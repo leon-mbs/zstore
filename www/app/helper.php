@@ -1042,16 +1042,17 @@ class Helper
      */
     public static function printItems(array $items, $pqty=0,array $tags=[]) {
         $printer = \App\System::getOptions('printer');
-  
+                  
         $prturn = \App\System::getUser()->prturn;
 
         $htmls = "";
+
+        $report = new \App\Report('item_tag.tpl');
 
         foreach ($items as $item) {
             if(intval($item->item_id)==0) {
                 continue;
             }
-            $report = new \App\Report('item_tag.tpl');
             $header = [];
             $header['turn'] = '';
             if($prturn==1) {
@@ -1069,6 +1070,7 @@ class Helper
             }
 
             $header['name'] = str_replace("'", "`", $header['name'])  ;
+            $header['description'] = str_replace("'", "`", $item->description)  ;
 
             $header['docnumber']  =  $tags['docnumber'] ?? "";
             
@@ -1169,12 +1171,20 @@ class Helper
      * @param array $items
      */
     public static function printItemsEP(array $items, $pqty=0,array $tags=[]) {
+        $user = \App\System::getUser() ;
+        
+       
         $printer = \App\System::getOptions('printer');
 
         $htmls = "";
+        $rows = [];
 
+        $report = new \App\Report('item_tag_ps.tpl');
+        if($user->prtypelabel==2) {
+          $report = new \App\Report('item_tag_ts.tpl');
+        }
+        
         foreach ($items as $item) {
-            $report = new \App\Report('item_tag_ps.tpl');
             $header = [];
             if (strlen($item->shortname) > 0) {
                 $header['name'] = $item->shortname;
@@ -1182,6 +1192,7 @@ class Helper
                 $header['name'] = $item->itemname;
             }
             $header['name'] = str_replace("'", "`", $header['name'])  ;
+            $header['description'] = str_replace("'", "`", $item->description)  ;
 
             $header['docnumber']  =  $tags['docnumber'] ?? "";
 
@@ -1245,16 +1256,48 @@ class Helper
                 $qty = $pqty;
             }
 
-            for($i=0;$i< intval($qty) ;$i++) {
-                $htmls = $htmls . $report->generate($header);
-            }
 
-            for($i=0;$i<$qty;$i++) {
-                $htmls = $htmls .   $report->generate($header) ;
-            }
-        }
+           if($user->prtypelabel==2) {
+               $header['name'] = str_replace("\"","`",$header['name']) ;
+               $header['description'] = str_replace("\"","`",$header['description']) ;
+               $header['qrcode'] = str_replace("\"","`",$header['qrcode']) ;
+               $header['brand'] = str_replace("\"","`",$header['brand']) ;
 
-        return $htmls;
+               if($user->pwsymlabel >0) {
+                   $header['name'] = mb_substr($header['name'],0,$user->pwsymlabel) ;
+               }
+               
+               
+               $text =  $report->generate($header,false);
+  
+               $r = explode("\n",$text) ;
+               
+               for($i=0;$i< intval($qty) ;$i++) {
+
+                   foreach($r as $row) {
+                       $row = str_replace("\n", "", $row);
+                       $row = str_replace("\r", "", $row);
+                       $row = trim($row);
+                       $rows[]=$row;
+                   }
+              }               
+               
+           } else {
+                for($i=0;$i< intval($qty) ;$i++) {
+                    $htmls = $htmls . $report->generate($header);
+                }
+                
+           }
+            
+           
+       }
+       if($user->prtypelabel==2) {
+         return $rows;              
+       } else {
+         return $htmls;                    
+       } 
+       
+        
     }
 
     //"соль" для  шифрования

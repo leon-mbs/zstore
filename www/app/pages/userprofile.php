@@ -103,8 +103,10 @@ class UserProfile extends \App\Pages\Base
         }
 
         $form = new Form('printer');
-        $form->add(new DropDownChoice('prtype', 0))->onChange($this, "onPSType");
+        $form->add(new DropDownChoice('prtype',[], 0))->onChange($this, "onPSType");
         $form->prtype->setValue($this->user->prtype);
+        $form->add(new DropDownChoice('pcp',[], $this->user->pcp));
+
 
         $form->add(new TextInput('pserver', $this->user->pserver));
         $form->add(new ClickLink('pstest'))->onClick($this, 'onPSTest', true);
@@ -122,6 +124,7 @@ class UserProfile extends \App\Pages\Base
         $form->prtypelabel->setValue($this->user->prtypelabel);
         $form->add(new DropDownChoice('prturn'));
         $form->prturn->setValue($this->user->prturn);
+        $form->add(new DropDownChoice('pcplabel',[], $this->user->pcplabel));
 
         $form->add(new TextInput('pserverlabel', $this->user->pserverlabel));
         $form->add(new ClickLink('pstestlabel'))->onClick($this, 'onPSTestlabel', true);
@@ -206,6 +209,8 @@ class UserProfile extends \App\Pages\Base
         $prtype = (int)$this->printer->prtype->getValue();
         $this->printer->pserver->setVisible($prtype==1) ;
         $this->printer->pwsym->setVisible($prtype==1) ;
+        $this->printer->pstest->setVisible($prtype==1) ;
+        $this->printer->pcp->setVisible($prtype!=0) ;
 
 
     }
@@ -214,8 +219,7 @@ class UserProfile extends \App\Pages\Base
         try {
 
             $pr = new \App\Printer() ;
-
-            $pr->text("Printer text");
+            $pr->text("Printer test");
             $pr->text("Тест принтера");
 
             $buf = $pr->getBuffer() ;
@@ -236,6 +240,7 @@ class UserProfile extends \App\Pages\Base
 
 
         $this->user->prtype = $this->printer->prtype->getValue() ;
+        $this->user->pcp = $this->printer->pcp->getValue() ;
         $this->user->pwsym = trim($this->printer->pwsym->getText());
         $this->user->pserver = trim($this->printer->pserver->getText());
         $this->user->pserver  = rtrim($this->user->pserver, "/") ;
@@ -248,21 +253,32 @@ class UserProfile extends \App\Pages\Base
 
     public function onPSTypelabel($sender) {
         $prtype = (int)$this->printerlabel->prtypelabel->getValue();
-        $this->printerlabel->pserverlabel->setVisible($prtype==1) ;
-        $this->printerlabel->pwsymlabel->setVisible($prtype==1) ;
+        $this->printerlabel->pserverlabel->setVisible($prtype!=0) ;
+        $this->printerlabel->pstestlabel->setVisible($prtype!=0) ;
+        $this->printerlabel->pcplabel->setVisible($prtype!=0) ;
+        $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
         $this->printerlabel->prturn->setVisible($prtype==0) ;
 
 
     }
     public function onPSTestlabel($sender) {
-
+        $prtype = (int)$this->printerlabel->prtypelabel->getValue();
+ 
         try {
 
-            $pr = new \App\Printer() ;
-
-            $pr->text("Printer test");
-            $pr->text("Тест принтера");
-
+            $pr = new \App\Printer(true) ;
+            if($prtype==1) {
+              $pr->text("Printer test");
+              $pr->text("Тест принтера");
+            }
+            if($prtype==2) {
+              $pr->labelrow("CLS");
+//              $pr->text("CODEPAGE 866");
+              $pr->text("DIRECTION 0");
+              $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"Printer test\"");
+              $pr->labelrow("FEED 50");
+              $pr->labelrow("PRINT 1,1");
+            }
             $buf = $pr->getBuffer() ;
             $b = json_encode($buf) ;
             $this->addAjaxResponse(" sendPSlabel('{$b}') ");
@@ -281,6 +297,7 @@ class UserProfile extends \App\Pages\Base
 
 
         $this->user->prtypelabel = $this->printerlabel->prtypelabel->getValue() ;
+        $this->user->pcplabel = $this->printerlabel->pcplabel->getValue() ;
         $this->user->prturn = $this->printerlabel->prturn->getValue() ;
         $this->user->pwsymlabel = trim($this->printerlabel->pwsymlabel->getText());
         $this->user->pserverlabel = trim($this->printerlabel->pserverlabel->getText());

@@ -857,9 +857,14 @@ class ItemList extends \App\Pages\Base
             }
         }
         if (count($items) == 0) {
+           $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+          
             return;
         }
-        if(intval(\App\System::getUser()->prtypelabel) == 0) {
+        
+        $user = \App\System::getUser() ;
+          
+        if(intval($user->prtypelabel) == 0) {
 
             $htmls = H::printItems($items);
 
@@ -876,8 +881,23 @@ class ItemList extends \App\Pages\Base
 
         try {
 
-            $xml = H::printItemsEP($items);
-            $buf = \App\Printer::xml2comm($xml);
+            $ret = H::printItemsEP($items);
+            if(intval($user->prtypelabel) == 1) {
+                if(strlen($ret)==0) {
+                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::xml2comm($ret);
+        
+            }            
+            if(intval($user->prtypelabel) == 2) {
+                if(count($ret)==0) {
+                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::arr2comm($ret);
+        
+            }            
             $b = json_encode($buf) ;
 
             $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");

@@ -112,6 +112,8 @@ class User extends \ZCL\DB\Entity
         $this->pwsymlabel = $options['pwsymlabel']?? 0;
         $this->pserverlabel = $options['pserverlabel']?? '';
         $this->prturn = (int)$options['prturn']?? '';
+        $this->pcplabel = (int)$options['pcplabel']?? '';
+        $this->pcp = (int)$options['pcp']?? '';
 
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
@@ -155,6 +157,8 @@ class User extends \ZCL\DB\Entity
         $options['prtypelabel'] = $this->prtypelabel;
         $options['pwsymlabel'] = $this->pwsymlabel;
         $options['prturn'] = $this->prturn;
+        $options['pcplabel'] = $this->pcplabel;
+        $options['pcp'] = $this->pcp;
 
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
