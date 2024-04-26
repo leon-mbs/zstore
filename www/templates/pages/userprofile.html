@@ -132,7 +132,7 @@
                 </form>
             </div>
         
-            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
+            <div class="col-10  col-md-4 col-xl-3">
                          <h4>Принтер чеків</h4>
                          <small><a href="https://zippy.com.ua/ext#10">Опис</a></small>
                          <form zippy="printer">
@@ -154,21 +154,33 @@
                              <div class="form-group  ">
                                 <label data-label="pwsym" for="pwsym">Ширина (кiл. символiв)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
-                                <a  data-label="pwsym" zippy="pstest" >Тест принтера</a>
                             </div>
-                                          
+                             <div class="form-group  ">
+                                <label for="pcp">Кодова сторінка</label>
+                                <select class="form-control" zippy="pcp">
+                                     <option value="866">866</option>
+                                     <option value="1251">win-1251</option>
+                                </select>
+                                <small>Кодування, виставлене в  принтері</small>    
+                            </div>    
+                                 
+                                         
                              <div class="form-group">
                                 <input zippy="savep" class="btn btn-primary" type="submit" value="Зберегти">
                             </div>                            
+                             <div class="form-group">
+                                <a    zippy="pstest" >Тест принтера</a>
+                            </div>                            
                          </form>   
                              <h4>Принтер етикеток</h4>
-                             <small>Кількість етикеток що друкується, задається в довіднику ТМЦ </small>
+                             <small>Кількість на позицiю, задається в довіднику ТМЦ </small>
                          <form zippy="printerlabel">
                             <div class="form-group  ">
                                 <label for="prtypelabel">Тип підключення</label>
                                 <select class="form-control" zippy="prtypelabel">
                                      <option value="0">Системний принтер</option>
-                                     <option value="1">Print сервер</option>
+                                     <option value="1">Print сервер (режим  receipt)</option>
+                                     <option value="2">Print сервер (режим  label)</option>
                                 </select>
                                 <small data-label="pserverlabel">Опис <a href="https://zippy.com.ua/ext#10" target="_blank">тут</a>  </small>
                             </div>    
@@ -182,8 +194,16 @@
                              <div class="form-group  ">
                                 <label data-label="pwsymlabel" for="pwsymlabel">Ширина (кiл. символiв)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
-                                <a  data-label="pwsymlabel" zippy="pstestlabel" >Тест принтера</a>
                             </div>
+                             <div class="form-group  ">
+                                <label for="pcplabel">Кодова сторінка</label>
+                                <select class="form-control" zippy="pcplabel">
+                                     <option value="866">866</option>
+                                     <option value="1251">win-1251</option>
+                                </select>
+                                <small>Кодування, виставлене в  принтері</small>    
+                            </div>    
+                            
                              <div class="form-group  ">
                                 <label for="prturn">Поворот зображення</label>
                                 <select class="form-control" zippy="prturn">
@@ -194,6 +214,9 @@
                             </div>                                            
                              <div class="form-group">
                                 <input zippy="saveplabel" class="btn btn-primary" type="submit" value="Зберегти">
+                            </div>                            
+                             <div class="form-group">
+                                <a   zippy="pstestlabel" >Тест принтера</a>
                             </div>                            
                          </form>   
         </div>

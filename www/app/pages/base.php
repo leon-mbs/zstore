@@ -283,10 +283,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars['cron']  = true;
         }
 
-        
-        if($_config['db']['driver'] == 'postgres'){
-            $this->setError('Поддержка Postgres прекращена!') ;
-        }
+   
     }
 
     public function LogoutClick($sender) {
