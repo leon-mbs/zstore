@@ -2,8 +2,9 @@
 
 namespace App;
 
-use App\Application as App;
-use App\Helper as H;
+use \App\Application as App;
+use \App\Helper as H;
+use \App\Entity\User;
 
 /**
  * Класс  для  управления доступом к метаобьектам
@@ -133,8 +134,11 @@ class ACL
     }
 
     //проверка  на  доступ  к просмотру документа
-    public static function checkShowDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkShowDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -171,11 +175,15 @@ class ACL
     }
 
     //проверка  на  доступ  к   редактированию документа
-    public static function checkEditDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkEditDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
+  
 
         self::load();
 
@@ -210,8 +218,11 @@ class ACL
     }
 
     //проверка  на  доступ  к   удалению документа
-    public static function checkDelDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkDelDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -255,8 +266,11 @@ class ACL
      * @param mixed $inreg в жернале - если нет перебрасывать на  домашнюю страницу
      * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
      */
-    public static function checkExeDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkExeDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -284,8 +298,11 @@ class ACL
      * @param mixed $doc документ
      * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
      */
-    public static function checkChangeStateDoc($doc, $inreg = true, $showerror = true) {
+    public static function checkChangeStateDoc($doc, $inreg = true, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -313,8 +330,11 @@ class ACL
      * @param mixed $doc документ
      * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
      */
-    public static function checkCancelDoc($doc, $inreg = true, $showerror = true) {
+    public static function checkCancelDoc($doc, $inreg = true, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }

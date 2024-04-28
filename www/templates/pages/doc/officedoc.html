@@ -149,14 +149,39 @@
         </form>
           <form zippy="accessform">
             <h3>&nbsp;Права доступу </h3>
+            <small>Якщо не  задано використувуються права заданi в ролях</small><br>
+            <span zippy="accdocbane">  </span>
+            <h5>&nbsp;Право перегляду </h5>
+                <div class="form-group row">
+                     <div class="col-auto">
+                       <label for="accshowemps">Спiвробiтник </label>
+                    </div>
+                     <div class="col-auto">
+                       <select zippy="accshowemps">
+                        
+                       </select>
+                    </div>
+                     <div class="col-auto">
+                        <input zippy="addaccshow" type="submit" value="Додати" class="btn btn-outline-primary">
+                    </div>
+                           
+               </div> 
+                <div class="form-group">
+                  <table >
+                     
+                  </table>
+               </div>           
+             
+            <h5>&nbsp;Право редагування </h5>
+                <div class="form-group">
+
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-                <div class="form-group">
+                     <div class="form-group">
                         <input type="button" zippy="cancelaccess" value="Скасувати" class="btn btn-outline-secondary  mr-2">
                         <input zippy="saveaccess" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        
                     </div>           
-             </div>
+                </div>
             </div>
         </form>
         

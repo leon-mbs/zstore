@@ -105,6 +105,8 @@ class OfficeDoc extends \App\Pages\Base
         $this->add(new Form('accessform'))->setVisible(false);
         $this->accessform->add(new Button('cancelaccess'))->onClick($this, 'cancelaccessOnClick');
         $this->accessform->add(new SubmitButton('saveaccess'))->onClick($this, 'saveaccessOnClick');
+        $this->accessform->add(new Label('accdocbane'));
+        $this->accessform->add(new DropDownChoice('accshowemps',[],0));
     
         
         $user = System::getUser()->user_id;
@@ -373,6 +375,58 @@ class OfficeDoc extends \App\Pages\Base
     public function access() {
        $this->docform->setVisible(false);
        $this->accessform->setVisible(true);
+        
+       
+       $this->accessform->accdocbane->setText( H::fd($this->_doc->document_date).' '. $this->_doc->notes );
+       $users=[];
+       $deps=[];            
+       $poss=[];
+       
+         
+       foreach( \App\Entity\User::findYield('disabled<>1', 'username') as $user )  {
+          if($user->user_id==System::getUser()->user_id) {
+              continue;
+          }
+          if($user->user_id==$this->_doc->user_id) {
+              continue;
+          }
+          if($user->user_id==$this->_doc->headerdata['author']) {
+              continue;
+          }
+          
+          if (false == \App\ACL::checkShowDoc($this->_doc, true,false,$user->user_id)) {
+              continue;
+          }        
+           
+          $users[$user->user_id]=$user->username;
+          
+          if($user->employee_id > 0) {
+              $emp = \App\Entity\Employee::load($user->employee_id);
+              if(strlen($emp->position)>0) {
+                  $poss[$emp->position] = $emp->position;
+              }
+              if(strlen($emp->department)>0) {
+                  $deps[$emp->department] = $emp->department;
+              }
+          }
+          
+          
+       }
+       $options=[];
+       foreach($deps as $d) {
+           $options[$d]=$d;    
+       }      
+       foreach($poss as $p) {
+           $options[$p]=$p;    
+       }      
+       foreach($users as  $id=> $u) {
+           $options[$id]=$u;    
+       }      
+       $this->accessform->accshowemps->setOptionList($options);
+
+
+
+
  
     }
     public function saveaccessOnClick($sender) {
