@@ -72,7 +72,7 @@ class FirmList extends \App\Pages\Base
 
         $modules = System::getOptions('modules');
 
-        $this->_tvars["loadkey"] = ($modules['ppo'] == 1) || ($modules['paperless'] == 1);
+        $this->_tvars["loadkey"] = ($modules['ppo'] == 1 || $modules['vdoc'] == 1 ) ;
 
 
 

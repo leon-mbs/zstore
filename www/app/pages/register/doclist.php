@@ -50,7 +50,7 @@ class DocList extends \App\Pages\Base
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
             $filter->to =   0;
-            $filter->from = time() - (30 * 24 * 3600);
+            $filter->from = time() - (15 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -135,7 +135,7 @@ class DocList extends \App\Pages\Base
     public function onErase($sender) {
         $filter = Filter::getFilter("doclist");
         $filter->to = 0;
-        $filter->from = time() - (30 * 24 * 3600);
+        $filter->from = time() - (15 * 24 * 3600);
         $filter->page = 1;
         $filter->doctype = 0;
         $filter->status = 0;
@@ -262,8 +262,6 @@ class DocList extends \App\Pages\Base
         }  
         if( $doc->meta_name == 'OfficeDoc' ){
             
-
-            $row->edit->setVisible(false);
             $row->delete->setVisible(false);
             $row->cancel->setVisible(false);
             $row->hasscan->setVisible(false);
@@ -363,17 +361,9 @@ class DocList extends \App\Pages\Base
             if($_u->rolename == 'admins') {
                 $u[$_u->user_id]=$_u->username;
             } else {
-                $aclexe = explode(',', $_u->aclexe);
-
-                if (in_array($this->_doc->meta_id, $aclexe)) {
+                                 
+                if( \App\ACL::checkEditDoc($this->_doc,true,false,$_u->user_id) == true ||  \App\ACL::checkExeDoc($this->_doc,true,false,$_u->user_id) == true ||  \App\ACL::checkChangeStateDoc($this->_doc,true,false,$_u->user_id) == true) {
                     $u[$_u->user_id] = $_u->username;
-
-                }
-                $aclstate = explode(',', $_u->aclstate);
-
-                if (in_array($this->_doc->meta_id, $aclstate)) {
-                    $u[$_u->user_id] = $_u->username;
-
                 }
 
             }

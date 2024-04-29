@@ -333,7 +333,6 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
-        $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
         $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
 //    
         
@@ -684,7 +683,6 @@ class Options extends \App\Pages\Base
         $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
         $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
-        $modules['paperless'] = $sender->modpaperless->isChecked() ? 1 : 0;
         $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
