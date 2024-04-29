@@ -271,19 +271,66 @@ class OrderList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
+      //проверяем  что есть ТТН
+        $list = $this->_doc->getChildren('TTN');
+        $ttn = count($list) > 0;
+        $list = $this->_doc->getChildren('GoodsIssue');
+        $gi = count($list) > 0;
+        //  $list = $this->_doc->getChildren('Invoice');
+        //   $invoice = count($list) > 0;
+        $list = $this->_doc->getChildren('POSCheck');
+        $pos = count($list) > 0;
+
+    
+    
+        if ($sender->id == "btask") {
+            $task = count($this->_doc->getChildren('Task')) > 0;
+
+            if ($task) {
+
+                $this->setWarn('Вже існує документ Наряд');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($sender->id == "bttn") {
+            if ($ttn) {
+                $this->setWarn('У замовлення вже є відправки');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($sender->id == "bcopy") {
+
+            App::Redirect("\\App\\Pages\\Doc\\Order", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($sender->id == "bpos") {
+            if ($pos) {
+                $this->setWarn('Вже існує документ Чек');
+            }
+            App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
+            return;
+        }
+
+        if ($sender->id == "bgi") {
+
+            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($sender->id == "bco") {
+
+            App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
+            return;
+        }
+
+        
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+
         try {
 
-            //проверяем  что есть ТТН
-            $list = $this->_doc->getChildren('TTN');
-            $ttn = count($list) > 0;
-            $list = $this->_doc->getChildren('GoodsIssue');
-            $gi = count($list) > 0;
-            //  $list = $this->_doc->getChildren('Invoice');
-            //   $invoice = count($list) > 0;
-            $list = $this->_doc->getChildren('POSCheck');
-            $pos = count($list) > 0;
-
-            if ($sender->id == "bscan") {
+              if ($sender->id == "bscan") {
                 $this->openedit();
                 return;
             }
@@ -300,47 +347,6 @@ class OrderList extends \App\Pages\Base
 
                 $this->setWarn('Замовлення анульовано');
             }
-            if ($sender->id == "btask") {
-                $task = count($this->_doc->getChildren('Task')) > 0;
-
-                if ($task) {
-
-                    $this->setWarn('Вже існує документ Наряд');
-                }
-                App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
-                return;
-            }
-            if ($sender->id == "bttn") {
-                if ($ttn) {
-                    $this->setWarn('У замовлення вже є відправки');
-                }
-                App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
-                return;
-            }
-            if ($sender->id == "bcopy") {
-
-                App::Redirect("\\App\\Pages\\Doc\\Order", 0, $this->_doc->document_id);
-                return;
-            }
-            if ($sender->id == "bpos") {
-                if ($pos) {
-                    $this->setWarn('Вже існує документ Чек');
-                }
-                App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
-                return;
-            }
-
-            if ($sender->id == "bgi") {
-
-                App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
-                return;
-            }
-            if ($sender->id == "bco") {
-
-                App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
-                return;
-            }
-
 
             if ($sender->id == "bclose") {
 
@@ -358,10 +364,16 @@ class OrderList extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
  
             }
-        } catch(\Exception $e) {
-            $this->setError($e->getMessage());
+            $conn->CommitTrans();
 
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage()) ;
+            $conn->RollbackTrans();
+            return;
         }
+        
+        
+        
         $this->statuspan->setVisible(false);    
         $this->_doc = null;            
         $this->listpanel->doclist->Reload(false);
@@ -767,24 +779,35 @@ class OrderList extends \App\Pages\Base
     public function editOnSubmit($sender) {
 
 
+            $conn = \ZDB\DB::getConnect();
+            $conn->BeginTrans();
 
-        foreach ($this->_itemlist as   $_item) {
-            if($sender->id == "editready" && $_item->checked != true) {
-                $this->setError('Не зібрані всі позиції') ;
+            try {
+ 
 
-                return;
-            }
+                foreach ($this->_itemlist as   $_item) {
+                    if($sender->id == "editready" && $_item->checked != true) {
+                        $this->setError('Не зібрані всі позиції') ;
+
+                        return;
+                    }
+                }
+
+
+                $this->_doc->packDetails('detaildata', $this->_itemlist)  ;
+                $this->_doc->save();
+                if ($sender->id == "editready") {
+                    $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
+                    $this->listpanel->doclist->Reload(false);
+
+                }
+             $conn->CommitTrans();
+
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage()) ;
+            $conn->RollbackTrans();
+            return;
         }
-
-
-        $this->_doc->packDetails('detaildata', $this->_itemlist)  ;
-        $this->_doc->save();
-        if ($sender->id == "editready") {
-            $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-            $this->listpanel->doclist->Reload(false);
-
-        }
-
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
 

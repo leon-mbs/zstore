@@ -732,17 +732,53 @@ class DocList extends \App\Pages\Base
             $items[]=$it;
         }
 
-        $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
+        $user = \App\System::getUser() ;
+          
+        if(intval($user->prtypelabel) == 0) {
+        
+            $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
 
-        if(\App\System::getUser()->usemobileprinter == 1) {
-            \App\Session::getSession()->printform =  $htmls;
-
-            $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-        } else {
-
-            $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
-
+            if(\App\System::getUser()->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $htmls;
+                $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
+            }
+            return;
         }
+        
+        
+        try {
+
+            $ret = H::printItemsEP($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
+            if(intval($user->prtypelabel) == 1) {
+                if(strlen($ret)==0) {
+                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::xml2comm($ret);
+        
+            }            
+            if(intval($user->prtypelabel) == 2) {
+                if(count($ret)==0) {
+                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::arr2comm($ret);
+        
+            }            
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $message = str_replace("'", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }        
+        
+        
     }
  
     public function QrOnClick($sender) {

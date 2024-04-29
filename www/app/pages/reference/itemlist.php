@@ -904,6 +904,7 @@ class ItemList extends \App\Pages\Base
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;
             $message = str_replace(";", "`", $message)  ;
+            $message = str_replace("'", "`", $message)  ;
             $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
 
         }
