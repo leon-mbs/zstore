@@ -21,6 +21,9 @@ use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
 use Zippy\Html\Link\SubmitLink;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
 
 /**
  * Страница   офисный документ
@@ -28,6 +31,9 @@ use Zippy\Html\Link\SubmitLink;
 class OfficeDoc extends \App\Pages\Base
 {
     private $_doc;
+    public $_accshowlist=[];
+    public $_acceditlist=[];
+    public $_accapprlist=[];
     
     public function __construct($docid = 0,$copyid=0,$access=false){
         parent::__construct();
@@ -58,23 +64,16 @@ class OfficeDoc extends \App\Pages\Base
             if($_u->rolename == 'admins') {
                 $u[$_u->user_id]=$_u->username;
             } else {
-                $aclexe = explode(',', $_u->aclexe);
-
-                if (in_array($mn, $aclexe)) {
+                
+                if( \App\ACL::checkEditDoc($this->_doc,true,false,$_u->user_id) == true ||  \App\ACL::checkExeDoc($this->_doc,true,false,$_u->user_id) == true ||  \App\ACL::checkChangeStateDoc($this->_doc,true,false,$_u->user_id) == true) {
                     $u[$_u->user_id] = $_u->username;
-
                 }
-                $aclstate = explode(',', $_u->aclstate);
-
-                if (in_array($this->_doc->meta_id, $aclstate)) {
-                    $u[$_u->user_id] = $_u->username;
-
-                }
+        
 
             }
         }
         $this->docform->user->setOptionList($u);
-//         
+          
         
 
         $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name") ;
@@ -102,11 +101,22 @@ class OfficeDoc extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
     
+    
+        //права  доступа
         $this->add(new Form('accessform'))->setVisible(false);
         $this->accessform->add(new Button('cancelaccess'))->onClick($this, 'cancelaccessOnClick');
         $this->accessform->add(new SubmitButton('saveaccess'))->onClick($this, 'saveaccessOnClick');
-        $this->accessform->add(new Label('accdocbane'));
-        $this->accessform->add(new DropDownChoice('accshowemps',[],0));
+        $this->accessform->add(new Label('accdocname'));
+        
+        $this->accessform->add(new DropDownChoice('accshowusers',[],0));
+        $this->accessform->add(new SubmitButton('addaccshow'))->onClick($this, 'addaccshowOnClick');
+        $this->accessform->add(new DataView('accshowlist',new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_accshowlist')), $this, 'accshowOnRow'));
+        $this->accessform->add(new DropDownChoice('acceditusers',[],0));
+        $this->accessform->add(new SubmitButton('addaccedit'))->onClick($this, 'addacceditOnClick');
+        $this->accessform->add(new DataView('acceditlist',new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_acceditlist')), $this, 'acceditOnRow'));
+        $this->accessform->add(new DropDownChoice('accapprusers',[],0));
+        $this->accessform->add(new SubmitButton('addaccappr'))->onClick($this, 'addaccapprOnClick');
+        $this->accessform->add(new DataView('accapprlist',new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_accapprlist')), $this, 'accapprOnRow'));
     
         
         $user = System::getUser()->user_id;
@@ -142,6 +152,7 @@ class OfficeDoc extends \App\Pages\Base
             $d= $cdoc->unpackDetails('detaildata')  ;
             $this->docform->doccontent->setText($d['data']??''); 
             $this->docform->user->setValue($user);
+            $this->_doc = Document::create('OfficeDoc');
              
          
          } else {
@@ -365,6 +376,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
+    
     public function onEmp($sender) {
         $emp=$sender->getValue();
         $this->docform->bonus->setVisible($emp>0)  ;
@@ -375,13 +387,11 @@ class OfficeDoc extends \App\Pages\Base
     public function access() {
        $this->docform->setVisible(false);
        $this->accessform->setVisible(true);
-        
        
-       $this->accessform->accdocbane->setText( H::fd($this->_doc->document_date).' '. $this->_doc->notes );
-       $users=[];
-       $deps=[];            
-       $poss=[];
-       
+       $this->accessform->accdocname->setText( H::fd($this->_doc->document_date).' '. $this->_doc->notes );
+       $usersshow=[];
+       $usersedit=[];
+       $usersappr=[];
          
        foreach( \App\Entity\User::findYield('disabled<>1', 'username') as $user )  {
           if($user->user_id==System::getUser()->user_id) {
@@ -393,50 +403,183 @@ class OfficeDoc extends \App\Pages\Base
           if($user->user_id==$this->_doc->headerdata['author']) {
               continue;
           }
-          
-          if (false == \App\ACL::checkShowDoc($this->_doc, true,false,$user->user_id)) {
+      
+      
+      
+          if($user->rolename=='admins') {
               continue;
-          }        
-           
-          $users[$user->user_id]=$user->username;
-          
-          if($user->employee_id > 0) {
-              $emp = \App\Entity\Employee::load($user->employee_id);
-              if(strlen($emp->position)>0) {
-                  $poss[$emp->position] = $emp->position;
-              }
-              if(strlen($emp->department)>0) {
-                  $deps[$emp->department] = $emp->department;
-              }
           }
           
+          if (true == \App\ACL::checkShowDoc($this->_doc, true,false,$user->user_id)) {
+              $usersshow[$user->user_id] = $user->username;
+          }        
+                                                                                    
+          if (true == \App\ACL::checkEditDoc($this->_doc, true,false,$user->user_id) || true == \App\ACL::checkExeDoc($this->_doc, true,false,$user->user_id)  ) {
+              $usersedit[$user->user_id] = $user->username;
+          }        
+          if (true == \App\ACL::checkExeDoc($this->_doc, true,false,$user->user_id)) {
+              $usersappr[$user->user_id] = $user->username;
+          }        
+    
           
        }
-       $options=[];
-       foreach($deps as $d) {
-           $options[$d]=$d;    
-       }      
-       foreach($poss as $p) {
-           $options[$p]=$p;    
-       }      
-       foreach($users as  $id=> $u) {
-           $options[$id]=$u;    
-       }      
-       $this->accessform->accshowemps->setOptionList($options);
+      
+       $this->accessform->accshowusers->setOptionList($usersshow);
+       $this->accessform->acceditusers->setOptionList($usersedit);
+       $this->accessform->accapprusers->setOptionList($usersappr);
 
+       $this->_accshowlist = [];      
+       $this->_acceditlist = [];      
+       $this->_accapprlist = [];      
 
+       $d = $this->_doc->unpackDetails('accessdata')  ;
+       if(is_array($d['showlist'])) {
+          $this->_accshowlist = $d['showlist']  ;    
+       }
+       if(is_array($d['editlist'])) {
+          $this->_acceditlist = $d['editlist']  ;    
+       }
+       if(is_array($d['apprlist'])) {
+          $this->_accapprlist = $d['apprlist']  ;    
+       }
+       
+       
+       $this->accessform->accshowlist->Reload();
+       $this->accessform->acceditlist->Reload();
+       $this->accessform->accapprlist->Reload();
+   
 
-
- 
+        
     }
+    
+    public function accshowOnRow($row) { 
+        $item = $row->getDataItem();
+        $row->add(new Label('accshowuser', $item->username));
+        $row->add(new ClickLink('delshowuser'))->onClick($this, 'delaccshowOnClick');
+          
+    }    
+    public function addaccshowOnClick($sender) {
+       $user_id=$this->accessform->accshowusers->getValue()  ;
+       if($user_id > 0) {
+          $username = $this->accessform->accshowusers->getValueName()  ;
+          
+          $user =  new  \App\DataItem() ;
+          $user->user_id = $user_id;
+          $user->username = $username;
+          $this->_accshowlist[$user->user_id] = $user ;
+           
+           
+          $this->accessform->accshowlist->Reload();    
+       }
+       
+       
+       
+    }
+    public function delaccshowOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        
+        $tmp = [];
+ 
+        foreach($this->_accshowlist as $u) {
+            if($u->user_id==$item->user_id)  continue;
+            $tmp[$u->user_id] = $u;  
+        }
+ 
+        $this->_accshowlist = $tmp;
+ 
+        $this->accessform->accshowlist->Reload();
+    }
+    public function acceditOnRow($row) { 
+        $item = $row->getDataItem();
+        $row->add(new Label('accedituser', $item->username));
+        $row->add(new ClickLink('deledituser'))->onClick($this, 'delacceditOnClick');
+          
+    }    
+    public function addacceditOnClick($sender) {
+       $user_id=$this->accessform->acceditusers->getValue()  ;
+       if($user_id > 0) {
+          $username = $this->accessform->acceditusers->getValueName()  ;
+          
+          $user =  new  \App\DataItem() ;
+          $user->user_id = $user_id;
+          $user->username = $username;
+          $this->_acceditlist[$user->user_id] = $user ;
+           
+           
+          $this->accessform->acceditlist->Reload();    
+       }
+       
+       
+       
+    }
+    public function delacceditOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        
+        $tmp = [];
+ 
+        foreach($this->_acceditlist as $u) {
+            if($u->user_id==$item->user_id)  continue;
+            $tmp[$u->user_id] = $u;  
+        }
+ 
+        $this->_acceditlist = $tmp;
+ 
+        $this->accessform->acceditlist->Reload();
+    }
+    public function accapprOnRow($row) { 
+        $item = $row->getDataItem();
+        $row->add(new Label('accappruser', $item->username));
+        $row->add(new ClickLink('delappruser'))->onClick($this, 'delaccapprOnClick');
+          
+    }    
+    public function addaccapprOnClick($sender) {
+       $user_id=$this->accessform->accapprusers->getValue()  ;
+       if($user_id > 0) {
+          $username = $this->accessform->accapprusers->getValueName()  ;
+          
+          $user =  new  \App\DataItem() ;
+          $user->user_id = $user_id;
+          $user->username = $username;
+          $this->_accapprlist[$user->user_id] = $user ;
+           
+           
+          $this->accessform->accapprlist->Reload();    
+       }
+       
+       
+       
+    }
+    public function delaccapprOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        
+        $tmp = [];
+ 
+        foreach($this->_accapprlist as $u) {
+            if($u->user_id==$item->user_id)  continue;
+            $tmp[$u->user_id] = $u;  
+        }
+ 
+        $this->_accapprlist = $tmp;
+ 
+        $this->accessform->accapprlist->Reload();
+    }
+
+
+    
     public function saveaccessOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-         
         
+        $this->_doc->packDetails('accessdata', array(
+                'showlist'=> $this->_accshowlist,
+                'editlist'=> $this->_acceditlist,
+                'apprlist'=> $this->_accapprlist
+              ));
         
-         App::Redirect("\\App\\Pages\\Register\\OfficeList");
+        $this->_doc->save()  ;
+        
+        App::Redirect("\\App\\Pages\\Register\\OfficeList");
     }
     public function cancelaccessOnClick($sender) {
          App::Redirect("\\App\\Pages\\Register\\OfficeList");
@@ -444,3 +587,7 @@ class OfficeDoc extends \App\Pages\Base
     
     
 }
+//  todo  методы доступа в доке
+//  todo  доступы  в общем журнале
+
+
