@@ -369,7 +369,7 @@ class DocList extends \App\Pages\Base
             }
         }
         $this->statusform->musers->setOptionList($u);
-//        $user = System::getUser();
+        $user = System::getUser();
         if(in_array($this->_doc->user_id, array_keys($u))) {
             $this->statusform->musers->setValue($this->_doc->user_id);
         } else {
@@ -378,7 +378,7 @@ class DocList extends \App\Pages\Base
 
         if( $this->_doc->meta_name == 'OfficeDoc' ){
               
-            if (false == $this->_doc->checkShow()) {
+            if (false == $this->_doc->checkShow($user)) {
                 return;
             }
             $this->statusform->setVisible(false);
@@ -407,6 +407,14 @@ class DocList extends \App\Pages\Base
         $filter = Filter::getFilter("doclist");
         $filter->page = $this->doclist->getCurrentPage();
 
+
+        if( $this->_doc->meta_name == 'OfficeDoc' ){
+              
+            if (false == $this->_doc->checkExe($user)) {
+                return;
+            }
+        }            
+        
         App::Redirect($class, $item->document_id);
     }
 

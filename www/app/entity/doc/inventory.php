@@ -50,8 +50,10 @@ class Inventory extends Document
 
             //списываем  со склада
             if ($item->quantity > $item->qfact && $this->headerdata['autooutcome'] == 1) {
+                $q= $item->quantity;
                 $item->quantity = $item->quantity - $item->qfact;
                 $listst = Stock::pickup($this->headerdata['store'], $item);
+                $item->quantity = $q;                
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
