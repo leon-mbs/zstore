@@ -540,6 +540,7 @@ class OfficeDoc extends \App\Pages\Base
           $user =  new  \App\DataItem() ;
           $user->user_id = $user_id;
           $user->username = $username;
+          $user->signed = false;
           $this->_accapprlist[$user->user_id] = $user ;
            
            

@@ -60,15 +60,90 @@ class OfficeDoc extends Document
         return array(self::EX_EXCEL,  self::EX_PDF);
     }
 
-    public function checkShow() {
-        return true;
+    /**
+    * права  из  списка
+    * 
+    */
+    public function checkShow($user) {
+       if($user->user_id== $this->user_id || $user->user_id== $this->headerdata['author'] ) {
+           return true;
+       }
+       if($user->rolename=='admins') {
+           return true;
+       }
+        
+       $d = $this->unpackDetails('accessdata')  ;
+       if(is_array($d['showlist'] &&  count($d['showlist'])>0)) {
+          foreach($d['showlist'] as $u){
+              if($user->user_id== $u->user_id) {
+                  return true;
+              }                  
+          }     
+          return false; //если  список  непустой  и  не  найден в  списке
+           
+       }  else {
+           return true;
+       }
+        
+
     }
-    public function checkExe() {
-        return true;
+    public function checkEdit($user) {
+       if($user->user_id== $this->user_id || $user->user_id== $this->headerdata['author'] ) {
+           return true;
+       }
+       if($user->rolename=='admins') {
+           return true;
+       }
+        
+       $d = $this->unpackDetails('accessdata')  ;
+       if(is_array($d['editlist'] &&  count($d['editlist'])>0)) {
+          foreach($d['editlist'] as $u){
+              if($user->user_id== $u->user_id) {
+                  return true;
+              }                  
+          }     
+          return false; //если  список  непустой  и  не  найден в  списке
+           
+       }  else {
+           return true;
+       }
+        
     }
-    public function checkApprove() {
-        return true;
+    
+    public function checkApprove($user) {
+       $d = $this->unpackDetails('accessdata')  ;
+       if(is_array($d['apprlist'] &&  count($d['apprlist'])>0)) {
+          foreach($d['apprlist'] as $u){
+              if($user->user_id== $u->user_id) {
+                  return true;
+              }                  
+          }     
+          return false; //если  список  непустой  и  не  найден в  списке
+           
+       }  else {
+           return false;
+       }
+        
+
     }
+    
+   public function sign($user) {
+       
+   }
+   public function signed( ){
+
+
+       $d = $this->unpackDetails('accessdata')  ;
+       if(!is_array($d['apprlist'] )) {
+           return [[],[]];
+       }
+       if(count($d['apprlist'])==0) {
+           return [[],[]];
+       }
+               
+       
+   }    
+    
     protected function onState($state, $oldstate) {
 
         if($state == Document::STATE_FINISHED) {
