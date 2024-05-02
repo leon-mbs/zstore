@@ -73,7 +73,8 @@ class OfficeDoc extends Document
        }
         
        $d = $this->unpackDetails('accessdata')  ;
-       if(is_array($d['showlist'] &&  count($d['showlist'])>0)) {
+       
+       if(is_array($d['showlist']) &&  count($d['showlist'])>0) {
           foreach($d['showlist'] as $u){
               if($user->user_id== $u->user_id) {
                   return true;
@@ -96,7 +97,7 @@ class OfficeDoc extends Document
        }
         
        $d = $this->unpackDetails('accessdata')  ;
-       if(is_array($d['editlist'] &&  count($d['editlist'])>0)) {
+       if(is_array($d['editlist']) &&  count($d['editlist'])>0) {
           foreach($d['editlist'] as $u){
               if($user->user_id== $u->user_id) {
                   return true;
@@ -112,7 +113,7 @@ class OfficeDoc extends Document
     
     public function checkApprove($user) {
        $d = $this->unpackDetails('accessdata')  ;
-       if(is_array($d['apprlist'] &&  count($d['apprlist'])>0)) {
+       if(is_array($d['apprlist']) &&  count($d['apprlist'])>0) {
           foreach($d['apprlist'] as $u){
               if($user->user_id== $u->user_id) {
                   return true;

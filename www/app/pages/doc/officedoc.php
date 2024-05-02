@@ -588,7 +588,4 @@ class OfficeDoc extends \App\Pages\Base
     
     
 }
-//  todo  методы доступа в доке
-//  todo  доступы  в общем журнале
-
 

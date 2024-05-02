@@ -120,8 +120,13 @@ class OfficeList extends \App\Pages\Base
         $row->title->setValue($doc->notes) ;
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
-        $row->add(new ClickLink('access'))->onClick($this, 'accessOnClick');
-
+        $row->add(new ClickLink('access',$this, 'accessOnClick'))->setVisible(false);
+        $user = System::getUser();
+        if($user->rolename=='admins' && $user->user_id == $doc->headerdata['author']) {
+            $row->access->setVisible(true) ;
+        }
+        
+        
         if( in_array($doc->state,[1,2,3,7] ) ) {
             $row->edit->setVisible(true);
         } else {
@@ -160,10 +165,13 @@ class OfficeList extends \App\Pages\Base
 
     public function copyOnClick($sender) {
         $doc = $sender->getOwner()->getDataItem();
-  
-        if (false == \App\ACL::checkShowDoc($doc, true)) {
+        $doc = $doc->cast();
+        if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }  
+        if(false ==$doc->checkShow(System::getUser())) {
+            return; 
+        }
         $class = "\\App\\Pages\\Doc\\OfficeDoc";
 
         App::Redirect($class,0, $doc->document_id);
@@ -520,3 +528,10 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+
+//todo  спец запись  в headerdata  лоя  прлписй и поиска
+//todo  увеомление что  полпиано
+//todo  досиуп  к  кнрпкам  продписи
+//todo доступ в обшщем журнале просмотр  и реактирование
+//todo уведомление  что надо  полписать
+
