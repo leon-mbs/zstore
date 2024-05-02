@@ -397,6 +397,7 @@ class CategoryList extends \App\Pages\Base
          
         $this->categoryprice->cplist->Reload() ;       
         
+        $this->categoryprice->savecp->setVisible(false);       
 
     }
 
@@ -467,6 +468,7 @@ class CategoryList extends \App\Pages\Base
            $di = new \App\DataItem() ;
            $di->item_id=$item->item_id;
            $di->name=$item->itemname;
+           $di->code=$item->item_code;
            $di->oldp=$item->{'price'.$pt} ;
            $di->newp=$ip ;
            
@@ -477,6 +479,8 @@ class CategoryList extends \App\Pages\Base
             
         $this->categoryprice->cplist->Reload() ;       
 
+        $this->categoryprice->savecp->setVisible(true);       
+
         
     }
 
@@ -484,6 +488,7 @@ class CategoryList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('cplname', $item->name));
+        $row->add(new Label('cplcode', $item->code));
         $row->add(new Label('cplold', $item->oldp));
         $row->add(new TextInput('cplnew',new \Zippy\Binding\PropertyBinding($item, 'newp')));
     }
