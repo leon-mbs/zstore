@@ -75,6 +75,7 @@ class OfficeList extends \App\Pages\Base
         $this->statuspan->buttons->add(new SubmitButton('bshift'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bdelete'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new TextInput('refusecomm'));
 
 
         $this->statuspan->add(new Form('maint'));
@@ -103,7 +104,7 @@ class OfficeList extends \App\Pages\Base
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
-      //  $doc = $doc->cast();
+        $doc = $doc->cast();
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', H::fd($doc->document_date)));
@@ -142,6 +143,20 @@ class OfficeList extends \App\Pages\Base
             $row->setAttribute('class', 'table-success');
         }
 
+        list($s,$wa)=$doc->signed();
+        $ua=array_keys($wa)  ;
+        
+        if(count($ua)>0 && in_array($doc->state,[7,8]) ) {
+            if(in_array($user->user_id,$ua)) {
+               $row->state->setAttribute('class', 'text-danger');            
+               $row->state->setText("Очікує ващ підпис");            
+            } else {
+               $un= array_values($wa) ;
+               $names= implode(", ",$un) ;
+               $row->state->setText("Очікує підпис від: ".$names);            
+            }
+        }
+        
     }
 
 
@@ -158,6 +173,10 @@ class OfficeList extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
+        if(false ==$doc->checkEdit(System::getUser())) {
+            return; 
+        }
+        
         $class = "\\App\\Pages\\Doc\\OfficeDoc";
 
         App::Redirect($class, $doc->document_id);
@@ -225,6 +244,9 @@ class OfficeList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        if(false == $this->_doc->checkShow(System::getUser())) {
+            return; 
+        }
 
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
@@ -281,6 +303,7 @@ class OfficeList extends \App\Pages\Base
 
         $buttons->bapprove->setVisible(false);
         $buttons->brefuse->setVisible(false);
+        $buttons->refusecomm->setVisible(false);
         
         $user=System::getUser() ;
                
@@ -296,8 +319,15 @@ class OfficeList extends \App\Pages\Base
         }
         if($ch &&  in_array($state,[7] ) ) {
             $buttons->bshift->setVisible(true);
-           // $buttons->bapprove->setVisible(true);
-           // $buttons->brefuse->setVisible(true);
+        }
+
+        
+        list($a,$wa)=$this->_doc->signed();
+        
+        if( in_array($user->user_id, array_keys( $wa) )&&  in_array($state,[7,8] ) ) {
+            $buttons->bapprove->setVisible(true);
+            $buttons->brefuse->setVisible(true);
+            $buttons->refusecomm->setVisible(true);
         }
 
    
@@ -318,7 +348,8 @@ class OfficeList extends \App\Pages\Base
     
     public function statusOnSubmit($sender) {
        
-
+        $user=System::getUser() ;
+ 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
@@ -341,6 +372,36 @@ class OfficeList extends \App\Pages\Base
             }
             if($sender->id == 'bdelete') {
                  $this->deldoc();
+            }
+            if($sender->id == 'bapprove') {
+
+               $this->_doc->sign($user->user_id); 
+               list($a,$wa)=$this->_doc->signed();
+               if(count($wa)>0) {
+                  $this->_doc->updateStatus(Document::STATE_WA,true);                
+               }  else {
+                  $this->_doc->updateStatus(Document::STATE_APPROVED);    
+               }
+               
+                 
+            }
+            if($sender->id == 'brefuse') {
+                 $comment = trim($this->statuspan->buttons->refusecomm->getText());
+                 if(strlen($comment)==0){
+                     $this->setError("Не введено коментар");
+                     return;
+                 }
+                 
+                 $this->_doc->updateStatus(Document::STATE_REFUSED);
+                 
+                 $msg = new \App\Entity\Message();
+                 $msg->message = $comment;
+                 $msg->created = time();
+                 $msg->user_id = $user->user_id;
+                 $msg->item_id = $this->_doc->document_id;
+                 $msg->item_type = \App\Entity\Message::TYPE_DOC;
+                 $msg->save();                  
+                 
             }
             
             
@@ -532,6 +593,5 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
 //todo  спец запись  в headerdata  лоя  прлписй и поиска
 //todo  увеомление что  полпиано
 //todo  досиуп  к  кнрпкам  продписи
-//todo доступ в обшщем журнале просмотр  и реактирование
 //todo уведомление  что надо  полписать
 

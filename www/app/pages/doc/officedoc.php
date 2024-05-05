@@ -288,6 +288,14 @@ class OfficeDoc extends \App\Pages\Base
             if($this->docform->editaccess->isChecked()) {
                 $this->access()  ;
             }   else {
+                
+                $doc = $this->_doc->cast();
+                list($s,$wa)=$doc->signed();
+                
+                if( in_array($doc->state,[7,19] ) && count($wa)>0   ) {
+                   $doc->updateStatus(8,true) ;   
+                }                
+                
                 App::Redirect("\\App\\Pages\\Register\\OfficeList");
             }
             
@@ -394,6 +402,11 @@ class OfficeDoc extends \App\Pages\Base
        $usersappr=[];
          
        foreach( \App\Entity\User::findYield('disabled<>1', 'username') as $user )  {
+
+          if (true == \App\ACL::checkExeDoc($this->_doc, true,false,$user->user_id)) {
+              $usersappr[$user->user_id] = $user->username;
+          } 
+          
           if($user->user_id==System::getUser()->user_id) {
               continue;
           }
@@ -417,9 +430,7 @@ class OfficeDoc extends \App\Pages\Base
           if (true == \App\ACL::checkEditDoc($this->_doc, true,false,$user->user_id) || true == \App\ACL::checkExeDoc($this->_doc, true,false,$user->user_id)  ) {
               $usersedit[$user->user_id] = $user->username;
           }        
-          if (true == \App\ACL::checkExeDoc($this->_doc, true,false,$user->user_id)) {
-              $usersappr[$user->user_id] = $user->username;
-          }        
+       
     
           
        }
@@ -579,6 +590,13 @@ class OfficeDoc extends \App\Pages\Base
               ));
         
         $this->_doc->save()  ;
+        $doc = $this->_doc->cast();
+        list($s,$wa)=$doc->signed();
+        
+        if( in_array($doc->state,[7,19] ) && count($wa)>0   ) {
+           $doc->updateStatus(8,true) ;   
+        }
+        
         
         App::Redirect("\\App\\Pages\\Register\\OfficeList");
     }

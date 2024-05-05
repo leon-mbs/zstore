@@ -60,11 +60,19 @@ class OfficeDoc extends Document
         return array(self::EX_EXCEL,  self::EX_PDF);
     }
 
-    /**
+    protected function onState($state, $oldstate) {
+
+        if($state == Document::STATE_FINISHED) {
+            $this->Execute();
+        }
+        
+    }
+
+   /**
     * права  из  списка
     * 
     */
-    public function checkShow($user) {
+    public function checkShow($user,$showerror=true) {
        if($user->user_id== $this->user_id || $user->user_id== $this->headerdata['author'] ) {
            return true;
        }
@@ -79,7 +87,10 @@ class OfficeDoc extends Document
               if($user->user_id== $u->user_id) {
                   return true;
               }                  
-          }     
+          }  
+          if($showerror) {
+              System::setErrorMsg("Немає права перегляду");
+          }         
           return false; //если  список  непустой  и  не  найден в  списке
            
        }  else {
@@ -88,7 +99,8 @@ class OfficeDoc extends Document
         
 
     }
-    public function checkEdit($user) {
+
+    public function checkEdit($user,$showerror=true) {
        if($user->user_id== $this->user_id || $user->user_id== $this->headerdata['author'] ) {
            return true;
        }
@@ -102,7 +114,11 @@ class OfficeDoc extends Document
               if($user->user_id== $u->user_id) {
                   return true;
               }                  
-          }     
+          }   
+          if($showerror) {
+              System::setErrorMsg("Немає права редагування");
+          }
+            
           return false; //если  список  непустой  и  не  найден в  списке
            
        }  else {
@@ -128,10 +144,31 @@ class OfficeDoc extends Document
 
     }
     
-   public function sign($user) {
+    /**
+    * отметка  что  подписан
+    * 
+    * @param mixed $user
+    */
+    public function sign($user_id) {
+       $d = $this->unpackDetails('accessdata')  ;
+       $tmp = [];
+       foreach($d['apprlist'] as $u) {
+           if($user_id == $u->user_id) {
+               $u->signed=true;
+           }
+           $tmp[$u->user_id] = $u;
+       }
        
-   }
-   public function signed( ){
+       $d['apprlist']  = $tmp;
+       $this->packDetails('accessdata',$d);
+       
+    }
+
+    /**
+    * состояние  подписи  сколько  подписали сколько  еше  нет
+    * 
+    */
+    public function signed( ){
 
 
        $d = $this->unpackDetails('accessdata')  ;
@@ -141,15 +178,21 @@ class OfficeDoc extends Document
        if(count($d['apprlist'])==0) {
            return [[],[]];
        }
+           
+       $a=[];
+       $wa=[];    
+       foreach($d['apprlist'] as $u ) {
+           
+           if($u->signed) {
+               $a[$u->user_id]= $u->username;
+           }   else {
+               $wa[$u->user_id]= $u->username;
                
+           }
+       }   
+       return [$a,$wa];               
        
    }    
     
-    protected function onState($state, $oldstate) {
 
-        if($state == Document::STATE_FINISHED) {
-            $this->Execute();
-        }
-        
-    }
 }
