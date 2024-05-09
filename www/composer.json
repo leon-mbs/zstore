@@ -30,6 +30,8 @@
         "leon-mbs/zippy": "2.7.2",
         "leon-mbs/ppolib": "1.4.1",   
 
+        "ext-mysqli": "*",
+        "ext-zip": "*",
         "ext-gmp": "*",
         "ext-openssl": "*",
         "ext-json": "*",
