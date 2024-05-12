@@ -21,7 +21,8 @@
         <th align="right" style="border: solid black 1px">Кіл.</th>
         <th align="right" style="border: solid black 1px">На суму</th>
       {{^noshowpartion}}
-        <th align="right" style="border: solid black 1px">Прибуток</th>
+        <th align="right" style="border: solid black 1px">Маржа</th>
+        <th align="right" style="border: solid black 1px">Маржа,%</th>
       {{/noshowpartion}}
 
 
@@ -46,7 +47,7 @@
         {{^navarsign}}
         <td align="right" style="color:red">{{navar}}</td>
         {{/navarsign}}
-
+        <td align="right" >{{navarproc}}</td>
       {{/noshowpartion}}
 
 
@@ -55,10 +56,11 @@
     <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
       {{^noshowpartion}}
 
-    <td align="right" ><b><b>{{totnavar}}</b></b></td> 
+    <td align="right" ><b>{{totnavar}}</b></td> 
+    <td align="right" ><b>{{totnavarproc}}</b></td> 
       {{/noshowpartion}}
     
-    
+ 
     </tr>
 
 </table>
@@ -78,7 +80,8 @@
     
         {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Маржа</th>
+    <th align="right" style="border: solid black 1px">Маржа,%</th>
     {{/noshowpartion}}
 
     <th></th>    
@@ -95,6 +98,7 @@
     {{^noshowpartion}}
     
     <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
     {{/noshowpartion}}
     
     <td></td>  
@@ -103,7 +107,9 @@
 <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
-<td align="right" ><b><b>{{totnavar}}</b></b></td> 
+<td align="right" ><b>{{totnavar}}</b></b></td> 
+<td align="right" ><b>{{totnavarproc}}</b></b></td> 
+
     {{/noshowpartion}}
 
 </tr>
@@ -195,7 +201,8 @@
  
      {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Маржа</th>
+    <th align="right" style="border: solid black 1px">Маржа,%</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -212,6 +219,8 @@
       {{^noshowpartion}}
 
   <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
+  
     {{/noshowpartion}}
   
     <td></td>
@@ -221,9 +230,10 @@
     {{^noshowpartion}}
 
 <td align="right"   > <b>{{totnavar}}</b></td>
+<td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
 
-<td   > </td>  </tr>
+ </tr>
 
 </table>
 {{/_type5}}     
@@ -242,7 +252,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Маржа</th>
+    <th align="right" style="border: solid black 1px">Маржа,%</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -259,6 +270,8 @@
      {{^noshowpartion}}
 
    <td align="right">{{navar}}</td>
+        <td align="right"  >{{navarproc}}</td>
+   
     {{/noshowpartion}}
    
     <td></td>
@@ -268,9 +281,11 @@
     {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
+ <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
  
- <td   > </td>  </tr>
+
+  </tr>
 
 </table>
 {{/_type6}}     
@@ -289,7 +304,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
      {{^noshowpartion}}
 
-   <th align="right" style="border: solid black 1px">Прибуток</th>
+   <th align="right" style="border: solid black 1px">Маржа</th>
+   <th align="right" style="border: solid black 1px">Маржа,%</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -306,6 +322,8 @@
       {{^noshowpartion}}
 
   <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
+  
     {{/noshowpartion}}
   
     <td></td>
@@ -315,9 +333,10 @@
      {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
+ <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
  
- <td   > </td>  </tr>
+ </tr>
 
 </table>
 {{/_type7}}     
@@ -336,7 +355,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Маржа</th>
+    <th align="right" style="border: solid black 1px">Маржа,%</th>
     {{/noshowpartion}}
 
     
@@ -354,6 +374,8 @@
       {{^noshowpartion}}
 
   <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
+  
     {{/noshowpartion}}
      
 </tr>
@@ -362,9 +384,10 @@
     {{^noshowpartion}}
 
     <td align="right"   > <b>{{totnavar}}</b></td>
+    <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
 
-    <td   > </td>  </tr>
+   </tr>
 
 </table>
 {{/_type8}}     
@@ -383,7 +406,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
       {{^noshowpartion}}
 
-  <th align="right" style="border: solid black 1px">Прибуток</th>
+  <th align="right" style="border: solid black 1px">Маржа</th>
+  <th align="right" style="border: solid black 1px">Маржа,%</th>
     {{/noshowpartion}}
 
   
@@ -401,6 +425,8 @@
     {{^noshowpartion}}
 
     <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
+    
     {{/noshowpartion}}
     
 </tr>
@@ -408,9 +434,10 @@
 <tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
     {{^noshowpartion}}
 <td align="right"   > <b>{{totnavar}}</b></td>
+<td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
 
-<td   > </td>  </tr>
+  </tr>
 
 </table>
 {{/_type12}}
