@@ -334,7 +334,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 12) {    //по брендам
 
-            $man="''";
+            $man="'___###___'";
             $brand = trim($this->filter->brand->getText());
             if(strlen($brand)>0) {
                 $man = $conn->qstr($brand) ;
@@ -362,6 +362,7 @@ class Outcome extends \App\Pages\Base
 
         $totsum = 0;
         $totnavar = 0;
+        $totnavarproc = 0;
 
         if (strlen($sql) > 0) {
             $rs = $conn->Execute($sql);
@@ -371,30 +372,40 @@ class Outcome extends \App\Pages\Base
                 //  if ($row['navar'] != 0) {
                 //      $row['summa'] += $row['navar'];
                 //  }
+                if ($type == 3 && $row['summa']==0) {
+                    continue;                    
+                }
 
-
-                $detail[] = array(
+                $det = array(
                     "code"      => $row['item_code'],
                     "name"      => $row['itemname'],
                     "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
                     "qty"       => H::fqty($row['qty']),
                     "navar"     => H::fa($row['navar']),
                     "navarsign" => $row['navar'] > 0,
+                    "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa']  ), 1, '.', '') : "",
                     "summa"     => H::fa($row['summa'] + $row['navar']),
                     "docs"     => intval($row['docs'])
                 );
 
+                
+                $detail[] = $det;
+                
                 $totnavar += $row['navar'];
                 $totsum += ($row['summa'] + $row['navar']);
             }
         }
-
+        if( $totsum >0) {
+           $totnavarproc = 100*$totnavar/$totsum ;
+        }
+        
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
                         "brand"  => $brand,
                         'dateto'   => \App\Helper::fd($to)
         );
 
+        $header['totnavarproc'] = $totnavarproc > 0 ?  number_format($totnavarproc, 1, '.', '') : "";
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
         $header['disc'] = H::fa($disc);

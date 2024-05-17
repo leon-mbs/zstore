@@ -168,6 +168,11 @@ class GIList extends \App\Pages\Base
                 $row->istruck->setVisible(count($n)==0);
 
             }
+            if($doc->meta_name=='GoodsIssue') {
+                if($doc->payamount == $doc->headerdata['prepaid'])  {
+                   $row->ispay->setVisible(false);    
+                }
+            }
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
