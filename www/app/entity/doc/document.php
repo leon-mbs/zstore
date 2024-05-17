@@ -644,42 +644,24 @@ class Document extends \ZCL\DB\Entity
         if ($branch_id > 0) {
             $branch = " and branch_id=" . $branch_id;
         }
-        $limit =" limit 0,1";
-        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  order  by document_id desc ".$limit;
-        $prevnumber = $conn->GetOne($sql);
-        if (strlen($prevnumber) == 0) {
-            $prevnumber = $doc->getNumberTemplate();
+
+        $last=0;
+        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  ";
+        $list = $conn->GetCol($sql);
+        if (count($list) == 0) {
+            $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
         } else {
-            //           $prevnumber = $d->document_number;
-        }
-        $letter = preg_replace('/[0-9]/', '', $prevnumber);
-        $letter = str_replace('-','',$letter) ;
-        $letter = $conn->qstr($letter.'%');
+           foreach($list as $n) {
+               $digits = preg_replace('/[^0-9]/', '', $n);
+               if($digits > $last) {
+                  $last = round($digits) ; //максимальная цифра
+                  $letters = preg_replace('/[0-9]/', '', $n);
+                  
+               }
+           }
+        } 
 
-        $sql = "select document_number from  documents  where   document_number like {$letter}     {$branch}  order  by document_id desc ".$limit;
-        $prevnumber = $conn->GetOne($sql);
-
-        if (strlen($prevnumber) == 0) {
-            $prevnumber =  $doc->getNumberTemplate();
-        } else {
-            //            $prevnumber = $d->document_number;
-        }
-
-
-
-
-        if (strlen($prevnumber) == 0) {
-            return '';
-        }
-        $number = preg_replace('/[^0-9]/', '', $prevnumber);
-        if (strlen($number) == 0) {
-            $number = 0;
-        }
-
-        $letter = preg_replace('/[0-9]/', '', $prevnumber);
-        $next = $letter . sprintf("%05d", ++$number);
-
-
+        $next = $letters . sprintf("%06d", ++$last);
 
         return $next;
     }
