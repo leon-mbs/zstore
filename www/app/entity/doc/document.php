@@ -646,7 +646,7 @@ class Document extends \ZCL\DB\Entity
         }
 
         $last=0;
-        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  ";
+        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch} order  by  document_id desc  limit 0,1000 ";
         $list = $conn->GetCol($sql);
         if (count($list) == 0) {
             $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
