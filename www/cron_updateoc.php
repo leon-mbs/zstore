@@ -316,7 +316,7 @@ try {
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клієнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-
+            $cust= null;
             if ($shoporder->customer_id > 0 && $modules['ocinsertcust'] == 1) {
                 $cust = \App\Entity\Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
                 if ($cust == null) {
