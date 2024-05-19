@@ -644,9 +644,9 @@ class Document extends \ZCL\DB\Entity
         if ($branch_id > 0) {
             $branch = " and branch_id=" . $branch_id;
         }
-
+        
         $last=0;
-        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch} order  by  document_id desc  limit 0,1000 ";
+        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  "; //todo  order  by  document_id desc  limit 0,1000
         $list = $conn->GetCol($sql);
         if (count($list) == 0) {
             $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
@@ -656,12 +656,15 @@ class Document extends \ZCL\DB\Entity
                if($digits > $last) {
                   $last = round($digits) ; //максимальная цифра
                   $letters = preg_replace('/[0-9]/', '', $n);
-                  
                }
            }
         } 
-
-        $next = $letters . sprintf("%06d", ++$last);
+        $last++;
+        $d=5;
+        if( strlen( ''.$last) >$d){ //если не  влазит
+           $d =  strlen( ''.$last); 
+        }
+        $next = $letters . sprintf("%0{$d}d", $last);
 
         return $next;
     }
