@@ -425,6 +425,10 @@
                         </form>
             </div>
               {{^leadmode}}
+
+
+            {{#iscontract}}
+
             <div class="col-6 col-md-4 col-xl-3 ">
                 <div class="card">
 
@@ -439,9 +443,28 @@
 
 
                 </div>
-     
-                 {{/leadmode}} 
             </div>
+             {{/iscontract}}
+            
+            
+            <div class="col-6 col-md-4 col-xl-3 ">
+                <div class="card">
+
+                        <h5> Останні документи </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_doc">
+                                <td><a title="Перейти" zippy="doc"></a></td>
+                                <td class="text-right"><span zippy="doc_amount"></span></td>
+                                <td><span zippy="doc_state"></span></td>
+
+                            </tr>
+                        </table>
+
+
+                </div>
+            </div>
+
+            {{/leadmode}}             
         </div>
 
 
@@ -670,3 +693,10 @@
 
     </body>
 </html>
+
+
+
+
+
+ 
+ 
