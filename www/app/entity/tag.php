@@ -12,6 +12,7 @@ class Tag extends \ZCL\DB\Entity
 {
     public  const  TYPE_CUSTOMER=1;
     public  const  TYPE_OFFICEDCO=2;
+    public  const  TYPE_ITEM=3;
     
     protected function init() {
         $this->id = 0;
