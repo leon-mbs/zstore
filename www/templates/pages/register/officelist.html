@@ -1,0 +1,135 @@
+<html>
+     <head>
+        <title>  Офiснi документи </title>
+
+    </head>
+  <body>
+        <div class="row">
+            <div class="col-12 col-xl-10">
+
+                <h3>Офiснi документи </h3>
+
+                <div class="navbar nav">
+                    <form zippy="filter" class="form-inline ">
+
+                        <label for="searchnumber"> № </label>
+                        <input placeholder="Номер..." class="form-control mr-2" type="search" zippy="searchnumber" style="width:100px">
+                        
+                        <label for="from"> З </label>
+                        <input type="text" class="form-control    " zippy="from" style="width:110px">
+                        <label for="to"> По </label>
+                        <input type="text" class="form-control    " zippy="to" style="width:110px">
+                                               
+                        <label for="searchtype"> Тип </label>                          
+                        <input type="text" class="form-control" zippy="searchtype">
+                        
+
+                        <div class="form-check">
+                            <input   class="form-check-input" type="checkbox" zippy="archive">
+                            <label class="form-check-label mr-2" for="archive">Архiвнi</label>
+                        </div>                         
+                         
+                        <input placeholder="Пошук по контексту..." class="form-control mr-2" type="search" zippy="searchcontext" >
+
+                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
+                       <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                            
+                    </form>
+                </div>
+                       <details class="mb-2 ml-2">
+                        <summary >Теги</summary>
+                        <span zippy="taglist"></span>
+                     </details>
+                <a href="/index.php?p=App/Pages/Doc/OfficeDoc" class="btn btn-info btn-sm">Створити новий</a>
+     
+               
+                <table class="table   table-sm   ">
+                    <tr>
+                        <th>Назва</th>
+
+                        <th>Номер</th>
+                        <th>Дата</th>
+
+                        <th>Статус</th>
+                        <th>Вiдповiдальний</th>
+
+
+                        <th>Примiтка</th>
+                        <th></th>
+                        <th></th>
+                     
+
+
+                    </tr>
+                    <tr zippy="doclist">
+                        <td >
+                          <a zippy="title" ></a>
+                        </td>
+
+                        <td zippy="number"></td>
+                        <td class="text-nowrap" zippy="date"></td>
+                  
+
+                        <td class="text-nowrap" zippy="state"></td>
+                        <td  zippy="user"></td>
+                        <td zippy="notes"></td>
+                        <td >   <a zippy="copy" title="Копiя"><i class="fa fa-copy"></i></a>     </td>  
+                        <td >  <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>                          </td>    
+                        <td >   <a zippy="access" title="Права  доступу"><i class="fa fa-user-lock"></i></a>                          </td>    
+                      
+
+                    </tr>
+
+                </table>
+
+                <div zippy="pag">
+                </div>
+                <a id="dankor"></a>
+            </div>
+
+        </div>
+
+
+        <div class="row" zippy="statuspan">
+            <div class="col-12">
+
+                  <div class="card">
+                  <div class="card-body">
+                    <form zippy="buttons" class="form-inline ">
+            
+                         <button zippy="binproсess" class="btn btn-info  ml-2"><i class="fa fa-gavel"></i> На виконання</button>                         
+                         <button zippy="bdone" class="btn btn-info  ml-2"><i class="fa fa-stamp"></i> Виконано</button>                         
+                         <button zippy="bclose" class="btn btn-secondary  ml-2"><i class="fa  fa-box"></i> В архiв</button>                         
+                         <button zippy="bshift" class="btn btn-warning  ml-2"><i class="fa  fa-exchange"></i> Вiдкласти</button>                         
+                         <button zippy="bcancel" class="btn btn-info  ml-2"><i class="fa  fa-undo"></i> Скасувати</button>                         
+                         <button zippy="bdelete" class="btn btn-danger  ml-2"><i class="fa  fa-trash"></i> Видалити</button>                         
+                          
+                         <button zippy="bapprove" class="btn btn-success  ml-4"><i class="fas fa-thumbs-up"></i> Затверлити</button>                         
+                         <button zippy="brefuse" class="btn btn-info  ml-2"><i class="fas fa-thumbs-down"></i> Вiдхилити</button>                         
+                         <input zippy="refusecomm"  class="form-control   ml-1" placeholder="Коментар при  вiдхиленнi"  > 
+                    </form>
+                    <form zippy="maint" class="form-inline ">
+                      <label data-label="musers" for="mstates"> Виконавець </label>
+                         <select zippy="musers" class="form-control mr-2">
+                           </select>
+                         <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+
+                    </form>
+                 </div>
+                </div>
+
+                <div zippy="docview"></div>
+
+            </div>
+        </div>
+
+     <script>
+           function check_bdelete() {
+                return confirm("Видалити документ?")
+           }
+     </script>
+     
+     
+    </body>
+</html>
+

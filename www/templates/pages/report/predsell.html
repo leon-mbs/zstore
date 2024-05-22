@@ -1,0 +1,47 @@
+<html>
+
+    <head>
+        <title>  Прогноз  продаж  </title>
+
+    </head>
+
+    <body>
+        <div class="row">
+            <div class="col-12   col-xl-10">
+                <h3>Прогноз  продаж</h3>
+                 <small>На підставі продаж за два останні місяці</small>
+                <div class="navbar nav">
+
+                    <form zippy="filter" class="form-inline ">
+
+                        <label for="type">Категорія </label>
+
+                        <select class="form-control mr-2" zippy="cat">
+                            <option value="0">Без категорії</option>
+                        </select>
+                           
+
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+                    </form>
+
+                </div>
+
+                <div zippy="detail">
+                    <div>
+
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/showreport/xls/predsell" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/showreport/pdf/predsell" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+
+                    </div>
+
+                    <div zippy="preview" class="table-responsive-sm">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>

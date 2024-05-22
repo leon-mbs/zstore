@@ -1,0 +1,263 @@
+<html>
+    <head>
+          <title> Офiсний документ</title>
+    </head>
+    <body>
+
+                  
+       
+        <form zippy="docform" enctype="multipart/form-data">
+         
+            <div class="row">
+         
+ 
+                <div class="col-12 col-md-4 col-xl-3">
+                  <div class="form-group">
+                        <label for="edittitle"> Назва (тип) документу</label>
+                        <input class="form-control" type="text" zippy="edittitle"  >
+                        <small>Наприклад: Заява, Звiт, Угода...</small>
+                        
+                 </div>                 
+                    <div class="form-group row">
+                        <div class="col-5">
+                            <label for="document_number">Номер </label>
+                        </div>
+                         <div class="col-7">
+                            <input style="width:150px" class="form-control" type="text" zippy="document_number" required="required">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-5">
+                           <label for="document_date"> Дата</label>
+                        </div>
+                         <div class="col-7">
+                           <input class="form-control" type="text" zippy="document_date" required="required">
+                        </div>                        
+                    </div>
+                    <div class="form-group  ">
+                      <label for="document_date"> Контрагент</label>
+                      <div class="input-group  ">
+                         <input class="form-control"  placeholder="Почніть вводити..."   zippy="customer"/>
+                         <div class="input-group-append">
+                           <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
+                        </div>
+                        <div class="input-group-append"  >
+                            <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
+                        </div>                                                      
+                    </div> 
+                    <small>Якщо документ зв'язаний з контрагентом</small>         
+                  </div>          
+                    <div class="form-group">
+                        <label for="emp">Спiвробiтник</label>
+                        <select class="form-control"  zippy="emp" >  
+                           <option value="0">Не вказаний</option>
+                        </select>
+                        <small>Якщо документ зв'язаний зi спiвробiтником</small>         
+                    </div>               
+                   <div class="form-group row">
+                         <div class="col-auto"><label for="bonus">Премiя:</label></div>
+                         <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="bonus" ></div>
+                         <div class="col-auto"><label for="fine">&nbsp;&nbsp;Штраф:</label></div>
+                         <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="fine" ></div>
+                        <small data-label="bonus">Додаются  на  особовий  рахунок</small>         
+                    </div>               
+                   <div class="form-group">
+                        <label for="user">Вiдповiдальний</label>
+                        <select class="form-control"  zippy="user" >  
+
+                        </select>
+                    </div>               
+                   <div class="form-group">
+                        <label for="editcomment">Коментар, примiтка</label>
+                        <textarea class="form-control"  zippy="editcomment" >  
+                        </textarea>
+
+                    </div>               
+                
+                
+
+                </div>
+                
+                
+                <div class="col-12 col-md-8 col-xl-6">
+                    <div class="form-group">
+                        <label for="doccontent">Змiст</label>
+                        <textarea    class="form-control" zippy="doccontent"></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label for="doctags">Теги</label>
+                        <div    zippy="doctags" >  </div>
+                        <small>Вводяться по  Enter</small>
+                    </div>   
+                     <div class="form-group">
+                        <label for="editfile"> Оригiнал (файл, скан) документу</label>
+                        <input class="form-control" type="file" zippy="editfile"  >
+                    
+                        
+                 </div>                                    
+               </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary mr-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary mr-2">
+                    <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ">
+                    <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-primary  ">
+                     &nbsp;
+                    <input zippy="editaccess" type="checkbox" >
+                    <label class="form-check-label" for="editaccess"> Задати права  доступу</label>
+                </div>
+            </div>
+           
+
+        </form>     
+      
+         <form zippy="editcust">
+            <h3>&nbsp;Новий конрагент </h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                        <label for="editcustname">Назва </label>
+                        <input class="form-control " zippy="editcustname" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editphone">Телефон</label>
+                        <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="editemail">E-mail</label>
+                        <input class="form-control" type="email" zippy="editemail"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editemail">Тип</label>
+                        <select class="form-control" type="email" zippy="edittype">
+                           <option value="0">Не вказано</option>
+                           <option value="1">Покупець</option>
+                           <option value="2">Постачальник</option>
+                           <option value="3">Лiд</option>
+                        </select>                        
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary  mr-2">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+
+          <form zippy="accessform">
+            <h3>&nbsp;Права доступу </h3>
+            <small>Якщо не  задано використувуються права заданi в ролях</small><br>
+            <span zippy="accdocname">  </span>
+            <div class="row">
+              <div class="col-12 col-md-6 col-xl-4">
+                <h5>&nbsp;Право перегляду </h5>
+            
+            
+                <div class="form-group row">
+                     <div class="col-auto">
+                       <select class="form-control" zippy="accshowusers">
+                        
+                       </select>
+                    </div>
+                     <div class="col-auto">
+                        <input zippy="addaccshow" type="submit" value="Додати" class="btn btn-outline-primary">
+                    </div>
+                           
+               </div> 
+                <div class="form-group">
+                  <table class="table table-sm">
+                     <tr zippy="accshowlist">  <td zippy="accshowuser">  </td><td  class="text-right"> <a zippy="delshowuser"><i class="fa fa-trash"></i></a> </td>
+                  </table>
+               </div>           
+             
+            <h5>&nbsp;Право редагування </h5>
+                <div class="form-group row">
+                     <div class="col-auto">
+                       <select class="form-control" zippy="acceditusers">
+                        
+                       </select>
+                    </div>
+                     <div class="col-auto">
+                        <input zippy="addaccedit" type="submit" value="Додати" class="btn btn-outline-primary">
+                    </div>
+                           
+               </div> 
+                <div class="form-group">
+                  <table class="table table-sm">
+                     <tr zippy="acceditlist">  <td zippy="accedituser">  </td><td class="text-right" > <a zippy="deledituser"><i class="fa fa-trash"></i></a> </td>
+                  </table>
+               </div>                   
+            <h5>&nbsp;Мають пiдписати (затвердети) </h5>
+            <small>Документ буде затверджено пiсдя пiдпису всiх з перелiку   </small>
+                <div class="form-group row">
+                     <div class="col-auto">
+                       <select class="form-control" zippy="accapprusers">
+                        
+                       </select>
+                    </div>
+                     <div class="col-auto">
+                        <input zippy="addaccappr" type="submit" value="Додати" class="btn btn-outline-primary">
+                    </div>
+                           
+               </div> 
+                <div class="form-group">
+                  <table class="table table-sm">
+                     <tr zippy="accapprlist">  <td zippy="accappruser">  </td><td class="text-right" > <a zippy="delappruser"><i class="fa fa-trash"></i></a> </td>
+                  </table>
+               </div>                   
+
+            <div class="row">
+                <div class="col-12">
+                     <div class="form-group">
+                        <input type="button" zippy="cancelaccess" value="Скасувати" class="btn btn-outline-secondary  mr-2">
+                        <input zippy="saveaccess" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                    </div>           
+                </div>
+            </div>
+          </div>
+        </div>
+        </form>
+                    
+
+        
+      <script>         
+            $(function () {
+                // Summernote
+            
+                $('#doccontent').summernote({
+                    height: 400,
+                    lang: 'uk-UA',
+
+                    callbacks: {
+                        onEnter: function (e) {
+                            if (e.keyCode === 13) {
+                            //    e.shiftKey = true;
+                            //    context.triggerEvent('enter', e);
+                            }
+                        },
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
+                    }
+                });
+            })
+     
+
+     
+       
+   </script>              
+
+    </body>
+
+</html>
+
