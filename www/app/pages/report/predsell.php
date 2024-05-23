@@ -8,6 +8,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
 /**
@@ -25,28 +26,23 @@ class PredSell extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = "Товари, Маржа";
-        $this->typelist[2] = "Постачальники, об`єм поставок";
-        $this->typelist[3] = "Покупці, об`єм продаж";
-        $this->typelist[4] = "Послуги, виторг";
-        $this->typelist[5] = "Покупці, Маржа";
-
-
+        $cats=   \App\Entity\Category::findArray('cat_name','cat_id in(select cat_id from items where  disabled <>1)','cat_name') ;
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-        $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
+        $this->filter->add(new DropDownChoice('cat', $cats, 0));
+        $this->filter->add(new DropDownChoice('type'));
 
         $this->add(new Panel('detail'))->setVisible(false);
 
+        $this->detail->add(new ClickLink('cci',$this,"onCCI"));
         $this->detail->add(new Label('preview'));
 
-        $brids = \App\ACL::getBranchIDsConstraint();
-        if (strlen($brids) > 0) {
-            $this->br = " and documents_view.branch_id in ({$brids}) ";
-        }
+        
     }
 
+    public function onCCI($sender) {
+        
+    }
+    
     public function OnSubmit($sender) {
 
         $html = $this->generateReport();
@@ -59,57 +55,100 @@ class PredSell extends \App\Pages\Base
 
     private function generateReport() {
 
-        $type = $this->filter->type->getValue();
-
-        $from = $this->filter->from->getDate();
-        $to = $this->filter->to->getDate();
-
-        $detail = array();
-
-        if ($type == 1) {     //Товары,  прибыль
-            $detail = $this->find1();
-        }
-        if ($type == 2) {    //Поставщики, объем поставок
-            $detail = $this->find2();
-        }
-        if ($type == 3) {  //Покупатели, объем продаж"
-            $detail = $this->find3();
-        }
-        if ($type == 4) {   //Услуги, выручка
-            $detail = $this->find4();
-        }
-        if ($type == 5) {  //Покупатели, прибыль
-            $detail = $this->find5();
+        $cat =(int) $this->filter->cat->getValue();
+        $type =(int) $this->filter->type->getValue();
+        $conn = \ZDB\DB::getConnect();
+      
+        $tp=" (i.item_type=0 || i.item_type=1 ) ";
+        if($type==1) {
+            $tp=" (i.item_type=4 || i.item_type=5 ) ";
         }
 
-        $detail = $this->calc($detail);
+        $onstore=[];
+        $sql="select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1) group  by item_id";
+        foreach($conn->Execute($sql) as $r){
+           if($r['q'] >0) {
+               $onstore[$r['item_id']]= $r['q'];
+           }   
+        }
+        $minqty=[];
+        $sql="select minqty,item_id from  items where  disabled <> 1 and minqty >0";
+        foreach($conn->Execute($sql) as $r){
+           if($r['minqty'] >0) {
+               $minqty[$r['item_id']]= $r['minqty'];
+           }   
+        }
+        
+        $inorder=[];
+        
+        $where = "   meta_name='OrderCust'  and  state= " . \App\Entity\Doc\Document::STATE_INPROCESS;
+ 
+        foreach (\App\Entity\Doc\Document::findYield($where) as $doc) {
 
-        $total = 0;
-        $totala = 0;
-        $totalb = 0;
-        $totalc = 0;
-        foreach ($detail as $d) {
-            $total += $d['value'];
-            if ($d['group'] == 'A') {
-                $totala += $d['value'];
+            foreach ($doc->unpackDetails('detaildata') as $item) {
+                if (!isset($inorder[$item->item_id])) {
+                    $inorder[$item->item_id] = 0;
+                }
+                $inorder[$item->item_id] += $item->quantity;
+                
             }
-            if ($d['group'] == 'B') {
-                $totalb += $d['value'];
+        }        
+        
+        
+        $m1 = $conn->DBDate( strtotime('-1 month') );
+        $m2 = $conn->DBDate( strtotime('-2 month') );
+     
+     
+        $sql="select i.item_id,i.itemname,i.item_code, 
+        sum( case when d.document_date < now() and d.document_date >= {$m1} then 0-e.quantity else 0 end ) as m1,
+        sum( case when d.document_date < {$m1} and d.document_date >= {$m2} then 0-e.quantity else 0 end ) as m2
+        from entrylist_view e 
+        join items i on e.item_id = i.item_id 
+        join documents_view d on e.document_id = d.document_id 
+        where  i.disabled <> 1 and d.meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ReturnIssue') 
+        and i.cat_id={$cat} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
+        and {$tp}
+        group  by i.item_id,i.itemname,i.item_code 
+        order  by i.itemname 
+        ";
+     
+        $rows= $conn->Execute($sql);
+        
+        $detail = [];
+        
+        foreach($rows as $r) {
+      
+            $r['qty'] = $rqty ;            
+            
+            $rqty = $r['m1'] + ($r['m1'] - $r['m2']);
+            if($rqty > 0) {
+                $r['qty'] = $rqty ;                
+                if($onstore[$r['item_id']] > 0) {
+                    $r['onstore'] = H::fqty( $onstore[$r['item_id']] );
+                    $rqty = $rqty - $onstore[$r['item_id']] ;
+                }
+                if($inorder[$r['item_id']] > 0) {
+                    $rqty = $rqty - $inorder[$r['item_id']] ;
+                }
+                
+                $r['tobay'] = $rqty ;               
+
+              
+              
+                if( $minqty[$r['item_id']] > 0 ) {
+                   $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']] ;
+                }
+                if($r['tobay'] >0) {
+                    $detail[$r['item_id']] = $r;       
+                }
             }
-            if ($d['group'] == 'C') {
-                $totalc += $d['value'];
-            }
+            
+            
+            
         }
-
-
-        $header = array('from'    => \App\Helper::fd($from),
-                        "_detail" => $detail,
-                        'to'      => \App\Helper::fd($to),
-                        "type"    => $this->typelist[$type],
-                        'totala'  => $totala,
-                        'totalb'  => $totalb,
-                        'totalc'  => $totalc,
-                        'total'   => $total
+        
+        $header = array( "_detail" => array_values( $detail) ,
+            "tovar"=>$type==0
         );
         $report = new \App\Report('report/predsell.tpl');
 
@@ -117,180 +156,5 @@ class PredSell extends \App\Pages\Base
 
         return $html;
     }
-
-    private function find1() {
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-        $sql = "SELECT * FROM (
-                    SELECT items.itemname as name, ABS( SUM( (outprice-partion )*quantity ) ) AS value
-                    FROM  entrylist_view 
-                       join items on entrylist_view.item_id = items.item_id 
-                       join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                       
-                    WHERE partion  is  not null and outprice>partion and documents_view.meta_name   in('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood') 
-                    AND entrylist_view.tag in(0,-1,-4)  
-                    AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
-                    AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                    {$this->br} 
-                    GROUP BY name
-                    )t
-                 
-                    ORDER BY value DESC";
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
-            $list[] = $row;
-        }
-
-        return $list;
-    }
-
-    private function find2() {
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-        $sql = "SELECT * FROM (
-                    SELECT customers.customer_name as name, SUM( ABS( partion *quantity ) ) AS value
-                    FROM  entrylist_view 
-                    join customers on entrylist_view.customer_id = customers.customer_id 
-                    join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE  partion  is  not null and   entrylist_view.quantity  >0 and meta_name in('GoodsReceipt','RetCustIssue') 
-                    AND entrylist_view.tag in(0,-2,-8)  
-                    AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
-                    AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                    AND customers.detail not like '%<isholding>1</isholding>%' 
-                    {$this->br} 
-                    GROUP BY name
-                    )t    
-                    ORDER BY value DESC";
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
-            $list[] = $row;
-        }
-
-        return $list;
-    }
-
-    private function find3() {
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-        $sql = "SELECT * FROM (
-                    SELECT customers.customer_name as name, SUM( ABS( partion *quantity ) ) AS value
-                    FROM  entrylist_view 
-                    join customers on entrylist_view.customer_id = customers.customer_id 
-                    join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue',  'ReturnIssue',  'POSCheck','TTN','OrderFood' )  
-                    AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
-                    AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                    AND customers.detail not like '%<isholding>1</isholding>%' 
-                    {$this->br} 
-                    GROUP BY name
-                    )t      
-                    ORDER BY value DESC";
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
-            $list[] = $row;
-        }
-
-        return $list;
-    }
-
-    private function find4() {
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-        $sql = "SELECT * FROM (
-                    SELECT services.service_name as name, SUM( ABS( entrylist_view.outprice *entrylist_view.quantity ) ) AS value
-                    FROM  entrylist_view 
-                       join services on entrylist_view.service_id = services.service_id 
-                       join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                       
-                    WHERE     entrylist_view.outprice>0  and meta_name in('ServiceAct') 
-                    AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
-                    AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                    {$this->br}  
-                    GROUP BY name
-                    )t  
-                    ORDER BY value DESC";
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['value'] = round($row['value']);
-            $list[] = $row;
-        }
-
-        return $list;
-    }
-
-    private function find5() {
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-        $sql = "SELECT * FROM (
-                    SELECT customers.customer_name as name, SUM( ABS( (outprice-partion )*quantity  ) ) AS value
-                    FROM   entrylist_view  
-                    join customers on entrylist_view.customer_id = customers.customer_id 
-                    join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE partion  is  not null and outprice>partion and entrylist_view.quantity <0 and meta_name in('GoodsIssue', 'ReturnIssue',   'POSCheck','TTN','OrderFood' )  
-                    AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
-                    AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
-                    {$this->br} 
-                    GROUP BY name
-                    )t      
-                    ORDER BY value DESC";
-
-        $rs = $conn->Execute($sql);
-        foreach ($rs as $row) {
-            $row['value'] = round($row['value'] / 1000);
-            $list[] = $row;
-        }
-
-        return $list;
-    }
-
-    //выполняет расчет  АВС
-    private function calc($detail) {
-
-
-        $sum = 0;
-        $_detail = array();
-        foreach ($detail as $row) {
-
-            $row['value'] = round($row['value']);
-            $sum += $row['value'];
-            $row['perc'] = 0;
-            $row['percsum'] = 0;
-            $row['group'] = '';
-            $row['color'] = '';
-            $_detail[] = $row;
-        }
-        $val = 0;
-        for ($i = 0; $i < count($_detail); $i++) {
-            if ($sum == 0) {
-                continue;
-            }
-            $_detail[$i]['perc'] = $_detail[$i]['value'] / $sum * 100;
-            //  $_detail[$i]['value'] = $_detail[$i]['value'];
-            $_detail[$i]['percsum'] = $_detail[$i]['perc'] + $val;
-            if ($_detail[$i]['percsum'] <= 80) {
-                $_detail[$i]['group'] = 'A';
-                $_detail[$i]['color'] = '#AAFFAA';
-            } else {
-                if ($_detail[$i]['percsum'] <= 95) {
-                    $_detail[$i]['group'] = 'B';
-                    $_detail[$i]['color'] = 'CCCCFF';
-                } else {
-                    $_detail[$i]['group'] = 'C';
-                    $_detail[$i]['color'] = 'yellow';
-                }
-            }
-            $val = $_detail[$i]['percsum'];
-            $_detail[$i]['perc'] = number_format($_detail[$i]['perc'], 2, '.', '');
-            $_detail[$i]['percsum'] = number_format($_detail[$i]['percsum'], 2, '.', '');
-        }
-        return $_detail;
-    }
-
+ 
 }

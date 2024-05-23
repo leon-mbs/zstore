@@ -7,17 +7,25 @@
 
     <body>
         <div class="row">
-            <div class="col-12   col-xl-10">
+            <div class="col-12 col-md-10  col-xl-8">
                 <h3>Прогноз  продаж</h3>
-                 <small>На підставі продаж за два останні місяці</small>
+                 <small>На підставі продаж за два останні місяці. Враховується  також кількість на  складі,
+                 в заявках постачальнику та  мінімальна  кількість (якщо задано)</small>
                 <div class="navbar nav">
 
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="type">Категорія </label>
+                        <label for="cat">Категорія </label>
 
                         <select class="form-control mr-2" zippy="cat">
                             <option value="0">Без категорії</option>
+                 
+                         </select>
+                       <label for="type">Тип </label>
+
+                        <select class="form-control mr-2" zippy="type">
+                            <option value="0">Товар</option>
+                            <option value="1">Готова продукція</option>
                         </select>
                            
 
@@ -28,7 +36,8 @@
                 </div>
 
                 <div zippy="detail">
-                    <div>
+                     <a zippy="cci"  >Створити заявки на  закупку</a> 
+                    <div class="mt-2">
 
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
                         <a href="/showreport/xls/predsell" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
@@ -42,6 +51,16 @@
                 </div>
             </div>
         </div>
+        
+        <script >
+       function check_cci(ele){
+            document.getElementById('dialogwait').showModal()
+          
+            return true;
+       
+        }         
+        </script>
+        
     </body>
 
 </html>
