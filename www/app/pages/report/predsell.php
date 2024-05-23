@@ -16,8 +16,8 @@ use Zippy\Html\Panel;
  */
 class PredSell extends \App\Pages\Base
 {
-    private $typelist = array();
-    private $br       = '';
+    private $_cci = array();
+ 
 
     public function __construct() {
         parent::__construct();
@@ -39,10 +39,7 @@ class PredSell extends \App\Pages\Base
         
     }
 
-    public function onCCI($sender) {
-        
-    }
-    
+
     public function OnSubmit($sender) {
 
         $html = $this->generateReport();
@@ -54,7 +51,8 @@ class PredSell extends \App\Pages\Base
     }
 
     private function generateReport() {
-
+        $this->_cci = [];
+        
         $cat =(int) $this->filter->cat->getValue();
         $type =(int) $this->filter->type->getValue();
         $conn = \ZDB\DB::getConnect();
@@ -117,33 +115,31 @@ class PredSell extends \App\Pages\Base
         $detail = [];
         
         foreach($rows as $r) {
-      
-            $r['qty'] = $rqty ;            
             
             $rqty = $r['m1'] + ($r['m1'] - $r['m2']);
             if($rqty > 0) {
-                $r['qty'] = $rqty ;                
+                $r['qty'] = H::fqty($rqty )  ;            
+
                 if($onstore[$r['item_id']] > 0) {
                     $r['onstore'] = H::fqty( $onstore[$r['item_id']] );
-                    $rqty = $rqty - $onstore[$r['item_id']] ;
+                    $rqty = $rqty - $onstore[$r['item_id']] ;  //на  складе
                 }
                 if($inorder[$r['item_id']] > 0) {
-                    $rqty = $rqty - $inorder[$r['item_id']] ;
+                    $rqty = $rqty - $inorder[$r['item_id']] ;  //заказано
                 }
                 
                 $r['tobay'] = $rqty ;               
-
-              
               
                 if( $minqty[$r['item_id']] > 0 ) {
-                   $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']] ;
+                   $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']] ;  //плюс  минимальное  оличество
                 }
                 if($r['tobay'] >0) {
-                    $detail[$r['item_id']] = $r;       
+                    $this->_cci[$r['item_id']]= $r['tobay']  ;                      
+                    $r['tobay']  = H::fqty($r['tobay'] );
+                    $detail[$r['item_id']] = $r;  
                 }
             }
-            
-            
+             
             
         }
         
@@ -157,4 +153,11 @@ class PredSell extends \App\Pages\Base
         return $html;
     }
  
+    public function onCCI($sender) {
+       
+        foreach( $this->_cci as $item_id=>$qty ) {
+            $this->addItemToCO([$item_id,$qty]) ;
+        }
+    }
+     
 }

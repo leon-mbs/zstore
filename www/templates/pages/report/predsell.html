@@ -54,6 +54,12 @@
         
         <script >
        function check_cci(ele){
+           
+            if(false ==confirm("Створити заявки постачальникам?")) {
+                return  false;
+            }
+           
+           
             document.getElementById('dialogwait').showModal()
           
             return true;
