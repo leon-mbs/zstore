@@ -29,6 +29,7 @@ class ItemList extends \App\Pages\Base
     private $_pitem_id = 0;
     public $_itemset  = array();
     public $_serviceset  = array();
+    public $_tag = '' ; 
 
     public function __construct($add = false) {
         parent::__construct();
@@ -68,7 +69,9 @@ class ItemList extends \App\Pages\Base
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
+        $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
 
+        
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
@@ -144,7 +147,9 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->itemdetail->add(new \ZCL\BT\Tags("edittags"));
 
+        
         $this->add(new Panel('setpanel'))->setVisible(false);
         
         
@@ -174,7 +179,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['hp5'] = strlen($common['price5']) > 0 ? $common['price5'] : false;
 
         if ($add == false) {
-            $this->itemtable->listform->itemlist->Reload();
+           $this->Reload() ;
         } else {
             $this->addOnClick(null);
         }
@@ -326,6 +331,11 @@ class ItemList extends \App\Pages\Base
         if (strlen($this->_item->item_code)==0  && System::getOption("common", "autoarticle") == 1) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
+        
+        $this->itemdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id));
+        $this->itemdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_ITEM));
+         
+        
     }
 
     public function addOnClick($sender) {
@@ -357,9 +367,23 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnFilter($sender) {
-        $this->itemtable->listform->itemlist->Reload();
-    }
+        $this->_tag ='';  
+        $this->Reload()  ;
+     }
 
+    public function Reload($f=true) {
+          $this->itemtable->listform->itemlist->Reload($f);
+        
+       
+          $this->itemtable->taglist->Clear();
+          $tags = \App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM ) ;
+          foreach ($tags as $tag) {
+             $this->itemtable->taglist->addClickLink($tag, '#'.$tag);
+          }           
+          
+          
+    }    
+    
     public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
@@ -536,6 +560,10 @@ class ItemList extends \App\Pages\Base
 
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
+        $tags = $this->itemdetail->edittags->getTags() ;
+        \App\Entity\Tag::updateTags($tags,\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id) ;
+        
+        
         if($this->_copy > 0) {  //комплекты
             $itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_copy, "itemname");
             $serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_copy, "service_name");
@@ -557,7 +585,6 @@ class ItemList extends \App\Pages\Base
                 $set->save();
             }
 
-
         }
 
         if($this->_item->disabled == 1) {
@@ -565,7 +592,7 @@ class ItemList extends \App\Pages\Base
             $conn->Execute("delete from  item_set where item_id=".$this->_item->item_id) ;
         }
 
-        $this->itemtable->listform->itemlist->Reload(false);
+        $this->Reload(false);
 
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
@@ -935,7 +962,7 @@ class ItemList extends \App\Pages\Base
             $conn->Execute("update items set  cat_id={$cat_id} where  item_id={$item->item_id}");
         }
 
-        $this->itemtable->listform->itemlist->Reload();
+        $this->Reload();
         $sender->setValue(0);
     }
 
@@ -1000,7 +1027,8 @@ class ItemList extends \App\Pages\Base
 
         }
 
-        $this->itemtable->listform->itemlist->Reload();
+        $this->Reload();
+
 
     }
 
@@ -1026,6 +1054,15 @@ class ItemList extends \App\Pages\Base
         
     }
     
+    public function OnTagList($sender) {
+        $this->_tag  = $sender->getSelectedValue();
+
+        $this->itemtable->setVisible(true);
+        $this->itemdetail->setVisible(false);
+       
+        $this->itemtable->listform->itemlist->Reload();
+         
+    }
     
 }
 
@@ -1077,7 +1114,11 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $where = $where . " and item_type = {$type}";
             }
         }
-
+        if(strlen($this->page->_tag)>0) {
+                
+               $tag   = Item::qstr($this->page->_tag) ;
+               $where = "disabled <> 1 and item_id in (select item_id from taglist where  tag_type=3 and tag_name={$tag} )"; 
+        }
 
         if (strlen($text) > 0) {
             if ($p == false) {
