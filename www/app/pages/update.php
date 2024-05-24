@@ -182,7 +182,7 @@ class Update extends \App\Pages\Base
                    $this->setErrorTopPage('Invalid connect')  ;
                    return;
              } 
-           
+             mysqli_query($b,"SET NAMES 'utf8'") ;
              foreach($sql_array as $s) {
                  $s = trim($s);
                  if(strlen($s)==0) {

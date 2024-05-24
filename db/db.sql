@@ -1,3 +1,4 @@
+SET NAMES 'utf8';
 
 CREATE TABLE `branches` (
   `branch_id` int(11) NOT NULL AUTO_INCREMENT,
