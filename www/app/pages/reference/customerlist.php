@@ -335,7 +335,6 @@ class CustomerList extends \App\Pages\Base
             return;
         }
 
-        \App\Entity\Tag::updateTags([],   \App\Entity\Tag::TYPE_CUSTOMER,$id) ;
         $this->Reload();
 
     }
