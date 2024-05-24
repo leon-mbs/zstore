@@ -10,7 +10,16 @@
         <th   style="border-bottom:1px #000 solid;">Артикул</th>
         <th   style="border-bottom:1px #000 solid;" align="right">Прогноз </th>
         <th   style="border-bottom:1px #000 solid;" align="right">На складі</th>
-        <th   style="border-bottom:1px #000 solid;" align="right">Закупити</th>
+        <th   style="border-bottom:1px #000 solid;" align="right">
+        
+       {{#tovar}}
+        Закупити
+       {{/tovar}}
+       {{^tovar}}
+       Виробити
+       {{/tovar}}
+        
+        </th>
 
     </tr>
     {{#_detail}}

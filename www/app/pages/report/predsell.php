@@ -134,7 +134,26 @@ class PredSell extends \App\Pages\Base
                    $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']] ;  //плюс  минимальное  оличество
                 }
                 if($r['tobay'] >0) {
-                    $this->_cci[$r['item_id']]= $r['tobay']  ;                      
+                    if($type==0) {
+                       $this->_cci[$r['item_id']]= $r['tobay']  ;     
+                    }
+                    if($type==1) {   //продукция
+                        
+                        $set = \App\Entity\ItemSet::find("pitem_id=" . $r['item_id']);
+                        foreach ($set as $part) {
+                            
+                           if( !isset($this->_cci[$part->item_id])) {
+                                $this->_cci[$part->item_id] = 0;
+                                if($onstore[$part->item_id] > 0) {
+                                   $this->_cci[$part->item_id] = 0 - $onstore[$part->item_id] ; 
+                                }   
+                           } 
+                           $this->_cci[$part->item_id] += $part->qty;
+                           
+                        }
+                       
+                    }
+                                         
                     $r['tobay']  = H::fqty($r['tobay'] );
                     $detail[$r['item_id']] = $r;  
                 }
@@ -154,9 +173,11 @@ class PredSell extends \App\Pages\Base
     }
  
     public function onCCI($sender) {
-       
+         
         foreach( $this->_cci as $item_id=>$qty ) {
-            $this->addItemToCO([$item_id,$qty]) ;
+            if($qty > 0) {
+               $this->addItemToCO([$item_id,$qty]) ;    
+            }
         }
     }
      
