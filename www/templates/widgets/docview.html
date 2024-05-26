@@ -532,7 +532,7 @@
                 } ,  
                 delfile:function( id){
                     
-                   callPageMethod(this.path+'::delfile',[ id], null,(data)=> 
+                   callPageMethod(this.path+'::delfile',[ id,this.docid], null,(data)=> 
                      {
                         this.loadfiles() 
                      });

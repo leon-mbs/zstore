@@ -953,7 +953,7 @@ class Helper
     * @param mixed $key
     * @return mixed
     */
-    public static function getKeyVal($key,$det="") {
+    public static function getKeyVal($key,$def="") {
         if(strlen($key)==0) {
             return;
         }
