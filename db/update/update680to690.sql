@@ -1,3 +1,4 @@
+SET NAMES 'utf8';
 
 CREATE TABLE promocodes (
   id int(11) NOT NULL AUTO_INCREMENT,
