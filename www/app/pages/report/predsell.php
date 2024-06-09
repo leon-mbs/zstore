@@ -17,7 +17,7 @@ use Zippy\Html\Panel;
 class PredSell extends \App\Pages\Base
 {
     private $_cci = array();
- 
+
 
     public function __construct() {
         parent::__construct();
@@ -26,17 +26,17 @@ class PredSell extends \App\Pages\Base
             return;
         }
 
-        $cats=   \App\Entity\Category::findArray('cat_name','cat_id in(select cat_id from items where  disabled <>1)','cat_name') ;
+        $cats = \App\Entity\Category::findArray('cat_name', 'cat_id in(select cat_id from items where  disabled <>1)', 'cat_name');
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new DropDownChoice('cat', $cats, 0));
         $this->filter->add(new DropDownChoice('type'));
 
         $this->add(new Panel('detail'))->setVisible(false);
 
-        $this->detail->add(new ClickLink('cci',$this,"onCCI"));
+        $this->detail->add(new ClickLink('cci', $this, "onCCI"));
         $this->detail->add(new Label('preview'));
 
-        
+
     }
 
 
@@ -52,35 +52,35 @@ class PredSell extends \App\Pages\Base
 
     private function generateReport() {
         $this->_cci = [];
-        
-        $cat =(int) $this->filter->cat->getValue();
-        $type =(int) $this->filter->type->getValue();
+
+        $cat = (int)$this->filter->cat->getValue();
+        $type = (int)$this->filter->type->getValue();
         $conn = \ZDB\DB::getConnect();
-      
-        $tp=" (i.item_type=0 || i.item_type=1 ) ";
-        if($type==1) {
-            $tp=" (i.item_type=4 || i.item_type=5 ) ";
+
+        $tp = " (i.item_type=0 || i.item_type=1 ) ";
+        if ($type == 1) {
+            $tp = " (i.item_type=4 || i.item_type=5 ) ";
         }
 
-        $onstore=[];
-        $sql="select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1) group  by item_id";
-        foreach($conn->Execute($sql) as $r){
-           if($r['q'] >0) {
-               $onstore[$r['item_id']]= $r['q'];
-           }   
+        $onstore = [];
+        $sql = "select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1) group  by item_id";
+        foreach ($conn->Execute($sql) as $r) {
+            if ($r['q'] > 0) {
+                $onstore[$r['item_id']] = $r['q'];
+            }
         }
-        $minqty=[];
-        $sql="select minqty,item_id from  items where  disabled <> 1 and minqty >0";
-        foreach($conn->Execute($sql) as $r){
-           if($r['minqty'] >0) {
-               $minqty[$r['item_id']]= $r['minqty'];
-           }   
+        $minqty = [];
+        $sql = "select minqty,item_id from  items where  disabled <> 1 and minqty >0";
+        foreach ($conn->Execute($sql) as $r) {
+            if ($r['minqty'] > 0) {
+                $minqty[$r['item_id']] = $r['minqty'];
+            }
         }
-        
-        $inorder=[];
-        
+
+        $inorder = [];
+
         $where = "   meta_name='OrderCust'  and  state= " . \App\Entity\Doc\Document::STATE_INPROCESS;
- 
+
         foreach (\App\Entity\Doc\Document::findYield($where) as $doc) {
 
             foreach ($doc->unpackDetails('detaildata') as $item) {
@@ -88,16 +88,16 @@ class PredSell extends \App\Pages\Base
                     $inorder[$item->item_id] = 0;
                 }
                 $inorder[$item->item_id] += $item->quantity;
-                
+
             }
-        }        
-        
-        
-        $m1 = $conn->DBDate( strtotime('-1 month') );
-        $m2 = $conn->DBDate( strtotime('-2 month') );
-     
-     
-        $sql="select i.item_id,i.itemname,i.item_code, 
+        }
+
+
+        $m1 = $conn->DBDate(strtotime('-1 month'));
+        $m2 = $conn->DBDate(strtotime('-2 month'));
+
+
+        $sql = "select i.item_id,i.itemname,i.item_code, 
         sum( case when d.document_date < now() and d.document_date >= {$m1} then 0-e.quantity else 0 end ) as m1,
         sum( case when d.document_date < {$m1} and d.document_date >= {$m2} then 0-e.quantity else 0 end ) as m2
         from entrylist_view e 
@@ -109,61 +109,61 @@ class PredSell extends \App\Pages\Base
         group  by i.item_id,i.itemname,i.item_code 
         order  by i.itemname 
         ";
-     
-        $rows= $conn->Execute($sql);
-        
-        $detail = [];
-        
-        foreach($rows as $r) {
-            
-            $rqty = $r['m1'] + ($r['m1'] - $r['m2']);
-            if($rqty > 0) {
-                $r['qty'] = H::fqty($rqty )  ;            
 
-                if($onstore[$r['item_id']] > 0) {
-                    $r['onstore'] = H::fqty( $onstore[$r['item_id']] );
-                    $rqty = $rqty - $onstore[$r['item_id']] ;  //на  складе
+        $rows = $conn->Execute($sql);
+
+        $detail = [];
+
+        foreach ($rows as $r) {
+
+            $rqty = $r['m1'] + ($r['m1'] - $r['m2']);
+            if ($rqty > 0) {
+                $r['qty'] = H::fqty($rqty);
+
+                if ($onstore[$r['item_id']] > 0) {
+                    $r['onstore'] = H::fqty($onstore[$r['item_id']]);
+                    $rqty = $rqty - $onstore[$r['item_id']];  //на  складе
                 }
-                if($inorder[$r['item_id']] > 0) {
-                    $rqty = $rqty - $inorder[$r['item_id']] ;  //заказано
+                if ($inorder[$r['item_id']] > 0) {
+                    $rqty = $rqty - $inorder[$r['item_id']];  //заказано
                 }
-                
-                $r['tobay'] = $rqty ;               
-              
-                if( $minqty[$r['item_id']] > 0 ) {
-                   $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']] ;  //плюс  минимальное  оличество
+
+                $r['tobay'] = $rqty;
+
+                if ($minqty[$r['item_id']] > 0) {
+                    $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']];  //плюс  минимальное  оличество
                 }
-                if($r['tobay'] >0) {
-                    if($type==0) {
-                       $this->_cci[$r['item_id']]= $r['tobay']  ;     
+                if ($r['tobay'] > 0) {
+                    if ($type == 0) {
+                        $this->_cci[$r['item_id']] = $r['tobay'];
                     }
-                    if($type==1) {   //продукция
-                        
+                    if ($type == 1) {   //продукция
+
                         $set = \App\Entity\ItemSet::find("pitem_id=" . $r['item_id']);
                         foreach ($set as $part) {
-                            
-                           if( !isset($this->_cci[$part->item_id])) {
+
+                            if (!isset($this->_cci[$part->item_id])) {
                                 $this->_cci[$part->item_id] = 0;
-                                if($onstore[$part->item_id] > 0) {
-                                   $this->_cci[$part->item_id] = 0 - $onstore[$part->item_id] ; 
-                                }   
-                           } 
-                           $this->_cci[$part->item_id] += $part->qty;
-                           
+                                if ($onstore[$part->item_id] > 0) {
+                                    $this->_cci[$part->item_id] = 0 - $onstore[$part->item_id];
+                                }
+                            }
+                            $this->_cci[$part->item_id] += $part->qty;
+
                         }
-                       
+
                     }
-                                         
-                    $r['tobay']  = H::fqty($r['tobay'] );
-                    $detail[$r['item_id']] = $r;  
+
+                    $r['tobay'] = H::fqty($r['tobay']);
+                    $detail[$r['item_id']] = $r;
                 }
             }
-             
-            
+
+
         }
-        
-        $header = array( "_detail" => array_values( $detail) ,
-            "tovar"=>$type==0
+
+        $header = array("_detail" => array_values($detail),
+                        "tovar"   => $type == 0
         );
         $report = new \App\Report('report/predsell.tpl');
 
@@ -171,14 +171,14 @@ class PredSell extends \App\Pages\Base
 
         return $html;
     }
- 
+
     public function onCCI($sender) {
-         
-        foreach( $this->_cci as $item_id=>$qty ) {
-            if($qty > 0) {
-               $this->addItemToCO([$item_id,$qty]) ;    
+
+        foreach ($this->_cci as $item_id => $qty) {
+            if ($qty > 0) {
+                $this->addItemToCO([$item_id, $qty]);
             }
         }
     }
-     
+
 }

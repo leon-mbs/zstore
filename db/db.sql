@@ -229,6 +229,7 @@ BEGIN
 
 END;;
 DELIMITER ;
+
 CREATE TABLE `equipments` (
   `eq_id` int(11) NOT NULL AUTO_INCREMENT,
   `eq_name` varchar(255) DEFAULT NULL,
