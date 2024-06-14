@@ -17,15 +17,11 @@ class ItemList extends \Zippy\Html\PageFragment
      *
      *
      * @param mixed $id
-     * @param mixed $page
-     * @param mixed $event
-     * @param mixed $pricetype
      */
     public function __construct($id) {
         parent::__construct($id);
 
-        $this->add(new Label('_itemlist_')) ;
-
+        $this->add(new Label('_itemlist_')) ;  // URI путь к  виджету
 
 
     }
