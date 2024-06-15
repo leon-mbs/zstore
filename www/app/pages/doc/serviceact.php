@@ -35,6 +35,9 @@ class ServiceAct extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
+        
+        $this->add(new \App\Widgets\ItemList("itemsel"))->init();
+        
         $common = System::getOptions("common");
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
