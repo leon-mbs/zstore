@@ -60,11 +60,20 @@ class ProdReceipt extends Document
             if ($item->autooutcome == 1) {  //списание  комплектующих
                 $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                 foreach ($set as $part) {
+                    $lost = 0;
 
                     $itemp = \App\Entity\Item::load($part->item_id);
                     if($itemp==null) {
                         continue;
                     }
+                    
+                    //учитываем  отходы
+                    if ($itemp->lost > 0) {
+                        $k = 1 / (1 - $itemp->lost / 100);
+                        $itemp->quantity = $itemp->quantity * $k;
+                        $lost = $k - 1;
+                    }
+                    
                     $itemp->quantity = $item->quantity * $part->qty;
                     if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                         throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
@@ -78,6 +87,17 @@ class ProdReceipt extends Document
                         $sc->tag=Entry::TAG_TOPROD;
 
                         $sc->save();
+                        
+                        if ($lost > 0) {
+                            $io = new \App\Entity\IOState();
+                            $io->document_id = $this->document_id;
+                            $io->amount = 0 - $st->quantity * $st->partion * $lost;
+                            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+                            $io->save();
+
+                        }    
+                        
                     }
                 }
             }
