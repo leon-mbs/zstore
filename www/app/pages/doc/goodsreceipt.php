@@ -467,6 +467,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function savesnOnClick($sender) {
+        $common = System::getOptions("common");
 
         $id = $this->editsnitem->editsnitemname->getKey();
         $name = trim($this->editsnitem->editsnitemname->getText());
@@ -484,6 +485,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $list = [];
         foreach(explode("\n", $sns) as $s) {
+            $s = trim($s);
             if(strlen($s) > 0) {
                 $list[] = $s;
             }
@@ -493,6 +495,19 @@ class GoodsReceipt extends \App\Pages\Base
             $this->setError("Не вказані серійні номери");
             return;
         }
+        
+        
+        if($common['usesnumber'] == 3 ){
+            
+            $temp_array = array_unique($list);
+            if(sizeof($temp_array) < sizeof($list)) {
+                $this->setError("Cерійний номер має бути унікальним для виробу");    
+                return;
+            }           
+            
+        }        
+        
+        
         $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
 
         foreach($list as $s) {
@@ -568,7 +583,7 @@ class GoodsReceipt extends \App\Pages\Base
                    return;
                 }
                 if($common['usesnumber'] == 3 && $item->quantity <> 1){
-                   $this->setError("Cерійний номер має бути для одного виробу");    
+                   $this->setError("Cерійний номер має бути унікальним для виробу");    
                    return;
                 }  
                 $this->setError("Не введено серійний номер");    
@@ -777,7 +792,7 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
 
             return;
         }

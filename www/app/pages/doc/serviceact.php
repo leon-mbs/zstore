@@ -35,6 +35,9 @@ class ServiceAct extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
+        
+        $this->add(new \App\Widgets\ItemList("itemsel"))->init();
+        
         $common = System::getOptions("common");
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
@@ -96,14 +99,8 @@ class ServiceAct extends \App\Pages\Base
 
                     }
                 }
-
-
             }
         }
-
-
-
-
     }
 
     public function loaddata($args, $post) {
@@ -293,7 +290,7 @@ class ServiceAct extends \App\Pages\Base
             if ($isEdited == false) {
                 $this->_doc->document_id = 0;
             }
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
 
             return json_encode(['error'=>$ee->getMessage()], JSON_UNESCAPED_UNICODE);
 

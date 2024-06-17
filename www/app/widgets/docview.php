@@ -314,7 +314,11 @@ class DocView extends \Zippy\Html\PageFragment
     public function delfile($arg, $post) {
 
         H::deleteFile($arg[0]);
-
+        $doc= Document::load($arg[1]) ;
+        if($doc->headerdata["scan"]== $arg[0] )  {
+             $doc->headerdata["scan"] = 0;
+             $doc->save();
+        }
 
     }
     public function addfile($arg, $post) {

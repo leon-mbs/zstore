@@ -1,3 +1,4 @@
+SET NAMES 'utf8';
 
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Офiсний документ', 'OfficeDoc', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Офiс', 'OfficeList', '', 0);

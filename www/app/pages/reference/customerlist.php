@@ -33,6 +33,7 @@ class CustomerList extends \App\Pages\Base
     public $_msglist         = array();
     public $_eventlist       = array();
     public $_contrtlist      = array();
+    public $_doclist         = array();
     public $_leadstatuseslist = array();
     public $_leadsourceslist = array();
     public $_bonuses = array(); // бонусы  по  контраоентам
@@ -170,6 +171,8 @@ class CustomerList extends \App\Pages\Base
         $this->leadstatusesform->add(new DataView('leadstatuseslist', new ArrayDataSource(new Bind($this, '_leadstatuseslist')), $this, 'leadstatusListOnRow'));
 
         $this->contentview->add(new DataView('dw_contr', new ArrayDataSource(new Bind($this, '_contrlist')), $this, 'contrListOnRow'));
+
+        $this->contentview->add(new DataView('dw_doc', new ArrayDataSource(new Bind($this, '_doclist')), $this, 'docListOnRow'));
 
 
         if ($id > 0) {
@@ -332,7 +335,6 @@ class CustomerList extends \App\Pages\Base
             return;
         }
 
-        \App\Entity\Tag::updateTags([],   \App\Entity\Tag::TYPE_CUSTOMER,$id) ;
         $this->Reload();
 
     }
@@ -512,6 +514,7 @@ class CustomerList extends \App\Pages\Base
         $this->updateMessages();
         $this->updateEvents();
         $this->updateContrs();
+        $this->updateDocs();
 
         
         $this->_tag='';
@@ -672,8 +675,14 @@ class CustomerList extends \App\Pages\Base
     }
 
     private function updateContrs() {
-        $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id);
+        $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id,'contract_id desc');
         $this->contentview->dw_contr->Reload();
+        $this->_tvars['iscontract'] = count($this->_contrlist) > 0; 
+    }
+    private function updateDocs() {
+        $this->_doclist = \App\Entity\doc\Document::find(' state <> 9 and  customer_id=' . $this->_customer->customer_id,'document_date desc',10);
+        $this->contentview->dw_doc->Reload();
+
     }
  
     //вывод строки  коментария
@@ -705,6 +714,16 @@ class CustomerList extends \App\Pages\Base
         $row->contract->setValue($contr->contract_number);
     }
 
+    public function docListOnRow(DataRow $row) {
+        $doc = $row->getDataItem();
+
+        $row->add(new Label('doc_amount',  Helper::fa($doc->amount) ));
+        $row->add(new Label('doc_state',   \App\Entity\doc\Document::getStateName($doc->state) ));
+
+        $row->add(new ClickLink('doc'))->onClick($this, 'docOnClick');
+        $row->doc->setValue($doc->document_number);
+    }
+
     public function bonusListOnRow(DataRow $row) {
         $b = $row->getDataItem();
         $row->add(new Label('b_date', Helper::fd($b->paydate)));
@@ -717,6 +736,11 @@ class CustomerList extends \App\Pages\Base
         $contr = $sender->owner->getDataItem();
 
         \App\Application::Redirect("\\App\\Pages\\Reference\\ContractList", $contr->contract_id);
+    }
+    public function docOnClick($sender) {
+        $doc = $sender->owner->getDataItem();
+
+        \App\Application::Redirect("\\App\\Pages\\Register\\DocList", $doc->document_id);
     }
 
     public function OnSelStatus($sender) {

@@ -261,7 +261,8 @@
                             <div class="form-group">
                               <label for="edititem">Назва </label>
                                <typeahead  v-model="item"  :onquery="onitemtext"   required="required"  ref="edititem" placeholder="Почніть вводити..."   />
-                               Наявність: <span  >{{qtystock}}</span>
+                                <a v-on:click.prevent="onOpenItemSel">Відкрити довідник</a>
+                               <br>Наявність: <span  >{{qtystock}}</span>
                  
                             </div>
                              
@@ -340,6 +341,7 @@
        
     {|={{ }}=|}  
  
+    <div zippy="itemsel"></div>
         
       <script>
         
@@ -720,7 +722,7 @@
                        this.$refs.edititem.query = data.itemname;  
     
                        this.loadeditem = data;
-                        
+                       
                   });        
                     
                     
@@ -748,10 +750,19 @@
                       });        
                       
                   }              
-            }  
+            } ,
+            onOpenItemSel:  function( ) { 
+                 onOpenItemList(vapp.onOpenItemSelCB)
+            }  ,
       
+            onOpenItemSelCB:  function(id ) { 
+               this.item=id
+           //    this.$refs.edititem.query = name
+               this.hititem(id)
+               
+            }
       
-            }   ,   
+        }   ,   
     
        computed:{
          payamount:function(){

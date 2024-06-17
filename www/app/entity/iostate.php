@@ -19,7 +19,7 @@ class IOState extends \ZCL\DB\Entity
 
     //доход ТМЦ
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
-    public const TYPE_INSERVICE = 31;     //с внешних умлуг
+    public const TYPE_INSERVICE = 31;     //с внешних услуг
 
     //расход платежи
     public const TYPE_BASE_OUTCOME     = 50;    //операционные расходы
@@ -41,7 +41,7 @@ class IOState extends \ZCL\DB\Entity
 
     //потери ТМЦ
     public const TYPE_LOST           = 80;     //потери при инвентаризации
-    public const TYPE_TRASH          = 81;     //отходы
+    public const TYPE_TRASH          = 81;     //отходы производства
 
 
 
@@ -120,7 +120,7 @@ class IOState extends \ZCL\DB\Entity
 
         if ($type == 4 || $type == 0 || $type == 24) {
             $list[self::TYPE_LOST] = "Втрати при інвентаризації";
-            $list[self::TYPE_TRASH] = "Відходи";
+            $list[self::TYPE_TRASH] = "Відходи виробництва";
             $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";

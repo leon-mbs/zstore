@@ -217,6 +217,9 @@ class Item extends \ZCL\DB\Entity
         if ($this->image_id > 0) {
             \App\Entity\Image::delete($this->image_id);
         }
+        
+        \App\Entity\Tag::updateTags([],   \App\Entity\Tag::TYPE_ITEM,$this->item_id) ;
+        
     }
 
     //Вычисляет  отпускную цену без скидок

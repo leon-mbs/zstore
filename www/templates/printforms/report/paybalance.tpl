@@ -62,7 +62,7 @@
 
         <td align="right">{{out}}</td>
         <td></td>
-    </tr>
+    </tr>            
     {{#docdet}}
     
     <tr>
@@ -89,7 +89,21 @@
         <td align="right">{{total}}</td>
         <td></td>
     </tr>
+    </tr>
+        <td colspan="3"> <br>
+            <b>Деталiзацiя по ТМЦ</b>
+        </td>       -
+    </tr>    
+    
+     {{#_detail3}}
+    <tr>
 
+        <td>{{type}}</td>
+
+        <td align="right">{{out}}</td>
+        <td></td>
+    </tr>
+     {{/_detail3}}
     
 </table>
 

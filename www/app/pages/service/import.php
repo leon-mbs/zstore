@@ -24,6 +24,12 @@ class Import extends \App\Pages\Base
         }
 
         //ТМЦ
+        $sc=[];
+        $v= H::getKeyVal('importcols','') ;
+        if(strlen($v)>0) {
+           $sc =     @unserialize($v) ;
+        }
+        
         $form = $this->add(new Form("iform"));
 
         $form->add(new DropDownChoice("itype", array(), 0))->onChange($this, "onType");
@@ -36,15 +42,15 @@ class Import extends \App\Pages\Base
 
         $form->add(new \Zippy\Html\Form\File("filename"));
         $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O' );
-        $form->add(new DropDownChoice("colname", $cols));
-        $form->add(new DropDownChoice("colcode", $cols));
-        $form->add(new DropDownChoice("colbarcode", $cols));
-        $form->add(new DropDownChoice("colcat", $cols));
-        $form->add(new DropDownChoice("colqty", $cols));
-        $form->add(new DropDownChoice("colcell", $cols));
-        $form->add(new DropDownChoice("colshortname", $cols));
-        $form->add(new DropDownChoice("colimage", $cols));
-        $form->add(new DropDownChoice("colwar", $cols));
+        $form->add(new DropDownChoice("colname", $cols,$sc['colname'] ?? 0));
+        $form->add(new DropDownChoice("colcode", $cols,$sc['colcode'] ?? 0));
+        $form->add(new DropDownChoice("colbarcode", $cols,$sc['colbarcode'] ?? 0));
+        $form->add(new DropDownChoice("colcat", $cols,$sc['colcat'] ?? 0));
+        $form->add(new DropDownChoice("colqty", $cols,$sc['colqty'] ?? 0));
+        $form->add(new DropDownChoice("colcell", $cols,$sc['colcell'] ?? 0));
+        $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
+        $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
+        $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
@@ -54,18 +60,18 @@ class Import extends \App\Pages\Base
         $form->add(new Label('pricename4', $pt['price4'] ??''));
         $form->add(new Label('pricename5', $pt['price5'] ??''));
 
-        $form->add(new DropDownChoice("colprice1", $cols))->setVisible(strlen($pt['price1'])>0);
-        $form->add(new DropDownChoice("colprice2", $cols))->setVisible(strlen($pt['price2'])>0);
-        $form->add(new DropDownChoice("colprice3", $cols))->setVisible(strlen($pt['price3'])>0);
-        $form->add(new DropDownChoice("colprice4", $cols))->setVisible(strlen($pt['price4'])>0);
-        $form->add(new DropDownChoice("colprice5", $cols))->setVisible(strlen($pt['price5'])>0);
+        $form->add(new DropDownChoice("colprice1", $cols,$sc['colprice1'] ?? 0))->setVisible(strlen($pt['price1'])>0);
+        $form->add(new DropDownChoice("colprice2", $cols,$sc['colprice2'] ?? 0))->setVisible(strlen($pt['price2'])>0);
+        $form->add(new DropDownChoice("colprice3", $cols,$sc['colprice3'] ?? 0))->setVisible(strlen($pt['price3'])>0);
+        $form->add(new DropDownChoice("colprice4", $cols,$sc['colprice4'] ?? 0))->setVisible(strlen($pt['price4'])>0);
+        $form->add(new DropDownChoice("colprice5", $cols,$sc['colprice5'] ?? 0))->setVisible(strlen($pt['price5'])>0);
 
 
 
-        $form->add(new DropDownChoice("colinprice", $cols));
-        $form->add(new DropDownChoice("colmsr", $cols));
-        $form->add(new DropDownChoice("colbrand", $cols));
-        $form->add(new DropDownChoice("coldesc", $cols));
+        $form->add(new DropDownChoice("colinprice", $cols,$sc['colinprice'] ?? 0));
+        $form->add(new DropDownChoice("colmsr", $cols,$sc['colmsr'] ?? 0));
+        $form->add(new DropDownChoice("colbrand", $cols,$sc['colbrand'] ?? 0));
+        $form->add(new DropDownChoice("coldesc", $cols,$sc['coldesc'] ?? 0));
         $form->add(new CheckBox("passfirst"));
         $form->add(new CheckBox("preview"));
 
@@ -78,6 +84,16 @@ class Import extends \App\Pages\Base
         $this->onType($form->itype);
 
         //накладная
+        
+        $sc=[];
+        $v= H::getKeyVal('nimportcols','') ;
+        if(strlen($v)>0) {
+           $sc =     @unserialize($v) ;
+        }
+         
+         
+      
+        
         $form = $this->add(new Form("nform"));
 
         $form->add(new DropDownChoice("nstore", Store::getList(), H::getDefStore()));
@@ -85,13 +101,14 @@ class Import extends \App\Pages\Base
         $form->add(new AutocompleteTextInput("ncust"))->onText($this, 'OnAutoCustomer');
         $form->add(new \Zippy\Html\Form\File("nfilename"));
 
-        $form->add(new DropDownChoice("ncolname", $cols));
-        $form->add(new DropDownChoice("ncolcode", $cols));
-        $form->add(new DropDownChoice("ncolbarcode", $cols));
-        $form->add(new DropDownChoice("ncolqty", $cols));
-        $form->add(new DropDownChoice("ncolprice", $cols));
-        $form->add(new DropDownChoice("ncolmsr", $cols));
-        $form->add(new DropDownChoice("ncoldesc", $cols));
+        $form->add(new DropDownChoice("ncolname", $cols,$sc['colname'] ?? 0));
+        $form->add(new DropDownChoice("ncolcode", $cols,$sc['colcode'] ?? 0));
+        $form->add(new DropDownChoice("ncolbarcode", $cols,$sc['colbarcode'] ?? 0));
+        $form->add(new DropDownChoice("ncolqty", $cols,$sc['colqty'] ?? 0));
+        $form->add(new DropDownChoice("ncolprice", $cols,$sc['colprice'] ?? 0));
+        $form->add(new DropDownChoice("ncolmsr", $cols,$sc['colmsr'] ?? 0));
+        $form->add(new DropDownChoice("ncoldesc", $cols,$sc['coldesc'] ?? 0));
+        $form->add(new DropDownChoice("ncolbrand", $cols,$sc['colbrand'] ?? 0));
         $form->add(new CheckBox("npassfirst"));
         $form->add(new CheckBox("npreview"));
 
@@ -201,6 +218,33 @@ class Import extends \App\Pages\Base
             return;
         }
 
+        
+        $save = array();
+        $save['colname']=$colname;
+        $save['colcode']=$colcode;
+        $save['colbarcode']=$colbarcode;
+        $save['colqty']=$colqty;
+        $save['colprice']=$colcat;
+        $save['colprice1']=$colprice1;
+        $save['colprice2']=$colprice2;
+        $save['colprice3']=$colprice3;
+        $save['colprice4']=$colprice4;
+        $save['colprice5']=$colprice5;
+        $save['colinprice']=$colinprice;
+        $save['colmsr']=$colmsr;
+        $save['colcell']=$colcell;
+        $save['colbrand']=$colbrand;
+        $save['coldesc']=$coldesc;
+        $save['colimage']=$colimage;
+        $save['colshortname']=$colshortname;
+        $save['colwar']=$colwar;
+  
+  
+            
+        H::setKeyVal('importcols',serialize($save)) ;
+           
+        
+        
         $data = array();
         $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
 
@@ -326,11 +370,11 @@ class Import extends \App\Pages\Base
             $item->description =$desc;
             $item->shortname = $shortname;
             $item->warranty = $warranty;
-            $item->price1 = $price1;
-            $item->price2 = $price2;
-            $item->price3 = $price3;
-            $item->price4 = $price4;
-            $item->price5 = $price5;
+            $item->price1 = doubleval($price1);
+            $item->price2 = doubleval($price2);
+            $item->price3 = doubleval($price3);
+            $item->price4 = doubleval($price4);
+            $item->price5 = doubleval($price5);
 
             if ($inprice > 0) {
                 $item->price = $inprice;
@@ -346,7 +390,7 @@ class Import extends \App\Pages\Base
                 $item->item_type = $item_type;
             }
 
-            $item->amount = $item->quantity * $item->price;
+            $item->amount = doubleval($item->quantity) * doubleval($item->price);
 
             $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
             $item->noshop = $this->iform->noshowshop->isChecked() ? 1 : 0;
@@ -560,6 +604,7 @@ class Import extends \App\Pages\Base
         $colprice = $this->nform->ncolprice->getValue();
         $colmsr = $this->nform->ncolmsr->getValue();
         $coldesc = $this->nform->ncoldesc->getValue();
+        $colbrand = $this->nform->ncolbrand->getValue();
 
         if ($colname === '0') {
             $this->setError('Не вказано колонку з назвою');
@@ -582,6 +627,18 @@ class Import extends \App\Pages\Base
             return;
         }
 
+        $save = array();
+        $save['colname']=$colname;
+        $save['colcode']=$colcode;
+        $save['colbarcode']=$colbarcode;
+        $save['colqty']=$colqty;
+        $save['colprice']=$colprice;
+        $save['colmsr']=$colmsr;
+        $save['coldesc']=$coldesc;
+        $save['colbrand']=$colbrand;
+        
+        H::setKeyVal('nimportcols',serialize($save)) ;
+        
         $data = array();
         $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
 
@@ -613,6 +670,7 @@ class Import extends \App\Pages\Base
                     'colcode'    => $row[$colcode],
                     'colbarcode' => $row[$colbarcode],
                     'colqty'     => $row[$colqty],
+                    'colbrand'   => $row[$colbrand],
                     'colmsr'     => $row[$colmsr],
                     'colprice'   => $row[$colprice]
                 );
@@ -638,8 +696,8 @@ class Import extends \App\Pages\Base
                 }
 
 
-                $price = str_replace(',', '.', trim($row[$colprice]));
-                $qty = str_replace(',', '.', trim($row[$colqty]));
+                $price = doubleval( str_replace(',', '.', trim($row[$colprice])) );
+                $qty = doubleval(str_replace(',', '.', trim($row[$colqty])) );
 
                 if ($item == null) {
                     $item = new Item();
@@ -652,6 +710,9 @@ class Import extends \App\Pages\Base
                     }
                     if (strlen($row[$coldesc]) > 0) {
                         $item->description = trim($row[$coldesc]);
+                    }
+                    if (strlen($row[$colbrand]) > 0) {
+                        $item->manufacturer = trim($row[$colbrand]);
                     }
 
 

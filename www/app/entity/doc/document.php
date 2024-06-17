@@ -729,6 +729,10 @@ class Document extends \ZCL\DB\Entity
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->document_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
 
+        \App\Entity\Tag::updateTags([],   \App\Entity\Tag::TYPE_OFFICEDCO,$this->document_id) ;
+        
+        
+        
         //   if(System::getUser()->userlogin =='admin') return;
         if ($hasExecuted) {
 

@@ -8,7 +8,7 @@ use App\Entity\Item;
 use App\Entity\Entry;
 
 /**
- * Класс-сущность  документ расходная  накладая
+ * Класс-сущность  документ заказ
  *
  */
 class Order extends \App\Entity\Doc\Document

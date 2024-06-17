@@ -82,6 +82,12 @@
                            </div>
                     </form>
                 </div>
+                    
+                 <details class="mb-2 ml-2">
+                    <summary >Теги</summary>
+                    <small zippy="taglist"></small>
+                 </details>
+                                     
                 <a zippy="addnew" class="btn btn-primary mr-4  ">Додати</a>
                  {{#showtips}}
                     <small> <i class="fa fa-info-circle"> Експорт в  ексель в Сервісні сторінки-> Експорт</small>
@@ -259,6 +265,12 @@
                                 </div>
                             </div>       
 
+                              <div class="form-group row">
+                                <label class="col-5 col-form-label" for="edituktz">УКТЗЕД</label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="edituktz"/>
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editzarp">Собiвартiсть виробництва</label>
@@ -332,12 +344,7 @@
                                 </div>
                             </div>
 
-                         <div class="form-group row">
-                                <label class="col-5 col-form-label" for="edituktz">УКТЗЕД</label>
-                                <div class="col-7">
-                                    <input class="form-control" zippy="edituktz"/>
-                                </div>
-                            </div>
+                      
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcell">Номер комірки на складі</label>
                                 <div class="col-7">
@@ -435,7 +442,14 @@
                                 <div class="col-7">
                                     <textarea style="height:100px" class="form-control" zippy="editdescription"></textarea>
                                 </div>
-                            </div>       
+                            </div>    
+                           <div class="form-group row">
+                               <label class="col-5 col-form-label" for="edittags">Теги</label>
+                                <div class="col-7">
+                                 <div zippy="edittags"> </div>
+                                  <small>Вводяться по  Enter</small>
+                               </div>
+                          </div>                                
                         </div>
 
                         <div class="col-12  ">
