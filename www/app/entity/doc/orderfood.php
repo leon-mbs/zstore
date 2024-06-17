@@ -268,8 +268,6 @@ class OrderFood extends Document
                             $k = 1 / (1 - $itemp->lost / 100);
                             $itemp->quantity = $itemp->quantity * $k;
                             $lost = $k - 1;
-
-
                         }
 
 
@@ -281,6 +279,8 @@ class OrderFood extends Document
                             $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
+                            
+                             
                             if ($lost > 0) {
                                 $io = new \App\Entity\IOState();
                                 $io->document_id = $this->document_id;
@@ -289,7 +289,7 @@ class OrderFood extends Document
 
                                 $io->save();
 
-                            }
+                            }    
 
                         }
                     }
