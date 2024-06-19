@@ -38,7 +38,10 @@ class GoodsIssue extends \App\Pages\Base
 
     private $_changedpos  = false;
 
-
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 

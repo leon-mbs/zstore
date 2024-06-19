@@ -37,6 +37,10 @@ class TTN extends \App\Pages\Base
     private $_orderid   = 0;
     private $_changedpos  = false;
 
+     /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 

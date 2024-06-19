@@ -33,6 +33,10 @@ class Invoice extends \App\Pages\Base
     private $_rowid     = 0;
 
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
