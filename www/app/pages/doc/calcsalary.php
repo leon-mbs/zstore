@@ -22,6 +22,9 @@ class CalcSalary extends \App\Pages\Base
     private $_list;
 
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 

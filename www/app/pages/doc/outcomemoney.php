@@ -25,6 +25,13 @@ class OutcomeMoney extends \App\Pages\Base
 {
     private $_doc;
 
+   /**
+    * @param mixed $docid     редактирование
+    * @param mixed $pcustomer_id  контрагент (для  нового документа)
+    * @param mixed $pamount       сума
+    * @param mixed $det           детализация
+    * @return mixed
+    */
     public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0,$det=2) {
         parent::__construct();
 

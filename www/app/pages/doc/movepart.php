@@ -30,7 +30,11 @@ class MovePart extends \App\Pages\Base
     private $_doc;
     private $_rowid    = 0;
 
-    public function __construct($docid = 0, $tostock = 0) {
+     /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
+   public function __construct($docid = 0, $tostock = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));

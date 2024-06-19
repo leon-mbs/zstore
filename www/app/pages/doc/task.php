@@ -33,10 +33,14 @@ class Task extends \App\Pages\Base
     public $_servicelist = array();
     public $_eqlist      = array();
     public $_emplist     = array();
-    private $_basedocid   = 0;
+    private $_basedocid  = 0;
 
 
-
+    /**
+    * @param mixed $docid      редактирование
+    * @param mixed $basedocid  создание на  основании
+    * @param mixed $date       дата  с  календаря
+    */
     public function __construct($docid = 0, $basedocid = 0, $date = null) {
         parent::__construct();
 
@@ -52,11 +56,6 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('parea', ProdArea::findArray("pa_name", ""), 0));
 
-        //   $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
-        // $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');
-
-        // $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
-        //  $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');

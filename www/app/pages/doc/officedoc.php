@@ -35,6 +35,12 @@ class OfficeDoc extends \App\Pages\Base
     public  $_acceditlist = [];
     public  $_accapprlist = [];
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $copyid    копия
+    * @param mixed $access    открыть страницу  доступов
+    * @return mixed
+    */
     public function __construct($docid = 0, $copyid = 0, $access = false) {
         parent::__construct();
 

@@ -24,6 +24,9 @@ class MoveMoney extends \App\Pages\Base
 {
     private $_doc;
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 

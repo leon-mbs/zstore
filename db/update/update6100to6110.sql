@@ -36,7 +36,6 @@ CREATE VIEW eventlist_view
 AS
 SELECT
   e.user_id AS user_id,
-  e.createdby AS createdby,
   e.eventdate AS eventdate,
   e.title AS title,
   e.description AS description,

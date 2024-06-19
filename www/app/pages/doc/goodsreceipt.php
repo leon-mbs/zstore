@@ -38,6 +38,10 @@ class GoodsReceipt extends \App\Pages\Base
     public $_sllist     = [];
     private $_rownumber = 1;
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
