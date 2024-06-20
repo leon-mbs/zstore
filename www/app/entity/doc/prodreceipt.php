@@ -38,8 +38,8 @@ class ProdReceipt extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "document_number" => $this->document_number,
-                        "pareaname"       => $this->headerdata["pareaname"],
-                        "storename"       => $this->headerdata["storename"],
+                        "pareaname"       => $this->headerdata["pareaname"] ??'',
+                        "storename"       => $this->headerdata["storename"]??'',
                         "notes"           => nl2br($this->notes),
                         "total"           => H::fa($this->amount)
         );

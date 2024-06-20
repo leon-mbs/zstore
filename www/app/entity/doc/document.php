@@ -1101,8 +1101,8 @@ class Document extends \ZCL\DB\Entity
         }
 
         $payment=$this->payamount;
-        if($this->headerdata['payedcard'] > 0) {
-            $payment =  $this->headerdata['payedcard'];
+        if(($this->headerdata['payedcard'] ??0) > 0) {
+            $payment =  $this->headerdata['payedcard'] ;
         }
 
         $url = "BCD\n002\n1\nUCT\n\n";

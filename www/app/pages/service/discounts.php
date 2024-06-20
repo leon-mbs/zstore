@@ -215,8 +215,8 @@ class Discounts extends \App\Pages\Base
         $form = $this->etab->add(new Form('empform'));
         $form->onSubmit($this, "onEmp");
 
-        $form->add(new  TextInput("ebonussell", $disc["bonussell"]));
-        $form->add(new  TextInput("efineret", $disc["fineret"]));
+        $form->add(new  TextInput("ebonussell", $disc["bonussell"] ??''));
+        $form->add(new  TextInput("efineret", $disc["fineret"]??''));
  
       
     }

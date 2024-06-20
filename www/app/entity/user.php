@@ -111,9 +111,9 @@ class User extends \ZCL\DB\Entity
         $this->prtypelabel = $options['prtypelabel']?? 0;
         $this->pwsymlabel = $options['pwsymlabel']?? 0;
         $this->pserverlabel = $options['pserverlabel']?? '';
-        $this->prturn = (int)$options['prturn']?? '';
-        $this->pcplabel = (int)$options['pcplabel']?? '';
-        $this->pcp = (int)$options['pcp']?? '';
+        $this->prturn = $options['prturn']?? 0;
+        $this->pcplabel = $options['pcplabel']?? '';
+        $this->pcp = $options['pcp']?? '';
 
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
