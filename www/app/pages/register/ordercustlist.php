@@ -147,7 +147,8 @@ class OrderCustList extends \App\Pages\Base
         }
 
         $this->doclist->Reload(false);
-        $this->updateStatusButtons();
+        $this->statuspan->statusform->setVisible(false);
+     
     }
 
     public function updateStatusButtons() {

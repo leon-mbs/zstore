@@ -30,6 +30,9 @@ class OutSalary extends \App\Pages\Base
     private $_doc;
     public $_list = array();
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 

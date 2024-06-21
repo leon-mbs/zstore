@@ -586,7 +586,8 @@ class DocList extends \App\Pages\Base
         try{
         
             if ($sender->id == "bap") {
-                $this->_doc->document_date = time();                   
+                $this->_doc->document_date = time(); //todo remove                  
+                $this->_doc->headerdata['timeentry'] = time();
                 $this->_doc->updateStatus(Document::STATE_APPROVED);    
           
                 $bs=trim($this->_doc->headerdata['_state_before_approve_']??'',',' ) ;
@@ -638,9 +639,6 @@ class DocList extends \App\Pages\Base
             }
             
             $this->_doc->headerdata['_state_before_approve_'] ='';
-            
-            
-     
 
             
             $conn->CommitTrans();

@@ -88,8 +88,8 @@ class GoodsIssue extends Document
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
-        $header['isprep'] = $this->headerdata["prepaid"] > 0;
-        $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
+        $header['isprep'] = ($this->headerdata["prepaid"] ??0 )> 0;
+        $header['prepaid'] = H::fa($this->headerdata["prepaid"]??'');
 
         if ($this->customer_id > 0) {
             $cust = \App\Entity\Customer::load($this->customer_id);
@@ -159,6 +159,7 @@ class GoodsIssue extends Document
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
+                        $lost = 0;
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null) {
@@ -169,6 +170,12 @@ class GoodsIssue extends Document
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
                         }
+                         //учитываем  отходы
+                        if ($itemp->lost > 0) {
+                            $k = 1 / (1 - $itemp->lost / 100);
+                            $itemp->quantity = $itemp->quantity * $k;
+                            $lost = $k - 1;
+                        }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
@@ -178,6 +185,18 @@ class GoodsIssue extends Document
                             $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
+ 
+                            if ($lost > 0) {
+                                $io = new \App\Entity\IOState();
+                                $io->document_id = $this->document_id;
+                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
+                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+                                $io->save();
+
+                            }    
+                            
+                            
                         }
                     }
                 }
@@ -267,7 +286,7 @@ class GoodsIssue extends Document
 
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }

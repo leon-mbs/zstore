@@ -38,7 +38,12 @@ class IncomeService extends \App\Pages\Base
 
     public $_itemlist     = array();
 
-
+    /**
+   * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    * @param mixed $st_id 
+    * @return mixed 
+    */
     public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
         parent::__construct();
 

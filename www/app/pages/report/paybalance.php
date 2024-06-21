@@ -12,7 +12,7 @@ use Zippy\Html\Panel;
 use App\Entity\Pay;
 
 /**
- * Финансовые  ркзультаты
+ * Финансовые  результаты
  */
 class PayBalance extends \App\Pages\Base
 {
@@ -89,7 +89,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE    
-              iotype <50   {$brpay}
+              iotype <30   {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
               GROUP BY  iotype order  by  iotype  
@@ -132,7 +132,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              iotype >= 50    {$brpay}
+              iotype >= 50 and  iotype < 80    {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
               GROUP BY  iotype order  by  iotype  
@@ -175,11 +175,34 @@ class PayBalance extends \App\Pages\Base
 
         $total = $tin - $tout;
 
+        $detail3=[];
+        $sql = " 
+         SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
+             WHERE   
+              iotype in (30,31,90,81)     {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
+              GROUP BY  iotype    
+                         
+        ";
+
+        $rs = $conn->Execute($sql);        
+        
+        foreach ($rs as $row) {
+            $detailitem = array();
+            $detailitem["out"]   = H::fa(0-$row['am']);
+            $detailitem["type"] = $pl[$row['iotype'] ] ;
+            
+            
+            $detail3[]= $detailitem;
+        }        
+        
         $header = array(
             'datefrom' => \App\Helper::fd($from),
             'dateto'   => \App\Helper::fd($to),
             "_detail"  => $detail,
             "_detail2" => $detail2,
+            "_detail3" => $detail3,
             'tin'      => H::fa($tin),
             'tout'     => H::fa($tout),
             'total'    => H::fa($total)

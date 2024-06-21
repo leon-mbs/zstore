@@ -83,15 +83,18 @@ class Document extends \ZCL\DB\Entity
         $this->document_number = '';
         $this->notes = '';
 
-        $this->document_date = time();
-        $this->user_id = 0;
-
+   
         $this->headerdata = array();
         $this->detaildata = array();
-        $this->headerdata['contract_id'] = 0;
-        $this->headerdata['time'] = time();
 
         $this->headerdata['_state_before_approve_'] = '';
+        
+        if($this->document_id==0) {    //для новых документов
+           $this->headerdata['contract_id'] = 0;
+           $this->headerdata['timeentry'] = time();
+           $this->headerdata['time'] = time();  
+        }
+        
     }
 
     /**
@@ -1101,8 +1104,8 @@ class Document extends \ZCL\DB\Entity
         }
 
         $payment=$this->payamount;
-        if($this->headerdata['payedcard'] > 0) {
-            $payment =  $this->headerdata['payedcard'];
+        if(($this->headerdata['payedcard'] ??0) > 0) {
+            $payment =  $this->headerdata['payedcard'] ;
         }
 
         $url = "BCD\n002\n1\nUCT\n\n";

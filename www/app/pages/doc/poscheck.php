@@ -36,6 +36,10 @@ class POSCheck extends \App\Pages\Base
     private $_order_id  = 0;
     private $_prevcust  = 0;   // предыдущий контрагент
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 

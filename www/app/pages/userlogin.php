@@ -89,7 +89,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 } else {
                     setcookie("remember", '', 0);
                 }
-                if ($_COOKIE['branch_id'] > 0) {
+                if (($_COOKIE['branch_id'] ?? 0) > 0) {
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
                 $modules = \App\System::getOptions("modules");

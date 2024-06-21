@@ -31,6 +31,9 @@ class Inventory extends \App\Pages\Base
     private $_rowid    = 0;
     private $_qint     = false;
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 

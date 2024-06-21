@@ -26,6 +26,9 @@ class TransItem extends \App\Pages\Base
     private $_doc;
     private $_rowid    = 0;
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 
