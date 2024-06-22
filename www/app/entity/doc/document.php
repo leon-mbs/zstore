@@ -79,21 +79,14 @@ class Document extends \ZCL\DB\Entity
         $this->amount = 0;
         $this->payamount = 0;
         $this->payed = 0;
-
         $this->document_number = '';
         $this->notes = '';
-
-   
         $this->headerdata = array();
         $this->detaildata = array();
-
         $this->headerdata['_state_before_approve_'] = '';
-        
-        if($this->document_id==0) {    //для новых документов
-           $this->headerdata['contract_id'] = 0;
-           $this->headerdata['timeentry'] = time();
-           $this->headerdata['time'] = time();  
-        }
+        $this->headerdata['contract_id'] = 0;
+        $this->headerdata['timeentry'] = null; // для проаводок
+        $this->headerdata['time'] = time();  //  для чеков
         
     }
 
