@@ -586,8 +586,8 @@ class DocList extends \App\Pages\Base
         try{
         
             if ($sender->id == "bap") {
-                $this->_doc->document_date = time(); //todo remove                  
-                $this->_doc->headerdata['timeentry'] = time();
+                //$this->_doc->headerdata['timeentry'] = time();
+                $this->_doc->document_date=time();
                 $this->_doc->updateStatus(Document::STATE_APPROVED);    
           
                 $bs=trim($this->_doc->headerdata['_state_before_approve_']??'',',' ) ;
@@ -826,6 +826,9 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
+        }
+        if ($filter->status > 0) {
+            $where .= " and state  = {$filter->status} ";
         }
         if ($filter->customer > 0) {
             $where .= " and customer_id  ={$filter->customer} ";
