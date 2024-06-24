@@ -35,7 +35,7 @@ class ProdReturn extends \App\Pages\Base
     * @param mixed $basedocid  создание на  основании
     * @param mixed $st_id      производственный  этап
     */
-    public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
+    public function __construct($docid = 0, $basedocid = 0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -63,9 +63,6 @@ class ProdReturn extends \App\Pages\Base
         $this->editdetail->add(new TextInput('editserial'));
 
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
-
-        $this->editdetail->add(new Label('qtystock'));
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -88,104 +85,16 @@ class ProdReturn extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'Task') {
-
-                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
-                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
-                       //комплекты
-                        foreach($basedoc->unpackDetails('prodlist') as $prod) {
-                            $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
-                            foreach($set as $m) {
-                                if(!isset($this->_itemlist[$m->item_id])) {
-
-                                    $this->_itemlist[$m->item_id] = Item::load($m->item_id);
-                                    $this->_itemlist[$m->item_id]->quantity = 0;
-                                }
-                                $this->_itemlist[$m->item_id]->quantity += ($prod->quantity * $m->qty);
-
-
-                            }
-
-                           // $this->_itemlist = array_values($this->_itemlist) ;
-                        }
-                        //работы
-                        foreach($basedoc->unpackDetails('detaildata') as $s) {
-                            $ser = \App\Entity\Service::load($s->service_id);
-                            if(!is_array($ser->itemset)) {
-                                continue;
-                            }   
-                            foreach($ser->itemset as $m) {
-                                $itemp = \App\Entity\Item::load($m->item_id);
-                                if($itemp == null) {
-                                    continue;
-                                }
-                                $itemp->quantity = $s->quantity * $m->qty;
-                                
-                                if(!isset($this->_itemlist[$itemp->item_id])) {
-
-                                    $this->_itemlist[$itemp->item_id] = Item::load($itemp->item_id);
-                                    $this->_itemlist[$itemp->item_id]->quantity = $itemp->quantity;
-                                }
-                                $this->_itemlist[$itemp->item_id]->quantity +=  $itemp->quantity;
-
-
-                            }
-
-                          //  $this->_itemlist = array_values($this->_itemlist) ;
-                        }
-
-
-
-                    }
-                    if ($basedoc->meta_name == 'ServiceAct') {
-
-                        $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
-                    }
+               
                     if ($basedoc->meta_name == 'ProdIssue') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
-                    if ($basedoc->meta_name == 'GoodsReceipt') {
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                    }
-                    if ($basedoc->meta_name == 'ProdReceipt') {
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
-
-                        $parts = array();
-                        foreach ($basedoc->unpackDetails('detaildata') as $tovar) {
-                            $plist = \App\Entity\ItemSet::find('pitem_id=' . $tovar->item_id);
-                            foreach ($plist as $p) {
-                                if (isset($parts[$p->item_id])) {
-                                    $parts[$p->item_id]->qty += ($tovar->quantity * $p->qty);
-                                } else {
-                                    $parts[$p->item_id] = Item::load($p->item_id);
-                                    $parts[$p->item_id]->qty = ($tovar->quantity * $p->qty);
-                                }
-                            }
-                        }
-                        foreach ($parts as $p) {
-                            $it = Item::load($p->item_id);
-                            $it->quantity = $p->qty;
-
-                            $this->_itemlist[] = $it;
-                        }
-                    }
-                }
+               }
             }
-            if ($st_id > 0) {
-                $st = \App\Entity\ProdStage::load($st_id);
-                $this->docform->parea->setValue($st->pa_id);
-                $this->_doc->headerdata['st_id'] = $st->st_id;
-                $this->_doc->headerdata['pp_id'] = $st->pp_id;
-                $this->docform->notes->setText($st->stagename);
-
-
-            }
+   
 
 
         }
@@ -206,11 +115,6 @@ class ProdReturn extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
 
         $row->add(new Label('snumber', $item->snumber));
-        $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
-        $row->add(new Label('cell', $item->cell));
-        $qty = $item->getQuantity($this->docform->store->getValue());
-        $row->add(new Label('qtyon',H::fqty($qty) ));
-        $row->add(new Label('toorder','В закупку' ))->setAttribute('onclick',"addItemToCO({$item->item_id})");
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -248,7 +152,6 @@ class ProdReturn extends \App\Pages\Base
         $this->editdetail->edittovar->setValue($item->itemname);
         $this->editdetail->editserial->setValue($item->snumber);
 
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $this->_rowid =  array_search($item, $this->_itemlist, true);
 
     }
@@ -269,10 +172,7 @@ class ProdReturn extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
-        $qstock = $this->editdetail->qtystock->getText();
-        if ($item->quantity > $qstock) {
-            $this->setWarn('Введено більше товару, чим є в наявності');
-        }
+    
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
@@ -488,24 +388,7 @@ class ProdReturn extends \App\Pages\Base
     }
 
 
-    public function OnChangeItem($sender) {
-
-        $id = $sender->getKey();
-        $item = Item::load($id);
-        $store_id = $this->docform->store->getValue();
-
-        $qty = $item->getQuantity($store_id);
-
-        $this->editdetail->qtystock->setText(H::fqty($qty));
-
-        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-
-            $serial = $item->getNearestSerie($store_id);
-            $this->editdetail->editserial->setText($serial);
-        }
-
-
-    }
+ 
 
     public function OnAutoItem($sender) {
         //$store_id = $this->docform->store->getValue();

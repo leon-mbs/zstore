@@ -15,9 +15,9 @@
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="store">Зі складу</label>
+                        <label for="store">На склад</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не встановлено</option>
+                            <option value="0">Не вказано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
@@ -59,15 +59,13 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            <th>Ком.</th>
                             {{#usesnumber}}
                             <th>Серія</th>
-                            <th>Дата</th>
+
                             {{/usesnumber}}
 
 
                             <th class="text-right">Кіл.</th>
-                            <th class="text-center">Наявність</th>
 
 
                             <th  ></th>
@@ -76,22 +74,14 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            <td zippy="cell"></td>
 
                             {{#usesnumber}}
                             <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
                             {{/usesnumber}}
 
                             <td zippy="quantity" class="text-right"></td>
-                            <td  class="text-right text-nowrap">
-                               <span zippy="qtyon"></span> &nbsp;&nbsp;  <small zippy="toorder" title="Додати в  заявку постачальнику" style="cursor:pointer"></small> 
-                               &nbsp;&nbsp;
-                            </td>
 
-
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
-                            </td>
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>                            </td>
 
                         </tr>
 
@@ -119,7 +109,7 @@
                         <label for="edittovar">Назва</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
 
-                        Наявність : <span zippy="qtystock"></span>
+                        
 
                     </div>
                     {{#usesnumber}}

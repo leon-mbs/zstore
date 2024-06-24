@@ -57,8 +57,74 @@ FROM ((eventlist e
     ON ((uv2.user_id = e.createdby))) ;    
     
     
+ALTER TABLE store_stock ADD customer_id int(11) DEFAULT NULL;    
 
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', '', 0);
+DROP VIEW store_stock_view;
+
+CREATE
+VIEW store_stock_view
+AS
+SELECT
+  st.stock_id AS stock_id,
+  st.item_id AS item_id,
+  st.partion AS partion,
+  st.store_id AS store_id,
+  st.customer_id AS customer_id,
+  i.itemname AS itemname,
+  i.item_code AS item_code,
+  i.cat_id AS cat_id,
+  i.msr AS msr,
+  i.item_type AS item_type,
+  i.bar_code AS bar_code,
+  i.cat_name AS cat_name,
+  i.disabled AS itemdisabled,
+  stores.storename AS storename,
+  st.qty AS qty,
+  st.snumber AS snumber,
+  st.sdate AS sdate
+FROM ((store_stock st
+  JOIN items_view i
+    ON (((i.item_id = st.item_id)
+    AND (i.disabled <> 1))))
+  JOIN stores
+    ON ((stores.store_id = st.store_id))) ;
+
+
+    
+CREATE TABLE custacc (
+  ca_id int(11) NOT NULL AUTO_INCREMENT,
+  customer_id int(11) NOT NULL,
+  document_id int(11) DEFAULT NULL,
+  optype int(11) DEFAULT NULL,
+  amount decimal(10, 2) NOT NULL,
+  createdon date DEFAULT NULL,
+  PRIMARY KEY (ca_id),
+  KEY emp_id (customer_id),
+  KEY document_id (document_id)
+) ENGINE = INNODB  DEFAULT CHARSET = utf8;    
+    
+CREATE
+VIEW custacc_view
+AS
+SELECT
+  e.ca_id AS ca_id,
+  e.customer_id AS customer_id,
+  e.document_id AS document_id,
+  e.optype AS optype,
+  d.notes AS notes,
+  e.amount AS amount,
+  COALESCE(e.createdon, d.document_date) AS createdon,
+  d.document_number AS document_number,
+  c.customer_name AS customer_name
+FROM ((custacc e
+  LEFT JOIN documents d
+    ON ((d.document_id = e.document_id)))
+  JOIN customers c
+    ON ((c.customer_id = e.customer_id))) ;
+    
+    
+
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
   
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.11.0'); 

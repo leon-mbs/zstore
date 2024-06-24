@@ -80,6 +80,7 @@ class ProdIssue extends Document
     public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = self::getDesc('ProdIssue');
+        $list['ProdReturn'] = self::getDesc('ProdReturn');
 
         return $list;
     }

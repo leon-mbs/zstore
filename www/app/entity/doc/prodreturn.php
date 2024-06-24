@@ -32,7 +32,6 @@ class ProdReturn extends Document
                                   "tovar_name" => $name,
                                   "tovar_code" => $item->item_code,
                                   "msr"        => $item->msr,
-                                  "cell"       => $item->cell,
                                   "quantity"   => H::fqty($item->quantity)
                 );
             }
@@ -58,16 +57,13 @@ class ProdReturn extends Document
         $conn = \ZDB\DB::getConnect();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+            $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber);
+            $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
+            $sc->setStock($st->stock_id);
+            $sc->setOutPrice($st->partion);
+            $sc->tag=Entry::TAG_TOPROD;
 
-            foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                $sc->setStock($st->stock_id);
-                $sc->setOutPrice($st->partion);
-                $sc->tag=Entry::TAG_TOPROD;
-
-                $sc->save();
-            }
+        
         }
 
         return true;
@@ -79,8 +75,7 @@ class ProdReturn extends Document
 
     public function getRelationBased() {
         $list = array();
-        $list['ProdIssue'] = self::getDesc('ProdIssue');
-
+  
         return $list;
     }
 

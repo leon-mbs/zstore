@@ -138,6 +138,7 @@ CREATE TABLE store_stock (
   item_id int(11) NOT NULL,
   partion decimal(11, 2) DEFAULT NULL,
   store_id int(11) NOT NULL,
+  customer_id int(11) NOT NULL,
   qty decimal(11, 3) DEFAULT '0.000',
   snumber varchar(64) DEFAULT NULL,
   sdate date DEFAULT NULL,
@@ -1313,6 +1314,7 @@ SELECT
   st.item_id AS item_id,
   st.partion AS partion,
   st.store_id AS store_id,
+  st.customer_id AS customer_id,
   i.itemname AS itemname,
   i.item_code AS item_code,
   i.cat_id AS cat_id,
@@ -1331,6 +1333,7 @@ FROM ((store_stock st
     AND (i.disabled <> 1))))
   JOIN stores
     ON ((stores.store_id = st.store_id))) ;
+    
 
 CREATE
 VIEW timesheet_view
@@ -1378,7 +1381,38 @@ CREATE TABLE promocodes (
 ALTER TABLE promocodes
 ADD UNIQUE INDEX code (code)   ; 
 
-
+CREATE TABLE custacc (
+  ca_id int(11) NOT NULL AUTO_INCREMENT,
+  customer_id int(11) NOT NULL,
+  document_id int(11) DEFAULT NULL,
+  optype int(11) DEFAULT NULL,
+  amount decimal(10, 2) NOT NULL,
+  createdon date DEFAULT NULL,
+  PRIMARY KEY (ca_id),
+  KEY emp_id (customer_id),
+  KEY document_id (document_id)
+) ENGINE = INNODB  DEFAULT CHARSET = utf8;    
+    
+CREATE
+VIEW custacc_view
+AS
+SELECT
+  e.ca_id AS ca_id,
+  e.customer_id AS customer_id,
+  e.document_id AS document_id,
+  e.optype AS optype,
+  d.notes AS notes,
+  e.amount AS amount,
+  COALESCE(e.createdon, d.document_date) AS createdon,
+  d.document_number AS document_number,
+  c.customer_name AS customer_name
+FROM ((custacc e
+  LEFT JOIN documents d
+    ON ((d.document_id = e.document_id)))
+  JOIN customers c
+    ON ((c.customer_id = e.customer_id))) ;
+    
+  
 
 INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
 INSERT INTO roles (rolename, acl) VALUES( 'admins', 'a:11:{s:13:\"noshowpartion\";N;s:15:\"showotherstores\";N;s:7:\"aclview\";N;s:7:\"acledit\";N;s:6:\"aclexe\";N;s:9:\"aclcancel\";N;s:8:\"aclstate\";N;s:9:\"acldelete\";N;s:7:\"widgets\";N;s:7:\"modules\";N;s:9:\"smartmenu\";s:3:\"8,2\";}');
@@ -1478,7 +1512,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Офiсний документ', 'OfficeDoc', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Офiс', 'OfficeList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналітика', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
 
 
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(2, 105, 'Основна зарплата', 'осн', 0);
