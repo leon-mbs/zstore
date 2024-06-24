@@ -734,7 +734,12 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
 
 
-        $item->quantity = $this->docpanel->editdetail->editquantity->getText();
+        $item->quantity = doubleval($this->docpanel->editdetail->editquantity->getText());
+        if ($item->quantity == 0) {
+            $this->setError("Не введена  кількість");
+            return;
+        }
+        
         $item->snumber = $this->docpanel->editdetail->editserial->getText();
 
         $qstock = $item->getQuantity($store);
@@ -820,7 +825,12 @@ class ARMPos extends \App\Pages\Base
 
         $ser = Service::load($id);
 
-        $ser->quantity = $this->docpanel->editserdetail->editserquantity->getText();
+        $ser->quantity = doubleval( $this->docpanel->editserdetail->editserquantity->getText());
+        if ($item->quantity == 0) {
+            $this->setError("Не введена  кількість");
+            return;
+        }
+        
         $ser->pureprice = $ser->getPurePrice();
 
         $ser->price = H::fa($this->docpanel->editserdetail->editserprice->getText());
@@ -918,6 +928,7 @@ class ARMPos extends \App\Pages\Base
         return $total;
 
     }
+ 
     private function calcTotal() {
 
         $total = $this->_calcTotal();
@@ -2006,7 +2017,7 @@ class ARMPos extends \App\Pages\Base
         $item = Item::load($id);
 
 
-        $item->quantity = $this->docpanel->form2->qtysm->getText();
+        $item->quantity = doubleval($this->docpanel->form2->qtysm->getText());
         if ($item->quantity == 0) {
             $this->setError("Не введена  кількість");
             return;
