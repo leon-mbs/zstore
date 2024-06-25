@@ -309,6 +309,8 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
+            
+            $conn->Execute("delete from custacc where document_id=" . $this->document_id);
 
 
             $conn->CommitTrans();

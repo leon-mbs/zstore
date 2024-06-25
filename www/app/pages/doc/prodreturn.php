@@ -172,7 +172,6 @@ class ProdReturn extends \App\Pages\Base
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->snumber = $this->editdetail->editserial->getText();
-    
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
@@ -393,7 +392,11 @@ class ProdReturn extends \App\Pages\Base
     public function OnAutoItem($sender) {
         //$store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return Item::findArrayAC($text);
+        $like = Item::qstr('%' . $text . '%');
+
+        $criteria = " disabled <> 1 and  item_type in(2,3,5) and item_id in(select item_id from store_stock ) and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        
+        return Item::findArray("itemname",$criteria,"itemname");
     }
 
 }

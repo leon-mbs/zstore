@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Entry;
+use App\Entity\Stock;
 use App\Helper as H;
 
 /**
@@ -57,12 +58,27 @@ class ProdReturn extends Document
         $conn = \ZDB\DB::getConnect();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber);
-            $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
+            
+    
+            $where = " item_id =    ". $item->item_id;
+            if($this->headerdata['store']>0) {
+                $where .= " and store_id = ".$this->headerdata['store'];
+            }
+
+
+            if (strlen($item->snumber) > 0) {
+                $where .= "  and  snumber =  " . $conn->qstr($item->snumber);
+            }
+
+
+            $st = Stock::getFirst($where , 'qty desc,stock_id desc');
+            
+
+            $sc = new Entry($this->document_id, $item->quantity * $st->partion, $item->quantity);
             $sc->setStock($st->stock_id);
             $sc->setOutPrice($st->partion);
             $sc->tag=Entry::TAG_TOPROD;
-
+            $sc->save();
         
         }
 

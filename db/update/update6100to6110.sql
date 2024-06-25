@@ -122,6 +122,9 @@ FROM ((custacc e
   JOIN customers c
     ON ((c.customer_id = e.customer_id))) ;
     
+
+INSERT INTO custacc (amount,document_id,customer_id,optype) 
+SELECT bonus,document_id, customer_id,1 FROM paylist_view WHERE  paytype=1001 AND  customer_id IS NOT null;
     
 
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
