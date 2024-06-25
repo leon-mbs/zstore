@@ -85,7 +85,7 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
         $this->headerdata['_state_before_approve_'] = '';
         $this->headerdata['contract_id'] = 0;
-        $this->headerdata['timeentry'] = null; // для проаводок
+        $this->headerdata['timeentry'] = 0; // для проаводок
         $this->headerdata['time'] = time();  //  для чеков
         
     }
@@ -407,6 +407,7 @@ class Document extends \ZCL\DB\Entity
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
+                    $this->headerdata['timeentry'] = 0;
                     $this->Cancel();
                 }
                 $this->headerdata['_state_before_approve_'] = '';                
