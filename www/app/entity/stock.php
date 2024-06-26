@@ -60,8 +60,9 @@ class Stock extends \ZCL\DB\Entity
      * @param mixed $tovar_id Товар
      * @param mixed $price Цена
      * @param mixed $create Создать  если  не   существует
+     * @param mixed $customer_id Поставщик
      */
-    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true) {
+    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0) {
 
     
         $conn = \ZDB\DB::getConnect();
@@ -71,6 +72,9 @@ class Stock extends \ZCL\DB\Entity
 
         if (strlen($snumber) > 0) {
             $where .= "  and  snumber =  " . $conn->qstr($snumber);
+        }
+        if ($customer_id > 0) {
+            $where .= "  and  customer_id =  " . $customer_id;
         }
 
 
@@ -84,6 +88,7 @@ class Stock extends \ZCL\DB\Entity
             $stock->partion = $price;
             $stock->snumber = $snumber;
             $stock->sdate = $sdate;
+            $stock->customer_id = $customer_id >0 ? $customer_id :null;
 
 
             $stock->save();

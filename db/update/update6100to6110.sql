@@ -128,6 +128,7 @@ SELECT bonus,document_id, customer_id,1 FROM paylist_view WHERE  paytype=1001 AN
     
 
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Оплата комітенту', 'PayComitent', 'Закупівлі', 0);
   
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.11.0'); 
