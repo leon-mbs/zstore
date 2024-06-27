@@ -81,6 +81,7 @@ class Document extends \ZCL\DB\Entity
         $this->payed = 0;
 
         $this->document_number = '';
+        $this->document_date = time();
         $this->notes = '';
 
    
