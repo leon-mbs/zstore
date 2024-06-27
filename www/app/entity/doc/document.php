@@ -79,22 +79,15 @@ class Document extends \ZCL\DB\Entity
         $this->amount = 0;
         $this->payamount = 0;
         $this->payed = 0;
-
         $this->document_number = '';
         $this->document_date = time();
         $this->notes = '';
-
-   
         $this->headerdata = array();
         $this->detaildata = array();
-
         $this->headerdata['_state_before_approve_'] = '';
-        
-        if($this->document_id==0) {    //для новых документов
-           $this->headerdata['contract_id'] = 0;
-           $this->headerdata['timeentry'] = time();
-           $this->headerdata['time'] = time();  
-        }
+        $this->headerdata['contract_id'] = 0;
+        $this->headerdata['timeentry'] = 0; // для проаводок
+        $this->headerdata['time'] = time();  //  для чеков
         
     }
 
@@ -317,6 +310,8 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
+            
+            $conn->Execute("delete from custacc where document_id=" . $this->document_id);
 
 
             $conn->CommitTrans();
@@ -413,6 +408,7 @@ class Document extends \ZCL\DB\Entity
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
+                    $this->headerdata['timeentry'] = 0;
                     $this->Cancel();
                 }
                 $this->headerdata['_state_before_approve_'] = '';                
