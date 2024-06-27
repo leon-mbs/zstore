@@ -80,6 +80,7 @@ class Document extends \ZCL\DB\Entity
         $this->payamount = 0;
         $this->payed = 0;
         $this->document_number = '';
+        $this->document_date = time();
         $this->notes = '';
         $this->headerdata = array();
         $this->detaildata = array();
