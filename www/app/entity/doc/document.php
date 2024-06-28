@@ -293,10 +293,9 @@ class Document extends \ZCL\DB\Entity
      *
      */
     protected function Cancel() {
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-            // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
+            $conn = \ZDB\DB::getConnect();
+
+            //  удаляем  документ  со  всех  движений
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
 
             //удаляем освободившиеся стоки
@@ -304,27 +303,17 @@ class Document extends \ZCL\DB\Entity
 
             //отменяем оплаты
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
-            //лицевые счета  контрагентов
-
+     
 
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
+            //лицевые счета  сотрудника
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
             
-            $conn->Execute("delete from custacc where document_id=" . $this->document_id);
+            //лицевые счета  контрагентов
+          //  $conn->Execute("delete from custacc where document_id=" . $this->document_id);
 
-
-            $conn->CommitTrans();
-        } catch(\Exception $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            \App\System::setErrorMsg($ee->getMessage());
-
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
-
-            return false;
-        }
-        return true;
+ 
     }
 
     /**
@@ -1201,5 +1190,7 @@ class Document extends \ZCL\DB\Entity
 
     }
 
-
+    protected function beforeDelete() { 
+        $this->Cancel();
+    }
 }
