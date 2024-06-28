@@ -7,7 +7,7 @@ use App\Entity\Customer;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\MoneyFund;
-use App\Entity\Store;
+
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -46,14 +46,18 @@ class PayComitent extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
-
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
-        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
+        $clist= Customer::findArray("customer_name","status=0 and customer_id in (select customer_id from documents_view where  meta_name='GoodsReceipt' and state=5 and  content like '%<comission>1</comission>%'  )","customer_name") ;
+        $ilist= Item::findArray("itemname","item_id in (select item_id from store_stock where  customer_id in  (select customer_id from documents_view where  meta_name='GoodsReceipt' and state=5 and  content like '%<comission>1</comission>%'  ) ) ","itemname") ;
+        
+        $this->docform->add(new DropDownChoice('customer',$clist,0 ));
+        $this->docform->add(new DropDownChoice('item',$ilist,0 ));
+        $this->docform->add(new TextInput('iqty'));
+        $this->docform->add(new TextInput('iprice'));
+
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'saverowOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -66,28 +70,16 @@ class PayComitent extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
 
-        $this->add(new Form('editdetail'))->setVisible(false);
-        $this->editdetail->add(new TextInput('editquantity'))->setText("1");
-        $this->editdetail->add(new TextInput('editprice'));
-
-        $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
-
-        $this->editdetail->add(new Label('qtystock'));
-
-        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
-        $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
-
+ 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+
+            $this->docform->customer->setValue($this->_doc->customer_id);
+
             $this->docform->total->setText(H::fa($this->_doc->amount));
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
@@ -108,9 +100,8 @@ class PayComitent extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
 
                     if ($basedoc->meta_name == 'GoodsReceipt') {
-                        $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
+
+                        $this->docform->customer->setValue($basedoc->customer_id);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
@@ -141,7 +132,7 @@ class PayComitent extends \App\Pages\Base
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+
     }
 
     public function deleteOnClick($sender) {
@@ -158,36 +149,12 @@ class PayComitent extends \App\Pages\Base
         $this->calcTotal();
     }
 
-    public function addrowOnClick($sender) {
-        $this->editdetail->setVisible(true);
-        $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("0");
-        $this->editdetail->qtystock->setText("");
-        $this->docform->setVisible(false);
-        $this->_rowid = -1;
-    }
+ 
 
-    public function editOnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $this->editdetail->setVisible(true);
-        $this->docform->setVisible(false);
-
-        $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editprice->setText($item->price);
-
-        $this->editdetail->edittovar->setKey($item->item_id);
-        $this->editdetail->edittovar->setText($item->itemname);
-
-        $qty = $item->getQuantity();
-        $this->editdetail->qtystock->setText(H::fqty($qty));
-
-        $this->_rowid =  array_search($item, $this->_itemlist, true);
-
-    }
-
+ 
     public function saverowOnClick($sender) {
 
-        $id = $this->editdetail->edittovar->getKey();
+        $id = $this->docform->item->getValue();
         if ($id == 0) {
             $this->setError("Не обрано товар");
             return;
@@ -196,36 +163,25 @@ class PayComitent extends \App\Pages\Base
         $item = Item::load($id);
 
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = doubleval($this->docform->iqty->getText() );
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price =  doubleval($this->docform->iprice->getText() );
 
-        if($this->_rowid == -1) {
-            $this->_itemlist[] = $item;
-        } else {
-            $this->_itemlist[$this->_rowid] = $item;
+        if($item->quantity == 0  && $item->price == 0 )  {
+            return;
         }
-
+        
+        $this->_itemlist[] = $item;
+  
         $this->docform->detail->Reload();
         $this->calcTotal();
         
         
-         $this->docform->setVisible(true);
-         $this->editdetail->setVisible(false);
+
 
     }
 
-    public function cancelrowOnClick($sender) {
-        $this->editdetail->setVisible(false);
-        $this->docform->setVisible(true);
-        //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
-
-        $this->editdetail->editquantity->setText("1");
-
-        $this->editdetail->editprice->setText("");
-    }
+ 
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -236,17 +192,16 @@ class PayComitent extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
-        $this->_doc->customer_id = $this->docform->customer->getKey();
+        $this->_doc->customer_id = $this->docform->customer->getValue();
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getValueName();
         }
 
         //  $this->calcTotal();
         $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
@@ -256,7 +211,7 @@ class PayComitent extends \App\Pages\Base
 
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->payamount = $this->docform->total->getText();
+        $this->_doc->payamount = 0;
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
@@ -265,9 +220,6 @@ class PayComitent extends \App\Pages\Base
             return;
         }
 
-        if ($this->_doc->payed == 0) {
-            $this->_doc->headerdata['payment'] = 0;
-        }
 
 
         $isEdited = $this->_doc->document_id > 0;
@@ -286,9 +238,7 @@ class PayComitent extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if ($this->_doc->payamount > $this->_doc->payed) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                }
+           
 
             } else {
 
@@ -327,18 +277,7 @@ class PayComitent extends \App\Pages\Base
         }
 
         $payed=  $total;
-        
-        if($this->_basedocid >0) {
-            $parent = Document::load($this->_basedocid) ;
-            
-            $payed = $parent->payamount;
-            
-            
-            $k = 1 - ($parent->amount - $total) / $parent->amount;
  
-            $payed  = $payed*$k;           
-        }        
-
         
         $this->docform->total->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($payed));
@@ -347,13 +286,7 @@ class PayComitent extends \App\Pages\Base
 
     public function onPayed($sender) {
         $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
-        $payed = $this->docform->payed->getText();
-        $total = $this->docform->total->getText();
-        if ($payed > $total) {
-            $this->setWarn('Внесена сума більше необхідної');
-        } else {
-            $this->goAnkor("tankor");
-        }
+ 
     }
 
     /**
@@ -375,11 +308,8 @@ class PayComitent extends \App\Pages\Base
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введено товар");
         }
-        if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
-        }
-        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+        if ( $this->_doc->payed == 0) {
+            $this->setError("Не внесена сума");
         }
 
         return !$this->isError();
@@ -389,36 +319,6 @@ class PayComitent extends \App\Pages\Base
         App::RedirectBack();
     }
 
-
-    public function OnChangeItem($sender) {
-        $id = $sender->getKey();
-        $item = Item::load($id);
-
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
-        $cid = $this->docform->customer->getKey();
-
-        $where = " document_id  in (select document_id from  documents_view where  meta_name='GoodsReceipt') and item_id=" . $id;
-
-        if ($id > 0) {
-            $where .= " and  customer_id= {$cid} ";
-        }
-
-
-        $e = \App\Entity\Entry::getFirst($where, "entry_id desc");
-
-        $this->editdetail->editprice->setText(H::fa($e->partion));
-
-
-
-    }
-
-    public function OnAutoCustomer($sender) {
-        return Customer::getList($sender->getText(), 2);
-    }
-
-    public function OnAutoItem($sender) {
-        $text = trim($sender->getText());
-        return Item::findArrayAC($text);
-    }
+ 
 
 }

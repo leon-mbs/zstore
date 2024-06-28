@@ -61,26 +61,12 @@ class PayComitent extends Document
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->unpackDetails('detaildata') as $item) {
-
-
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
-
-            foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $item->price, 0 - $st->quantity);
-                $sc->setStock($st->stock_id);
-                //   $sc->setExtCode($item->price - $st->partion); //Для АВС
-                $sc->setOutPrice($item->price);
-                $sc->tag=Entry::TAG_RBAY;
-                $sc->save();
-            }
-        }
-
+    
         $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
         if ($payed > 0) {
             $this->payed = $payed;
         }
-        \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        \App\Entity\IOState::addIOState($this->document_id, 0-$this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
 
 
@@ -89,7 +75,7 @@ class PayComitent extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВП-000000';
+        return 'ВК-000000';
     }
 
 }
