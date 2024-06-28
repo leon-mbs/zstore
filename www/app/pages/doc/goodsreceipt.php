@@ -912,12 +912,6 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->setError('Не створено унікальный номер документа');
             }
         }
-        if ($this->_doc->headerdata['comission']==1 && $this->_doc->headerdata['val'] != "0") {
-            $this->setError("Не можна валюту і комісію ");
-        }
-        if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
-            $this->setError("Оплата не  вноситься якщо Комісія ");
-        }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введено товар");
         }
@@ -937,7 +931,15 @@ class GoodsReceipt extends \App\Pages\Base
                 return;
             }
 
+        } 
+        
+        if ($this->_doc->headerdata['comission']==1 && $this->_doc->headerdata['val'] != "0") {
+            $this->setError("Не можна валюту і комісію ");
         }
+        if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
+            $this->setError("Оплата не  вноситься якщо Комісія ");
+        }
+        
         return !$this->isError();
     }
 

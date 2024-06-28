@@ -17,6 +17,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -54,6 +55,7 @@ class RetCustIssue extends \App\Pages\Base
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new CheckBox('comission', 0));
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -92,6 +94,7 @@ class RetCustIssue extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
+            $this->docform->comission->setChecked($this->_doc->headerdata['comission']);
 
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
@@ -111,6 +114,7 @@ class RetCustIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
+                        $this->docform->comission->setChecked($basedoc->headerdata['comission']);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
@@ -380,6 +384,9 @@ class RetCustIssue extends \App\Pages\Base
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
             $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+        }
+        if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
+            $this->setError("Оплата не  вноситься якщо Комісія ");
         }
 
         return !$this->isError();
