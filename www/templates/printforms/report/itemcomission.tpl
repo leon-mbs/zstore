@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Комісійні товари
+            Комісійні товари  на {{dt}}
         </td>
     </tr>
     
@@ -43,12 +43,7 @@
 
     </tr>
     {{/_detail}}
-    <tr>
-      <td colspan="3" >Поступило на суму:</td>    
-    </tr>
-    <tr>
-      <td colspan="3" >Продано на суму:</td>    
-    </tr>
+ 
 
 
 </table>

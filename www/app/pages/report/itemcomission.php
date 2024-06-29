@@ -54,51 +54,54 @@ class ItemComission extends \App\Pages\Base
     private function generateReport() {
       
         $cust =  $this->filter->customer->getValue() ;
-      
-        $conn = \ZDB\DB::getConnect();
-
-
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-            $br = " and d.branch_id in ({$brids}) ";
+            $br = " and  branch_id in ({$brids}) ";
+        }        
+      
+      
+        $where="where 1=1 ";
+        if($cust >0){
+            $c= " and s.customer_id=".$cust; 
         }
-
+   
         $conn = $conn = \ZDB\DB::getConnect();
         $this->data = array();
 
 
         $sql = "
-            select itemname,item_code,buyqty,rqty,(0-rqty)/buyqty as pr from (
-            select * from (
-          select i.itemname,i.item_code,
-              sum( case when e.quantity > 0 then e.quantity  else 0 end ) as buyqty,    
-              sum( case when e.quantity < 0 then e.quantity  else 0 end ) as rqty    
-              from entrylist_view  e
-
-              join items_view i on e.item_id = i.item_id  and i.disabled<> 1  
-              join documents_view d on d.document_id = e.document_id
-               where e.partion  is  not null and  e.item_id >0  and e.quantity <> 0    
-               and d.meta_name in ('GoodsReceipt','RetCustIssue' )
-               {$br}   
-               group by  i.itemname,i.item_code
-               )  t where  t.rqty <0  ) t2   where (0-rqty)/buyqty >= 0.01 order  by (0-rqty)/buyqty desc 
+            select s.*,e.document_id from store_stock_view s
+            join entrylist_view e  on e.stock_id = s.stock_id 
+            {$where} and e.document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' and state=5 and  content like '%<comission>1</comission>%'  {$br} ) 
+            order by s.itemname 
         ";
-
 
         $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $item) {
+            $d= \App\Entity\Doc\Document::load($item["document_id"]);
+            $det=[];
+            $det['itemname'] =  $item['itemname'];
+            $det['item_code'] = H::fqty($item['item_code']);
+            $det['price'] = H::fa($item['partion']);
+            $det['docs'] = $d->document_number;
+            
+            $sql="select coalesce(sum(quantity),0 ) from entrylist where quantity >0 and stock_id=".$item["stock_id"];
+            $det['buyqty']  = H::fqty($conn->GetOne($sql) );
+            $sql="select coalesce(sum(0-quantity),0 ) from entrylist where quantity < 0 and document_id in (select document_id from documents_view where  meta_name='RetCustIssue') and stock_id=".$item["stock_id"];
+            $det['retqty'] =  H::fqty($conn->GetOne($sql) );
+            $sql="select coalesce(sum(0-quantity),0 ) from entrylist where quantity < 0 and document_id not in (select document_id from documents_view where  meta_name='RetCustIssue') and stock_id=".$item["stock_id"];
+            $det['sellqty'] = H::fqty($conn->GetOne($sql) );
 
-            $item['buyqty'] = H::fqty($item['buyqty']);
-            $item['rqty'] = H::fqty(0-$item['rqty']);
-            $item['pr'] = number_format($item['pr'] *100, 1, '.', '') ;
-            $detail[] = $item;
+            $detail[] = $det;
+              
         }
 
 
         $header = array(
             "_detail" => $detail,
+            "dt" => H::fd(time()) ,
             "iscust" => $cust > 0 ,
             "cust" => $cust > 0  ? $this->filter->customer->getValueName()  : ""
             
