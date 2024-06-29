@@ -47,6 +47,7 @@ class Roles extends \App\Pages\Base
 
 
         $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
+        $this->editpan->editform->add(new CheckBox('editcanevent'));
         $this->editpan->editform->add(new CheckBox('editshowotherstores'));
 
         //виджеты
@@ -142,6 +143,7 @@ class Roles extends \App\Pages\Base
 
 
         $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
+        $this->editpan->editform->editcanevent->setChecked($this->role->canevent);
         $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
 
 
@@ -239,6 +241,7 @@ class Roles extends \App\Pages\Base
 
     public function saveaclOnClick($sender) {
 
+        $this->role->canevent = $this->editpan->editform->editcanevent->isChecked() ? 1 : 0;
         $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ? 1 : 0;
         $this->role->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
 

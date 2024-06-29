@@ -35,11 +35,11 @@ DROP VIEW eventlist_view;
 CREATE VIEW eventlist_view
 AS
 SELECT
+  e.event_id AS event_id,
   e.user_id AS user_id,
   e.eventdate AS eventdate,
   e.title AS title,
   e.description AS description,
-  e.event_id AS event_id,
   e.customer_id AS customer_id,
   e.isdone AS isdone,
   e.createdby AS createdby,
