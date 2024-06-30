@@ -1070,7 +1070,7 @@ SELECT
   note_nodes.user_id AS user_id,
   note_nodes.ispublic AS ispublic,
   (SELECT
-      COUNT(note_topicnode.topic_id) AS Count(topic_id)
+      COUNT(note_topicnode.topic_id) AS cnt
     FROM note_topicnode
     WHERE (note_topicnode.node_id = note_nodes.node_id)) AS tcnt
 FROM note_nodes ;
