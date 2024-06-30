@@ -600,7 +600,7 @@ class Helper
         if ($common['qtydigits'] > 0) {
             return @number_format($qty, $common['qtydigits'], '.', '');
         } else {
-            return round($qty);
+            return intval($qty);
         }
     }
 

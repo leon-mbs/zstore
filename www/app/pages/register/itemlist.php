@@ -288,7 +288,7 @@ class ItemList extends \App\Pages\Base
         }
     
      
-        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st} {$st2} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st}  and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
            $this->_tvars["i_lastsell"] =  $d->document_number .' вiд '. H::fd($d->document_date) .'.'  ; 

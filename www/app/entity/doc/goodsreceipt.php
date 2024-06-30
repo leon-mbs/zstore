@@ -127,7 +127,7 @@ class GoodsReceipt extends Document
                 $iprice = 0;
             }
        //     $item->amount = $iprice * $item->quantity;
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0);
 
             $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
@@ -216,6 +216,7 @@ class GoodsReceipt extends Document
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['MoveItem'] = self::getDesc('MoveItem');
+  
 
         return $list;
     }

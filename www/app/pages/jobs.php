@@ -28,6 +28,7 @@ class Jobs extends \App\Pages\Base
         $user = System::getUser();
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
+            return;
         }
 
         $this->add(new Panel('listpan'));
@@ -38,7 +39,7 @@ class Jobs extends \App\Pages\Base
         $this->listpan->add(new  ClickLink('addnew', $this, 'onAddNew'));
 
 
-        $this->ds = new \ZCL\DB\EntityDataSource("\\App\\Entity\\Event", "  user_id=" . $user->user_id, " isdone asc,  (date(eventdate) > date(now( )))  asc, eventdate desc");
+        $this->ds = new \ZCL\DB\EntityDataSource("\\App\\Entity\\Event", " event_type in(0,2) and ( user_id={$user->user_id} or createdby={$user->user_id}  ) ", " isdone asc,  (date(eventdate) > date(now( )))  asc, eventdate desc");
 
         $this->listpan->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->listpan->nlist->setPageSize(H::getPG());
@@ -76,8 +77,10 @@ class Jobs extends \App\Pages\Base
 
         $row->add(new Label("description"))->setText($event->description);
         $row->add(new Label("title"))->setText($event->title);
+        $row->add(new Label("createdby"))->setText($event->createdname);
+        $row->add(new Label("username"))->setText($event->username);
         $row->add(new Label("date", \App\Helper::fdt($event->eventdate)));
-        $row->add(new ClickLink('edit', $this, 'onEditClick'));
+        $row->add(new ClickLink('edit', $this, 'onEditClick'))->setVisible(($event->createdby ?? 0) ==0  ||  $event->createdby==System::getUser()->user_id);
         $row->add(new ClickLink('done', $this, 'onDoneClick'));
         $row->add(new Label("stwait"))->setVisible(false);
         $row->add(new Label("sttoday"))->setVisible(false);
@@ -136,6 +139,7 @@ class Jobs extends \App\Pages\Base
         $event->eventdate = $this->addeventform->addeventdate->getDate();
         $event->eventdate = $this->addeventform->addeventtime->getDateTime($event->eventdate);
         $event->user_id = System::getUser()->user_id;
+        $event->createdby = System::getUser()->user_id;
         $user = $this->addeventform->adduser->getValue();
         if ($user > 0) {
             $event->user_id = $user;
@@ -216,11 +220,12 @@ class Jobs extends \App\Pages\Base
 
 
     public function filterOnSubmit($sender) {
-        $where = 'user_id=' . System::getUser()->user_id;
+        $user_id =  System::getUser()->user_id;
+        $where = " event_type in(0,2) and ( user_id={$user_id} or createdby={$user_id}  ) ";
         $text = trim($sender->searchtext->getText());
         if (strlen($text) > 0) {
             $text = Event::qstr('%' . $text . '%');
-            $where = " ( description like {$text} or title like {$text} )  and  event_type in(0,2) and  user_id=" . System::getUser()->user_id;
+            $where .= " and  ( description like {$text} or title like {$text} )  " ;
         }
 
         $this->ds->setWhere($where);

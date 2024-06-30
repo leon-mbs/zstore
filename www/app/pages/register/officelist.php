@@ -582,9 +582,5 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
-
-//todo  спец запись  в headerdata  лоя  прлписй и поиска
-//todo  увеомление что  полпиано
-//todo  досиуп  к  кнрпкам  продписи
-//todo уведомление  что надо  полписать
+ 
 

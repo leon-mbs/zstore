@@ -107,7 +107,6 @@ class Update extends \App\Pages\Base
           $this->_tvars['sqlurl']  = $sqlurl .$t ;
           $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
              
-          $this->_tvars['showdb']  = true; 
         }  
           
 

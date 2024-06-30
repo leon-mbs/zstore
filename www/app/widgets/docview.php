@@ -134,7 +134,11 @@ class DocView extends \Zippy\Html\PageFragment
 
         //склад
         $ret['entrylist'] = array();
-        $sql = " select e.entry_id, s.stock_id, s.partion,s.itemname,s.item_code,e.quantity,e.outprice  from  entrylist e join store_stock_view  s on e.stock_id = s.stock_id  where  coalesce(e.quantity,0) <> 0  and document_id=" . $docid . " order  by e.entry_id";
+        $sql = " select e.entry_id, s.stock_id, s.partion,i.itemname,i.item_code,e.quantity,e.outprice  
+        from entrylist e 
+        join store_stock  s on e.stock_id = s.stock_id
+        join items i on s.item_id = i.item_id 
+        where  coalesce(e.quantity,0) <> 0  and document_id=" . $docid . " order  by e.entry_id";
 
         foreach(\App\Entity\Entry::findBySql($sql) as $entry) {
             $ret['entrylist'][]= array(

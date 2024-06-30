@@ -157,7 +157,7 @@ class Pay extends \ZCL\DB\Entity
         }
 
         $doc = \App\Entity\Doc\Document::load($pl->document_id);
-
+        //сторно
         $pay = new \App\Entity\Pay();
         $pay->mf_id = $pl->mf_id;
 

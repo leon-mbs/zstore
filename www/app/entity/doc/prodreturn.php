@@ -3,13 +3,14 @@
 namespace App\Entity\Doc;
 
 use App\Entity\Entry;
+use App\Entity\Stock;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ  списание в  производство
+ * Класс-сущность  документ возврат с производства
  *
  */
-class ProdIssue extends Document
+class ProdReturn extends Document
 {
     public function generateReport() {
 
@@ -32,7 +33,6 @@ class ProdIssue extends Document
                                   "tovar_name" => $name,
                                   "tovar_code" => $item->item_code,
                                   "msr"        => $item->msr,
-                                  "cell"       => $item->cell,
                                   "quantity"   => H::fqty($item->quantity)
                 );
             }
@@ -47,7 +47,7 @@ class ProdIssue extends Document
                         "notes"           => nl2br($this->notes)
         );
 
-        $report = new \App\Report('doc/prodissue.tpl');
+        $report = new \App\Report('doc/prodreturn.tpl');
 
         $html = $report->generate($header);
 
@@ -58,30 +58,40 @@ class ProdIssue extends Document
         $conn = \ZDB\DB::getConnect();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
-
-            foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                $sc->setStock($st->stock_id);
-                $sc->setOutPrice($st->partion);
-                $sc->tag=Entry::TAG_TOPROD;
-
-                $sc->save();
+            
+    
+            $where = " item_id =    ". $item->item_id;
+            if($this->headerdata['store']>0) {
+                $where .= " and store_id = ".$this->headerdata['store'];
             }
+
+
+            if (strlen($item->snumber) > 0) {
+                $where .= "  and  snumber =  " . $conn->qstr($item->snumber);
+            }
+
+
+            $st = Stock::getFirst($where , 'qty desc,stock_id desc');
+            
+
+            $sc = new Entry($this->document_id, $item->quantity * $st->partion, $item->quantity);
+            $sc->setStock($st->stock_id);
+            $sc->setOutPrice($st->partion);
+            $sc->tag=Entry::TAG_TOPROD;
+            $sc->save();
+        
         }
 
         return true;
     }
 
     protected function getNumberTemplate() {
-        return 'СВ-000000';
+        return 'ПВ-000000';
     }
 
     public function getRelationBased() {
         $list = array();
-        $list['ProdIssue'] = self::getDesc('ProdIssue');
-        $list['ProdReturn'] = self::getDesc('ProdReturn');
-
+  
         return $list;
     }
 

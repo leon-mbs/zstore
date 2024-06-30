@@ -79,19 +79,16 @@ class Document extends \ZCL\DB\Entity
         $this->amount = 0;
         $this->payamount = 0;
         $this->payed = 0;
-
         $this->document_number = '';
-        $this->notes = '';
-
         $this->document_date = time();
-        $this->user_id = 0;
-
+        $this->notes = '';
         $this->headerdata = array();
         $this->detaildata = array();
-        $this->headerdata['contract_id'] = 0;
-        $this->headerdata['time'] = time();
-
         $this->headerdata['_state_before_approve_'] = '';
+        $this->headerdata['contract_id'] = 0;
+        $this->headerdata['timeentry'] = 0; // для проаводок
+        $this->headerdata['time'] = time();  //  для чеков
+        
     }
 
     /**
@@ -296,10 +293,9 @@ class Document extends \ZCL\DB\Entity
      *
      */
     protected function Cancel() {
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-            // если  метод не переопределен  в  наследнике удаляем  документ  со  всех  движений
+            $conn = \ZDB\DB::getConnect();
+
+            //  удаляем  документ  со  всех  движений
             $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
 
             //удаляем освободившиеся стоки
@@ -307,25 +303,17 @@ class Document extends \ZCL\DB\Entity
 
             //отменяем оплаты
             $conn->Execute("delete from paylist where document_id = " . $this->document_id);
-            //лицевые счета  контрагентов
-
+     
 
             $conn->Execute("delete from iostate where document_id=" . $this->document_id);
 
+            //лицевые счета  сотрудника
             $conn->Execute("delete from empacc where document_id=" . $this->document_id);
+            
+            //лицевые счета  контрагентов
+            $conn->Execute("delete from custacc where document_id=" . $this->document_id);
 
-
-            $conn->CommitTrans();
-        } catch(\Exception $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            \App\System::setErrorMsg($ee->getMessage());
-
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
-
-            return false;
-        }
-        return true;
+ 
     }
 
     /**
@@ -409,6 +397,7 @@ class Document extends \ZCL\DB\Entity
         } else {
             if ($state == self::STATE_CANCELED) {
                 if($onlystate == false) {
+                    $this->headerdata['timeentry'] = 0;
                     $this->Cancel();
                 }
                 $this->headerdata['_state_before_approve_'] = '';                
@@ -1101,8 +1090,8 @@ class Document extends \ZCL\DB\Entity
         }
 
         $payment=$this->payamount;
-        if($this->headerdata['payedcard'] > 0) {
-            $payment =  $this->headerdata['payedcard'];
+        if(($this->headerdata['payedcard'] ??0) > 0) {
+            $payment =  $this->headerdata['payedcard'] ;
         }
 
         $url = "BCD\n002\n1\nUCT\n\n";
@@ -1201,5 +1190,7 @@ class Document extends \ZCL\DB\Entity
 
     }
 
-
+    protected function beforeDelete() { 
+        $this->Cancel();
+    }
 }

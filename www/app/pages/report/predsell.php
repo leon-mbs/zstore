@@ -6,6 +6,7 @@ use App\Helper as H;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Link\ClickLink;
@@ -30,6 +31,8 @@ class PredSell extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new DropDownChoice('cat', $cats, 0));
         $this->filter->add(new DropDownChoice('type'));
+        $this->filter->add(new TextInput('brand'));
+        $this->filter->brand->setDataList(\App\Entity\Item::getManufacturers());
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -55,11 +58,16 @@ class PredSell extends \App\Pages\Base
 
         $cat = (int)$this->filter->cat->getValue();
         $type = (int)$this->filter->type->getValue();
+        $brand = trim( $this->filter->brand->getText() );
         $conn = \ZDB\DB::getConnect();
 
         $tp = " (i.item_type=0 || i.item_type=1 ) ";
         if ($type == 1) {
             $tp = " (i.item_type=4 || i.item_type=5 ) ";
+        }
+        $br = "";
+        if (strlen($brand)>0) {
+            $br = " and i.manufacturer= ".$conn->qstr($brand);
         }
 
         $onstore = [];
@@ -105,7 +113,7 @@ class PredSell extends \App\Pages\Base
         join documents_view d on e.document_id = d.document_id 
         where  i.disabled <> 1 and d.meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ReturnIssue') 
         and i.cat_id={$cat} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
-        and {$tp}
+        and {$tp}   {$br}
         group  by i.item_id,i.itemname,i.item_code 
         order  by i.itemname 
         ";

@@ -6,10 +6,10 @@ use App\Entity\Entry;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ  списание в  производство
+ * Класс-сущность  документ Оплата  комитенту
  *
  */
-class ProdIssue extends Document
+class PayComitent extends Document
 {
     public function generateReport() {
 
@@ -27,27 +27,31 @@ class ProdIssue extends Document
                     $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
                 }
 
-
                 $detail[] = array("no"         => $i++,
                                   "tovar_name" => $name,
                                   "tovar_code" => $item->item_code,
+                                  "quantity"   => H::fqty($item->quantity),
                                   "msr"        => $item->msr,
-                                  "cell"       => $item->cell,
-                                  "quantity"   => H::fqty($item->quantity)
+                                  "price"      => H::fa($item->price),
+                                  "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
         }
 
 
+        $customer = \App\Entity\Customer::load($this->customer_id);
+
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "pareaname"       => $this->headerdata["pareaname"],
-                        "storename"       => $this->headerdata["storename"],
+                        "firm_name"       => $this->headerdata["firm_name"],
+                        "customer_name"   => $this->customer_name,
+                        "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
-                        "notes"           => nl2br($this->notes)
+                        "total"           => H::fa($this->amount),
+                        "payed"           => H::fa($this->payed)
         );
 
-        $report = new \App\Report('doc/prodissue.tpl');
+        $report = new \App\Report('doc/paycomitent.tpl');
 
         $html = $report->generate($header);
 
@@ -57,32 +61,21 @@ class ProdIssue extends Document
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
 
-        foreach ($this->unpackDetails('detaildata') as $item) {
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
-
-            foreach ($listst as $st) {
-                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                $sc->setStock($st->stock_id);
-                $sc->setOutPrice($st->partion);
-                $sc->tag=Entry::TAG_TOPROD;
-
-                $sc->save();
-            }
+    
+        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+        if ($payed > 0) {
+            $this->payed = $payed;
         }
+        \App\Entity\IOState::addIOState($this->document_id, 0-$this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
+
+
 
         return true;
     }
 
     protected function getNumberTemplate() {
-        return 'СВ-000000';
-    }
-
-    public function getRelationBased() {
-        $list = array();
-        $list['ProdIssue'] = self::getDesc('ProdIssue');
-        $list['ProdReturn'] = self::getDesc('ProdReturn');
-
-        return $list;
+        return 'ВК-000000';
     }
 
 }

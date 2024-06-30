@@ -274,6 +274,8 @@ class ServiceAct extends \App\Pages\Base
 
 
                 if ($post->op == 'execdoc' || $post->op == 'paydoc') {
+                    
+                    $this->_doc->headerdata['timeentry'] = time();
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
                 }
                 if (  $post->op == 'paydoc') {

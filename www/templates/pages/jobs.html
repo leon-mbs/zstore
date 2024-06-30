@@ -24,9 +24,20 @@
                 </div>
                 <a zippy="addnew" class="btn btn-success">Додати</a>
                 <table class="table table-sm table-bordered  ">
+                     <tr>
+                     <th>Дата</th>
+                     <th>Створив</th>
+                     <th>Виконавець</th>
+                     <th>Статус</th>
+                     <th>Заголовок</th>
+                     <th>Контрагент</th>
+                     <th>Коментар</th>
+                     </tr>
                     <tr zippy="nlist">
 
                         <td zippy="date" class="text-nowrap">    </td>
+                        <td zippy="createdby" >    </td>
+                        <td zippy="username" >    </td>
                         <td  class="text-nowrap"> 
                             <span zippy="stwait" class="badge badge-success">Очiкує</span>
                             <span zippy="sttoday" class="badge badge-warning">Сьогоднi</span>
@@ -77,24 +88,26 @@
                      </div>
                     
                      <div class="col-12 col-md-5  col-xl-4">
-                      <div class="form-group">
-                        <label for="addeventnotify">Нагадати повiдомленням за</label>
-                        <select class="form-control" zippy="addeventnotify">
-                            <option value="0">Не нагадувати</option>
-                            <option value="1">1 годину</option>
-                            <option value="2">2 години</option>
-                            <option value="4">4 години</option>
-                            <option value="8">8 годин</option>
-                            <option value="16">16 годин</option>
-                            <option value="24">24 години</option>
-                        </select>
-                    </div>
-                     <div class="form-group">
-                        <label for="adduser">Призначити користувачевi</label>
-                        <select class="form-control  " zippy="adduser">
-                            <option value="0">Не вказано</option>
-                        </select>
-                    </div>
+                          <div class="form-group">
+                            <label for="addeventnotify">Нагадати повiдомленням за</label>
+                            <select class="form-control" zippy="addeventnotify">
+                                <option value="0">Не нагадувати</option>
+                                <option value="1">1 годину</option>
+                                <option value="2">2 години</option>
+                                <option value="4">4 години</option>
+                                <option value="8">8 годин</option>
+                                <option value="16">16 годин</option>
+                                <option value="24">24 години</option>
+                            </select>
+                        </div>
+                         {{#canevent}}
+                         <div class="form-group">
+                            <label for="adduser">Призначити користувачевi</label>
+                            <select class="form-control  " zippy="adduser">
+                                <option value="0">Не вказано (для мене)</option>
+                            </select>
+                        </div>
+                        {{/canevent}}
                     </div> 
                 </form>
                

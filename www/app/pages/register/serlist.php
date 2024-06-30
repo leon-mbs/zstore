@@ -391,7 +391,9 @@ class SerList extends \App\Pages\Base
         $this->_doc->payamount = floatval($this->_doc->amount)+ floatval($this->_doc->headerdata['bonus']) + floatval($this->_doc->headerdata['totaldisc']);
 
 
+        $this->_doc->headerdata['timeentry'] = time();
         $this->_doc->save();
+        $this->_doc->DoStore();
         $this->listpan->doclist->Reload();
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
