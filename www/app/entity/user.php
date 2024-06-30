@@ -69,6 +69,7 @@ class User extends \ZCL\DB\Entity
         }
 
 
+        $this->canevent = $acl['canevent'];
         $this->noshowpartion = $acl['noshowpartion'];
         $this->showotherstores = $acl['showotherstores'];
 

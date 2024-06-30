@@ -41,8 +41,12 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
-        $this->_tvars["noshowpartion"] = System::getUser()->noshowpartion;
-        $this->_tvars["showsidemenu"] = !(System::getUser()->hidemenu == true);
+        $this->_tvars["canevent"] = $user->canevent == 1;
+        if($user->rolename=='admins') {
+            $this->_tvars["canevent"] = true;
+        }
+        $this->_tvars["noshowpartion"] = $usernoshowpartion;
+        $this->_tvars["showsidemenu"] = !($user->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
         $this->_tvars['qtydigits']  = intval($options['qtydigits'] ?? 0);

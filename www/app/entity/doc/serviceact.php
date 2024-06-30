@@ -100,14 +100,12 @@ class ServiceAct extends Document
 
             $this->DoStore() ;
 
-
-
         }
 
 
         if ($state == self::STATE_FINISHED) {
 
-            $this->DoStore() ;
+          //  $this->DoStore() ;
 
             $dd =      doubleval($this->headerdata['totaldisc'])   ;
             $k = 1;   //учитываем  скидку
@@ -159,7 +157,9 @@ class ServiceAct extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-
+                if($this->headerdata['timeentry'] >0) {
+                   $sc->createdon =  $this->headerdata['timeentry'];
+                }
                 $sc->setOutPrice($item->price * $k);
                 $sc->tag = \App\Entity\Entry::TAG_SELL;
                 $sc->save();
@@ -195,7 +195,10 @@ class ServiceAct extends Document
                         $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                         $sc->setStock($st->stock_id);
                         $sc->tag=\App\Entity\Entry::TAG_TOPROD;
-
+                        if($this->headerdata['timeentry'] >0) {
+                           $sc->createdon =  $this->headerdata['timeentry'];
+                        }
+     
                         $sc->save();
                     }
                 }           

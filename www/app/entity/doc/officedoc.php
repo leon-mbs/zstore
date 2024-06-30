@@ -13,13 +13,23 @@ class OfficeDoc extends Document
 {
     public function Execute() {
         $emp = intval($this->headerdata['employee'] ?? 0);
-        if ($emp == 0) {
-            return;
-        }
+       
         $bonus = $this->headerdata['bonus'];
         $fine = $this->headerdata['fine'];
+        $custbonus = $this->headerdata['custbonus'];
 
-        if ($bonus > 0) {
+        if ($custbonus > 0 && $this->customer_id > 0) {
+            $pay = new \App\Entity\Pay();
+
+            $pay->document_id = $this->document_id;
+            $pay->bonus =    $custbonus;
+            $pay->paytype = \App\Entity\Pay::PAY_BONUS;
+            $pay->paydate = time();
+            $pay->user_id = \App\System::getUser()->user_id;
+
+            $pay->save();
+        }
+        if ($bonus > 0 && $emp > 0) {
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::BONUS;
             $ua->document_id = $this->document_id;
@@ -27,7 +37,7 @@ class OfficeDoc extends Document
             $ua->amount = $bonus;
             $ua->save();
         }
-        if ($fine > 0) {
+        if ($fine > 0 && $emp > 0) {
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::FINE;
             $ua->document_id = $this->document_id;

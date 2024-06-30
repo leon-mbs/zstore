@@ -61,6 +61,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
+        $this->docform->add(new CheckBox('comission', 0));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $this->docform->add(new TextInput('notes'));
@@ -206,6 +207,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->OnCustomerFirm($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
+            $this->docform->comission->setChecked($this->_doc->headerdata['comission']);
 
 
             $this->docform->total->setText($this->_doc->amount);
@@ -687,6 +689,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getText();
         $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
+        $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
@@ -735,9 +738,10 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
 
-
-                if(( H::fa( $this->_doc->headerdata['payamount']) - H::fa(doubleval($this->_doc->headerdata['prepaid']))  )> H::fa( $this->_doc->headerdata['payed'] ) ) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
+                if($this->_doc->headerdata['comission'] != 1) {
+                    if(( H::fa( $this->_doc->headerdata['payamount']) - H::fa(doubleval($this->_doc->headerdata['prepaid']))  )> H::fa( $this->_doc->headerdata['payed'] ) ) {
+                        $this->_doc->updateStatus(Document::STATE_WP);
+                    }
                 }
 
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
@@ -927,7 +931,15 @@ class GoodsReceipt extends \App\Pages\Base
                 return;
             }
 
+        } 
+        
+        if ($this->_doc->headerdata['comission']==1 && $this->_doc->headerdata['val'] != "0") {
+            $this->setError("Не можна валюту і комісію ");
         }
+        if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
+            $this->setError("Оплата не  вноситься якщо Комісія ");
+        }
+        
         return !$this->isError();
     }
 
