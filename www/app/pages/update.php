@@ -50,7 +50,7 @@ class Update extends \App\Pages\Base
         $phpv =   phpversion()  ;
         $conn = \ZDB\DB::getConnect();
      
-        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv ;
+        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv. '_'. System::CURR_VERSION ;
     
         $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
         $data = @json_decode($v, true);

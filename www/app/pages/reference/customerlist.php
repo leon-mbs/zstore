@@ -521,6 +521,7 @@ class CustomerList extends \App\Pages\Base
          
         // $this->goAnkor('contentviewlink');
     }
+ 
     public function OnTagList($sender) {
         $this->_tag  = $sender->getSelectedValue();
 
@@ -679,6 +680,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->dw_contr->Reload();
         $this->_tvars['iscontract'] = count($this->_contrlist) > 0; 
     }
+
     private function updateDocs() {
         $this->_doclist = \App\Entity\doc\Document::find(' state <> 9 and  customer_id=' . $this->_customer->customer_id,'document_date desc',10);
         $this->contentview->dw_doc->Reload();
@@ -737,6 +739,7 @@ class CustomerList extends \App\Pages\Base
 
         \App\Application::Redirect("\\App\\Pages\\Reference\\ContractList", $contr->contract_id);
     }
+
     public function docOnClick($sender) {
         $doc = $sender->owner->getDataItem();
 

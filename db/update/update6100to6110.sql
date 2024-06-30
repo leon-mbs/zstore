@@ -99,7 +99,7 @@ CREATE TABLE custacc (
   amount decimal(10, 2) NOT NULL,
   createdon date DEFAULT NULL,
   PRIMARY KEY (ca_id),
-  KEY emp_id (customer_id),
+  KEY customer_id (customer_id),
   KEY document_id (document_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;    
     
