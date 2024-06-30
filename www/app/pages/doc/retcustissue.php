@@ -239,6 +239,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
@@ -258,9 +259,9 @@ class RetCustIssue extends \App\Pages\Base
         }
 
 
-
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
+      
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
@@ -290,7 +291,7 @@ class RetCustIssue extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if ($this->_doc->payamount > $this->_doc->payed) {
+                if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->headerdata['comission'] != 1) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
 

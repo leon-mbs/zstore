@@ -216,9 +216,7 @@ class GoodsReceipt extends Document
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         $list['MoveItem'] = self::getDesc('MoveItem');
-        if( $this->state==Document::STATE_EXECUTED  && $this->headerdata['comission']== 1) { //комиссия
-           $list['PayComitent'] = self::getDesc('PayComitent');
-        }
+  
 
         return $list;
     }
