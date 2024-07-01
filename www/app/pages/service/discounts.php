@@ -384,8 +384,8 @@ class Discounts extends \App\Pages\Base
         if(strlen($t) > 0)  {
             $where .= "   customer_name like   " . Customer::qstr( '%'.$t.'%' ) .' and ' ;
         }        
-        $on = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where} paytype=1001 and  bonus>0 " );
-        $off = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where}  paytype=1001 and  bonus<0 " );
+        $on =  $conn->GetOne( "select sum(amount) from custacc_view  where {$where} optype=1  and  amount>0 " );
+        $off = $conn->GetOne( "select sum(amount) from custacc_view  where {$where}  optype=1  and  amount<0 " );
         $this->otab->sumbonuses->setText($on +$off ); 
 
     }   
@@ -877,7 +877,7 @@ class BonusListCustomerDataSource implements \Zippy\Interfaces\DataSource
 
      //   $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
 
-        $where = " status = 0  and customer_id in ( select customer_id from paylist_view  where paytype=1001 ) ";
+        $where = " status = 0  and customer_id in ( select customer_id from custacc_view  where optype=1 ) ";
         if(strlen($t) > 0)  {
             $where .= " and customer_name like   " . Customer::qstr( '%'.$t.'%' );
         }

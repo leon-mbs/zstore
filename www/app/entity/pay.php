@@ -13,7 +13,7 @@ class Pay extends \ZCL\DB\Entity
 {
     //  const PAY_CUSTOMER = 1;   //расчеты  с  контрагентм
     public const PAY_BANK       = 1000;   //эквайринг
-    public const PAY_BONUS      = 1001;   //бонусы
+ //   public const PAY_BONUS      = 1001;   //бонусы
     public const PAY_DELIVERY   = 1002;   //доставка
     public const PAY_COMISSION  = 1003;   //комиссия
 
