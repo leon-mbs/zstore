@@ -271,10 +271,10 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
         Session::getSession()->toasts = false;
 
-        $duration = \App\Session::getSession()->duration() ;
+        $duration =  Session::getSession()->duration() ;
         $this->_tvars['showtips'] = $duration < 300   ;
 
-
+        //планировщик
         $this->_tvars['cron']  = false;
 
         $last = \App\Helper::getKeyValInt('lastcron')  ;
@@ -282,6 +282,12 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars['cron']  = true;
         }
 
+        //миграция  данных
+        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
+            Helper::migration() ;
+            Session::getSession()->migrationcheck = true;
+        }
+       
    
     }
 

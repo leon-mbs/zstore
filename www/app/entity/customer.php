@@ -233,9 +233,9 @@ class Customer extends \ZCL\DB\Entity
     */
     public function getBonus() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
+        $sql = "select coalesce(sum(amount),0) as bonus from custacc where  customer_id={$this->customer_id} and optype=1";
 
-        return $conn->GetOne($sql);
+        return intval($conn->GetOne($sql) );
 
     }
     /**
@@ -244,11 +244,11 @@ class Customer extends \ZCL\DB\Entity
     */
     public static function getBonusAll() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonusall, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id ";
+        $sql = "select coalesce(sum(amount),0) as bonusall, customer_id from custacc where optype=1  group by  customer_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row) {
             if(doubleval($row['bonusall']) <>0) {
-                $ret[$row['customer_id']] = $row['bonusall'] ;
+                $ret[$row['customer_id']] = intval($row['bonusall'] );
             }
 
         }
@@ -261,14 +261,14 @@ class Customer extends \ZCL\DB\Entity
     */
     public function getBonuses() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select bonus, paydate,d.document_number  from paylist p join documents d ON  p.document_id = d.document_id where d.customer_id={$this->customer_id} and coalesce(p.bonus,0) <> 0 order  by  pl_id ";
+        $sql = "select p.amount, p.createdon,p.document_number  from custacc_view p  where p.optype=1 and p.customer_id={$this->customer_id} and coalesce(p.amount,0) <> 0 order  by  ca_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row) {
 
             $b = new \App\DataItem() ;
-            $b->paydate = strtotime($row['paydate']) ;
+            $b->paydate = strtotime($row['createdon']) ;
             $b->document_number = $row['document_number']  ;
-            $b->bonus = $row['bonus']  ;
+            $b->bonus = intval( $row['amount'] ) ;
 
             $ret[]=$b;
         }

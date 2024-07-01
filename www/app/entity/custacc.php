@@ -17,14 +17,13 @@ class CustAcc extends \ZCL\DB\Entity
 
     protected function init() {
         $this->ca_id = 0;
-        $this->createdon = time();
     }
 
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
     }
  
-     
+       //начисление  (списание)  бонусов  
    public static function addBonus($doc, $amount =0) {
 
         $conn = \ZDB\DB::getConnect();
@@ -33,7 +32,7 @@ class CustAcc extends \ZCL\DB\Entity
         if($customer_id ==0) {
             return;
         }
-        $conn->Execute(" delete from  paylist where paytype= ".self::PAY_BONUS." and  document_id=" . $doc->document_id);
+        $conn->Execute(" delete from  custacc where optype= ".CustAcc::BONUS." and  document_id=" . $doc->document_id);
 
         $c = \App\Entity\Customer::load($customer_id);
 
@@ -66,15 +65,15 @@ class CustAcc extends \ZCL\DB\Entity
             $retbonus = intval($parentbonus * $k) ;// доля
 
             if($retbonus > 0) {
-                $pay = new Pay();
+                $b = new CustAcc();
 
-                $pay->document_id = $doc->document_id;
-                $pay->bonus = 0 -  $retbonus;
-                $pay->paytype = Pay::PAY_BONUS;
-                $pay->paydate = time();
-                $pay->user_id = \App\System::getUser()->user_id;
-
-                $pay->save();
+                $b->customer_id = $customer_id;
+                $b->document_id = $doc->document_id;
+                $b->amount = 0 -  $retbonus;
+                $b->optype = CustAcc::BONUS;
+                $b->createdon = time();
+              
+                $b->save();
 
             }
 
@@ -90,15 +89,15 @@ class CustAcc extends \ZCL\DB\Entity
         if ($doc->headerdata['bonus'] > 0) { //списание
 
 
-            $pay = new Pay();
+            $b = new CustAcc();
 
-            $pay->document_id = $doc->document_id;
-            $pay->bonus = 0 -  $doc->headerdata['bonus'];
-            $pay->paytype = Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
+            $b->customer_id = $customer_id;
+            $b->document_id = $doc->document_id;
+            $b->amount = 0 -  $doc->headerdata['bonus'];
+            $b->optype = CustAcc::BONUS;
+            $b->createdon = time();
 
-            $pay->save();
+            $b->save();
 
             // return;
         }
@@ -112,20 +111,19 @@ class CustAcc extends \ZCL\DB\Entity
             }
 
 
-            $pay = new Pay();
-
-            $pay->document_id = $doc->document_id;
-
-            $pay->amount = 0;
-            $pay->bonus = (int)$doc->headerdata['exch2b'];
+            $b = new CustAcc();
+            $b->customer_id = $customer_id;
+            $b->optype = CustAcc::BONUS;
+            $b->createdon = time();
+            $b->document_id = $doc->document_id;
+ 
+   
+            $b->amount = (int)$doc->headerdata['exch2b'];
             if($doc->headerdata['exch2b'] > $doc->headerdata['exchange']) {
-                $pay->bonus = (int)$doc->headerdata['exchange'];
+                $b->amount = (int)$doc->headerdata['exchange'];
             }
-            $pay->paytype = Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-
-            $pay->save();
+ 
+            $b->save();
         }
 
 
@@ -172,19 +170,14 @@ class CustAcc extends \ZCL\DB\Entity
         
         if ($bonus > 0) {
 
-
-            $pay = new Pay();
-
-            $pay->document_id = $doc->document_id;
-
-       
-            $pay->amount = 0;
-            $pay->bonus = (int)$bonus;
-            $pay->paytype = Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-
-            $pay->save();
+            $b = new CustAcc();
+            $b->customer_id = $customer_id;
+            $b->optype = CustAcc::BONUS;
+            $b->createdon = time();
+            $b->document_id = $doc->document_id;
+            $b->amount = (int)$bonus;
+ 
+            $b->save();
 
         }
     }

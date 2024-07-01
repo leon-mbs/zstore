@@ -1396,4 +1396,37 @@ class Helper
             return '';
     }
     
+     /**
+     * выполняет перенос  данных на  новой  версии
+     * 
+     */
+     public static function migration() {
+           $conn = \ZDB\DB::getConnect();
+  
+           $done = \App\Helper::getKeyVal('migrationbonus')  ; //6.11.1
+           if($done != "done") {
+               $conn->BeginTrans();
+               try{
+                  $conn->Execute("delete from custacc where optype=1 ") ;
+                  
+                  $conn->Execute("INSERT INTO custacc (amount,document_id,customer_id,optype,createdon) 
+                                  SELECT bonus,document_id, customer_id,1,paydate FROM paylist_view WHERE  paytype=1001 AND  customer_id IS NOT null;     ") ;
+
+
+               
+                  \App\Helper::setKeyVal('migrationbonus',"done") ;
+                  $conn->CommitTrans();
+            
+              } catch(\Throwable $ee) {
+                global $logger;
+                $conn->RollbackTrans();
+                System::setErrorMsg($ee->getMessage()) ;
+                $logger->error($ee->getMessage() );
+                return;            
+              }
+               
+               
+           }
+     }
+    
 }
