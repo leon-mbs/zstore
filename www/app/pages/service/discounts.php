@@ -202,6 +202,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->add(new TextInput('peditcode'));
         $this->ptab->formpan->pform->add(new Date('peditdate'));
         $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
+        $this->ptab->formpan->pform->add(new TextInput('peditbonus'))->setVisible(false);
 
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
@@ -677,10 +678,13 @@ class Discounts extends \App\Pages\Base
         if($p->type==1) $type="Одноразовий";
         if($p->type==2) $type="Багаторазовий";
         if($p->type==3) $type="Персональний";
+        if($p->type==4) $type="Реферальний";
 
         $row->add(new  Label("ptype", $type));
         $row->add(new  Label("pdisc", $p->disc));
-
+        if($p->type==4) {
+           $row->pdisc->setText( $p->disc . " (бонус {$p->refbonus})" );     
+        }
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
         if($p->type==2){                                                                            
@@ -739,8 +743,9 @@ class Discounts extends \App\Pages\Base
     }
     public function onPType($sender) {
         $t=$sender->getValue();
-        $this->ptab->formpan->pform->peditcust->setVisible($t==3);
+        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
         $this->ptab->formpan->pform->peditcheck->setVisible($t==2);
+        $this->ptab->formpan->pform->peditbonus->setVisible($t==4);
 
  
     }
@@ -754,6 +759,7 @@ class Discounts extends \App\Pages\Base
             return;
         }
         $pc->disc = $sender->peditdisc->getText();
+        $pc->refbonus =  $sender->peditbonus->getText();
         $pc->dateto = $sender->peditdate->getDate();
         if($pc->dateto >0 && $pc->dateto < time()) {
            $this->setError('Неправильна дата') ;

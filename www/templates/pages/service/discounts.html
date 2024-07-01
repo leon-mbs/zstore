@@ -458,6 +458,7 @@
                                      <small><b>Одноразовий</b> - для однократного використання 
                                          <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
                                          <br><b>Персональний</b> - для конкретного контрагента
+                                         <br><b>Реферальный</b>  - бонус контрашента, з  промо  котрого  прийшов новий покупець
 
                                       </small>                                     
                                     <form zippy="pform" >
@@ -477,6 +478,7 @@
                                                   <option value="1">Одноразовий</option>
                                                   <option value="2">Багаторазовий</option>
                                                   <option value="3">Персональний</option>
+                                                  <option value="4">Реферальний</option>
 
                                                 </select>   
                                                </div>
@@ -494,12 +496,21 @@
                                                <input required="required"  pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
                                                </div>
                                            </div>      
+                                          
+                                           
                                            <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditcust">Контрагент</label>
                                                 <div class="col-7">
                                                <input placeholder="Почніть вводити..." class="form-control"  zippy="peditcust"   >
                                                </div>
+                                           </div>    
+                                          <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditbonus">Реферальний бонус</label>
+                                                <div class="col-7">
+                                               <input    pattern="[0-9]+" style="width:140px" class="form-control"  zippy="peditbonus"   >
+                                               </div>
                                            </div>      
+                                             
                                      <div class="form-group row">
                                             <div class="form-check">
                                                 <input zippy="peditcheck" type="checkbox" class="form-check-input">

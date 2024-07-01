@@ -13,6 +13,7 @@ class Helper
     public const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
     public const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
     public const STAT_VIEW_ITEM          = 3;     //перегляд  товару
+    public const STAT_PROMO              = 4;     //просо код
 
 
     private static $meta = array(); //кеширует метаданные
