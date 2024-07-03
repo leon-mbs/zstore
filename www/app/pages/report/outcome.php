@@ -361,6 +361,7 @@ class Outcome extends \App\Pages\Base
 
 
         $totsum = 0;
+        $totsumself = 0;
         $totnavar = 0;
         $totnavarproc = 0;
 
@@ -392,11 +393,12 @@ class Outcome extends \App\Pages\Base
                 $detail[] = $det;
                 
                 $totnavar += $row['navar'];
+                $totsumself += $row['summa'];
                 $totsum += ($row['summa'] + $row['navar']);
             }
         }
         if( $totsum >0) {
-           $totnavarproc = 100*$totnavar/$totsum ;
+           $totnavarproc = 100*$totnavar/$totsumself ;
         }
         
         $header = array('datefrom' => \App\Helper::fd($from),
