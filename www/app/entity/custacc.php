@@ -13,6 +13,8 @@ class CustAcc extends \ZCL\DB\Entity
 {
  
     public const  BONUS = 1; // бонусы
+    public const  BUYER = 2; // покупатель
+    public const  SELLER = 3; // поставщик
  
 
     protected function init() {

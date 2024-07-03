@@ -394,7 +394,7 @@ class Customer extends \ZCL\DB\Entity
             $brdoc = " and   document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
         }
         
-      /*  
+     
         
        $cust_acc_view = "SELECT
               COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
@@ -412,7 +412,7 @@ class Customer extends \ZCL\DB\Entity
             and d.customer_id in(select c.customer_id from customers c  where  status=0) 
 
             GROUP BY d.customer_id";      
-                           */
+         /*                   
               $cust_acc_view =" 
                 SELECT
                   SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
@@ -427,7 +427,7 @@ class Customer extends \ZCL\DB\Entity
                 GROUP BY customer_id
 
                  ";
-
+                */
         return $cust_acc_view;
         
     }

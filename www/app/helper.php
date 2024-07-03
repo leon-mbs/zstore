@@ -1430,6 +1430,7 @@ class Helper
                
            }
  
+ /*
            $migrationbalans = \App\Helper::getKeyVal('migrationbalans')  ; //6.11.2
            if($migrationbalans != "done") {
                Helper::log("Миграция баланс") ;
@@ -1494,6 +1495,9 @@ class Helper
                     return;            
                 }     
            }
+           
+           
+           */
      }
     
 }
