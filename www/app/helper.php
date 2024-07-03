@@ -1404,8 +1404,8 @@ class Helper
      public static function migration() {
            $conn = \ZDB\DB::getConnect();
   
-           $done = \App\Helper::getKeyVal('migrationbonus')  ; //6.11.1
-           if($done != "done") {
+           $migrationbonus = \App\Helper::getKeyVal('migrationbonus')  ; //6.11.1
+           if($migrationbonus != "done") {
                $conn->BeginTrans();
                try{
                   $conn->Execute("delete from custacc where optype=1 ") ;
@@ -1427,6 +1427,70 @@ class Helper
               }
                
                
+           }
+ 
+           $migrationbalans = \App\Helper::getKeyVal('migrationbalans')  ; //6.11.2
+           if($migrationbalans != "done") {
+      
+               $conn->BeginTrans();
+               try{
+                 $conn->Execute("delete from custacc where optype=2 or optype=3 ") ;
+                
+                 $sql = "SELECT
+                          COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
+                              (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payamount ELSE 0 END)), 0) AS s_active,
+                          COALESCE(SUM((CASE WHEN (d.meta_name IN ('IncomeService', 'GoodsReceipt')) THEN d.payamount WHEN ((d.meta_name = 'IncomeMoney') AND
+                              (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payed ELSE 0 END)), 0) AS s_passive,
+                          COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN d.payamount WHEN ((d.meta_name = 'OutcomeMoney') AND
+                              (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payed ELSE 0 END)), 0) AS b_active,
+                          COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN d.payed WHEN ((d.meta_name = 'IncomeMoney') AND
+                              (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payamount ELSE 0 END)), 0) AS b_passive,
+                          d.customer_id , d.document_id
+                        FROM documents_view d
+                        WHERE d.state NOT IN (0, 1, 2, 3, 15, 8, 17)
+                        AND d.customer_id > 0 
+                      
+                        GROUP BY d.customer_id,d.document_id order  by d.document_id";        
+                                   
+                 foreach($conn->Execute($sql) as $row){
+                     $s_active = doubleval($row['s_active']) ;
+                     $s_passive = doubleval($row['s_passive']) ;
+                     $b_active = doubleval($row['b_active']) ;
+                     $b_passive = doubleval($row['b_passive']) ;
+
+                     if($s_active != $s_passive) {
+                         if($s_active > 0) {
+                             $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},3,{$s_active})  ") ;                     
+                         }
+                         if($s_passive > 0) {
+                             $s_passive = 0-$s_passive;
+                             $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},3,{$s_passive})  ") ;                     
+                         }
+                     }
+                     if($b_active != $b_passive) {
+                     
+                         if($b_active > 0) {
+                             $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},2,{$b_active})  ") ;                     
+                         }
+                         if($b_passive > 0) {
+                             $b_passive = 0-$b_passive;
+                             $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},2,{$b_passive})  ") ;                     
+                         }
+                     }                                          
+                     
+                     
+                 }                  
+                   
+                //  \App\Helper::setKeyVal('migrationbalans',"done") ;
+                  $conn->CommitTrans();
+       
+                } catch(\Throwable $ee) {
+                    global $logger;
+                    $conn->RollbackTrans();
+                    System::setErrorMsg($ee->getMessage()) ;
+                    $logger->error($ee->getMessage() );
+                    return;            
+                }     
            }
      }
     
