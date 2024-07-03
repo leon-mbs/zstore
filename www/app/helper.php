@@ -1406,6 +1406,7 @@ class Helper
   
            $migrationbonus = \App\Helper::getKeyVal('migrationbonus')  ; //6.11.1
            if($migrationbonus != "done") {
+               Helper::log("Миграция бонус") ;
                $conn->BeginTrans();
                try{
                   $conn->Execute("delete from custacc where optype=1 ") ;
@@ -1431,7 +1432,8 @@ class Helper
  
            $migrationbalans = \App\Helper::getKeyVal('migrationbalans')  ; //6.11.2
            if($migrationbalans != "done") {
-      
+               Helper::log("Миграция баланс") ;
+ 
                $conn->BeginTrans();
                try{
                  $conn->Execute("delete from custacc where optype=2 or optype=3 ") ;
@@ -1458,7 +1460,7 @@ class Helper
                      $b_active = doubleval($row['b_active']) ;
                      $b_passive = doubleval($row['b_passive']) ;
 
-                     if($s_active != $s_passive) {
+                   //  if($s_active != $s_passive) {
                          if($s_active > 0) {
                              $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},3,{$s_active})  ") ;                     
                          }
@@ -1466,8 +1468,8 @@ class Helper
                              $s_passive = 0-$s_passive;
                              $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},3,{$s_passive})  ") ;                     
                          }
-                     }
-                     if($b_active != $b_passive) {
+                    // }
+                   //  if($b_active != $b_passive) {
                      
                          if($b_active > 0) {
                              $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},2,{$b_active})  ") ;                     
@@ -1476,12 +1478,12 @@ class Helper
                              $b_passive = 0-$b_passive;
                              $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},2,{$b_passive})  ") ;                     
                          }
-                     }                                          
+                   //  }                                          
                      
                      
                  }                  
                    
-                //  \App\Helper::setKeyVal('migrationbalans',"done") ;
+                  \App\Helper::setKeyVal('migrationbalans',"done") ;
                   $conn->CommitTrans();
        
                 } catch(\Throwable $ee) {

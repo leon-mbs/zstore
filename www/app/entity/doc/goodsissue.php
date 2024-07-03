@@ -343,5 +343,7 @@ class GoodsIssue extends Document
 
 
     }
+    public function DoBalans() {
 
+    }
 }

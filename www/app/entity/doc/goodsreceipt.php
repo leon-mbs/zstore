@@ -220,6 +220,8 @@ class GoodsReceipt extends Document
 
         return $list;
     }
+    public function DoBalans() {
 
+    }
 }     
 

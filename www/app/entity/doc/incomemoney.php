@@ -72,5 +72,7 @@ class IncomeMoney extends Document
 
         return $list;
     }
+    public function DoBalans() {
 
+    }
 }
