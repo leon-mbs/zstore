@@ -91,5 +91,7 @@ class RetCustIssue extends Document
     protected function getNumberTemplate() {
         return 'ВП-000000';
     }
+    public function DoBalans() {
 
+    }
 }

@@ -308,6 +308,8 @@ class TTN extends Document
         return array(self::EX_EXCEL, self::EX_PDF);
     }
 
+    public function DoBalans() {
 
+    }
 
 }

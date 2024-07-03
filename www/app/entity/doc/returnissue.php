@@ -119,5 +119,7 @@ class ReturnIssue extends Document
     protected function getNumberTemplate() {
         return 'BK-000000';
     }
+    public function DoBalans() {
 
+    }
 }

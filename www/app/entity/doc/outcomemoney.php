@@ -66,4 +66,7 @@ class OutcomeMoney extends Document
 
         return $list;
     }
+    public function DoBalans() {
+
+    }    
 }

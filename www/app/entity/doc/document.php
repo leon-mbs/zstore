@@ -287,6 +287,13 @@ class Document extends \ZCL\DB\Entity
     public function DoStore() {
 
     }
+    /**
+    * баланс  контрагента
+    * 
+    */
+    public function DoBalans() {
+
+    }
 
     /**
      * Отмена  документа

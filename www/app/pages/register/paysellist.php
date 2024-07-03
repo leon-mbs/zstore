@@ -376,6 +376,8 @@ GROUP BY c.customer_name,
             $this->markPayed()  ;
         }
 
+        $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
+        $doc->DoBalans();
 
         $this->setSuccess('Оплата додана');
 
