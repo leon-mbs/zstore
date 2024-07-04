@@ -79,23 +79,8 @@ class CompareAct extends \App\Pages\Base
  
         $detail = array();
         
-        $where_start =  " document_date <{$from}  and    customer_id = {$cust_id}  and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
-        $bal=0;
-        foreach (\App\Entity\Doc\Document::findYield($where_start, "document_date asc,document_id asc ", -1, -1) as $d) {
-           
-            $ch = Customer::balans($d );
-         
-            if($ch===true) {
-                continue;
-            }
-            
-            $diff = $ch['active'] - $ch['passive'];
-
-            $bal +=  $diff;
-           
-                
-        }        
-        
+        $sql="select sum(amount) from custacc_view where optype in (2,3) and  customer_id= {$cust_id} and createdon < {$from} "; 
+        $bal = $conn->GetOne($sql) ;
         $r  = array();
 
         $r['meta_desc'] = '';
@@ -108,34 +93,36 @@ class CompareAct extends \App\Pages\Base
 
         $detail[] = $r;
          
-        $where =  " document_date >={$from} and document_date <={$to} and   customer_id = {$cust_id}   and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
+        $sql =  "select 
+             SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS active,
+             SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS passive,
+            cv.document_id,cv.document_number,cv.createdon,dv.meta_desc
+
+             FROM custacc_view cv
+             JOIN documents_view dv 
+             ON cv.document_id = dv.document_id 
+             WHERE  cv.customer_id={$cust_id} 
+            AND optype IN (2,3)  and createdon >={$from} and createdon <={$to}  
+            GROUP BY cv.document_id,cv.document_number,cv.createdon
+            ORDER  BY  cv.document_id ";
      
-        foreach (\App\Entity\Doc\Document::findYield($where, "document_date asc ", -1, -1) as $d) {
+        foreach ( $conn->Execute($sql) as $d) {
            
-                $ch = Customer::balans($d);
-            
-                if($ch===true) {
-                    continue;
-                }
-                if($ch['active']==$ch['passive']) {
-                  //  continue;
-           
-                }
-            
+               
             
                 $r  = array();
 
-                $r['meta_desc'] = $d->meta_desc;
-                $r['document_number'] = $d->document_number;
-                $r['document_date'] = H::fd($d->document_date);
-                $r['active'] = H::fa($ch['active']);
-                $r['passive'] = H::fa($ch['passive']);
+                $r['meta_desc'] = $d['meta_desc'];
+                $r['document_number'] = $d['document_number'];
+                $r['document_date'] = H::fd( strtotime($d['createdon'] ));
+                $r['active'] = H::fa($d['active']);
+                $r['passive'] = H::fa($d['passive']);
 
-                $diff = $ch['active'] - $ch['passive'];
+                $diff = $d['active'] - $d['passive'];
 
                 $bal +=  $diff;
                 $r['bal'] = H::fa($bal);
-                $r['pays'] = $this->getPayments($d) ;
+                $r['pays'] = $this->getPayments($d['document_id']) ;
                 $r['notes'] = $d->notes ?? '';
 
                 $detail[] = $r;
@@ -159,7 +146,8 @@ class CompareAct extends \App\Pages\Base
         return $html;
     }
 
-    private function getPayments(Document $doc){
+    private function getPayments( $did){
+        $doc = Document::load($did) ;
         $pays = [];
         foreach(\App\Entity\Pay::find("document_id={$doc->document_id} and paytype < 1000","pl_id asc") as $pay){
             $pays[]= H::fd($pay->paydate)." ".H::fa($pay->amount) ." ".$pay->mf_name ;

@@ -281,110 +281,15 @@ class Customer extends \ZCL\DB\Entity
         $dolg = 0;
         $conn = \ZDB\DB::getConnect();
 
-        $where  =  "     customer_id = {$this->customer_id}   and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ";
-        $bal=0;
-        foreach (\App\Entity\Doc\Document::findYield($where, "document_date asc,document_id asc ", -1, -1) as $d) {
-           
-            $ch = Customer::balans($d );
-         
-            if($ch===true) {
-                continue;
-            }
-            
-            $diff = $ch['passive'] - $ch['active'];
+        $sql="select sum(amount) from custacc where optype in (2,3) and  customer_id= ".$this->customer_id; 
 
-            $bal +=  $diff;
-           
-                
-        } 
-
-
-
-        return $bal;
+        return \App\Helper::fa($conn->GetOne($sql));
 
     }
 
     
 
-    /**
-    * баланс  по  документу
-    * актив   - долг  когтрагента
-    * пассиив   - долг  когтрагенту
-    */
-    public static function balans( \App\Entity\Doc\Document $doc,$ctype=0 ) {
-       
-       
-        if($doc->meta_name=='Order' && $doc->payamount==0 && $doc->payed ==0 ) {
-            return  true;
-        }
-        
-      
-        $ret=[];
-     
-        $ret['active']  = 0;
-        $ret['passive'] = 0;
- 
-        
-        if($ctype != self::TYPE_SELLER) {
-            if( in_array( $doc->meta_name,['GoodsIssue',  'POSCheck', 'OrderFood', 'ServiceAct' ]) ) {
-                 $ret['active']=$doc->payamount ?? 0;
-                 $ret['passive']=$doc->payed ?? 0;
-            }
-
-            if( in_array( $doc->meta_name,['Order']) ) {
-                 $ret['passive']=$doc->payed ?? 0;
-            }
-            if( in_array( $doc->meta_name,['Invoice']) ) {
-                 $ret['passive']=$doc->payed ?? 0;
-            }
-            if( in_array( $doc->meta_name,['TTN']) ) {
-                 $ret['active']=$doc->payamount ?? 0;
-            }
-            if( in_array( $doc->meta_name,['ReturnIssue']) ) {
-                 $ret['active']=$doc->payed ?? 0;
-                 $ret['passive']=$doc->payamount ?? 0;
-                 
-            }
-            if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
-                $ret['active']=$doc->payed ?? 0;    //возврат покупателю
-            }
-            if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>1</detail>') > 0) {
-                 $ret['passive']=$doc->payed ?? 0;    //оплата от покупателя
-            }            
-        }
-        
-        if($ctype != self::TYPE_BAYER) {
-      
-            if( in_array( $doc->meta_name,[ 'GoodsReceipt', 'IncomeService' ]) ) {
-                 $ret['passive']=$doc->payamount ?? 0;
-                 $ret['active']=$doc->payed ?? 0;
-            }
-         
-            if( in_array( $doc->meta_name,['InvoiceCust']) ) {
-                 $ret['active']=$doc->payed ?? 0;
-            }
-            if( in_array( $doc->meta_name,['RetCustIssue']) ) {
-                 $ret['active']=$doc->payamount ?? 0;
-                 $ret['passive']=$doc->payed ?? 0;
-            }
-
-
-            if( in_array( $doc->meta_name,['OutcomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
-                 $ret['active']=$doc->payed ?? 0;   //  оплата  поставщику
-            }
-
-
-            if( in_array( $doc->meta_name,['IncomeMoney']) && strpos($doc->content,'<detail>2</detail>') > 0) {
-                 $ret['passive']=$doc->payed ?? 0;    //возврат от поставщика
-            }
-         }
-      
- 
-        return $ret;
-        
-                 
-    }
-        
+    
     
     //вместо  промотра  в  бд
     public  static function  get_acc_view(){

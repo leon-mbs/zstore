@@ -420,8 +420,9 @@ GROUP BY c.customer_name,
         $this->clist->setVisible(false);
         $this->dlist->setVisible(true);
     }
+    
     public function updateDetDocs() {
-
+        $conn = \ZDB\DB::getConnect();
 
         $br = "";
         $c = \App\ACL::getBranchConstraint();
@@ -434,24 +435,32 @@ GROUP BY c.customer_name,
 
         $bal=0;
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and   state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "document_date asc,document_id asc ", -1, -1) as $id=>$d) {
-          
-              $ch = Customer::balans($d,Customer::TYPE_SELLER);
-                
-              if($ch===true) {
-                   continue;
-              }          
+      $sql =  "select 
+             SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS active,
+             SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS passive,
+            cv.document_id,cv.document_number,cv.createdon,dv.meta_desc
+
+             FROM custacc_view cv
+             JOIN documents_view dv 
+             ON cv.document_id = dv.document_id 
+             WHERE  cv.customer_id={$this->_cust->customer_id} 
+            {$br} AND optype IN (3)    
+            GROUP BY cv.document_id,cv.document_number,cv.createdon
+            ORDER  BY  cv.document_id ";
+     
+        foreach ( $conn->Execute($sql) as $d) {
+         
           
 
                 $r = new  \App\DataItem() ;
-                $r->document_id = $d->document_id;
-                $r->meta_desc = $d->meta_desc;
-                $r->document_number = $d->document_number;
-                $r->document_date = $d->document_date;
-                $r->s_active = $ch['passive'];
-                $r->s_passive = $ch['active'];
+                $r->document_id = $d['document_id'];
+                $r->meta_desc = $d['meta_desc'];
+                $r->document_number = $d['document_number'];
+                $r->document_date =  strtotime( $d['createdon'] );
+                $r->s_active = $d['passive'];
+                $r->s_passive = $d['active'];
 
-                $diff = $ch['active'] - $ch['passive'];
+                $diff = $d['active'] - $d['passive'];
                 if($diff==0) {
                     continue;
                 }
