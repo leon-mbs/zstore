@@ -82,6 +82,7 @@ class RetCustIssue extends Document
         }
         \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
+       $this->DoBalans() ;
 
 
 
@@ -92,6 +93,22 @@ class RetCustIssue extends Document
         return 'ВП-000000';
     }
     public function DoBalans() {
+                 if($this->payed >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = $this->payed;
+                    $b->optype = \App\Entity\CustAcc::SELLER;
+                    $b->save();
+                }
+               if($this->payamount >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = 0-$this->payamount;
+                    $b->optype = \App\Entity\CustAcc::SELLER;
+                    $b->save();
+                }
 
     }
 }

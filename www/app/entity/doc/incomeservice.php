@@ -124,6 +124,7 @@ class IncomeService extends Document
         }
         \App\Entity\IOState::addIOState($this->document_id, 0-$this->payed, \App\Entity\IOState::TYPE_OUTSERVICE);
 
+        $this->DoBalans() ;
 
 
 
@@ -146,7 +147,24 @@ class IncomeService extends Document
 
         return $list;
     }
+
     public function DoBalans() {
+                if($this->payed >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = 0-$this->payed;
+                    $b->optype = \App\Entity\CustAcc::SELLER;
+                    $b->save();
+                }
+               if($this->payamount >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = $this->payamount;
+                    $b->optype = \App\Entity\CustAcc::SELLER;
+                    $b->save();
+                }
 
     }
 }

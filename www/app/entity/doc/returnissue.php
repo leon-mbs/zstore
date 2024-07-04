@@ -81,6 +81,7 @@ class ReturnIssue extends Document
             $this->payed = $payed;
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+      $this->DoBalans() ;
 
         if($this->headerdata["bonus"] > 0) {
                 $pay = new \App\Entity\CustAcc();
@@ -120,6 +121,22 @@ class ReturnIssue extends Document
         return 'BK-000000';
     }
     public function DoBalans() {
-
+                
+                if($this->payed >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = 0-$this->payed;
+                    $b->optype = \App\Entity\CustAcc::BUYER;
+                    $b->save();
+                }
+               if($this->payamount >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = $this->payamount;
+                    $b->optype = \App\Entity\CustAcc::BUYER;
+                    $b->save();
+                }
     }
 }

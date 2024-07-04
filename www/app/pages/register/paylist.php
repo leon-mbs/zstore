@@ -165,7 +165,10 @@ class PayList extends \App\Pages\Base
             $payed = $conn->GetOne($sql);
 
             $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
-
+       
+            $doc = \App\Entity\Doc\Document::load($pl->document_id)->cast();
+            $doc->DoBalans();
+      
             $conn->CommitTrans();
 
 
@@ -188,7 +191,7 @@ class PayList extends \App\Pages\Base
         \App\Entity\Notify::toSystemLog("Користувач {$user->username} видалив платіж з документа {$doc->document_number}. Підстава: " . $sender->notes->getText()) ;
 
         $sender->notes->setText('');
-        $this->setSuccess('Платіж відмінено');
+        $this->setSuccess('Платіж скаслвано');
         $this->resetURL();
     }
 

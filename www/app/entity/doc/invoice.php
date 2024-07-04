@@ -118,6 +118,7 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
+        $this->DoBalans() ;
 
         return true;
     }
@@ -162,6 +163,15 @@ class Invoice extends \App\Entity\Doc\Document
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
     }
     public function DoBalans() {
-
+                
+                if($this->payed >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = $this->payed;
+                    $b->optype = \App\Entity\CustAcc::BUYER;
+                    $b->save();
+                }
+             
     }
 }

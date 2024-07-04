@@ -362,4 +362,5 @@ class GoodsIssue extends Document
                     $b->save();
                 }
     }
+    
 }

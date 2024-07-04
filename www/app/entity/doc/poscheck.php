@@ -267,6 +267,7 @@ class POSCheck extends Document
             $this->payed = $payed;
         }
         \App\Entity\IOState::addIOState($this->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        $this->DoBalans() ;
 
         
         if ($this->parent_id > 0) {
@@ -423,7 +424,23 @@ class POSCheck extends Document
         return $list;
     }
     public function DoBalans() {
-
+                
+                if($this->payed >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = $this->payed;
+                    $b->optype = \App\Entity\CustAcc::BUYER;
+                    $b->save();
+                }
+               if($this->payamount >0) {
+                    $b = new \App\Entity\CustAcc();
+                    $b->customer_id = $this->customer_id;
+                    $b->document_id = $this->document_id;
+                    $b->amount = 0-$this->payamount;
+                    $b->optype = \App\Entity\CustAcc::BUYER;
+                    $b->save();
+                }
     }
 
 }
