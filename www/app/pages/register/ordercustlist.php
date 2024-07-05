@@ -74,8 +74,7 @@ class OrderCustList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
-
+        $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
         $row->add(new Label('date', H::fd($doc->document_date)));
         $delivery ="";
         if($doc->headerdata['delivery_date'] >0) {
