@@ -543,6 +543,13 @@ class Base extends \Zippy\Html\WebPage
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+    * добавляет стьроку  заказа в  заявку  поставщику
+    * 
+    * @param mixed $args
+    * @param mixed $post
+    * @return mixed
+    */
     public function addItemToCO($args, $post=null) {
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
