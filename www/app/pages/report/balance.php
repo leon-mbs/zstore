@@ -103,41 +103,21 @@ class Balance extends \App\Pages\Base
         
         $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
           
-        
-        $sql = "SELECT COALESCE( SUM(   a.b_passive ) ,0) AS d   FROM ({$cust_acc_view}) a   ";
-        $pb = doubleval($conn->GetOne($sql)) ;
-        $sql = "SELECT COALESCE( SUM(   a.s_passive ) ,0) AS d   FROM ({$cust_acc_view}) a    ";
-        $ps = doubleval($conn->GetOne($sql)) ;
-        $sql = "SELECT COALESCE( SUM(   a.b_active ) ,0) AS d   FROM ({$cust_acc_view}) a      ";
-        $ab = doubleval($conn->GetOne($sql)) ;
-        $sql = "SELECT COALESCE( SUM(   a.s_active ) ,0) AS d   FROM ({$cust_acc_view}) a      ";
-        $as = doubleval($conn->GetOne($sql)) ;
-        
-        if($pb== $ab) {
-          $pb=0;  
-          $ab=0;  
-        }
-        if($pb > $ab) {
-          $pb=$pb - $ab;  
-          $ab=0;  
-        }
-        if($pb < $ab) {
-          $ab=$ab - $pb;  
-          $pb=0;  
-        }
-        if($ps== $as) {
-          $ps=0;  
-          $as=0;  
-        }
-        if($ps > $as) {
-          $ps=$ps - $as;  
-          $as=0;  
-        }
-        if($ps < $as) {
-          $as=$as - $ps;  
-          $ps=0;  
-        }
-        
+        //к оплате
+        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        $debet = H::fa($sum);
+
+        //ожидается  оплата
+        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        $credit = H::fa($sum);
+
+
         $aeq=0;
         foreach(\App\Entity\Equipment::find(" 1=1  {$bemp} ") as $eq){
             $aeq += doubleval($eq->balance);
@@ -153,14 +133,11 @@ class Balance extends \App\Pages\Base
         $abnal = H::fa($abnal);
         $aemp = H::fa($aemp);
         $pemp = H::fa($pemp);
-        $pb = H::fa($pb);
-        $ps = H::fa($ps);
-        $ab = H::fa($ab);
-        $as = H::fa($as);
+ 
         $aeq = H::fa($aeq);
         
-        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+ $ab + $as;
-        $ptotal = H::fa( doubleval($pemp) + doubleval($pb) + doubleval($ps) );
+        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+  doubleval($debet);
+        $ptotal = H::fa( doubleval($pemp) +   doubleval($credit) );
         $bal = $atotal - $ptotal ;
 
 
@@ -175,10 +152,8 @@ class Balance extends \App\Pages\Base
             'abnal'     => $abnal !=0 ? $abnal : false,
             'aemp'      => $aemp !=0 ? $aemp : false,
             'pemp'      => $pemp !=0 ? $pemp : false,
-            'pb'      => $pb !=0 ? $pb : false,
-            'ps'      => $ps !=0 ? $ps : false,
-            'ab'      => $ab !=0 ? $ab : false,
-            'as'      => $as !=0 ? $as : false,
+            'debet'      => $debet >0 ? $debet : false,
+            'credit'      => $credit >0 ? $credit : false,
             'aeq'      => $aeq !=0 ? $aeq : false,
 
             'atotal'    => H::fa($atotal) ,

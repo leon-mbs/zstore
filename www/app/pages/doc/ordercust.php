@@ -45,6 +45,7 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
+        $this->docform->add(new Date('delivery_date'));
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
@@ -102,6 +103,9 @@ class OrderCust extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
+            if($this->_doc->headerdata['delivery_date'] >0) {
+              $this->docform->delivery_date->setDate($this->_doc->headerdata['delivery_date']);
+            }
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
 
@@ -442,6 +446,7 @@ class OrderCust extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
+        $this->_doc->headerdata['delivery_date'] = $this->docform->delivery_date->getDate();
 
  
         if ($this->checkForm() == false) {
@@ -469,7 +474,7 @@ class OrderCust extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
            
             } else {
 
@@ -505,7 +510,7 @@ class OrderCust extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('GRList', false)) {
             App::RedirectHome() ;
         } else {
-            App::Redirect("\\App\\Pages\\Register\\GRList");
+            App::Redirect("\\App\\Pages\\Register\\OrderCustList");
         }
 
     }

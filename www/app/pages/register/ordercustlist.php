@@ -77,6 +77,16 @@ class OrderCustList extends \App\Pages\Base
         $row->add(new Label('number', $doc->document_number));
 
         $row->add(new Label('date', H::fd($doc->document_date)));
+        $delivery ="";
+        if($doc->headerdata['delivery_date'] >0) {
+              $delivery =  H::fd($doc->headerdata['delivery_date']);
+        }
+      
+        $row->add(new Label('delivery', $delivery));
+        if($doc->headerdata['delivery_date'] >0 && $doc->headerdata['delivery_date'] < time() && $doc->state== Document::STATE_INPROCESS  ) {
+              $row->delivery->setAttribute('class','text-danger');
+        }
+        
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
