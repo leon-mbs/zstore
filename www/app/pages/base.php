@@ -45,7 +45,7 @@ class Base extends \Zippy\Html\WebPage
         if($user->rolename=='admins') {
             $this->_tvars["canevent"] = true;
         }
-        $this->_tvars["noshowpartion"] = $usernoshowpartion;
+        $this->_tvars["noshowpartion"] = $user->noshowpartion;
         $this->_tvars["showsidemenu"] = !($user->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
