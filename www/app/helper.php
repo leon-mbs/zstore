@@ -1372,7 +1372,7 @@ class Helper
       
           
       
-            $nocache= "?t=" . time()."&s=". self::getSalt().'&phpv='.$phpv;
+            $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv. '_'. \App\System::CURR_VERSION ;
        
             $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
             $v = @json_decode($v, true);
