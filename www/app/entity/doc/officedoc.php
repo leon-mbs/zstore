@@ -19,7 +19,7 @@ class OfficeDoc extends Document
         $fine = $this->headerdata['fine'];
         $custbonus =intval($this->headerdata['custbonus']);
 
-        if ($custbonus > 0 &&  $cust > 0) {
+        if ($custbonus != 0 &&  $cust > 0) {
             $cb = new \App\Entity\CustAcc();
 
             $cb->customer_id = $cust;

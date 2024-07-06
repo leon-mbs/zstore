@@ -881,9 +881,8 @@ class BonusListCustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $t = trim($this->page->otab->blfilter->blsearch->getText());
 
-     //   $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
-
-        $where = " status = 0  and customer_id in ( select customer_id from custacc_view  where optype=1 ) ";
+  
+        $where = " status = 0  and customer_id in ( select customer_id  from custacc   where optype=1 group by customer_id having sum(amount)  <>0 ) ";
         if(strlen($t) > 0)  {
             $where .= " and customer_name like   " . Customer::qstr( '%'.$t.'%' );
         }
