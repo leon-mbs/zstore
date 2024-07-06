@@ -92,7 +92,7 @@ FROM ((store_stock st
 
     
 CREATE TABLE custacc (
-  ca_id int(11) NOT NULL AUTO_INCREMENT,
+  ca_id bigint(20) NOT NULL AUTO_INCREMENT,
   customer_id int(11) NOT NULL,
   document_id int(11) DEFAULT NULL,
   optype int(11) DEFAULT NULL,
