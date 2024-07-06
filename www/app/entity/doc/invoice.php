@@ -162,7 +162,11 @@ class Invoice extends \App\Entity\Doc\Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
     }
+
     public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
+
                 
                 if($this->payed >0) {
                     $b = new \App\Entity\CustAcc();

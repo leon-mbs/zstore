@@ -154,15 +154,15 @@ GROUP BY c.customer_name,
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $diff = $cust->act - $cust->pas;   //плюс - наш долг
-        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
-        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
 
 
         $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
         $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff>0 ? $diff : 0);
-        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
+        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff<0 ? 0-$diff : 0);
     }
 
 
@@ -278,7 +278,7 @@ GROUP BY c.customer_name,
 
     public function payDoc($docid) {
 
-        $this->_doc = Document::load($docid)  ;
+        $this->_doc = Document::load($docid)->cast()  ;
         $this->_cust = \App\Entity\Customer::load($this->_doc->customer_id);
         $this->showPay();
         $this->plist->cname->setText($this->_cust->customer_name);
@@ -293,6 +293,7 @@ GROUP BY c.customer_name,
         $this->docview->setVisible(false);
 
         $this->_doc = $sender->owner->getDataItem();
+         
         //   $this->plist->doclist->setSelectedRow($sender->getOwner());
         $this->showPay();
     }
@@ -375,7 +376,10 @@ GROUP BY c.customer_name,
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }
-
+        if ($payed > 0) {
+            $this->_doc->payed = $payed;
+        }
+  
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
         $doc->DoBalans();
 
@@ -457,8 +461,8 @@ GROUP BY c.customer_name,
                 $r->meta_desc = $d['meta_desc'];
                 $r->document_number = $d['document_number'];
                 $r->document_date =  strtotime( $d['createdon'] );
-                $r->s_active = $d['passive'];
-                $r->s_passive = $d['active'];
+                $r->s_active = $d['active'];
+                $r->s_passive = $d['passive'];
 
                 $diff = $d['active'] - $d['passive'];
                 if($diff==0) {

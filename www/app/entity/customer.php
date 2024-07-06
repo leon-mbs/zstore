@@ -300,25 +300,9 @@ class Customer extends \ZCL\DB\Entity
         }
         
      
-        
-       $cust_acc_view = "SELECT
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
-                  (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payamount ELSE 0 END)), 0) AS s_active,
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('IncomeService', 'GoodsReceipt')) THEN d.payamount WHEN ((d.meta_name = 'IncomeMoney') AND
-                  (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payed ELSE 0 END)), 0) AS s_passive,
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN d.payamount WHEN ((d.meta_name = 'OutcomeMoney') AND
-                  (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payed ELSE 0 END)), 0) AS b_active,
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN d.payed WHEN ((d.meta_name = 'IncomeMoney') AND
-                  (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payamount ELSE 0 END)), 0) AS b_passive,
-              d.customer_id AS customer_id
-            FROM documents_view d
-            WHERE d.state NOT IN (0, 1, 2, 3, 15, 8, 17)
-            AND d.customer_id > 0 {$brdoc}
-            and d.customer_id in(select c.customer_id from customers c  where  status=0) 
-
-            GROUP BY d.customer_id";      
-         /*                   
-              $cust_acc_view =" 
+      
+                            
+            $cust_acc_view =" 
                 SELECT
                   SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
                   SUM(CASE WHEN amount < 0 AND       optype = 3 THEN 0 - amount ELSE 0 END) AS s_passive,
@@ -332,7 +316,7 @@ class Customer extends \ZCL\DB\Entity
                 GROUP BY customer_id
 
                  ";
-                */
+                
         return $cust_acc_view;
         
     }

@@ -68,6 +68,9 @@ class OutcomeMoney extends Document
         return $list;
     }
     public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
+
              if($this->payed >0 && $this->headerdata['detail'] ==1 ) {
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;

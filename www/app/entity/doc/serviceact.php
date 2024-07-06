@@ -313,7 +313,10 @@ class ServiceAct extends Document
     }
 
     public function DoBalans() {
-                
+            $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
+
+              
                 if($this->payed >0) {
                     $b = new \App\Entity\CustAcc();
                     $b->customer_id = $this->customer_id;

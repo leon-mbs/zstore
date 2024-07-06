@@ -93,7 +93,10 @@ class RetCustIssue extends Document
         return 'ВП-000000';
     }
     public function DoBalans() {
-                 if($this->payed >0) {
+                $conn = \ZDB\DB::getConnect();
+                $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
+   
+               if($this->payed >0) {
                     $b = new \App\Entity\CustAcc();
                     $b->customer_id = $this->customer_id;
                     $b->document_id = $this->document_id;
