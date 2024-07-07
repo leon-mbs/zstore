@@ -165,7 +165,7 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function DoBalans() {
           $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
+         $conn->Execute("delete from custacc where optype in (2.3) and document_id =" . $this->document_id);
 
                 
        //платежи       
@@ -175,7 +175,7 @@ class Invoice extends \App\Entity\Doc\Document
             $b->document_id = $this->document_id;
             $b->amount = $p['amount'];
             $b->createdon = strtotime($p['paydate']);
-            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
              

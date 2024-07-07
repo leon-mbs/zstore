@@ -79,7 +79,7 @@ class CompareAct extends \App\Pages\Base
  
         $detail = array();
         
-        $sql="select sum(amount) from custacc_view where optype in (2,3) and  customer_id= {$cust_id} and createdon < {$from} "; 
+        $sql="select coalesce(sum(amount),0) from custacc_view where optype in (2,3) and  customer_id= {$cust_id} and createdon < {$from} "; 
         $bal = $conn->GetOne($sql) ;
         $r  = array();
 
