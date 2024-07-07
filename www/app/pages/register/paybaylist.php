@@ -379,6 +379,10 @@ GROUP BY c.customer_name,
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }
+        if ($payed > 0) {
+            $this->_doc->payed = $payed;
+        }
+  
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
         $doc->DoBalans();
         

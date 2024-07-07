@@ -344,26 +344,31 @@ class GoodsIssue extends Document
 
     }
     public function DoBalans() {
-            $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
-
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from custacc where customer_id =" . $this->customer_id);
               
-                if($this->payed >0) {
-                    $b = new \App\Entity\CustAcc();
-                    $b->customer_id = $this->customer_id;
-                    $b->document_id = $this->document_id;
-                    $b->amount = $this->payed;
-                    $b->optype = \App\Entity\CustAcc::BUYER;
-                    $b->save();
-                }
-               if($this->payamount >0) {
-                    $b = new \App\Entity\CustAcc();
-                    $b->customer_id = $this->customer_id;
-                    $b->document_id = $this->document_id;
-                    $b->amount = 0-$this->payamount;
-                    $b->optype = \App\Entity\CustAcc::BUYER;
-                    $b->save();
-                }
+
+ 
+        //тмц
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$this->payamount;
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+        
+       //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }        
     }
     
 }
