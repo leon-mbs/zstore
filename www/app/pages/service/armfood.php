@@ -1391,6 +1391,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['forbar'] =  $this->docpanel->listsform->forbar->isChecked() ? 1 : 0;
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
+        $this->_doc->headerdata['time'] = time();
 
         $this->_doc->headerdata['contact'] = $this->docpanel->listsform->contact->getText();
         $this->_doc->notes = $this->docpanel->listsform->notes->getText();

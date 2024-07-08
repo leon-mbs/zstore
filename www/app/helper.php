@@ -1084,6 +1084,7 @@ class Helper
             $header['garterm'] = $item->warranty;
             $header['country'] = $item->country;
             $header['brand']   = $item->manufacturer;
+            $header['notes']   = $item->notes;
 
 
             if (strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
@@ -1206,6 +1207,7 @@ class Helper
             $header['garterm'] = $item->warranty;
             $header['country'] = $item->country;
             $header['brand']   = $item->manufacturer;
+            $header['notes']   = $item->notes;
 
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
             if(intval($item->price) > 0) {
