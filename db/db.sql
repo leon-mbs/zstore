@@ -138,7 +138,7 @@ CREATE TABLE store_stock (
   item_id int(11) NOT NULL,
   partion decimal(11, 2) DEFAULT NULL,
   store_id int(11) NOT NULL,
-  customer_id int(11) NOT NULL,
+  customer_id int(11) DEFAULT NULL,
   qty decimal(11, 3) DEFAULT '0.000',
   snumber varchar(64) DEFAULT NULL,
   sdate date DEFAULT NULL,
