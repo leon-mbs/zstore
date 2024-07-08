@@ -352,9 +352,12 @@ class OrderFood extends Document
         return false;
     }
  
-    public function DoBalans() {
+    /**
+    * @overrride
+    */
+    public function {
           $conn = \ZDB\DB::getConnect();
-         $conn->Execute("delete from custacc where optype in (2.3) and document_id =" . $this->document_id);
+         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
               
          if($this->payamount >0) {

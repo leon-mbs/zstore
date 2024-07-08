@@ -73,9 +73,13 @@ class IncomeMoney extends Document
 
         return $list;
     }
+
+    /**
+    * @overrride
+    */
     public function DoBalans() {
           $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete from custacc where optype in (2.3) and document_id =" . $this->document_id);
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
           if($this->payed >0 && $this->headerdata['detail'] ==1 ) {
                 $b = new \App\Entity\CustAcc();
