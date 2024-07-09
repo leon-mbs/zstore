@@ -238,7 +238,7 @@ class GoodsReceipt extends Document
             $b->save();
         }
         //платежи       
-        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
             $b->document_id = $this->document_id;

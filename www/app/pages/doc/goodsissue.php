@@ -312,7 +312,7 @@ class GoodsIssue extends \App\Pages\Base
                         //$this->calcTotal();
                         //$this->calcPay();
                         $this->docform->total->setText($basedoc->amount);
-
+                        $this->calcPay();
 
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
