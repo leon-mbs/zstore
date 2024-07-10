@@ -101,7 +101,7 @@ class Balance extends \App\Pages\Base
             
         }
         
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
           
         //к оплате
         $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";

@@ -84,21 +84,22 @@ class IncomeMoney extends Document
                  //платежи       
         foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
 
-          
+          //оплата  от покупателя
           if($this->payed >0 && $this->headerdata['detail'] ==1 ) {
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;
                 $b->document_id = $this->document_id;
-                $b->amount = 0-$p['amount'];
+                $b->amount = $p['amount'];
                 $b->optype = \App\Entity\CustAcc::BUYER;
                 $b->createdon = strtotime($p['paydate']);
                 $b->save();
             }
+            //возврат  от поставщика
             if($this->payed >0 && $this->headerdata['detail'] ==2 ) {
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;
                 $b->document_id = $this->document_id;
-                $b->amount = 0-$p['amount'];
+                $b->amount = $p['amount'];
                 $b->optype = \App\Entity\CustAcc::SELLER;
                 $b->createdon = strtotime($p['paydate']);
                 $b->save();

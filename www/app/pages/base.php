@@ -271,8 +271,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
         Session::getSession()->toasts = false;
 
-        $duration =  Session::getSession()->duration() ;
-        $this->_tvars['showtips'] = $duration < 300   ;
+      //  $duration =  Session::getSession()->duration() ;
+      //  $this->_tvars['showtips'] = $duration < 300   ;
 
         //планировщик
         $this->_tvars['cron']  = false;

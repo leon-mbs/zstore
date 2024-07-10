@@ -289,38 +289,7 @@ class Customer extends \ZCL\DB\Entity
 
     
 
-    
-    
-    //вместо  промотра  в  бд
-    public  static function  get_acc_view(){
-        $brdoc = "";
-        $brids = \App\ACL::getBranchIDsConstraint();
-        if (strlen($brids) > 0) {
-            $brdoc = " and   document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
-        }
-        
-     
-      
-                            
-            $cust_acc_view =" 
-                SELECT
-                  SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
-                  SUM(CASE WHEN amount < 0 AND       optype = 3 THEN 0 - amount ELSE 0 END) AS s_passive,
-                  SUM(CASE WHEN amount > 0 AND       optype = 2 THEN amount ELSE 0 END) AS b_active,
-                  SUM(CASE WHEN amount < 0 AND       optype = 2 THEN 0 - amount ELSE 0 END) AS b_passive,
 
-                  customer_id
-                FROM custacc_view
-                WHERE optype IN (2, 3)  {$brdoc}
-                AND customer_id IN (SELECT    c.customer_id   FROM customers c    WHERE status = 0)
-                GROUP BY customer_id
-
-                 ";
-                
-        return $cust_acc_view;
-        
-    }
-    
     public function getDiscount() {
         $d = $this->discount;
         if($d > 0) {

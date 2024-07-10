@@ -40,7 +40,7 @@ class Session
         $this->filter = array();
         $this->start = 0;
     }
-    //длительность сеанса
+    //длительность сеанса  в секундах
     public function duration() {
         if(intval($this->start) > 0) {
             return  time() - $this->start;

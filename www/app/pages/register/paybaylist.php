@@ -104,7 +104,7 @@ class PayBayList extends \App\Pages\Base
             $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
  
 
    $sql = "SELECT  c.customer_name,  c.customer_id,c.phone,
@@ -160,15 +160,15 @@ GROUP BY c.customer_name,
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $diff = $cust->act - $cust->pas;   
-        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
-        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
+        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
 
  
         $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
         $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff>0 ? $diff : 0);
-        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
+        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff<0 ? 0-$diff : 0);
 
     }
 
@@ -449,8 +449,8 @@ GROUP BY c.customer_name,
         $bal=0;
 
           $sql =  "select 
-             SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS active,
-             SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS passive,
+             SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS passive,
+             SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS active,
             cv.document_id,cv.document_number,cv.createdon,dv.meta_desc
 
              FROM custacc_view cv

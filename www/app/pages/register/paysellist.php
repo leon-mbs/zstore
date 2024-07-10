@@ -103,7 +103,7 @@ class PaySelList extends \App\Pages\Base
             $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
  
    
    $sql = "SELECT  c.customer_name,  c.customer_id,c.phone,
