@@ -1385,7 +1385,7 @@ CREATE TABLE custacc (
   ca_id bigint(20) NOT NULL AUTO_INCREMENT,
   customer_id int(11) NOT NULL,
   document_id int(11) DEFAULT NULL,
-  optype int(11) DEFAULT NULL,
+  optype tinyint(4) DEFAULT NULL,
   amount decimal(10, 2) NOT NULL,
   createdon date DEFAULT NULL,
   PRIMARY KEY (ca_id),
