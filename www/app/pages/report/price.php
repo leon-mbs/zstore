@@ -36,7 +36,7 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('showdesc'));
 
         $catlist = array();
-        foreach (Category::getList() as $k => $v) {
+        foreach (Category::getList( ) as $k => $v) {
             if($v->noprice==1) {
                 continue;
             }
@@ -89,7 +89,15 @@ class Price extends \App\Pages\Base
         
         $sql ="disabled <>1 and detail not  like '%<noprice>1</noprice>%'";
         if($cat > 0){
-            $sql = $sql . " and cat_id=". $cat;
+            $c =   Category::load($cat) ;
+            $ch = $c->getChildren();
+            if(count($ch)==0) {
+               $sql = $sql . " and cat_id=". $cat;    
+            } else {
+               $j = implode(',',$ch) ;
+               $sql = $sql . " and cat_id in (". $j .")";    
+            }
+            
         }
         if(strlen($brand) > 0){
             $sql = $sql . " and manufacturer=". Item::qstr($brand) ;
