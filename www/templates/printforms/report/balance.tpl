@@ -64,7 +64,7 @@
     {{/abnal}}                     
     {{#debet}}
     <tr>  
-        <td >  Дебетовий  борг  контрагентiв       </td>
+        <td >Борг  контрагентiв       </td>
         <td align="right">     {{debet}}              </td>
     </tr>
     {{/debet}} 
@@ -92,7 +92,7 @@
 
     {{#credit}}
     <tr>  
-        <td >  Кредитовий  борг  контрагентiв       </td>
+        <td >  Борг  контрагентам       </td>
         <td align="right">     {{credit}}              </td>
     </tr>
     {{/credit}} 
