@@ -89,10 +89,13 @@
         <td align="right">{{total}}</td>
         <td></td>
     </tr>
+
+   {{#is3}}    
+    
     </tr>
         <td colspan="3"> <br>
-            <b>Деталiзацiя по ТМЦ</b>
-        </td>       -
+            <b>Деталiзацiя по ТМЦ </b>
+        </td>       
     </tr>    
     
      {{#_detail3}}
@@ -104,7 +107,7 @@
         <td></td>
     </tr>
      {{/_detail3}}
-    
+   {{/is3}}    
 </table>
 
 

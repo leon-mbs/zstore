@@ -103,6 +103,8 @@ CREATE TABLE custacc (
   KEY document_id (document_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;    
     
+DROP VIEW IF EXISTS custacc_view;    
+    
 CREATE
 VIEW custacc_view
 AS
