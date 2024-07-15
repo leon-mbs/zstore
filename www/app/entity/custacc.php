@@ -54,7 +54,7 @@ class CustAcc extends \ZCL\DB\Entity
                 return;
             }
             $parent = \App\Entity\Doc\Document::load($doc->parent_id);
-            $parentbonus = intval($parent->getBonus(true)); //начислкно
+            $parentbonus = intval($parent->getBonus(true)); //начислено
 
             if($parentbonus==0) {
                 return;

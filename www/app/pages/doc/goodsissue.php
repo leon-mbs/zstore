@@ -960,10 +960,10 @@ class GoodsIssue extends \App\Pages\Base
             if (doubleval($d) > 0) {
                 $disctext = "Постійна знижка {$d}%";
             } else {
-                $bonus = $cust->getBonus();
-                if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
-                }
+             //   $bonus = $cust->getBonus();
+             //   if ($bonus > 0) {
+              //      $disctext = "Нараховано бонусів {$bonus} ";
+              //  }
             }
             $this->docform->custinfo->setText($disctext);
             $this->docform->custinfo->setVisible(strlen($disctext) >0);

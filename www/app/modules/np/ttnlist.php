@@ -41,7 +41,7 @@ class TTNList extends \App\Pages\Base
 
         $this->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
 
-        $this->onRefresh($this->refresh);
+      //  $this->onRefresh($this->refresh);
     }
 
     public function doclistOnRow($row) {

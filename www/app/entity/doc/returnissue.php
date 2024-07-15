@@ -81,18 +81,18 @@ class ReturnIssue extends Document
             $this->payed = $payed;
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-      $this->DoBalans() ;
+        $this->DoBalans() ;
 
         if($this->headerdata["bonus"] > 0) {
-                $pay = new \App\Entity\CustAcc();
+                $ca = new \App\Entity\CustAcc();
 
-                $pay->document_id = $this->document_id;
-                $pay->amount = $this->headerdata["bonus"];
-                $pay->optype = \App\Entity\CustAcc::BONUS;
+                $ca->document_id = $this->document_id;
+                $ca->amount = $this->headerdata["bonus"];
+                $ca->optype = \App\Entity\CustAcc::BONUS;
                
-                $pay->customer_id = $this->customer_id;
+                $ca->customer_id = $this->customer_id;
 
-                $pay->save();       
+                $ca->save();       
         }
 
         //штраф  сотруднику

@@ -1406,7 +1406,7 @@ class Helper
      public static function migration() {
            $conn = \ZDB\DB::getConnect();
   
-           $migrationbonus = \App\Helper::getKeyVal('migrationbonus')  ; //6.11.1
+           $migrationbonus = \App\Helper::getKeyVal('migrationbonus')  ; //6.11.2
            if($migrationbonus != "done") {
                Helper::log("Миграция бонус") ;
                $conn->BeginTrans();
@@ -1431,12 +1431,13 @@ class Helper
                
                
            }
+
  
- 
-           $migrationbalans = \App\Helper::getKeyVal('migrationbalans')  ; //6.11.1
+           $migrationbalans = \App\Helper::getKeyVal('migrationbalans')  ; //6.11.2
            if($migrationbalans != "done") {
                Helper::log("Миграция баланс") ;
- 
+               //  + контрагента (active)  - наш кредитовый  долг
+               //  - контрагента (passive)  - наш дебетовый  долг
                $conn->BeginTrans();
                try{
                  $conn->Execute("delete from custacc where optype=2 or optype=3 ") ;
