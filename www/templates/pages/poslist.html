@@ -6,20 +6,32 @@
 
     <body>
         <div class="row">
-            <div class="col-12">
+             {{^loadkey}}
+               <div class="col-12 col-md-6 col-xl-4">
+             {{/loadkey}}
+             {{#loadkey}}
+               <div class="col-12   col-xl-10">
+             {{/loadkey}}
                 <div zippy="postable">
                     <h3>Довідник кас (POS терміналів) </h3>
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
-                    <table class="table table-bordered   table-sm" style="width:600px">
+                    <table class="table table-bordered   table-sm"  >
                         <tr>
                             <th>Назва</th>
                             {{#usebranch}}
                             <th>Філія</th>
                             {{/usebranch}}
                             <th></th>
-
                             <th></th>
                             <th></th>
+                             
+    {{#loadkey}}
+                            <th  > </th>
+                            <th  >Власник сертифiкату</th>
+                            <th  >Iдентифiкатор ключа</th>
+                            
+                            
+                            {{/loadkey}}   
                         </tr>
                         <tr zippy="poslist">
                             <td zippy="pos_name"></td>
@@ -27,12 +39,20 @@
                             <td zippy="branch_name"></td>
                             {{/usebranch}}
                             <td zippy="comment"></td>
-
                             <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> </td>
                             <td  > <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
-                        </tr>
-                    </table>
 
+      {{#loadkey}}
+                            <td  >
+                               <a  zippy="ppo" title="Завантажити ключ і сертифікат" ><i class="fa fa-key"></i></a>
+                            </td>
+                            <td zippy="ppoowner"> </td>
+                            <td zippy="ppokeyid"> </td>
+                            {{/loadkey}}    
+                         </tr>
+                    </table>
+                          {{#loadkey}}    <small>Iдентифiкатор ключа має бути прописаний в податковiй</small>       {{/loadkey}}     
+ 
 
                 </div>
 
@@ -156,12 +176,85 @@
                     </div>
 
                 </form>
+                
+                
+          <div class="row">
+            
+            <form class="col-6 col-md-6  col-xl-4" zippy="keyform" enctype="multipart/form-data">
+                <h5>Завантаження ключа та сертифiкату</h5>
+            <small>Опис роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ext#6">тут</a> </small>
+                  <div class="form-group">
+                    <label for="signtype">Метод пiдпису </label>
+                    <select   class="form-control" type="text" zippy="signtype">
+                      <option value="0">Внутрiшня бiблiотека</option>
+                  <!--    <option value="1">Сервер з передачею ключа</option>
+                      <option value="2">Сервер з встроєним ключем</option>
+                      -->
+                    </select>
+                    
+                </div>  
+            
+                             
+                <div class="form-group">
+                    <label for="password">Пароль </label>
+                    <input required="required" class="form-control" type="password" zippy="password">
+                    <small>Пароль не буде записаний в системi</small>
+                </div>
+                <div class="form-group">
+                    <label for="keyfile">Файл ключа </label>
+                    <input class="form-control" type="file" zippy="keyfile">
+                  
+                </div>
+                <div class="form-group">
+                    <label for="certfile">Файл сертифiкату </label>
+                    <input class="form-control" type="file" zippy="certfile">
+                </div>
+   <small>Для jks ключiв (ПриватБанк) необов'язково</small>                      
+                <div class="form-group">
+                    <label for="serhost">Адреса сервера пiдпису </label>
+                    <input class="form-control"   zippy="serhost">
+                </div>
+                <div class="form-group">
+                    <label for="serport">Порт сервера </label>
+                    <input class="form-control"   zippy="serport">
+                </div>
+                <div class="form-check">
+                    <input zippy="usessl" type="checkbox" class="form-check-input">
+                    <label class="form-check-label text-bold" for="usessl">Перевiряти SSL сертифiкат</label>
+             <small for="usessl">У разі проблем із самопідписаним сертифікатом потрібно додати його до системи до списку довірених,
+                 або покласти файл сертифіката в папку config, перейменувавши в 'ssl.srt'
+                </small>       
+                </div>   
+
+                <div class="form-check">
+                   <input zippy="outher" type="checkbox" class="form-check-input">
+                   <label class="form-check-label" for="outher">Використати зовнiшнiй сервер</label>
+                  <br> <small>Якщо помилка з таймаутом (завантаження  може  зайняти кілька хвилин)</small>
+               </div>                              
+                 
+
+                <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-outline-primary mr-1 ">
+                <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  mr-2 ">
+                
+                <input zippy="delppo" type="button" value="Видалити" class="btn btn-outline-danger  ">  
+      
+
+            </form>
+            
+            </div>
+                
             </div>
         </div>
       <script>
             function check_delete() {
                 return confirm("Видалити термiнал?")
             }
+            function check_send(){
+            
+               document.getElementById('dialogwait').showModal()
+
+                return  true;
+            }            
         </script>
     </body>
 </html>

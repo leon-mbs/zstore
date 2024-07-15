@@ -42,7 +42,7 @@ class PPOList extends \App\Pages\Base
         $this->add(new Panel('opan'));
 
         $this->opan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->opan->filter->add(new DropDownChoice('searchcomp', \App\Entity\Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->opan->filter->add(new DropDownChoice('searchcomp', \App\Entity\Pos::findArray('pos_name', '', 'pos_name'), 0));
 
         $this->opan->add(new DataView('ppolist', new ArrayDataSource(new Prop($this, '_ppolist')), $this, 'ppoOnRow'));
 
@@ -68,8 +68,8 @@ class PPOList extends \App\Pages\Base
         if ($cid == 0) {
             return;
         }
-        $firm = Firm::load($cid);
-        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $firm);
+        $pos = Pos::load($cid);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Objects')), 'cmd', $pos);
         if ($res['success'] == false) {
             $this->setErrorTopPage($res['data']);
             return;
@@ -132,9 +132,9 @@ class PPOList extends \App\Pages\Base
         $from = $dt->subDay(10)->getISO();
  
         $cid = $this->opan->filter->searchcomp->getValue();
-        $firm = Firm::load($cid);
+        $pos = Pos::load($cid);
 
-        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $pos);
         if ($res['success'] == false) {
             $this->setErrorTopPage($res['data']);
             return;
@@ -160,7 +160,7 @@ class PPOList extends \App\Pages\Base
         $to = $dt->getISO();
 
         
-        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $firm);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'From' => $from, 'To' => $to)), 'cmd', $pos);
         if ($res['success'] == false) {
             $this->setErrorTopPage($res['data']);
             return;
@@ -204,9 +204,9 @@ class PPOList extends \App\Pages\Base
         $sh = $sender->getOwner()->getDataItem();
         $this->_doclist = array();
         $cid = $this->opan->filter->searchcomp->getValue();
-        $firm = Firm::load($cid);
+        $pos = Pos::load($cid);
 
-        $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $firm);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $this->ppo->tr->NumFiscal, 'ShiftId' => $sh->ShiftId)), 'cmd', $pos);
         if ($res['success'] == false) {
             $this->setErrorTopPage($res['data']);
             return;
@@ -254,9 +254,9 @@ class PPOList extends \App\Pages\Base
         $this->docpan->doclist->Reload();
 
         $cid = $this->opan->filter->searchcomp->getValue();
-        $firm = Firm::load($cid);
+        $pos = Pos::load($cid);
 
-        $res = PPOHelper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $firm);
+        $res = PPOHelper::send(json_encode(array('Command' => $doc->DocClass, 'RegistrarNumFiscal' => $this->ppo->tr->NumFiscal, 'NumFiscal' => $doc->NumFiscal)), 'cmd', $pos);
         if ($res['success'] == false) {
             $this->setErrorTopPage($res['data']);
             return;

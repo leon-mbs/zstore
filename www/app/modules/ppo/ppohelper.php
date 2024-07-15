@@ -22,21 +22,21 @@ class PPOHelper
      *
      * @param mixed $data
      * @param mixed $type cmd (команда) или  doc (документ)
-     * @param mixed $firm компания
-     * @param mixed $onlysign только  наложть  подпись
+     * @param mixed $pos pos терминал
+     * @param mixed $onlysign только  наложить  подпись
      */
-    public static function send($data, $type, \App\Entity\Firm $firm, $onlysign = false) {
+    public static function send($data, $type, \App\Entity\Pos $pos, $onlysign = false) {
 
         try {
 
-            $pposigntype = $firm->pposigntype;
-            $serhost = $firm->ppohost;
-            $serport = $firm->ppoport;
-            $usessl = $firm->ppousessl;
-            $password = $firm->ppopassword;
-            $keydata = $firm->ppokey;
-            $certdata = $firm->ppocert;
-            $isjks = $firm->ppoisjks;
+            $pposigntype = $pos->pposigntype;
+            $serhost = $pos->ppohost;
+            $serport = $pos->ppoport;
+            $usessl = $pos->ppousessl;
+            $password = $pos->ppopassword;
+            $keydata = $pos->ppokey;
+            $certdata = $pos->ppocert;
+            $isjks = $pos->ppoisjks;
 
             if ($pposigntype == 1 || $pposigntype == 2) {     //server
 
@@ -107,8 +107,8 @@ class PPOHelper
                 $signed = base64_decode($ret->data);
             } else {
 
-                $key = @unserialize(@base64_decode($firm->ppokey));
-                $cert = @unserialize(@base64_decode($firm->ppocert));
+                $key = @unserialize(@base64_decode($pos->ppokey));
+                $cert = @unserialize(@base64_decode($pos->ppocert));
 
                 if ($key == null || $cert == null) {
                     $msg = "Не завантажений ключ або сертифікат";
