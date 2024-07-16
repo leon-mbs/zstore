@@ -1371,9 +1371,7 @@ class Helper
       
             $phpv =   phpversion()  ;
             $conn = \ZDB\DB::getConnect();
-      
-          
-      
+       
             $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv. '_'. \App\System::CURR_VERSION ;
        
             $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
