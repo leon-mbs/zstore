@@ -195,6 +195,7 @@ class Order extends \App\Entity\Doc\Document
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
                             $sc->tag=Entry::TAG_TOPROD;
+                            $sc->createdon=time();
 
                             $sc->save();
                         }
@@ -212,6 +213,7 @@ class Order extends \App\Entity\Doc\Document
                 $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
                 $sc->tag=Entry::TAG_FROMPROD;
+                $sc->createdon=time();
 
                 $sc->save();
             }
@@ -230,7 +232,9 @@ class Order extends \App\Entity\Doc\Document
                 $sc = new \App\Entity\Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 //  $sc->setOutPrice($item->price  );
-                $sc->tag = \App\Entity\Entry::TAG_RESERV;
+                $sc->tag = Entry::TAG_RESERV;
+                $sc->createdon=time();
+                
                 $sc->save();
 
             }
