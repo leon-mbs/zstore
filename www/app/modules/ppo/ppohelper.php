@@ -260,14 +260,13 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-        
+          
         if($firm== null){
             return array('success' => false, 'data' => 'Не вказана  компаiя в POS термiналi');
         }
         
         
-        return self::send($xml, 'doc', $firm);
+        return self::send($xml, 'doc', $pos);
     }
 
     /**
@@ -388,9 +387,8 @@ class PPOHelper
         $xml = $report->generate($header);
         $_xml = $xml;
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-
-        $ret =  self::send($xml, 'doc', $firm);
+     
+        $ret =  self::send($xml, 'doc', $pos);
         if($ret['success']==true) {
             $r = new ZRecord();
             $r->createdon = time();
@@ -654,8 +652,8 @@ class PPOHelper
         $xml = $report->generate($header);
    //     H::log($xml);
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-        $ret = self::send($xml, 'doc', $firm);
+      
+        $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
 
             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
@@ -725,9 +723,8 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-
-        $ret = self::send($xml, 'doc', $firm);
+     
+        $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
 
 
@@ -810,9 +807,9 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
 
-        $ret = self::send($xml, 'doc', $firm);
+
+        $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
 
 
@@ -896,8 +893,7 @@ class PPOHelper
             return;
         }
         //$branch = \App\Entity\Branch::load($pos->firm_id);
-        $company = \App\Entity\Firm::load($pos->firm_id);
-
+    
         //"2022-05-01T00:00:00+03:00"
 
         $dt = new  \App\DateTime() ;
@@ -907,7 +903,7 @@ class PPOHelper
 
         $to = date('c');
 
-        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $company);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $pos);
 
         if($res['success']==false) {
             \App\System::setErrorMsg($res['data']);
@@ -920,7 +916,7 @@ class PPOHelper
                 if(strlen($sh->CloseName)==0) {
 
 
-                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fiscalnumber, 'ShiftId' => $sh->ShiftId)), 'cmd', $company);
+                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fiscalnumber, 'ShiftId' => $sh->ShiftId)), 'cmd', $pos);
 
 
                     if($res['success']==false) {
@@ -976,7 +972,7 @@ class PPOHelper
             if(in_array($d, $floc)==false) {
 
 
-                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fiscalnumber, 'NumFiscal' =>  $d )), 'cmd', $company);
+                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fiscalnumber, 'NumFiscal' =>  $d )), 'cmd', $pos);
 
                 if($res['success']==false) {
                     continue;
@@ -1030,8 +1026,8 @@ class PPOHelper
     *
     * @param mixed $firm
     */
-    public static function checkServer($firm) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $firm);
+    public static function checkServer($pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
@@ -1050,8 +1046,8 @@ class PPOHelper
     * @param mixed $fiscnumber
     * @param mixed $firm
     */
-    public static function rroState($fiscnumber, $firm) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+    public static function rroState($fiscnumber, $pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
@@ -1066,8 +1062,8 @@ class PPOHelper
     * @param mixed $fiscnumber
     * @param mixed $firm
     */
-    public static function shiftTotal($fiscnumber, $firm) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+    public static function shiftTotal($fiscnumber, $pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
@@ -1103,10 +1099,9 @@ class PPOHelper
     */
     public static function checkSession($pos) {
        
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-     
+       
       
-        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $firm);
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }

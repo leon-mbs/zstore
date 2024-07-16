@@ -280,9 +280,8 @@ class ZForm extends \App\Pages\Base
         }
 
         $pos = \App\Entity\Pos::load($this->_pos->pos_id);
-        $firm = \App\Entity\Firm::load($this->_pos->firm_id);
-
-        $ret = PPOHelper::shiftTotal($pos->fiscalnumber, $firm) ;
+  
+        $ret = PPOHelper::shiftTotal($pos->fiscalnumber, $pos) ;
         if($ret == false) {
             $this->setError("Сервер недоступний або зміна закрита");
             return ;

@@ -354,8 +354,6 @@ class OrderFood extends \App\Pages\Base
 
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
 
-
-
         $isEdited = $this->_doc->document_id > 0;
         if ($isEdited == false) {
             $this->_doc->headerdata['time'] = time();
