@@ -82,7 +82,7 @@ class CustAcc extends \ZCL\DB\Entity
             return;
         }
 
-        if(in_array($doc->meta_name, ['GoodsIssue','ServiceAct','Invoice','POSCheck','Order','OrderFood']) == false) {
+        if(in_array($doc->meta_name, ['Invoice','POSCheck','Order','OrderFood']) == false) {
             return;
         }
 
