@@ -79,7 +79,8 @@ class Update extends \App\Pages\Base
            $this->_tvars['actual']  = true   ;
            $this->_tvars['show']  = false   ;
           
-        }        
+        }   
+        $this->_tvars['tooold']  = false;    
         if ($na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
 
            $this->_tvars['tooold']  = true   ;//пропущено несколько
