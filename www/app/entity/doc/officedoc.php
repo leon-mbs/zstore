@@ -17,19 +17,7 @@ class OfficeDoc extends Document
        
         $bonus = $this->headerdata['bonus'];
         $fine = $this->headerdata['fine'];
-        $custbonus =intval($this->headerdata['custbonus']);
-
-        if ($custbonus != 0 &&  $cust > 0) {
-            $cb = new \App\Entity\CustAcc();
-
-            $cb->customer_id = $cust;
-            $cb->document_id = $this->document_id;
-            $cb->amount =    $custbonus;
-            $cb->optype = \App\Entity\CustAcc::BONUS;
-            $cb->notes = $this->notes;
-            $cb->createdon = time();
-            $cb->save();
-        }
+ 
         if ($bonus > 0 && $emp > 0) {
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::BONUS;

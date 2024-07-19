@@ -39,7 +39,7 @@ class CustAcc extends \ZCL\DB\Entity
         $c = \App\Entity\Customer::load($customer_id);
 
         if(($doc->headerdata['pricetype']??'price1') != 'price1') {
-            return;
+           // return;
         }
 
 

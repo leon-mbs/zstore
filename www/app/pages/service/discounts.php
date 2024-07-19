@@ -219,7 +219,10 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("ebonussell", $disc["bonussell"] ??''));
         $form->add(new  TextInput("efineret", $disc["fineret"]??''));
  
-      
+        $this->add(new Form('formaddbc'))->onSubmit($this, 'onAddBonus');
+        $this->formaddbc->add(new  TextInput("amountbc",''));
+        $this->formaddbc->add(new AutocompleteTextInput('custbc'))->onText($this, 'OnAutoCustomer');
+          
     }
 
 
@@ -793,6 +796,29 @@ class Discounts extends \App\Pages\Base
 
         System::setOptions("discount", $disc);
         $this->setSuccess('Збережено');
+    }
+  
+    public function onAddBonus($sender) {
+        
+        $am=intval($sender->amountbc->getText() );
+        $cid=intval($sender->custbc->getKey() );
+        $sender->amountbc->setText('') ;
+        $sender->custbc->setText('') ;
+        $sender->custbc->setKey(0) ;
+         
+        if($am != 0  && $cid >0) {
+             
+            $cb = new \App\Entity\CustAcc();
+
+            $cb->customer_id = $cid;
+          //  $cb->document_id = $this->document_id;
+            $cb->amount =    $am;
+            $cb->optype = \App\Entity\CustAcc::BONUS;
+            $cb->createdon = time();
+            $cb->save();
+            
+            $this->OnPL(null);
+        }
     }
 
 }
