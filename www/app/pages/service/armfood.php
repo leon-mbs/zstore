@@ -35,7 +35,7 @@ class ARMFood extends \App\Pages\Base
     private $_worktype = 0;
     private $_pos;
     private $_store;
-    public $_pt       = -1;
+    public  $_pt       = -1;
 
 
     private $_doc;
@@ -340,7 +340,7 @@ class ARMFood extends \App\Pages\Base
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
          
-        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') "  );        
+        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') "  );        
         
 
     }
@@ -574,7 +574,7 @@ class ARMFood extends \App\Pages\Base
             $this->_catlist = $catlist;
             $this->docpanel->catpan->catlist->Reload();
         } else {
-            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $cat->cat_id);
+            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4,5 )  and cat_id=' . $cat->cat_id);
             $this->docpanel->catpan->setVisible(false);
             $this->docpanel->prodpan->setVisible(true);
             $this->docpanel->prodpan->prodlist->Reload();
@@ -1405,7 +1405,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['pos'] = $this->_pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->_pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store;
-        $this->_doc->headerdata['pricetype'] = $this->_pt;
+        $this->_doc->headerdata['pricetype'] = $this->_pricetype;
 
         $this->_doc->firm_id = $this->_pos->firm_id;
         $this->_doc->username = System::getUser()->username;

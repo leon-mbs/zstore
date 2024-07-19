@@ -397,7 +397,7 @@ class Outcome extends \App\Pages\Base
                 $totsum += ($row['summa'] + $row['navar']);
             }
         }
-        if( $totsum >0) {
+        if( $totsumself > 0) {
            $totnavarproc = 100*$totnavar/$totsumself ;
         }
         

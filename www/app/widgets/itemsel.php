@@ -190,7 +190,7 @@ class ItemSel extends \Zippy\Html\PageFragment
             $this->_catlist = $catlist;
             $this->wcatpan->wcatlist->Reload();
         } else {
-            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $cat->cat_id);
+            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4,5 )  and cat_id=' . $cat->cat_id);
             $this->wcatpan->setVisible(false);
             $this->wprodpan->setVisible(true);
             $this->wprodpan->wprodlist->Reload();
