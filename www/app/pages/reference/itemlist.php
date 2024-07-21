@@ -205,6 +205,7 @@ class ItemList extends \App\Pages\Base
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
+        $row->add(new Label('onstore'))->setVisible($item->qty > 0);
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
@@ -1152,7 +1153,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
         
-        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $k => $v) {
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start,"*,(select coalesce(sum(qty),0) from store_stock where  items_view.item_id = store_stock.item_id) as qty") as $k => $v) {
             $l[$k] = $v;
         }
         return $l;
