@@ -62,11 +62,23 @@ class Equipment extends \ZCL\DB\Entity
         }
         return $list;
     }
-     public static function getConstraint() {
+   
+    //todo  история
+    public static function getConstraint() {
         $br = \App\ACL::getBranchConstraint();
         if (strlen($br) > 0) {
             $br = " (" . $br . " or coalesce(branch_id,0)=0)  ";
-        }  //склады не  привязаные к  филиалу
+        }   
         return $br;
     }
+
+    public  function getBalance($tm=0) {
+  
+        return $this->balance;
+    }
+    public  function setBalance($am) {
+  
+       $this->balance = $am;
+    }
+    
 }

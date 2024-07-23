@@ -186,14 +186,18 @@ class CustAcc extends \ZCL\DB\Entity
     
     
     //вместо  промотра  в  бд
-    public  static function  get_acc_view(){
+    public  static function  get_acc_view($dt=0){
         $brdoc = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $brdoc = " and   document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
         }
-        
-                            
+        $createdon = "";
+        if($dt >0) {
+          $conn= \ZDB\DB::getConnect() ;
+          $createdon = " and date(createdon) < " . $conn->DBDate($dt);
+             
+        }                   
             $cust_acc_view =" 
                 SELECT
                   SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
@@ -205,6 +209,7 @@ class CustAcc extends \ZCL\DB\Entity
                 FROM custacc_view
                 WHERE optype IN (2, 3)  {$brdoc}
                 AND customer_id IN (SELECT    c.customer_id   FROM customers c    WHERE status = 0)
+                {$createdon} 
                 GROUP BY customer_id
 
                  ";

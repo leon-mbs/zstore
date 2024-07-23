@@ -22,10 +22,14 @@ class Balance extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('Balance')) {
             return;
         }
-
+        $dt = new \App\DateTime();
+      
+        $dt = $dt->startOfMonth()->getTimestamp();
+  
     
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-
+        $this->filter->add(new Date('dt', $dt));
+  
       
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -47,9 +51,11 @@ class Balance extends \App\Pages\Base
     }
 
     private function generateReport() {
-        
+        $dt = $this->filter->dt->getDate();
+         
         $conn= \ZDB\DB::getConnect() ;
-
+        $dbdt = $conn->DBDate($dt);
+        
         $brdoc = "";
         $brf = "";
         $brst = "";
@@ -63,33 +69,29 @@ class Balance extends \App\Pages\Base
             $brdoc = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
 
-        
+        $stview ="SELECT  SUM( (SELECT COALESCE(SUM(quantity), 0)  FROM entrylist_view
+          WHERE entrylist_view.stock_id = store_stock_view.stock_id and date(createdon) < {$dbdt} ) * partion)  from store_stock_view ";
 
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst} item_type=   ".Item::TYPE_MAT;
+        $sql = $stview. " where {$brst} item_type=   ".Item::TYPE_MAT;
         $amat = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  (item_type=   ".Item::TYPE_PROD ."  or  item_type=   ".Item::TYPE_HALFPROD .")";
+        $sql = $stview. " where {$brst}  (item_type=   ".Item::TYPE_PROD ."  or  item_type=   ".Item::TYPE_HALFPROD .")";
         $aprod = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  item_type=   ".Item::TYPE_MBP;
+        $sql = $stview. " where {$brst}  item_type=   ".Item::TYPE_MBP;
         $ambp = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  item_type=   ".Item::TYPE_TOVAR;
+        $sql = $stview. " where {$brst}  item_type=   ".Item::TYPE_TOVAR;
         $aitem = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  coalesce(item_type,0)=0  ";
+        $sql = $stview. " where {$brst}  coalesce(item_type,0)=0  ";
         $aother = doubleval($conn->GetOne($sql)) ;
  
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where date(paydate) < {$dbdt} and paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
         $anal = doubleval($conn->GetOne($sql)) ;
 
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where date(paydate) < {$dbdt} and paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
         $abnal = doubleval($conn->GetOne($sql)) ;
 
         $aemp=0;
         $pbemp=0;
-        $sql = "select coalesce(sum(amount),0) as am  from empacc where 1=1  {$bemp} group by emp_id ";
+        $sql = "select coalesce(sum(amount),0) as am  from empacc_view where date(createdon) <  {$dbdt}  {$bemp} group by emp_id ";
 
         foreach($conn->GetCol($sql) as $r ) {
            if($r >0) {
@@ -101,7 +103,7 @@ class Balance extends \App\Pages\Base
             
         }
         
-        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view($dt)  ;
           
         //к оплате
         $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
@@ -119,8 +121,8 @@ class Balance extends \App\Pages\Base
 
 
         $aeq=0;
-        foreach(\App\Entity\Equipment::find(" 1=1  {$bemp} ") as $eq){
-            $aeq += doubleval($eq->balance);
+        foreach(\App\Entity\Equipment::find("") as $eq){
+            $aeq += doubleval($eq->getBalance($dt));
         } ;
         
  
@@ -142,7 +144,7 @@ class Balance extends \App\Pages\Base
 
 
         $header = array(
-            'datefrom' => \App\Helper::fd(time()),
+            'datefrom' => \App\Helper::fd($dt) ,
             'amat'      => $amat != 0 ? $amat : false,
             'aprod'     => $aprod !=0 ? $aprod : false,
             'ambp'      => $ambp !=0 ? $ambp : false,
