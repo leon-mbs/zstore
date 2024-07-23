@@ -10,6 +10,7 @@ namespace App\Entity;
  */
 class Equipment extends \ZCL\DB\Entity
 {
+    private $bh=[]; 
     protected function init() {
         $this->eq_id = 0;
         $this->branch_id = 0;
@@ -27,6 +28,7 @@ class Equipment extends \ZCL\DB\Entity
         $this->detail .= "<eq>{$this->eq}</eq>";
         $this->detail .= "<pa_id>{$this->pa_id}</pa_id>";
         $this->detail .= "<enterdate>{$this->enterdate}</enterdate>";
+        $this->detail .= "<bh>". serialize($this->bh) ."</bh>";
 
         $this->detail .= "</detail>";
 
@@ -45,7 +47,10 @@ class Equipment extends \ZCL\DB\Entity
         $this->enterdate = (int)($xml->enterdate[0]);
         $this->eq = (int)($xml->eq[0]);
         $this->pa_id = (int)($xml->pa_id[0]);
-
+        $this->bh = @unserialize( (string)($xml->bh[0]) );
+        if(!is_array($this->bh)) {
+            $this->bh=[] ;
+        }
         parent::afterLoad();
     }
 
@@ -73,11 +78,24 @@ class Equipment extends \ZCL\DB\Entity
     }
 
     public  function getBalance($tm=0) {
-  
+        if(count( $this->bh)==0) {
+           return $this->balance;
+        }
+        $keys= array_keys($this->bh) ;
+        sort($keys) ;
+        
+        foreach($keys as $i){
+            
+            if($i >$tm){
+               break; 
+            }
+            $this->balance = $this->bh[$i] ;
+        }
         return $this->balance;
     }
     public  function setBalance($am) {
-  
+       $this->bh[55555] = 777;
+       $this->bh[time()] = $am;
        $this->balance = $am;
     }
     
