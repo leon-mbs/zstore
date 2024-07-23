@@ -94,8 +94,7 @@ class Equipment extends \ZCL\DB\Entity
         return $this->balance;
     }
     public  function setBalance($am) {
-       $this->bh[55555] = 777;
-       $this->bh[time()] = $am;
+s       $this->bh[time()] = $am;
        $this->balance = $am;
     }
     
