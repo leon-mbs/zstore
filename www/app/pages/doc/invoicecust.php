@@ -481,21 +481,14 @@ class InvoiceCust extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewitemmsr->getText();
 
-        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
 
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('Такий артикул вже існує');
-                return;
-            }
-
-        }
-        if (strlen($item->item_code) == 0 &&  System::getOption("common", "autoarticle") == 1) {
-
+        if (strlen($item->item_code) == 0  ) {
             $item->item_code = Item::getNextArticle();
         }
-
 
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();

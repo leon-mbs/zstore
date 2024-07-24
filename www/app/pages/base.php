@@ -734,17 +734,12 @@ class Base extends \Zippy\Html\WebPage
         $item->cat_id = $post->cat_id;
 
 
-
-        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
-            $code = \App\Entity\Item::qstr($this->_item->item_code);
-            $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and item_code={$code} ");
-            if ($cnt > 0) {
-                return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
-            }
+        if ($item->checkUniqueArticle()==false) {
+           return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
         }
 
-        if (strlen($item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
-            $item->item_code = \App\Entity\Item::getNextArticle();
+        if (strlen($item->item_code) == 0 ){
+           $item->item_code =  \App\Entity\Item::getNextArticle();
         }
 
         $itemname = \App\Entity\Item::qstr($item->itemname);

@@ -648,9 +648,9 @@ class Document extends \ZCL\DB\Entity
             $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
         } else {
            foreach($list as $n) {
-               $digits = preg_replace('/[^0-9]/', '', $n);
+               $digits = intval( preg_replace('/[^0-9]/', '', $n) );
                if($digits > $last) {
-                  $last = round($digits) ; //максимальная цифра
+                  $last =  $digits ; //максимальная цифра
                   $letters = preg_replace('/[0-9]/', '', $n);
                }
            }

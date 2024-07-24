@@ -184,15 +184,15 @@ class OrderCust extends \App\Pages\Base
         $item->manufacturer = $this->editnewitem->editnewitembrand->getText();
         $item->msr = $this->editnewitem->editnewitemmsr->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
-        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('Такий артикул вже існує');
-                return;
-            }
+  
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
 
-        }      
+        if (strlen($item->item_code) == 0  ) {
+            $item->item_code = Item::getNextArticle();
+        }     
  
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);
