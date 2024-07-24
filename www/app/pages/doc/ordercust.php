@@ -160,7 +160,8 @@ class OrderCust extends \App\Pages\Base
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewitembrand->setDataList(Item::getManufacturers());
-       
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
+      
     }
     
    public function cancelnewitemOnClick($sender) {
@@ -190,9 +191,7 @@ class OrderCust extends \App\Pages\Base
               return;
         }  
 
-        if (strlen($item->item_code) == 0  ) {
-            $item->item_code = Item::getNextArticle();
-        }     
+          
  
         $item->save();
         $this->editdetail->edititem->setText($item->itemname);

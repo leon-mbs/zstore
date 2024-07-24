@@ -467,7 +467,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->editnewitem->editnewitemmsr->setText('');
 
         $this->editnewitem->editnewitemname->setText('');
-        $this->editnewitem->editnewitemcode->setText('');
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
+        
     }
 
     public function savenewitemOnClick($sender) {
@@ -486,9 +487,7 @@ class InvoiceCust extends \App\Pages\Base
               return;
         }  
 
-        if (strlen($item->item_code) == 0  ) {
-            $item->item_code = Item::getNextArticle();
-        }
+     
 
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();

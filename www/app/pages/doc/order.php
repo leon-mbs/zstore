@@ -928,6 +928,7 @@ class Order extends \App\Pages\Base
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
     }
 
     public function savenewitemOnClick($sender) {
@@ -946,10 +947,7 @@ class Order extends \App\Pages\Base
               return;
         }  
         
-        if (strlen($item->item_code) == 0 ){
-           $item->item_code =  \App\Entity\Item::getNextArticle();
-        }
-
+   
 
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();

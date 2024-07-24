@@ -435,6 +435,7 @@ class IncomeItem extends \App\Pages\Base
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
     }
 
     public function savenewitemOnClick($sender) {
@@ -453,9 +454,7 @@ class IncomeItem extends \App\Pages\Base
               return;
         }  
 
-        if (strlen($item->item_code) == 0  ) {
-            $item->item_code = Item::getNextArticle();
-        }
+  
 
 
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
