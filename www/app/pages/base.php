@@ -649,6 +649,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['service_id']   = $service_id;
             $ret['service_name'] = $ser->service_name;
             $ret['category'] = $ser->category;
+            $ret['msr'] = $ser->msr;
             $ret['pureprice'] = $ser->getPurePrice();
             $ret['price'] = $ser->getPrice($args[1]);
             if($ret['pureprice'] > $ret['price']) {

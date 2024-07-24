@@ -22,6 +22,7 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
+                              "msr"         => $ser->msr,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
@@ -31,6 +32,7 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->itemname,
                               "desc"         => $ser->item_code . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
+                              "msr"         => $ser->msr . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)

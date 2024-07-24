@@ -151,6 +151,7 @@ class ServiceAct extends \App\Pages\Base
                'desc'=>$ser->desc ,
                'price'=>H::fa($ser->price) ,
                'disc'=>$ser->disc ,
+               'msr'=>$ser->msr ,
                'pureprice'=>$ser->pureprice ,
 
                'quantity'=>H::fqty($ser->quantity) ,
@@ -168,6 +169,7 @@ class ServiceAct extends \App\Pages\Base
                'item_code'=>$item->item_code ,
                'price'=>H::fa($item->price) ,
                'disc'=>$item->disc ,
+               'msr'=>$item->msr ,
                'snumber'=>$item->snumber ,
                'pureprice'=>$item->pureprice ,
 

@@ -1,6 +1,6 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr>
-        <td colspan="5">
+        <td colspan="6">
             Замовник: {{customer_name}}
         </td>
 
@@ -8,7 +8,7 @@
     </tr>
     {{#isfirm}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             Виконавець: {{firm_name}}
         </td>
 
@@ -16,7 +16,7 @@
     {{/isfirm}}
     {{#iscontract}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             Договір: {{contract}} вiд {{createdon}}
         </td>
 
@@ -25,14 +25,14 @@
 
     {{#isdevice}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             Виріб, матеріали: {{device}} с/н: {{devsn}}
         </td>
 
     </tr>
     {{/isdevice}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="center">
+        <td colspan="7" align="center">
            
           {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
           {{^isfinished}}  Квитанція до {{/isfinished}} 
@@ -47,6 +47,7 @@
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;"> </th>
+        <th style="border: 1px solid black;"  >Од.</th>
         <th style="border: 1px solid black;" align="right">Кількість</th>
         <th style="border: 1px solid black;" align="right">Вартість</th>
         <th style="border: 1px solid black;" align="right">Сума</th>
@@ -59,6 +60,7 @@
 
         <td>{{desc}}</td>
 
+        <td  >{{msr}}</td>
         <td align="right">{{qty}}</td>
         <td align="right">{{price}}</td>
         <td align="right">{{amount}}</td>
@@ -66,49 +68,49 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td colspan="5" style="border-top: 1px solid black;" align="right">Всього:</td>
+        <td colspan="6" style="border-top: 1px solid black;" align="right">Всього:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">Знижка:</td>
+        <td colspan="6" align="right">Знижка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}    
    {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">Списані бонуси:</td>
+        <td colspan="6" align="right">Списані бонуси:</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}    
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">До сплати:</td>
+        <td colspan="6" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
    {{#payed}}  
     <tr style="font-weight: bolder;">
-        <td colspan="5" align="right">Оплата:</td>
+        <td colspan="6" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
     <tr>
-        <td colspan="6"><br>
+        <td colspan="7"><br>
             Гарантія: {{gar}}
         </td>
     </tr>
     <tr>
-        <td colspan="6"  ><small>{{{devdesc}}}</small></td>
+        <td colspan="7"  ><small>{{{devdesc}}}</small></td>
     </tr>
     <tr>
-        <td colspan="6"><small>{{{notes}}}</small></td>
+        <td colspan="7"><small>{{{notes}}}</small></td>
     </tr>
        {{#payamount}}
    
    {{#totalstr}}
     <tr>
-        <td colspan="6">До сплати <b>{{totalstr}}</b></td>
+        <td colspan="7">До сплати <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}                    
 

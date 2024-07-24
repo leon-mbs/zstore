@@ -115,6 +115,7 @@
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
+                                <th>Од. </th>
                                 <th class="text-right">Кiл.</th>
 
                                 <th class="text-right"><i class="fa fa-gift"></i>,%</th>
@@ -129,6 +130,7 @@
                                 <td >{{service.category}}</td>
                                 <td ></td>
                                 <td >{{service.desc}}</td>
+                                <td >{{service.msr}}</td>
                                 <td  class="text-right"> {{service.quantity}}</td>
 
                                 <td   class="text-right">{{service.disc}}</td>
@@ -146,6 +148,7 @@
                                 <td   >{{item.snumber}}</td>
                                 <td   > </td>
 
+                                <td  class="text-right">{{item.msr}}</td>
                                 <td  class="text-right">{{item.quantity}}</td>
 
                                 <td  class="text-right">{{item.disc}}</td>
@@ -443,6 +446,7 @@
                       
                     this.services[this.editedindex].service_name = this.loadedservice.service_name 
                     this.services[this.editedindex].category = this.loadedservice.category 
+                    this.services[this.editedindex].msr = this.loadedservice.msr 
                     this.services[this.editedindex].desc = this.editservicedesc 
                     this.services[this.editedindex].price = fa(this.editserviceprice) 
                     this.services[this.editedindex].quantity = fqty(this.editservicequantity) 

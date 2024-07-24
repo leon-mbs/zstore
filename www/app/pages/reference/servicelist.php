@@ -47,6 +47,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->add(new TextInput('editcat'));
         $this->servicedetail->add(new TextInput('editcost'));
         $this->servicedetail->add(new TextInput('edithours'));
+        $this->servicedetail->add(new TextInput('editmsr'));
         $this->servicedetail->add(new CheckBox('editdisabled'));
 
         $this->servicedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -79,6 +80,7 @@ class ServiceList extends \App\Pages\Base
         $row->add(new Label('price', $item->price));
         $row->add(new Label('cost', $item->cost));
         $row->add(new Label('hours', $item->hours));
+        $row->add(new Label('msr', $item->msr));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
@@ -113,10 +115,12 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->editprice->setText($this->_service->price);
         $this->servicedetail->editcost->setText($this->_service->cost);
         $this->servicedetail->edithours->setText($this->_service->hours);
+        $this->servicedetail->editmsr->setText($this->_service->msr);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
         $this->servicedetail->editcat->setText($this->_service->category);
         $this->servicedetail->editcat->setDataList(Service::getCategoryList());
-    }
+        $this->servicedetail->editmsr->setDataList(Service::getMsrList());
+   }
 
     public function addOnClick($sender) {
         $this->servicetable->setVisible(false);
@@ -124,6 +128,7 @@ class ServiceList extends \App\Pages\Base
         // Очищаем  форму
         $this->servicedetail->clean();
         $this->servicedetail->editcat->setDataList(Service::getCategoryList());
+        $this->servicedetail->editmsr->setDataList(Service::getMsrList());
 
         $this->_service = new Service();
     }
@@ -138,6 +143,7 @@ class ServiceList extends \App\Pages\Base
         $this->_service->category = $this->servicedetail->editcat->getText();
         $this->_service->cost = $this->servicedetail->editcost->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
+        $this->_service->msr = $this->servicedetail->editmsr->getText();
         if ($this->_service->service_name == '') {
             $this->setError("Не введено назву");
             return;
