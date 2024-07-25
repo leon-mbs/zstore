@@ -83,13 +83,13 @@ class ReturnIssue extends Document
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
         if($this->headerdata["bonus"] > 0) {
-                $pay = new \App\Entity\CustAcc();
+                $pay = new \App\Entity\Pay();
 
                 $pay->document_id = $this->document_id;
-                $pay->amount = $this->headerdata["bonus"];
-                $pay->optype = \App\Entity\CustAcc::BONUS;
-               
-                $pay->customer_id = $this->customer_id;
+                $pay->bonus = $this->headerdata["bonus"];
+                $pay->paytype = \App\Entity\Pay::PAY_BONUS;
+                $pay->paydate = time();
+                $pay->user_id = \App\System::getUser()->user_id;
 
                 $pay->save();       
         }
@@ -119,7 +119,5 @@ class ReturnIssue extends Document
     protected function getNumberTemplate() {
         return 'BK-000000';
     }
-    public function DoBalans() {
 
-    }
 }

@@ -310,7 +310,5 @@ class ServiceAct extends Document
 
         return $list;
     }
-    public function DoBalans() {
 
-    }
 }

@@ -366,6 +366,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->document_date->setDate(time());
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
         $this->_doc->headerdata['arm'] = 1;
+        $this->_doc->headerdata['time'] = time();
+        
         $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());
 
 
@@ -1885,7 +1887,7 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-    public function checkPromo($args, $post=null) {
+    public function chechPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
             return json_encode([], JSON_UNESCAPED_UNICODE);             

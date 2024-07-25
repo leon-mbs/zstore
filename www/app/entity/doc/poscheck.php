@@ -422,8 +422,6 @@ class POSCheck extends Document
 
         return $list;
     }
-    public function DoBalans() {
 
-    }
 
 }

@@ -26,7 +26,7 @@ class EmpAcc extends \ZCL\DB\Entity
 
     protected function init() {
         $this->ea_id = 0;
-   //     $this->createdon = time();
+        $this->createdon = time();
     }
 
     protected function afterLoad() {

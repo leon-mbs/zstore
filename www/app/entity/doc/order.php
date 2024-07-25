@@ -273,7 +273,5 @@ class Order extends \App\Entity\Doc\Document
 
         }
     }
-    public function DoBalans() {
 
-    }
 }

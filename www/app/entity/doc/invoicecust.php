@@ -92,7 +92,5 @@ class InvoiceCust extends Document
 
         return $list;
     }
-    public function DoBalans() {
 
-    }
 }

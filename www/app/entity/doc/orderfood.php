@@ -350,7 +350,5 @@ class OrderFood extends Document
 
         return false;
     }
-    public function DoBalans() {
 
-    }
 }

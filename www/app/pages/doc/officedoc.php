@@ -338,7 +338,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->cinfo->setVisible(true);
         $this->docform->cinfo->setAttribute('onclick', "customerInfo({$customer_id});");
 
-        $this->docform->custbonus->setVisible($customer_id > 0);
+   //todo     $this->docform->custbonus->setVisible($customer_id > 0);
 
     }
 

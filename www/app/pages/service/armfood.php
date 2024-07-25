@@ -1391,6 +1391,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['forbar'] =  $this->docpanel->listsform->forbar->isChecked() ? 1 : 0;
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
+        $this->_doc->headerdata['time'] = time();
 
         $this->_doc->headerdata['contact'] = $this->docpanel->listsform->contact->getText();
         $this->_doc->notes = $this->docpanel->listsform->notes->getText();
@@ -1928,7 +1929,7 @@ class ARMFood extends \App\Pages\Base
     }
     
 
-     public function checkPromo($args, $post=null) {
+     public function chechPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
             return json_encode([], JSON_UNESCAPED_UNICODE);             

@@ -58,7 +58,7 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bcom'))->onClick($this, 'statusOnSubmit');
+
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -139,10 +139,7 @@ class GRList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
             return;
         }
-        if ($sender->id == "bcom") {
-            App::Redirect("\\App\\Pages\\Doc\\PayComission", 0, $this->_doc->document_id);
-            return;
-        }        
+             
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
@@ -155,7 +152,7 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
         $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
-        $this->statuspan->statusform->bcom->setVisible($this->_doc->meta_name == 'GoodsReceipt'  && $this->_doc->state== 5 && $this->_doc->headerdata['comission'] ==1);
+
 
         //новый
         if ($this->_doc->state < Document::STATE_EXECUTED) {

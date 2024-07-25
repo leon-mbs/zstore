@@ -12,7 +12,7 @@ use Zippy\Html\Panel;
 use App\Entity\Pay;
 
 /**
- * Финансовые  результаты
+ * Доходы и расходы
  */
 class PayBalance extends \App\Pages\Base
 {
@@ -203,6 +203,7 @@ class PayBalance extends \App\Pages\Base
             "_detail"  => $detail,
             "_detail2" => $detail2,
             "_detail3" => $detail3,
+            "is3" => count($detail3) >0,
             'tin'      => H::fa($tin),
             'tout'     => H::fa($tout),
             'total'    => H::fa($total)

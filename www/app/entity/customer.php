@@ -233,9 +233,9 @@ class Customer extends \ZCL\DB\Entity
     */
     public function getBonus() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(amount),0) as bonus from custacc where  customer_id={$this->customer_id} and optype=1";
+        $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
 
-        return intval($conn->GetOne($sql) );
+        return $conn->GetOne($sql);
 
     }
     /**
@@ -244,11 +244,11 @@ class Customer extends \ZCL\DB\Entity
     */
     public static function getBonusAll() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(amount),0) as bonusall, customer_id from custacc where optype=1  group by  customer_id ";
+        $sql = "select coalesce(sum(bonus),0) as bonusall, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row) {
             if(doubleval($row['bonusall']) <>0) {
-                $ret[$row['customer_id']] = intval($row['bonusall'] );
+                $ret[$row['customer_id']] = $row['bonusall'] ;
             }
 
         }
@@ -261,14 +261,14 @@ class Customer extends \ZCL\DB\Entity
     */
     public function getBonuses() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select p.amount, p.createdon,p.document_number  from custacc_view p  where p.optype=1 and p.customer_id={$this->customer_id} and coalesce(p.amount,0) <> 0 order  by  ca_id ";
+        $sql = "select bonus, paydate,d.document_number  from paylist p join documents d ON  p.document_id = d.document_id where d.customer_id={$this->customer_id} and coalesce(p.bonus,0) <> 0 order  by  pl_id ";
         $ret = array();
         foreach($conn->Execute($sql) as $row) {
 
             $b = new \App\DataItem() ;
-            $b->paydate = strtotime($row['createdon']) ;
+            $b->paydate = strtotime($row['paydate']) ;
             $b->document_number = $row['document_number']  ;
-            $b->bonus = intval( $row['amount'] ) ;
+            $b->bonus = $row['bonus']  ;
 
             $ret[]=$b;
         }
@@ -391,43 +391,28 @@ class Customer extends \ZCL\DB\Entity
         $brdoc = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-            $brdoc = " and   document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
+            $brdoc = " and  d.document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
         }
         
-     
+        
         
        $cust_acc_view = "SELECT
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
-                  (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payamount ELSE 0 END)), 0) AS s_active,
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('IncomeService', 'GoodsReceipt')) THEN d.payamount WHEN ((d.meta_name = 'IncomeMoney') AND
-                  (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payed ELSE 0 END)), 0) AS s_passive,
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN d.payamount WHEN ((d.meta_name = 'OutcomeMoney') AND
-                  (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payed ELSE 0 END)), 0) AS b_active,
-              COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN d.payed WHEN ((d.meta_name = 'IncomeMoney') AND
-                  (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payamount ELSE 0 END)), 0) AS b_passive,
-              d.customer_id AS customer_id
-            FROM documents_view d
-            WHERE d.state NOT IN (0, 1, 2, 3, 15, 8, 17)
-            AND d.customer_id > 0 {$brdoc}
-            and d.customer_id in(select c.customer_id from customers c  where  status=0) 
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('InvoiceCust', 'GoodsReceipt', 'IncomeService')) THEN d.payed WHEN ((d.meta_name = 'OutcomeMoney') AND
+              (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payamount ELSE 0 END)), 0) AS s_active,
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('IncomeService', 'GoodsReceipt')) THEN d.payamount WHEN ((d.meta_name = 'IncomeMoney') AND
+              (d.content LIKE '%<detail>2</detail>%')) THEN d.payed WHEN (d.meta_name = 'RetCustIssue') THEN d.payed ELSE 0 END)), 0) AS s_passive,
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'TTN', 'PosCheck', 'OrderFood', 'ServiceAct')) THEN d.payamount WHEN ((d.meta_name = 'OutcomeMoney') AND
+              (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payed ELSE 0 END)), 0) AS b_active,
+          COALESCE(SUM((CASE WHEN (d.meta_name IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN d.payed WHEN ((d.meta_name = 'IncomeMoney') AND
+              (d.content LIKE '%<detail>1</detail>%')) THEN d.payed WHEN (d.meta_name = 'ReturnIssue') THEN d.payamount ELSE 0 END)), 0) AS b_passive,
+          d.customer_id AS customer_id
+        FROM documents_view d
+        WHERE d.state NOT IN (0, 1, 2, 3, 15, 8, 17)
+        AND d.customer_id > 0 {$brdoc}
+        and d.customer_id in(select c.customer_id from customers c  where  status=0) 
 
-            GROUP BY d.customer_id";      
-         /*                   
-              $cust_acc_view =" 
-                SELECT
-                  SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
-                  SUM(CASE WHEN amount < 0 AND       optype = 3 THEN 0 - amount ELSE 0 END) AS s_passive,
-                  SUM(CASE WHEN amount > 0 AND       optype = 2 THEN amount ELSE 0 END) AS b_active,
-                  SUM(CASE WHEN amount < 0 AND       optype = 2 THEN 0 - amount ELSE 0 END) AS b_passive,
-
-                  customer_id
-                FROM custacc_view
-                WHERE optype IN (2, 3)  {$brdoc}
-                AND customer_id IN (SELECT    c.customer_id   FROM customers c    WHERE status = 0)
-                GROUP BY customer_id
-
-                 ";
-                */
+        GROUP BY d.customer_id";      
+        
         return $cust_acc_view;
         
     }

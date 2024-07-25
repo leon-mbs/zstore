@@ -146,7 +146,5 @@ class IncomeService extends Document
 
         return $list;
     }
-    public function DoBalans() {
 
-    }
 }

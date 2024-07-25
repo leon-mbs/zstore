@@ -287,13 +287,6 @@ class Document extends \ZCL\DB\Entity
     public function DoStore() {
 
     }
-    /**
-    * баланс  контрагента
-    * 
-    */
-    public function DoBalans() {
-
-    }
 
     /**
      * Отмена  документа
@@ -1188,9 +1181,9 @@ class Document extends \ZCL\DB\Entity
     public function getBonus($add=true) {
         $conn = \ZDB\DB::getConnect();
         if($add) {
-            $sql = "select coalesce(sum(amount),0) as bonus from custacc where optype=1 and amount > 0 and document_id =" . $this->document_id;
+            $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;
         } else {
-            $sql = "select coalesce(sum(0-amount),0) as bonus from custacc where optype=1 and  amount < 0 and document_id =" . $this->document_id;
+            $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;
         }
 
         return $conn->GetOne($sql);
