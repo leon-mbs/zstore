@@ -1,3 +1,5 @@
+SET NAMES 'utf8';
+
 CREATE
 VIEW documents_view
 AS
@@ -15,7 +17,7 @@ SELECT
   d.state AS state,
   d.notes AS notes,
   d.payamount AS payamount,
-  (SELECT COALESCE(SUM(amount),0)FROM paylist p WHERE  p.document_id = d.document_id)     AS `payed`,
+  (SELECT COALESCE(SUM(amount),0)FROM paylist p WHERE p.paytype < 1000 and  p.document_id = d.document_id)     AS `payed`,
   d.parent_id AS parent_id,
   d.branch_id AS branch_id,
   b.branch_name AS branch_name,
@@ -36,3 +38,8 @@ FROM (((((documents d
     ON ((d.branch_id = b.branch_id)))
   LEFT JOIN firms f
     ON ((d.firm_id = f.firm_id))) ;
+
+
+delete  from  options where  optname='version' ;
+insert  into options (optname,optvalue) values('version','6.12.0'); 
+    
