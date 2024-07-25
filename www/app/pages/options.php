@@ -157,6 +157,7 @@ class Options extends \App\Pages\Base
         $this->business->usecattree->setChecked($common['usecattree']);
         $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
         $this->business->baydelivery->setChecked($common['baydelivery']);
+        $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
 
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
