@@ -1202,13 +1202,13 @@ class Document extends \ZCL\DB\Entity
     }
  
      /**
-     * актутальное  значение
+     * актуальное  значение оплат
      * 
      */
-    public function getPayed) { 
+    public function getPayed() { 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from paylist_view where paytype < 1000  and  document_id=" . $this->document_id;
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where paytype < 1000  and  document_id=" . $this->document_id;
         $payed = doubleval($conn->GetOne($sql));
         return $payed;
     }    
