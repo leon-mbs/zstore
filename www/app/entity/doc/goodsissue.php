@@ -345,7 +345,7 @@ class GoodsIssue extends Document
 
     }
     /**
-    * @overrride
+    * @override
     */
     public function DoBalans() {
         $conn = \ZDB\DB::getConnect();

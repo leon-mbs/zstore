@@ -164,7 +164,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     /**
-    * @overrride
+    * @override
     */
     public function DoBalans() {
          $conn = \ZDB\DB::getConnect();

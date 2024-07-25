@@ -1200,4 +1200,17 @@ class Document extends \ZCL\DB\Entity
     protected function beforeDelete() { 
         $this->Cancel();
     }
+ 
+     /**
+     * актутальное  значение
+     * 
+     */
+    public function getPayed) { 
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select coalesce(sum(amount),0) from paylist_view where paytype < 1000  and  document_id=" . $this->document_id;
+        $payed = doubleval($conn->GetOne($sql));
+        return $payed;
+    }    
+    
 }

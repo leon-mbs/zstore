@@ -68,7 +68,7 @@ class OutcomeMoney extends Document
         return $list;
     }
     /**
-    * @overrride
+    * @override
     */
     public function DoBalans() {
           $conn = \ZDB\DB::getConnect();

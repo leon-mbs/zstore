@@ -149,7 +149,7 @@ class IncomeService extends Document
     }
 
     /**
-    * @overrride
+    * @override
     */
     public function DoBalans() {
         $conn = \ZDB\DB::getConnect();

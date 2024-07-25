@@ -425,7 +425,7 @@ class POSCheck extends Document
     }
  
      /**
-    * @overrride
+    * @override
     */
    public function DoBalans() {
         $conn = \ZDB\DB::getConnect();

@@ -96,7 +96,7 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        if($this->payed==0) {
+        if($this->payed == 0) {
             $list['Invoice'] = self::getDesc('Invoice');
         }
       //  $list['POSCheck'] = self::getDesc('POSCheck');
@@ -280,7 +280,7 @@ class Order extends \App\Entity\Doc\Document
     }
     
     /**
-    * @overrride
+    * @override
     */
     public function DoBalans() {
           $conn = \ZDB\DB::getConnect();

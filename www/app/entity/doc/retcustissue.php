@@ -93,7 +93,7 @@ class RetCustIssue extends Document
         return 'ВП-000000';
     }
     /**
-    * @overrride
+    * @override
     */
     public function DoBalans() {
        $conn = \ZDB\DB::getConnect();

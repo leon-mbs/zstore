@@ -47,6 +47,7 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $amount сумма
      * @param mixed $mf денежный счет
      * @param mixed $comment коментарий
+     * @param mixed $nobank  без банковского  процента 
      */
     public static function addPayment($document_id, $paydate, $amount, $mf_id, $comment = '', $nobank=false) {
         $doc = \App\Entity\Doc\Document::load($document_id);
