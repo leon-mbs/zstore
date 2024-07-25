@@ -1,5 +1,7 @@
 SET NAMES 'utf8';
 
+DROP VIEW documents_view;
+
 CREATE
 VIEW documents_view
 AS
@@ -17,7 +19,7 @@ SELECT
   d.state AS state,
   d.notes AS notes,
   d.payamount AS payamount,
-  (SELECT COALESCE(SUM(amount),0)FROM paylist p WHERE p.paytype < 1000 and  p.document_id = d.document_id)     AS `payed`,
+  (SELECT COALESCE(abs(SUM(amount)),0) FROM paylist p WHERE p.paytype < 1000 and  p.document_id = d.document_id)     AS `payed`,
   d.parent_id AS parent_id,
   d.branch_id AS branch_id,
   b.branch_name AS branch_name,
