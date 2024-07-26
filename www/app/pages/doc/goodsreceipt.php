@@ -988,6 +988,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         $this->editnewitem->editnewmanufacturer->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
 
     }
 
@@ -1003,15 +1004,14 @@ class GoodsReceipt extends \App\Pages\Base
         $item->msr = $this->editnewitem->editnewmsr->getText();
         $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
 
-        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('Такий артикул вже існує');
-                return;
-            }
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
 
-        }
+      
+
+
         if (strlen($item->bar_code) > 0) {
             $code = Item::qstr($item->bar_code);
             $cnt = Item::findCnt("  bar_code={$code} ");
@@ -1020,10 +1020,6 @@ class GoodsReceipt extends \App\Pages\Base
                 return;
             }
 
-        }
-        if (strlen($item->item_code) == 0 &&  System::getOption("common", "autoarticle") == 1) {
-
-            $item->item_code = Item::getNextArticle();
         }
 
 

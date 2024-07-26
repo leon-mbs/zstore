@@ -571,7 +571,7 @@ class OrderList extends \App\Pages\Base
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
 
             $ait['citemsstore']  =  array();
-            $ait['toco']  =  "addItemToCO({$it->item_id})";
+            $ait['toco']  =  "addItemToCO([{$it->item_id}])";
 
             foreach($stl as $k=>$v) {
                 $qty = $it->getQuantity($k);
@@ -628,6 +628,27 @@ class OrderList extends \App\Pages\Base
             $this->_tvars['isciprod']=count($ait['ciprod'])>0;
 
             $this->_tvars['citems'][]=$ait;
+            
+            $sitems=[];
+            
+            $corders= Document::find("meta_name='OrderCust' and state in(5,7) ")  ;
+            
+            foreach($corders as $o) {
+               foreach($this->_doc->unpackDetails('detaildata') as $it) {
+                  foreach($o->unpackDetails('detaildata') as $cit) {
+                       if($it->item_id==$cit->item_id) {
+                           $r=[] ;
+                           $r['dnum']  = $o->document_number;
+                           $r['dd']  = $o->headerdata['delivery_date'] >0 ? H::fd($o->headerdata['delivery_date']) :'';
+                           $r['dc']  = $o->customer_name;
+                           $sitems[$o->document_id] = $r;
+                           break;
+                       }
+                  }
+               }
+           }
+            $this->_tvars['sitems']= array_values($sitems);
+            $this->_tvars['issitems']= count($sitems) >0;
 
 
         }

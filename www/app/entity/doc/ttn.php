@@ -253,6 +253,7 @@ class TTN extends Document
                 $sc->save();
             }
         }
+        $this->DoBalans() ;
 
         return true;
     }
@@ -308,6 +309,22 @@ class TTN extends Document
         return array(self::EX_EXCEL, self::EX_PDF);
     }
 
-
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+           //тмц
+            if($this->payamount >0) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$this->payamount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+             
+    }
 
 }

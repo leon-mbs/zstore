@@ -57,7 +57,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new File('editfile'));
         $this->docform->add(new TextInput('bonus'))->setVisible(false);
-        $this->docform->add(new TextInput('custbonus'))->setVisible(false);
+
         $this->docform->add(new TextInput('fine'))->setVisible(false);
         $this->docform->add(new CheckBox('editaccess'));
         $this->docform->add(new Date('document_date', time()));
@@ -134,7 +134,7 @@ class OfficeDoc extends \App\Pages\Base
             $this->docform->edittitle->setText($this->_doc->notes);
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->fine->setText($this->_doc->headerdata['fine']);
-            $this->docform->custbonus->setText($this->_doc->headerdata['custbonus']);
+
 
             $customer_id = $this->_doc->headerdata['customer'] ?? 0;
             if ($customer_id > 0) {
@@ -211,7 +211,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', array('data' => $data));
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
-        $this->_doc->headerdata['custbonus'] = $this->docform->custbonus->getText();
+
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
@@ -338,7 +338,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->cinfo->setVisible(true);
         $this->docform->cinfo->setAttribute('onclick', "customerInfo({$customer_id});");
 
-   //todo     $this->docform->custbonus->setVisible($customer_id > 0);
+
 
     }
 

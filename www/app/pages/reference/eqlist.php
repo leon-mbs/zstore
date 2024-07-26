@@ -182,7 +182,7 @@ class EqList extends \App\Pages\Base
         $this->_item->pa_name = $this->itemdetail->editpa->getValueName();
 
         $this->_item->code = $this->itemdetail->editcode->getText();
-        $this->_item->balance = $this->itemdetail->editbalance->getText();
+        $this->_item->setBalance ( doubleval($this->itemdetail->editbalance->getText()) );
         $this->_item->enterdate = $this->itemdetail->editenterdate->getDate();
         $this->_item->branch_id = $this->itemdetail->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_item->branch_id == 0) {

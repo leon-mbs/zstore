@@ -23,6 +23,7 @@ class Service extends \ZCL\DB\Entity
         $this->hours = (string)($xml->hours[0]);
         $this->price = (string)($xml->price[0]);
         $this->cost = (string)($xml->cost[0]);
+        $this->msr = (string)($xml->msr[0]);
         $this->techcard = (string)($xml->techcard[0]);
         $this->actionprice = doubleval($xml->actionprice[0]);
         $this->todate = intval($xml->todate[0]);
@@ -46,6 +47,7 @@ class Service extends \ZCL\DB\Entity
         $this->detail .= "<cost>{$this->cost}</cost>";
         $this->detail .= "<price>{$this->price}</price>";
         $this->detail .= "<hours>{$this->hours}</hours>";
+        $this->detail .= "<msr>{$this->msr}</msr>";
         if ($this->actionprice > 0) {
             $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
         }
@@ -83,7 +85,20 @@ class Service extends \ZCL\DB\Entity
         if (is_array($list)) {
             return $list;
         }
-        return array();
+        return [];
+    }
+   public static function getMsrList() {
+        $conn = \ZDB\DB::getConnect();
+
+        $msrl=[];
+        
+        foreach(Service::find("disabled<>1" ) as $s) {
+            if(strlen($s->msr)>0) {
+               $msrl[$s->msr]=$s->msr;
+            }
+
+        }
+        return array_values($msrl);
     }
 
     public function hasAction() {

@@ -728,26 +728,55 @@ class Item extends \ZCL\DB\Entity
      *
      */
     public static function getNextArticle() {
+        
+        if (\App\System::getOption("common", "autoarticle") != 1) {
+            return "";    //не генерим
+        }        
+        
         $conn = \ZDB\DB::getConnect();
-
-        $sql = "  select coalesce(max(item_id),0)   from  items ";
-        $id = $conn->GetOne($sql);
-        if($id>0) {
-            $last = Item::load($id);
-
-            if(strpos($last->item_code, "ID") == 0) {
-                $a =  str_replace("ID", "", $last->item_code);
-                $a = intval($a) ;
-                if($a >0) {
-                    $id = $a;
-                }
-
-            }
+        $letters = "ID";
+        $last=0;
+        $sql = "select item_code from  items     order  by  item_id desc  limit 0,100000 ";   //todo  100
+        $list = $conn->GetCol($sql);
+      
+ 
+        foreach($list as $n) {
+           $digits = intval( preg_replace('/[^0-9]/', '', $n) );
+           if($digits > $last) {
+              $last =  $digits ; //максимальная цифра
+           }
         }
+        
+        $last++;
+        $d=5;
+        if( strlen( ''.$last) >$d){ //если не  влазит
+           $d =  strlen( ''.$last); 
+        }
+        $next = $letters . sprintf("%0{$d}d", $last);
 
-        return "ID" . sprintf("%05d", ++$id);
+        return $next;
     }
 
+    /**
+    * проверка  уникальности артикула
+    * возвращает true если  уникальный
+    */
+    public   function checkUniqueArticle( ) {
+        if (\App\System::getOption("common", "nocheckarticle") == 1) {
+            return true; //не проверяем
+        }        
+        if (strlen($this->item_code) ==0 ) {
+            return true;
+        }
+        $code = Item::qstr($this->item_code);
+        $cnt = Item::findCnt("item_id <> {$this->item_id} and  item_code={$code} ");
+        if ($cnt > 0) {
+            return false;
+        }
+
+        return true;             
+    }    
+    
     /**
      * список производителей
      *

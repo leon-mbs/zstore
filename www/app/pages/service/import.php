@@ -367,7 +367,7 @@ class Import extends \App\Pages\Base
             $item->msr = $msr;
             $item->cell = $cell;
             $item->manufacturer = $brand;
-            $item->description =$desc;
+            $item->description = $desc;
             $item->shortname = $shortname;
             $item->warranty = $warranty;
             $item->price1 = doubleval($price1);

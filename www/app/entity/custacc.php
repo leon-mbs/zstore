@@ -13,18 +13,19 @@ class CustAcc extends \ZCL\DB\Entity
 {
  
     public const  BONUS = 1; // бонусы
+    public const  BUYER = 2; // покупатель
+    public const  SELLER = 3; // поставщик
  
 
     protected function init() {
         $this->ca_id = 0;
-        $this->createdon = time();
     }
 
     protected function afterLoad() {
         $this->createdon = strtotime($this->createdon);
     }
  
-     
+       //начисление  (списание)  бонусов  
    public static function addBonus($doc, $amount =0) {
 
         $conn = \ZDB\DB::getConnect();
@@ -33,12 +34,12 @@ class CustAcc extends \ZCL\DB\Entity
         if($customer_id ==0) {
             return;
         }
-        $conn->Execute(" delete from  paylist where paytype= ".self::PAY_BONUS." and  document_id=" . $doc->document_id);
+        $conn->Execute(" delete from  custacc where optype= ".CustAcc::BONUS." and  document_id=" . $doc->document_id);
 
         $c = \App\Entity\Customer::load($customer_id);
 
         if(($doc->headerdata['pricetype']??'price1') != 'price1') {
-            return;
+           // return;
         }
 
 
@@ -53,7 +54,7 @@ class CustAcc extends \ZCL\DB\Entity
                 return;
             }
             $parent = \App\Entity\Doc\Document::load($doc->parent_id);
-            $parentbonus = intval($parent->getBonus(true)); //начислкно
+            $parentbonus = intval($parent->getBonus(true)); //начислено
 
             if($parentbonus==0) {
                 return;
@@ -66,22 +67,22 @@ class CustAcc extends \ZCL\DB\Entity
             $retbonus = intval($parentbonus * $k) ;// доля
 
             if($retbonus > 0) {
-                $pay = new Pay();
+                $b = new CustAcc();
 
-                $pay->document_id = $doc->document_id;
-                $pay->bonus = 0 -  $retbonus;
-                $pay->paytype = Pay::PAY_BONUS;
-                $pay->paydate = time();
-                $pay->user_id = \App\System::getUser()->user_id;
-
-                $pay->save();
+                $b->customer_id = $customer_id;
+                $b->document_id = $doc->document_id;
+                $b->amount = 0 -  $retbonus;
+                $b->optype = CustAcc::BONUS;
+                $b->createdon = time();
+              
+                $b->save();
 
             }
 
             return;
         }
 
-        if(in_array($doc->meta_name, ['GoodsIssue','ServiceAct','Invoice','POSCheck','Order','OrderFood']) == false) {
+        if(in_array($doc->meta_name, ['Invoice','POSCheck','Order','OrderFood']) == false) {
             return;
         }
 
@@ -90,15 +91,15 @@ class CustAcc extends \ZCL\DB\Entity
         if ($doc->headerdata['bonus'] > 0) { //списание
 
 
-            $pay = new Pay();
+            $b = new CustAcc();
 
-            $pay->document_id = $doc->document_id;
-            $pay->bonus = 0 -  $doc->headerdata['bonus'];
-            $pay->paytype = Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
+            $b->customer_id = $customer_id;
+            $b->document_id = $doc->document_id;
+            $b->amount = 0 -  $doc->headerdata['bonus'];
+            $b->optype = CustAcc::BONUS;
+            $b->createdon = time();
 
-            $pay->save();
+            $b->save();
 
             // return;
         }
@@ -112,20 +113,19 @@ class CustAcc extends \ZCL\DB\Entity
             }
 
 
-            $pay = new Pay();
-
-            $pay->document_id = $doc->document_id;
-
-            $pay->amount = 0;
-            $pay->bonus = (int)$doc->headerdata['exch2b'];
+            $b = new CustAcc();
+            $b->customer_id = $customer_id;
+            $b->optype = CustAcc::BONUS;
+            $b->createdon = time();
+            $b->document_id = $doc->document_id;
+ 
+   
+            $b->amount = (int)$doc->headerdata['exch2b'];
             if($doc->headerdata['exch2b'] > $doc->headerdata['exchange']) {
-                $pay->bonus = (int)$doc->headerdata['exchange'];
+                $b->amount = (int)$doc->headerdata['exchange'];
             }
-            $pay->paytype = Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-
-            $pay->save();
+ 
+            $b->save();
         }
 
 
@@ -172,21 +172,50 @@ class CustAcc extends \ZCL\DB\Entity
         
         if ($bonus > 0) {
 
-
-            $pay = new Pay();
-
-            $pay->document_id = $doc->document_id;
-
-       
-            $pay->amount = 0;
-            $pay->bonus = (int)$bonus;
-            $pay->paytype = Pay::PAY_BONUS;
-            $pay->paydate = time();
-            $pay->user_id = \App\System::getUser()->user_id;
-
-            $pay->save();
+            $b = new CustAcc();
+            $b->customer_id = $customer_id;
+            $b->optype = CustAcc::BONUS;
+            $b->createdon = time();
+            $b->document_id = $doc->document_id;
+            $b->amount = (int)$bonus;
+ 
+            $b->save();
 
         }
     }
     
+    
+    //вместо  промотра  в  бд
+    public  static function  get_acc_view($dt=0){
+        $brdoc = "";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+            $brdoc = " and   document_id in(select  document_id from  documents dd where dd.branch_id in ({$brids}) )";
+        }
+        $createdon = "";
+        if($dt >0) {
+          $conn= \ZDB\DB::getConnect() ;
+          $createdon = " and date(createdon) < " . $conn->DBDate($dt);
+             
+        }                   
+            $cust_acc_view =" 
+                SELECT
+                  SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
+                  SUM(CASE WHEN amount < 0 AND       optype = 3 THEN 0 - amount ELSE 0 END) AS s_passive,
+                  SUM(CASE WHEN amount > 0 AND       optype = 2 THEN amount ELSE 0 END) AS b_active,
+                  SUM(CASE WHEN amount < 0 AND       optype = 2 THEN 0 - amount ELSE 0 END) AS b_passive,
+
+                  customer_id
+                FROM custacc_view
+                WHERE optype IN (2, 3)  {$brdoc}
+                AND customer_id IN (SELECT    c.customer_id   FROM customers c    WHERE status = 0)
+                {$createdon} 
+                GROUP BY customer_id
+
+                 ";
+                
+        return $cust_acc_view;
+        
+    }
+        
 }

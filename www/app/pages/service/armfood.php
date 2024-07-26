@@ -1929,7 +1929,7 @@ class ARMFood extends \App\Pages\Base
     }
     
 
-     public function chechPromo($args, $post=null) {
+     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
             return json_encode([], JSON_UNESCAPED_UNICODE);             

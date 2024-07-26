@@ -1060,7 +1060,7 @@
                             </li>
                          
                             <li class="nav-item  ">
-                                <a href="https://zippy.com.ua/contacts" class="nav-link">
+                                <a target="_blank" href="https://zippy.com.ua/contacts" class="nav-link">
                                     <i class="nav-icon fas fa-phone-alt"></i>
                                     <p>
                                         Тех. пiдтримка 
@@ -1071,7 +1071,7 @@
                       
                             {{/isadmins}}
                           <li class="nav-item  ">
-                                <a href="https://zippy.com.ua/zstoreusage" class="nav-link">
+                                <a target="_blank" href="https://zippy.com.ua/zstoreusage" class="nav-link">
                                     <i class="nav-icon fa fa-info-circle"></i>
                                     <p>
                                         Документація  
@@ -1106,13 +1106,16 @@
                             {{#smart}}
 
                             <div style="justify-content: space-between" class="    card   d-none d-sm-block">
-                                {{{smart}}}
+                                {{{smart}}} 
+                                
+                                 {{#isadmins}}
+                                 <small><a href="/index.php?p=App/Pages/Roles" title="Налаштування оперативного меню"><i class="fa fa-cog"></i> </a> </small>
+                                 {{/isadmins}}
+                                 
                             </div>
                              
                             {{/smart}}
-                             {{#showtips}}
-                                <small> <i class="fa fa-info-circle"> Оперативне меню налаштовується в  довіднику ролей</small>
-                             {{/showtips}}
+                            
 
 
                             <childpage/>

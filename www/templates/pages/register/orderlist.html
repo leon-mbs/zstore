@@ -201,6 +201,29 @@
                      {{/citems}} 
                   </table>
                 </details>
+                  {{#issitems}} 
+                  </div>
+                  <div class="col-12 col-md-10  col-xl-8">
+          
+                  
+                <details>
+                  <summary> Товари в  закупцi</summary>
+               <table class="table table-sm">
+                     <tr>
+                     <th>Заявка</th>
+                     <th>Постачальник</th>
+                     <th >Поставка</th>
+                     </tr>
+                       {{#sitems}} 
+                     <tr>
+                     <td> {{dnum}}</td>
+                     <td>{{dc}} </td>
+                     <td  >{{dd}} </td>
+                     <tr> 
+                      {{/sitems}} 
+                       </table> 
+                </details>
+                 {{/issitems}} 
             </div>
              <div class="col-12 col-xl-10 mt-2">      
                 <div class="navbar nav">

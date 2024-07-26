@@ -45,7 +45,7 @@ class Base extends \Zippy\Html\WebPage
         if($user->rolename=='admins') {
             $this->_tvars["canevent"] = true;
         }
-        $this->_tvars["noshowpartion"] = $usernoshowpartion;
+        $this->_tvars["noshowpartion"] = $user->noshowpartion;
         $this->_tvars["showsidemenu"] = !($user->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
@@ -271,10 +271,10 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
         Session::getSession()->toasts = false;
 
-        $duration = \App\Session::getSession()->duration() ;
-        $this->_tvars['showtips'] = $duration < 300   ;
+      //  $duration =  Session::getSession()->duration() ;
+      //  $this->_tvars['showtips'] = $duration < 300   ;
 
-
+        //планировщик
         $this->_tvars['cron']  = false;
 
         $last = \App\Helper::getKeyValInt('lastcron')  ;
@@ -282,6 +282,20 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars['cron']  = true;
         }
 
+        //миграция  данных
+        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
+            Helper::migration() ;
+            Session::getSession()->migrationcheck = true;
+        }
+       
+        //откат   todo remove
+        if($this->_tvars['curversion']== '6.11.1'  || $this->_tvars['curversion']=='6.11.0') {
+            $conn = \ZDB\DB::getConnect();
+            $conn->Execute("delete from custacc   ") ;
+            \App\Helper::setKeyVal('migrationbonus',null) ;
+            \App\Helper::setKeyVal('migrationbalans',null) ;
+                              
+        }
    
     }
 
@@ -537,6 +551,13 @@ class Base extends \Zippy\Html\WebPage
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
+    /**
+    * добавляет стьроку  заказа в  заявку  поставщику
+    * 
+    * @param mixed $args
+    * @param mixed $post
+    * @return mixed
+    */
     public function addItemToCO($args, $post=null) {
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
@@ -628,6 +649,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['service_id']   = $service_id;
             $ret['service_name'] = $ser->service_name;
             $ret['category'] = $ser->category;
+            $ret['msr'] = $ser->msr;
             $ret['pureprice'] = $ser->getPurePrice();
             $ret['price'] = $ser->getPrice($args[1]);
             if($ret['pureprice'] > $ret['price']) {
@@ -712,17 +734,12 @@ class Base extends \Zippy\Html\WebPage
         $item->cat_id = $post->cat_id;
 
 
-
-        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
-            $code = \App\Entity\Item::qstr($this->_item->item_code);
-            $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and item_code={$code} ");
-            if ($cnt > 0) {
-                return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
-            }
+        if ($item->checkUniqueArticle()==false) {
+           return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
         }
 
-        if (strlen($item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
-            $item->item_code = \App\Entity\Item::getNextArticle();
+        if (strlen($item->item_code) == 0 ){
+           $item->item_code =  \App\Entity\Item::getNextArticle();
         }
 
         $itemname = \App\Entity\Item::qstr($item->itemname);

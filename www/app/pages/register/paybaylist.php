@@ -104,7 +104,7 @@ class PayBayList extends \App\Pages\Base
             $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
  
 
    $sql = "SELECT  c.customer_name,  c.customer_id,c.phone,
@@ -160,15 +160,15 @@ GROUP BY c.customer_name,
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $diff = $cust->act - $cust->pas;   
-        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
-        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
+        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
 
  
         $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
         $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff>0 ? $diff : 0);
-        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
+        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff<0 ? 0-$diff : 0);
 
     }
 
@@ -379,7 +379,13 @@ GROUP BY c.customer_name,
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }
-
+        if ($payed > 0) {
+            $this->_doc->payed = $payed;
+        }
+  
+        $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
+        $doc->DoBalans();
+        
         $this->setSuccess('Оплата додана');
 
         //$this->updateDocs();
@@ -428,7 +434,9 @@ GROUP BY c.customer_name,
 
     public function updateDetDocs() {
 
+        $conn = \ZDB\DB::getConnect();
 
+ 
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
@@ -440,24 +448,32 @@ GROUP BY c.customer_name,
 
         $bal=0;
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "  document_date asc,document_id asc", -1, -1) as $id=>$d) {
-           
-              $ch = Customer::balans($d,Customer::TYPE_BAYER);
+          $sql =  "select 
+             SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS passive,
+             SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS active,
+            cv.document_id,cv.document_number,cv.createdon,dv.meta_desc
+
+             FROM custacc_view cv
+             JOIN documents_view dv 
+             ON cv.document_id = dv.document_id 
+             WHERE  cv.customer_id={$this->_cust->customer_id} 
+            {$br} AND optype IN (2)    
+            GROUP BY cv.document_id,cv.document_number,cv.createdon
+            ORDER  BY  cv.document_id ";
+     
+        foreach ( $conn->Execute($sql) as $d) {
                 
-              if($ch===true) {
-                   continue;
-              }          
-          
             
                 $r = new  \App\DataItem() ;
-                $r->document_id = $d->document_id;
-                $r->meta_desc = $d->meta_desc;
-                $r->document_number = $d->document_number;
-                $r->document_date = $d->document_date;
-                $r->b_active = $ch['active'];
-                $r->b_passive = $ch['passive'];
+                $r->document_id = $d['document_id'];
+                $r->meta_desc = $d['meta_desc'];
+                $r->document_number = $d['document_number'];
+                $r->document_date =  strtotime( $d['createdon'] );
+                $r->b_active = $d['active'];
+                $r->b_passive = $d['passive'];
 
-                $diff = $ch['active'] - $ch['passive'];
+       
+                $diff = $d['active'] - $d['passive'];
                 if($diff==0) {
                     continue;
                 }

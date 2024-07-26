@@ -622,7 +622,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->editprice->setText($price);
         $price = $item->getPartion();
         $this->editdetail->pricestock->setText(H::fa($price));
-        $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO({$id})");
+        $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO([{$id}])");
         $this->editdetail->tocustorder->setVisible(true);
 
 
@@ -928,6 +928,7 @@ class Order extends \App\Pages\Base
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
     }
 
     public function savenewitemOnClick($sender) {
@@ -941,21 +942,12 @@ class Order extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
-        if (strlen($item->item_code) > 0) {
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('Такий артикул вже існує');
-                return;
-            }
-
-        } else {
-            if (\App\System::getOption("common", "autoarticle") == 1) {
-
-                $item->item_code = Item::getNextArticle();
-            }
-        }
-
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
+        
+   
 
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();

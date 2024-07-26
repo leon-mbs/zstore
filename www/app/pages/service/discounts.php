@@ -202,6 +202,7 @@ class Discounts extends \App\Pages\Base
         $this->ptab->formpan->pform->add(new TextInput('peditcode'));
         $this->ptab->formpan->pform->add(new Date('peditdate'));
         $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
+        $this->ptab->formpan->pform->add(new TextInput('peditbonus'))->setVisible(false);
 
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
@@ -218,7 +219,10 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("ebonussell", $disc["bonussell"] ??''));
         $form->add(new  TextInput("efineret", $disc["fineret"]??''));
  
-      
+        $this->add(new Form('formaddbc'))->onSubmit($this, 'onAddBonus');
+        $this->formaddbc->add(new  TextInput("amountbc",''));
+        $this->formaddbc->add(new AutocompleteTextInput('custbc'))->onText($this, 'OnAutoCustomer');
+          
     }
 
 
@@ -384,8 +388,8 @@ class Discounts extends \App\Pages\Base
         if(strlen($t) > 0)  {
             $where .= "   customer_name like   " . Customer::qstr( '%'.$t.'%' ) .' and ' ;
         }        
-        $on = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where} paytype=1001 and  bonus>0 " );
-        $off = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where}  paytype=1001 and  bonus<0 " );
+        $on =  $conn->GetOne( "select sum(amount) from custacc_view  where {$where} optype=1  and  amount>0 " );
+        $off = $conn->GetOne( "select sum(amount) from custacc_view  where {$where}  optype=1  and  amount<0 " );
         $this->otab->sumbonuses->setText($on +$off ); 
 
     }   
@@ -677,10 +681,13 @@ class Discounts extends \App\Pages\Base
         if($p->type==1) $type="Одноразовий";
         if($p->type==2) $type="Багаторазовий";
         if($p->type==3) $type="Персональний";
+        if($p->type==4) $type="Реферальний";
 
         $row->add(new  Label("ptype", $type));
         $row->add(new  Label("pdisc", $p->disc));
-
+        if($p->type==4) {
+           $row->pdisc->setText( $p->disc . " (бонус {$p->refbonus})" );     
+        }
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
         if($p->type==2){                                                                            
@@ -739,8 +746,9 @@ class Discounts extends \App\Pages\Base
     }
     public function onPType($sender) {
         $t=$sender->getValue();
-        $this->ptab->formpan->pform->peditcust->setVisible($t==3);
+        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
         $this->ptab->formpan->pform->peditcheck->setVisible($t==2);
+        $this->ptab->formpan->pform->peditbonus->setVisible($t==4);
 
  
     }
@@ -754,6 +762,7 @@ class Discounts extends \App\Pages\Base
             return;
         }
         $pc->disc = $sender->peditdisc->getText();
+        $pc->refbonus =  $sender->peditbonus->getText();
         $pc->dateto = $sender->peditdate->getDate();
         if($pc->dateto >0 && $pc->dateto < time()) {
            $this->setError('Неправильна дата') ;
@@ -787,6 +796,29 @@ class Discounts extends \App\Pages\Base
 
         System::setOptions("discount", $disc);
         $this->setSuccess('Збережено');
+    }
+  
+    public function onAddBonus($sender) {
+        
+        $am=intval($sender->amountbc->getText() );
+        $cid=intval($sender->custbc->getKey() );
+        $sender->amountbc->setText('') ;
+        $sender->custbc->setText('') ;
+        $sender->custbc->setKey(0) ;
+         
+        if($am != 0  && $cid >0) {
+             
+            $cb = new \App\Entity\CustAcc();
+
+            $cb->customer_id = $cid;
+          //  $cb->document_id = $this->document_id;
+            $cb->amount =    $am;
+            $cb->optype = \App\Entity\CustAcc::BONUS;
+            $cb->createdon = time();
+            $cb->save();
+            
+            $this->OnPL(null);
+        }
     }
 
 }
@@ -875,9 +907,8 @@ class BonusListCustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $t = trim($this->page->otab->blfilter->blsearch->getText());
 
-     //   $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
-
-        $where = " status = 0  and customer_id in ( select customer_id from paylist_view  where paytype=1001 ) ";
+  
+        $where = " status = 0  and customer_id in ( select customer_id  from custacc   where optype=1 group by customer_id having sum(amount)  <>0 ) ";
         if(strlen($t) > 0)  {
             $where .= " and customer_name like   " . Customer::qstr( '%'.$t.'%' );
         }

@@ -92,7 +92,8 @@
                                     <label for="pbsearchbon">бонус,%</label>
                                     <input class="form-control qtyprice mr-sm-2" type="text" zippy="pbsearchbon" pattern="[0-9\.]+" style="width:50px;">
                                     <input class="btn btn-success " type="submit" value="Додати"  >
-
+                                 
+  
                                 </form> 
                             </div>                            
                                    <table class="table    table-sm mt-2">
@@ -117,8 +118,9 @@
                            <div class="navbar nav  ">
                                 <form zippy="blfilter" class="form-inline ">
                                     <input placeholder="Контрагент..." class="form-control " type="search"  zippy="blsearch">
-                                    <input class="btn btn-success " type="submit" value="OK"  >
-
+                                    <input class="btn btn-success mr-4" type="submit" value="OK"  >
+                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#modaladdbonus" class="btn btn-success " title="Додати бонуси"  >+</a>
+                             
                                 </form> 
                             </div>  
                                <table class="table    table-sm  ">
@@ -458,6 +460,7 @@
                                      <small><b>Одноразовий</b> - для однократного використання 
                                          <br>  <b>Багаторазовий</b> - для використання (однократного)  багатьма  покупцями 
                                          <br><b>Персональний</b> - для конкретного контрагента
+                                         <br><b>Реферальный</b>  - бонус контрашента, з  промо  котрого  прийшов новий покупець
 
                                       </small>                                     
                                     <form zippy="pform" >
@@ -477,6 +480,7 @@
                                                   <option value="1">Одноразовий</option>
                                                   <option value="2">Багаторазовий</option>
                                                   <option value="3">Персональний</option>
+                                                  <option value="4">Реферальний</option>
 
                                                 </select>   
                                                </div>
@@ -494,12 +498,21 @@
                                                <input required="required"  pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
                                                </div>
                                            </div>      
+                                          
+                                           
                                            <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditcust">Контрагент</label>
                                                 <div class="col-7">
                                                <input placeholder="Почніть вводити..." class="form-control"  zippy="peditcust"   >
                                                </div>
+                                           </div>    
+                                          <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditbonus">Реферальний бонус</label>
+                                                <div class="col-7">
+                                               <input    pattern="[0-9]+" style="width:140px" class="form-control"  zippy="peditbonus"   >
+                                               </div>
                                            </div>      
+                                             
                                      <div class="form-group row">
                                             <div class="form-check">
                                                 <input zippy="peditcheck" type="checkbox" class="form-check-input">
@@ -547,7 +560,43 @@
 
             </div>
 
-        </div>                
+        </div> 
+
+                                         
+    <div id="modaladdbonus" class="modal fade  " tabindex="-1" role="dialog"   >
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Додати (відняти) бонуси</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"> 
+                           <form zippy="formaddbc" >
+                                <div class="form-group  ">
+                                   <label for="custbc">Контрагент </label>
+                                   <input   class="form-control"  zippy="custbc" >
+                               </div>
+                                <div class="form-group  ">
+                                   <label for="amountbc">Сума </label>
+                                   <input style="width:100px"  class="form-control qtyprice" type="text" zippy="amountbc" pattern="[0-9\-]+">
+                               </div>
+                               
+                                <div class="form-group">
+                                    <input type="submit" value="Зберегти" zippy="bsavebc" class="btn btn-info  ">
+
+                                </div>
+                                
+                            </div>
+                         </form>       
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+                             
+                   
     </body>
 </html>
 

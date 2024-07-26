@@ -215,6 +215,7 @@ class OrderFood extends Document
             if ($payed > 0) {
                 $this->payed = $payed;
             }
+            $this->DoBalans() ;
 
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
           //бонус  сотруднику
@@ -350,5 +351,34 @@ class OrderFood extends Document
 
         return false;
     }
+ 
+    /**
+    * @overrride
+    */
+    public function DoBalans() {
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
+              
+         if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$this->payamount;
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+      //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+        
+        
+    }
 }

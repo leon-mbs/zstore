@@ -287,6 +287,14 @@ class Document extends \ZCL\DB\Entity
     public function DoStore() {
 
     }
+  
+    /**
+    * обновляет баланс  контрагента
+    * 
+    */
+    public function DoBalans() {
+
+    }
 
     /**
      * Отмена  документа
@@ -635,15 +643,15 @@ class Document extends \ZCL\DB\Entity
         }
         
         $last=0;
-        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  "; //todo  order  by  document_id desc  limit 0,1000
+        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}   order  by  document_id desc  limit 0,100 "; 
         $list = $conn->GetCol($sql);
         if (count($list) == 0) {
             $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
         } else {
            foreach($list as $n) {
-               $digits = preg_replace('/[^0-9]/', '', $n);
+               $digits = intval( preg_replace('/[^0-9]/', '', $n) );
                if($digits > $last) {
-                  $last = round($digits) ; //максимальная цифра
+                  $last =  $digits ; //максимальная цифра
                   $letters = preg_replace('/[0-9]/', '', $n);
                }
            }
@@ -1181,9 +1189,9 @@ class Document extends \ZCL\DB\Entity
     public function getBonus($add=true) {
         $conn = \ZDB\DB::getConnect();
         if($add) {
-            $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;
+            $sql = "select coalesce(sum(amount),0) as bonus from custacc where optype=1 and amount > 0 and document_id =" . $this->document_id;
         } else {
-            $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;
+            $sql = "select coalesce(sum(0-amount),0) as bonus from custacc where optype=1 and  amount < 0 and document_id =" . $this->document_id;
         }
 
         return $conn->GetOne($sql);
@@ -1193,4 +1201,17 @@ class Document extends \ZCL\DB\Entity
     protected function beforeDelete() { 
         $this->Cancel();
     }
+ 
+     /**
+     * актуальное  значение оплат
+     * 
+     */
+    public function getPayed() { 
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where paytype < 1000  and  document_id=" . $this->document_id;
+        $payed = doubleval($conn->GetOne($sql));
+        return $payed;
+    }    
+    
 }

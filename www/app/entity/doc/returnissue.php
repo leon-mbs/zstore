@@ -81,17 +81,18 @@ class ReturnIssue extends Document
             $this->payed = $payed;
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        $this->DoBalans() ;
 
         if($this->headerdata["bonus"] > 0) {
-                $pay = new \App\Entity\Pay();
+                $ca = new \App\Entity\CustAcc();
 
-                $pay->document_id = $this->document_id;
-                $pay->bonus = $this->headerdata["bonus"];
-                $pay->paytype = \App\Entity\Pay::PAY_BONUS;
-                $pay->paydate = time();
-                $pay->user_id = \App\System::getUser()->user_id;
+                $ca->document_id = $this->document_id;
+                $ca->amount = $this->headerdata["bonus"];
+                $ca->optype = \App\Entity\CustAcc::BONUS;
+               
+                $ca->customer_id = $this->customer_id;
 
-                $pay->save();       
+                $ca->save();       
         }
 
         //штраф  сотруднику
@@ -119,5 +120,32 @@ class ReturnIssue extends Document
     protected function getNumberTemplate() {
         return 'BK-000000';
     }
+    /**
+    * @overrride
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
+              
+        //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  paytype < 1000 and  coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+        
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $this->payamount;
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+    }
 }

@@ -29,6 +29,7 @@ class Update extends \App\Pages\Base
  
         $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
+        $this->add(new  ClickLink('rollback',$this,'OnRollback')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversiondb'] = System::getOptions('version', false);
@@ -78,7 +79,8 @@ class Update extends \App\Pages\Base
            $this->_tvars['actual']  = true   ;
            $this->_tvars['show']  = false   ;
           
-        }        
+        }   
+        $this->_tvars['tooold']  = false;    
         if ($na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
 
            $this->_tvars['tooold']  = true   ;//пропущено несколько
@@ -108,7 +110,22 @@ class Update extends \App\Pages\Base
           $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
              
         }  
-          
+        
+        $this->_tvars['rollback']  = false;
+
+         // откат к предыдущей       
+         if(strlen(System::PREV_VERSION) >0 ) {
+             $this->_tvars['rollback']  = true;
+             $this->_tvars['prevversipn']  = System::PREV_VERSION;
+             
+             
+         }     
+         if($this->_tvars['tooold'] == true) {
+             $this->_tvars['rollback']  = false;
+         }     
+         if($this->_tvars['show'] == true) {
+             $this->_tvars['rollback']  = false;
+         }     
 
     }   
 
@@ -130,7 +147,7 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка завантаження файду');
+                $this->setError('Помилка завантаження файлу');
                 return;        
             }
 
@@ -211,6 +228,53 @@ class Update extends \App\Pages\Base
        }
        
  
+    }
+ 
+    public function OnRollback($sender)   {
+    
+        try {
+            if (!is_writeable( _ROOT .'app/')) {
+                $this->setError('Нема  права  запису');
+                return;        
+            }
+
+               
+            $zip = new \ZipArchive()  ;
+
+            $archive = _ROOT.'upload/update.zip' ;
+            @unlink($archive) ;
+            $path = "https://zippy.com.ua/updates/update-".System::PREV_VERSION.".zip";
+            
+            @file_put_contents($archive, file_get_contents($path)) ;
+         
+            if(filesize($archive)==0) {
+                $this->setError('Помилка завантаження файлу');
+                return;        
+            }
+         
+            if ($zip->open($archive) === TRUE) {
+           
+                $destination =_ROOT; 
+                
+                $zip->extractTo($destination);
+                $zip->close();
+
+           }  else {
+                $this->setError('Помилка  архіву');
+                return;        
+               
+           }
+           $this->setSuccess('Файли оновлені')  ;
+           App::RedirectURI("/index.php?p=/App/Pages/Update");
+
+         
+      } catch(\Exception $e){
+            $msg = $e->getMessage()  ;
+     
+            $this->setErrorTopPage($msg)  ;
+   
+       } 
+         
     }
     
 }

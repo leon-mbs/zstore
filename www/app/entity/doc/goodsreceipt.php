@@ -156,6 +156,7 @@ class GoodsReceipt extends Document
         if ($payed > 0) {
             $this->payed = $payed;
         }
+        $this->DoBalans() ;
 
         if($this->headerdata['delivery'] > 0) {
            if($this->headerdata['spreaddelivery']== 0) { //если  не  распределяем на  цену
@@ -220,6 +221,33 @@ class GoodsReceipt extends Document
 
         return $list;
     }
-
+    /**
+    * @override
+    */
+    public function DoBalans() {
+        $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+   
+        //тмц
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $this->payamount;
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+        //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+        
+    }
 }     
 

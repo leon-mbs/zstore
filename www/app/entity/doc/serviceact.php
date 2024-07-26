@@ -22,6 +22,7 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
+                              "msr"         => $ser->msr,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
@@ -31,6 +32,7 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->itemname,
                               "desc"         => $ser->item_code . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
+                              "msr"         => $ser->msr . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
@@ -134,6 +136,7 @@ class ServiceAct extends Document
             $this->payed = $payed;
         }
         \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        $this->DoBalans() ;
 
     }
 
@@ -309,6 +312,35 @@ class ServiceAct extends Document
         $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
+    }
+
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+
+              
+
+           if($this->payamount >0) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$this->payamount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+           //платежи       
+            foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = $p['amount'];
+                $b->createdon = strtotime($p['paydate']);
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            } 
     }
 
 }

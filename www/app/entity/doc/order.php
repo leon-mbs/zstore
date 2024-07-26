@@ -96,7 +96,7 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        if($this->payed==0) {
+        if($this->payed == 0) {
             $list['Invoice'] = self::getDesc('Invoice');
         }
       //  $list['POSCheck'] = self::getDesc('POSCheck');
@@ -195,6 +195,7 @@ class Order extends \App\Entity\Doc\Document
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
                             $sc->tag=Entry::TAG_TOPROD;
+                            $sc->createdon=time();
 
                             $sc->save();
                         }
@@ -212,6 +213,7 @@ class Order extends \App\Entity\Doc\Document
                 $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
                 $sc->tag=Entry::TAG_FROMPROD;
+                $sc->createdon=time();
 
                 $sc->save();
             }
@@ -230,7 +232,9 @@ class Order extends \App\Entity\Doc\Document
                 $sc = new \App\Entity\Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 //  $sc->setOutPrice($item->price  );
-                $sc->tag = \App\Entity\Entry::TAG_RESERV;
+                $sc->tag = Entry::TAG_RESERV;
+                $sc->createdon=time();
+                
                 $sc->save();
 
             }
@@ -270,8 +274,30 @@ class Order extends \App\Entity\Doc\Document
                 }
                 \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
             }
+            $this->DoBalans() ;
 
         }
     }
+    
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
+              
+       //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+             
+    }
+    
 }

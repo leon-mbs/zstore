@@ -83,8 +83,8 @@ class EmployeeList extends \App\Pages\Base
         $d = new \App\DateTime() ;
         $d = $d->startOfMonth()->subMonth(1) ;
 
-        $this->accp->filters->add(new Date('from', $d->getTimestamp()));
-        $this->accp->filters->add(new Date('to', time()));
+        $this->accp->filters->add(new Date('from' ));
+        $this->accp->filters->add(new Date('to',  ));
         
         $this->employeetable->employeelist->Reload();
 
@@ -273,8 +273,8 @@ class EmployeeList extends \App\Pages\Base
     public function OnSubmit($sender) {
 
         $emp_id = $this->_employee->employee_id ;
-        $from =  $this->accp->filters->from->getDate();
-        $to =  $this->accp->filters->to->getDate();
+        $from = intval( $this->accp->filters->from->getDate() );
+        $to = intval( $this->accp->filters->to->getDate() );
 
         $conn = \ZDB\DB::getConnect();
 
@@ -282,8 +282,12 @@ class EmployeeList extends \App\Pages\Base
 
         $b = $conn->GetOne($sql);
 
-
-        $sql =    $sql = "select * from empacc_view where   emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $tosql ="";
+        if($to > 0) {
+           $tosql = " and createdon <= " . $conn->DBDate($to)  ;          
+        }
+        
+        $sql =    $sql = "select * from empacc_view where   emp_id = {$emp_id} and createdon >= " . $conn->DBDate($from) . " {$tosql} order  by  ea_id ";
         $rc = $conn->Execute($sql);
         $en=\App\Entity\EmpAcc::getNames();
 

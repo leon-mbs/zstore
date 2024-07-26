@@ -205,6 +205,7 @@ class ItemList extends \App\Pages\Base
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
+        $row->add(new Label('onstore'))->setVisible($item->qty > 0);
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
@@ -256,14 +257,10 @@ class ItemList extends \App\Pages\Base
         $this->_item->extdata = "";
         $this->itemdetail->editname->setText($this->_item->itemname.'_copy');
 
-        $this->itemdetail->editcode->setText('');
+        $this->itemdetail->editcode->setText(Item::getNextArticle());
         $this->itemdetail->editbarcode->setText('');
-        if (System::getOption("common", "autoarticle") == 1) {
-            $this->itemdetail->editcode->setText(Item::getNextArticle());
-        }
-
-
-
+        $this->itemdetail->editcode->setText(Item::getNextArticle());
+ 
 
     }
 
@@ -328,7 +325,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload(false);
 
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
-        if (strlen($this->_item->item_code)==0  && System::getOption("common", "autoarticle") == 1) {
+        if (strlen($this->_item->item_code)==0  ) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
         }
         
@@ -354,9 +351,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editautoincome->setChecked(false);
         $this->_item = new Item();
 
-        if (System::getOption("common", "autoarticle") == 1) {
-            $this->itemdetail->editcode->setText(Item::getNextArticle());
-        }
+        $this->itemdetail->editcode->setText(Item::getNextArticle());
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
 
     }
@@ -447,23 +442,15 @@ class ItemList extends \App\Pages\Base
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 
         //проверка  уникальности артикула
-        if (strlen($this->_item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
-            $code = Item::qstr($this->_item->item_code);
-            $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-            if ($cnt > 0) {
-
-                $this->setError('Такий артикул вже існує');
-                return;
-
-            }
+        if ($this->_item->checkUniqueArticle()==false) {
+            $this->setError('Такий артикул вже існує');
+            return;
         }
 
 
-        if (strlen($this->_item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
+        if (strlen($this->_item->item_code) == 0  ) {
             $this->_item->item_code = Item::getNextArticle();
-            $this->itemdetail->editcode->setText($this->_item->item_code);
-
-
+//            $this->itemdetail->editcode->setText($this->_item->item_code);
         }
 
         //проверка  уникальности штрих кода
@@ -1152,7 +1139,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
         
-        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $k => $v) {
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start,"*,(select coalesce(sum(qty),0) from store_stock where  items_view.item_id = store_stock.item_id) as qty") as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

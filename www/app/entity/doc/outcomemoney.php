@@ -20,6 +20,7 @@ class OutcomeMoney extends Document
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
 
+      $this->DoBalans() ;
 
         if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
             $ua = new \App\Entity\EmpAcc();
@@ -66,4 +67,35 @@ class OutcomeMoney extends Document
 
         return $list;
     }
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+ 
+       foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+ 
+             // опдата поставщику
+             if($this->payed >0 && $this->headerdata['detail'] ==1 ) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$p['amount'];
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->createdon = strtotime($p['paydate']);
+                $b->save();
+            }
+            //возврат покупателя
+            if($this->payed >0 && $this->headerdata['detail'] ==2 ) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$p['amount'];
+                $b->optype = \App\Entity\CustAcc::SELLER;
+                $b->createdon = strtotime($p['paydate']);
+                $b->save();
+            }
+       }
+    }    
 }

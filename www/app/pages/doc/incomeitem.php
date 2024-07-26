@@ -85,6 +85,9 @@ class IncomeItem extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
+            if($this->_doc->state== Document::STATE_NEW) {
+                $this->_doc->document_date = time() ;               
+            }
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
@@ -432,6 +435,7 @@ class IncomeItem extends \App\Pages\Base
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
     }
 
     public function savenewitemOnClick($sender) {
@@ -445,20 +449,12 @@ class IncomeItem extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
-        if (strlen($item->item_code) > 0) {
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('Такий артикул вже існує');
-                return;
-            }
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
 
-        } else {
-            if (\App\System::getOption("common", "autoarticle") == 1) {
-
-                $item->item_code = Item::getNextArticle();
-            }
-        }
+  
 
 
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();

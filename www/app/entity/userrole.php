@@ -33,19 +33,19 @@ class UserRole extends Entity
             $acl = array();
         }
 
-        $this->canevent = $acl['canevent'];
-        $this->noshowpartion = $acl['noshowpartion'];
-        $this->showotherstores = $acl['showotherstores'];
-        $this->aclview = $acl['aclview'];
-        $this->acledit = $acl['acledit'];
-        $this->aclexe = $acl['aclexe'];
-        $this->aclcancel = $acl['aclcancel'];
-        $this->aclstate = $acl['aclstate'];
-        $this->acldelete = $acl['acldelete'];
+        $this->canevent = $acl['canevent']??0;
+        $this->noshowpartion = $acl['noshowpartion']??0;
+        $this->showotherstores = $acl['showotherstores']??0;
+        $this->aclview = $acl['aclview']??'';
+        $this->acledit = $acl['acledit']??'';
+        $this->aclexe = $acl['aclexe']??'';
+        $this->aclcancel = $acl['aclcancel']??'';
+        $this->aclstate = $acl['aclstate']??'';
+        $this->acldelete = $acl['acldelete']??'';
 
-        $this->widgets = $acl['widgets'];
-        $this->modules = $acl['modules'];
-        $this->smartmenu = $acl['smartmenu'];
+        $this->widgets = $acl['widgets']??'';
+        $this->modules = $acl['modules']??'';
+        $this->smartmenu = $acl['smartmenu']??'';
 
         parent::afterLoad();
     }
