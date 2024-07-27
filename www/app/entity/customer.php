@@ -28,6 +28,12 @@ class Customer extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
+   
+        if ($this->customer_id == 0) { //новый
+            $this->createdon = time();
+            $this->user_id = \App\System::getUser()->user_id;
+        }
+   
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
         if (doubleval($this->discount) > 0) {
@@ -36,6 +42,7 @@ class Customer extends \ZCL\DB\Entity
         if (doubleval($this->pbonus) > 0) {
             $this->detail .= "<pbonus>{$this->pbonus}</pbonus>";
         }
+
 
 
         $this->detail .= "<type>{$this->type}</type>";
