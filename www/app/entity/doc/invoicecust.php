@@ -68,12 +68,12 @@ class InvoiceCust extends Document
     }
 
     public function Execute() {
-        $payed = $this->payed;
+        $payed = $this->headerdata['payed'];
   
 
         $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
     
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
 
        $this->DoBalans() ;
 
