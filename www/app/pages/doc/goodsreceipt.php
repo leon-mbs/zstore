@@ -190,16 +190,11 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
 
-            if ($this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-            if ($this->_doc->headerdata['payamount'] > 0) {
-                $this->_doc->payamount = $this->_doc->headerdata['payamount'];
-            }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
-            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
-            $this->docform->editpayamount->setText(H::fa($this->_doc->payamount));
+ 
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payamount->setText(H::fa($this->_doc->headerdata['payamount']));
+            $this->docform->editpayamount->setText(H::fa($this->_doc->headerdata['payamount']));
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
@@ -693,7 +688,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->_doc->payamount;
 
         $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
