@@ -427,11 +427,6 @@ class CustomerList extends \App\Pages\Base
             }
         }
 
-        if ($this->_customer->customer_id == 0) { //новый
-            $this->_customer->createdon = time();
-            $this->_customer->user_id = System::getUser()->user_id;
-        }
-
 
         $pass = $this->customerdetail->editpassword->getText();
         $confirm = $this->customerdetail->editconfirm->getText();

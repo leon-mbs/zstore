@@ -238,10 +238,8 @@ class GoodsIssue extends Document
 
 
 
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
+ 
         \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
 
         $this->DoBalans() ;

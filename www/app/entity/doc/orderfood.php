@@ -211,10 +211,8 @@ class OrderFood extends Document
             }
 
 
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment']);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
+            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $payed, $this->headerdata['payment']);
+          
             $this->DoBalans() ;
 
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);

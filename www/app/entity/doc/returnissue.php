@@ -76,10 +76,8 @@ class ReturnIssue extends Document
             $sc->save();
         }
 
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment']);
+    
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
         $this->DoBalans() ;
 

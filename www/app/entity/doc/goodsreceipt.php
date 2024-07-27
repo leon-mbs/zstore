@@ -152,10 +152,8 @@ class GoodsReceipt extends Document
         $this->payamount = H::fa($this->headerdata['payamount'] * $rate);
 
 
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+      
         $this->DoBalans() ;
 
         if($this->headerdata['delivery'] > 0) {
