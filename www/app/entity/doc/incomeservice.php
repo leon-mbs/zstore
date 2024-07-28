@@ -118,11 +118,9 @@ class IncomeService extends Document
 
       
         
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->payed, $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
-        \App\Entity\IOState::addIOState($this->document_id, 0-$this->payed, \App\Entity\IOState::TYPE_OUTSERVICE);
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0-$this->headerdata['payed'], $this->headerdata['payment']);
+     
+        \App\Entity\IOState::addIOState($this->document_id, 0-$this->headerdata['payed'], \App\Entity\IOState::TYPE_OUTSERVICE);
 
         $this->DoBalans() ;
 

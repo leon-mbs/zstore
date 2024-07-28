@@ -148,7 +148,7 @@ class Pay extends \ZCL\DB\Entity
         $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where paytype < 1000  and  document_id=" . $document_id;
         $payed = $conn->GetOne($sql);
         $conn->Execute("update documents set payed={$payed} where   document_id =" . $document_id);
-        return $payed;
+        return doubleval( $payed);
     }
 
     public static function cancelPayment($id, $comment) {

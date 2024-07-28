@@ -139,18 +139,16 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
-            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->payamount->setText(H::fa($this->_doc->headerdata['payamount']));
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
 
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
+      
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -677,14 +675,12 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-
+        $this->_doc->headerdata['payamount'] = $this->_doc->payamount;
         $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
 
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
-
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
 
         if ($this->checkForm() == false) {
