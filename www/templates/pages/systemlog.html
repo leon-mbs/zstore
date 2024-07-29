@@ -1,14 +1,15 @@
 <html>
  <head>
-        <title>  Журнал системних повiдомлень  </title>
+        <title>  Системний лог  </title>
 
     </head>
 
     <body>
  
         <div class="row">
+             
             <div class="col-12 col-md-8 col-xl-6"  >
-                <h4>Журнал системних повiдомлень</h4>
+                <h5>Системнi повiдомлення</h5>
                 <div class="navbar nav justify-content-start">
                     <form  zippy="filter" class="form-inline ">
 
@@ -41,8 +42,24 @@
       
             </div>
 
+             <div class="col-12 col-md-4 "  >
+                <h5>Файловий лог</h5>
+                <table class="table table-sm    ">
+                    <tr  zippy="flist">
+
+                        <td zippy="fname">                        </td>
+                        <td> 
+                        <a zippy="fview"   title="Переглянути"> <i class="fa fa-eye"></i></a>
+                        &nbsp;&nbsp;<a zippy="fdown"   title="Завантажити"> <i class="fa fa-download"></i></a>
+                         </td>
 
 
+                    </tr>
+                </table>     
+                <pre   zippy="fc">
+                
+                </pre>
+              </div>
         </div>
  
 <script>
