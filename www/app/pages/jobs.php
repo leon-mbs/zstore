@@ -19,6 +19,9 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 
+/**
+* мои  задания
+*/
 class Jobs extends \App\Pages\Base
 {
     public $_event;

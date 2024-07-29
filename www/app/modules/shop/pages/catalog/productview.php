@@ -114,7 +114,11 @@ class ProductView extends Base
         $imglist = array();
 
         foreach ($product->getImages(true) as $id) {
-            $imglist[] = \App\Entity\Image::load($id);
+            $img = \App\Entity\Image::load($id);
+            if($img != null) {
+               $imglist[] = \App\Entity\Image::load($id);    
+            }
+            
         }
         $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
         $this->_tvars['islistimage'] = count($imglist) > 1;
