@@ -61,7 +61,7 @@ class Main extends Base
                 $ids[] = $a->item_id;
             }
 
-            $sql=   " item_id in (" . implode(',', $ids) . ") and  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
+            $sql=   " cat_id >0 and item_id in (" . implode(',', $ids) . ") and  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
 
             $newlist = Product::find($sql, '', 6);
 

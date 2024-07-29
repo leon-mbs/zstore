@@ -64,6 +64,12 @@ body {
    background-color: rgb(52,58,64);
 }
 
+.dark-mode  pre  {
+   color:#fff; 
+ 
+     
+}
+
 .icon20 {
     height: 24px; margin-left:4px;
 }

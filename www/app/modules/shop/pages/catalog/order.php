@@ -22,17 +22,23 @@ use App\Modules\Shop\Entity\Product;
 class Order extends Base
 {
     public $sum = 0;
+    public $disc = 0;
     public $orderid = 0;
     public $basketlist;
 
     public function __construct() {
         parent::__construct();
+        
+        $this->sum=0;
+        $this->disc=0;
+        
         $this->basketlist = Basket::getBasket()->list;
         $form = $this->add(new Form('listform'));
         $form->onSubmit($this, 'OnUpdate');
 
         $form->add(new \Zippy\Html\DataList\DataView('pitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, 'basketlist')), $this, 'OnAddRow'))->Reload();
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
+        $form->add(new Label('disc', new \Zippy\Binding\PropertyBinding($this, 'disc')));
         $this->OnUpdate($this);
 
 
@@ -63,7 +69,7 @@ class Order extends Base
             $form->phone->setText($c->phone) ;
             $form->email->setText($c->email)  ;
             $form->address->setText($c->address)  ;
-            $form->firstname->setText($c->firstname)  ;
+            $form->firstname->setText( strlen( $c->firstname ??'') >0 ? $c->firstname : $c->customer_name )  ;
             $form->lastname->setText($c->lastname)  ;
         }
 
@@ -115,7 +121,19 @@ class Order extends Base
 
 
         }
+        $this->disc =0;
+        $cid = System::getCustomer() ;
+        if($cid > 0) {
+            $c =  Customer::load($cid);
+            $d= $c->getDiscount();
 
+            if (doubleval($d) > 0) {
+                $this->disc = \App\Helper::fa(  $this->sum * ($d/100) );
+                $this->sum  =  $this->sum -  $this->disc;         
+            }              
+        }
+   
+        $this->listform->disc->setVisible($this->disc >0);
 
         $basket = Basket::getBasket();
         $basket->list = $this->basketlist   ;
@@ -237,8 +255,11 @@ class Order extends Base
                 'ship_address'  => $address,
                 'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
+                'totaldisc'     => $this->disc,
                 'total'         => $amount
             );
+             
+            
             $order->packDetails('detaildata', $itlist);
 
             $cid = System::getCustomer() ;
@@ -276,10 +297,10 @@ class Order extends Base
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
-            $order->payamount = $amount;
+            $order->payamount = $amount - $this->disc;
          //   $order->branch_id = $shop["defbranch"] ?? 0;
             $order->firm_id = $shop["firm"];
-
+            $order->user_id = intval($shop["defuser"]??0) ;
             if($order->user_id==0) {
                 $user = \App\Entity\User::getByLogin('admin') ;
                 $order->user_id = $user->user_id;

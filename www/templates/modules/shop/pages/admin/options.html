@@ -84,9 +84,11 @@
                       
                     </div>         {{#usebranch}}
                     <div class="form-group  row ">
-                        <label  class="col-6 col-form-label"   for="shopdefbranch">Фiлiя </label>
+                     <div class="col-6">
+                        <label      for="shopdefbranch">Фiлiя </label>
                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title=" Фiлiя, з  якою створюються  документи "></i>
+                        </div>              
                            <div class="col-6">
                             <select class="form-control" zippy="shopdefbranch">
                                 <option value="0">Не обрано</option>
@@ -95,7 +97,19 @@
                       
                     </div>
                     {{/usebranch}}
-              
+                       <div class="form-group  row ">
+                     <div class="col-6">
+                        <label      for="shopdefuser">Користувач </label>
+                              <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Користувач, на якого  створюются замовлдення.Повинен  мати  права  на  обробку  замовлення. "></i>
+                        </div>              
+                           <div class="col-6">
+                            <select class="form-control" zippy="shopdefuser">
+                                
+                            </select>
+                            </div>  
+                      
+                    </div>         
 
                     <div class="form-group  row ">
                         <label class="col-6 col-form-label"   for="email">E-mail для   зв'язку</label>
