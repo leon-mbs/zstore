@@ -148,7 +148,9 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg("Немає права перегляду документа  " . self::$_metasdesc[$doc->meta_name]);
+                if ($showerror == true) {
+                    System::setErrorMsg("Немає права перегляду документа  " . self::$_metasdesc[$doc->meta_name]);
+                }
                 if ($inreg == false) {
                     App::RedirectError();
                 }
@@ -189,9 +191,9 @@ class ACL
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-
-                System::setErrorMsg("Немає права редагування документа " . self::$_metasdesc[$doc->meta_name]);
-
+                if ($showerror == true) {
+                    System::setErrorMsg("Немає права редагування документа " . self::$_metasdesc[$doc->meta_name]);
+                }
                 if ($inreg == false) {
                     App::RedirectError();
                 }
@@ -231,9 +233,9 @@ class ACL
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-
-                System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
-
+                if ($showerror == true) {
+                    System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
+                }
                 if ($inreg == false) {
                     App::RedirectError();
                 }

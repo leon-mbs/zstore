@@ -40,7 +40,16 @@ class OrderFood extends Document
 
         $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id);
+        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
+        if(strlen($pos->pointname) >0) {
+           $shopname=$pos->pointname ;   
+        }
+        if(strlen($pos->address) >0) {
+           $firm["address"]=$pos->address ;   
+        }
+     
+     
         $deliverydata = "";
         $deliverydata = $this->headerdata["delivery_name"];
         if ($this->headerdata["delivery"] > 1) {
@@ -97,6 +106,16 @@ class OrderFood extends Document
         $common = \App\System::getOptions('common');
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+   
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
+        if(strlen($pos->pointname) >0) {
+           $shopname=$pos->pointname ;   
+        }
+        if(strlen($pos->address) >0) {
+           $firm["address"]=$pos->address ;   
+        }
+   
+   
         $addbonus = $this->getBonus() ;
         $delbonus = $this->getBonus(false) ;
         $allbonus = 0 ;
@@ -110,7 +129,7 @@ class OrderFood extends Document
                         "ischeck"         => !$bill ,
                         "username"        => $this->headerdata['cashier'] ,
                         "firm_name"       => $firm["firm_name"],
-                        "shopname"        => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
+                        "shopname"        => strlen($shopname) > 0 ? $shopname : false,
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
                         "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
