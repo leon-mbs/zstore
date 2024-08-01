@@ -13,10 +13,10 @@
                      <div class="navbar nav">
                                 <form  class="form-inline ">
 
-                                    <label for="firm"> Компанiя </label>
-                                    <select class="form-control  mr-2" v-model="firmid" id="firm" name="firm" >
-                                       <option v-for="f in firms" :value="f.key">
-                                          {{ f.value }}
+                                    <label for="firm"> POS термiнал </label>
+                                    <select class="form-control  mr-2" v-model="posid" id="pos" name="pos" >
+                                       <option v-for="p in poses" :value="p.key">
+                                          {{ p.value }}
                                       </option>
                                     </select>
                                    
@@ -42,7 +42,7 @@
 
 
                                 </form>
-                                <small>Вибираюься тiльки документи з контрагентами  у  яких задано ЄДРПОУ</small>
+                                <small>Вибираються тiльки документи з контрагентами  у  яких задано ЄДРПОУ</small>
                   
                           </div>
             </div>
@@ -96,12 +96,12 @@
                   counter:0,
                   selall:0,
                   custid:0,
-                  firmid:0,
+                  posid:0,
                   doctype:'GoodsIssue',
                   docs:[] ,
                   selectedDocs:[] ,
                   clist:[] ,
-                  firms:[]
+                  poses:[]
                   
                   
                   
@@ -115,8 +115,8 @@
                   callPageMethod('init',[], null,(data)=> 
                   {
                        let tmp =   JSON.parse(data)  
-                       this.firmid = tmp.firmid; 
-                       this.firms = tmp.firms; 
+                       this.posid = tmp.posid; 
+                       this.poses = tmp.poses; 
                        this.clist = tmp.clist; 
                               
                       
@@ -163,7 +163,7 @@
                    this.showsp2 = true
                    this.log = ""
                     
-                   callPageMethod('check',[this.firmid,this.kep ], null,(data)=> 
+                   callPageMethod('check',[this.posid,this.kep ], null,(data)=> 
                    {
                        
                        if(data != "") {
@@ -175,7 +175,7 @@
 
              
                        for(var d of this.selectedDocs) {
-                            callPageMethod('send',[d.id,this.firmid,this.kep ], null,(data)=> 
+                            callPageMethod('send',[d.id,this.posid,this.kep ], null,(data)=> 
                             {
                                     this.log= this.log + data +"<br>"
                            
@@ -208,7 +208,7 @@
                   
                   this.counter=0
                      
-                  callPageMethod('loaddocs',[this.custid,this.doctype,this.firmid], null,(data)=> 
+                  callPageMethod('loaddocs',[this.custid,this.doctype,this.posid], null,(data)=> 
                   {
                        let tmp =  JSON.parse(data)  
                        this.docs = tmp.docs 

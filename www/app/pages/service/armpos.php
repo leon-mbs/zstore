@@ -449,7 +449,7 @@ class ARMPos extends \App\Pages\Base
             $this->_paytype=1;
         }
 
-        if($this->_paytype==0 && $payamount > 0) {
+        if(($this->_paytype==0 || $this->_paytype=='') && $payamount > 0) {
             $this->setError('Не вказаний тип оплати');
             return;
 
