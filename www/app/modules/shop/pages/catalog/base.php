@@ -109,6 +109,12 @@ class Base extends \Zippy\Html\WebPage
 
         }
 
+        if(strlen($_COOKIE['zippy_shop_unique'] ?? '')==0) {
+            \App\Helper::insertstat(\App\Helper::STAT_NEW_SHOP, 0, 0) ;
+            setcookie("zippy_shop_unique", "visited", 0);
+
+        }
+
 
 
     }
