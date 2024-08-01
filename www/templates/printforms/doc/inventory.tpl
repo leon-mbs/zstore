@@ -80,7 +80,7 @@
    {{#sumplus}} 
    <tr>
         <td  >
-           <b>  Залишки на суму:  </b>
+           <b>  Надлишки на суму:  </b>
         </td>    <td colspan="3" align="right">
              <b>  {{sumplus}}   </b>
         </td>

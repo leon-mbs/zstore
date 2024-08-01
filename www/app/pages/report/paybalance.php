@@ -177,9 +177,9 @@ class PayBalance extends \App\Pages\Base
 
         $detail3=[];
         $sql = " 
-         SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
+         SELECT   iotype,coalesce(abs(sum(amount)),0) as am   FROM iostate_view 
              WHERE   
-              iotype in (30,31,90,81)     {$brpay}
+              iotype in (30,31,80,81)     {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
               GROUP BY  iotype    
@@ -190,7 +190,7 @@ class PayBalance extends \App\Pages\Base
         
         foreach ($rs as $row) {
             $detailitem = array();
-            $detailitem["out"]   = H::fa(0-$row['am']);
+            $detailitem["out"]   = H::fa($row['am']);
             $detailitem["type"] = $pl[$row['iotype'] ] ;
             
             
