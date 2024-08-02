@@ -50,16 +50,27 @@ class POSCheck extends Document
 
         $common = System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id);
-        $printer = System::getOptions('printer');
+        $firm = H::getFirmData($this->firm_id,$this->branch_id);
 
+        $shopname=$common["shopname"] ;
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
+        if(strlen($pos->pointname) >0) {
+           $shopname=$pos->pointname ;   
+        }
+        if(strlen($pos->address) >0) {
+           $firm["address"]=$pos->address ;   
+        }
+    
+        
+        $printer = System::getOptions('printer');
+ 
         $pp = doubleval($this->headerdata['payed'])+ doubleval($this->headerdata['payedcard']);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "firm_name"       => $firm["firm_name"],
 
-                        "shopname"        => $common["shopname"],
+                        "shopname"        => $shopname,
                         "address"         => $firm["address"],
                         "phone"           => $firm["phone"],
                         "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
@@ -122,6 +133,17 @@ class POSCheck extends Document
         }
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
+    
+        $shopname=$common["shopname"] ;
+        $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
+        if(strlen($pos->pointname) >0) {
+           $shopname=$pos->pointname ;   
+        }
+        if(strlen($pos->address) >0) {
+           $firm["address"]=$pos->address ;   
+        }
+    
+    
         $addbonus = $this->getBonus() ;
         $delbonus = $this->getBonus(false) ;
         $allbonus = 0 ;
@@ -136,7 +158,7 @@ class POSCheck extends Document
                         "style"         => $style,
                         "username"      => $this->headerdata['cashier'] ,
                         "firm_name"     => $firm["firm_name"],
-                        "shopname"      => strlen($common["shopname"]) > 0 ? $common["shopname"] : false,
+                        "shopname"      => strlen($shopname) > 0 ? $shopname : false,
                         "address"       => $firm["address"],
                         "phone"         => $firm["phone"],
                         "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] : false,

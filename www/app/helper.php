@@ -12,8 +12,10 @@ class Helper
 {
     public const STAT_HIT_SHOP           = 1;     //посещение  онлайн  каталога
     public const STAT_ORDER_SHOP         = 2;     //заказы  в  онлайн каталоге
-    public const STAT_VIEW_ITEM          = 3;     //перегляд  товару
-    public const STAT_PROMO              = 4;     //просо код
+    public const STAT_VIEW_ITEM          = 3;     //просмотр товара
+    public const STAT_PROMO              = 4;     //промо код
+    public const STAT_NEW_SHOP           = 5;     //уникальнных  посетителей
+    public const STAT_CARD_SHOP          = 6;     //позиций в  корзине
 
 
     private static $meta = array(); //кеширует метаданные

@@ -139,6 +139,8 @@ class PosList extends \App\Pages\Base
         $this->posdetail->clean();
         $b = \App\System::getBranch();
         $this->posdetail->editbranch->setValue($b > 0 ? $b : 0);
+        $this->posdetail->editfiscalnumber->setText("1");
+        
         $this->_pos = new Pos();
     }
 

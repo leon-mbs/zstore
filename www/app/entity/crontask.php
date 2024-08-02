@@ -66,7 +66,7 @@ class CronTask extends \ZCL\DB\Entity
         try {
             $conn = \ZDB\DB::getConnect()  ;
 
-            //задачи каждый  при  каждом  вызове
+            //задачи    при  каждом  вызове
 
             self::doQueue();
 
@@ -85,7 +85,27 @@ class CronTask extends \ZCL\DB\Entity
                 //очищаем  уведомления
                 $dt = $conn->DBDate(strtotime('-1 month', time())) ;
                 $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
+                  
+                
+                //очистка товаров у поставщика
+                $days = H::getKeyValint('CI_optclean') ;
+                if($days >0) {
+                    $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
+                }
 
+                
+            }
+            
+            //задачи  раз  в месяц
+            $last =  intval(\App\Helper::getKeyVal('lastcronm'));
+            if(date('m') != date('m', $last)) {
+                \App\Helper::setKeyVal('lastcronm', time()) ;
+
+                //очищаем статистику
+                $dt = $conn->DBDate(strtotime('-1 month', time())) ;
+                $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
+                $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
+                   
                 //обновление  НП
                 if($modules['np'] == 1) {
                     $api = new  \App\Modules\NP\Helper();
@@ -101,16 +121,11 @@ class CronTask extends \ZCL\DB\Entity
                     }           
                 }    
                 
-                
-                //очистка товаров у поставзика
-                $days = H::getKeyValint('CI_optclean') ;
-                if($days >0) {
-                    $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
-                }
-
+        
                 
             }
 
+            
         } catch(\Exception $ee) {
             $msg = $ee->getMessage();
             $logger->error($msg);

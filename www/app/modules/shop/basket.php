@@ -49,6 +49,7 @@ class Basket implements \Zippy\Interfaces\DataSource
             $this->list[$p->item_id] = $p;
         }
         $this->sendCookie();
+        \App\Helper::insertstat(\App\Helper::STAT_CARD_SHOP, 0, 0) ;
 
     }
 

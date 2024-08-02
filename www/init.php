@@ -74,7 +74,7 @@ if(!file_exists(_ROOT . "upload")) {
 try {
     $conn = \ZDB\DB::getConnect();
 } catch (Throwable $e) {
-    echo 'Ошибка  соединения с  БД. Подробности  в логе.';
+    echo 'Ошибка  соединения с  БД. Подробности  в папке logs';
 
     $logger->error($e);
     die;
