@@ -101,7 +101,11 @@ class CronTask extends \ZCL\DB\Entity
             if(date('m') != date('m', $last)) {
                 \App\Helper::setKeyVal('lastcronm', time()) ;
 
-        
+                //очищаем статистику
+                $dt = $conn->DBDate(strtotime('-1 month', time())) ;
+                $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
+                $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
+                   
                 //обновление  НП
                 if($modules['np'] == 1) {
                     $api = new  \App\Modules\NP\Helper();

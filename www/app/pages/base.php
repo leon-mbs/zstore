@@ -534,7 +534,7 @@ class Base extends \Zippy\Html\WebPage
         }
         if ($user->rolename == "admins") {
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                $list[] = array('type'=>'i','title' => "Наявні непрочитані системні повідомлення");
+                $list[] = array('type'=>'i','title' => "Є непрочитані системні повідомлення");
 
             }
             //проверка  новой версии
