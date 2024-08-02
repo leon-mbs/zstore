@@ -178,12 +178,12 @@ GROUP BY c.customer_name,
         $this->_cust = $sender->getOwner()->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
-        if($this->_cust->pas >  $this->_cust->act) {
+        if($this->_cust->pas <  $this->_cust->act) {
           $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
         }   else {
           $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
         }
         $this->updateDocs();
 
