@@ -41,7 +41,10 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['capcha'] = $common['capcha'] == 1;
 
         $this->_tvars['cron']  =  \App\System::useCron() ;
-
+        $this->_tvars['curver']  =  \App\System::CURR_VERSION ;
+       $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. phpversion(). '_'. \App\System::CURR_VERSION ;
+       
+       $this->_tvars['verurl']  ="https://zippy.com.ua/checkver.php".$nocache;
 
     }
 

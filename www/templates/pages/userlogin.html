@@ -86,7 +86,12 @@
                             <!-- /.col -->
                         </div>
                     </form>
-               
+         <div style="display:none" id="vrow" class="row">
+                        <div class="col-12">
+                            <span> Доступна   версія </span> <span id="vtext" class="badge badge-info">  </span> 
+                    
+                        </div>
+                    </div>          
 
                 </div>
                 <!-- /.login-card-body -->
@@ -105,6 +110,22 @@
          fetch('/crontab.php')  
      
      {{/cron}} 
+    
+ 
+
+fetch('{{{verurl}}}')
+   .then(response => response.json())
+   .then((response) => {
+       if(response['version'] != '{{curver}}') {
+          $('#vrow').show() 
+          $('#vtext').text('{{curver}}') 
+       
+       }
+   })
+  
+    
+    
+     
     
     </script>
     
