@@ -104,7 +104,7 @@
                    {{emp.emp_name}}  
                  </td>
                  <td class="text-right" v-for=" v in stlist  ">
-                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp[v.salcode]" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
+                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp.sellvalue" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
                     <!--
                     <i v-if="v.salcode == '_c'+opt.codebaseincom" class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"                                   :title="emp.info"></i>
                     -->
@@ -112,7 +112,7 @@
 
                     
                  </td>
-                 <td class="text-right"><a href="javascript:return false" v-on:click="del(emp )"><i class="fa fa-trash"></i></a></td>
+                 <td class="text-right"><a   v-on:click.prevent="del(emp )"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 
                 
@@ -244,6 +244,7 @@
                  
              },
              
+         
              recalc:  function ( ){
              
 
@@ -256,16 +257,16 @@
              
              }  ,            
             
-             calcbaseemp:  function (emp){
+             calcbaseemp:  function (emp){  //начисления
                  
-                {{{calcbases}}}
+              
                 
         
                 
              }  ,            
             
-             calcemp:  function (emp){
-                
+             calcemp:  function (emp){  //удержания
+               
                 {{{calcs}}}
                  
              } ,

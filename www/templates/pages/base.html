@@ -136,9 +136,9 @@
           var d = {{amdigits}}     
           var _v =  parseVal(v)
           if(d>0) {
-             return _v.toFixed(2)    
+             return  Number.parseFloat(_v.toFixed(2) )   
           }
-          return   _v.toFixed(0)          
+          return   Number.parseFloat( _v.toFixed(0) )         
           
      }
      //округление  количеств

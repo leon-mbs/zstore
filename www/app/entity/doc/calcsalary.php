@@ -20,6 +20,9 @@ class CalcSalary extends Document
         $code  = "_c" . $opt['coderesult'];
         $bonus = "_c" . $opt['codebonus'];
         $fine  = "_c" . $opt['codefine'];
+   
+        $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
+        $to = $dt->endOfMonth()->getTimestamp();
 
 
         foreach ($this->unpackDetails('detaildata') as $emp) {
@@ -30,8 +33,10 @@ class CalcSalary extends Document
             $eacc->document_id = $this->document_id;
             $eacc->optype = EmpAcc::SALARY;
             $eacc->amount = $am;
-            $eacc->save();
+            $eacc->createdon = $to;
             
+            $eacc->save();
+            /*
             $am = $emp->{$bonus};
             if($am > 0) {
                 $eacc = new  EmpAcc();
@@ -39,6 +44,7 @@ class CalcSalary extends Document
                 $eacc->document_id = $this->document_id;
                 $eacc->optype = EmpAcc::BONUS;
                 $eacc->amount = 0-$am;
+                $eacc->createdon = $to;
                 $eacc->save();
          
             }
@@ -50,10 +56,11 @@ class CalcSalary extends Document
                 $eacc->document_id = $this->document_id;
                 $eacc->optype = EmpAcc::FINE;
                 $eacc->amount = $am;
+                $eacc->createdon = $to;
                 $eacc->save();
           
             }
-            
+            */
         }
 
         return true;

@@ -14,11 +14,16 @@ class OutSalary extends Document
 {
     public function Execute() {
 
+         $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
+         $to = $dt->endOfMonth()->getTimestamp();
+        
+        
         foreach ($this->unpackDetails('detaildata') as $emp) {
             if ($emp->amount > 0) {
                 $eacc = new \App\Entity\EmpAcc();
                 $eacc->emp_id = $emp->employee_id;
                 $eacc->document_id = $this->document_id;
+                $eacc->createdon = $to;
 
                 $eacc->optype = $this->headerdata['advance'] == 1 ? EmpAcc::ADVANCE : EmpAcc::SALARY_PAY;
                 $eacc->amount = 0 - $emp->amount;
@@ -35,7 +40,7 @@ class OutSalary extends Document
     public function generateReport() {
 
         $detail = array();
-
+   
         foreach ($this->unpackDetails('detaildata') as $emp) {
 
 

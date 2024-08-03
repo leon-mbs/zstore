@@ -203,9 +203,11 @@ class OutSalary extends \App\Pages\Base
                     $emp->amount = $emp->advance;
                 }
             } else {
+                $y = $this->docform->year->getValue();
+                $m = $this->docform->month->getValue();
 
 
-                $rows = EmpAcc::getForPay();
+                $rows = EmpAcc::getForPay($y,$m);
                 foreach ($rows as $row) {
                     if($this->_list[$row['emp_id']] instanceof  Employee) {
                         $this->_list[$row['emp_id']]->amount = H::fa($row['am']);
@@ -264,8 +266,10 @@ class OutSalary extends \App\Pages\Base
             if ($this->docform->advance->isChecked()) {
                 $this->_list[$id]->amount = $this->_list[$id]->advance;
             } else {
+                $y = $this->docform->year->getValue();
+                $m = $this->docform->month->getValue();
 
-                $rows = EmpAcc::getForPay();
+                $rows = EmpAcc::getForPay($y,$m);
                 foreach ($rows as $row) {
                     if ($id == $row['emp_id']) {
                         $this->_list[$row['emp_id']]->amount = H::fa($row['am']);
