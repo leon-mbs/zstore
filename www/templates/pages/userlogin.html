@@ -85,8 +85,9 @@
                             </div>
                             <!-- /.col -->
                         </div>
+                        <input zippy="newver" type="hidden">
                     </form>
-               
+                            
 
                 </div>
                 <!-- /.login-card-body -->
@@ -105,6 +106,22 @@
          fetch('/crontab.php')  
      
      {{/cron}} 
+    
+ 
+
+fetch('{{{verurl}}}')
+   .then(response => response.json())
+   .then((response) => {
+       if(response['version'] != '{{curver}}') {
+       
+          $('#newver').val('isnew') 
+       
+       }
+   })
+  
+    
+    
+     
     
     </script>
     

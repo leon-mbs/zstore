@@ -271,8 +271,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
         Session::getSession()->toasts = false;
 
-      //  $duration =  Session::getSession()->duration() ;
-      //  $this->_tvars['showtips'] = $duration < 300   ;
+    //    $duration =  Session::getSession()->duration() ;
+     //   $this->_tvars['showver'] = $duration < 60   ;
 
         //планировщик
         $this->_tvars['cron']  = false;
@@ -537,14 +537,7 @@ class Base extends \Zippy\Html\WebPage
                 $list[] = array('type'=>'i','title' => "Є непрочитані системні повідомлення");
 
             }
-            //проверка  новой версии
-
-            $v= \App\Helper::checkVer()  ;
-            
-            if(strlen($v) >0){
-              // $list[] = array('title' => " Доступна нова версiя {$v}  <a target=\"_blank\" href=\"https://zippy.com.ua/update\">Перейти...</a> ");                
-               $list[] = array('type'=>'i','title' => " Доступна нова версiя {$v}  <a href=\"/index.php?p=App/Pages/Update\">Перейти...</a> ");                
-            }
+             
             
         }
 
