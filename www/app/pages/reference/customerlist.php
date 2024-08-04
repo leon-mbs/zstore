@@ -146,10 +146,7 @@ class CustomerList extends \App\Pages\Base
         $this->contentview->addeventform->add(new DropDownChoice('addeventnotify', array(), 0));
         $this->contentview->add(new DataView('dw_eventlist', new ArrayDataSource(new Bind($this, '_eventlist')), $this, 'eventListOnRow'));
 
-        
-        
-        
-        
+         
         $this->contentview->dw_eventlist->setPageSize(10);
         $this->contentview->add(new \Zippy\Html\DataList\Paginator('eventpag', $this->contentview->dw_eventlist));
 
