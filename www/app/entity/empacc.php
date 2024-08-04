@@ -41,7 +41,8 @@ class EmpAcc extends \ZCL\DB\Entity
         } else {
            $dt = new \App\DateTime(strtotime($y . '-' . $m . '-01'));
            $to = $dt->endOfMonth()->getTimestamp();
-           $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype < 100  and createdon <=" . $conn->DBDate($to) ." group by  emp_id   ";
+           $from = $dt->startOfMonth()->getTimestamp();
+           $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype < 100  and createdon >=" . $conn->DBDate($from) . " and createdon <=" . $conn->DBDate($to) . " group by  emp_id   ";
          
         }
       

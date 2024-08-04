@@ -31,7 +31,7 @@
                     </div>
 
                 </div>
-                <div class="col-12 col-md-4 col-xl-3">
+                <div id="formd" class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
                         <label for="year">Рiк</label>
                         <select v-on:change="hch()" class="form-control" v-model="doc.year">
@@ -246,26 +246,18 @@
              
          
              recalc:  function ( ){
-             
-
                        
                    for(var e of this.emps) {
-                       this.calcbaseemp(e)
+                  
                        this.calcemp(e)
                    }                   
 
              
              }  ,            
             
-             calcbaseemp:  function (emp){  //начисления
                  
-              
-                
-        
-                
-             }  ,            
             
-             calcemp:  function (emp){  //удержания
+             calcemp:  function (emp){   
                
                 {{{calcs}}}
                  
@@ -316,7 +308,9 @@
                        this.years   = data.years 
                        this.monthes = data.monthes 
                        this.doc = data.doc 
-                       
+                       if(this.doc.document_id >0) {
+                           $('#formd').hide()
+                       }
                         
                         
                   });

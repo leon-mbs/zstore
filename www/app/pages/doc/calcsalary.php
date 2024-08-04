@@ -86,24 +86,18 @@ class CalcSalary extends \App\Pages\Base
         $calc .= $opt['calc'];  //формулы удержаний
         $calc .= "\n\n";
 
-        $calcbase = $calcvar;
-        $calcbase .= "\n\n";
-        $calcbase .= $opt['calcbase'];  //формулы начислений
-        $calcbase .= "\n\n";
-
+   
         // из  переменных в строку  сотрудника
 
         foreach($this->_stlist as $st) {
 
    
             $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
-            $calcbase .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
-
+      
         }
 
         $this->_tvars['calcs'] = $calc;
-        $this->_tvars['calcbases'] = $calcbase;
-
+    
 
 
     }
@@ -150,6 +144,7 @@ class CalcSalary extends \App\Pages\Base
             foreach ($this->_stlist as $st) {
                 $c   = "_c".$st->salcode ;
                 $emp->{$c} = $e->{$c};
+                $emp->sellvalue = $e->sellvalue;
             }
 
 
@@ -297,7 +292,9 @@ class CalcSalary extends \App\Pages\Base
                 $sql= $sqlservice ." and d.user_id=" .$u->user_id;
                 $e['sellvalue'] = $e['sellvalue'] + intval($conn->GetOne($sql)) ;
             }
-
+            if($emp->sellvalue > 0) {
+               $e['sellvalue'] = doubleval($emp->sellvalue)  ;
+            }
 
             $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
           
@@ -346,6 +343,7 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
         $ret['doc']['document_number']   =   $this->_doc->document_number ;
         $ret['doc']['notes']   =   $this->_doc->notes ;
+        $ret['doc']['document_id']   =   $this->_doc->document_id ;
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;

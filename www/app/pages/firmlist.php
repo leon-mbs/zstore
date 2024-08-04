@@ -56,7 +56,8 @@ class FirmList extends \App\Pages\Base
         $this->firmdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->firmdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
- 
+        $this->add(new Panel('fpan'))->setVisible(false);
+
 
 
     }
@@ -67,6 +68,7 @@ class FirmList extends \App\Pages\Base
         $row->add(new Label('firm_name', $item->firm_name));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('files'))->onClick($this, 'filesOnClick');
     }
 
     public function deleteOnClick($sender) {
@@ -142,7 +144,17 @@ class FirmList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->firmtable->setVisible(true);
         $this->firmdetail->setVisible(false);
+        $this->fpan->setVisible(false);
 
         $this->firmtable->firmlist->Reload();
     }
+    
+   public function filesOnClick($sender) {
+        $this->fpan->setVisible(true);
+        $this->firmtable->setVisible(false);
+
+        
+    }
+    
+    
 }

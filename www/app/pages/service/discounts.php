@@ -475,6 +475,7 @@ class Discounts extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
+
     public function OnIsearchKey($sender) {
         $key = $sender->getKey();
         $it = Item::load($key) ;
@@ -482,6 +483,7 @@ class Discounts extends \App\Pages\Base
         $this->itab->ifilter->isearchdisc->setText($pureprice) ;
 
     }
+
     public function OnIAdd($sender) {
         $k =  $this->itab->ifilter->isearchkey->getKey();
         $i = Item::load($k);
@@ -518,6 +520,7 @@ class Discounts extends \App\Pages\Base
         $this->itab->iofilter->isearchoprice1->setText($pureprice) ;
         $this->itab->iofilter->isearchoprice2->setText($pureprice) ;
     }
+
     public function OnIOAdd($sender) {
         $k = $this->itab->iofilter->isearchokey->getKey();
         $i = Item::load($k);
@@ -725,7 +728,6 @@ class Discounts extends \App\Pages\Base
 
     }
    
-   
     public function onAddPromo($sender) {
         $code=PromoCode::generate() ;
         $this->ptab->formpan->pform->clean();        
@@ -739,11 +741,13 @@ class Discounts extends \App\Pages\Base
         $this->ptab->listpan->setVisible(false);
  
     }
+
     public function cancelPCode($sender) {
         $this->ptab->formpan->setVisible(false);
         $this->ptab->listpan->setVisible(true);
  
     }
+
     public function onPType($sender) {
         $t=$sender->getValue();
         $this->ptab->formpan->pform->peditcust->setVisible($t>2);
@@ -752,6 +756,7 @@ class Discounts extends \App\Pages\Base
 
  
     }
+
     public function savePCode($sender) {
         
         $pc = new PromoCode() ;
