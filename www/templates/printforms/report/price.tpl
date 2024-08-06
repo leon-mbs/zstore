@@ -22,7 +22,9 @@
     </tr>
  {{/isbrand}}  
     <tr style="font-weight: bolder;">
-
+        {{#showimage}}
+        <th> </th>
+        {{/showimage}}
         <th>Найменування</th>
         <th>Код</th>
         <th>Од. вим.</th>
@@ -40,6 +42,13 @@
     </tr>
     {{#_detail}}
     <tr>
+        {{#showimage}}
+        <td style="border-top:1px #ccc solid;" >
+          {{#isimage}}
+          <img src="{{im}}"  style="width:64px" />
+           {{/isimage}}
+        </td>
+        {{/showimage}}
 
         <td style="border-top:1px #ccc solid;">{{name}}</td>
         <td style="border-top:1px #ccc solid;">{{code}}</td>

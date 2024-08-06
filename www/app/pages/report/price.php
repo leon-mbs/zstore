@@ -34,6 +34,7 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('onstore'));
         $this->filter->add(new CheckBox('showqty'));
         $this->filter->add(new CheckBox('showdesc'));
+        $this->filter->add(new CheckBox('showimage'));
 
         $catlist = array();
         foreach (Category::getList( ) as $k => $v) {
@@ -80,6 +81,7 @@ class Price extends \App\Pages\Base
         $isp5 = $this->filter->price5->isChecked();
         $onstore = $this->filter->onstore->isChecked();
         $showdesc = $this->filter->showdesc->isChecked();
+        $showimage = $this->filter->showimage->isChecked();
         $showqty = $this->filter->showqty->isChecked();
         $cat = $this->filter->searchcat->getValue();
         $brand = $this->filter->searchbrand->getText();
@@ -92,7 +94,7 @@ class Price extends \App\Pages\Base
             $c =   Category::load($cat) ;
             $ch = $c->getChildren();
             if(count($ch)==0) {
-               $sql = $sql . " and cat_id=". $cat;    
+               $sql = $sql . " and cat_id = ". $cat;    
             } else {
                $j = implode(',',$ch) ;
                $sql = $sql . " and cat_id in (". $j .")";    
@@ -123,11 +125,22 @@ class Price extends \App\Pages\Base
             if ($onstore && ($qty > 0) == false) {
                 continue;
             }
-
+            $im="";
+            if($item->image_id>0 && $showimage) {
+               $image=\App\Entity\Image::load($item->image_id)   ;
+               if($image != null) {
+                   $im=$image->getUrlData();
+                   unset($image) ;
+               } else {
+                  $item->image_id=0; 
+               }
+            }
             $detail[] = array(
                 "code"   => $item->item_code,
                 "name"   => $item->itemname,
                 "desc"   => $item->description,
+                "isimage"   => $item->image_id>0,
+                "im"   => $im,
                 "cat"    => $item->cat_name,
                 "brand"  => $item->manufacturer,
                 "msr"    => $item->msr,
@@ -148,7 +161,8 @@ class Price extends \App\Pages\Base
             "price3name" => $isp3 ? $option['price3'] : false,
             "price4name" => $isp4 ? $option['price4'] : false,
             "price5name" => $isp5 ? $option['price5'] : false,
-            "iscat" => $cat ==0 ,
+            "iscat" => $cat == 0 ,
+            "showimage"   => $showimage,
             "isbrand" => strlen($brand)==0 ,
             "catname" => $this->filter->searchcat->getValueName(),
             "brandname" => $brand,
