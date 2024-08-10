@@ -21,8 +21,8 @@
         <th align="right" style="border: solid black 1px">Кіл.</th>
         <th align="right" style="border: solid black 1px">На суму</th>
       {{^noshowpartion}}
-        <th align="right" style="border: solid black 1px">Маржа</th>
-        <th align="right" style="border: solid black 1px">Маржа,%</th>
+        <th align="right" style="border: solid black 1px">Прибуток</th>
+        <th align="right" style="border: solid black 1px">Приб.,%</th>
       {{/noshowpartion}}
 
 
@@ -80,8 +80,8 @@
     
         {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Маржа</th>
-    <th align="right" style="border: solid black 1px">Маржа,%</th>
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
     <th></th>    
@@ -201,8 +201,8 @@
  
      {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Маржа</th>
-    <th align="right" style="border: solid black 1px">Маржа,%</th>
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -252,8 +252,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Маржа</th>
-    <th align="right" style="border: solid black 1px">Маржа,%</th>
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -304,8 +304,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
      {{^noshowpartion}}
 
-   <th align="right" style="border: solid black 1px">Маржа</th>
-   <th align="right" style="border: solid black 1px">Маржа,%</th>
+   <th align="right" style="border: solid black 1px">Прибуток</th>
+   <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
     <th></th>
@@ -355,8 +355,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Маржа</th>
-    <th align="right" style="border: solid black 1px">Маржа,%</th>
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
     
@@ -406,8 +406,8 @@
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
       {{^noshowpartion}}
 
-  <th align="right" style="border: solid black 1px">Маржа</th>
-  <th align="right" style="border: solid black 1px">Маржа,%</th>
+  <th align="right" style="border: solid black 1px">Прибуток</th>
+  <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
   
