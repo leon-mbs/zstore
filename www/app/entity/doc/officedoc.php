@@ -88,7 +88,7 @@ class OfficeDoc extends Document
                 }
             }
             if ($showerror) {
-                System::setErrorMsg("Немає права перегляду");
+                \App\System::setErrorMsg("Немає права перегляду");
             }
             return false; //если  список  непустой  и  не  найден в  списке
 
@@ -115,7 +115,7 @@ class OfficeDoc extends Document
                 }
             }
             if ($showerror) {
-                System::setErrorMsg("Немає права редагування");
+                \App\System::setErrorMsg("Немає права редагування");
             }
 
             return false; //если  список  непустой  и  не  найден в  списке

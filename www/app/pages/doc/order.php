@@ -488,8 +488,8 @@ class Order extends \App\Pages\Base
             $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
 
             if ($sender->id == 'paydoc') {
-                $this->_doc->payed = $this->docform->payed->getText();
-                $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+                $this->_doc->payed = doubleval($this->docform->payed->getText());
+                $this->_doc->headerdata['payed'] = $this->_doc->payed;
                 $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
                 if ($this->_doc->payed > $this->_doc->payamount) {
@@ -550,7 +550,7 @@ class Order extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }

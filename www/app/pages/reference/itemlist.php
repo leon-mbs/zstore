@@ -235,10 +235,7 @@ class ItemList extends \App\Pages\Base
 
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
-        if(strlen($item->thumb)>0) {
-            $row->imagelistitem->setValue($item->thumb);
-        }
-
+     
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
@@ -621,7 +618,7 @@ class ItemList extends \App\Pages\Base
               "iqty"=> H::fqty( $ii['qty'] ),
               "icode"=>$ii['item_code']
            );     
-        } ;
+        }
    
       foreach(\App\Entity\Service::find("") as $s){
            if(is_array($s->itemset)) {
@@ -1139,7 +1136,13 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
         
-        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start,"*,(select coalesce(sum(qty),0) from store_stock where  items_view.item_id = store_stock.item_id) as qty") as $k => $v) {
+        $fst="";
+        $br=   \App\System::getBranch()  ;
+        if($br >0){
+           $fst = " store_stock.store_id in(select store_id from stores where  stores.branch_id = {$br}  )  and "; 
+        }
+           
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start,"*,(select coalesce(sum(qty),0) from store_stock where {$fst} items_view.item_id = store_stock.item_id) as qty") as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

@@ -95,7 +95,7 @@ class Orders extends \App\Pages\Base
                 $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
 
                 if (intval($cnt) > 0) { //уже импортирован
-             //       continue;
+                    continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);

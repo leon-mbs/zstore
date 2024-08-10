@@ -1314,7 +1314,7 @@ class ARMPos extends \App\Pages\Base
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
-                    $this->_doc->headerdata["passfisc"]  = 0;;
+                    $this->_doc->headerdata["passfisc"]  = 0;
                     if($this->_tvars['checkbox'] == true) {
 
                         $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;

@@ -160,7 +160,7 @@ class DocList extends \App\Pages\Base
             $na[]=  str_replace(' ','', $doc->document_number) ;
             
             
-            $filename = implode('_',$na) .'.pdf'; ;
+            $filename = implode('_',$na) .'.pdf';
         //    $filename= "2475406556_3235608644_20170213_Рахунок_РН-026.pdf";
             
             list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm->vdoc  )  ;

@@ -287,7 +287,7 @@ class EmployeeList extends \App\Pages\Base
            $tosql = " and createdon <= " . $conn->DBDate($to)  ;          
         }
         
-        $sql =    $sql = "select * from empacc_view where   emp_id = {$emp_id} and createdon >= " . $conn->DBDate($from) . " {$tosql} order  by  ea_id ";
+        $sql =    $sql = "select * from empacc_view where   emp_id = {$emp_id} and createdon >= " . $conn->DBDate($from) . " {$tosql} order  by  createdon ";
         $rc = $conn->Execute($sql);
         $en=\App\Entity\EmpAcc::getNames();
 

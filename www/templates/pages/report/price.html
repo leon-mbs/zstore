@@ -19,6 +19,13 @@
                             <label class="form-check-label" for="showdesc"> Опис
                             </label>
                         </div>
+                          {{#useimages}}
+                         <div class="form-check   mr-2">
+                            <input class="form-check-input" type="checkbox" zippy="showimage">
+                            <label class="form-check-label" for="showimage"> Фото
+                            </label>
+                        </div>
+                          {{/useimages}}
                         <label class="    mr-2"><b>Ціни</b></label>
                         <div class="form-check   mr-2">
                             <input class="form-check-input" type="checkbox" zippy="price1">
@@ -73,7 +80,9 @@
                 <div zippy="detail">
                     <div>
                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                         {{^showimage}}
                         <a href="/index.php?p=App/Pages/ShowReport&arg=xls/price" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                         {{/showimage}}
                         <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/price" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>

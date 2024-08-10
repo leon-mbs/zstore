@@ -107,7 +107,68 @@
         <td></td>
     </tr>
      {{/_detail3}}
-   {{/is3}}    
+   {{/is3}}  
+   
+  {{#isfin}}  
+  <tr style="font-weight: bolder;">
+
+        <td> <br>Фiнансовi показники</td>
+
+        <td></td>
+        <td></td>
+
+    </tr>
+    <tr>
+        <td>Проход:</td>
+        <td align="right"> {{tu}} </td>
+        <td>
+            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               title="Виручка (відпускна ціна на кількість) мінус змінні витрати (собівартість)"></i>
+        </td>
+    </tr>
+    <tr>
+        <td>Змiннi витрати :</td>
+        <td align="right"> {{tvc}} </td>
+        <td>
+            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               title="Cобівартість"></i>
+        </td>
+    </tr>
+    <tr>
+        <td>Операцiйнi витрати:</td>
+        <td align="right">{{OP}}  </td>
+        <td>
+            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               title="Витрати мінус змінні витрати (собівартість)"></i>
+        </td>
+    </tr>
+    <tr>
+        <td>Чистий прибуток:</td>
+        <td align="right"> {{PR}} </td>
+        <td>
+            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               title="проход мiнус видатки"></i>
+        </td>
+    </tr>
+   {{#isinv}}   
+    <tr>
+        <td>Інвестиції:</td>
+        <td align="right"> {{inv}} </td>
+        <td>
+            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               title="ТМЦ на складі та основні фонди на балансі"></i>
+        </td>
+    </tr>
+    <tr>
+        <td>Вiддача вiд iнвестицiй (ROI),%:</td>
+        <td align="right"> {{ROI}} </td>
+        <td>
+            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+               title="Проход на iнвестицiї"></i>
+        </td>
+    </tr>
+    {{/isinv}}     
+    {{/isfin}}     
 </table>
 
 

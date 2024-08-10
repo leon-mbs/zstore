@@ -97,9 +97,14 @@ class UserLogin extends \Zippy\Html\WebPage
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
                 
+              
                 if($user->rolename=='admins' && $sender->newver->getText()=="isnew"){
-                    App::Redirect('\App\Pages\Update');
-                    return;   
+                    $lastshow=intval(Helper::getKeyVal('lastshowupdate')) ;
+                    if(strtotime('-7 day') > $lastshow ) {
+                        Helper::setKeyVal('lastshowupdate',time()) ;
+                        App::Redirect('\App\Pages\Update');
+                        return;   
+                    }
                 }
                 
                 $modules = \App\System::getOptions("modules");

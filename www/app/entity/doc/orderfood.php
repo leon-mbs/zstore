@@ -176,7 +176,7 @@ class OrderFood extends Document
            }
            if($p->showcheck==1) {
                $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
-               breack; 
+               break;
            }
         }  
            
