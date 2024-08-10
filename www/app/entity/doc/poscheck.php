@@ -210,7 +210,7 @@ class POSCheck extends Document
            }
            if($p->showcheck==1) {
                $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
-               breack; 
+               break;
            }
         }  
            
@@ -408,7 +408,7 @@ class POSCheck extends Document
         
         if(strlen($this->headerdata['promocode']) > 0){
             \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
-        };
+        }
        
         //бонус  сотруднику
 

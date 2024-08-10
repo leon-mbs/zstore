@@ -618,7 +618,7 @@ class ItemList extends \App\Pages\Base
               "iqty"=> H::fqty( $ii['qty'] ),
               "icode"=>$ii['item_code']
            );     
-        } ;
+        }
    
       foreach(\App\Entity\Service::find("") as $s){
            if(is_array($s->itemset)) {

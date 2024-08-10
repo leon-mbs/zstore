@@ -316,7 +316,7 @@ class OrderFood extends \App\Pages\Base
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = doubleval($this->docform->payed->getText());
 
 
         if ($this->checkForm() == false) {
@@ -414,7 +414,7 @@ class OrderFood extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }

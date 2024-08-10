@@ -83,7 +83,7 @@ class Helper
      *
      * @param string $key NovaPoshta API key
      *
-     * @return NovaPoshtaApi2
+
      */
     public function setKey($key)
     {
@@ -129,7 +129,7 @@ class Helper
      *
      * @param string $language
      *
-     * @return NovaPoshtaApi2
+
      */
     public function setLanguage($language)
     {
@@ -152,7 +152,7 @@ class Helper
      *
      * @param string $format Format of returned data by methods (json, xml, array)
      *
-     * @return NovaPoshtaApi2
+
      */
     public function setFormat($format)
     {
@@ -1179,7 +1179,7 @@ class Helper
         $points = @file_get_contents(_ROOT . "upload/pointlist.dat");
         $points = @unserialize($points);
         if (is_array($points) == false) {
-            $points = $this->getPointList($cityref);;
+            $points = $this->getPointList($cityref);
         }
         $ret = array();
         foreach ($points as $r=>$p) {

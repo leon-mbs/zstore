@@ -690,8 +690,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->headerdata['payamount'] = $this->_doc->payamount;
 
-        $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = doubleval( $this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
 
 
         if ($this->checkForm() == false) {
@@ -718,6 +718,7 @@ class GoodsReceipt extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
+             
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
@@ -795,7 +796,7 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }

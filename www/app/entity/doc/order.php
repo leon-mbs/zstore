@@ -265,7 +265,7 @@ class Order extends \App\Entity\Doc\Document
 
             if(strlen($this->headerdata['promocode']) > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
-            };
+            }
 
             if($this->payed >0) {
                 $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);

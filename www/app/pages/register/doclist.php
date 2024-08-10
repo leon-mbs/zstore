@@ -684,7 +684,7 @@ class DocList extends \App\Pages\Base
         $doc->user_id= System::getUser()->user_id;
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = 0; ;
+        $doc->state = 0;
         $doc->headerdata['contract_id'] = 0;
         $doc->headerdata['_state_before_approve_'] = '';
         $doc->save();

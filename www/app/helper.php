@@ -639,7 +639,7 @@ class Helper
      * @return mixed
      */
     public static function fa($am) {
-        if (strlen(''.$am ) == 0) {
+        if (strlen($am ?? '') == 0) {
             return '';
         }
         if(is_numeric($am) && abs($am)<0.005) {

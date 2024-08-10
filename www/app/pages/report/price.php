@@ -114,7 +114,7 @@ class Price extends \App\Pages\Base
                 $c= $cats[$item->cat_id]?? null;
                 if($c instanceof Category) {
                     if($c->noprice) {
-                        contiue;
+                        continue;
                     }
                 }
                 

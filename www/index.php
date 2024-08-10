@@ -52,7 +52,7 @@ try {
     $logger->error($e);
     if ($e instanceof Throwable) {
         echo $e->getMessage() . '<br>';
-        echo $e->getLine() . '<br>';
+        echo $e->getLine() . ' ';
         echo $e->getFile() . '<br>';
     }
 

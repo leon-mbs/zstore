@@ -270,7 +270,7 @@ GROUP BY c.customer_name,
        }      
         
        $this->updateDocs() ;
- ;
+
     }
 
     //оплаты

@@ -111,8 +111,6 @@ class ItemList extends \App\Pages\Base
         $inprice="";
         if($this->_tvars['noshowpartion'] != true) {
           $inprice = $item->getPartion($store);  
-            
-          ;
         }
         $row->add(new Label('inprice', H::fa($inprice)));
         $pt = $this->filter->searchprice->getValue();

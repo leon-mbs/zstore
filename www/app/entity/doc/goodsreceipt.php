@@ -90,7 +90,7 @@ class GoodsReceipt extends Document
         if ($this->amount == 0) {
             // return;
         }
-        $rate= doubleval($this->headerdata["rate"]);
+        $rate= doubleval($this->headerdata["rate"]??0);
 
         if ($rate == 0 || $rate == 1) {
             $rate =1;
@@ -146,7 +146,7 @@ class GoodsReceipt extends Document
             }
         }
 
-        $payed = $this->headerdata['payed'];
+        $payed = doubleval($this->headerdata['payed']??0);
 
         $payed = H::fa( $payed * $rate);
         $this->payamount = H::fa($this->headerdata['payamount'] * $rate);
