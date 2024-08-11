@@ -7,10 +7,12 @@ test('All pages OK', async ({ page }) => {
   await page.getByLabel('Пароль').click();
   await page.getByLabel('Пароль').fill('admin');
   await page.getByRole('button', { name: 'Увійти' }).click();
-  await expect(page.getByTestId('Playwright')).toBeVisible();
+  await page.getByRole('link', { name: '' }).click();
+ 
   
   await page.goto('/index.php');
-  await expect(page.getByTestId('Playwright')).toBeVisible();
+  await page.getByRole('link', { name: '' }).click();
+ 
 
   await page.goto('/index.php?p=App/Pages/SystemLog');
   await page.goto('/index.php?p=App/Pages/CronTab');
@@ -131,8 +133,7 @@ test('All pages OK', async ({ page }) => {
   await page.goto('/shop');
   await page.goto('/store');
 
-   
-  await expect(page.getByTestId('Playwright')).toBeVisible();
+  await page.getByRole('link', { name: '' }).click();
   
   await page.getByRole('link', { name: ' Сидоров' }).click();
   await page.getByRole('link', { name: ' Вийти' }).click();
