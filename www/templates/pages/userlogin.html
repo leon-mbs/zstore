@@ -108,20 +108,7 @@
      {{/cron}} 
     
  
-
-fetch('{{{verurl}}}')
-   .then(response => response.json())
-   .then((response) => {
-       if(response['version'] != '{{curver}}') {
-       
-          $('#newver').val('isnew') 
-       
-       }
-   })
-  
-    
-    
-     
+ 
     
     </script>
     

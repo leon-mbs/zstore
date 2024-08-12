@@ -25,11 +25,12 @@
       <div class="row  ">
   
          {{#tooold}}
-       <div class="col-12  ">
+       <div class="col-12  mb-4">
   
-        <i class="fa fa-exclamation-triangle"></i>  <b>Пропущено  кілька оновлень </b>
-           <br>Перейдіть на  <a href="https://zippy.com.ua/update">історію версій </a> 
-            і виконайте послідовне оновлення
+        <i class="fa fa-exclamation-triangle text-danger" ></i>  <b>Пропущено  кілька оновлень </b>
+           <br>У випадку проблем з роботою програми, перейдіть на  <a href="https://zippy.com.ua/update">історію версій </a> 
+            і виконайте послідовне оновлення з урахуванням інструкцій (наприклад пропущено оновлення  папки vendor).
+            Або виконайте  повне  оновлення  з    <a class="link" href="https://zippy.com.ua/download/fullzstore.zip"> архiву</a> (крім config.php) 
      </div>  
          {{/tooold}}
  
@@ -42,8 +43,8 @@
       <div class="col-12  ">
 
   
-     <i class="fa fa-exclamation-triangle"></i> <h5 style="display:inline">    Доступна  версія <b>{{newver}}</b></h5>
-         <br><b>Перелік змін</b>
+     <i class="fa fa-info-circle text-info"></i> <h5 style="display:inline">    Доступна  версія <b>{{newver}}</b></h5>
+         <br><br><b>Перелік змін</b>
            <p>
           <ul style=" line-height: 1.4em;"  >
             {{#list}}
@@ -122,6 +123,9 @@
            document.getElementById('dialogwait').showModal()
             return true;
        
+        } 
+        function check_rollback(ele){
+           return confirm("Вiдкотити версію?")
         } 
         
  </script> 

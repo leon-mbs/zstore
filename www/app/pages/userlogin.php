@@ -42,11 +42,16 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['capcha'] = $common['capcha'] == 1;
 
         $this->_tvars['cron']  =  \App\System::useCron() ;
-        $this->_tvars['curver']  =  \App\System::CURR_VERSION ;
-       $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. phpversion(). '_'. \App\System::CURR_VERSION ;
+           
+        $v = @file_get_contents("https://zippy.com.ua/version.json");
+        $data = @json_decode($v, true);
+        if(is_array($data)){
+           
+           $b= $data['version'] != System::CURR_VERSION;
+           $form->newver->setText( $b ? 'isnew':'' ) ;             
+        }
        
-       $this->_tvars['verurl']  ="https://zippy.com.ua/checkver.php".$nocache;
-
+        
     }
 
     public function onsubmit($sender) {

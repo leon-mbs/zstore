@@ -490,11 +490,12 @@ class PPOHelper
          
         }        
         
-      foreach($header['services'] as $p ) {
+        foreach($header['services'] as $p ) {
            $sum += $p['cost'] ;
          
         }        
-        
+        $sum=  number_format($sum, 2, '.', '');
+       
          // к  оплате
         $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
         // оплачено
