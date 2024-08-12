@@ -44,7 +44,7 @@
 
   
      <i class="fa fa-info-circle text-info"></i> <h5 style="display:inline">    Доступна  версія <b>{{newver}}</b></h5>
-         <br><b>Перелік змін</b>
+         <br><br><b>Перелік змін</b>
            <p>
           <ul style=" line-height: 1.4em;"  >
             {{#list}}
@@ -123,6 +123,9 @@
            document.getElementById('dialogwait').showModal()
             return true;
        
+        } 
+        function check_rollback(ele){
+           return confirm("Вiдкотити версію?")
         } 
         
  </script> 
