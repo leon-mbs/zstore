@@ -191,7 +191,7 @@ class Orders extends \App\Pages\Base
                   }
                 
                 if ($cust != null) {
-                    $neworder->customer_id = $cust->customer_id;
+                    $shoporder->customer_id = $cust->customer_id  ;
                 }                
                 
             }
@@ -216,7 +216,7 @@ class Orders extends \App\Pages\Base
 
     public function onRefresh($sender) {
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>1</wcorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 
