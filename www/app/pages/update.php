@@ -49,6 +49,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['show']  = false   ; 
  
         $phpv =   phpversion()  ;
+        
         $conn = \ZDB\DB::getConnect();
      
         $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv. '_'. System::CURR_VERSION ;
@@ -61,7 +62,7 @@ class Update extends \App\Pages\Base
             
         }        
     
-        
+         
         if(!is_array($data)){
             $this->setError('Помилка завантаження  json') ;
             return  ;
@@ -125,8 +126,24 @@ class Update extends \App\Pages\Base
          }     
          if($this->_tvars['show'] == true) {
              $this->_tvars['rollback']  = false;
-         }     
+         } 
+         
+          $this->_tvars['oldphpv']  = $phpv;    
+          $this->_tvars['newphpv']  = $data['forphp'] ?? $phpv   ;
+          
+          $pvo = str_replace('.','',$phpv)  ;
+          $pvo = intval(substr($pvo,0,2) );
+          $pvn = str_replace('.','',$this->_tvars['newphpv'] )  ;
+          $pvn = intval(substr($pvn,0,2) );
 
+          $this->_tvars['oldphp']  = false;
+                        
+          if($pvn > $pvo)   {
+              $this->_tvars['oldphp']  = true; 
+              $this->_tvars['show']  = false   ;              
+          }
+          
+   
     }   
 
 

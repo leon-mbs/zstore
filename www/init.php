@@ -32,8 +32,10 @@ if(file_exists(_ROOT . 'config/config.php')) {
     require_once _ROOT . 'config/config.php';
 
 } else {   // для  совместимости
-    $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-}
+   // $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+   die("Перенесiть налаштування з config/config.ini в config/config.php ") ;
+}   
+ 
 
 
 
