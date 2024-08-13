@@ -926,6 +926,9 @@ class GoodsIssue extends \App\Pages\Base
         $price = $item->getPartion($store_id);
         $this->editdetail->pricestock->setText(H::fa($price));
 
+        if(strlen($item->notes)>0) {
+            $this->addToastrInfo($item->notes,true);
+        }
 
     }
 
@@ -967,6 +970,9 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->OnCustomerFirm(null);
+        if(strlen($customer->comment)>0) {
+            $this->addToastrInfo($customer->comment);
+        }
 
 
     }

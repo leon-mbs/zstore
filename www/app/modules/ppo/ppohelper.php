@@ -486,7 +486,7 @@ class PPOHelper
         
         $sum=0;
         foreach($header['details'] as $p ) {
-           $sum += ($p['price'] * $p['qty'] );
+           $sum +=  number_format($p['price'] * $p['qty'] , 2, '.', '');
          
         }        
         
@@ -494,7 +494,6 @@ class PPOHelper
            $sum += $p['cost'] ;
          
         }        
-        $sum=  number_format($sum, 2, '.', '');
        
          // к  оплате
         $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);

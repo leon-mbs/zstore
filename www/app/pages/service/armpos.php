@@ -984,6 +984,9 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->editdetail->editserial->setText($serial);
         }
 
+        if(strlen($item->notes)>0) {
+            $this->addToastrInfo($item->notes,true);
+        }
 
 
     }
@@ -1064,11 +1067,15 @@ class ARMPos extends \App\Pages\Base
             }
             $this->docpanel->form2->custinfo->setText($disctext);
             $this->docpanel->form2->custinfo->setVisible(strlen($disctext) >0);
-
+      
         }
         $this->docpanel->form2->addcust->setVisible(false) ;
         $this->docpanel->form2->cinfo->setVisible(true) ;
         $this->docpanel->form2->cinfo->setAttribute('onclick', "customerInfo({$customer_id});") ;
+ 
+        if(strlen($customer->comment)>0) {
+            $this->addToastrInfo($customer->comment);
+        }
 
 
     }
