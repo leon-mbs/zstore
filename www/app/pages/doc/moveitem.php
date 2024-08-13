@@ -53,6 +53,8 @@ class MoveItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -71,6 +73,7 @@ class MoveItem extends \App\Pages\Base
         $this->editsnitem->add(new TextArea('editsn'));
         $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
         $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
        
@@ -474,6 +477,17 @@ class MoveItem extends \App\Pages\Base
 
     }    
 
- 
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
+    }
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edititem);
+    } 
     
 }
