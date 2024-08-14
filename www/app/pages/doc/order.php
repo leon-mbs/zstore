@@ -624,10 +624,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->pricestock->setText(H::fa($price));
         $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO([{$id}])");
         $this->editdetail->tocustorder->setVisible(true);
-        if(strlen($item->notes)>0) {
-            $this->addToastrInfo($item->notes );
-        }
-
+     
 
     }
 
@@ -668,9 +665,7 @@ class Order extends \App\Pages\Base
 
             $this->OnCinfo($customer_id);
 
-            if(strlen($customer->comment)>0) {
-                $this->addToastrInfo($customer->comment );
-            }
+           
 
         }
 

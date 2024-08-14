@@ -319,7 +319,7 @@ class Base extends \Zippy\Html\WebPage
             \App\Helper::setKeyVal('migrationbalans',null) ;
                               
         }
-   
+       Helper::log('');
     }
 
     public function LogoutClick($sender) {
@@ -424,12 +424,21 @@ class Base extends \Zippy\Html\WebPage
     }
 
     /**
-     * Вставляет  JavaScript  в  конец   выходного  потока
+     * Вставляет  JavaScript  в  конец   выходного HTML потока
      * @param string  Код  скрипта
      * @param boolean Если  true  - вставка  после  загрузки  документа в  браузер
      */
     public function addJavaScript($js, $docready = false) {
         App::$app->getResponse()->addJavaScript($js, $docready);
+    }
+    
+    /**
+    * Добавление  javascript в AJAX вызовах
+    * 
+    * @param mixed $js
+    */
+    public function addAjaxJavaScript($js) {
+         $this->addAjaxResponse($js) ; 
     }
 
     public function goDocView() {
