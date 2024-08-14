@@ -319,7 +319,7 @@ class Base extends \Zippy\Html\WebPage
             \App\Helper::setKeyVal('migrationbalans',null) ;
                               
         }
-       Helper::log('');
+      
     }
 
     public function LogoutClick($sender) {
