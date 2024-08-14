@@ -30,6 +30,7 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
         $this->add(new  ClickLink('rollback',$this,'OnRollback')) ;
+        $this->add(new  ClickLink('reload',$this,'OnFileUpdate')) ;
  
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversiondb'] = System::getOptions('version', false);
