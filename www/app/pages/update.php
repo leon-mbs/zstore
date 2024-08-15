@@ -72,16 +72,19 @@ class Update extends \App\Pages\Base
         
         $c = str_replace("v", "", \App\System::CURR_VERSION);
         $n = str_replace("v", "", $data['version']);
-
-        $ca = explode('.', $c) ;
-        $na = explode('.', $n) ;
-        
-        if ($c === $n ) {
+ 
+        $b= \App\Util::compareVersion($n , $c);
+       
+        if ($b!=1 ) {  //новая версия
 
            $this->_tvars['actual']  = true   ;
            $this->_tvars['show']  = false   ;
           
         }   
+        
+        $ca = explode('.', $c) ;
+        $na = explode('.', $n) ;
+                
         $this->_tvars['tooold']  = false;    
         if ($na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
 
@@ -128,22 +131,16 @@ class Update extends \App\Pages\Base
          if($this->_tvars['show'] == true) {
              $this->_tvars['rollback']  = false;
          } 
-         
+     
           $this->_tvars['oldphpv']  = $phpv;    
           $this->_tvars['newphpv']  = $data['forphp'] ?? $phpv   ;
           
-          $pvo = str_replace('.','',$phpv)  ;
-          $pvo = intval(substr($pvo,0,2) );
-          $pvn = str_replace('.','',$this->_tvars['newphpv'] )  ;
-          $pvn = intval(substr($pvn,0,2) );
-
-          $this->_tvars['oldphp']  = false;
-                        
-          if($pvn > $pvo)   {
+ 
+          $b= \App\Util::compareVersion($this->_tvars['newphpv'] , $this->_tvars['oldphpv']);
+          if($b==1)   {
               $this->_tvars['oldphp']  = true; 
               $this->_tvars['show']  = false   ;              
-          }
-          
+          }          
    
     }   
 

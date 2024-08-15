@@ -47,8 +47,8 @@ class UserLogin extends \Zippy\Html\WebPage
         $data = @json_decode($v, true);
         if(is_array($data)){
            
-           $b= $data['version'] != System::CURR_VERSION;
-           $form->newver->setText( $b ? 'isnew':'' ) ;             
+           $b= \App\Util::compareVersion($data['version'] , System::CURR_VERSION);
+           $form->newver->setText( $b==1 ? 'isnew':'' ) ;             
         }
        
         

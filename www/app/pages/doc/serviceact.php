@@ -155,7 +155,7 @@ class ServiceAct extends \App\Pages\Base
                'pureprice'=>$ser->pureprice ,
 
                'quantity'=>H::fqty($ser->quantity) ,
-               'amount'=>H::fa($ser->quantity * $ser->price)
+               'amount'=>H::fa(doubleval($ser->quantity) * doubleval($ser->price))
 
             );
         }

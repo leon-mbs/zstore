@@ -311,7 +311,7 @@ class Base extends \Zippy\Html\WebPage
             Session::getSession()->migrationcheck = true;
         }
        
-        //откат   todo remove
+        //todo remove   откат
         if($this->_tvars['curversion']== '6.11.1'  || $this->_tvars['curversion']=='6.11.0') {
             $conn = \ZDB\DB::getConnect();
             $conn->Execute("delete from custacc   ") ;

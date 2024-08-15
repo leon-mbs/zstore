@@ -736,7 +736,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $letters = "ID";
         $last=0;
-        $sql = "select item_code from  items     order  by  item_id desc  limit 0,100000 ";   //todo  100
+        $sql = "select item_code from  items     order  by  item_id desc   ";  
         $list = $conn->GetCol($sql);
       
  

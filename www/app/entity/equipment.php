@@ -68,7 +68,7 @@ class Equipment extends \ZCL\DB\Entity
         return $list;
     }
    
-    //todo  история
+ 
     public static function getConstraint() {
         $br = \App\ACL::getBranchConstraint();
         if (strlen($br) > 0) {

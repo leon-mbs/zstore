@@ -16,32 +16,29 @@ if (isset($_SERVER['HTTPS']) &&  strtolower($_SERVER['HTTPS']) !== 'off') {
 define('_BASEURL', $http . "://" . $_SERVER["HTTP_HOST"] . '/');
 
 define('_ROOT', __DIR__ . '/');
+ 
 
-//define('UPLOAD_USERS', 'uploads/users/');
-
-
-date_default_timezone_set('Europe/Kiev');
-
-
-
-require_once _ROOT . 'vendor/autoload.php';
-include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
 //чтение  конфигурации
 if(file_exists(_ROOT . 'config/config.php')) {
     require_once _ROOT . 'config/config.php';
 
 } else {   // для  совместимости
-   // $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-   die("Перенесiть налаштування з config/config.ini в config/config.php ") ;
-}   
- 
-
-
+    $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+   //die("Перенесiть налаштування з config/config.ini в config/config.php ") ;
+} //todo remove  
 
 if(!is_array($_config)) {
     die("Invalid config file") ;
 }
+
+date_default_timezone_set($_config['common']['timezone'] ?? 'Europe/Kiev');
+
+
+
+require_once _ROOT . 'vendor/autoload.php';
+include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
+
 
 // логгер
 $logger = new \Monolog\Logger("main");
