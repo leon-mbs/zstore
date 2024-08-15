@@ -1,44 +1,37 @@
 {
-    "description": "Складська система",
-    "keywords": [ "php", "wms", "erp" ],
-    "homepage": "https://zippy.com.ua/",
-
-    "license": "MIT" ,
-    "prefer-stable" : true,
-  
-    "require": {
-        "php": ">8.0.0",
-         
-        "phpmailer/phpmailer": "^6.5",
-        "monolog/monolog": "2.9.2",
-       
-        "dompdf/dompdf": "2.0.4",
-        "firebase/php-jwt": "6.4.0",
-        "roave/security-advisories": "dev-master",
-        "picqer/php-barcode-generator": "2.4.0",
-        "endroid/qr-code": "4.5.2",
-
-        "masterexploder/phpthumb" :"2.1",
-
-
-        "phpoffice/phpspreadsheet" :"2.0.0",
-       
-        "automattic/woocommerce": "3.1.0",
-        "symfony/polyfill-mbstring": "1.29.0",
-        "symfony/polyfill-uuid": "1.29.0",
-
-        "leon-mbs/zippy": "2.7.2",
-        "leon-mbs/ppolib": "1.4.1",   
-
-        "ext-mysqli": "*",
-        "ext-zip": "*",
-        "ext-gmp": "*",
-        "ext-openssl": "*",
-        "ext-json": "*",
-        "ext-curl": "*",       
-        "ext-simplexml": "*" 
-        
-    }
+  "description": "Складська система",
+  "keywords": [
+    "php",
+    "wms",
+    "erp"
+  ],
+  "homepage": "https://zippy.com.ua/",
+  "license": "MIT",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.0.0",
+    "phpmailer/phpmailer": "^6.5",
+    "monolog/monolog": "2.9.2",
+    "dompdf/dompdf": "~2.0.4",
+    "firebase/php-jwt": "6.4.0",
+    "roave/security-advisories": "dev-master",
+    "picqer/php-barcode-generator": "2.4.0",
+    "endroid/qr-code": "4.5.2",
+    "masterexploder/phpthumb": "2.1",
+    "phpoffice/phpspreadsheet": "~2.0.0",
+    "automattic/woocommerce": "3.1.0",
+    "symfony/polyfill-mbstring": "^1.29.0",
+    "symfony/polyfill-uuid": "^1.29.0",
+    "leon-mbs/zippy": "~2.7.2",
+    "leon-mbs/ppolib": "~1.4.1",
+    "ext-mysqli": "*",
+    "ext-zip": "*",
+    "ext-gmp": "*",
+    "ext-openssl": "*",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-simplexml": "*"
+  }
 }
            
 

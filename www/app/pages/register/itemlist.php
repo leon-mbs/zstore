@@ -327,7 +327,7 @@ class ItemList extends \App\Pages\Base
                 $conn=\ZDB\db::getConnect()  ;
                 $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
                 $sell =   $conn->GetOne($sql)  ;
-                $sell =  number_format($sell/$interval->days*30, 1, '.', '');  ;
+                $sell =  number_format($sell/$interval->days*30, 1, '.', '');
                 $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в мiс.";
                 
                 

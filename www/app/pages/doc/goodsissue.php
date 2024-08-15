@@ -926,6 +926,7 @@ class GoodsIssue extends \App\Pages\Base
         $price = $item->getPartion($store_id);
         $this->editdetail->pricestock->setText(H::fa($price));
 
+       
 
     }
 
@@ -967,7 +968,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->OnCustomerFirm(null);
-
+       
 
     }
 

@@ -30,14 +30,13 @@ class Application extends \Zippy\WebApplication
         $path = _ROOT . strtolower($path);
         $cpath = _ROOT . strtolower($cpath);
 
-        if(file_exists($cpath)) {
+        if (file_exists($cpath)) {
             $template = @file_get_contents($cpath);
-        } elseif(file_exists($path)) {
+        } elseif (file_exists($path)) {
             $template = @file_get_contents($path);
         } else {
             throw new \Exception('Invalid template path: ' . $path);
         }
-
 
 
         return $template;
@@ -51,7 +50,7 @@ class Application extends \Zippy\WebApplication
     public function Route($uri) {
 
         if (preg_match('/^[-#a-zA-Z0-9\/_]+$/', $uri) == 0) {
-            http_response_code(404) ;
+            http_response_code(404);
             die;
 
 
@@ -67,7 +66,7 @@ class Application extends \Zippy\WebApplication
 
                 $file = _ROOT . "app/api/" . strtolower($class) . ".php";
                 if (!file_exists($file)) {
-                    http_response_code(404) ;
+                    http_response_code(404);
                     die;
                 }
                 require_once($file);
@@ -95,31 +94,31 @@ class Application extends \Zippy\WebApplication
         $arr = explode('/', $uri);
 
         $pages = array(
-            "store"          => "\\App\\Pages\\Main",
-            "admin"          => "\\App\\Pages\\Main",
-            "shop"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
-            "menu"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
-            "cchat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\CChat",
-            "sp"             => "\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView",
-            "showreport"     => "\\App\\Pages\\ShowReport",
-            "showdoc"        => "\\App\\Pages\\ShowDoc",
-            "doclink"        => "\\App\\Pages\\Doclink",
-            "doclist"        => "\\App\\Pages\\Register\\DocList",
-            "scat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
-            "pcat"           => "\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog",
-            "project"        => "\\App\\Modules\\Issue\\Pages\\ProjectList",
-            "issue"          => "\\App\\Modules\\Issue\\Pages\\IssueList",
-            "topic"          => "\\App\\Modules\\Note\\Pages\\ShowTopic"
+            "store"      => "\\App\\Pages\\Main",
+            "admin"      => "\\App\\Pages\\Main",
+            "shop"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
+            "menu"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
+            "cchat"      => "\\App\\Modules\\Shop\\Pages\\Catalog\\CChat",
+            "sp"         => "\\App\\Modules\\Shop\\Pages\\Catalog\\ProductView",
+            "showreport" => "\\App\\Pages\\ShowReport",
+            "showdoc"    => "\\App\\Pages\\ShowDoc",
+            "doclink"    => "\\App\\Pages\\Doclink",
+            "doclist"    => "\\App\\Pages\\Register\\DocList",
+            "scat"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
+            "pcat"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog",
+            "project"    => "\\App\\Modules\\Issue\\Pages\\ProjectList",
+            "issue"      => "\\App\\Modules\\Issue\\Pages\\IssueList",
+            "topic"      => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
         if (strlen($pages[$arr[0]]) > 0) {
             if (strlen($arr[2] ?? '') > 0) {
                 self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
             } else {
-                if (strlen($arr[1]?? '') > 0) {
+                if (strlen($arr[1] ?? '') > 0) {
                     self::$app->LoadPage($pages[$arr[0]], $arr[1]);
                 } else {
-                    if (strlen($arr[0]?? '') > 0) {
+                    if (strlen($arr[0] ?? '') > 0) {
                         self::$app->LoadPage($pages[$arr[0]]);
                     }
                 }
@@ -132,7 +131,7 @@ class Application extends \Zippy\WebApplication
         }
 
         //кастомные страницы  в онлайн каталогк
-        $shoppages =      \App\Modules\Shop\Helper::getPages() ;
+        $shoppages = \App\Modules\Shop\Helper::getPages();
 
         if (in_array($uri, $shoppages)) {
             self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\Catalog\\CustomPage", $uri);

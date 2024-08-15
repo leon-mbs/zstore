@@ -3,6 +3,7 @@
 
 $_config = array('common'=>[],'db'=>[],'smtp'=>[]) ;
 
+$_config['common']['timezone'] = 'Europe/Kiev'  ;
 $_config['common']['loglevel'] = 100  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
 
 $_config['db']['host'] = 'localhost:3306'  ;

@@ -34,9 +34,9 @@ class Task extends Document
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
-                              "cost"         => H::fa($ser->cost * $ser->quantity),
+                              "cost"         => H::fa(doubleval($ser->cost) * doubleval($ser->quantity) ),
                               "category"     => $ser->category,
-                              "hours"        => $ser->hours * $ser->quantity
+                              "hours"        => doubleval($ser->hours) * $ser->quantity
             );
         }
 

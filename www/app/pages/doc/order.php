@@ -519,7 +519,7 @@ class Order extends \App\Pages\Base
             }
             if ( $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 if ($this->_doc->headerdata['store'] > 0) {
-                    $this->_doc->reserve($this->_doc->headerdata['store']); 
+                    $this->_doc->reserve(); 
                 }
             }
             if ($sender->id == 'topaydoc') {
@@ -624,7 +624,7 @@ class Order extends \App\Pages\Base
         $this->editdetail->pricestock->setText(H::fa($price));
         $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO([{$id}])");
         $this->editdetail->tocustorder->setVisible(true);
-
+     
 
     }
 
@@ -663,9 +663,9 @@ class Order extends \App\Pages\Base
             $this->docform->custinfo->setVisible(strlen($disctext) >0);
             $this->docform->cinfo->setVisible(false);
 
-
-
             $this->OnCinfo($customer_id);
+
+           
 
         }
 

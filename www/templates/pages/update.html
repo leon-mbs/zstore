@@ -5,6 +5,7 @@
 </head>
 <body>
  <div class="row">
+        
     <div class="col-12 col-lg-10 col-xl-6 ml-2"   >
         <h2>Оновлення</h2>
   
@@ -35,7 +36,10 @@
          {{/tooold}}
  
          
-       
+       {{#oldphp}}
+         <h5 >    Доступна  версія <b>{{newver}}</b></h5>   
+       <br>  <h5 >    Оновлення вимагає <b>PHP{{newphpv}}</b>. Поточна  версія PHP{{oldphpv}}</h5>   
+       {{/oldphp}}
  
    
     
@@ -96,13 +100,16 @@
    </div>  
             {{/showdb}}
      
-
+       
          {{#rollback}}
        <div class="col-12  mt-2">
-  
-        <i class="fa fa-undo"></i>  
-            <a zippy="rollback"><b>Вiдкотити файли до попередньої версії   </b> </a> 
-            
+    
+        <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити  оновлення </b>  </a> 
+        <br><small>Повторити оновлення, наприклад пiсля виходу виправлення (хотфiксу)</small>
+        <br>  <br> 
+        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити до попередньої версії </b> </a> 
+        <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
+           
      </div>  
          {{/rollback}}                 
                       

@@ -157,7 +157,7 @@ class Order extends \App\Entity\Doc\Document
         return $html;
     }
 
-    //резеорвирование товаров
+    //резервирование товаров
     public function reserve() {
 
         $this->unreserve();

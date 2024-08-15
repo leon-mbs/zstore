@@ -268,9 +268,32 @@ class Base extends \Zippy\Html\WebPage
         }
 
 
-        $this->_tvars['showtoasts']  =  Session::getSession()->toasts ?? true ;
-        Session::getSession()->toasts = false;
-
+        if((Session::getSession()->toasts ?? true) ==false) {
+           Session::getSession()->toasts = false;  
+           
+            if ($user->defstore == 0) {
+                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
+            }
+            if ($user->deffirm == 0) {
+                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
+            }
+            if ($user->defmf == 0) {
+                //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
+            }
+            if ($user->userlogin == "admin") {
+                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+                    $this->addToastrWarn("Змініть у профілі пароль за замовчуванням"); 
+                }
+            }
+            if ($user->rolename == "admins") {
+                if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
+                    $this->addToastrInfo("Є непрочитані системні повідомлення"); 
+                }
+            }           
+                 
+           
+        }
+     
     //    $duration =  Session::getSession()->duration() ;
      //   $this->_tvars['showver'] = $duration < 60   ;
 
@@ -288,7 +311,7 @@ class Base extends \Zippy\Html\WebPage
             Session::getSession()->migrationcheck = true;
         }
        
-        //откат   todo remove
+        //todo remove   откат
         if($this->_tvars['curversion']== '6.11.1'  || $this->_tvars['curversion']=='6.11.0') {
             $conn = \ZDB\DB::getConnect();
             $conn->Execute("delete from custacc   ") ;
@@ -296,7 +319,7 @@ class Base extends \Zippy\Html\WebPage
             \App\Helper::setKeyVal('migrationbalans',null) ;
                               
         }
-   
+      
     }
 
     public function LogoutClick($sender) {
@@ -401,12 +424,21 @@ class Base extends \Zippy\Html\WebPage
     }
 
     /**
-     * Вставляет  JavaScript  в  конец   выходного  потока
+     * Вставляет  JavaScript  в  конец   выходного HTML потока
      * @param string  Код  скрипта
      * @param boolean Если  true  - вставка  после  загрузки  документа в  браузер
      */
     public function addJavaScript($js, $docready = false) {
         App::$app->getResponse()->addJavaScript($js, $docready);
+    }
+    
+    /**
+    * Добавление  javascript в AJAX вызовах
+    * 
+    * @param mixed $js
+    */
+    public function addAjaxJavaScript($js) {
+         $this->addAjaxResponse($js) ; 
     }
 
     public function goDocView() {
@@ -512,38 +544,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
 
-    public function gettoasts($args, $post=null) {
-
-        $list = [];
-
-        $user = System::getUser();
-        if ($user->defstore == 0) {
-            //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
-        }
-        if ($user->deffirm == 0) {
-            //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
-        }
-        if ($user->defmf == 0) {
-            //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
-        }
-        if ($user->userlogin == "admin") {
-            if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                $list[] = array( 'type'=>'w', 'title' => "Змініть у профілі пароль за замовчуванням");
-
-            }
-        }
-        if ($user->rolename == "admins") {
-            if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                $list[] = array('type'=>'i','title' => "Є непрочитані системні повідомлення");
-
-            }
-             
-            
-        }
-
-        return json_encode($list, JSON_UNESCAPED_UNICODE);
-    }
-
+    
     /**
     * добавляет стьроку  заказа в  заявку  поставщику
     * 
@@ -617,6 +618,45 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    /**
+    *  всплывающая  подсказка
+    * 
+    * @param mixed $text
+    */
+    protected function addToastrInfo($text,$ajax=false) {
+        $text = str_replace('`',"'",$text) ;
+        $text = str_replace('`',"\"",$text) ;
+                
+        $js=" $(document).Toasts('create', {
+                    icon: 'fa fa-info-circle text-info',
+                            position:'bottomRight',
+                            title:'{$text}'
+
+                    }) ";
+        if($ajax) {
+            $this->addJavaScript($js,true) ;    
+        }else {
+          $this->addAjaxResponse($js) ; 
+        }           
+        
+    }
+    protected function addToastrWarn($text,$ajax=false) {
+        $text = str_replace('`',"'",$text) ;
+        $text = str_replace('`',"\"",$text) ;
+                
+        $js=" $(document).Toasts('create', {
+                    icon: 'fa fa-exclamation-triangle text-warning',
+                            position:'bottomRight',
+                            title:'{$text}'
+
+                    }) ";
+        if($ajax) {
+            $this->addJavaScript($js,true) ;    
+        }else {
+          $this->addAjaxResponse($js) ; 
+        }
+    }
+    
     //callPM
 
     public function vonTextCust($args, $post=null) {
