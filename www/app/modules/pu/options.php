@@ -71,7 +71,7 @@ class Options extends \App\Pages\Base
         $modules['pusalesource'] = $salesource;
         $modules['pusetpayamount'] = $setpayamount;
         $modules['puinsertcust'] = $insertcust;
-        $modules['pussl'] = $this->cform->ssl->isChecked() ? 1 : 0;;
+        $modules['pussl'] = $this->cform->ssl->isChecked() ? 1 : 0;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');

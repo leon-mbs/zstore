@@ -75,7 +75,7 @@ class Update extends \App\Pages\Base
  
         $b= \App\Util::compareVersion($n , $c);
        
-        if ($b!=1 ) {  //новая версия
+        if ($b!=1 ) {  //не новая версия
 
            $this->_tvars['actual']  = true   ;
            $this->_tvars['show']  = false   ;

@@ -74,7 +74,7 @@ class Options extends \App\Pages\Base
         $modules['hrpricetype'] = $pricetype;
         $modules['hrsalesource'] = $salesource;
         $modules['hrinsertcust'] = $insertcust;
-        $modules['hrssl'] = $this->cform->ssl->isChecked() ? 1 : 0;;
+        $modules['hrssl'] = $this->cform->ssl->isChecked() ? 1 : 0;
 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');

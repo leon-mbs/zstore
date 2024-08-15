@@ -27,7 +27,7 @@ class CompareAct extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');;
+        $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->add(new Date('from', strtotime("-1 month", time())));
         $this->filter->add(new Date('to', time()));
 

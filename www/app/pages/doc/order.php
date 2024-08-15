@@ -519,7 +519,7 @@ class Order extends \App\Pages\Base
             }
             if ( $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 if ($this->_doc->headerdata['store'] > 0) {
-                    $this->_doc->reserve($this->_doc->headerdata['store']); 
+                    $this->_doc->reserve(); 
                 }
             }
             if ($sender->id == 'topaydoc') {
