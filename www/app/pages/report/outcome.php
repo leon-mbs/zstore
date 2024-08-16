@@ -240,7 +240,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 8) {  //по холдингам
             $sql = '';
-            $rs = array();
+         // $rs = array();
 
             $hlist = \App\Entity\Customer::getHoldList();
             foreach ($hlist as $id => $name) {

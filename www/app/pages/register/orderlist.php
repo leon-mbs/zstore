@@ -592,7 +592,7 @@ class OrderList extends \App\Pages\Base
             }
          
             $ait['ciprod']  =  array();
-         
+            $prod=[];
 
             $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
             if($itpr instanceof \App\Entity\Item)  {

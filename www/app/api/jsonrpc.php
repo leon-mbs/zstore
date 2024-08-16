@@ -94,7 +94,7 @@ abstract class JsonRPC
         if ($api['atype'] == 3) {
             $user = \App\Entity\User::getByLogin('admin');
         }
-        if ($user == null || $user == false) {
+        if ($user == null ) {
             return self::error(null, -1001, "Користувач не знайдений");
         }
         \App\System::setUser($user);

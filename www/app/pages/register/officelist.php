@@ -64,7 +64,7 @@ class OfficeList extends \App\Pages\Base
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
         $this->statuspan->add(new Form('buttons'));
-        $this->statuspan->buttons->add(new SubmitButton('binproсess'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->buttons->add(new SubmitButton('binprocess'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bdone'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->buttons->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
 
@@ -288,7 +288,7 @@ class OfficeList extends \App\Pages\Base
         $state = $this->_doc->state;
         $buttons = $this->statuspan->buttons;
 
-        $buttons->binproсess->setVisible(false);
+        $buttons->binprocess->setVisible(false);
         $buttons->bdone->setVisible(false);
         $buttons->bclose->setVisible(false);
 
@@ -310,7 +310,7 @@ class OfficeList extends \App\Pages\Base
         }
 
         if ($ch && in_array($state, [1, 2, 3, 16])) {
-            $buttons->binproсess->setVisible(true);
+            $buttons->binprocess->setVisible(true);
         }
         if ($ch && in_array($state, [7])) {
             $buttons->bshift->setVisible(true);

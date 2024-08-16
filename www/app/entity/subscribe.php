@@ -287,7 +287,7 @@ class Subscribe extends \ZCL\DB\Entity
             if(strlen($options['chat_id'])>0 && $this->msg_type == self::MSG_BOT) {
                 $ret =   self::sendBot($options['chat_id'], $text, $this->attach==1 ? $options['doc'] : null,$this->html==1) ;
             }
-            if($sub->reciever_type == self::RSV_WH) {
+            if($this->reciever_type == self::RSV_WH) {
                 $ret =   self::sendHook($this->url, $text) ;
             }
 
@@ -741,7 +741,7 @@ class Subscribe extends \ZCL\DB\Entity
                 curl_setopt($ch, CURLOPT_USERPWD, $sms['flysmslogin'] . ':' . $sms['flysmspass']);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_URL, 'http://sms-fly.com/api/api.php');
+                curl_setopt($ch, CURLOPT_URL, 'https://sms-fly.com/api/api.php');
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Accept: text/xml"));
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $myXML);

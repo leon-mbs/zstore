@@ -486,7 +486,7 @@ class PPOHelper
         
         $sum=0;
         foreach($header['details'] as $p ) {
-           $sum +=  number_format($p['price'] * $p['qty'] , 2, '.', '');
+           $sum += doubleval( number_format($p['price'] * $p['qty'] , 2, '.', ''));
          
         }        
         

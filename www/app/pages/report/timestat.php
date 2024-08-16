@@ -70,7 +70,7 @@ class TimeStat extends \App\Pages\Base
 
             $tm = number_format($row['tm'] / 3600, 2, '.', '');
             $detail[] = array('emp_name' => $row['emp_name'], 'tm' => $tm);
-            $total += $tm;
+            $total += intval($tm);
         }
 
 

@@ -407,6 +407,7 @@ class DocList extends \App\Pages\Base
         $filter = Filter::getFilter("doclist");
         $filter->page = $this->doclist->getCurrentPage();
 
+        $user = System::getUser();
 
         if( $this->_doc->meta_name == 'OfficeDoc' ){
               
@@ -718,7 +719,7 @@ class DocList extends \App\Pages\Base
     }
 
     public function printlabels($sender) {
-
+        $buf=[];
         $one = $this->statusform->print1->isChecked();
         $items=[];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {

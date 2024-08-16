@@ -256,24 +256,24 @@ class ItemList extends \App\Pages\Base
 
  
         if ($this->_item->price1 > 0) {
-            $p = $this->_item->getPrice('price1', 0, $stock->partion);
+            $p = $this->_item->getPrice('price1', $store);
 
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price1'] ,'i_price'=>$p); 
         }
         if ($this->_item->price2 > 0) {
-            $p = $this->_item->getPrice('price2', 0, $stock->partion);
+            $p = $this->_item->getPrice('price2', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price2'],'i_price'=>$p); 
         }
         if ($this->_item->price3 > 0) {
-            $p = $this->_item->getPrice('price3', 0, $stock->partion);
+            $p = $this->_item->getPrice('price3', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price3'],'i_price'=>$p); 
         }
         if ($this->_item->price4 > 0) {
-            $p = $this->_item->getPrice('price4', 0, $stock->partion);
+            $p = $this->_item->getPrice('price4', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price4'],'i_price'=>$p); 
         }
         if ($this->_item->price5 > 0) {
-            $p = $this->_item->getPrice('price5', 0, $stock->partion);
+            $p = $this->_item->getPrice('price5', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price5'],'i_price'=>$p); 
         }
       

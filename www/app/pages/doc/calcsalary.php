@@ -73,7 +73,7 @@ class CalcSalary extends \App\Pages\Base
        
         // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st) {
-            $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
+         //   $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
 
             $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
 
