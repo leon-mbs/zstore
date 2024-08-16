@@ -27,7 +27,6 @@ class IncomeService extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
-                              "items"         => $items,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)

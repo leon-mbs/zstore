@@ -69,7 +69,7 @@ class Helper
 
        // parent::__construct($modules['npapikey']);
        
-        $this->throwErrors = $throwErrors;
+      //  $this->throwErrors = $throwErrors;
         $this
             ->setKey($modules['npapikey'])
          //   ->setLanguage($language)

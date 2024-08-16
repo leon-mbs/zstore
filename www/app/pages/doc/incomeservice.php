@@ -202,6 +202,7 @@ class IncomeService extends \App\Pages\Base
         $service = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+        $this->setpanel->setVisible(false);
 
         $this->_rowid =  array_search($service, $this->_servicelist, true);
         
@@ -238,6 +239,7 @@ class IncomeService extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+        $this->setpanel->setVisible(false);
         $this->_rowid = -1;
 
         $this->editdetail->editdesc->setText('');
@@ -269,6 +271,7 @@ class IncomeService extends \App\Pages\Base
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->setpanel->setVisible(true);
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -282,6 +285,7 @@ class IncomeService extends \App\Pages\Base
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->setpanel->setVisible(true);
     }
 
     public function savedocOnClick($sender) {

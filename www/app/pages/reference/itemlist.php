@@ -859,7 +859,7 @@ class ItemList extends \App\Pages\Base
 
     */
     public function OnPrintAll($sender) {
-
+        $buf=[];
         $items = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();

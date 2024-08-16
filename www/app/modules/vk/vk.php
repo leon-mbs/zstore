@@ -142,7 +142,7 @@ class VK
 
 
              
-            if ($doc->headerdata['payment'] == 0 && $payed > 0) {
+            if ($doc->headerdata['payment'] == 0 && $doc->payed > 0) {
                 $payment=array(
                 "type"=>1,
                 "sum"=>  self::fa($doc->headerdata['payed'] )  

@@ -821,7 +821,7 @@ class Item extends \ZCL\DB\Entity
     public function getProdprice() {
         $price = 0;
         if ($this->zarp > 0) {
-            $price += $this->zarp;
+            $price += doubleval($this->zarp);
         }
         $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
 
@@ -843,7 +843,7 @@ class Item extends \ZCL\DB\Entity
             $price = $this->getPartion(0);
         }
         if($price==0) {
-            \App\System::setWarnMsg("Для {$item->itemname} не  вирахувано собївартїсть") ;
+            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собївартїсть") ;
         }
         return $price;
     }

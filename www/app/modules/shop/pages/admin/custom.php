@@ -169,7 +169,7 @@ class Custom extends \App\Pages\Base
 
         $sm = _ROOT . 'sitemap.xml';
         @unlink($sm);
-        $xml = "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">";
+        $xml = "<urlset xmlns=\"https://www.sitemaps.org/schemas/sitemap/0.9\">";
 
         
         foreach (Product::findYield(" disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ") as $p) {

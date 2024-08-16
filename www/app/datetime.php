@@ -22,7 +22,7 @@ class DateTime
     }
 
     public function getISO() {
-        return date(\DateTime::ISO8601, $this->time);
+        return date(\DateTimeInterface::ISO8601, $this->time);
     }
 
 

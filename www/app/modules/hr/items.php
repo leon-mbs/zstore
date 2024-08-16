@@ -269,8 +269,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
             
-            $price = $item->getPrice($modules['hrpricetype']);
-       
+            $qty = $item->getQuantity();    
           
             $body['products'][]=array(
                 'article'=>$item->item_code,

@@ -90,7 +90,7 @@ class Balance extends \App\Pages\Base
         $abnal = doubleval($conn->GetOne($sql)) ;
 
         $aemp=0;
-        $pbemp=0;
+        $pemp=0;
         $sql = "select coalesce(sum(amount),0) as am  from empacc_view where date(createdon) <  {$dbdt}  {$bemp} group by emp_id ";
 
         foreach($conn->GetCol($sql) as $r ) {

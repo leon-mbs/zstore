@@ -632,7 +632,7 @@ class Document extends \ZCL\DB\Entity
 
     public function nextNumber($branch_id = 0) {
         $doc = $this->cast();
-
+        $letters='';
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {

@@ -828,7 +828,7 @@ class ARMPos extends \App\Pages\Base
         $ser = Service::load($id);
 
         $ser->quantity = doubleval( $this->docpanel->editserdetail->editserquantity->getText());
-        if ($item->quantity == 0) {
+        if ($ser->quantity == 0) {
             $this->setError("Не введена  кількість");
             return;
         }

@@ -714,16 +714,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
-                if (!$isEdited) {
-                    $this->_doc->updateStatus(Document::STATE_NEW);
-                }
-
-
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'])) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                }
-                if ($this->_doc->parent_id > 0) {   //закрываем заказ
+       
+               if ($this->_doc->parent_id > 0) {   //закрываем заказ
                     $order = Document::load($this->_doc->parent_id)->cast();
 
                     if($this->_changedpos) {
@@ -744,12 +736,22 @@ class GoodsIssue extends \App\Pages\Base
                             }
                         }
                         
-                        
-                        
                         $order->unreserve();
                     }
                 }
-            } else {
+       
+       
+                if (!$isEdited) {
+                    $this->_doc->updateStatus(Document::STATE_NEW);
+                }
+
+
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'])) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
+                }
+                
+             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }

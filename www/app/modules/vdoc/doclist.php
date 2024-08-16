@@ -148,6 +148,7 @@ class DocList extends \App\Pages\Base
             }
 
             //send
+            $firm = \App\Entity\Firm::load($doc->firm_id)  ;
 
             $c = \App\Entity\Customer::load($doc->customer_id) ;
 
