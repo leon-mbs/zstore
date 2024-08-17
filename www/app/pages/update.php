@@ -133,13 +133,12 @@ class Update extends \App\Pages\Base
          } 
      
           $this->_tvars['oldphpv']  = $phpv;    
-          $this->_tvars['newphpv']  = $data['forphp'] ?? $phpv   ;
-          
+        
  
-          $b= \App\Util::compareVersion($this->_tvars['newphpv'] , $this->_tvars['oldphpv']);
+          $b= \App\Util::compareVersion("8.0.0" , $phpv);
           if($b==1)   {
               $this->_tvars['oldphp']  = true; 
-              $this->_tvars['show']  = false   ;              
+                        
           }          
    
     }   

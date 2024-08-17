@@ -1,9 +1,7 @@
 {
   "description": "Складська система",
   "keywords": [
-    "php",
-    "wms",
-    "erp"
+    "php","wms","erp","accounting"
   ],
   "homepage": "https://zippy.com.ua/",
   "license": "MIT",
@@ -20,10 +18,11 @@
     "masterexploder/phpthumb": "2.1",
     "phpoffice/phpspreadsheet": "~2.0.0",
     "automattic/woocommerce": "3.1.0",
-    "symfony/polyfill-mbstring": "^1.29.0",
-    "symfony/polyfill-uuid": "^1.29.0",
+    "symfony/polyfill-mbstring": "~1.29.0",
+    "symfony/polyfill-uuid": "~1.29.0",
     "leon-mbs/zippy": "~2.7.2",
     "leon-mbs/ppolib": "~1.4.1",
+
     "ext-mysqli": "*",
     "ext-zip": "*",
     "ext-gmp": "*",

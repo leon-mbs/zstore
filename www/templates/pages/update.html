@@ -36,10 +36,7 @@
          {{/tooold}}
  
          
-       {{#oldphp}}
-         <h5 >    Доступна  версія <b>{{newver}}</b></h5>   
-       <br>  <h5 >    Оновлення вимагає <b>PHP{{newphpv}}</b>. Поточна  версія PHP{{oldphpv}}</h5>   
-       {{/oldphp}}
+
  
    
     
@@ -100,7 +97,16 @@
    </div>  
             {{/showdb}}
      
-       
+        {{#oldphp}}
+  <div class="col-12  mt-2">
+            
+     <i class="fa fa-exclamation-circle text-warning"></i> Поточна  версія PHP - {{oldphpv}}. 
+       Пiдтримка версiй менших 8.0.0 з часом буде припинена.
+       <br>
+       <br>
+       </div> 
+         {{/oldphp}}      
+         
          {{#rollback}}
        <div class="col-12  mt-2">
     

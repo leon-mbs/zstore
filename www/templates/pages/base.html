@@ -70,12 +70,12 @@
              postdata =    JSON.stringify(postdata)
           }
           
-          callPageMethod(method,params,postdata,(data)=> 
+          callPageMethod(method,params,postdata,(datad)=>
           {
-//               console.log(data) 
+//               console.log(datad) 
                
                try{
-                  var data = JSON.parse(data)
+                  var data = JSON.parse(datad)
                   callback(data)                  
                }
                catch(error) {
