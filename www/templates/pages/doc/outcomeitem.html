@@ -130,7 +130,12 @@
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партія постачальника</label>
+                   {{^usesnumberitem}}
+                        <label for="editsnumber">Серія (партія) виробника </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серійний номер </label>
+                         {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
 

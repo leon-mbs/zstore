@@ -26,7 +26,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('capchacode'));
-        $form->add(new TextInput('newver'));
+
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
         $form->add(new \ZCL\Captcha\Captcha('capcha'));
         $form->onSubmit($this, 'onsubmit');
@@ -42,16 +42,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['capcha'] = $common['capcha'] == 1;
 
         $this->_tvars['cron']  =  \App\System::useCron() ;
-           
-        $v = @file_get_contents("https://zippy.com.ua/version.json");
-        $data = @json_decode($v, true);
-        if(is_array($data)){
-           
-           $b= \App\Util::compareVersion($data['version'] , System::CURR_VERSION);
-           $form->newver->setText( $b==1 ? 'isnew':'' ) ;             
-        }
-       
-        
+          
     }
 
     public function onsubmit($sender) {
@@ -101,9 +92,17 @@ class UserLogin extends \Zippy\Html\WebPage
                 if (($_COOKIE['branch_id'] ?? 0) > 0) {
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
-                
+             
+                $b=0;
+                $phpv =   phpversion()  ;
+                $nocache= "?t=" . time()."&s=". Helper::getSalt() .'&phpv='.$phpv. '_'. System::CURR_VERSION ;
+                $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
+                $data = @json_decode($v, true);
+                if(is_array($data)){
+                   $b= \App\Util::compareVersion($data['version'] , System::CURR_VERSION);
+                }               
               
-                if($user->rolename=='admins' && $sender->newver->getText()=="isnew"){
+                if($user->rolename=='admins' && $b==1 ){
                     $lastshow=intval(Helper::getKeyVal('lastshowupdate')) ;
                     if(strtotime('-7 day') > $lastshow ) {
                         Helper::setKeyVal('lastshowupdate',time()) ;
