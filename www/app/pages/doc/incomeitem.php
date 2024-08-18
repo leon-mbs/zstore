@@ -376,13 +376,15 @@ class IncomeItem extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
-     public function OnChangeItem($sender) {
+ 
+    public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
         $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
+ 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
@@ -394,7 +396,7 @@ class IncomeItem extends \App\Pages\Base
 
         $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0}  )");
         if ($item == null) {
-            $this->setError('noitem');
+            $this->setError('Не знайдено ТМЦ  з таким  кодом');
             return;
         }
 
