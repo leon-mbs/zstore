@@ -22,8 +22,8 @@ if (file_exists(_ROOT . 'config/config.php')) {
     require_once _ROOT . 'config/config.php';
 
 } else {   // для  совместимости
-    $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-    //die("Перенесiть налаштування з config/config.ini в config/config.php ") ;
+   // $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
+    die("Перенесiть налаштування з config/config.ini в config/config.php ") ;
 } //todo remove  
 
 if (!is_array($_config)) {
@@ -44,7 +44,7 @@ $level = $_config['common']['loglevel'];
 
 $output = "%datetime%  %level_name% : %message% \n";
 $formatter = new \Monolog\Formatter\LineFormatter($output, "Y-m-d H:i:s");
-$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10, $level);
+$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 5, $level);
 $h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, \Monolog\Logger::ERROR);
 $h1->setFormatter($formatter);
 $h2->setFormatter($formatter);

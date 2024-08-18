@@ -142,22 +142,29 @@
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
                     <input  class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
-
+                    <a   zippy="addnewitem">Додати новий</a>
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партія постачальника</label>
+                         {{^usesnumberitem}}
+                        <label for="editsnumber">Серія (партія) виробника </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серійний номер </label>
+                         {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"                           />
-                    <a   zippy="addnewitem">Додати новий</a>
+                    
 
                 </div>
+                   {{#usesnumberdate}}
                 <div class="form-group">
                     <label for="editsdate">Придатний до </label>
                     <input class="form-control " zippy="editsdate"/>
 
                 </div>
+                   {{/usesnumberdate}}
                 {{/usesnumber}}
                 <div class="form-group">
                     <label for="editquantity">Кількість</label>
