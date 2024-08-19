@@ -191,7 +191,7 @@ class GoodsReceipt extends Document
                  $ci->customer_id = $this->customer_id;
                  $ci->price = $item->price;
                  $ci->quantity = 0;
-                 $ci->cust_code = $item->custcode;
+                 $ci->cust_code = $item->custcode??'';
                  $ci->comment = $this->document_number;
                  $ci->updatedon = time();
                  

@@ -466,8 +466,10 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = 0;
+            $doc->payamount = amount;
+            $doc->headerdata['payamount'] = amount;
             $doc->payed = 0;
+            $doc->headerdata['payed'] = 0;
             $doc->notes = 'Импорт с Excel';
             $doc->headerdata['store'] = $store;
 
@@ -742,8 +744,10 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = 0;
+            $doc->payamount = $amount;
+            $doc->headerdata['payamount'] = $amount;
             $doc->payed = 0;
+            $doc->headerdata['payed'] = 0;
             $doc->notes = 'Імпорт з Excel';
             $doc->headerdata['store'] = $store;
             $doc->customer_id = $c;
@@ -881,7 +885,9 @@ class Import extends \App\Pages\Base
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
             $doc->payamount = 0;
+            $doc->headerdata['payamount'] = 0;
             $doc->payed = 0;
+            $doc->headerdata['payed'] = 0;
             $doc->notes = 'Імпорт з Excel';
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->zform->zcust->getText();
