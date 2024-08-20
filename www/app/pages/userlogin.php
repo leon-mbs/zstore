@@ -97,8 +97,8 @@ class UserLogin extends \Zippy\Html\WebPage
                 if($user->rolename=='admins'   ){
                     $b=0;
                     $phpv =   phpversion()  ;
-                    $nocache= "?t=" . time()."&s=". Helper::getSalt() .'&phpv='.$phpv. '_'. System::CURR_VERSION ;
-                    $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
+
+                    $v = @file_get_contents("https://zippy.com.ua/version.json" );
                     $data = @json_decode($v, true);
                     if(is_array($data)){
                        $b= \App\Util::compareVersion($data['version'] , System::CURR_VERSION);
