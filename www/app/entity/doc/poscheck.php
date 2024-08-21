@@ -87,7 +87,7 @@ class POSCheck extends Document
                         "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
 
                         "docqrcode"       => $this->getQRCodeImage(),
-                        "payamount"       => H::fasell($this->payamount)
+                        "payamount"       => H::fasell($this->headerdata['payamount'])
         );
         if($this->headerdata['payment'] ?? null  >0) {
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment']);
@@ -185,7 +185,7 @@ class POSCheck extends Document
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payed"           => $pp > 0 ? H::fasell($pp) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fasell($this->payamount) : false
+                        "payamount"       => $this->headerdata['payamount'] > 0 ? H::fasell($this->headerdata['payamount']) : false
         );
 
         if($header['inn'] != false) {

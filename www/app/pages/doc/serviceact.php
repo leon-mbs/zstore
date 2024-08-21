@@ -204,6 +204,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->_doc->amount = $post->doc->total;
         $this->_doc->payamount = $post->doc->payamount;
+        $this->_doc->headerdata['payamount'] = $post->doc->payamount;
         $this->_doc->payed = $post->doc->payed;
         $this->_doc->headerdata['payed'] = $post->doc->payed;
         $this->_doc->headerdata['store'] = $post->doc->store;

@@ -1183,6 +1183,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc = $this->_doc->cast();
 
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
+            $this->_doc->headerdata['payamount'] = $this->docpanel->payform->pfforpay->getText();
             $this->_doc->payed = doubleval($this->docpanel->payform->pfpayed->getText());
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->_doc->payed;
@@ -1435,6 +1436,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
         $this->_doc->payamount = $this->_doc->amount;
+        $this->_doc->headerdata['payamount'] = $this->_doc->amount;
 
         $this->_doc->save();
 

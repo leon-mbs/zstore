@@ -126,7 +126,7 @@ class Invoice extends \App\Pages\Base
             }
 
 
-            $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText($this->_doc->headerdata['payamount']);
 
 
             $this->docform->total->setText($this->_doc->amount);
@@ -425,6 +425,7 @@ class Invoice extends \App\Pages\Base
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
 
 
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();

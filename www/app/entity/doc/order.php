@@ -75,7 +75,7 @@ class Order extends \App\Entity\Doc\Document
                         "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
-                        "payamount"       => $this->['payamount'] > 0 ? H::fa($this->headerdata['payamount']) : false
+                        "payamount"       => $this->headerdata['payamount'] > 0 ? H::fa($this->headerdata['payamount']) : false
         );                                                                               
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 

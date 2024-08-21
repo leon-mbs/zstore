@@ -38,7 +38,7 @@ class ServiceAct extends Document
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
-        $totalstr =  \App\Util::money2str_ua($this->payamount);
+        $totalstr =  \App\Util::money2str_ua($this->headerdata['payamount']);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -56,8 +56,8 @@ class ServiceAct extends Document
                         "devdesc"           => $this->headerdata["devdesc"],
                         "notes"           => $this->notes,
                         "document_number" => $this->document_number,
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
+                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
+                        "payamount"       => $this->headerdata['payamount'] > 0 ? H::fa($this->headerdata['payamount']) : false,
                         "total"           => H::fa($this->amount)
         );
 
