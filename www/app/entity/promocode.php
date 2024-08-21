@@ -23,6 +23,7 @@ class PromoCode extends \ZCL\DB\Entity
         $this->details .= "<customer_name><![CDATA[{$this->customer_name}]]></customer_name>";
         $this->details .= "<dateto>{$this->dateto}</dateto>";
         $this->details .= "<disc>{$this->disc}</disc>";
+        $this->details .= "<discf>{$this->discf}</discf>";
         $this->details .= "<refbonus>{$this->refbonus}</refbonus>";
         $this->details .= "<showcheck>{$this->showcheck}</showcheck>";
 
@@ -40,6 +41,7 @@ class PromoCode extends \ZCL\DB\Entity
         $this->customer_name = (string)($xml->customer_name[0]);
         $this->dateto = (string)($xml->dateto[0]);
         $this->disc = (string)($xml->disc[0]);
+        $this->discf = (string)($xml->discf[0]);
 
         $this->used = (string)($xml->used[0]);
         $this->showcheck = (int)($xml->showcheck[0]);

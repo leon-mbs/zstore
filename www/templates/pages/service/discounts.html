@@ -434,7 +434,7 @@
 
                                 <a class="btn btn-success " zippy="pcodeadd">Додати</a>
                                 <table class="table table-sm">                      
-                                    <tr><th>Код</th><th>Тип</th><th>Знижка,%</th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
+                                    <tr><th>Код</th><th>Тип</th><th>Знижка </th><th>Контрагент</th><th> Срок дії</th><th>Використаний </th><th> </th></tr>
                                     <tr zippy="plist">
                                     <td zippy="pcode"></td>
                                     <td zippy="ptype"> </td>
@@ -448,7 +448,7 @@
                                     
                                     
                                 </table>
-                                <div zippy="ppag"></div>
+                                 
                                     
                                 </div>
                               </div>
@@ -495,7 +495,13 @@
                                            <div class="form-group row">
                                                <label class="col-5 col-form-label" for="peditdisc">Знижка,%</label>
                                                 <div class="col-7">
-                                               <input required="required"  pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
+                                               <input    pattern="[0-9\.]+" style="width:140px" class="form-control"  zippy="peditdisc"   >
+                                               </div>
+                                           </div>      
+                                           <div class="form-group row">
+                                               <label class="col-5 col-form-label" for="peditdiscf">Знижка, сума</label>
+                                                <div class="col-7">
+                                               <input    pattern="[0-9]+" style="width:140px" class="form-control"  zippy="peditdiscf"   >
                                                </div>
                                            </div>      
                                           
@@ -516,7 +522,7 @@
                                      <div class="form-group row">
                                             <div class="form-check">
                                                 <input zippy="peditcheck" type="checkbox" class="form-check-input">
-                                                <label class="form-check-label" for="peditcheck"> Додавати в кiнцi чеку </label>
+                                                <label class="form-check-label" for="peditcheck"> Додавати код в кiнцi чеку </label>
                                             </div>                 
                                       </div> 
                                         <div class="form-group">

@@ -208,7 +208,7 @@ class POSCheck extends Document
            if($p->dateto >0 && $p->dateto < time() ) {
                continue;               
            }
-           if($p->showcheck==1) {
+           if($p->showcheck==1 && $p->disc>0) {
                $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
                break;
            }

@@ -192,16 +192,14 @@ class Discounts extends \App\Pages\Base
         $this->ptab->listpan->add(new ClickLink('pcodeadd'))->onClick($this,"onAddPromo");
 
         $this->ptab->listpan->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
-        $this->ptab->listpan->plist->setPageSize(H::getPG());
-        $this->ptab->listpan->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->listpan->plist));
-     //   $this->ptab->listpan->plist->Reload();
-        
+  
         $this->ptab->add(new Panel('formpan'))->setVisible(false) ;
         $this->ptab->formpan->add(new Form('pform'))->onSubmit($this,"savePCode") ;
         $this->ptab->formpan->pform->add(new ClickLink('cancelpadd'))->onClick($this,"cancelPCode") ;
         $this->ptab->formpan->pform->add(new TextInput('peditcode'));
         $this->ptab->formpan->pform->add(new Date('peditdate'));
         $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
+        $this->ptab->formpan->pform->add(new TextInput('peditdiscf'));
         $this->ptab->formpan->pform->add(new TextInput('peditbonus'))->setVisible(false);
 
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
@@ -687,10 +685,17 @@ class Discounts extends \App\Pages\Base
         if($p->type==4) $type="Реферальний";
 
         $row->add(new  Label("ptype", $type));
-        $row->add(new  Label("pdisc", $p->disc));
+        $disc = $p->disc.'%';
+        
         if($p->type==4) {
-           $row->pdisc->setText( $p->disc . " (бонус {$p->refbonus})" );     
+           $disc = $p->disc . " (бонус {$p->refbonus})"  ;     
         }
+
+        if($p->discf>0) {
+           $disc = $p->discf;
+        }
+
+        $row->add(new  Label("pdisc", $disc));
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
         if($p->type==2){                                                                            
@@ -766,13 +771,21 @@ class Discounts extends \App\Pages\Base
             $this->setError('Не вказано тип') ;
             return;
         }
-        $pc->disc = $sender->peditdisc->getText();
-        $pc->refbonus =  $sender->peditbonus->getText();
+        $pc->disc = doubleval($sender->peditdisc->getText() );
+        $pc->discf = doubleval($sender->peditdiscf->getText() );
+        $pc->refbonus = intval( $sender->peditbonus->getText() );
         $pc->dateto = $sender->peditdate->getDate();
         if($pc->dateto >0 && $pc->dateto < time()) {
            $this->setError('Неправильна дата') ;
            return; 
-
+        }
+        if($pc->disc == 0 && $pc->discf  == 0) {
+           $this->setError('Не задана  знижка ') ;
+           return; 
+        }
+        if($pc->disc >0 && $pc->discf > 0) {
+           $this->setError('Вводиться або  процент або  сума') ;
+           return; 
         }
 
   
@@ -1044,11 +1057,11 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "1=1 ";
+        $where = "";
 
         $text = trim($this->page->ptab->listpan->pfilter->psearchkey->getText());
         if(strlen($text)>0) {
-            $where = $where . " and code = ".$conn->qstr($text);
+            $where = " code = ".$conn->qstr($text);
         }
         
         return $where;
@@ -1059,7 +1072,22 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return PromoCode::find($this->getWhere(), " disabled, id desc ", $count, $start);
+         $where =$this->getWhere() ;
+         if($where != "") {
+            return PromoCode::find($where, "   id desc ", $count, $start);
+         }
+ 
+     
+        $list = [];
+              
+        foreach(PromoCode::findYield("", "   id desc ", $count, $start) as $p) {
+            if($p->dateto > 0 && $p->dateto < time()) {
+               continue;
+            }      
+            $list[] = $p; 
+        }
+        
+        return $list;
     }
 
     public function getItem($id) {
