@@ -48,7 +48,7 @@ class RetCustIssue extends Document
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed)
+                        "payed"           => H::fa($this->headerdata["payed"])
         );
 
         $report = new \App\Report('doc/retcustissue.tpl');

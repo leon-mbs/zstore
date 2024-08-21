@@ -54,7 +54,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editform->add(new ClickLink('cancel'))->onClick($this, 'OnCancel');
         $this->editform->add(new ClickLink('delete'))->onClick($this, 'OnDelete');
-
+   
         $this->Reload();
 
     }
@@ -62,22 +62,25 @@ class Subscribes extends \App\Pages\Base
     public function update($sender) {
 
 
-   
-
         $et = $this->editform->editeventtype->getValue();
         if($sender->id=='editeventtype') {
             $l=Subscribe::getRecieverList($et) ;
             $this->editform->editrecievertype->setOptionList($l);
-            $this->editform->editrecievertype->setValue(array_shift($l));            
+            $this->editform->editrecievertype->setValue(array_shift(array_keys($l)));            
 
             if($et == Subscribe::EVENT_DOCSTATE) {
                 $this->editform->editdoctype->setVisible(true);
                 $this->editform->editstate->setVisible(true);
+
+
             }
             if($et == Subscribe::EVENT_NEWCUST) {
                 $this->editform->editdoctype->setVisible(false);
                 $this->editform->editstate->setVisible(false);
+
+
             }
+       
             $this->update($this->editform->editrecievertype) ;    
             return;       
         }

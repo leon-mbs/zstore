@@ -77,8 +77,8 @@ class GoodsIssue extends Document
                         "notes"           => nl2br($this->notes),
 
                         "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
-                        "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
-                        "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
+                        "payed"      => $this->headerdata["payed"] > 0 ? H::fa($this->headerdata["payed"]) : false,
+                        "payamount"  => $this->headerdata["payamount"] > 0 ? H::fa($this->headerdata["payamount"]) : false
 
         );
 
