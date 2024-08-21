@@ -86,13 +86,14 @@ class Subscribes extends \App\Pages\Base
         if($sender->id=='editrecievertype') {
             $l=Subscribe::getMsgTypeList($rt) ;
             $this->editform->editmsgtype->setOptionList($l);
-            $this->editform->editmsgtype->setValue(array_shift($l));            
-            $this->update($this->editform->editmsgtype) ;    
-            
+            $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
+             
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
-            
-            
+            $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
+               
+            $this->update($this->editform->editmsgtype) ;    
+                   
             return;       
           
         }        
@@ -103,8 +104,7 @@ class Subscribes extends \App\Pages\Base
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
             
-            $this->editform->editurl->setVisible($mt == Subscribe::RSV_WH);
-            
+             
             if($mt == Subscribe::MSG_EMAIL) {
                 $this->editform->editmsgsubject->setVisible(true);
             }            
