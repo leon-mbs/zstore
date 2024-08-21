@@ -182,7 +182,7 @@ class Order extends \App\Pages\Base
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
 
-            $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText($this->_doc->headerdata['payed']);
 
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->editbonus->setText($this->_doc->headerdata['bonus']);
@@ -459,6 +459,7 @@ class Order extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payamount->getText();
 
 
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();

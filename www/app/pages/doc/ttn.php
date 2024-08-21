@@ -629,7 +629,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->total->getText();
 
         if($this->_doc->headerdata['nostore']==1)  {
-            $this->_doc->payamount = 0;
+           // $this->_doc->payamount = 0;
         }
         
         $isEdited = $this->_doc->document_id > 0;

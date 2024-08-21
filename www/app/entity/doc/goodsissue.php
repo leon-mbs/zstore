@@ -47,7 +47,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $totalstr =  \App\Util::money2str_ua($this->payamount);
+        $totalstr =  \App\Util::money2str_ua($this->headerdata["payamount"]);
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);

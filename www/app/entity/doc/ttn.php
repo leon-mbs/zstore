@@ -319,11 +319,11 @@ class TTN extends Document
           $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
            //тмц
-            if($this->payamount >0) {
+            if($this->amount >0) {
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;
                 $b->document_id = $this->document_id;
-                $b->amount = 0-$this->payamount;
+                $b->amount = 0-$this->amount;
                 $b->optype = \App\Entity\CustAcc::BUYER;
                 $b->save();
             }
