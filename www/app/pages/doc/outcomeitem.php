@@ -264,7 +264,7 @@ class OutcomeItem extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 $tostore = $this->docform->tostore->getValue();
-                if ($sender->id == 'execdoc' && $tostore > 0) {
+                if ($sender->id == 'execdoc' && $tostore > 0) {    //создание  прихода
                     $ch = $this->_doc->getChildren('IncomeItem');
                     if (count($ch) > 0) {
                         $this->setWarn('Вже є прибутковий документ ');
@@ -287,12 +287,13 @@ class OutcomeItem extends \App\Pages\Base
                         $admin  =\App\Entity\User::getByLogin('admin') ;
                         $indoc->user_id = $admin->user_id;
 
-                        $indoc->notes = "Підстава {$this->_doc->document_number}, склад " . $this->_doc->headerdata['storename'];
+                        $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
-                            $indoc->notes = "Підстава {$this->_doc->document_number}, склад {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
+                            $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
+                        
                         $items = array();
 
                         foreach ($this->_itemlist as $it) {
@@ -316,6 +317,11 @@ class OutcomeItem extends \App\Pages\Base
                         if ($indoc->document_id > 0) {
                             $this->setSuccess("Створено документ " . $indoc->document_number);
                         }
+                        
+                        $this->_doc->notes = "Створено {$indoc->document_number}, на склад " . $indoc->headerdata['storename'];
+          
+                        $this->_doc->save();
+                        
                     }
                 }
             } else {

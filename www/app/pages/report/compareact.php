@@ -92,6 +92,14 @@ class CompareAct extends \App\Pages\Base
         $r['bal'] = H::fa($bal);
 
         $detail[] = $r;
+        
+        $br="";
+        $brids = \App\ACL::getBranchIDsConstraint();
+        if (strlen($brids) > 0) {
+           $br="and dv.branch_id in ({$brids}) ";
+        }
+             
+        
          
         $sql =  "select 
              SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS active,
@@ -101,7 +109,7 @@ class CompareAct extends \App\Pages\Base
              FROM custacc_view cv
              JOIN documents_view dv 
              ON cv.document_id = dv.document_id 
-             WHERE  cv.customer_id={$cust_id} 
+             WHERE  cv.customer_id={$cust_id} {$br}
             AND optype IN (2,3)  and createdon >={$from} and createdon <={$to}  
             GROUP BY cv.document_id,cv.document_number,cv.createdon
             ORDER  BY  cv.document_id ";
