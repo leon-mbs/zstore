@@ -9,7 +9,7 @@ use App\Entity\Store;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ перекомплектация ТМЦ
+ * Класс-сущность  документ перекомплектация (расфасовка) ТМЦ
  *
  */
 class TransItem extends Document
@@ -74,7 +74,7 @@ class TransItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПК-000000';
+        return 'ПФ-000000';
     }
 
 }
