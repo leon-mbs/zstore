@@ -25,7 +25,9 @@ class Report
      * @param mixed $removeendline  убирать перевод  строки
      */
     public function generate(array $header,$removeendline=true) {
-
+        gc_enable();
+        gc_collect_cycles();
+        
         $dir = 'templates';
 
         $fp = _ROOT . $dir . '/printforms/' . $this->_template ;

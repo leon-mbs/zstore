@@ -38,7 +38,7 @@ class MoveMoney extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПМ-000000';
+        return 'ПК-000000';
     }
 
 }

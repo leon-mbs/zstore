@@ -650,7 +650,7 @@ class PPOHelper
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);
-   //     H::log($xml);
+     
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
       
         $ret = self::send($xml, 'doc', $pos);
@@ -768,7 +768,14 @@ class PPOHelper
         $amount1 = 0;
         $amount2 = 0;
         $amount3 = 0;
+         //общая  скидка
+        $discsum =    $doc->amount  -  $doc->payamount  ;
 
+         $disc=1;
+        if($discsum >0 ) {
+           $disc = 1 - ($discsum/$doc->amount);
+     
+        }
 
         if ($mf->beznal == 1) {
             $header['formname'] = self::FORM_CARD;
@@ -788,6 +795,8 @@ class PPOHelper
         $n = 1;
         $header['amount'] = 0;
         foreach ($doc->unpackDetails('detaildata') as $item) {
+            $item->price = round($item->price * $disc *100)/100 ;
+             
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,
@@ -805,7 +814,7 @@ class PPOHelper
         $report = new \App\Report('checkback.xml');
 
         $xml = $report->generate($header);
-
+      
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
 
 

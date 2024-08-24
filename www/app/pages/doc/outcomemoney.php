@@ -111,9 +111,8 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->payed = $this->_doc->amount;
-        $this->_doc->headerdata['payed'] = $this->_doc->amount;
-        $this->_doc->payment = 0;
+        $this->_doc->payed = 0;
+        $this->_doc->payamount = $this->_doc->amount;
         if ($this->checkForm() == false) {
             return;
         }

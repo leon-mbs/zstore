@@ -5,6 +5,7 @@ namespace App\Pages\Report;
 use App\Entity\Item;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
@@ -32,6 +33,7 @@ class ItemComission extends \App\Pages\Base
         $clist = \App\Entity\Customer::findArray("customer_name","status=0 and customer_id in (select customer_id from documents_view where  meta_name='GoodsReceipt' and state=5 and  content like '%<comission>1</comission>%'  {$br} )","customer_name") ;
  
         $this->filter->add(new DropDownChoice('customer', $clist, 0));
+        $this->filter->add(new CheckBox('sold'));
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -54,6 +56,7 @@ class ItemComission extends \App\Pages\Base
     private function generateReport() {
       
         $cust =  $this->filter->customer->getValue() ;
+        $sold =  $this->filter->sold->isChecked() ;
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
@@ -94,6 +97,10 @@ class ItemComission extends \App\Pages\Base
             $sql="select coalesce(sum(0-quantity),0 ) from entrylist where quantity < 0 and document_id not in (select document_id from documents_view where  meta_name='RetCustIssue') and stock_id=".$item["stock_id"];
             $det['sellqty'] = H::fqty($conn->GetOne($sql) );
 
+            if($sold && $det['sellqty'] == 0 )  {
+               continue; 
+            }
+            
             $detail[] = $det;
               
         }

@@ -63,8 +63,8 @@ class IncomeService extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "document_number" => $this->document_number,
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
+                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
+                        "payamount"       => $this->headerdata['payamount'] > 0 ? H::fa($this->headerdata['payamount']) : false,
                         "stotal"           => H::fa($samount) ,
                         "total"           => H::fa($this->amount)
         );

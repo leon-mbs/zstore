@@ -77,7 +77,7 @@ class OrderFood extends Document
                         "bonus"           => H::fa($this->headerdata["bonus"] >0) ? H::fa($this->headerdata["bonus"]) : false,
                         "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
-                        "payamount"       => H::fasell($this->payamount)
+                        "payamount"       => H::fasell($this->headerdata['payamount'])
         );
 
         $report = new \App\Report('doc/orderfood.tpl');
@@ -152,7 +152,7 @@ class OrderFood extends Document
                        "docqrcode"       => $this->getQRCodeImage(),
                        "docqrcodeurl"     =>  $this->getQRCodeImage(true),
 
-                        "payamount" => H::fasell($this->payamount)
+                        "payamount" => H::fasell($this->headerdata['payamount'])
         );
 
         if($header['inn'] != false) {
@@ -174,7 +174,7 @@ class OrderFood extends Document
            if($p->dateto >0 && $p->dateto < time() ) {
                continue;               
            }
-           if($p->showcheck==1) {
+           if($p->showcheck==1 && $p->disc>0 ) {
                $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
                break;
            }

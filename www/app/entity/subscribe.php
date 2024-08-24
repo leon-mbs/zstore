@@ -16,6 +16,7 @@ class Subscribe extends \ZCL\DB\Entity
     //типы  событий
     public const EVENT_DOCSTATE = 1;
     public const EVENT_NEWCUST  = 2;
+    
     //типы сообщений
     public const MSG_NOTIFY = 1;
     public const MSG_EMAIL  = 2;
@@ -82,7 +83,8 @@ class Subscribe extends \ZCL\DB\Entity
     public static function getEventList() {
         $list = array();
         $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
-        $list[self::EVENT_NEWCUST] = "Новий контрвгент";
+        $list[self::EVENT_NEWCUST]  = "Новий контрвгент";
+
 
         return $list;
     }
@@ -134,9 +136,9 @@ class Subscribe extends \ZCL\DB\Entity
         if($et==self::EVENT_NEWCUST) {
            $list[self::RSV_CUSTOMER] = "Контрагент";
         }
+        $list[self::RSV_SYSTEM] = "Системний лог";
         $list[self::RSV_USER] = "Користувач системи";
         $list[self::RSV_WH] = "Web Hook";
-        $list[self::RSV_SYSTEM] = "Системний лог";
 
         return $list;
     }

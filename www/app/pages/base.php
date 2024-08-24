@@ -379,7 +379,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
             $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
 
             $this->goAnkor('topankor');

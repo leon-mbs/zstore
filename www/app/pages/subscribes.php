@@ -54,7 +54,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editform->add(new ClickLink('cancel'))->onClick($this, 'OnCancel');
         $this->editform->add(new ClickLink('delete'))->onClick($this, 'OnDelete');
-
+   
         $this->Reload();
 
     }
@@ -62,22 +62,25 @@ class Subscribes extends \App\Pages\Base
     public function update($sender) {
 
 
-   
-
         $et = $this->editform->editeventtype->getValue();
         if($sender->id=='editeventtype') {
             $l=Subscribe::getRecieverList($et) ;
             $this->editform->editrecievertype->setOptionList($l);
-            $this->editform->editrecievertype->setValue(array_shift($l));            
+            $this->editform->editrecievertype->setValue(array_shift(array_keys($l)));            
 
             if($et == Subscribe::EVENT_DOCSTATE) {
                 $this->editform->editdoctype->setVisible(true);
                 $this->editform->editstate->setVisible(true);
+
+
             }
             if($et == Subscribe::EVENT_NEWCUST) {
                 $this->editform->editdoctype->setVisible(false);
                 $this->editform->editstate->setVisible(false);
+
+
             }
+       
             $this->update($this->editform->editrecievertype) ;    
             return;       
         }
@@ -86,13 +89,14 @@ class Subscribes extends \App\Pages\Base
         if($sender->id=='editrecievertype') {
             $l=Subscribe::getMsgTypeList($rt) ;
             $this->editform->editmsgtype->setOptionList($l);
-            $this->editform->editmsgtype->setValue(array_shift($l));            
-            $this->update($this->editform->editmsgtype) ;    
-            
+            $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
+             
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
-            
-            
+            $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
+               
+            $this->update($this->editform->editmsgtype) ;    
+                   
             return;       
           
         }        
@@ -103,8 +107,7 @@ class Subscribes extends \App\Pages\Base
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
             
-            $this->editform->editurl->setVisible($mt == Subscribe::RSV_WH);
-            
+             
             if($mt == Subscribe::MSG_EMAIL) {
                 $this->editform->editmsgsubject->setVisible(true);
             }            

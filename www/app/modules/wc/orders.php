@@ -134,6 +134,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
+                $neworder->headerdata['payamount'] = $neworder->amount;
                 if($modules['wcmf']>0) {
                   $neworder->headerdata['payment'] = $modules['wcmf'];
                 }

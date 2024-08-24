@@ -301,6 +301,7 @@ try {
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($total);
             $neworder->payamount = \App\Helper::fa($shoporder->total);
+            $neworder->headerdata['payamount']  = $neworder->payamount;
             $neworder->headerdata['totaldisc']  = $neworder->amount - $neworder->payamount;
 
             $neworder->headerdata['salesource'] = $modules['ocsalesource'];

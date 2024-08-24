@@ -951,10 +951,18 @@ class ARMFood extends \App\Pages\Base
             if($r == ''){
                 $p = \App\Entity\PromoCode::findByCode($code);
                 $disc = doubleval($p->disc );
+                $discf = doubleval($p->discf );
+                 
                 if($disc >0)  {
                     $td = H::fa( $amount * ($p->disc/100) );
                     $this->docpanel->listsform->totaldisc->setText($td);
-                }        
+                }  
+                if($discf > 0) {
+                    if( $amount < $discf  ) {
+                        $discf = $amount;
+                    }
+                    $this->docpanel->listsform->totaldisc->setText($discf);                       
+                }      
             }
         }         
         
@@ -1175,6 +1183,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc = $this->_doc->cast();
 
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
+            $this->_doc->headerdata['payamount'] = $this->docpanel->payform->pfforpay->getText();
             $this->_doc->payed = doubleval($this->docpanel->payform->pfpayed->getText());
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->_doc->payed;
@@ -1427,6 +1436,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
         $this->_doc->payamount = $this->_doc->amount;
+        $this->_doc->headerdata['payamount'] = $this->_doc->amount;
 
         $this->_doc->save();
 
@@ -1946,9 +1956,20 @@ class ARMFood extends \App\Pages\Base
 
         $p = \App\Entity\PromoCode::findByCode($code);
         $disc = doubleval($p->disc );
+        $discf = doubleval($p->discf );
         if($disc >0)  {
             $td = H::fa( $total * ($p->disc/100) );
             $ret=array('disc'=>$td) ;
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+             
+        }        
+        
+        if($discf >0)  {
+          
+            if($total < $discf)  {
+               $discf =  $total;
+            }
+            $ret=array('disc'=>$discf) ;
             return json_encode($ret, JSON_UNESCAPED_UNICODE);
              
         }        

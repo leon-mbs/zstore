@@ -30,13 +30,19 @@ class Task extends Document
             if ($ser->hours == "") {
                 $ser->hours = 0;
             }
+
+            if (strlen( $ser->quantity ??'' )==0 ) {
+                $ser->quantity = 1;
+            }
+
+            
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
                               "cost"         => H::fa(doubleval($ser->cost) * doubleval($ser->quantity) ),
                               "category"     => $ser->category,
-                              "hours"        => doubleval($ser->hours) * $ser->quantity
+                              "hours"        => doubleval($ser->hours) *doubleval( $ser->quantity)
             );
         }
 

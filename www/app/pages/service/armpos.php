@@ -941,10 +941,18 @@ class ARMPos extends \App\Pages\Base
             if($r == ''){
                 $p = \App\Entity\PromoCode::findByCode($code);
                 $disc = doubleval($p->disc );
+                $discf = doubleval($p->discf );
+                  
                 if($disc >0)  {
                     $td = H::fa( $total * ($p->disc/100) );
                     $this->docpanel->form2->totaldisc->setText($td);
                 }        
+                if($discf > 0) {
+                    if( $total < $discf  ) {
+                        $discf = $total;
+                    }
+                    $this->docpanel->form2->totaldisc->setText($discf);
+                }      
             }
         }        
         
@@ -1195,6 +1203,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->_doc->customer_id = $this->docpanel->form2->customer->getKey();
         $this->_doc->payamount = $this->docpanel->form3->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docpanel->form3->payamount->getText();
 
         $this->_doc->headerdata['promocode'] = $this->docpanel->form2->promocode->getText();
         $this->_doc->payed = doubleval($this->docpanel->form3->payed->getText()) + doubleval($this->docpanel->form3->payedcard->getText()) ;
@@ -1905,7 +1914,15 @@ class ARMPos extends \App\Pages\Base
             return json_encode($ret, JSON_UNESCAPED_UNICODE);
              
         }        
-        
+        if($discf >0)  {
+          
+            if($total < $discf)  {
+               $discf =  $total;
+            }
+            $ret=array('disc'=>$discf) ;
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+             
+        }        
         return json_encode([], JSON_UNESCAPED_UNICODE);             
        
 

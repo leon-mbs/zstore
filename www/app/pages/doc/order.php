@@ -182,7 +182,7 @@ class Order extends \App\Pages\Base
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
 
-            $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText($this->_doc->headerdata['payed']);
 
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->editbonus->setText($this->_doc->headerdata['bonus']);
@@ -459,6 +459,7 @@ class Order extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payamount->getText();
 
 
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
@@ -867,21 +868,30 @@ class Order extends \App\Pages\Base
     }
 
     private function calcPay() {
-        $total = $this->docform->total->getText();
+        $total = doubleval($this->docform->total->getText() );
 
-        $code= trim($this->docform->promocode->getText());
+        $code = trim($this->docform->promocode->getText());
         if($code != '') {
             $r = \App\Entity\PromoCode::check($code,$this->docform->customer->getKey())  ;
             if($r == ''){
                 $p = \App\Entity\PromoCode::findByCode($code);
                 $disc = doubleval($p->disc );
-                if($disc >0)  {
-                    $td = H::fa( $total * ($p->disc/100) );
+                $discf = doubleval($p->discf );
+                if($disc > 0)  {
+                    $td = H::fa( $total * ($disc/100) );
                     $this->docform->totaldisc->setText($td);
+                    $this->docform->edittotaldisc->setText($td);
+                }        
+                if($discf > 0)  {
+                    if( $total < $discf  ) {
+                        $discf = $total;
+                    }
+                    $this->docform->totaldisc->setText(H::fa($discf));
+                    $this->docform->edittotaldisc->setText(H::fa($discf));
                 }        
             }
         }
-        
+     
         
         $bonus = $this->docform->bonus->getText();
         $totaldisc = $this->docform->totaldisc->getText();
@@ -1003,15 +1013,9 @@ class Order extends \App\Pages\Base
             $this->docform->promocode->setText('');
             return;
         }
-      
-        $p = \App\Entity\PromoCode::findByCode($code);
-        $disc = doubleval($p->disc );
-        if($disc >0)  {
-            $this->docform->edittotaldisc->setText($disc);
-            $this->docform->totaldisc->setText($disc);
-            $this->calcPay();
+        $this->calcPay();
         
-        }
+     
     }
     
 }

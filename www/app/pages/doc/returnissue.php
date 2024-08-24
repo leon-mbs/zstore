@@ -95,7 +95,7 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
 
             $this->docform->total->setText(H::fa($this->_doc->amount));
-            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->payamount->setText(H::fa($this->_doc->headerdata['payamount']));
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
 
@@ -293,6 +293,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
 
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;

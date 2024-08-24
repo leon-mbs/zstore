@@ -100,8 +100,8 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText($this->_doc->headerdata['payamount']);
+            $this->docform->editpayamount->setText($this->_doc->headerdata['payamount']);
        
             $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
             $this->docform->payed->setText($this->_doc->headerdata['payed']);
@@ -265,6 +265,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
 
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;

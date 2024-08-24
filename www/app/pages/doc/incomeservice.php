@@ -121,8 +121,8 @@ class IncomeService extends \App\Pages\Base
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->payamount->setText($this->_doc->payamount);
-            $this->docform->editpayamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText($this->_doc->headerdata['payamount']);
+            $this->docform->editpayamount->setText($this->_doc->headerdata['payamount']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
      
 
@@ -318,6 +318,7 @@ class IncomeService extends \App\Pages\Base
         $this->_doc->headerdata['paydisc'] = $this->docform->paydisc->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payamount'] = $this->docform->payamount->getText();
 
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;

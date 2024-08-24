@@ -45,7 +45,7 @@ $level = $_config['common']['loglevel'];
 $output = "%datetime%  %level_name% : %message% \n";
 $formatter = new \Monolog\Formatter\LineFormatter($output, "Y-m-d H:i:s");
 $h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 5, $level);
-$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, \Monolog\Logger::ERROR);
+$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 5, \Monolog\Logger::ERROR);
 $h1->setFormatter($formatter);
 $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
