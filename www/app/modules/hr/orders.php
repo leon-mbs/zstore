@@ -140,7 +140,6 @@ class Orders extends \App\Pages\Base
 
             $neworder->amount = H::fa($amount);
             $neworder->payamount = H::fa($amount);
-            $neworder->headerdata['payamount'] = H::fa($amount);
 
 
             $neworder->document_date = strtotime($hrorder['stat_created']);

@@ -128,7 +128,6 @@ class Orders extends \App\Pages\Base
 
             $neworder->amount = H::fa($puorder['price']);
             $neworder->payamount = H::fa($puorder['full_price']);
-            $neworder->headerdata['payamount'] = H::fa($puorder['full_price']);
 
 
             $neworder->document_date = time();

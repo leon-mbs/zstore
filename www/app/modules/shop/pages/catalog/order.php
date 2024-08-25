@@ -298,7 +298,7 @@ class Order extends Base
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->payamount = $amount - $this->disc;
-            $order->headerdata['payamount'] = $order->payamount;
+
          //   $order->branch_id = $shop["defbranch"] ?? 0;
             $order->firm_id = $shop["firm"];
             $order->user_id = intval($shop["defuser"]??0) ;

@@ -39,7 +39,7 @@ class InvoiceCust extends Document
                         "notes"           => nl2br($this->notes),
                        "total"           => H::fa($this->amount),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
-                        "payamount"       => $this->headerdata['payamount'] > 0 ? H::fa($this->headerdata['payamount']) : false
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
