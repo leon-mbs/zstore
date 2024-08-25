@@ -77,7 +77,7 @@ class OrderFood extends Document
                         "bonus"           => H::fa($this->headerdata["bonus"] >0) ? H::fa($this->headerdata["bonus"]) : false,
                         "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
-                        "payamount"       => H::fasell($this->headerdata['payamount'])
+                        "payamount"       => H::fasell($this->payamount)
         );
 
         $report = new \App\Report('doc/orderfood.tpl');
@@ -152,7 +152,7 @@ class OrderFood extends Document
                        "docqrcode"       => $this->getQRCodeImage(),
                        "docqrcodeurl"     =>  $this->getQRCodeImage(true),
 
-                        "payamount" => H::fasell($this->headerdata['payamount'])
+                        "payamount" => H::fasell($this->payamount)
         );
 
         if($header['inn'] != false) {

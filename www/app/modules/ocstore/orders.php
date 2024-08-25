@@ -178,7 +178,7 @@ class Orders extends \App\Pages\Base
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($total);
             $neworder->payamount = \App\Helper::fa($shoporder->total);
-            $neworder->headerdata['payamount'] = \App\Helper::fa($shoporder->total);
+
             $neworder->headerdata['totaldisc']  = $neworder->amount - $neworder->payamount;
 
 

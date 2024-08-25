@@ -34,7 +34,7 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
-        $totalstr =  \App\Util::money2str_ua($this->headerdata['payamount']);
+        $totalstr =  \App\Util::money2str_ua($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -62,7 +62,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "total"           => H::fa($this->amount),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
-                        "payamount"       => $this->headerdata['payamount'] > 0 ? H::fa($this->headerdata['payamount']) : false
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
 
         );
         if (strlen($this->headerdata["customer_print"]) > 0) {
