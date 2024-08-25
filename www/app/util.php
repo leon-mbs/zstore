@@ -658,9 +658,9 @@ function money2str_ua($money, $options = 0) {
 function dec_digits_group($number, $power, $digits = 1) {
 
     if (function_exists('gmp_init') && $power >0) {
-        return   gmp_intval(gmp_mod(gmp_div((int)$number, gmp_pow(10, (int) $power * $digits)), gmp_pow(10, (int)$digits)));
+        return   gmp_intval(gmp_mod(gmp_div(intval($number), gmp_pow(10, intval($power) * intval($digits))), gmp_pow(10, (int)$digits)));
     }
-    return    intval(($number/pow(10, $power * $digits)) % pow(10, $digits)) ;
+    return    intval((intval($number)/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
 
     // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
