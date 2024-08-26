@@ -96,7 +96,7 @@ class CompareAct extends \App\Pages\Base
         $br="";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-           $br="and dv.branch_id in ({$brids}) ";
+           $br=" and dv.branch_id in ({$brids}) ";
         }
              
         
