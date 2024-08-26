@@ -440,7 +440,7 @@ GROUP BY c.customer_name,
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
-            $br = " {$c} and ";
+            $br = " and {$c}  ";
         }
 
         $this->_blist = array();
