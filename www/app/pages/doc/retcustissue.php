@@ -115,8 +115,14 @@ class RetCustIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->docform->comission->setChecked($basedoc->headerdata['comission']);
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $rate = $basedoc->headerdata["rate"] ?? '';
+                        $rate = $rate == '' ? 1 : doubleval($rate) ;  
+  
+                        $this->_itemlist = [];
+                        foreach($basedoc->unpackDetails('detaildata') as $i){
+                            $i->price = $i->price * $rate;
+                            $this->_itemlist[]=$i;
+                        }
 
 
                     }
