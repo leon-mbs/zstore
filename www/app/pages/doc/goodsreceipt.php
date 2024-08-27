@@ -305,8 +305,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         $this->_tvars["prepaid"] = (doubleval($this->_doc->headerdata['prepaid']??0)>0) ? H::fa($this->_doc->headerdata['prepaid']) : false;
-        $common = System::getOptions("common");
-
+      
 
 
         $this->docform->add(new DataView('detail', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
