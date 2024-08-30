@@ -423,8 +423,7 @@ class Invoice extends \App\Pages\Base
             return;
         }
 
-        $this->_doc->payamount = $this->docform->payamount->getText();
-
+ 
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
@@ -437,6 +436,8 @@ class Invoice extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->payed = 0;
+        $this->_doc->payamount = $this->docform->payamount->getText();
 
         $isEdited = $this->_doc->document_id > 0;
 

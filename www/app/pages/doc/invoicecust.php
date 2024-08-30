@@ -265,8 +265,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
-        $this->_doc->payamount = $this->docform->payamount->getText();
 
+        $this->_doc->amount = doubleval($this->docform->total->getText());
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
 

@@ -449,7 +449,12 @@ class ItemList extends \App\Pages\Base
             $this->_item->item_code = Item::getNextArticle();
 //            $this->itemdetail->editcode->setText($this->_item->item_code);
         }
-
+   
+        $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
+        if($digits > 100000000) {
+            $this->setError('Надто велике  число в  артикулі');
+            return;
+        }
         //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {
             $code = Item::qstr($this->_item->bar_code);
