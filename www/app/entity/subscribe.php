@@ -83,7 +83,7 @@ class Subscribe extends \ZCL\DB\Entity
     public static function getEventList() {
         $list = array();
         $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
-        $list[self::EVENT_NEWCUST]  = "Новий контрвгент";
+        $list[self::EVENT_NEWCUST]  = "Новий контрагент";
 
 
         return $list;
