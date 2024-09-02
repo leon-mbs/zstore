@@ -356,6 +356,7 @@ class CheckBox
 
         if ($status_code !== 201) {
             if($status_code == 422 || $status_code == 400) {
+                \App\Helper::logerror($response) ;
                 $response = json_decode($response, true);
                 return $response['message'] ;
             }

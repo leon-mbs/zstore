@@ -788,7 +788,9 @@ class GIList extends \App\Pages\Base
         if ($result['success'] == true) {
 
             $this->_doc->headerdata['delivery_date'] = strtotime($result['data'][0]['EstimatedDeliveryDate']);
-            $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
+            if($params['PayerType']=='Sender') {
+                $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
+            }
             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
             $this->_doc->save();
