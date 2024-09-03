@@ -852,6 +852,18 @@
                var el= $("#payed");
                if(el.attr("disabled") == "disabled" ) return; 
                el.val(sum);
+                //сдача
+                var payed = sum  
+                var payedcard = $("#payedcard").val() ??0;  
+                var payamount = $("#payamount").val();
+
+                var exchange = parseFloat(payed) + parseFloat(payedcard)  - parseFloat(payamount);
+                if (exchange > 0) {
+                    $("#exchange").val( exchange.toFixed(2) )
+                } else {
+                    $("#exchange").val(0) 
+                }               
+               
             }
 
         </script>
