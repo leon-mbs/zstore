@@ -365,6 +365,12 @@
                            <div class="col-3">
                             <input  pattern="[0-9,\.]+" autocomplete="off" class="form-control qtyprice" type="text" zippy="payed">
                           </div>
+                          <div class="col-5">
+                             <button type="button" onclick="setnote(50);return false;" class="btn btn-sm btn-secondary mr-1">50</button> 
+                             <button type="button" onclick="setnote(100);return false;" class="btn btn-sm btn-secondary mr-1">100</button> 
+                             <button type="button" onclick="setnote(200);return false;" class="btn btn-sm btn-secondary mr-1">200</button> 
+                             <button type="button" onclick="setnote(500);return false;" class="btn btn-sm btn-secondary mr-1">500</button> 
+                          </div>
                         </div>
                         {{^onlynal}}  
                       <div class="form-group row">
@@ -786,7 +792,7 @@
                 
                 
             });
-
+  
             function onBarCode(ele) {
 
                 if (event.key === 'Enter' || event.keyCode == 13) {
@@ -841,6 +847,11 @@
             }
             function check_tocancel(ele) {
                 return confirm("Скасувати чек?")
+            }
+            function setnote(sum) {
+               var el= $("#payed");
+               if(el.attr("disabled") == "disabled" ) return; 
+               el.val(sum);
             }
 
         </script>
