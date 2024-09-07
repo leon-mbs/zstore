@@ -9,7 +9,7 @@
 <body class="dark-mode">
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12 col-md-10 col-xl-8  pl-4 pr-4">
+        <div class="col-12 col-md-10 col-xl-10  pl-4 pr-4">
             <h2>Опис API</h2>
 
             <h3>Формат обміну</h3>
@@ -18,6 +18,8 @@
                                                             href="https://www.jsonrpc.org/specification">JSON-RPC</a>.
                 <br>Повідомлення в цілому має вигляд:
                 <br>POST /api/{endpoint}
+                <br>content-type: application/json
+                <br>
                 <br><code>{"jsonrpc": "2.0", "method": "echo", "params": {"say": "Привіт"}, "id": 1}</code>
             <ul>
                 <li>jsonrpc - завжди "2.0"</li>
@@ -41,6 +43,7 @@
                 <li>error - повертається замість result, якщо помилка</li>
                 <li>id - відповідний ідентифікатор із запиту</li>
             </ul>
+            <i class="fa fa-exclamation-triangle"></i>  Поля з довільним текстом (наприклад описи) повертаються  закодованими  в  base64
             </p>
             <p>
                 <b>Коди помилок</b>
@@ -78,7 +81,7 @@
                 Bearer та Basic аутентифікація відправляються стардартним чином в заголовку Authorization.
                 Для Bearer попередньо необхідно отримати JWT токен.
             </p>
-            <h3>Перелік методів</h3>
+            <h3>Перелік endpoints</h3>
             <ul style=" line-height: 1.4em;" class="list-unstyled text-bold">
                 <li><a class=" " href="#common">Загальні</a></li>
                 <li><a class=" " href="#items">ТМЦ</a></li>
@@ -90,75 +93,93 @@
             <br>
             <h4 id="common">Загальні</h4>
             <i>/api/common</i><br>
-            
-            <p>
-                <b>checkapi</b> - перевірка API<br>
-            </p>            
-            <p>
-                <b>token</b>- отримати Bearer токен<br>
-                <span>Параметри:</span><br>
-                login - логін
-                <br>password - пароль <br>
-                <span>Приклад:</span><br>
-                {
-                "login":"admin",
-                "password":"admin"
-                }
-            </p>
-
-            <p>
-                <b>parealist</b> - виробничі дільниці<br>
-            </p>
-            <p>
-                <b>firmlist</b> - перелік компаній <br>
-
-            </p>
-            <p>
-                <b>sourcelist</b> - джерела продаж<br>
-            </p>
-       
+             <table class="table table-sm">
+             <tr>
+                <td><b>checkapi</b></td>
+                <td>перевірка API</td>
+                <td>{"jsonrpc": "2.0", "method": "checkapi",  "id": 1}</td>
+             </tr>
+            <tr>
+                <td><b>token</b></td>
+                <td>отримати Bearer токен <br>
+                <span>Параметри:</span>
+                <br>login - логін
+                <br>password - пароль                </td>
+                <td>{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}</td>
+             </tr>
+             <tr>
+                <td><b>parealist</b></td>
+                <td>виробничі дільниці</td>
+                <td></td>
+             </tr>
+            <tr>
+                <td><b>firmlist</b></td>
+                <td>перелік компаній</td>
+                <td></td>
+             </tr>
+            <tr>
+                <td><b>sourcelist</b></td>
+                <td>джерела продаж</td>
+                <td></td>
+             </tr>
+            </table>
+                      
+     
+    
 
             <h4 id="items">ТМЦ</h4>
             <i>/api/items</i><br>
-            <p>
-                <b>storelist</b> - перелік складів<br>
-            </p>
-            <p>
-                <b>catlist</b> - перелік категорій<br>
-
-            </p>
-            <p>
-                <b>articlelist</b> - перелік артикулів<br>
-
-            </p>
-            <p>
-                <b>itemlist</b> - перелік ТМЦ<br>
-                <small>Якщо категорія не задана, повертається загальний перелік. Поле description
-                    повертається в кодуванні base64</small>
+          <table class="table table-sm">
+             <tr>
+                <td><b>storelist</b></td>
+                <td>перелік складів</td>
+                <td></td>
+             </tr>
+             <tr>
+                <td><b>catlist</b></td>
+                <td>перелік категорій</td>
+                <td></td>
+             </tr>
+             <tr>
+                <td><b>articlelist</b></td>
+                <td>перелік артикулів</td>
+                <td></td>
+             </tr>
+            <tr>
+                <td><b>typelist</b></td>
+                <td>перелік типів ТМЦ</td>
+                <td></td>
+             </tr>
+           <tr>
+                <td><b>itemlist</b></td>
+                <td>перелік   ТМЦ <br>
+                <small>Якщо категорія не задана, повертається загальний перелік.  </small>
                 <br>
                 <span>Параметри:</span><br>
                 cat_id - id категорії<br>
-                <span>Приклад:</span><br>
-                {
-                "cat_id":"10"
-                }
-            </p>
-            <p>
-                <b>getqty</b> - наявність на складах<br>
+                </td>
+                <td>
+                "params": {"cat_id":10}
+                </td>
+             </tr>
+         <tr>
+                <td><b>getqty</b></td>
+                <td>наявність на складах <br>
                 <small>Якщо склад не заданий, повертається загальний перелік</small>
                 <br>
                 <span>Параметри:</span><br>
-                store_id - id складу<br>
-                <span>Приклад:</span><br>
-                {
-                "store_id":"1"
-                }
-            </p>
-            <p>
-                <b>save</b> - зберегти ТМЦ<br>
-                <small>Якщо артикул (item_code) існує, то ТМЦ перезаписується, інакше створюється</small>
+                 store_id - id складу<br>
+                </td>
+                <td>
+              
+                </td>
+             </tr>
+         <tr>
+                <td><b>save</b></td>
+                <td>зберегти ТМЦ <br>
+                <small>Якщо артикул (item_code) існує, то ТМЦ перезаписується, інакше створюється новий</small>
                 <br>
-                <span>Параметри:</span>
+                <span>Параметри:</span><br>
                 <br>itemname - назва (обов'язкове поле)
                 <br>item_code - артикул (обов'язкове поле)
                 <br>bar_code - штрих код
@@ -168,9 +189,9 @@
                 <br>price1,... - відпускні ціни
                 <br> desсription - опис (в base64)
                 <br> imageurl - URL картинки
-
-                <br> <span>Приклад:</span><br>
-                {
+                </td>
+                <td>
+                 "params":   {
                 "item_code":"К001",
                 "bar_code":"К001",
                 "itemname":"testapi",
@@ -180,26 +201,31 @@
                 "cat_id":"0",
                 "price1":50
                 }
-            </p>
-            <h4 id="service">Роботи, послуги</h4>
-            <i>/api/service</i><br>
-    <p>
-                <b>list</b> - перелік <br>
-
-            </p>
+                </td>
+             </tr>
+             <tr>
+                <td><b>service</b></td>
+                <td>Роботи, послуги</td>
+                <td></td>
+             </tr>
+       </table>    
+ 
+ 
             <h4 id="cust">Контрагенти</h4>
             <i>/api/customers</i><br>
-       <p>
-                <b>list</b> - перелік <br>
-
-            </p>
- 
-            <p>
-                <b>save</b> - зберегти  <br>
+       <table class="table table-sm">
+             <tr>
+                <td><b>list</b></td>
+                <td>перелік  </td>
+                <td></td>
+             </tr>
+         <tr>
+                <td><b>save</b></td>
+                <td>зберегти контрагента <br>
                 <small>Якщо customer_id більше нуля, то контрагент перезаписується. Якщо дорівнює нулю або відсутній,
-                        то  створюється новий</small>
+                        то  створюється новий </small>
                 <br>
-                <span>Параметри:</span>
+                <span>Параметри:</span><br>
                 <br>customer_id - id контрагента
                         <br> customer_name - назва (обов'язкове поле)
                         <br> phone - телефон (рекомендується вводити як 10 цифр)
@@ -207,93 +233,101 @@
                         <br> city - місто
                         <br> address - адреса
                         <br> desсription - опис (в base64)
-
-                <br> <span>Приклад:</span><br>
-                 {
-                        "customer_id":"8",
+                </td>
+                <td>
+                 "params":   {
+                "customer_id":"8",
                         "customer_name":"\"Рога&Копыта\"",
                         "phone":"0991111111",
                         "email":"test@ukr.net",
                         "city":"",
                         "address":""
                         }
-            </p>           
+                </td>
+             </tr>             
+    </table>               
+  
+ 
+          
             
             
             
             <h4 id="docs">Документи</h4>
             <i>/api/docs</i><br>
-            <p>
-                <b>statuslist</b> - перелік статусів документів <br>
-                 <small>Не всі статуси підходять до всіх типів документів</small>
-            </p>
-
-           <p>
-                <b>branchlist</b> - перелік статусів документів <br>
+        
+       <table class="table table-sm">
+             <tr>
+                <td><b>statuslist</b></td>
+                <td>перелік статусів документів<br>
+                 <small>Не всі статуси підходять до всіх типів документів</small></td>
+                <td></td>
+             </tr>
+             <tr>
+                <td><b>branchlist</b></td>
+                <td>перелік філій<br>
                  <small>Якщо обліковій системі включена підтримка філій, необхідно вказати філію у створюваному
-                        документі</small>
-            </p>
-    <p>
-                <b>mflist</b> - касс и  денежных счетов<br>
-            </p>
-            
-              <p>
-                <b>checkstatus</b> - Статуси документів за переліком номерів  <br>
-                <small>Повертаються тільки ті документи, які створені через API. По поверненим статусам оновляються
-                        статуси замовлень в основній системі</small>
-                <br>
+                        документі</small></td>
+                <td></td>
+             </tr>
+        <tr>
+                <td><b>mflist</b></td>
+                <td>перелік грошових рахунків  </td>
+                <td></td>
+             </tr>             
+      <tr>
+                <td><b>checkstatus</b></td>
+                <td>Статуси документів за переліком номерів  <br>
+              
                 <span>Параметри:</span>
                 <br>customer_id - id контрагента
                         <br> numbers - перелік номерів документів
               
-
-                <br> <span>Приклад:</span><br>
-                 {
+              
+                 </td>
+                <td> "params": {
                         "numbers":["З-00002","ТТН00034"]
-                        }
-            </p> 
-             <p>
-                <b>cancel</b> - Запит на видалення  <br>
-                <small>Запит адміністратору   на видалення документа. Наприклад, якщо замовлення відмінено, але
+                        }</td>
+             </tr>             
+           <tr>
+                <td><b>cancel</b></td>
+                <td>Запит на видалення  <br>
+                   <small>Запит адміністратору   на видалення документа. Наприклад, якщо замовлення відмінено, але
                         вже експортовано</small>
                 <br>
                 <span>Параметри:</span>
-               
+          
                 <br> number - номер документа
-                <br>reason - причина 
-
-                <br> <span>Приклад:</span><br>
-                     {
+                <br>reason - причина        
+                 </td>
+                <td> "params": {
                         "number": "ТТН00034",
                         "reason":"Тест"
-                     }
-            </p> 
- 
-             <p>
-                <b>list</b> - перелік  <br>
-                
+                     }</td>
+             </tr>             
+   
+           <tr>
+                <td><b>list</b></td>
+                <td>перелік  <br>
+               small>Повертаються тільки ті документи, які створені через API.  </small
                 <span>Параметри:</span>
-                        <br> phone - телефон (якщо телефон контакта відрізняється від телефона контрагента)
-                        <br> email - e-mail (якщо e-mail контакта відрізняється від e-mail контрагента)
-                        <br> ship_address - адреса доставки та інші дані доставки
-                 
-
-                <br> <span>Приклад:</span><br>
-                    {
-                        "number":"ID0001",
-                        "phone":"0971111111",
+        
+                 <br> стате - статус     
+                 <br> type - тип  ("Order","TTN","GoodsIssue","GoodsReceipt","IncomeItem","ProdIssue","ServiceAct")   
+                          
+                 </td>
+                <td> "params": {
+                        "state":5,
+                        "type":"Order",
                       
-                      }
-            </p>            
-            
- 
-            
-              <p>
-                <b>createorder</b> - Створення замовлення, якщо замовлення обробляються на стороні складської
+                      }</td>
+             </tr>             
+         <tr>
+                <td><b>createorder</b></td>
+                <td>Створення замовлення, якщо замовлення обробляються на стороні складської
                         системи  <br>
-               
                 <span>Параметри:</span>
-                <br>number - номер документа. Унікальне значення пов'язано із замовленням в основній системі
+        
+               <br>number - номер документа. Унікальне значення пов'язано із замовленням в основній системі
                         <br> phone - телефон (якщо телефон контакта відрізняється від телефона контрагента)
                         <br> email - e-mail (якщо e-mail контакта відрізняється від e-mail контрагента)
                         <br> ship_address - адреса доставки та інші дані доставки
@@ -305,24 +339,24 @@
                         <br> branch_id - філія (якщо увімкнено)
                         <br> item_code - артикул
                         <br> quantity - кількість
-                        <br> price - ціна
-
-                <br> <span>Приклад:</span><br>
-                    {
+                        <br> price - ціна                       
+                 </td>
+                <td> "params":  {
                         "number":"ID0001",
                         "phone":"0971111111",
                         "ship_address":"Харків",
                         "items":[
-                        {"item_code":"cbs500-1","quantity":2,"price":234},
-                        {"item_code":"ID0018","quantity":2,"price":234}
+                         {"item_code":"cbs500-1","quantity":2,"price":234},
+                         {"item_code":"ID0018","quantity":2,"price":234}
                         ]
-                      }
-            </p> 
-             <p>
-                <b>createttn</b> - Створення ТТН, якщо потрібно тільки списання зі складу  <br>
-                <br>
+                      }</td>
+             </tr>             
+        <tr>
+                <td><b>createttn</b></td>
+                <td>Створення ТТН, якщо потрібно тільки списання зі складу  <br>
                 <span>Параметри:</span>
-                <br>number - номер документа (унікальне значення, пов'язане з замовленням в
+        
+                    <br>number - номер документа (унікальне значення, пов'язане з замовленням в
                         основній системі)
                         <br> phone - телефон (якщо телефон контакта відрізняється від телефона контрагента)
                         <br> email - e-mail (якщо e-mail контакта відрізняється від e-mail контрагента)
@@ -335,24 +369,24 @@
                         <br> items - перелік позицій
                         <br> item_code - артикул
                         <br> quantity - кількість
-                        <br> price - ціна
-
-                <br> <span>Приклад:</span><br>
-                   {
+                        <br> price - ціна                    
+                 </td>
+                <td> "params":  {
                         "number":"ID0001",
                         "phone":"0971111111",
                         "ship_address":"Харків",
                         "items":[
-                        {"item_code":"cbs500-1","quantity":2,"price":234},
-                        {"item_code":"ID0018","quantity":2,"price":234}
+                          {"item_code":"cbs500-1","quantity":2,"price":234},
+                          {"item_code":"ID0018","quantity":2,"price":234}
                         ]
-                        }
-            </p> 
-            <p>
-                <b>goodsissue</b> - Створення видаткової накладної  <br>
-                <br>
+                        }</td>
+             </tr>             
+     <tr>
+                <td><b>goodsissue</b></td>
+                <td>Створення видаткової накладної  <br>
                 <span>Параметри:</span>
-                <br>number - номер документа (унікальне значення в основній системі - обов'язкове поле)
+        
+                    <br>number - номер документа (унікальне значення в основній системі - обов'язкове поле)
                         <br> mf - каса або банкiвський рахунок
                         <br> branch_id - фiлiя (якщо увiмкнено)
                         <br> customer_id - контрагент
@@ -364,10 +398,9 @@
                         <br> items - перелік позицій
                         <br> item_code - артикул
                         <br> quantity - кількість
-                        <br> price - ціна
-
-                <br> <span>Приклад:</span><br>
-                {
+                        <br> price - ціна                   
+                 </td>
+                <td> "params":   {
                         "number":"ID0001",
                         "store_id":19,
                         "customer_id":8,
@@ -375,17 +408,17 @@
                         "total":220,
                         "payed":220,
                         "items":[
-                        {"item_code":"cbs500-1","quantity":2,"price":234},
-                        {"item_code":"ID0018","quantity":2,"price":234}
+                         {"item_code":"cbs500-1","quantity":2,"price":234},
+                         {"item_code":"ID0018","quantity":2,"price":234}
                         ]
-                        }
-          </p>    
-           
-             <p>
-                <b>incomeitem</b> - Оприбуткування ТМЦ  <br>
-                <br>
+                        }</td>
+             </tr>  
+    <tr>
+                <td><b>incomeitem</b></td>
+                <td>Оприбуткування ТМЦ  <br>
                 <span>Параметри:</span>
-                <br>number - номер документа (унікальне значення в основній системі - обов'язкове поле)
+        
+                   <br>number - номер документа (унікальне значення в основній системі - обов'язкове поле)
                         <br> mf - каса або банкiвський рахунок
                         <br> branch_id - фiлiя (якщо увiмкнено)
                         <br> store_id - склад (обов'язкове поле)
@@ -395,10 +428,9 @@
                         <br> items - перелік позицій
                         <br> item_code - артикул
                         <br> quantity - кількість
-                        <br> price - ціна
-
-                <br> <span>Приклад:</span><br>
-                {
+                        <br> price - ціна                
+                 </td>
+                <td> "params":   {
                         "number":"ID0001",
                         "autoexec":true,
                         "store_id":19,
@@ -407,16 +439,16 @@
                         "total":220,
                         "payed":220,
                         "items":[
-                        {"item_code":"cbs500-1","quantity":2,"price":234},
-                        {"item_code":"ID0018","quantity":2,"price":234}
+                         {"item_code":"cbs500-1","quantity":2,"price":234},
+                         {"item_code":"ID0018","quantity":2,"price":234}
                         ]
-                        }
-          </p>    
-           <p>
-                <b>serviceact</b> - Створення акту виконаних робiт <br>
-                <br>
+                        }</td>
+             </tr>                
+     <tr>
+                <td><b>serviceact</b></td>
+                <td>Створення акту виконаних робiт  <br>
                 <span>Параметри:</span>
-                <br>number - номер документа (унікальне значення в
+                  <br>number - номер документа (унікальне значення в
                         основній системі - обов'язкове поле)
                         <br> mf - каса або банкiвський рахунок
                         <br> branch_id - фiлiя (якщо увiмкнено)
@@ -429,20 +461,22 @@
                         <br> items - перелік позицій
                         <br> service_id - id
                         <br> quantity - кількість
-                        <br> price - ціна
-
-                <br> <span>Приклад:</span><br>
-                 {
+                        <br> price - ціна             
+                 </td>
+                <td> "params":     {
                         "number":"ID0001",
                         "customer_id":8,
                         "mf":2,
                         "total":220,
                         "payed":220,
                         "items":[
-                        {"service_id":"5","quantity":2,"price":234}
+                         {"service_id":"5","quantity":2,"price":234}
                         ]
-                        }
-          </p>    
+                        }</td>
+             </tr>                
+                           
+       </table>      
+        
    
 
             <!--

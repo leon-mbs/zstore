@@ -28,13 +28,67 @@ class docs extends JsonRPC
 
         return $list;
     }
+    
+   // проверка  статусов документов по  списку  номеров
+    public function checkstatus($args) {
+        $list = array();
+
+        if (!is_array($args['numbers'])) {
+            throw new \Exception("Хибні параметри");
+        }
+        foreach ($args['numbers'] as $num) {
+            $num1 = Document::qstr("%<apinumber>{$num}</apinumber>%");
+            $num2 = Document::qstr("%<apinumber><![CDATA[{$num}]]></apinumber>%");
+            $doc = Document::getFirst("  content   like  {$num1} or content   like  {$num2}  ");
+            if ($doc instanceof Document) {
+                $list[] = array(
+                    "number"     => $num,
+                    "status"     => $doc->state,
+                    "statusname" => Document::getStateName($doc->state)
+                );
+            }
+        }
+
+        return $list;
+    }
+
+    //запрос на  отмену
+    public function cancel($args) {
+        $doc = null;
+        if (strlen($args['number']) > 0) {
+            $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
+            $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
+
+            $doc = Document::getFirst(" content like {$num1}  or content like {$num2} ");
+        }
+        if ($doc == null) {
+            throw new \Exception("Документ не  знайдено");
+        }
+
+        $user = \App\System::getUser();
+        $admin = \App\Entity\User::getByLogin('admin');
+        $n = new \App\Entity\Notify();
+        $n->user_id = $admin->user_id;
+        $n->sender_id = $user->user_id;
+
+        $n->dateshow = time();
+        $n->message = "Запит на  видалення  документу {$doc->document_number}. Причина " . $args['reason'];
+        $n->save();
+    }
+    
+    
     public function list($args) {
 
         $list = [];
-        $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
-        $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
-        foreach(Document::find("  content   like  {$num1} or content   like  {$num2}  ")  as $d) {
-      //  foreach(Document::find(" ")  as $d) {
+        $where= "content like '<apinumber>' ";
+        if($args['state']>0) {
+          $where .= " and state= ".$args['state'];
+        }
+        if(strlen($args['type'])>0) {
+          $where .= " and meta_name= ". Document::qstr($args['type']);
+        }
+        
+          foreach(Document::findYield($where,"document_id")  as $d) {
             $doc=[];
             $doc['document_id'] = $d->document_id;
             $doc['document_number'] = $d->document_number;
@@ -101,7 +155,7 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         if (strlen($doc->document_number) == 0) {
-            $doc->document_number = 'API00001';
+            $doc->document_number = 'API-00001';
         }
         $doc->document_date = time();
 
@@ -496,53 +550,7 @@ class docs extends JsonRPC
         return $doc->document_number;
     }
 
-    // проверка  статусов документов по  списку  номеров
-    public function checkstatus($args) {
-        $list = array();
-
-        if (!is_array($args['numbers'])) {
-            throw new \Exception("Хибні параметри");
-        }
-        foreach ($args['numbers'] as $num) {
-            $num1 = Document::qstr("%<apinumber>{$num}</apinumber>%");
-            $num2 = Document::qstr("%<apinumber><![CDATA[{$num}]]></apinumber>%");
-            $doc = Document::getFirst("  content   like  {$num1} or content   like  {$num2}  ");
-            if ($doc instanceof Document) {
-                $list[] = array(
-                    "number"     => $num,
-                    "status"     => $doc->state,
-                    "statusname" => Document::getStateName($doc->state)
-                );
-            }
-        }
-
-        return $list;
-    }
-
-    //запрос на  отмену
-    public function cancel($args) {
-        $doc = null;
-        if (strlen($args['number']) > 0) {
-            $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
-            $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
-
-            $doc = Document::getFirst(" content like {$num1}  or content like {$num2} ");
-        }
-        if ($doc == null) {
-            throw new \Exception("Документ не  знайдено");
-        }
-
-        $user = \App\System::getUser();
-        $admin = \App\Entity\User::getByLogin('admin');
-        $n = new \App\Entity\Notify();
-        $n->user_id = $admin->user_id;
-        $n->sender_id = $user->user_id;
-
-        $n->dateshow = time();
-        $n->message = "Запит на  видалення  документу {$doc->document_number}. Причина " . $args['reason'];
-        $n->save();
-    }
-
+ 
     // /api/docs
     // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1}
     //Списание ТМЦ в  производсво
