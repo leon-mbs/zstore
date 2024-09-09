@@ -32,6 +32,7 @@ class common extends JsonRPC
         return $jwt;
     }
 
+    //проверка  API. Авторизация  не  требуется
     public function checkapi() {
         return "OK";
     }
