@@ -404,6 +404,68 @@ class Order extends \App\Pages\Base
 
 
     }
+   //вставка  сканером
+    public function addcodeOnClick($sender) {
+        $common = \App\System::getOptions("common");
+
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        $code0 = $code;
+        $code = ltrim($code, '0');
+
+        if ($code == '') {
+            return;
+        }
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        if ($item == null) {
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            return;
+        }
+ 
+        if($item->useserial==1 && $common['usesnumber'] >0){
+            $this->setWarn("Товар потребує вводу серійного номеру");
+            return;
+        }
+        foreach ($this->_tovarlist as $ri => $_item) {
+            if ($_item->item_id == $item->item_id) {
+                $this->_tovarlist[$ri]->quantity += 1;
+                $this->_rownumber  = 1;
+
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->CalcPay();
+                return;
+            }
+        }
+
+        $customer_id = $this->docform->customer->getKey()  ;
+        $pt=     $this->docform->pricetype->getValue() ;
+        $price = $item->getPriceEx(array(
+           'pricetype'=>$pt,
+           'store'=>0,
+           'customer'=>$customer_id
+         ));
+
+        $item->price = $price;
+
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
+        }
+
+        $item->quantity = 1;
+
+        $this->_tovarlist[ ] = $item;
+        $this->_rownumber  = 1;
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+
+        $this->_rowid = -1;
+    }
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -759,69 +821,8 @@ class Order extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
-    public function addcodeOnClick($sender) {
-        $common = \App\System::getOptions("common");
-
-        $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
-
-        if ($code == '') {
-            return;
-        }
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
-        if ($item == null) {
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
-            return;
-        }
- 
-        if($item->useserial==1 && $common['usesnumber'] >0){
-            $this->setWarn("Товар потребує вводу серійного номеру");
-            return;
-        }
-        foreach ($this->_tovarlist as $ri => $_item) {
-            if ($_item->item_id == $item->item_id) {
-                $this->_tovarlist[$ri]->quantity += 1;
-                $this->_rownumber  = 1;
-
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
-            }
-        }
-
-        $customer_id = $this->docform->customer->getKey()  ;
-        $pt=     $this->docform->pricetype->getValue() ;
-        $price = $item->getPriceEx(array(
-           'pricetype'=>$pt,
-           'store'=>0,
-           'customer'=>$customer_id
-         ));
-
-        $item->price = $price;
-
-        $item->disc = '';
-        $item->pureprice = $item->getPurePrice();
-        if($item->pureprice > $item->price) {
-            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
-        }
-
-        $item->quantity = 1;
-
-        $this->_tovarlist[ ] = $item;
-        $this->_rownumber  = 1;
-
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-        $this->calcPay();
-
-        $this->_rowid = -1;
-    }
     
+     
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
         if ($dt > 1) {

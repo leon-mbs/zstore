@@ -161,7 +161,8 @@ class OfficeDoc extends \App\Pages\Base
                 $this->docform->doccontent->setText($d['data'] ?? '');
                 $this->docform->user->setValue($user);
                 $this->_doc = Document::create('OfficeDoc');
-
+                $this->docform->document_number->setText($this->_doc->nextNumber());
+                $this->docform->user->setValue($user);            
 
             } else {
                 $this->_doc = Document::create('OfficeDoc');

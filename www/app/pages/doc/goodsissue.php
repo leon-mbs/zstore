@@ -407,7 +407,10 @@ class GoodsIssue extends \App\Pages\Base
         $this->_rowid = -1;
     }
 
+    //вставка  сканером
     public function addcodeOnClick($sender) {
+     //   $common = \App\System::getOptions("common");
+        
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $code0 = $code;
@@ -416,9 +419,17 @@ class GoodsIssue extends \App\Pages\Base
         if ($code == '') {
             return;
         }
+        $store_id = $this->docform->store->getValue();
+        if ($store_id == 0) {
+            $this->setError('Не обрано склад');
+            return;
+        }
+
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0) {
+            if ($_item->item_id == $item->item_id ) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->_rownumber  = 1;
 
@@ -430,16 +441,8 @@ class GoodsIssue extends \App\Pages\Base
         }
 
 
-        $store_id = $this->docform->store->getValue();
-        if ($store_id == 0) {
-            $this->setError('Не обрано склад');
-            return;
-        }
-
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
-
-        if ($item == null) {      //ищес оп серийномк
+ 
+        if ($item == null) {      //ищем по серийному
 
             $st = Stock::find("store_id={$store_id} and  snumber=" . $code_);
             if(count($st)==1) {
@@ -604,11 +607,21 @@ class GoodsIssue extends \App\Pages\Base
                 
             }
         }
- 
-
-
+  
         if($this->_rowid == -1) {
-            $this->_itemlist[] = $item;
+            $found=false;
+  
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id && $_item->snumber == $item->snumber) {
+                    $this->_itemlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+            if(!$found) {
+               $this->_itemlist[] = $item;    
+            }
+            
+            
             $this->addrowOnClick(null);
             $this->setInfo("Позиція додана") ;
             //очищаем  форму

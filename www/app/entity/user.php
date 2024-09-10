@@ -247,7 +247,7 @@ class User extends \ZCL\DB\Entity
         $users = array();
 
         foreach (User::find('disabled <> 1', 'username') as $u) {
-            if ($u->userrole == 'admins' || $branch_id == 0) {
+            if ($u->rolename == 'admins' || $branch_id == 0) {
                 $users[$u->user_id] = $u->username;
                 continue;
             }

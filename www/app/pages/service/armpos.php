@@ -1645,11 +1645,11 @@ class ARMPos extends \App\Pages\Base
         foreach($tlist as $prod) {
             $t .="<tr> " ;
             $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fqty($prod->quantity) ."</td>" ;
             $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
             $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
 
-            $t .="</tr> " ;
+            $t .="</tr> " ;                                                
         }
         $tlist=  $doc->unpackDetails('services')  ;
 
