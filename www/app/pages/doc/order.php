@@ -355,8 +355,20 @@ class Order extends \App\Pages\Base
 
         $item->desc = $this->editdetail->editdesc->getText();
 
-        if($this->_rowid == -1) {
-            $this->_tovarlist[] = $item;
+        if($this->_rowid == -1) {    //новая  позиция
+            $found=false;
+            
+            foreach ($this->_tovarlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id ) {
+                    $this->_tovarlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+        
+            if(!$found) {
+               $this->_tovarlist[] = $item;    
+            }
+            
             $this->addrowOnClick(null);
             $this->setInfo("Позиція додана") ;
             //очищаем  форму
@@ -391,6 +403,68 @@ class Order extends \App\Pages\Base
         $this->wselitem->setVisible(false);
 
 
+    }
+   //вставка  сканером
+    public function addcodeOnClick($sender) {
+        $common = \App\System::getOptions("common");
+
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        $code0 = $code;
+        $code = ltrim($code, '0');
+
+        if ($code == '') {
+            return;
+        }
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        if ($item == null) {
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            return;
+        }
+ 
+        if($item->useserial==1 && $common['usesnumber'] >0){
+            $this->setWarn("Товар потребує вводу серійного номеру");
+            return;
+        }
+        foreach ($this->_tovarlist as $ri => $_item) {
+            if ($_item->item_id == $item->item_id) {
+                $this->_tovarlist[$ri]->quantity += 1;
+                $this->_rownumber  = 1;
+
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->CalcPay();
+                return;
+            }
+        }
+
+        $customer_id = $this->docform->customer->getKey()  ;
+        $pt=     $this->docform->pricetype->getValue() ;
+        $price = $item->getPriceEx(array(
+           'pricetype'=>$pt,
+           'store'=>0,
+           'customer'=>$customer_id
+         ));
+
+        $item->price = $price;
+
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
+        }
+
+        $item->quantity = 1;
+
+        $this->_tovarlist[ ] = $item;
+        $this->_rownumber  = 1;
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+
+        $this->_rowid = -1;
     }
 
     public function savedocOnClick($sender) {
@@ -747,64 +821,8 @@ class Order extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
-    public function addcodeOnClick($sender) {
-        $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
-
-        if ($code == '') {
-            return;
-        }
-
-        foreach ($this->_tovarlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0) {
-                $this->_tovarlist[$ri]->quantity += 1;
-                $this->_rownumber  = 1;
-
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
-            }
-        }
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
-        if ($item == null) {
-                $this->setWarn("Товар з кодом `{$code}` не знайдено");
-                return;
-            }
- 
-
-        $customer_id = $this->docform->customer->getKey()  ;
-        $pt=     $this->docform->pricetype->getValue() ;
-        $price = $item->getPriceEx(array(
-           'pricetype'=>$pt,
-           'store'=>0,
-           'customer'=>$customer_id
-         ));
-
-        $item->price = $price;
-
-        $item->disc = '';
-        $item->pureprice = $item->getPurePrice();
-        if($item->pureprice > $item->price) {
-            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
-        }
-
-        $item->quantity = 1;
-
-        $this->_tovarlist[ ] = $item;
-        $this->_rownumber  = 1;
-
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-        $this->calcPay();
-
-        $this->_rowid = -1;
-    }
     
+     
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
         if ($dt > 1) {

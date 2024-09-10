@@ -140,7 +140,8 @@ class Update extends \App\Pages\Base
               $this->_tvars['oldphp']  = true; 
                         
           }          
-   
+       
+         \App\Session::getSession()->migrationcheck = false; 
     }   
 
 

@@ -171,8 +171,18 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if ($sub->reciever_type == self::RSV_USER) {
                 $u = \App\Entity\User::load($sub->user_id);
+                
+                if($doc->branch_id > 0 && $u->rolename != 'admins') {
+                    $blist =  explode(',',$u->aclbranch) ; 
+                    if(in_array($doc->branch_id,$blist)==false) {
+                       continue; 
+                    }
+                }
+                
             }   
-            
+            if($c==null && $u== null){
+                continue;
+            }
                
             if ($c != null  ) {
                 $options['phone'] = $c->phone;
@@ -187,7 +197,8 @@ class Subscribe extends \ZCL\DB\Entity
                 $options['email'] = $u->email;
                 $options['chat_id'] = $u->chat_id;
                 $options['notifyuser'] = $doc->user_id;
-            }            
+            }  
+                      
             $options['doc']  = $doc;
             
             $text = $sub->getTextDoc($doc);

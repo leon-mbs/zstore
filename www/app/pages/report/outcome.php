@@ -384,7 +384,7 @@ class Outcome extends \App\Pages\Base
                     "qty"       => H::fqty($row['qty']),
                     "navar"     => H::fa($row['navar']),
                     "navarsign" => $row['navar'] > 0,
-                    "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa']  ), 1, '.', '') : "",
+                    "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa'] + $row['navar'] ), 1, '.', '') : "",
                     "summa"     => H::fa($row['summa'] + $row['navar']),
                     "docs"     => intval($row['docs'])
                 );
@@ -398,7 +398,7 @@ class Outcome extends \App\Pages\Base
             }
         }
         if( $totsumself > 0) {
-           $totnavarproc = 100*$totnavar/$totsumself ;
+           $totnavarproc = 100*$totnavar/($totsumself + $totnavar);
         }
         
         $header = array('datefrom' => \App\Helper::fd($from),
