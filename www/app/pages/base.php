@@ -338,7 +338,7 @@ class Base extends \Zippy\Html\WebPage
 
     //вывод ошибки,  используется   в дочерних страницах
 
-    public function setError($msg, $p1 = "", $p2 = "") {
+    public function setError($msg ) {
         $msg = str_replace("'", "`", $msg) ;
 
 
@@ -351,19 +351,19 @@ class Base extends \Zippy\Html\WebPage
         System::setErrorMsg($msg, true);
     }
 
-    public function setSuccess($msg, $p1 = "", $p2 = "") {
+    public function setSuccess($msg ) {
         $msg = str_replace("'", "`", $msg) ;
 
         System::setSuccessMsg($msg);
     }
 
-    public function setWarn($msg, $p1 = "", $p2 = "") {
+    public function setWarn($msg ) {
         $msg = str_replace("'", "`", $msg) ;
 
         System::setWarnMsg($msg);
     }
 
-    public function setInfo($msg, $p1 = "", $p2 = "") {
+    public function setInfo($msg ) {
         $msg = str_replace("'", "`", $msg) ;
 
         System::setInfoMsg($msg);
