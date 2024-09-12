@@ -349,6 +349,7 @@ class Subscribe extends \ZCL\DB\Entity
         //в  разметке  одинарные
         $this->msgtext = str_replace('{', '{{', $this->msgtext);
         $this->msgtext = str_replace('}', '}}', $this->msgtext);
+        
         $common = \App\System::getOptions("common");
 
         $header = array();
@@ -456,6 +457,8 @@ class Subscribe extends \ZCL\DB\Entity
         }
         if ($doc->customer_id > 0) {
             $cust = \App\Entity\Customer::load($doc->customer_id) ;
+         
+            $header['customer_name'] = $cust->phone;  
             $dolg = $cust->getDolg();
             if($dolg >0) {
                 $header['credit'] = \App\Helper::fa($dolg);
