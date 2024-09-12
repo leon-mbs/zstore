@@ -1400,8 +1400,10 @@ class Helper
     public static function migration() {
         $conn = \ZDB\DB::getConnect();
 
-        $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); //6.11.2
-        if($migrationbonus != "done") {
+        $vdb=\App\System::getOptions('version', false) ;
+     
+        $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
+        if($migrationbonus != "done" && \App\Util::compareVersion($vdb,'6.11.0')>=0  )    {
             Helper::log("Миграция бонус");
             $conn->BeginTrans();
             try {
@@ -1427,7 +1429,7 @@ class Helper
 
 
         $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
-        if($migrationbalans != "done") {
+        if($migrationbalans != "done" && \App\Util::compareVersion($vdb,'6.11.0')>=0) {
             Helper::log("Миграция баланс");
             //  + контрагента (active)  - наш кредитовый  долг
             //  - контрагента (passive)  - наш дебетовый  долг

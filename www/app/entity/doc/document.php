@@ -188,7 +188,7 @@ class Document extends \ZCL\DB\Entity
         $xml = @simplexml_load_string($xml) ;
         if($xml==false) {
 
-            $logger->error("Документ " . $this->document_id . " Невірний  контент");
+            $logger->error("Документ " . $this->document_number . " Невірний  контент");
             return;
         }
 
