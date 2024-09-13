@@ -196,7 +196,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $options['viber'] = $u->viber;
                 $options['email'] = $u->email;
                 $options['chat_id'] = $u->chat_id;
-                $options['notifyuser'] = $doc->user_id;
+                $options['notifyuser'] = $u->user_id;
             }  
                       
             $options['doc']  = $doc;
