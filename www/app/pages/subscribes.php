@@ -61,13 +61,12 @@ class Subscribes extends \App\Pages\Base
 
     public function update($sender) {
 
+    //    $l=Subscribe::getRecieverList($et) ;
+     //   $this->editform->editrecievertype->setOptionList($l);
 
         $et = $this->editform->editeventtype->getValue();
         if($sender->id=='editeventtype') {
-            $l=Subscribe::getRecieverList($et) ;
-            $this->editform->editrecievertype->setOptionList($l);
-            $this->editform->editrecievertype->setValue(array_shift(array_keys($l)));            
-
+   
             if($et == Subscribe::EVENT_DOCSTATE) {
                 $this->editform->editdoctype->setVisible(true);
                 $this->editform->editstate->setVisible(true);
@@ -88,8 +87,8 @@ class Subscribes extends \App\Pages\Base
 
         if($sender->id=='editrecievertype') {
             $l=Subscribe::getMsgTypeList($rt) ;
-            $this->editform->editmsgtype->setOptionList($l);
-            $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
+       //     $this->editform->editmsgtype->setOptionList($l);
+         //   $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
              
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
@@ -176,7 +175,7 @@ class Subscribes extends \App\Pages\Base
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
         
-        $this->update( $this->editform->editeventtype) ;
+       
     }
 
     public function OnSave($sender) {

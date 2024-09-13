@@ -246,7 +246,7 @@ class Util
     * 
     * @param mixed $v1
     * @param mixed $v2
-    * @return mixed    0  если  равны  1 если больше v1 -1 если больше v2
+    * @return mixed    0  если  равны,  1 если больше v1, -1 если больше v2
     */
     public  static function compareVersion($v1,$v2) {
         $a1=explode('.',$v1) ;          

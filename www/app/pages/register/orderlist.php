@@ -324,17 +324,17 @@ class OrderList extends \App\Pages\Base
             return;
         }
 
-        
+        if ($sender->id == "bscan") {
+            $this->openedit();
+            return;
+        }
+      
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
         try {
 
-              if ($sender->id == "bscan") {
-                $this->openedit();
-                return;
-            }
-
+ 
             if ($sender->id == "binp") {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
