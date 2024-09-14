@@ -24,7 +24,7 @@ use Zippy\Html\Panel;
 class EqList extends \App\Pages\Base
 {
     private $_item;
-    public $_uselist = array();
+ 
     private $_blist;
 
     public function __construct() {
@@ -68,7 +68,6 @@ class EqList extends \App\Pages\Base
         $this->add(new Panel('usetable'))->setVisible(false);
         $this->usetable->add(new Label('usename'));
         $this->usetable->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
-        $this->usetable->add(new DataView('uselist', new ArrayDataSource($this, '_uselist'), $this, 'uselistOnRow'));
     }
 
     public function eqlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -99,31 +98,42 @@ class EqList extends \App\Pages\Base
         $this->usetable->setVisible(true);
         $item = $sender->getOwner()->getDataItem();
         $this->usetable->usename->setText($item->eq_name);
-        $this->_uselist = array();
 
-        
+        $this->_tvars['use1'] =[] ;
+        $this->_tvars['use2'] =[] ;
 
-        foreach (\App\Entity\Doc\Document::findYield("meta_name='task' and state not in(2,3,1,9) ", "document_date desc") as $task) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name='task' and state not in(2,3,1,9) ", "document_date asc") as $task) {
             foreach ($task->unpackDetails('eqlist') as $eq) {
-                if ($eq->eq_id > 0) {
+                if ($eq->eq_id == $item->eq_id) {
 
-                    $it = new \App\DataItem(array(
-                        "usetask"  => $task->document_number,
+                    $this->_tvars['use1'][] = array(
+
+                        "usedate"  => Helper::fd($task->document_date),
+                        "usedn"  => $task->document_number,
                         "useplace" => $task->headerdata['pareaname']
-                    ));
-                    $this->_uselist[] = $it;
+                    );
                 }
             }
         }
+     
+        foreach (\App\Entity\Doc\Document::findYield("meta_name='officedoc' and content  not like '%<eq>0</eq>%'  and state not in(2,3,1,9) ", "document_date asc") as $office) {
+                if (intval($office->headerdata['eq'] ??0) == $item->eq_id) {
 
-        $this->usetable->uselist->Reload();
+                    $this->_tvars['use2'][] = array(
+                        "usedate"  => Helper::fd($office->document_date),
+              
+                        "usedn"  => $office->document_number,
+                        "usetitle" => $office->notes
+                    );
+                }
+
+        }
+    
+
+       
     }
 
-    public function uselistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $item = $row->getDataItem();
-        $row->add(new Label('usetask', $item->usetask));
-        $row->add(new Label('useplace', $item->useplace));
-    }
+ 
 
     public function editOnClick($sender) {
         $this->_item = $sender->owner->getDataItem();
