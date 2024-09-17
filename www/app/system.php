@@ -181,10 +181,19 @@ class System
         return Session::getSession()->wmsg;
     }
 
-    public static function setInfoMsg($msg) {
-        Session::getSession()->imsg = $msg;
+    public static function setInfoMsg($msg, $toppage=false) {
+
+        if($toppage) {
+            Session::getSession()->imsgtp = $msg;
+        } else {
+            Session::getSession()->imsg = $msg;
+        }
+    }
+    public static function getInfoMsgTopPage() {
+        return Session::getSession()->imsgtp;
     }
 
+   
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
