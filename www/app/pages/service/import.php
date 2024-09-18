@@ -223,8 +223,8 @@ class Import extends \App\Pages\Base
         $save['colname']=$colname;
         $save['colcode']=$colcode;
         $save['colbarcode']=$colbarcode;
+        $save['colcat']=$colcat;
         $save['colqty']=$colqty;
-        $save['colprice']=$colcat;
         $save['colprice1']=$colprice1;
         $save['colprice2']=$colprice2;
         $save['colprice3']=$colprice3;
@@ -239,6 +239,12 @@ class Import extends \App\Pages\Base
         $save['colshortname']=$colshortname;
         $save['colwar']=$colwar;
   
+        $letters=[];
+        foreach($save as $s){
+            if($s != '0') {
+               $letters[]=$s; 
+            }
+        }
   
             
         H::setKeyVal('importcols',serialize($save)) ;
@@ -254,13 +260,14 @@ class Import extends \App\Pages\Base
         for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
 
             $row = array();
-            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+         //   for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+            foreach ($letters as $iCol) {
                 $oCell = $oCells->get($iCol . $iRow);
                 if ($oCell) {
                     $row[$iCol] = $oCell->getValue();
-                }
+                }   
             }
-            $data[$iRow] = $row;
+            $data[$iRow] = $row; 
         }
 
         unset($oSpreadsheet);
@@ -278,21 +285,21 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname],
-                    'colcode'    => $row[$colcode],
-                    'colbarcode' => $row[$colbarcode],
-                    'colcat'      => $row[$colcat],
-                    'colqty'     => $row[$colqty],
-                    'colmsr'     => $row[$colmsr],
-                    'colinprice' => $row[$colinprice],
-                    'colprice1'  => $row[$colprice1],
-                    'colprice2'  => $row[$colprice2],
-                    'colprice3'  => $row[$colprice3],
-                    'colprice4'  => $row[$colprice4],
-                    'colprice5'  => $row[$colprice5],
-                    'colbrand'   => $row[$colbrand],
-                    'colcell'    => $row[$colcell],
-                    'coldesc'    => $row[$coldesc]
+                    'colname'    => $row[$colname] ?? '',
+                    'colcode'    => $row[$colcode] ?? '',
+                    'colbarcode' => $row[$colbarcode] ?? '',
+                    'colcat'      => $row[$colcat] ?? '',
+                    'colqty'     => $row[$colqty] ?? '',
+                    'colmsr'     => $row[$colmsr] ?? '',
+                    'colinprice' => $row[$colinprice] ?? '',
+                    'colprice1'  => $row[$colprice1] ?? '',
+                    'colprice2'  => $row[$colprice2] ?? '',
+                    'colprice3'  => $row[$colprice3] ?? '',
+                    'colprice4'  => $row[$colprice4] ?? '',
+                    'colprice5'  => $row[$colprice5] ?? '',
+                    'colbrand'   => $row[$colbrand] ?? '',
+                    'colcell'    => $row[$colcell] ?? '',
+                    'coldesc'    => $row[$coldesc] ?? ''
                 );
             }
             return;
@@ -302,25 +309,25 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $price1 = str_replace(',', '.', trim($row[$colprice1]));
-            $price2 = str_replace(',', '.', trim($row[$colprice2]));
-            $price3 = str_replace(',', '.', trim($row[$colprice3]));
-            $price4 = str_replace(',', '.', trim($row[$colprice4]));
-            $price5 = str_replace(',', '.', trim($row[$colprice5]));
+            $price1 = str_replace(',', '.', trim($row[$colprice1] ?? ''));
+            $price2 = str_replace(',', '.', trim($row[$colprice2] ?? ''));
+            $price3 = str_replace(',', '.', trim($row[$colprice3] ?? ''));
+            $price4 = str_replace(',', '.', trim($row[$colprice4] ?? ''));
+            $price5 = str_replace(',', '.', trim($row[$colprice5] ?? ''));
             
-            $itemcode = trim($row[$colcode]);
-            $brand = trim($row[$colbrand]);
-            $itemname = trim($row[$colname]);
-            $itembarcode = trim($row[$colbarcode]);
-            $cell = trim($row[$colcell]);
-            $msr = trim($row[$colmsr]);
-            $desc = trim($row[$coldesc]);
-            $catname = trim($row[$colcat]);
-            $image = trim($row[$colimage]);
+            $itemcode = trim($row[$colcode] ?? '');
+            $brand = trim($row[$colbrand] ?? '');
+            $itemname = trim($row[$colname] ?? '');
+            $itembarcode = trim($row[$colbarcode] ?? '');
+            $cell = trim($row[$colcell] ?? '');
+            $msr = trim($row[$colmsr] ?? '');
+            $desc = trim($row[$coldesc] ?? '');
+            $catname = trim($row[$colcat] ?? '');
+            $image = trim($row[$colimage] ?? '');
             $warranty = trim($row[$colwar]);
-            $shortname = trim($row[$colshortname]);
-            $inprice = str_replace(',', '.', trim($row[$colinprice]));
-            $qty = str_replace(',', '.', trim($row[$colqty]));
+            $shortname = trim($row[$colshortname] ?? '');
+            $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
+            $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
                
             
@@ -537,11 +544,11 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list2'][] = array(
-                    'colname'    => $row[$colcname],
-                    'colphone'   => $row[$colphone],
-                    'colemail'   => $row[$colemail],
-                    'colcity'    => $row[$colcity],
-                    'coladdress' => $row[$coladdress]
+                    'colname'    => $row[$colcname] ?? '',
+                    'colphone'   => $row[$colphone] ?? '',
+                    'colemail'   => $row[$colemail] ?? '',
+                    'colcity'    => $row[$colcity] ?? '',
+                    'coladdress' => $row[$coladdress]  ?? ''
                 );
             }
             return;
@@ -552,8 +559,8 @@ class Import extends \App\Pages\Base
         foreach ($data as $row) {
 
             $c = null;
-            $name = $row[$colcname];
-            $phone = $row[$colphone];
+            $name = $row[$colcname] ?? '';
+            $phone = $row[$colphone] ?? '';
 
             if (strlen(trim($name)) == 0) {
                 continue;
@@ -569,16 +576,16 @@ class Import extends \App\Pages\Base
                 $c->type = $t;
                 $c->customer_name = $name;
 
-                if (strlen($row[$colphone]) > 0) {
+                if (strlen($row[$colphone] ?? '') > 0) {
                     $c->phone = $row[$colphone];
                 }
-                if (strlen($row[$colemail]) > 0) {
+                if (strlen($row[$colemail] ?? '') > 0) {
                     $c->email = $row[$colemail];
                 }
-                if (strlen($row[$colcity]) > 0) {
+                if (strlen($row[$colcity] ?? '') > 0) {
                     $c->city = $row[$colcity];
                 }
-                if (strlen($row[$coladdress]) > 0) {
+                if (strlen($row[$coladdress] ?? '') > 0) {
                     $c->address = $row[$coladdress];
                 }
 
@@ -669,13 +676,13 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname],
-                    'colcode'    => $row[$colcode],
-                    'colbarcode' => $row[$colbarcode],
-                    'colqty'     => $row[$colqty],
-                    'colbrand'   => $row[$colbrand],
-                    'colmsr'     => $row[$colmsr],
-                    'colprice'   => $row[$colprice]
+                    'colname'    => $row[$colname] ?? '',
+                    'colcode'    => $row[$colcode] ?? '',
+                    'colbarcode' => $row[$colbarcode] ?? '',
+                    'colqty'     => $row[$colqty] ?? '',
+                    'colbrand'   => $row[$colbrand] ?? '',
+                    'colmsr'     => $row[$colmsr] ?? '',
+                    'colprice'   => $row[$colprice]  ?? ''
                 );
             }
             return;
@@ -687,8 +694,8 @@ class Import extends \App\Pages\Base
 
 
             $item = null;
-            $itemname = trim($row[$colname]);
-            $itemcode = trim($row[$colcode]);
+            $itemname = trim($row[$colname] ?? '');
+            $itemcode = trim($row[$colcode] ?? '');
             if (strlen($itemname) > 0) {
 
                 if (strlen($itemname) > 0) {
@@ -699,22 +706,22 @@ class Import extends \App\Pages\Base
                 }
 
 
-                $price = doubleval( str_replace(',', '.', trim($row[$colprice])) );
-                $qty = doubleval(str_replace(',', '.', trim($row[$colqty])) );
+                $price = doubleval( str_replace(',', '.', trim($row[$colprice] ?? '')) );
+                $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')) );
 
                 if ($item == null) {
                     $item = new Item();
                     $item->itemname = $itemname;
-                    if (strlen($row[$colcode]) > 0) {
-                        $item->item_code = trim($row[$colcode]);
+                    if (strlen($row[$colcode] ?? '') > 0) {
+                        $item->item_code = trim($row[$colcode]  );
                     }
-                    if (strlen($row[$colmsr]) > 0) {
+                    if (strlen($row[$colmsr] ?? '') > 0) {
                         $item->msr = trim($row[$colmsr]);
                     }
-                    if (strlen($row[$coldesc]) > 0) {
+                    if (strlen($row[$coldesc] ?? '') > 0) {
                         $item->description = trim($row[$coldesc]);
                     }
-                    if (strlen($row[$colbrand]) > 0) {
+                    if (strlen($row[$colbrand] ?? '') > 0) {
                         $item->manufacturer = trim($row[$colbrand]);
                     }
 
@@ -824,11 +831,11 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname],
-                    'colcode'    => $row[$colcode],
+                    'colname'    => $row[$colname] ?? '',
+                    'colcode'    => $row[$colcode] ?? '',
 
-                    'colqty'     => $row[$colqty],
-                    'colprice'   => $row[$colprice]
+                    'colqty'     => $row[$colqty] ?? '',
+                    'colprice'   => $row[$colprice]  ?? ''
                 );
             }
             return;
@@ -840,8 +847,8 @@ class Import extends \App\Pages\Base
 
 
             $item = null;
-            $itemname = trim($row[$colname]);
-            $itemcode = trim($row[$colcode]);
+            $itemname = trim($row[$colname] ?? '');
+            $itemcode = trim($row[$colcode] ?? '');
 
             if (strlen($itemname) > 0) {
 
@@ -854,8 +861,8 @@ class Import extends \App\Pages\Base
                 }
 
 
-                $price = str_replace(',', '.', trim($row[$colprice]));
-                $qty = str_replace(',', '.', trim($row[$colqty]));
+                $price = str_replace(',', '.', trim($row[$colprice] ?? ''));
+                $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
                 if ($item == null) {
                     $this->setError("Не знайдоно товар {$itemname} {$itemcode}");
