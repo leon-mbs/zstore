@@ -1495,7 +1495,7 @@ class Helper
         }
        
         $migration6120 = \App\Helper::getKeyVal('migration6120'); 
-        if($migration6120 != "done" && \App\Util::compareVersion($vdb,'6.10.0')>=0) {
+        if($migration6120 != "done" && \App\Util::compareVersion($vdb,'6.12.0')>=0) {
            Helper::log("Миграция 6120");
      
         }

@@ -262,7 +262,7 @@ class PPOHelper
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
           
         if($firm== null){
-            return array('success' => false, 'data' => 'Не вказана  компаiя в POS термiналi');
+            return array('success' => false, 'data' => 'Не вказана  компанiя в POS термiналi');
         }
         
         
@@ -348,7 +348,8 @@ class PPOHelper
             $n++;
         }
 
-
+       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Поаернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
+    
         //возврат
 
         $n = 1;
@@ -655,7 +656,7 @@ class PPOHelper
       
         $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
-
+            
             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";

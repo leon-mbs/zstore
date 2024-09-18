@@ -1278,11 +1278,14 @@ class ARMFood extends \App\Pages\Base
            
             
             if ($this->_doc->payamount <= $this->_doc->payed) {
-              if( $this->docpanel->payform->passfisc->isChecked()) {
-                    $this->_doc->headerdata["passfisc"]  = 1;
-                } else {
-                    $this->_doc->headerdata["passfisc"]  = 0;
-                    if($this->_pos->usefisc == 1){
+              
+                    
+                if($this->_pos->usefisc == 1){
+                    if( $this->docpanel->payform->passfisc->isChecked()) {
+                        $this->_doc->headerdata["passfisc"]  = 1;
+                    } else {     
+                        $this->_doc->headerdata["passfisc"]  = 0;
+                        
                         if( $this->_tvars['checkbox'] == true) {
 
                             $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
@@ -1311,7 +1314,7 @@ class ARMFood extends \App\Pages\Base
 
                             }         
                         }
-                        if ( $this->_tvars['ppo'] == true) {
+                        if( $this->_tvars['ppo'] == true) {
                             $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
 
 
@@ -1337,16 +1340,13 @@ class ARMFood extends \App\Pages\Base
                                 }
                             }
                         }
-                        $this->_doc->save();
+                       
                     }
                 }
-                
+                $this->_doc->save();     
 
             }
-
-
-
-
+ 
             $conn->CommitTrans();
 
         } catch(\Throwable $ee) {
@@ -1835,7 +1835,13 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна закрита");
+            $sc = \App\System::getSession()->shiftclose;
+            if(strlen($sc)>0) {
+               \App\System::getSession()->shiftclose="";
+               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
+            } else {
+               $this->setSuccess("Зміна закрита");    
+            }
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();

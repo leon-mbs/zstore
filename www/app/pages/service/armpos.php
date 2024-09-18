@@ -1380,15 +1380,12 @@ class ARMPos extends \App\Pages\Base
                         }
 
                     }
-                    $this->_doc->save();                    
+                                     
                 }
-                
+                $this->_doc->save();       
                 
             }
-                        
-
-
-
+  
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;
@@ -1606,7 +1603,15 @@ class ARMPos extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна закрита");
+            
+            $sc = \App\System::getSession()->shiftclose;
+            if(strlen($sc)>0) {
+               \App\System::getSession()->shiftclose="";
+               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
+            } else {
+               $this->setSuccess("Зміна закрита");    
+            }
+            
             if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
@@ -1618,6 +1623,7 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
+    //строка  списка чеков
     public function onDocRow($row) {
         $doc = $row->getDataItem();
         $row->add(new ClickLink('rownumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
@@ -1666,7 +1672,7 @@ class ARMPos extends \App\Pages\Base
         $t .="</table> " ;
 
         $row->rtlist->setText($t, true);
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
 
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);

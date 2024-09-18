@@ -311,7 +311,7 @@ class Base extends \Zippy\Html\WebPage
             Session::getSession()->migrationcheck = true;
         }
        
-   
+        
       
     }
 
@@ -361,6 +361,11 @@ class Base extends \Zippy\Html\WebPage
 
         System::setInfoMsg($msg);
     }
+    public function setInfoTopPage($msg) {
+        $msg = str_replace("'", "`", $msg) ;
+
+        System::setInfoMsg($msg, true);
+    }
 
     final protected function isError() {
         return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg()) > 0);
@@ -372,8 +377,16 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
+        $this->_tvars['alertinfo'] = "";
         if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
             $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
+
+            $this->goAnkor('topankor');
+
+
+        }
+        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
+            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
 
             $this->goAnkor('topankor');
 
@@ -402,6 +415,7 @@ class Base extends \Zippy\Html\WebPage
 
         $this->setError('');
         $this->setErrorTopPage('');
+        $this->setInfoTopPage('');
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
