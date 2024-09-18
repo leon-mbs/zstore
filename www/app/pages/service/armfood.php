@@ -1835,7 +1835,13 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна закрита");
+            $sc = \App\System::getSession()->shiftclose;
+            if(strlen($sc)>0) {
+               \App\System::getSession()->shiftclose="";
+               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
+            } else {
+               $this->setSuccess("Зміна закрита");    
+            }
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();

@@ -348,7 +348,7 @@ class PPOHelper
             $n++;
         }
 
-       \App\System::getSession()->shiftclose = "Готівка ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']);
+       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Поаернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
     
         //возврат
 

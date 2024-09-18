@@ -114,6 +114,13 @@ class Item extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
+        
+        $this->itemname = str_replace("'","`",$this->itemname) ;
+        $this->itemname = str_replace("\"","`",$this->itemname) ;
+        $this->shortname = str_replace("'","`",$this->shortname) ;
+        $this->shortname = str_replace("\"","`",$this->shortname) ;
+         
+        
         $fid = \App\System::getBranch();
         if ($fid > 0) {
             $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);

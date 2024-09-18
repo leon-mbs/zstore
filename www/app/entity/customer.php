@@ -33,7 +33,9 @@ class Customer extends \ZCL\DB\Entity
             $this->createdon = time();
             $this->user_id = \App\System::getUser()->user_id;
         }
-   
+        $this->customer_name = str_replace("'","`",$this->customer_name) ;
+        $this->customer_name = str_replace("\"","`",$this->customer_name) ;
+  
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
         if (doubleval($this->discount) > 0) {
@@ -114,6 +116,7 @@ class Customer extends \ZCL\DB\Entity
             \App\Entity\Subscribe::onNewCustomer($this->customer_id) ;
         }       
     }
+ 
     public function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();

@@ -496,10 +496,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->image_id = $image->image_id;
             $this->_item->thumb="";
         }
-        $this->_item->itemname = str_replace("'","`",$this->_item->itemname) ;
-        $this->_item->itemname = str_replace("\"","`",$this->_item->itemname) ;
-        $this->_item->shortname = str_replace("'","`",$this->_item->shortname) ;
-        $this->_item->shortname = str_replace("\"","`",$this->_item->shortname) ;
+
         $this->_item->save();
 
         $file = $this->itemdetail->editaddfile->getFile();

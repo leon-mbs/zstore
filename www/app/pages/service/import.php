@@ -322,11 +322,7 @@ class Import extends \App\Pages\Base
             $inprice = str_replace(',', '.', trim($row[$colinprice]));
             $qty = str_replace(',', '.', trim($row[$colqty]));
 
-            $itemname = str_replace("'","`",$itemname) ;
-            $itemname = str_replace("\"","`",$itemname) ;
-            $shortname = str_replace("'","`",$shortname) ;
-            $shortname = str_replace("\"","`",$shortname) ;
-            
+               
             
             $cat_id = 0;
 
