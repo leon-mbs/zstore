@@ -47,6 +47,10 @@ class ItemList extends \Zippy\Html\PageFragment
         if($post->wissearchonstore ==true) {
             $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
         }
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+           $where .= " and  item_id in (select item_id from store_stock where  store_id in (select store_id from stores where {$br} ))  "; 
+        }
 
 
         if(strlen($post->searchkey) > 0) {
