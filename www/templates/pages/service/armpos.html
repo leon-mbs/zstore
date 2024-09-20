@@ -149,7 +149,7 @@
                             Штрих код 
                             </div>
                               <div class="col-auto">
-                            <input autocomplete="off" style="width:120px"  type="text" zippy="barcode" onkeydown="onBarCode()">
+                            <input autofocus="on" autocomplete="off" style="width:120px"  type="text" zippy="barcode" onkeydown="onBarCode()">
                             <a zippy="addcode"  ></a>
                             
                             </div> 
@@ -489,7 +489,7 @@
                         <h4>Введення товару </h4>
                         <div class="form-group">
                             <label for="edittovar">Назва</label>
-                            <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                            <input autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                             <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
                             &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                            <br>
@@ -724,12 +724,7 @@
         <script>
             $(document).ready(function () {
 
-                if( $('#edittovar').length )         
-                {
-                    $('#edittovar').focus();
-                } else {
-                    $('#barcode').focus();  
-                }
+            
                 
                 var paytype = $('#paytypeh').val();
                 

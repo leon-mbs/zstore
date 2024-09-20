@@ -49,7 +49,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autofocus="on" autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -109,7 +109,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
 
                         
 
@@ -142,15 +142,7 @@
         </form>
         {{#usescanner}}
         <script>
-            $(document).ready(function () {
-
-               if( $('#edittovar').length )         
-                {
-                    $('#edittovar').focus();
-                } else {
-                    $('#barcode').focus();  
-                }
-            });
+  
 
             function onBarCode(ele) {
 

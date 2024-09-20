@@ -161,7 +161,7 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
+                    <input autofocus="on" class="form-control" zippy="edititem" placeholder="Почнiть вводити...  ">
 
                 </div>
                 {{#usesnumber}}
@@ -330,10 +330,7 @@
     <script>
         $(document).ready(function () {
  
-            if( $('#edititem').length )         
-            {
-                $('#edititem').focus();
-            } 
+ 
              
             var val = sessionStorage.getItem('decoder_readers');
             if (val != null) {

@@ -345,7 +345,7 @@
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
                         <div class="input-group  ">
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                               <div class="input-group-append">
                                  <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
                             </div>                    
@@ -463,10 +463,7 @@
    <script>
             $(document).ready(function () {
     
-                if( $('#edittovar').length )         
-                {
-                    $('#edittovar').focus();
-                }  
+                
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return

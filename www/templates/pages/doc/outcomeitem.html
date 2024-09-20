@@ -121,7 +121,7 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input    class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                    <input  autofocus="on"  class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
 
 
                     Наявність: <span zippy="qtystock"></span>
@@ -160,13 +160,7 @@
     </form>
     <script>
    
-        $(document).ready(function () {
- 
-            if( $('#edititem').length )         
-            {
-                $('#edititem').focus();
-            } 
-        });
+     
 
         function onBarCode(ele) {
 

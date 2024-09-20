@@ -115,7 +115,7 @@
                  <form zippy="editdetail">
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input   class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                    <input autofocus="on"  class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
                      <a zippy="openitemsel">Відкрити довідник</a>
                   <br>  Наявність: <span zippy="qtystock"></span>
 
@@ -187,13 +187,7 @@
             
     
     <script>
-         $(document).ready(function () {
- 
-            if( $('#edititem').length )         
-            {
-                $('#edititem').focus();
-            } 
-        });
+     
  
 
         function onBarCode(ele) {

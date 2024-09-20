@@ -41,7 +41,7 @@ class System
 
     public static function getBranch() {
 
-        return Session::getSession()->branch_id;
+        return intval(Session::getSession()->branch_id);
     }
 
     public static function setBranch(int $branch_id) {

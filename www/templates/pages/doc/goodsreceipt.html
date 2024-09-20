@@ -386,7 +386,7 @@
                         
                         
                         <div class="input-group  ">
-                        <input  placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
+                        <input autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
                               <div class="input-group-append">
                                  <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
                             </div>                    
@@ -744,10 +744,7 @@
             $(document).ready(function () {
       
       
-                if( $('#edititem').length )         
-                {
-                    $('#edititem').focus();
-                } 
+                
     
 
                 var val = sessionStorage.getItem('decoder_readers');
