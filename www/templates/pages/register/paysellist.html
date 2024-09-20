@@ -79,7 +79,9 @@
                         <th>Документ</th>
                         <th>Номер</th>
                         <th>Дата</th>
-
+                           {{#usebranch}}
+                        <th>Фiлiя</th>
+                           {{/usebranch}}
                          <th class="text-right">Сума</th>
                        
 
@@ -94,7 +96,11 @@
                         <td zippy="name"></td>
                         <td zippy="number"></td>
                         <td zippy="date"></td>
+                          {{#usebranch}}
+                       <td zippy="branch_name"></td>
+                           {{/usebranch}}
 
+                     
                         <td zippy="sum" class="text-right"></td>
 
 
@@ -173,7 +179,11 @@
                         <th  >Документ</th>
                         <th  >Номер</th>
                         <th  >Дата</th>
-                        <th  class="text-right">Прибуток</th>
+                         <th>Дата</th>
+                         {{#usebranch}}
+                        <th>Фiлiя</th>
+                       {{/usebranch}}  
+                      <th  class="text-right">Прибуток</th>
                         <th  class="text-right">Видаток</th>
                         <th  class="text-right">Деб. борг</th>
                         <th  class="text-right">Кред. борг</th>
@@ -191,7 +201,10 @@
                       <td zippy="dname"></td>
                       <td zippy="dnumber"></td>
                       <td zippy="ddate" ></td>
-     
+                        {{#usebranch}}
+                       <td zippy="dbranch_name"></td>
+                           {{/usebranch}}
+
                       <td zippy="in" class="text-right"></td>
                       <td zippy="out" class="text-right"></td>
                       <td zippy="bd" class="text-right"></td>
