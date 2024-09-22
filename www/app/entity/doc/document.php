@@ -86,7 +86,7 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
         $this->headerdata['_state_before_approve_'] = '';
         $this->headerdata['contract_id'] = 0;
-        $this->headerdata['timeentry'] = 0; // для проаводок
+        $this->headerdata['timeentry'] = 0; // если  проводки нужны не на дату документа
         $this->headerdata['time'] = time();  //  для чеков
         
     }
