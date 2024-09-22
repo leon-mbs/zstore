@@ -354,7 +354,7 @@ class GoodsIssue extends Document
   
         //тмц
         if($this->payamount >0) {
-            $b = new \App\Entity;
+            $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
             $b->document_id = $this->document_id;
             $b->amount = 0-$this->payamount;
