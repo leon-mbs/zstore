@@ -49,7 +49,7 @@
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off"   autofocus  type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off"   autofocus="on"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -115,7 +115,7 @@
                  <form zippy="editdetail">
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input   class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                    <input autofocus="on"  class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
                      <a zippy="openitemsel">Відкрити довідник</a>
                   <br>  Наявність: <span zippy="qtystock"></span>
 
@@ -166,7 +166,7 @@
 
                     <div class="form-group">
                         <label for="editsnitemname">Назва </label>
-                        <input  autofocus  placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
+                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
                     </div>
                     <div class="form-group">
                         <label for="editsn">Серійні номери</label>
@@ -187,13 +187,7 @@
             
     
     <script>
-         $(document).ready(function () {
- 
-            if( $('#edititem').length )         
-            {
-                $('#edititem').focus();
-            } 
-        });
+     
  
 
         function onBarCode(ele) {

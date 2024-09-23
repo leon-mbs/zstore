@@ -141,7 +141,7 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus   type="text" zippy="barcode"
+                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"    type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                        {{#usemobilescanner}}  
@@ -249,7 +249,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input    placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
+                        <input  autofocus="on"  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
                         <br>Наявність: <span zippy="qtystock"></span>
 
                     </div>
@@ -459,10 +459,7 @@
         <script>
             $(document).ready(function () {
 
-               if( $('#edittovar').length )         
-               {
-                   $('#edittovar').focus();
-               }      
+                   
 
                 var val = sessionStorage.getItem('decoder_readers');
                 if (val != null) {

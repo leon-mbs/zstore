@@ -211,6 +211,7 @@ GROUP BY c.customer_name,
 
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
+        $row->add(new Label('branch_name', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
 
         $row->add(new Label('sum', H::fa($doc->payamount  - $doc->payed)));
@@ -442,14 +443,14 @@ GROUP BY c.customer_name,
       $sql =  "select 
              SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS active,
              SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS passive,
-            cv.document_id,cv.document_number,cv.createdon,dv.meta_desc
+            cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
 
              FROM custacc_view cv
              JOIN documents_view dv 
              ON cv.document_id = dv.document_id 
              WHERE  cv.customer_id={$this->_cust->customer_id} 
             {$br} AND optype IN (3)    
-            GROUP BY cv.document_id,cv.document_number,cv.createdon
+            GROUP BY cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
             ORDER  BY  cv.document_id ";
      
         foreach ( $conn->Execute($sql) as $d) {
@@ -460,6 +461,7 @@ GROUP BY c.customer_name,
                 $r->document_id = $d['document_id'];
                 $r->meta_desc = $d['meta_desc'];
                 $r->document_number = $d['document_number'];
+                $r->branch_name = $d['branch_name'];
                 $r->document_date =  strtotime( $d['createdon'] );
                 $r->s_active = $d['active'];
                 $r->s_passive = $d['passive'];
@@ -489,6 +491,7 @@ GROUP BY c.customer_name,
 
         $row->add(new Label('dname', $doc->meta_desc));
         $row->add(new Label('dnumber', $doc->document_number));
+        $row->add(new Label('dbranch_name', $doc->branch_name));
         $row->add(new Label('ddate', H::fd($doc->document_date)));
 
 

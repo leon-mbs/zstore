@@ -94,7 +94,7 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код або С/Н &nbsp;<input style="width:150px;" autofocus  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
+                        Штрих код або С/Н &nbsp;<input style="width:150px;" autofocus="on"   autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
                                                 &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                       {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
@@ -301,7 +301,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input autofocus="on"  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Відкрити довідник</a>
                        <br>  На складі: <span zippy="qtystock"></span>
                              &nbsp;На інших складах: <span zippy="qtystockex"></span>
@@ -564,11 +564,7 @@
           <script>
             $(document).ready(function () {
   
-            if( $('#edittovar').length )         
-            {
-                $('#edittovar').focus();
-            } 
-     
+           
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return

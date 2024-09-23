@@ -376,7 +376,11 @@ class OrderFood extends Document
          $conn = \ZDB\DB::getConnect();
          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
-              
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
+         
+          //платежи          
          if($this->payamount >0) {
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
@@ -385,7 +389,7 @@ class OrderFood extends Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-      //платежи       
+       
         foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;

@@ -367,9 +367,10 @@ class ARMPos extends \App\Pages\Base
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->headerdata['time'] = time();
+        $this->_doc->document_date = time();
+        $this->_doc->document_number = $this->_doc->nextNumber();
         
-        $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());
-
+      
 
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
@@ -400,6 +401,9 @@ class ARMPos extends \App\Pages\Base
         if($this->_docid >0) { //загрузка  чека
             
             $doc = Document::load($this->_docid);
+            if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+               $doc->document_date=time();                
+            }            
             $this->loadDoc($doc);
            
             $this->_docid = 0;
@@ -454,9 +458,9 @@ class ARMPos extends \App\Pages\Base
             return;
 
         }
-        if(strlen($this->_doc->document_number) > 0) {
-            $this->docpanel->form3->document_number->setText($this->_doc->document_number);
-        }
+
+        $this->docpanel->form3->document_number->setText($this->_doc->document_number);
+        $this->docpanel->form3->document_date->setDate($this->_doc->document_date);
 
 
         $this->docpanel->form3->paytypeh->setText($this->_paytype);
@@ -1188,7 +1192,6 @@ class ARMPos extends \App\Pages\Base
         $doc = Document::getFirst(" document_id <> {$this->_doc->document_id}  and   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
             $this->_doc->document_number = $this->_doc->nextNumber();
-            $this->docpanel->form3->document_number->setText($this->_doc->document_number);
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
@@ -1802,6 +1805,9 @@ class ARMPos extends \App\Pages\Base
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);
+        if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+           $doc->document_date=time();                
+        }
         $this->loadDoc($doc);
     }
 

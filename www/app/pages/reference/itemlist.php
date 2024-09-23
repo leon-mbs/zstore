@@ -452,8 +452,14 @@ class ItemList extends \App\Pages\Base
    
         $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
         if($digits > 100000000) {
-            $this->setError('Надто велике  число в  артикулі');
-            return;
+            
+          if (\App\System::getOption("common", "autoarticle") == 1) {
+             $this->setWarn('Надто велике  число в  артикулі');
+          }  else {
+             $this->setError('Надто велике  число в  артикулі');
+             return;
+          }             
+            
         }
         //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {

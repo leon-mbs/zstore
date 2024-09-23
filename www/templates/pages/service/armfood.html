@@ -169,7 +169,7 @@
                            <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
                             {{#usescanner}}
-                             <input placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
+                             <input autofocus="on" placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
 
                             {{/usescanner}}
 
@@ -430,7 +430,7 @@
                             <div class="form-group  row ">
                                 <label class="col-7 col-form-label" for="pfpayed"  >Внесено оплату</label>
                                 <div class="col-5">
-                                <input autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
+                                <input autofocus="on" autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
                                 </div>
                             </div>
                             <div class="form-group  row ">
@@ -646,7 +646,7 @@
 
         <script>
             $(document).ready(function () {
-                $('#pfpayed').focus();
+
         
 
                 $("#pfpayed").on('input',function () {
@@ -769,7 +769,7 @@
         <script>
 
 
-            $('#barcode').focus();
+          
 
 
             function onBarCode(ele) {
