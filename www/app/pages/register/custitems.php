@@ -33,7 +33,7 @@ class CustItems extends \App\Pages\Base
 
     public function __construct($add = false) {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('CustItems')) {
+        if (false == \App\ACL::checkShowReg('CustItems')) {
             return;
         }
 

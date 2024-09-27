@@ -1,14 +1,14 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="3">
+        <td align="center" colspan="7">
             Комісійні товари  на {{dt}}
         </td>
     </tr>
     
     {{#iscust}}
     <tr >
-        <td  colspan="3">
+        <td  colspan="7">
           <b> Комітент:</b>  {{cust}}
             <br>
             <br>
@@ -44,8 +44,31 @@
     </tr>
     {{/_detail}}
  
+    <tr >
+        <td  colspan="7">
+          <b> Продажі:</b>  
+            <br>
+           
+        </td>
+    </tr>
+   {{#_detail2}}
+     <tr>
+        <td  >Дата {{dt}}</td>
+        <td colspan="6">Документи {{docs}}</td>
+    </tr>
+      {{#items}}
+     <tr>
+        <td > </td>
+        <td > {{itemname}}</td>
+        <td align="right"> {{sm}}</td>
+        <td colspan="4"> </td>
+    </tr>
+     {{/items}}
+     <tr>
+        <td colspan="7">Сума {{sm}}</td>
+    </tr>
 
-
+   {{/_detail2}}   
 </table>
 <br> <br>
 
