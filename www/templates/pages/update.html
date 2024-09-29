@@ -19,7 +19,10 @@
             </div>
             <div class="col-12  "  >
                Версiя БД <b>{{curversiondb}}</b> 
-               &nbsp;&nbsp; <span class="text-danger"> {{{reqversion}}} </span>
+               &nbsp;  <span class="text-danger"> {{{reqversion}}} </span>
+                 {{#actualdb}}
+                  <span>Версія   актуальна</span>
+                 {{/actualdb}}    
             </div>
           </div>
            
@@ -34,7 +37,17 @@
             Або виконайте  повне  оновлення  з    <a class="link" href="https://zippy.com.ua/download/fullzstore.zip"> архiву</a> (крім config.php) 
      </div>  
          {{/tooold}}
- 
+         {{#oldphp}}
+  <div class="col-12  mt-2">
+            
+     <i class="fa fa-exclamation-circle text-warning"></i> 
+       Поточна версія PHP на вашому сервері - {{oldphpv}}. 
+       Пiдтримка версiй менших 8.0.0 з часом буде припинена.  
+       <br> Рекомендується  оновити до 8.1+
+       <br>
+       <br>
+       </div> 
+         {{/oldphp}} 
          
 
  
@@ -64,7 +77,14 @@
 
            <br><small><i class="fa fa-exclamation-triangle"></i>  
                 У випадку помилки оновити вручну  з  архіву
-           </small>           
+           </small> 
+            {{#showdb}}  
+            <br><small><i class="fa fa-exclamation-triangle"></i>  
+                Бажано  оновити спочатку  структуру БД 
+           </small>       
+            {{/showdb}}  
+           
+                     
            <br><br>         
       
          
@@ -74,11 +94,9 @@
             
         {{/show}}
     
-    
-    
-        {{#showdb}}       
+          {{#showdb}}       
   
-     <div class="col-12 mt-4 ">  
+     <div class="col-12 mt-2 ">  
 
            <b>Оновлення структури бази данних</b>
            <br>Завантажити  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного оновлення
@@ -88,34 +106,22 @@
                 (Попередньо його потрібно зупинити).
                
            </small>
-           <br>
+     
            <br><br><a zippy="updatesql"><b>Оновити автоматично</b></a>
            <br><small><i class="fa fa-exclamation-triangle"></i>  
                 У випадку помилки з`єднання оновіть спочтаку код, як  написано  вище  потім  спробуйте  ще  раз оновити БД
            </small>           
            <br><br>
    </div>  
-            {{/showdb}}
-     
-        {{#oldphp}}
-  <div class="col-12  mt-2">
-            
-     <i class="fa fa-exclamation-circle text-warning"></i> 
-       Поточна версія PHP на вашому сервері - {{oldphpv}}. 
-       Пiдтримка версiй менших 8.0.0 з часом буде припинена.  
-       <br> Рекомендується  оновити до 8.1+
-       <br>
-       <br>
-       </div> 
-         {{/oldphp}}      
+            {{/showdb}}       
          
          {{#rollback}}
        <div class="col-12  mt-2">
     
         <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
-        <br><small>Повторити оновлення, наприклад пiсля виходу виправлення (хотфiксу)</small>
+        <br><small>Повторити оновлення коду, наприклад пiсля виходу виправлення (хотфiксу)</small>
         <br>  <br> 
-        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити до попередньої версії </b> </a> 
+        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити код до попередньої версії </b> </a> 
         <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
            
      </div>  
