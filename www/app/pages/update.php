@@ -77,7 +77,7 @@ class Update extends \App\Pages\Base
         $c = str_replace("v", "", \App\System::CURR_VERSION);
         $n = str_replace("v", "", $data['version']);
  
-        $b= \App\Util::compareVersion($n , $c);
+        $b= version_compare($n , $c);
         
         if ($b!=1 ) {  //не новая версия
 
@@ -143,7 +143,7 @@ class Update extends \App\Pages\Base
           $this->_tvars['oldphpv']  = $phpv;    
         
  
-          $b= \App\Util::compareVersion("8.0.0" , $phpv);
+          $b= version_compare("8.1.0" , $phpv);
           if($b==1)   {
               $this->_tvars['oldphp']  = true; 
                         

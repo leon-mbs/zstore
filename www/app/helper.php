@@ -597,7 +597,7 @@ class Helper
 
         $common = System::getOptions("common");
         if($common['qtydigits'] > 0) {
-            return @number_format($qty, $common['qtydigits'], '.', '');
+            return number_format(doubleval($qty), $common['qtydigits'], '.', '');
         } else {
             return intval($qty);
         }
@@ -649,15 +649,15 @@ class Helper
 
         $common = System::getOptions("common");
         if($common['amdigits'] == 1) {
-            return @number_format($am, 2, '.', '');
+            return number_format($am, 2, '.', '');
         }
         if($common['amdigits'] == 5) {
             $am = round($am * 20) / 20;
-            return @number_format($am, 2, '.', '');
+            return number_format($am, 2, '.', '');
         }
         if($common['amdigits'] == 10) {
             $am = round($am * 10) / 10;
-            return @number_format($am, 2, '.', '');
+            return number_format($am, 2, '.', '');
         }
 
         return round($am);
@@ -1403,7 +1403,7 @@ class Helper
         $vdb=\App\System::getOptions('version', false) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
-        if($migrationbonus != "done" && \App\Util::compareVersion($vdb,'6.11.0')>=0  )    {
+        if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
             Helper::log("Миграция бонус");
             $conn->BeginTrans();
             try {
@@ -1429,7 +1429,7 @@ class Helper
 
 
         $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
-        if($migrationbalans != "done" && \App\Util::compareVersion($vdb,'6.11.0')>=0) {
+        if($migrationbalans != "done" && version_compare($vdb,'6.11.0')>=0) {
             Helper::log("Миграция баланс");
             //  + контрагента (active)  - наш кредитовый  долг
             //  - контрагента (passive)  - наш дебетовый  долг
@@ -1495,7 +1495,7 @@ class Helper
         }
        
         $migration6120 = \App\Helper::getKeyVal('migration6120'); 
-        if($migration6120 != "done" && \App\Util::compareVersion($vdb,'6.12.0')>=0) {
+        if($migration6120 != "done" && version_compare($vdb,'6.12.0')>=0) {
            Helper::log("Миграция 6120");
      
         }
