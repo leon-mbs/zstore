@@ -241,29 +241,7 @@ class Util
         return $lines;
     }
     
-    /**
-    * сравоение  версий
-    * 
-    * @param mixed $v1
-    * @param mixed $v2
-    * @return mixed    0  если  равны,  1 если больше v1, -1 если больше v2
-    */
-    public  static function compareVersion($v1,$v2) {
-        $a1=explode('.',$v1) ;          
-        $a2=explode('.',$v2) ;          
-        
-        if($a1[0] != $a2[0]) {
-            return  $a1[0] > $a2[0]  ? 1:-1;
-        }
-        if($a1[1] != $a2[1]) {
-            return  $a1[1] > $a2[1]  ? 1:-1;
-        }
-        if(intval($a1[2])!=  intval($a2[2]) ) {
-            return   intval($a1[2]) >  intval($a2[2])  ? 1:-1;
-        }
-        return 0;
-    }
-    
+ 
     
 }
 

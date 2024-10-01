@@ -21,10 +21,7 @@ define('_ROOT', __DIR__ . '/');
 if (file_exists(_ROOT . 'config/config.php')) {
     require_once _ROOT . 'config/config.php';
 
-} else {   // для  совместимости
-   // $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-    die("Перенесiть налаштування з config/config.ini в config/config.php ") ;
-} //todo remove  
+}  
 
 if (!is_array($_config)) {
     die("Invalid config file");
@@ -68,7 +65,7 @@ if (!file_exists(_ROOT . "upload")) {
 try {
     $conn = \ZDB\DB::getConnect();
 } catch(Throwable $e) {
-    echo 'Ошибка  соединения с  БД. Подробности  в папке logs';
+    echo 'Помилка з`єднання з БД. Деталi в папцi logs';
 
     $logger->error($e);
     die;

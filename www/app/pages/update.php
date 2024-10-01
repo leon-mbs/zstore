@@ -31,16 +31,20 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
         $this->add(new  ClickLink('rollback',$this,'OnRollback')) ;
         $this->add(new  ClickLink('reload',$this,'OnFileUpdate')) ;
+      
  
+         
         $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversiondb'] = System::getOptions('version', false);
+        $this->_tvars['curversiondb'] =   System::getOptions('version', false);
 
         $requireddb=  System::REQUIRED_DB ;
  
         if($this->_tvars['curversiondb'] != $requireddb){
            $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
+           $this->_tvars['actualdb'] = false;
         } else{
            $this->_tvars['reqversion']  = '';
+           $this->_tvars['actualdb'] =true;
         }
         
         
@@ -68,19 +72,23 @@ class Update extends \App\Pages\Base
             $this->setError('Помилка завантаження  json') ;
             return  ;
         }
-        $this->_tvars['show']  = true   ;
+       
         
         $c = str_replace("v", "", \App\System::CURR_VERSION);
         $n = str_replace("v", "", $data['version']);
  
-        $b= \App\Util::compareVersion($n , $c);
-       
+        $b= version_compare($n , $c);
+        
         if ($b!=1 ) {  //не новая версия
 
            $this->_tvars['actual']  = true   ;
            $this->_tvars['show']  = false   ;
           
-        }   
+        } else {
+           $this->_tvars['actual']  = false   ;
+           $this->_tvars['show']  = true   ;
+            
+        } 
         
         $ca = explode('.', $c) ;
         $na = explode('.', $n) ;
@@ -135,7 +143,7 @@ class Update extends \App\Pages\Base
           $this->_tvars['oldphpv']  = $phpv;    
         
  
-          $b= \App\Util::compareVersion("8.0.0" , $phpv);
+          $b= version_compare("8.1.0" , $phpv);
           if($b==1)   {
               $this->_tvars['oldphp']  = true; 
                         

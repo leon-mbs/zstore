@@ -92,7 +92,7 @@ class ItemComission extends \App\Pages\Base
             $d= \App\Entity\Doc\Document::load($item["document_id"]);
             $det=[];
             $det['itemname'] =  $item['itemname'];
-            $det['item_code'] = H::fqty($item['item_code']);
+            $det['item_code'] = $item['item_code'];
             $det['price'] = H::fa($item['partion']);
             $det['docs'] = $d->docs;
             

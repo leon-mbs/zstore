@@ -101,7 +101,7 @@ class UserLogin extends \Zippy\Html\WebPage
                     $v = @file_get_contents("https://zippy.com.ua/version.json" );
                     $data = @json_decode($v, true);
                     if(is_array($data)){
-                       $b= \App\Util::compareVersion($data['version'] , System::CURR_VERSION);
+                       $b= version_compare($data['version'] , System::CURR_VERSION);
                     }               
                          
                     if(  $b==1 ){
