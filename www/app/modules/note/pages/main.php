@@ -175,7 +175,7 @@ class Main extends \App\Pages\Base
         $topic->save();
         $tags = trim($post->tags) ;
         if(strlen($tags)>0) {
-            $topic->saveTags(explode(",", $tags));
+            $topic->saveTags(explode(";", $tags));
         }
 
 
@@ -321,7 +321,7 @@ class Main extends \App\Pages\Base
         $ret['detail'] = $t->detail;
         $ret['tags'] = $t->getTags();
         $ret['files'] = array();
-
+        $ret['sugs'] = $t->getSuggestionTags();
         foreach(Helper::findFileByTopic($t->topic_id) as $f) {
             $ret['files'][] = array('file_id'=>$f->file_id,
              'filename'=>$f->filename ,
@@ -334,6 +334,7 @@ class Main extends \App\Pages\Base
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
     }
+  
     public function loadTopics($args, $post=null) {
 
         $conn = \ZCL\DB\DB::getConnect();

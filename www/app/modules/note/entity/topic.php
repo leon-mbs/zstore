@@ -128,15 +128,10 @@ class Topic extends \ZCL\DB\Entity
      *
      */
     public function getTags() {
-        $tl = array();
+     
         $conn = \ZCL\DB\DB::getConnect();
-        $rc = $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
-        foreach ($rc as $k => $v) {
-            if (strlen($v)) {
-                $tl[$k] = $v;
-            }
-        }
-        return $tl;
+        return $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
+  
     }
 
     /**
