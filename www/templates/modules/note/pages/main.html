@@ -214,9 +214,9 @@
                                 </select>
                             </div>
                               <div class="form-group">
-                                <label for="edittags">Теги</label>
-                                <input   v-model="editTags" type="text"  class="form-control"  >
-                                <small>Теги роздiляються  комою</small>
+                                <label id="edittags_label" for="edittags">Теги</label>
+                                 <div id="edittags"  ></div>  
+                                
                             </div>
 
 
@@ -262,7 +262,7 @@
             searchText:"" ,
             searchTitle:false ,
             selectedSearchId:0 ,
-
+            topicSuggestions:[] ,
             newTopic:false ,
             editTitle:"" ,
             editTags:"" ,
@@ -392,13 +392,14 @@
                    this.selectedTopic = t
                
                    callPageMethod('loadTopic',[t.topic_id], null,(data)=> 
-                   { 
+                   {    
                       data = JSON.parse(data)
+                       
                       this.topicData = data.detail
                       this.editAccType = data.acctype
                       this.topicTags = data.tags
                       this.topicFiles = data.files
-                     
+                      this.topicSuggestions = data.sugs     
                    })          
                       
                   
@@ -413,10 +414,10 @@
  
                   $('#topicedit').modal('show');
                   $('#editdetail').summernote("code","")
-         
+                  this.topicTags=[]
       
-            
-                    
+                              
+                        
                                      
             }   ,
             onEditTopic:function(){
@@ -427,9 +428,8 @@
                   this.editTags = this.topicTags.join();
                   $('#topicedit').modal('show');
                   $('#editdetail').summernote("code",this.topicData)
-                
-            
-                
+                     
+               
                   
             }   ,
          
@@ -685,13 +685,31 @@
 
             
             
-     $(function() {
-         
-          
-         
-    });       
+        function inittags(  ) {  
+               
+               $('#edittags').remove();  
+               $('#edittags_label').append('<div id="edittags"></div>');  
             
-     
+               var tags =   $('#edittags').tags({
+                        tagData:vapp.topicTags,
+                        suggestions:vapp.topicSuggestions, 
+                      
+                        afterAddingTag:function(tag){
+                          var t = tags.getTags();
+                          vapp.editTags = t.join(";") 
+                       
+                        },
+                        afterDeletingTag:function(tag){
+                          var t = tags.getTags();
+                          vapp.editTags = t.join(";") 
+                         
+                        }
+                   });  
+            }   
+            
+     $('#topicedit').on('shown.bs.modal', function (event) {
+            inittags()
+        })
             
         </script>
     </body>

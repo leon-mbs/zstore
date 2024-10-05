@@ -171,11 +171,12 @@ class Main extends \App\Pages\Base
         if ($topic->acctype > 0 && $node->ispublic != 1) {
             return "Не можна додавати приватний топік у публічний вузол" ;
         }
+        $topic->updatedon = time();
 
         $topic->save();
         $tags = trim($post->tags) ;
         if(strlen($tags)>0) {
-            $topic->saveTags(explode(",", $tags));
+            $topic->saveTags(explode(";", $tags));
         }
 
 
@@ -321,7 +322,7 @@ class Main extends \App\Pages\Base
         $ret['detail'] = $t->detail;
         $ret['tags'] = $t->getTags();
         $ret['files'] = array();
-
+        $ret['sugs'] = $t->getSuggestionTags();
         foreach(Helper::findFileByTopic($t->topic_id) as $f) {
             $ret['files'][] = array('file_id'=>$f->file_id,
              'filename'=>$f->filename ,
@@ -334,6 +335,7 @@ class Main extends \App\Pages\Base
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
     }
+  
     public function loadTopics($args, $post=null) {
 
         $conn = \ZCL\DB\DB::getConnect();
