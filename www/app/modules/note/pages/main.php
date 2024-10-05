@@ -171,6 +171,7 @@ class Main extends \App\Pages\Base
         if ($topic->acctype > 0 && $node->ispublic != 1) {
             return "Не можна додавати приватний топік у публічний вузол" ;
         }
+        $topic->updatedon = time();
 
         $topic->save();
         $tags = trim($post->tags) ;
