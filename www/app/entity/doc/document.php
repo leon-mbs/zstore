@@ -614,14 +614,14 @@ class Document extends \ZCL\DB\Entity
      *
      */
     public function checkUniqueNumber() {
-        $this->document_number = trim($this->document_number);
+        $document_number = trim($this->document_number);
         
         $branch = "";
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
         }
         //  $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
-        $doc = Document::getFirst(" document_number = '{$this->document_number}' {$branch}");
+        $doc = Document::getFirst(" meta_id={$this->meta_id} and  document_number = '{$document_number}' {$branch}");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
                 return false;
@@ -632,7 +632,6 @@ class Document extends \ZCL\DB\Entity
 
     public function nextNumber($branch_id = 0) {
         $doc = $this->cast();
-        $letters='';
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
@@ -643,19 +642,23 @@ class Document extends \ZCL\DB\Entity
         }
         
         $last=0;
-        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}   order  by  document_id desc  limit 0,100000 "; //todo
-        $list = $conn->GetCol($sql);
-        if (count($list) == 0) {
+        $letters='';
+        $sql = "select document_number from  documents  where   meta_id={$this->meta_id}   {$branch}   order  by  document_id desc  "; 
+        $lastdoc= $conn->GetOne($sql) ;
+        if(strlen($lastdoc ??'')==0) {
             $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
-        } else {
-           foreach($list as $n) {
-               $digits = intval( preg_replace('/[^0-9]/', '', $n) );
-               if($digits > $last) {
-                  $last =  $digits ; //максимальная цифра
-                  $letters = preg_replace('/[0-9]/', '', $n);
-               }
+        }    else {
+            $letters = preg_replace('/[0-9]/', '', $lastdoc);
+        }
+        $sql = "select document_number from  documents  where document_number like ". $conn->qstr( $letters.'%') ." and   meta_id={$this->meta_id}   {$branch}   order  by  document_id desc  "; 
+      
+        foreach($conn->Execute($sql) as $row) {
+           $digits = intval( preg_replace('/[^0-9]/', '', $row['document_number']) );
+           if($digits > $last) {
+              $last =  $digits ; //максимальная цифра
            }
-        } 
+        }
+        
         $last++;
         $d=5;
         if( strlen( ''.$last) >$d){ //если не  влазит
