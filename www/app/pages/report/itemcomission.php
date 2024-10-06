@@ -120,7 +120,7 @@ class ItemComission extends \App\Pages\Base
         }
       
         $sql="select  d.document_date,coalesce(sum(e.quantity * e.partion),0) as sm, GROUP_CONCAT(DISTINCT d.document_number SEPARATOR ',') AS docs from entrylist_view e join documents_view d on e.document_id=d.document_id 
-             where  e.quantity < 0 and e.stock_id in ({$ids})  {$stard}    and d.meta_name!='RetCustIssue'
+             where  e.quantity < 0 and e.stock_id in ({$ids})  {$stard}    and e.tag=". \App\Entity\Entry::TAG_SELL ."
              group by d.document_date  
              order by d.document_date  "    ;
        
@@ -131,7 +131,7 @@ class ItemComission extends \App\Pages\Base
         $sql2="select  i.itemname,coalesce(sum(e.quantity  ),0) as sm from entrylist_view e
          join documents_view d on e.document_id=d.document_id 
          join items i on e.item_id=i.item_id 
-             where  e.quantity < 0 and e.stock_id in ({$ids}) and d.document_date='{$row['document_date']}'     and d.meta_name!='RetCustIssue'
+             where  e.quantity < 0 and e.stock_id in ({$ids}) and d.document_date='{$row['document_date']}'     and e.tag=". \App\Entity\Entry::TAG_SELL ."
              group by i.itemname  
              order by i.itemname  "    ;
              $items=[];

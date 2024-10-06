@@ -73,12 +73,14 @@ class PayBalance extends \App\Pages\Base
 
 
         $brpay = "";
+        $brpayd = "";
         $brst = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) ";
 
             $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
+            $brpayd = " and  d.document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
 
 
@@ -110,7 +112,7 @@ class PayBalance extends \App\Pages\Base
                  SELECT  meta_desc,coalesce(sum(i.amount),0) as detam  
                      FROM iostate i join documents_view d on i.document_id=d.document_id
                      WHERE    
-                      iotype = {$row['iotype']}
+                      iotype = {$row['iotype']}    {$brpayd}
                       AND d.document_date  >= " . $conn->DBDate($from) . "
                       AND  d.document_date  <= " . $conn->DBDate($to) . "
                       GROUP BY  meta_desc order  by  meta_desc  
@@ -153,7 +155,7 @@ class PayBalance extends \App\Pages\Base
                      SELECT  meta_desc,coalesce(sum(i.amount),0) as detam  
                          FROM iostate i join documents_view d on i.document_id=d.document_id
                          WHERE    
-                          iotype = {$row['iotype']}
+                          iotype = {$row['iotype']}    {$brpayd}
                           AND d.document_date  >= " . $conn->DBDate($from) . "
                           AND  d.document_date  <= " . $conn->DBDate($to) . "
                           GROUP BY  meta_desc order  by  meta_desc  
