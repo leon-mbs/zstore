@@ -566,7 +566,7 @@ CREATE TABLE crontask (
   starton datetime DEFAULT NULL,
 
   PRIMARY KEY (id)
-) DEFAULT CHARSET = utf8;
+) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE roles (
   role_id int(11) NOT NULL AUTO_INCREMENT,
