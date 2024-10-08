@@ -192,7 +192,7 @@ class Income extends \App\Pages\Base
         }
 
 
-        H::log($sql) ;
+       
         $total = 0;
         $rs = $conn->Execute($sql);
 
