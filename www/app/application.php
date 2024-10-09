@@ -85,7 +85,7 @@ class Application extends \Zippy\WebApplication
 
             } catch(\Throwable $e) {
                 global $logger;
-                $logger->error($e->getMessage());
+                $logger->error($e );
 
                 die("Server error");
             }
