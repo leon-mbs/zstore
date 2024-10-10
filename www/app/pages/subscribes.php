@@ -56,6 +56,9 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new ClickLink('delete'))->onClick($this, 'OnDelete');
    
         $this->update($this->editform->editeventtype);
+        $this->update($this->editform->editrecievertype) ;    
+        $this->update($this->editform->editmsgtype) ;    
+     
         $this->Reload();
 
     }
@@ -65,7 +68,7 @@ class Subscribes extends \App\Pages\Base
 
  
         if($sender->id=='editeventtype') {
-            $et = $this->editform->editeventtype->getValue();
+            $et = $sender->getValue();
             $l=Subscribe::getRecieverList($et) ;
             $this->editform->editrecievertype->setOptionList($l);
 
@@ -82,28 +85,26 @@ class Subscribes extends \App\Pages\Base
 
             }
        
-            $this->update($this->editform->editrecievertype) ;    
             return;       
         }
-        $rt = $this->editform->editrecievertype->getValue();
 
         if($sender->id=='editrecievertype') {
+            $rt = $sender->getValue();
             $l=Subscribe::getMsgTypeList($rt) ;
             $this->editform->editmsgtype->setOptionList($l);
-            $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
+        //    $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
              
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
                
-            $this->update($this->editform->editmsgtype) ;    
-                   
+                    
             return;       
           
         }        
-        $mt = $this->editform->editmsgtype->getValue();
         
         if($sender->id=='editmsgtype') {
+            $mt = $sender->getValue();
             $this->editform->editmsgsubject->setVisible(false);
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
@@ -160,8 +161,12 @@ class Subscribes extends \App\Pages\Base
         $this->editform->delete->setVisible(true);
 
         $this->editform->editeventtype->setValue($this->_sub->sub_type);
+        $this->update($this->editform->editeventtype);
+         
         $this->editform->editrecievertype->setValue($this->_sub->reciever_type);
+        $this->update($this->editform->editrecievertype) ;    
         $this->editform->editmsgtype->setValue($this->_sub->msg_type);
+        $this->update($this->editform->editmsgtype);        
         $this->editform->edituser->setValue($this->_sub->user_id);
         $this->editform->editdoctype->setValue($this->_sub->doctype);
         $this->editform->editstate->setValue($this->_sub->state);
@@ -173,7 +178,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editattach->setCheCked($this->_sub->attach);
         $this->editform->edithtml->setCheCked($this->_sub->html);
 
-        $this->update($this->editform->editeventtype);
+
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
         
