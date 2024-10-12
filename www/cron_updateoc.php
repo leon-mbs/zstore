@@ -343,7 +343,7 @@ try {
             }
             $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Комментар:" . $shoporder->comment . ";";
+            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(\App\Entity\Doc\Document::STATE_NEW);
 

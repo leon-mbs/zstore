@@ -30,6 +30,7 @@ class Subscribe extends \ZCL\DB\Entity
     public const RSV_USER      = 3;
     public const RSV_WH        = 4;
     public const RSV_SYSTEM    = 5;
+    public const RSV_DOCRESP   = 6;
 
     protected function init() {
         $this->sub_id = 0;
@@ -131,6 +132,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list = array();
         if($et==self::EVENT_DOCSTATE) {
            $list[self::RSV_DOCAUTHOR] = "Автор документу";
+           $list[self::RSV_DOCRESP] = "Відповідальний за документ";
            $list[self::RSV_CUSTOMER] = "Контрагент документу";
         }
         if($et==self::EVENT_NEWCUST) {
@@ -168,6 +170,9 @@ class Subscribe extends \ZCL\DB\Entity
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
                 $u = \App\Entity\User::load($doc->headerdata['author']);
+            }
+            if ($sub->reciever_type == self::RSV_DOCRESP) {
+                $u = \App\Entity\User::load($doc->user_id);
             }
             if ($sub->reciever_type == self::RSV_USER) {
                 $u = \App\Entity\User::load($sub->user_id);

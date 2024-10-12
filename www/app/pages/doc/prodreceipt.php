@@ -196,14 +196,14 @@ class ProdReceipt extends \App\Pages\Base
 
 
         $id = $this->editdetail->edititem->getValue();
+  
+        $item = Item::load($id);
 
-        if ($id == 0) {
+        if ($item == null) {
             $this->setError("Не обрано товар");
             return;
         }
 
-
-        $item = Item::load($id);
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();

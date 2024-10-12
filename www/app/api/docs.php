@@ -24,8 +24,13 @@ class docs extends JsonRPC
 
     //список касс и  денежных счетов
     public function mflist() {
-        $list = \App\Entity\MoneyFund::getList();
-
+        $list = [];
+        $balance= \App\Entity\MoneyFund::Balance()  ;
+        
+        foreach (\App\Entity\MoneyFund::find("disabled <> 1") as $k => $v) {
+             
+            $list[$k] = array('name'=>$v->mf_name,'beznal'=>$v->beznal == 1,'balance'=>$balance[$k]  ) ;
+        }
         return $list;
     }
     
@@ -34,7 +39,7 @@ class docs extends JsonRPC
         $list = array();
 
         if (!is_array($args['numbers'])) {
-            throw new \Exception("Хибні параметри");
+            throw new \Exception("Невірні параметри");
         }
         foreach ($args['numbers'] as $num) {
             $num1 = Document::qstr("%<apinumber>{$num}</apinumber>%");
@@ -116,6 +121,63 @@ class docs extends JsonRPC
         return $list;
     }
 
+  // /api/docs
+    // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1}
+    //Списание ТМЦ в  производсво
+    public function createprodissue($args) {
+
+
+        if ($args['store_id'] > 0) {
+            $store = \App\Entity\Store::load($args['store_id']);
+            if ($store == null) {
+                throw new \Exception('Не  вказано  склад');
+            }
+        }
+        $doc = Document::create('ProdIssue');
+        $doc->document_number = $doc->nextNumber();
+        $doc->document_date = time();
+        $doc->headerdata['store'] = $args['store_id'];
+        $doc->headerdata['parea'] = $args['parea'];
+
+
+        $doc->notes = @base64_decode($args['description']);
+        $details = array();
+        $total = 0;
+        if (is_array($args['items']) && count($args['items']) > 0) {
+            foreach ($args['items'] as $it) {
+                if (strlen($it['item_code']) == 0) {
+                    throw new \Exception("Не вказано артикул");
+                }
+                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
+
+                if ($item instanceof Item) {
+
+                    $item->quantity = $it['quantity'];
+                    $item->rowid = $item->item_id;
+
+                    $details[$item->item_id] = $item;
+                } else {
+                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+
+                }
+            }
+        } else {
+            throw new \Exception("Не задані позиції");
+        }
+        if (count($details) == 0) {
+            throw new \Exception("Не задані позиції");
+        }
+        $doc->packDetails('detaildata', $details);
+
+        $doc->amount = 0;
+
+        $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+
+        $doc->updateStatus(Document::STATE_EXECUTED);
+
+        return $doc->document_number;
+    }
 
     //записать заказ
     public function createorder($args) {
@@ -249,7 +311,8 @@ class docs extends JsonRPC
         $doc->headerdata["phone"] = $args['phone'];
         $doc->headerdata["email"] = $args['email'];
         $doc->headerdata["ship_address"] = $args['ship_address'];
-
+        $doc->branch_id = intval($args['branch_id']);
+ 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
@@ -330,6 +393,7 @@ class docs extends JsonRPC
 
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
+        $doc->branch_id = intval($args['branch_id']);
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -420,6 +484,7 @@ class docs extends JsonRPC
         $doc->headerdata["payment"] = $args['mf'];
         $doc->headerdata["nds"] = 0;
         $doc->headerdata["disc"] = 0;
+        $doc->branch_id = intval($args['branch_id']);
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -500,6 +565,7 @@ class docs extends JsonRPC
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->headerdata["apinumber"] = $args['number'];
+        $doc->branch_id = intval($args['branch_id']);
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -551,64 +617,7 @@ class docs extends JsonRPC
     }
 
  
-    // /api/docs
-    // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1}
-    //Списание ТМЦ в  производсво
-    public function createprodissue($args) {
-
-
-        if ($args['store_id'] > 0) {
-            $store = \App\Entity\Store::load($args['store_id']);
-            if ($store == null) {
-                throw new \Exception('Не  указан  склад');
-            }
-        }
-        $doc = Document::create('ProdIssue');
-        $doc->document_number = $doc->nextNumber();
-        $doc->document_date = time();
-        $doc->headerdata['store'] = $args['store_id'];
-        $doc->headerdata['parea'] = $args['parea'];
-
-
-        $doc->notes = @base64_decode($args['description']);
-        $details = array();
-        $total = 0;
-        if (is_array($args['items']) && count($args['items']) > 0) {
-            foreach ($args['items'] as $it) {
-                if (strlen($it['item_code']) == 0) {
-                    throw new \Exception("Не зажано артикул");
-                }
-                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
-
-                if ($item instanceof Item) {
-
-                    $item->quantity = $it['quantity'];
-                    $item->rowid = $item->item_id;
-
-                    $details[$item->item_id] = $item;
-                } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
-
-                }
-            }
-        } else {
-            throw new \Exception("Не задані позиції");
-        }
-        if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
-        }
-        $doc->packDetails('detaildata', $details);
-
-        $doc->amount = 0;
-
-        $doc->save();
-        $doc->updateStatus(Document::STATE_NEW);
-
-        $doc->updateStatus(Document::STATE_EXECUTED);
-
-        return $doc->document_number;
-    }
-
+  
     //записать акт выполненых работ
     public function serviceact($args) {
 
@@ -639,6 +648,7 @@ class docs extends JsonRPC
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
         $doc->headerdata["device"] = $args['device'];
+        $doc->branch_id = intval($args['branch_id']);
 
 
         //    $doc->notes = @base64_decode($args['description']);
@@ -690,4 +700,49 @@ class docs extends JsonRPC
         return $doc->document_number;
     }
 
+ 
+    //кассовый  ордер
+    public function createpayment($args) {
+
+        $mf = \App\Entity\MoneyFund::load( intval($args['mf'] ));
+    
+        if ($mf==null) {
+           throw new \Exception('Не вказано  касу');
+        }
+        
+        $sum= doubleval($args['amount']) ;
+        if ($sum==0) {
+           throw new \Exception('Не вказано  суму');
+        }
+        if($sum>0)  {
+           $doc = Document::create('IncomeMoney');
+           $doc->headerdata['type'] = \App\Entity\IOState::TYPE_BASE_INCOME;
+        } else {
+           $doc = Document::create('IncomeMoney');
+           $doc->headerdata['type'] = \App\Entity\IOState::TYPE_BASE_OUTCOME;
+        }
+        $doc->document_number = $doc->nextNumber();
+        $doc->document_date = time();
+        $doc->headerdata['payment'] = $mf->mf_id;
+        $doc->headerdata['paymentname'] = $mf->mf_name;
+        $doc->headerdata['detail'] = 0;
+        $doc->branch_id = intval($args['branch_id']);
+ 
+        $doc->customer_id = intval($args['customer_id']);
+        if($doc->customer_id > 0){
+            $doc->headerdata['detail'] = $sum > 0 ?1:2;  //оплата  от покупателя  или  оплата  поставщику
+        }
+        $doc->amount = $sum;
+   
+        $doc->notes = @base64_decode($args['description']);
+
+        $doc->save();
+        $doc->updateStatus(Document::STATE_NEW);
+
+        $doc->updateStatus(Document::STATE_EXECUTED);
+
+        return $doc->document_number;
+    }
+    
+    
 }

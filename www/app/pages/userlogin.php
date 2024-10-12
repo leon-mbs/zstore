@@ -6,7 +6,7 @@ use App\Application as App;
 use App\Entity\User;
 use App\Helper;
 use App\System;
-use Zippy\Html\Form\TextInput as TextInput;
+use Zippy\Html\Form\TextInput ;
 
 class UserLogin extends \Zippy\Html\WebPage
 {

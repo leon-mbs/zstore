@@ -743,12 +743,10 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $letters = "ID";
         $last=0;
-        $sql = "select item_code from  items     order  by  item_id desc   ";  
-        $list = $conn->GetCol($sql);
-      
+        $sql = "select item_code from  items where  item_code like 'ID%'   order  by  item_id desc   ";  
  
-        foreach($list as $n) {
-           $digits = intval( preg_replace('/[^0-9]/', '', $n) );
+        foreach($conn->Execute($sql) as $row) {
+           $digits = intval( preg_replace('/[^0-9]/', '', $row['item_code']) );
            if($digits > $last) {
               $last =  $digits ; //максимальная цифра
            }

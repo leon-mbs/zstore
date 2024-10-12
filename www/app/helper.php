@@ -68,7 +68,7 @@ class Helper
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
-        $_SESSION['userlogin'] = 'Гость';
+        $_SESSION['userlogin'] = 'Гiсть';
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 
