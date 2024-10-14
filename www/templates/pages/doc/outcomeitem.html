@@ -71,11 +71,15 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
+                           
+                            <th> {{#usesnumber}}
+                            Серія
+                             {{/usesnumber}}
+                            </th>
 
-                            {{/usesnumber}}
-                            <th width="40" class="text-right">Кіл.</th>
+                           
+                            <th   class="text-right">Кіл.</th>
+                            <th   class="text-right">На суму</th>
 
                             <th  ></th>
                         </tr>
@@ -83,16 +87,24 @@
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
+                           
                             <td zippy="snumber"></td>
 
-                            {{/usesnumber}}
+                            
                             <td zippy="quantity" class="text-right"></td>
-                            <td zippy="price" class="text-right"></td>
+                            <td zippy="sum" class="text-right"></td>
+                           
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
 
 
+                        </tr>
+                        <tr>
+                          <td colspan="5"  class="text-right"><b>Всього:<a></td>
+                          <td zippy="amount" class="text-right"></td>
+                          <td  ></td>
+                         
+                           
                         </tr>
                     </table>
 
@@ -117,11 +129,11 @@
     <form zippy="editdetail">
         <h4>Введення товару </h4>
         <div class="row">
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4 col-xl-3">
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input  autofocus="on"  class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                    <input     class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
 
 
                     Наявність: <span zippy="qtystock"></span>
@@ -159,7 +171,11 @@
 
     </form>
     <script>
-   
+        $(document).ready(function () {
+      
+        
+         $("#edititem").focus()   
+        });    
      
 
         function onBarCode(ele) {

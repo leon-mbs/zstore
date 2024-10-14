@@ -249,7 +249,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input  autofocus="on"  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
+                        <input     placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
                         <br>Наявність: <span zippy="qtystock"></span>
 
                     </div>
@@ -469,7 +469,8 @@
                 if (val != null) {
                     $('#stream_constraints').val(val);
                 }
-
+                  $("#edittovar").focus()    
+ 
 
             });
 
