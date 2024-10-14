@@ -58,12 +58,14 @@ class OutcomeItem extends Document
                               "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
-                              "quantity"  => H::fqty($item->quantity));
+                              "quantity"  => H::fqty($item->quantity),
+                              "sum"  => H::fa($item->sum));
         }
 
         $header = array(
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
+            'amount'            => H::fa($this->amount),
             "from"            => $this->headerdata["storename"],
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number

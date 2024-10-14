@@ -39,7 +39,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
         $bid = \App\System::getBranch();
-
+        $this->docform->add(new Label('amount'));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $tostore = array();
@@ -100,6 +100,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        $this->total();
     }
 
     public function detailOnRow($row) {
@@ -111,10 +112,13 @@ class OutcomeItem extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('sum', H::fqty($item->sum)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
+        $this->_doc->amount += $item->sum;
     }
 
     public function deleteOnClick($sender) {
@@ -125,7 +129,7 @@ class OutcomeItem extends \App\Pages\Base
         $rowid =  array_search($item, $this->_itemlist, true);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-        $this->docform->detail->Reload();
+        $this->total();
     }
 
     public function addrowOnClick($sender) {
@@ -173,6 +177,8 @@ class OutcomeItem extends \App\Pages\Base
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
+        $item->sum = H::fa($item->quantity * $item->getPartion());
+        
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Потрібна партія виробника");
             return;
@@ -197,7 +203,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->detail->Reload();
+        $this->total();
 
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
@@ -447,7 +453,13 @@ class OutcomeItem extends \App\Pages\Base
         if ($s instanceof Stock) {
             $item->price = $s->partion;
         }
-        $this->docform->detail->Reload();
+        $this->total();
     }
 
+    
+    private function total(){
+        $this->_doc->amount=0;
+        $this->docform->detail->Reload();
+        $this->docform->amount->setText(H::fa( $this->_doc->amount)) ;
+    }
 }

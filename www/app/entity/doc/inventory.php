@@ -96,10 +96,12 @@ class Inventory extends Document
             $b= $conn->GetOne($sql);
             
             $name = $item->itemname;
+            $code = $item->item_code;
             $q = H::fqty($item->quantity);
             if (round($item->qfact) == round($q)) {
                 $detail[] = array("no"        => $i++,
                                   "item_name" => $name,
+                                  "item_code" => $code,
                                   "qfact"     => $item->qfact,
                                   "snumber"   => $item->snumber,
                                   "quantity"  => $user->rolename != 'admins' ? '-' :$q
@@ -110,6 +112,7 @@ class Inventory extends Document
                 $summinus += $b;
                 $detaillost[] = array("no"        => $i++,
                                       "item_name" => $name,
+                                      "item_code" => $code,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
                                       "quantity"  => $user->rolename != 'admins' ? '-' :$q
@@ -120,6 +123,7 @@ class Inventory extends Document
 
                 $detailover[] = array("no"        => $i++,
                                       "item_name" => $name,
+                                      "item_code" => $code,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
                                       "quantity"  => $user->rolename != 'admins' ? '-' :$q
