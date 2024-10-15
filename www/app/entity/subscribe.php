@@ -463,7 +463,7 @@ class Subscribe extends \ZCL\DB\Entity
         if ($doc->customer_id > 0) {
             $cust = \App\Entity\Customer::load($doc->customer_id) ;
          
-            $header['customer_name'] = $cust->phone;  
+            $header['customer_name'] = $cust->customer_name;  
             $dolg = $cust->getDolg();
             if($dolg >0) {
                 $header['credit'] = \App\Helper::fa($dolg);
