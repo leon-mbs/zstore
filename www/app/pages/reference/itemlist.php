@@ -854,11 +854,17 @@ class ItemList extends \App\Pages\Base
             if (strlen($barcode) == 0) {
                 $barcode = $item->item_code;
             }
-
+           try{
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
             $header['img'] = $img;
             $header['barcode'] = \App\Util::addSpaces($barcode);
+        } catch (\Throwable $e) {
+           \App\Helper::logerror("barcode: ".$e->getMessage()) ;
+           return '';
+        }
+            
+            
         }
         $header['iscolor'] = $printer['pcolor'] == 1;
 
