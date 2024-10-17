@@ -5,6 +5,5 @@ www/cron.cmd
 .idea/
 www/.idea/
  
-www/logs/
-www/upload/
+ 
 www/sitemap.xml
