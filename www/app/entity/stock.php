@@ -39,15 +39,22 @@ class Stock extends \ZCL\DB\Entity
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
 
-        $entitylist = self::find($criteria, "sdate asc");
+        $entitylist = self::find($criteria, " sdate asc");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
+            $name = $value->itemname;
+            
+            if (strlen($value->item_code) > 0) {
+                $name .= ', ' . $value->item_code ;
+            }
             if (strlen($value->snumber) > 0) {
-                $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd($value->sdate) . ')';
+                $name .= ', С/Н ' . $value->snumber . ' ' . \App\Helper::fd($value->sdate) ;
             }
              
-            $list[$key] = $value->itemname;
+            $name .= ', ц. ' . \App\Helper::fa($value->partion) ;
+            $name .= ', к. ' . \App\Helper::fqty($value->qty) ;
+            $list[$key] = $name;
         }
 
         return $list;
