@@ -1034,9 +1034,13 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
-        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
-
+        try{
+           $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+           $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
+        } catch (\Throwable $e) {
+          \App\Helper::logerror("barcode: ".$e->getMessage()) ;
+           return '';
+        }
         return $img;
     }
 

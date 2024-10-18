@@ -1111,13 +1111,16 @@ class Helper
                     $barcode = $item->item_code;
                 }
                 if(strlen($barcode) > 0) {
-                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                    $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . "\"";
-                    $header['barcodeattr'] = $da;
-                    $header['barcodewide'] = \App\Util::addSpaces($barcode);
-                    $header['barcode'] = $barcode;
-                    $header['isbarcode'] = true;
-
+                    try{
+                        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                        $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . "\"";
+                        $header['barcodeattr'] = $da;
+                        $header['barcodewide'] = \App\Util::addSpaces($barcode);
+                        $header['barcode'] = $barcode;
+                        $header['isbarcode'] = true;
+                    } catch (\Throwable $e) {
+                       Helper::logerror("barcode: ".$e->getMessage()) ;
+                    }
                 }
             }
 

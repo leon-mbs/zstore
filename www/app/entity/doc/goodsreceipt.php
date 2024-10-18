@@ -172,6 +172,8 @@ class GoodsReceipt extends Document
                 $pay->notes = 'Доставка';
                 $pay->user_id = \App\System::getUser()->user_id;
                 $pay->save();
+                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+                
            }
            
             

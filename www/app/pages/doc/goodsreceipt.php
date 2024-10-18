@@ -747,7 +747,7 @@ class GoodsReceipt extends \App\Pages\Base
                         if ($order->meta_name =="OrderCust" && $order->state == Document::STATE_INPROCESS) {
                             $order->updateStatus(Document::STATE_CLOSED);
 
-                            $this->setSuccess("Замовлення {$order->document_number} закрито");
+                            $this->setSuccess("Заявка {$order->document_number} закрита");
                         }
                     }
                 }
@@ -931,7 +931,7 @@ class GoodsReceipt extends \App\Pages\Base
         if ($this->_doc->headerdata['comission']==1 && $this->_doc->headerdata['val'] != "0") {
             $this->setError("Не можна валюту і комісію ");
         }
-        if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
+        if ($this->_doc->headerdata['comission']==1 && ($this->_doc->payed - doubleval($this->_doc->headerdata['delivery']) ) > 0) {
             $this->setError("Оплата не  вноситься якщо Комісія ");
         }
         

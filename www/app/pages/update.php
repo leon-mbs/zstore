@@ -54,10 +54,16 @@ class Update extends \App\Pages\Base
         $this->_tvars['show']  = false   ; 
  
         $phpv =   phpversion()  ;
+        $phpv = substr(str_replace('.','',$phpv),0,2) ;
+      
+        $r= mysqli_connect($_config['db']['host'], $_config['db']['user'], $_config['db']['pass'], $_config['db']['name']) ; 
+
+        $myv = mysqli_get_server_info($r)  ;
+        $myv = substr(str_replace('.','',$myv),0,2) ;
         
         $conn = \ZDB\DB::getConnect();
      
-        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='.$phpv. '_'. System::CURR_VERSION ;
+        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv .'_'.$myv ;
     
         $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
         $data = @json_decode($v, true);

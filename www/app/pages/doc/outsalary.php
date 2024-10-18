@@ -74,7 +74,7 @@ class OutSalary extends \App\Pages\Base
             $this->docform->advance->setChecked($this->_doc->headerdata['advance']);
             $this->docform->year->setAttribute('disabled','disabled');
             $this->docform->month->setAttribute('disabled','disabled');
-            $this->docform->advance->setAttribute('disabled','disabled');
+       //     $this->docform->advance->setAttribute('disabled','disabled');
             $this->docform->notes->setText($this->_doc->notes);
             $this->listform->total->setText(H::fa($this->_doc->amount));
             $this->_list = $this->_doc->unpackDetails('detaildata');

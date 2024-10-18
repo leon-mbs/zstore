@@ -112,7 +112,7 @@ class OutcomeItem extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('sum', H::fqty($item->sum)));
+        $row->add(new Label('sum', H::fa($item->sum)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
