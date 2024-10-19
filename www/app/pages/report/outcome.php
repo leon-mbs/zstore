@@ -364,7 +364,7 @@ class Outcome extends \App\Pages\Base
         if ($type == 13) {  //по поставщикам
 
             $sql = "
-             SELECT t.customer_name,   sum(0-t.quantity*t.partion) as summa, sum((t.outprice-t.partion )*(0-t.quantity)) AS navar 
+             SELECT t.customer_name as itemname,   sum(0-t.quantity*t.partion) as summa, sum((t.outprice-t.partion )*(0-t.quantity)) AS navar 
                 FROM (
                  SELECT   e.outprice,  e.partion,e.quantity , 
 
@@ -398,16 +398,18 @@ class Outcome extends \App\Pages\Base
 
            
 
-                $det = array(
-                  
-                    "name"      => $row['customer_name'],
-
+              $det = array(
+                    "code"      => $row['item_code'],
+                    "name"      => $row['itemname'],
+                    "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
                     "qty"       => H::fqty($row['qty']),
                     "navar"     => H::fa($row['navar']),
+                    "navarsign" => $row['navar'] > 0,
                     "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa'] + $row['navar'] ), 1, '.', '') : "",
-                    "summa"     => H::fa($row['summa'] + $row['navar']) 
-                    
+                    "summa"     => H::fa($row['summa'] + $row['navar']),
+                    "docs"     => intval($row['docs'])
                 );
+
 
                 
                 $detail[] = $det;
