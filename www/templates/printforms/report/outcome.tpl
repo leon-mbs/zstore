@@ -441,3 +441,54 @@
 
 </table>
 {{/_type12}}
+{{#_type13}}
+<tr style="font-size:larger; font-weight: bolder;">
+    <td align="center" colspan="5">
+        Продажі по постачальниках <br> <br>
+    </td>
+</tr>
+<tr style="font-weight: bolder;">
+
+    <th colspan="4" style="border: solid black 1px">Найменування</th>
+
+
+    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    
+        {{^noshowpartion}}
+
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    {{/noshowpartion}}
+
+    <th></th>    
+</tr>
+{{#_detail}}
+<tr>
+   
+
+
+    <td colspan="4">{{name}}</td>
+
+
+    <td align="right">{{summa}}</td>
+    {{^noshowpartion}}
+    
+    <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
+    {{/noshowpartion}}
+    
+    <td></td>  
+</tr>
+{{/_detail}}
+<tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
+    {{^noshowpartion}}
+
+<td align="right" ><b>{{totnavar}}</b></b></td> 
+<td align="right" ><b>{{totnavarproc}}</b></b></td> 
+
+    {{/noshowpartion}}
+
+</tr>
+
+</table>
+{{/_type13}}
