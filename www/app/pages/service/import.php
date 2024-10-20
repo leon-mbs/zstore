@@ -288,7 +288,7 @@ class Import extends \App\Pages\Base
                     'colname'    => $row[$colname] ?? '',
                     'colcode'    => $row[$colcode] ?? '',
                     'colbarcode' => $row[$colbarcode] ?? '',
-                    'colcat'      => $row[$colcat] ?? '',
+                    'colcat'     => $row[$colcat] ?? '',
                     'colqty'     => $row[$colqty] ?? '',
                     'colmsr'     => $row[$colmsr] ?? '',
                     'colinprice' => $row[$colinprice] ?? '',

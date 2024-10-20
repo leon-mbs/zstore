@@ -35,10 +35,11 @@ class OutcomeMoney extends Document
 
     public function generateReport() {
 
-
+     
         $pt = \App\Entity\IOState::getTypeList(2);
         $header = array(
             'amount'          => H::fa($this->amount),
+            'totalstr'        => \App\Util::money2str_ua($this->amount),
             'date'            => H::fd($this->document_date),
             "notes"           => nl2br($this->notes),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
