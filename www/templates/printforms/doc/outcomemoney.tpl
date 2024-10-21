@@ -13,14 +13,15 @@
     </tr>
     <tr>
         <td colspan="4">
-            <b>Сума:</b> {{amount}}
+            <b>Сума:</b> {{amount}} 
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>Тип витрати:</b> {{type}}
+            {{totalstr}}   
         </td>
     </tr>
+  
     {{#customer}}
     <tr>
         <td colspan="4">

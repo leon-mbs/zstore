@@ -47,7 +47,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $totalstr =  \App\Util::money2str_ua($this->headerdata["payamount"]);
+        $totalstr =  \App\Util::money2str_ua($this->payamount);
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
@@ -78,7 +78,7 @@ class GoodsIssue extends Document
 
                         "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
                         "payed"      => $this->headerdata["payed"] > 0 ? H::fa($this->headerdata["payed"]) : false,
-                        "payamount"  => $this->headerdata["payamount"] > 0 ? H::fa($this->headerdata["payamount"]) : false
+                        "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
         );
 

@@ -192,11 +192,6 @@ class Import extends \App\Pages\Base
         $colbarcode = $this->iform->colbarcode->getValue();
         $colcat = $this->iform->colcat->getValue();
         $colqty = $this->iform->colqty->getValue();
-        $colprice1 = $this->iform->colprice1->getValue();
-        $colprice2 = $this->iform->colprice2->getValue();
-        $colprice3 = $this->iform->colprice3->getValue();
-        $colprice4 = $this->iform->colprice4->getValue();
-        $colprice5 = $this->iform->colprice5->getValue();
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colcell = $this->iform->colcell->getValue();
@@ -205,6 +200,11 @@ class Import extends \App\Pages\Base
         $colimage = $this->iform->colimage->getValue();
         $colshortname = $this->iform->colshortname->getValue();
         $colwar = $this->iform->colwar->getValue();
+        $colprice1 = $this->iform->colprice1->getValue();
+        $colprice2 = $this->iform->colprice2->getValue();
+        $colprice3 = $this->iform->colprice3->getValue();
+        $colprice4 = $this->iform->colprice4->getValue();
+        $colprice5 = $this->iform->colprice5->getValue();
 
 
         if ($t == 1 && $colqty === '0') {
@@ -288,7 +288,7 @@ class Import extends \App\Pages\Base
                     'colname'    => $row[$colname] ?? '',
                     'colcode'    => $row[$colcode] ?? '',
                     'colbarcode' => $row[$colbarcode] ?? '',
-                    'colcat'      => $row[$colcat] ?? '',
+                    'colcat'     => $row[$colcat] ?? '',
                     'colqty'     => $row[$colqty] ?? '',
                     'colmsr'     => $row[$colmsr] ?? '',
                     'colinprice' => $row[$colinprice] ?? '',
@@ -369,21 +369,23 @@ class Import extends \App\Pages\Base
                 }
                 $item = new Item();
             }
+            if($colname !='0')    $item->itemname = $itemname;
+            if($colcode !='0')    $item->item_code = $itemcode;
+            if($colbarcode !='0') $item->bar_code = $itembarcode;
+            if($colmsr !='0')         $item->msr = $msr;
+            if($colcell !='0')        $item->cell = $cell;
+            if($colbrand   !='0')       $item->manufacturer = $brand;
+            if($coldesc !='0')        $item->description = $desc;
+            if($colshortname !='0')   $item->shortname = $shortname;
+            if($colwar !='0')    $item->warranty = $warranty;
 
-            $item->itemname = $itemname;
-            $item->item_code = $itemcode;
-            $item->bar_code = $itembarcode;
-            $item->msr = $msr;
-            $item->cell = $cell;
-            $item->manufacturer = $brand;
-            $item->description = $desc;
-            $item->shortname = $shortname;
-            $item->warranty = $warranty;
-            $item->price1 = doubleval($price1);
-            $item->price2 = doubleval($price2);
-            $item->price3 = doubleval($price3);
-            $item->price4 = doubleval($price4);
-            $item->price5 = doubleval($price5);
+            
+            if ($colprice1 !='0') $item->price1 = doubleval($price1) ;
+            if ($colprice2 !='0') $item->price2 = doubleval($price2) ;
+            if ($colprice3 !='0') $item->price3 = doubleval($price3) ;
+            if ($colprice4 !='0') $item->price4 = doubleval($price4) ;
+            if ($colprice5 !='0') $item->price5 = doubleval($price5) ;
+
 
             if ($inprice > 0) {
                 $item->price = $inprice;
@@ -400,10 +402,9 @@ class Import extends \App\Pages\Base
             }
 
             $item->amount = doubleval($item->quantity) * doubleval($item->price);
-
-            $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
-            $item->noshop = $this->iform->noshowshop->isChecked() ? 1 : 0;
-
+            if($this->iform->noshowprice->isChecked()) $item->noprice  = 1;
+            if($this->iform->noshowshop->isChecked()) $item->noshop  = 1;
+      
             $item->save();
             $cnt++;
             if ($item->quantity > 0) {
@@ -712,19 +713,10 @@ class Import extends \App\Pages\Base
                 if ($item == null) {
                     $item = new Item();
                     $item->itemname = $itemname;
-                    if (strlen($row[$colcode] ?? '') > 0) {
-                        $item->item_code = trim($row[$colcode]  );
-                    }
-                    if (strlen($row[$colmsr] ?? '') > 0) {
-                        $item->msr = trim($row[$colmsr]);
-                    }
-                    if (strlen($row[$coldesc] ?? '') > 0) {
-                        $item->description = trim($row[$coldesc]);
-                    }
-                    if (strlen($row[$colbrand] ?? '') > 0) {
-                        $item->manufacturer = trim($row[$colbrand]);
-                    }
-
+                    $item->item_code = trim($row[$colcode] ?? ''  );
+                    $item->msr = trim($row[$colmsr]  ?? '');
+                    $item->description = trim($row[$coldesc]  ?? '');
+                    $item->manufacturer = trim($row[$colbrand]  ?? '');
 
                     $item->save();
                 }
