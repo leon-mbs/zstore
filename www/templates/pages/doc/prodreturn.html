@@ -61,10 +61,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-
-                            {{/usesnumber}}
+                           <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                        
 
 
                             <th class="text-right">Кіл.</th>
@@ -77,9 +75,9 @@
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
 
-                            {{#usesnumber}}
+                           
                             <td zippy="snumber"></td>
-                            {{/usesnumber}}
+                          
 
                             <td zippy="quantity" class="text-right"></td>
 

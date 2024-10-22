@@ -60,10 +60,8 @@
                             <th>Код</th>
                             <th>Од.</th>
                             <th>Ком.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                 <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                 
 
 
                             <th class="text-right">Кіл.</th>
@@ -78,10 +76,8 @@
                             <td zippy="msr"></td>
                             <td zippy="cell"></td>
 
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                           <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                      
 
                             <td zippy="quantity" class="text-right"></td>
                             <td  class="text-right text-nowrap">

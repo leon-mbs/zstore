@@ -65,10 +65,8 @@
                         <tr>
                             <th>Назва</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-
-                            {{/usesnumber}}
+                             <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                 
                             <th width="40" class="text-right">Кіл.</th>
 
                             <th  ></th>
@@ -76,10 +74,10 @@
                         <tr zippy="detail">
                             <td zippy="item"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
+                      
                             <td zippy="snumber"></td>
 
-                            {{/usesnumber}}
+                         
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>

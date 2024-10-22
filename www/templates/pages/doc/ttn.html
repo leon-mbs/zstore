@@ -160,13 +160,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-                            <th>Дата</th>
-                            {{/usesnumberdate}}
+                           <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                        
 
 
                             <th class="text-right">Кіл.</th>
@@ -180,13 +175,8 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            {{/usesnumber}}
-
-                           {{#usesnumberdate}}
-                            <td zippy="sdate"></td>
-                            {{/usesnumberdate}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                        
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -203,14 +193,10 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            {{#usesnumber}}
+                         
 
                             <td></td>
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-
-                            <td></td>
-                            {{/usesnumberdate}}
+                         
 
 
                             <td class="text-right"></td>
