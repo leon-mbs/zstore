@@ -50,6 +50,7 @@ class Item extends \ZCL\DB\Entity
         $this->zarp = (string)($xml->zarp[0]);
         $this->thumb = (string)($xml->thumb[0]);
 
+        $this->isweight = (int)$xml->isweight[0];
         $this->noprice = (int)$xml->noprice[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->autooutcome = (int)$xml->autooutcome[0];
@@ -133,6 +134,7 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
+        $this->detail .= "<isweight>{$this->isweight}</isweight>";
         $this->detail .= "<noprice>{$this->noprice}</noprice>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";

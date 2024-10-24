@@ -135,6 +135,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
         $this->itemdetail->add(new CheckBox('editnoprice'));
+        $this->itemdetail->add(new CheckBox('editisweight'));
         $this->itemdetail->add(new CheckBox('editnoshop'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
@@ -209,6 +210,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
+ 
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         if($item->hasAction()) {
             $title="";
@@ -306,6 +308,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
         $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
+        $this->itemdetail->editisweight->setChecked($this->_item->isweight);
         $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
         $this->itemdetail->editautoincome->setChecked($this->_item->autoincome);
         if ($this->_item->image_id > 0) {
@@ -343,6 +346,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
         $this->itemdetail->editnoprice->setChecked(false);
+        $this->itemdetail->editisweight->setChecked(false);
         $this->itemdetail->editnoshop->setChecked(false);
         $this->itemdetail->editautooutcome->setChecked(false);
         $this->itemdetail->editautoincome->setChecked(false);
@@ -433,6 +437,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
+        $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
         $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
         $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
         $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;

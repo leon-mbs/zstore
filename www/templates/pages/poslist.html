@@ -17,6 +17,7 @@
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
+                            <th>ID</th>
                             <th>Назва</th>
                             {{#usebranch}}
                             <th>Філія</th>
@@ -34,6 +35,7 @@
                             {{/loadkey}}   
                         </tr>
                         <tr zippy="poslist">
+                            <td zippy="pos_id"></td>
                             <td zippy="pos_name"></td>
                             {{#usebranch}}
                             <td zippy="branch_name"></td>
