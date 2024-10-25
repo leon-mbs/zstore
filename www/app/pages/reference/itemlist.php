@@ -234,6 +234,8 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url ?? '') > 0);
+        $row->add(new ClickLink('printst'))->onClick($this, 'printStOnClick', true);
+        $row->printst->setVisible($item->isweight ==1 );
 
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
@@ -765,6 +767,38 @@ class ItemList extends \App\Pages\Base
 
     }
 
+    public function printStOnClick($sender) {
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+
+        $item = $sender->getOwner()->getDataItem();
+
+        if(intval($user->prtypelabel) == 0) {
+            $dataUri = \App\Util::generateQR($item->url, 100, 5)  ;
+            $html = "<img src=\"{$dataUri}\"  />";
+            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            return;
+        }
+       
+        try {
+
+            $pr = new \App\Printer() ;
+            $pr->align(\App\Printer::JUSTIFY_CENTER) ;
+
+            $pr->QR($item->url);
+
+
+            $buf = $pr->getBuffer() ;
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }        
+    }
     public function printQrOnClick($sender) {
 
         $printer = \App\System::getOptions('printer') ;
