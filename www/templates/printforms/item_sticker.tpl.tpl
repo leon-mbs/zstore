@@ -7,35 +7,30 @@
             </tr>
            
             <tr  >
-                <td align="left" style="font-size:20px" >
-                 {{#isarticle}}
-                     {{article}}  
-                 {{/isarticle}}
+                <td align="left" style="font-size:50px" >
+               
+                  Код  {{article}}  
+                 
                  
                  </td>
-                <td align="right" style="font-size:28px">
-                {{#isprice}}
-                <b>  {{price}} </b>
-                {{/isprice}}
+                <td   style="font-size:50px">
+                {{#isterm}}
+                   Придатний до  {{term}}  
+                {{/isterm}}
                 </td>
                 
             </tr>
           
 
-            {{#isbarcode}}
+        
             <tr style="font-size:18px">
                 <td align="center" colspan="2">
                 <img style="width:80%" {{{barcodeattr}}}  >
-                <br>{{barcode}}</td>
+                
             </tr>
-            {{/isbarcode}}            
+                   
 
-            {{#isqrcode}}
-               <tr><td align="center" colspan="2">
-                <img style="width:80%" {{{qrcodeattr}}}  >
-               
-               </td> </tr>
-            {{/isqrcode}}
+     
             
           </table>
       </td></tr>

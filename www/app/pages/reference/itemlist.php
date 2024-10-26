@@ -1148,10 +1148,17 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if($type == 10) {
             $where = $where . " and disabled = 1";
         }
+        if($type == 10) {
+            $where = $where . " and disabled = 1";
+        }
+ 
         if($type < 10) {
             $where = $where . " and disabled <> 1";
-            if($type >0) {
+            if($type >0 && $type < 9) {
                 $where = $where . " and item_type = {$type}";
+            }
+            if($type ==9 ) {
+                $where = $where . " and detail like '%<isweight>1</isweight>%' ";
             }
         }
         if(strlen($this->page->_tag)>0) {
