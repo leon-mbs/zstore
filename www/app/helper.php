@@ -1281,7 +1281,10 @@ class Helper
                         $row = str_replace("\n", "", $row);
                         $row = str_replace("\r", "", $row);
                         $row = trim($row);
-                        $rows[] = $row;
+                        if($row != "") {
+                           $rows[] = $row;  
+                        }
+                       
                     }
                 }
 
