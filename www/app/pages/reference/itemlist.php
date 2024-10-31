@@ -770,13 +770,33 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
+        $prturn = $user->prturn;
 
         $item = $sender->getOwner()->getDataItem();
 
         if(intval($user->prtypelabel) == 0) {
-            $dataUri = \App\Util::generateQR($item->url, 100, 5)  ;
-            $html = "<img src=\"{$dataUri}\"  />";
-            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            $report = new \App\Report('item_tag.tpl');
+            $header = [];
+            $header['turn'] = '';
+            if($prturn == 1) {
+                $header['turn'] = 'transform: rotate(90deg);';
+            }
+            if($prturn == 2) {
+                $header['turn'] = 'transform: rotate(-90deg);';
+            }
+
+
+            if(strlen($item->shortname) > 0) {
+                $header['name'] = $item->shortname;
+            } else {
+                $header['name'] = $item->itemname;
+            }
+
+            $header['name'] = str_replace("'", "`", $header['name']);
+          
+
+            $html =  $report->generate($header);
+            $this->addAjaxResponse("  $('#tagscale').html('{$html}') ; $('#pscale').modal()");
             return;
         }
        
@@ -814,14 +834,26 @@ class ItemList extends \App\Pages\Base
         }
        
         try {
+            if(intval($user->prtypelabel) == 1) {
+                $pr = new \App\Printer() ;
+                $pr->align(\App\Printer::JUSTIFY_CENTER) ;
 
-            $pr = new \App\Printer() ;
-            $pr->align(\App\Printer::JUSTIFY_CENTER) ;
+                $pr->QR($item->url);
 
-            $pr->QR($item->url);
-
-
-            $buf = $pr->getBuffer() ;
+                $buf = $pr->getBuffer() ;
+            }
+            /*
+            if(intval($user->prtypelabel) == 2) {
+                $ret=[];
+                $ret[]="SIZE 300,200";
+                $ret[]="CLS" ;
+                $ret[]="QRCODE 10,10,H,4,A,0, \"{$item->url}\"";
+                $ret[]="PRINT 1,1"               ;
+             ;
+                
+                $buf = \App\Printer::arr2comm($ret);
+            }
+             */
             $b = json_encode($buf) ;
             $this->addAjaxResponse(" sendPSlabel('{$b}') ");
 
