@@ -827,33 +827,46 @@ class ItemList extends \App\Pages\Base
         $item = $sender->getOwner()->getDataItem();
 
         if(intval($user->prtypelabel) == 0) {
-            $dataUri = \App\Util::generateQR($item->url, 100, 5)  ;
-            $html = "<img src=\"{$dataUri}\"  />";
+            $urldata = \App\Util::generateQR($item->url, 100, 5)  ;
+            $report = new \App\Report('item_qr.tpl');
+            $header['src'] = $urldata;
+
+            $html =  $report->generate($header);                  
+
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
             return;
         }
        
         try {
             if(intval($user->prtypelabel) == 1) {
-                $pr = new \App\Printer() ;
-                $pr->align(\App\Printer::JUSTIFY_CENTER) ;
-
-                $pr->QR($item->url);
-
-                $buf = $pr->getBuffer() ;
-            }
-            /*
-            if(intval($user->prtypelabel) == 2) {
-                $ret=[];
-                $ret[]="SIZE 300,200";
-                $ret[]="CLS" ;
-                $ret[]="QRCODE 10,10,H,4,A,0, \"{$item->url}\"";
-                $ret[]="PRINT 1,1"               ;
-             ;
                 
-                $buf = \App\Printer::arr2comm($ret);
+               $report = new \App\Report('item_qr_ps.tpl');
+               $header['qrcode'] = $item->url;
+
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
             }
-             */
+            if(intval($user->prtypelabel) == 2) {
+                
+                $report = new \App\Report('item_qr_ts.tpl');
+                $header['qrcode'] = $item->url;
+
+                $text = $report->generate($header, false);
+                $r = explode("\n", $text);
+                foreach($r as $row) {
+                    $row = str_replace("\n", "", $row);
+                    $row = str_replace("\r", "", $row);
+                    $row = trim($row);
+                    if($row != "") {
+                       $rows[] = $row;  
+                    }
+                   
+                }           
+                
+                $buf = \App\Printer::arr2comm($rows);
+            }
+       
             $b = json_encode($buf) ;
             $this->addAjaxResponse(" sendPSlabel('{$b}') ");
 
