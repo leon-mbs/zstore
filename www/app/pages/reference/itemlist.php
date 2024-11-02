@@ -1130,7 +1130,7 @@ class ItemList extends \App\Pages\Base
         $barcode=  sprintf("%06d", $header['price'] *100) . sprintf("%06d", $header['qty'] *1000) . $item->item_id;  
     
         $header['barcode'] = $barcode;
-        
+      
         if(intval($user->prtypelabel) == 0) {
             $report = new \App\Report('item_sticker.tpl');
          

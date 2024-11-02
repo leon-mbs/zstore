@@ -566,9 +566,9 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function addcodeOnClick($sender) {
-        $code = trim($this->docpanel->form2->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+        $barcode = trim($this->docpanel->form2->barcode->getText());
+        $code0 = $barcode;
+        $code = ltrim($barcode, '0');
 
         $store = $this->form1->store->getValue();
         $this->docpanel->form2->barcode->setText('');
@@ -580,6 +580,25 @@ class ARMPos extends \App\Pages\Base
         $code_ = Item::qstr($code);
         $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
       
+        // проверка  на  стикер
+        if ($item == null) {
+            
+            $ac= str_split($barcode,6)  ;
+            
+            $item= Item::load(trim($ac[2]));
+            if($item != null)  {
+                $item->price = H::fa(doubleval($ac[0])/100);
+                $item->quantity =H::fqty(doubleval($ac[1])/1000);
+                $item->pureprice = $item->getPurePrice();
+                $this->_itemlist[ ] = $item;
+
+                $this->docpanel->form2->detail->Reload();
+                $this->calcTotal(); 
+                return;      
+            }
+            
+                     
+        }
         if ($item == null) {
             $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
