@@ -3,9 +3,29 @@
        <td>
            <table>
             <tr  >
-                <td colspan="2"  style="font-size:24px"><b> {{name}}</b></td>
+                <td   colspan="3"  ><b> {{name}}</b></td>
             </tr>
-         
+           <tr  >
+                <td colspan="3"  >Код {{code}}</td>
+            </tr>
+            <tr  >
+                <td  >Вага</td>
+                <td  >Ціна</td>
+                <td style="font-size:18px" ><b> Сума</b></td>
+            </tr>
+            <tr  >
+                <td  >Кіл.</td>
+                <td  >Ціна</td>
+                <td  ><b> Сума</b></td>
+            </tr>
+           {{#isbarcode}}
+            <tr  >
+                <td align="center" colspan="3">
+                <img style="width:80%" {{{barcode}}}  >
+                
+            </tr>
+            {{/isbarcode}}  
+          
      
             
           </table>

@@ -767,65 +767,13 @@ class ItemList extends \App\Pages\Base
 
     }
 
-    public function printStOnClick($sender) {
-        $printer = \App\System::getOptions('printer') ;
-        $user = \App\System::getUser() ;
-        $prturn = $user->prturn;
-
-        $item = $sender->getOwner()->getDataItem();
-
-        if(intval($user->prtypelabel) == 0) {
-            $report = new \App\Report('item_tag.tpl');
-            $header = [];
-            $header['turn'] = '';
-            if($prturn == 1) {
-                $header['turn'] = 'transform: rotate(90deg);';
-            }
-            if($prturn == 2) {
-                $header['turn'] = 'transform: rotate(-90deg);';
-            }
-
-
-            if(strlen($item->shortname) > 0) {
-                $header['name'] = $item->shortname;
-            } else {
-                $header['name'] = $item->itemname;
-            }
-
-            $header['name'] = str_replace("'", "`", $header['name']);
-          
-
-            $html =  $report->generate($header);
-            $this->addAjaxResponse("  $('#tagscale').html('{$html}') ; $('#pscale').modal()");
-            return;
-        }
-       
-        try {
-
-            $pr = new \App\Printer() ;
-            $pr->align(\App\Printer::JUSTIFY_CENTER) ;
-
-            $pr->QR($item->url);
-
-
-            $buf = $pr->getBuffer() ;
-            $b = json_encode($buf) ;
-            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
-
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
-
-        }        
-    }
     public function printQrOnClick($sender) {
 
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
 
         $item = $sender->getOwner()->getDataItem();
-
+        $header = [];
         if(intval($user->prtypelabel) == 0) {
             $urldata = \App\Util::generateQR($item->url, 100, 5)  ;
             $report = new \App\Report('item_qr.tpl');
@@ -1148,6 +1096,93 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload();
          
     }
+    
+    public function printStOnClick($sender) {
+         $item = $sender->getOwner()->getDataItem();
+         $price= H::fa($item->getPrice() );
+         $this->addAjaxResponse("   $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stprice').val('{$price}') ;$('#pscale').modal()");
+      
+    }
+ 
+    public function getSticker($args, $post) {
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+        $prturn = $user->prturn;
+
+        $item =  \App\Entity\Item::load($post["stitemid"]) ;
+
+     
+        $header = [];        
+        if(strlen($item->shortname) > 0) {
+            $header['name'] = $item->shortname;
+        } else {
+            $header['name'] = $item->itemname;
+        }
+
+        $header['code'] = $item->item_code;
+      
+        
+        if(intval($user->prtypelabel) == 0) {
+            $report = new \App\Report('item_sticker.tpl');
+         
+            $header['turn'] = '';
+            if($prturn == 1) {
+                $header['turn'] = 'transform: rotate(90deg);';
+            }
+            if($prturn == 2) {
+                $header['turn'] = 'transform: rotate(-90deg);';
+            }
+ 
+ 
+            $html =  $report->generate($header);
+            $html = str_replace("'", "`", $html);
+            
+            
+            return json_encode(array('data'=>$html,"printer"=>0), JSON_UNESCAPED_UNICODE);
+          
+        }
+       
+        try {
+
+            if(intval($user->prtypelabel) == 1) {
+                
+               $report = new \App\Report('item_sticke_ps.tpl');
+               $header['qrcode'] = $item->url;
+
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+            if(intval($user->prtypelabel) == 2) {
+                
+                $report = new \App\Report('item_sticke_ts.tpl');
+                $header['qrcode'] = $item->url;
+
+                $text = $report->generate($header, false);
+                $r = explode("\n", $text);
+                foreach($r as $row) {
+                    $row = str_replace("\n", "", $row);
+                    $row = str_replace("\r", "", $row);
+                    $row = trim($row);
+                    if($row != "") {
+                       $rows[] = $row;  
+                    }
+                   
+                }           
+                
+                $buf = \App\Printer::arr2comm($rows);
+            }
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }        
+    }
+    
     
 }
 

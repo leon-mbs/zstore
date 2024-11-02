@@ -561,9 +561,8 @@
             </div>
         </div>
 
-        <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog  ">
+        <div id="pform" class="modal fade   " tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog modal-sm ">
                 <div class="modal-content">
                     <div class="modal-body">
                         <table>
@@ -588,26 +587,41 @@
         </div>
 
         
-     <div id="pscale" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog  ">
+     <div id="pscale" class="modal fade   " tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog modal-sm ">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <table>
-                          
-                         
-                            <tr>
-                                <td > <input class="form-control" ></td>
-                            <tr> 
-                            <tr>
-                                <td align="center" id="tagscale"></td>
-                            <tr>
-                            <tr>
-                                <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#tagscale').printThis();$('#pscale').modal('hide')"
-                                                      class="btn btn-success btn-sm mt-2 ">Друк</a></td>
-                            <tr>
-                        </table>
+                    <h4>Друк стікера</h4>
+                    <form id="formsticker">
+                     <input type="hidden" name="stitemid" id="stitemid">   
+                     <div class="form-group row">
+                      <label class="col-5 col-form-label" for="stqty">Вага</label>
+                      <div class="col-7">
+                       <input id="stqty" name="stqty" class="form-control">
+                     </div>
+                     </div>
+                    <div class="form-group row">
+                      <label class="col-5 col-form-label" for="stprice">Ціна</label>
+                      <div class="col-7">
+                       <input id="stprice" name="stprice" class="form-control">
+                     </div>
+                     </div>
+                    <div class="form-group row">
+                      <label class="col-5 col-form-label" for="stsum">Сума</label>
+                      <div class="col-7">
+                       <b id="stsum">  </b>
+                     </div>
+                     </div>
+                      
+                     
+                      <div class="form-group  ">
+                        <input onclick="getSticker()" type="button" class="btn btn-success" value="Друкувати"> 
+                     </div>
+                     
+                    </form>
+                   
+                  
+                        <div   id="tagsticker"></div>
                     </div>
                 </div>
             </div>
@@ -615,7 +629,7 @@
         
         
         
-        <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        <div id="idesc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
             <div class="modal-dialog  ">
                 <div  class="modal-content">
@@ -655,8 +669,33 @@
             function check_deleteall() {
                 return confirm("Видалити ТМЦ?")
             }
-
+        
             
+         function getSticker( ){
+                var f = document.getElementById('formsticker')  ;
+                   
+                let formdata = new FormData(f);
+               
+          
+                   
+                callPageMethod('getSticker',null,formdata,(data)=> 
+                {
+                    
+                    var data=  JSON.parse(data)  ;
+                    
+                   
+                        
+                    if(data.printer==0) {
+                       $('#tagsticker').html(data.data);
+                       $('#tagsticker').printThis();
+                    }
+                    if(data.printer>0) {
+                        
+                    }
+                    $('#pscale').modal('hide') 
+         
+                } )
+            }            
          
             
             
