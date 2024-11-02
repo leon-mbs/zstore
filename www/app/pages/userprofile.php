@@ -95,6 +95,11 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
+        
+        $form = new Form('scaleform');
+        $form->add(new TextInput('scaleserver', $this->user->scaleserver));
+        $form->onSubmit($this, 'saveScalelOnClick');
+        $this->add($form);     
 
         if(strlen($this->user->prtype) == 0) {
             $this->user->prtype = 0 ;
@@ -102,6 +107,7 @@ class UserProfile extends \App\Pages\Base
             $this->user->pwsym     = 32;
         }
 
+    
         $form = new Form('printer');
         $form->add(new DropDownChoice('prtype',[], 0))->onChange($this, "onPSType");
         $form->prtype->setValue($this->user->prtype);
@@ -133,6 +139,8 @@ class UserProfile extends \App\Pages\Base
         $this->add($form);
 
         $this->onPSTypelabel(null);
+        
+         
 
     }
 
@@ -292,6 +300,13 @@ class UserProfile extends \App\Pages\Base
 
     }
 
+    public function saveScalelOnClick($sender) {
+        $this->user->scaleserver = $sender->scaleserver->getText() ;
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+          
+    }
     public function savePrinterlabelOnClick($sender) {
 
 

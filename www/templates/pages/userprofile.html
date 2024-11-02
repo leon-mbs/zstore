@@ -219,6 +219,22 @@
                                 <a   zippy="pstestlabel" >Тест принтера</a>
                             </div>                            
                          </form>   
+                         <h4>Електронні ваги</h4>
+                       
+                         <small>Мають бути реалізовані в  POS сервері </small>
+                         <form zippy="scaleform">
+                             <div class="form-group  ">
+                                <label   for="scaleserver">Адреса POS серверу</label>
+                                <input   required="on" class="form-control" zippy="scaleserver">
+                                 
+                            </div>
+                              <div class="form-group">
+                                <input   class="btn btn-primary" type="submit" value="Зберегти">
+                            </div>                            
+                             <div class="form-group">
+                                <a id="testscale" href="#"    >Тест </a>
+                            </div>                           
+                        </form>       
         </div>
             <div class="col-10 col-lg-3 col-md-3 col-xl-2">
 
@@ -243,7 +259,39 @@
 
             </div>
         </div>
+       <script>
+         $(document).ready(function () {
+         
+            $('#testscale').click(function(event) {
+                event.preventDefault();
+                
+                var url = $("#scaleserver").val() 
 
+           var opt={
+               method: 'GET'  
+           };              
+                    
+            fetch(url+"/weight",opt)                                            
+  
+              .then((response) => {
+                  return response.json();
+              })
+              .then((data) => {
+                 if(data.success == true){
+                     toastr.success("Вага "+ data.weight )   
+                 }   else {
+                     toastr.error(data.error )        
+                 }
+              })
+               .catch(function (error) {
+                    toastr.error(error )       
+                });  
+            
+                
+               
+            });   
+  });                
+        </script> 
 
     </body>
 
