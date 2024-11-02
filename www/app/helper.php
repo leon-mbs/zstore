@@ -1135,7 +1135,7 @@ class Helper
 
             $printqty = intval($item->printqty);
             if($printqty == 0) {
-                $printqty = 4;
+                $printqty = 1;
             }
 
             if($printqty == 1) {
@@ -1237,7 +1237,7 @@ class Helper
 
             $printqty = intval($item->printqty);
             if($printqty == 0) {
-                $printqty = 4;
+                $printqty = 1;
             }
 
             if($printqty == 1) {
@@ -1258,7 +1258,7 @@ class Helper
             if($pqty > 0) {
                 $qty = $pqty;
             }
-
+          
 
             if($user->prtypelabel == 2) {
                 $header['name'] = str_replace("\"", "`", $header['name']);

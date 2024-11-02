@@ -655,6 +655,16 @@
                     $(this).ekkoLightbox({'alwaysShowClose': true});
                 });
 
+                
+                $("#stqty").on('input',function () {
+                    stsum()
+
+                });                
+                $("#stprice").on('input',function () {
+                    stsum()
+
+                });                
+                
 
             });
 
@@ -680,24 +690,37 @@
                    
                 callPageMethod('getSticker',null,formdata,(data)=> 
                 {
-                    
-                    var data=  JSON.parse(data)  ;
-                    
+                     
+                    var data =  JSON.parse(data)  ;
                    
-                        
-                    if(data.printer==0) {
+                     
+                    if(data.printer == 0) {
                        $('#tagsticker').html(data.data);
                        $('#tagsticker').printThis();
                     }
-                    if(data.printer>0) {
-                        
+                    if(data.printer > 0) {
+                       console.log(data.data)   
+                       sendPSlabel(  JSON.stringify(data.data) )  
                     }
                     $('#pscale').modal('hide') 
          
                 } )
             }            
          
-            
+         function stsum(){
+           
+            var price = $("#stprice").val()??0;  
+            var qty = $("#stqty").val() ??0;  
+   
+            var sum = parseFloat(price) * parseFloat(qty)   ;
+   
+   
+            if (sum > 0) {
+                $("#stsum").text( fa(sum)  )
+            } else {
+                $("#stsum").text('') 
+            }        
+         }   
             
         </script>
 

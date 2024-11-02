@@ -1100,19 +1100,21 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          $price= H::fa($item->getPrice() );
-         $this->addAjaxResponse("   $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stprice').val('{$price}') ;$('#pscale').modal()");
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
       
     }
  
     public function getSticker($args, $post) {
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
-        $prturn = $user->prturn;
-
+     
         $item =  \App\Entity\Item::load($post["stitemid"]) ;
 
      
-        $header = [];        
+        $header = [];  
+        $header['isbarcode'] = ($user->stbarcode ?? 0) ==0;
+        
+              
         if(strlen($item->shortname) > 0) {
             $header['name'] = $item->shortname;
         } else {
@@ -1120,12 +1122,19 @@ class ItemList extends \App\Pages\Base
         }
 
         $header['code'] = $item->item_code;
-      
+       
+        $header['price'] = H::fa($post["stprice"]);
+        $header['qty'] = H::fqty($post["stqty"]);
+        $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
+     
+        $barcode=  sprintf("%06d", $header['price'] *100) . sprintf("%06d", $header['qty'] *1000) . $item->item_id;  
+    
+        $header['barcode'] = $barcode;
         
         if(intval($user->prtypelabel) == 0) {
             $report = new \App\Report('item_sticker.tpl');
          
-            $header['turn'] = '';
+            $header['turn'] = $user->prturn ??'';
             if($prturn == 1) {
                 $header['turn'] = 'transform: rotate(90deg);';
             }
@@ -1133,7 +1142,13 @@ class ItemList extends \App\Pages\Base
                 $header['turn'] = 'transform: rotate(-90deg);';
             }
  
- 
+            if($header['isbarcode']) {
+         
+               $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+               $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;
+                     
+           
+            }
             $html =  $report->generate($header);
             $html = str_replace("'", "`", $html);
             
@@ -1146,16 +1161,18 @@ class ItemList extends \App\Pages\Base
 
             if(intval($user->prtypelabel) == 1) {
                 
-               $report = new \App\Report('item_sticke_ps.tpl');
-               $header['qrcode'] = $item->url;
-
+                $report = new \App\Report('item_sticker_ps.tpl');
+             
                 $html =  $report->generate($header);              
-                
+                  ;
                 $buf = \App\Printer::xml2comm($html);
+               
+                return json_encode(array('data'=>$buf,"printer"=>1), JSON_UNESCAPED_UNICODE);
+            
             }
             if(intval($user->prtypelabel) == 2) {
                 
-                $report = new \App\Report('item_sticke_ts.tpl');
+                $report = new \App\Report('item_sticker_ts.tpl');
                 $header['qrcode'] = $item->url;
 
                 $text = $report->generate($header, false);
@@ -1171,9 +1188,10 @@ class ItemList extends \App\Pages\Base
                 }           
                 
                 $buf = \App\Printer::arr2comm($rows);
-            }
-            $b = json_encode($buf) ;
-            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+           
+                return json_encode(array('data'=>$buf,"printer"=>2), JSON_UNESCAPED_UNICODE);
+          }
+     
 
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;

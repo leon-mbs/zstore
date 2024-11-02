@@ -1,5 +1,5 @@
     <div style="{{turn}}border: 1px solid   #ccc;width:100%;;">
-    <table class="ctable" border="0" cellpadding="1" cellspacing="0" style="width:100%"  > 
+    <table class="ctable" border="0" cellpadding="2" cellspacing="0" style="width:100%"  > 
        <td>
            <table>
             <tr  >
@@ -14,16 +14,16 @@
                 <td style="font-size:18px" ><b> Сума</b></td>
             </tr>
             <tr  >
-                <td  >Кіл.</td>
-                <td  >Ціна</td>
-                <td  ><b> Сума</b></td>
+                <td  >{{qty}}</td>
+                <td  >{{price}}</td>
+                <td  ><b> {{sum}}</b></td>
             </tr>
            {{#isbarcode}}
             <tr  >
-                <td align="center" colspan="3">
-                <img style="width:80%" {{{barcode}}}  >
+                <td style="padding:20px;" align="center" colspan="3">
+                <img style="width:80%" src="{{dataUri}}" >
                 
-            </tr>
+                </tr>
             {{/isbarcode}}  
           
      

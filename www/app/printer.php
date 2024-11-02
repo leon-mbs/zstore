@@ -843,6 +843,12 @@ class Printer
         $pr = new \App\Printer(true) ;
 
         foreach($arr as $row)  {
+            
+    //украинское i на  ангглийсккое  хз  почему
+        $row = str_replace("і", "i", $row);
+        $row = str_replace("І", "I", $row);
+              
+            
             $pr->labelrow($row);
         }
 

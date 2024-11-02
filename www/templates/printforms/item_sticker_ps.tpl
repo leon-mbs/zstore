@@ -1,43 +1,15 @@
-    <div style="{{turn}}border: 1px solid   #ccc;width:100%;;">
-    <table class="ctable" border="0" cellpadding="1" cellspacing="0" style="width:100%"  > 
-       <td>
-           <table>
-            <tr  >
-                <td colspan="2"  style="font-size:24px"><b> {{name}}</b></td>
-            </tr>
-           
-            <tr  >
-                <td align="left" style="font-size:20px" >
-                 {{#isarticle}}
-                     {{article}}  
-                 {{/isarticle}}
-                 
-                 </td>
-                <td align="right" style="font-size:28px">
-                {{#isprice}}
-                <b>  {{price}} </b>
-                {{/isprice}}
-                </td>
-                
-            </tr>
-          
+<align>left</align>
+<font >a</font>
+<font bold="true">b</font>
+<text>{{name}}</text>
+<font bold="false">a</font> 
+<text>Код {{code}}</text>
+<text>Вага {{qty}} Ціна {{price}} </text>
+<text bold="true">Всього {{sum}}  </text>
+ 
+<align>center</align>
+ 
+  <barcode type="code128" >{{barcode}}</barcode>
+ 
+<newline></newline>
 
-            {{#isbarcode}}
-            <tr style="font-size:18px">
-                <td align="center" colspan="2">
-                <img style="width:80%" {{{barcodeattr}}}  >
-                <br>{{barcode}}</td>
-            </tr>
-            {{/isbarcode}}            
-
-            {{#isqrcode}}
-               <tr><td align="center" colspan="2">
-                <img style="width:80%" {{{qrcodeattr}}}  >
-               
-               </td> </tr>
-            {{/isqrcode}}
-            
-          </table>
-      </td></tr>
-    </table>
-</div>   

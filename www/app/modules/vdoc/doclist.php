@@ -175,7 +175,7 @@ class DocList extends \App\Pages\Base
 
             return $name." ok";
         } catch(\Exception $e) {
-            H::log($name .' '. $e->getMessage()) ;
+            H::error($name .' '. $e->getMessage()) ;
             return $name ." ".$e->getMessage();
 
         }

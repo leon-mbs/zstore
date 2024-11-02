@@ -731,8 +731,8 @@ class Subscribe extends \ZCL\DB\Entity
                 curl_close($ch);
 
                 if ($httpcode >200) {
-                    H::log("code ".$httpcode) ;
-                    H::log($response) ;
+                    H::logerror("code ".$httpcode) ;
+                    H::logerror($response) ;
                     return "Error. See logs";
                 }
 
