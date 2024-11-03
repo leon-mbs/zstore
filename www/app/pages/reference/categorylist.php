@@ -270,7 +270,7 @@ class CategoryList extends \App\Pages\Base
         //delete image
         if ($this->categorydetail->editdelimage->isChecked()) {
             if ($this->_category->image_id > 0) {
-                Category::delete($this->_category->image_id);
+                 \App\Entity\Image::delete($this->_category->image_id);
             }
             $this->_category->image_id = 0;
         }

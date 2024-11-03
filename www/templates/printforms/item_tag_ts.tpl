@@ -1,6 +1,7 @@
-SIZE 300,200
-CLS       
-BOX 3,3,294,194,2
+SIZE 40mm,25mm
+CLS   
+DIRECTION 1    
+REM BOX 3,3,294,194,2
 TEXT 10,10,"2",0,1,1,"{{name}}"
 TEXT 10,50,"3",0,1,1,"{{article}}"
 TEXT 200,50,"3",0,1,1,"{{price}}"

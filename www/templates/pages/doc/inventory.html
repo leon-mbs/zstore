@@ -57,7 +57,7 @@
                     </div>
                     <div class="form-check">
                         <input zippy="autoincome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="autoincome">Автоматично оприходувати залишки </label>
+                        <label class="form-check-label" for="autoincome">Автоматично оприходувати надлишок </label>
 
                     </div>
                     <div class="form-check">
@@ -96,11 +96,8 @@
                             <th> <a zippy="sortname">Назва</a> </th>
                             <th><a zippy="sortcode">Артикул</a></th>
 
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
-                            <!--     <th width="40"  class="text-right" >Кiл. </th> -->
+                           <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                             <!--     <th width="40"  class="text-right" >Кiл. </th> -->
 
                             <th width="40" class="text-center">Факт. кіл.</th>
 
@@ -113,10 +110,8 @@
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
 
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                              <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                        
                             <!--    <td zippy="quantity"  class="text-right" ></td>-->
 
                             <td class="text-center">
@@ -132,7 +127,7 @@
                         <tr><td >
                             <a class="text-danger" zippy="delall" title="Видалити"><i class="fa fa-trash"></i></a>
                           </td> 
-                         <td colspan="3"></td>   
+                         <td colspan="4"></td>   
                          
                             </tr>                 
                        
