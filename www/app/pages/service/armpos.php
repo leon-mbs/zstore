@@ -243,7 +243,9 @@ class ARMPos extends \App\Pages\Base
         if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
            $this->onModeOn($this->docpanel->navbar->tosimple); 
         }
-        
+        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
+        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
+          
     }
 
     public function onModeOn($sender) {

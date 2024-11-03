@@ -184,6 +184,9 @@ class ItemList extends \App\Pages\Base
         } else {
             $this->addOnClick(null);
         }
+        
+        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
+        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -1109,11 +1112,8 @@ class ItemList extends \App\Pages\Base
         $user = \App\System::getUser() ;
      
         $item =  \App\Entity\Item::load($post["stitemid"]) ;
-
      
         $header = [];  
-        $header['isbarcode'] = ($user->stbarcode ?? 0) ==0;
-        
               
         if(strlen($item->shortname) > 0) {
             $header['name'] = $item->shortname;
@@ -1127,7 +1127,7 @@ class ItemList extends \App\Pages\Base
         $header['qty'] = H::fqty($post["stqty"]);
         $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
      
-        $barcode=  sprintf("%06d", $header['price'] *100) . sprintf("%06d", $header['qty'] *1000) . $item->item_id;  
+        $barcode =  sprintf("%06d", $header['price'] *100) . sprintf("%06d", $header['qty'] *1000) . $item->item_id;  
     
         $header['barcode'] = $barcode;
       
@@ -1146,12 +1146,10 @@ class ItemList extends \App\Pages\Base
          
                $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
                $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;
-                     
            
             }
             $html =  $report->generate($header);
             $html = str_replace("'", "`", $html);
-            
             
             return json_encode(array('data'=>$html,"printer"=>0), JSON_UNESCAPED_UNICODE);
           
@@ -1164,7 +1162,7 @@ class ItemList extends \App\Pages\Base
                 $report = new \App\Report('item_sticker_ps.tpl');
              
                 $html =  $report->generate($header);              
-                  ;
+                   
                 $buf = \App\Printer::xml2comm($html);
                
                 return json_encode(array('data'=>$buf,"printer"=>1), JSON_UNESCAPED_UNICODE);

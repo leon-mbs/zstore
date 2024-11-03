@@ -221,7 +221,8 @@
                          </form>   
                          <h4>Електронні ваги</h4>
                        
-                         <small>Мають бути реалізовані в  POS сервері </small>
+                        <small>Мають бути реалізовані в  POS сервері. Опис <a  href="https://zippy.com.ua/ext#10">тут</a> </small>
+                  
                          <form zippy="scaleform">
                              <div class="form-group  ">
                                 <label   for="scaleserver">Адреса POS серверу</label>
@@ -271,7 +272,7 @@
                method: 'GET'  
            };              
                     
-            fetch(url+"/weight",opt)                                            
+            fetch(url+"/scale",opt)                                            
   
               .then((response) => {
                   return response.json();

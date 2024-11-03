@@ -6,9 +6,9 @@ TEXT 10,30,"2",0,1,1,"Код {{code}}"
 TEXT 10,60,"2",0,1,1,"Вага {{qty}} Ціна {{price}}"
 TEXT 10,100,"3",0,1,1,"Всього {{sum}}"
  
-{{#isbarcode}}
+ 
 BARCODE 20,140,"128",50,0,0,2,4,"{{barcode}}"
-{{/isbarcode}}
+ 
 PRINT 1,1
 
 
