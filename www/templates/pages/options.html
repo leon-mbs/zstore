@@ -481,6 +481,9 @@
                             </div>
 
                             <div class="form-group">
+                               <a zippy="loadrate">Загрузити курс НБУ</a>
+                            </div>
+                          <div class="form-group">
                                 <button zippy="saveval" class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                         </form>
@@ -796,7 +799,12 @@
                 return confirm("Видалити запис?")
             }
             
+        function check_loadrate(ele){
             
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }       
                 
         </script>
 
