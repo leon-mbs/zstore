@@ -320,12 +320,13 @@ class Helper
             //  $d = $mail->send() ;
             if($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
+                self::logerror($mail->ErrorInfo) ;
             } else {
                 //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
-
+            self::logerror($e->getMessage()) ;
         }
 
         /*

@@ -24,7 +24,13 @@ class Update extends \App\Pages\Base
      public function __construct() {
         global $_config; 
         parent::__construct();
-   
+       
+        if (System::getUser()->userlogin != 'admin') {
+            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            \App\Application::RedirectError();
+            return false;
+        }  
+        
         $t = '?t='.time(); 
  
         $this->add(new  ClickLink('updatefile',$this,'OnFileUpdate')) ;
