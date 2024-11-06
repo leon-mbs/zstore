@@ -255,7 +255,7 @@ class Base extends \Zippy\Html\WebPage
 
 
             $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
-            //  \App\Helper::sendLetter("softman@ukr.net","test3","sub")  ;
+
         }
         //чат
         if ($options['showchat'] == 1) {
