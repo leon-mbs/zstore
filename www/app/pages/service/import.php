@@ -51,6 +51,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
         $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
         $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
+        $form->add(new DropDownChoice("colminqty", $cols,$sc['colminqty'] ?? 0));
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
@@ -205,6 +206,7 @@ class Import extends \App\Pages\Base
         $colprice3 = $this->iform->colprice3->getValue();
         $colprice4 = $this->iform->colprice4->getValue();
         $colprice5 = $this->iform->colprice5->getValue();
+        $colminqty = $this->iform->colminqty->getValue();
 
 
         if ($t == 1 && $colqty === '0') {
@@ -237,6 +239,7 @@ class Import extends \App\Pages\Base
         $save['coldesc']=$coldesc;
         $save['colimage']=$colimage;
         $save['colshortname']=$colshortname;
+        $save['colminqty']=$colminqty;
         $save['colwar']=$colwar;
   
         $letters=[];
@@ -326,6 +329,7 @@ class Import extends \App\Pages\Base
             $image = trim($row[$colimage] ?? '');
             $warranty = trim($row[$colwar]);
             $shortname = trim($row[$colshortname] ?? '');
+            $minqty = trim($row[$colminqty] ?? '');
             $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
             $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
@@ -392,6 +396,9 @@ class Import extends \App\Pages\Base
             }
             if ($qty > 0) {
                 $item->quantity = $qty;
+            }
+            if ($minqty > 0) {
+                $item->minqty = $minqty;
             }
 
             if ($cat_id > 0) {

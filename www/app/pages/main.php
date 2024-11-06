@@ -93,11 +93,12 @@ class Main extends Base
         //минимальное количество
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
-            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
-            join items  i  on t.item_id = i.item_id
+            $sql = "select coalesce(t.qty,0) as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+           items  i 
+          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
+               on t.item_id = i.item_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
+            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -353,7 +354,7 @@ class Main extends Base
         
         $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
         
-        $row->add(new Label('wmq_cust', $d->customer_name ?? ''));
+        $row->add(new Label('wmq_cust', $d->customer_name ?? '-'));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }
