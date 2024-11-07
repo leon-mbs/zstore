@@ -135,6 +135,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('edituseserial'));
         $this->itemdetail->add(new CheckBox('editnoprice'));
+        $this->itemdetail->add(new CheckBox('editisweight'));
         $this->itemdetail->add(new CheckBox('editnoshop'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
@@ -183,6 +184,9 @@ class ItemList extends \App\Pages\Base
         } else {
             $this->addOnClick(null);
         }
+        
+        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
+        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -209,6 +213,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
+ 
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         if($item->hasAction()) {
             $title="";
@@ -232,6 +237,8 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
         $row->printqr->setVisible(strlen($item->url ?? '') > 0);
+        $row->add(new ClickLink('printst'))->onClick($this, 'printStOnClick', true);
+        $row->printst->setVisible($item->isweight ==1 );
 
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
@@ -306,6 +313,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
         $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
+        $this->itemdetail->editisweight->setChecked($this->_item->isweight);
         $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
         $this->itemdetail->editautoincome->setChecked($this->_item->autoincome);
         if ($this->_item->image_id > 0) {
@@ -343,6 +351,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
         $this->itemdetail->editnoprice->setChecked(false);
+        $this->itemdetail->editisweight->setChecked(false);
         $this->itemdetail->editnoshop->setChecked(false);
         $this->itemdetail->editautooutcome->setChecked(false);
         $this->itemdetail->editautoincome->setChecked(false);
@@ -433,6 +442,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
 
+        $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
         $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
         $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
         $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;
@@ -766,23 +776,48 @@ class ItemList extends \App\Pages\Base
         $user = \App\System::getUser() ;
 
         $item = $sender->getOwner()->getDataItem();
-
+        $header = [];
         if(intval($user->prtypelabel) == 0) {
-            $dataUri = \App\Util::generateQR($item->url, 100, 5)  ;
-            $html = "<img src=\"{$dataUri}\"  />";
+            $urldata = \App\Util::generateQR($item->url, 100, 5)  ;
+            $report = new \App\Report('item_qr.tpl');
+            $header['src'] = $urldata;
+
+            $html =  $report->generate($header);                  
+
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
             return;
         }
        
         try {
+            if(intval($user->prtypelabel) == 1) {
+                
+               $report = new \App\Report('item_qr_ps.tpl');
+               $header['qrcode'] = $item->url;
 
-            $pr = new \App\Printer() ;
-            $pr->align(\App\Printer::JUSTIFY_CENTER) ;
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+            if(intval($user->prtypelabel) == 2) {
+                
+                $report = new \App\Report('item_qr_ts.tpl');
+                $header['qrcode'] = $item->url;
 
-            $pr->QR($item->url);
-
-
-            $buf = $pr->getBuffer() ;
+                $text = $report->generate($header, false);
+                $r = explode("\n", $text);
+                foreach($r as $row) {
+                    $row = str_replace("\n", "", $row);
+                    $row = str_replace("\r", "", $row);
+                    $row = trim($row);
+                    if($row != "") {
+                       $rows[] = $row;  
+                    }
+                   
+                }           
+                
+                $buf = \App\Printer::arr2comm($rows);
+            }
+       
             $b = json_encode($buf) ;
             $this->addAjaxResponse(" sendPSlabel('{$b}') ");
 
@@ -1065,6 +1100,106 @@ class ItemList extends \App\Pages\Base
          
     }
     
+    public function printStOnClick($sender) {
+         $item = $sender->getOwner()->getDataItem();
+         $price= H::fa($item->getPrice() );
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+      
+    }
+ 
+    public function getSticker($args, $post) {
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+     
+        $item =  \App\Entity\Item::load($post["stitemid"]) ;
+     
+        $header = [];  
+              
+        if(strlen($item->shortname) > 0) {
+            $header['name'] = $item->shortname;
+        } else {
+            $header['name'] = $item->itemname;
+        }
+
+        $header['code'] = $item->item_code;
+       
+        $header['price'] = H::fa($post["stprice"]);
+        $header['qty'] = H::fqty($post["stqty"]);
+        $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
+     
+        $barcode =  sprintf("%06d", $header['price'] *100) . sprintf("%06d", $header['qty'] *1000) . $item->item_id;  
+    
+        $header['barcode'] = $barcode;
+      
+        if(intval($user->prtypelabel) == 0) {
+            $report = new \App\Report('item_sticker.tpl');
+         
+            $header['turn'] = $user->prturn ??'';
+            if($prturn == 1) {
+                $header['turn'] = 'transform: rotate(90deg);';
+            }
+            if($prturn == 2) {
+                $header['turn'] = 'transform: rotate(-90deg);';
+            }
+ 
+            if($header['isbarcode']) {
+         
+               $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+               $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;
+           
+            }
+            $html =  $report->generate($header);
+            $html = str_replace("'", "`", $html);
+            
+            return json_encode(array('data'=>$html,"printer"=>0), JSON_UNESCAPED_UNICODE);
+          
+        }
+       
+        try {
+
+            if(intval($user->prtypelabel) == 1) {
+                
+                $report = new \App\Report('item_sticker_ps.tpl');
+             
+                $html =  $report->generate($header);              
+                   
+                $buf = \App\Printer::xml2comm($html);
+               
+                return json_encode(array('data'=>$buf,"printer"=>1), JSON_UNESCAPED_UNICODE);
+            
+            }
+            if(intval($user->prtypelabel) == 2) {
+                
+                $report = new \App\Report('item_sticker_ts.tpl');
+                $header['qrcode'] = $item->url;
+
+                $text = $report->generate($header, false);
+                $r = explode("\n", $text);
+                foreach($r as $row) {
+                    $row = str_replace("\n", "", $row);
+                    $row = str_replace("\r", "", $row);
+                    $row = trim($row);
+                    if($row != "") {
+                       $rows[] = $row;  
+                    }
+                   
+                }           
+                
+                $buf = \App\Printer::arr2comm($rows);
+           
+                return json_encode(array('data'=>$buf,"printer"=>2), JSON_UNESCAPED_UNICODE);
+          }
+     
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }        
+    }
+    
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
@@ -1109,10 +1244,17 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if($type == 10) {
             $where = $where . " and disabled = 1";
         }
+        if($type == 10) {
+            $where = $where . " and disabled = 1";
+        }
+ 
         if($type < 10) {
             $where = $where . " and disabled <> 1";
-            if($type >0) {
+            if($type >0 && $type < 9) {
                 $where = $where . " and item_type = {$type}";
+            }
+            if($type ==9 ) {
+                $where = $where . " and detail like '%<isweight>1</isweight>%' ";
             }
         }
         if(strlen($this->page->_tag)>0) {

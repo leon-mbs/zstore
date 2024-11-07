@@ -102,7 +102,7 @@ class User extends \ZCL\DB\Entity
         $this->viber = $options['viber']?? '';
 
         $this->darkmode = $options['darkmode']?? 0;
-        $this->emailnotify = $options['emailnotify']?? 0;
+
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
 
@@ -119,6 +119,7 @@ class User extends \ZCL\DB\Entity
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
+        $this->scaleserver = $options['scaleserver']?? '';
 
         parent::afterLoad();
     }
@@ -148,7 +149,7 @@ class User extends \ZCL\DB\Entity
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
         $options['darkmode'] = $this->darkmode;
-        $options['emailnotify'] = $this->emailnotify;
+
         $options['usemobileprinter'] = $this->usemobileprinter;
 
         $options['pserver'] = $this->pserver;
@@ -166,6 +167,7 @@ class User extends \ZCL\DB\Entity
         $options['viber'] = $this->viber;
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
+        $options['scaleserver'] = $this->scaleserver   ;
 
         $this->options = serialize($options);
 

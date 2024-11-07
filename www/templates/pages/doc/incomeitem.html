@@ -79,10 +79,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                             <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                        
                             <th width="40" class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
 
@@ -93,10 +91,8 @@
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                          
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
                             <td zippy="amount" class="text-right"></td>
@@ -107,12 +103,8 @@
 
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right">Всього:</td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right">Всього:</td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right">Всього:</td>
+                          
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>

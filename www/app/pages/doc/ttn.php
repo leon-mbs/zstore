@@ -46,8 +46,7 @@ class TTN extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
-
+     
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 

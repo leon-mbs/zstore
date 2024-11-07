@@ -54,7 +54,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('showchat'));
-        $this->common->add(new CheckBox('noemail'));
+
 
 
         $this->common->add(new CheckBox('capcha'));
@@ -80,7 +80,7 @@ class Options extends \App\Pages\Base
 
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->showchat->setChecked($common['showchat']);
-        $this->common->noemail->setChecked($common['noemail']);
+
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->sell2->setChecked($common['sell2']);
         $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
@@ -168,6 +168,7 @@ class Options extends \App\Pages\Base
         //валюты
 
         $this->add(new Form('valform'));
+        $this->valform->add(new SubmitLink('loadrate', $this, 'onValCource'));
         $this->valform->add(new SubmitLink('valadd', $this, 'onValAdd'));
         $this->valform->add(new SubmitButton('saveval'))->onClick($this, 'saveValOnClick');
 
@@ -371,7 +372,7 @@ class Options extends \App\Pages\Base
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
-        $common['noemail'] = $this->common->noemail->isChecked() ? 1 : 0;
+
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
 
@@ -646,11 +647,34 @@ class Options extends \App\Pages\Base
 
     }
 
+    public function onValCource($sender) {
+        $xml=@simplexml_load_string(file_get_contents("https://bank.gov.ua/NBU_Exchange/exchange?date=".date("d.m.Y")  ) ) ;
+        if($xml==false) return;
+        $vl = $this->_vallist;
+        $this->_vallist=[];
+        foreach($xml->children() as $row){
+            $code=(string)$row->CurrencyCodeL[0];
+            $amount=(string)$row->Amount[0];
+            $unit=(string)$row->Units[0];
+            $rate=   @number_format(doubleval($amount/$unit), 3, '.', '')  ;
+            foreach($vl as $v){
+               if($v->code == $code ) {
+                  $v->rate  = $rate;
+               }
+               $this->_vallist[$v->id]=$v;
+            }
+        }
+        
+        $this->valform->vallist->Reload();
+        $this->goAnkor('valform') ;
+        
+    }
     public function onValDel($sender) {
         $val = $sender->getOwner()->getDataItem() ;
         $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
 
         $this->valform->vallist->Reload();
+        $this->goAnkor('valform') ;
 
     }
     public function onValAdd($sender) {
@@ -663,7 +687,7 @@ class Options extends \App\Pages\Base
 
         $this->_vallist[$val->id] = $val;
         $this->valform->vallist->Reload();
-
+        $this->goAnkor('valform') ;
     }
 
     public function saveValOnClick($sender) {

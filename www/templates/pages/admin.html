@@ -1,0 +1,50 @@
+<html>
+  <head>
+     <title>  Адміністрування  </title>
+ 
+</head>
+<body>
+ <div class="row">
+        
+    <div class="col-12 col-lg-5 col-xl-3  "   >
+        <h2>Адміністрування</h2>
+       
+         <form zippy="sendform" >
+              <div class="form-group">
+                <h5>Перевірка відправки пошти</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="email">Email</label>
+                   <input class="form-control" type="text" zippy="email">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendemail" type="submit" value="Відправити" class="btn   btn-primary  ">
+                 
+               </div>
+               {{#issms}}
+             <div class="form-group">
+                <h5>Перевірка відправки SMS</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="phone">Телефон</label>
+                   <input class="form-control" type="text" zippy="phone">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendphone" type="submit" value="Відправити" class="btn   btn-primary  ">
+                 
+               </div>
+              {{/issms}}               
+         </form>
+         
+  </div>        
+</div>        
+      <script>
+        function check_sendemail(ele){
+            document.getElementById('dialogwait').showModal()
+          
+            return true;
+       
+        }       
+      </script>
+</body>
+</html>

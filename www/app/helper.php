@@ -283,10 +283,7 @@ class Helper
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 
-
-        if(\App\System::useEmail() == false) {
-            return;
-        }
+   
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom) == 0) {
@@ -320,12 +317,13 @@ class Helper
             //  $d = $mail->send() ;
             if($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
+                self::logerror($mail->ErrorInfo) ;
             } else {
                 //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
-
+            self::logerror($e->getMessage()) ;
         }
 
         /*
@@ -1035,7 +1033,7 @@ class Helper
 
 
     /**
-     * Печать  этикеток
+     * Печать  этикеток  на  системном принтере
      *
      * @param array $items
      */
@@ -1135,7 +1133,7 @@ class Helper
 
             $printqty = intval($item->printqty);
             if($printqty == 0) {
-                $printqty = 4;
+                $printqty = 1;
             }
 
             if($printqty == 1) {
@@ -1168,7 +1166,7 @@ class Helper
 
 
     /**
-     * Печать  этикеток на  ESC/POS
+     * Печать  этикеток на узком  принтере
      *
      * @param array $items
      */
@@ -1237,7 +1235,7 @@ class Helper
 
             $printqty = intval($item->printqty);
             if($printqty == 0) {
-                $printqty = 4;
+                $printqty = 1;
             }
 
             if($printqty == 1) {
@@ -1258,7 +1256,7 @@ class Helper
             if($pqty > 0) {
                 $qty = $pqty;
             }
-
+          
 
             if($user->prtypelabel == 2) {
                 $header['name'] = str_replace("\"", "`", $header['name']);
@@ -1281,7 +1279,10 @@ class Helper
                         $row = str_replace("\n", "", $row);
                         $row = str_replace("\r", "", $row);
                         $row = trim($row);
-                        $rows[] = $row;
+                        if($row != "") {
+                           $rows[] = $row;  
+                        }
+                       
                     }
                 }
 

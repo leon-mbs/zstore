@@ -67,7 +67,8 @@ class RetCustIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
-
+        $this->docform->add(new SubmitLink('delete'))->onClick($this, 'deleteOnClick');
+         
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -150,20 +151,37 @@ class RetCustIssue extends \App\Pages\Base
         $row->add(new Label('price', H::fa($item->price)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+        
     }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-
-        $item = $sender->owner->getDataItem();
-        $rowid =  array_search($item, $this->_itemlist, true);
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-
+        $items = array();
+        foreach ($this->docform->detail->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $items[] = $item->item_id;
+            }
+        }
+        if (count($items) == 0) {
+            return;
+        }
+        
+        $tmp= $this->_itemlist;
+        $this->_itemlist=[];
+        foreach($tmp as $item) {
+            if(in_array($item->item_id,$items))  {
+                continue;
+            }
+            $this->_itemlist[]= $item;
+        }
+        
+        
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -173,6 +191,8 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
+        $this->editdetail->edittovar->setKey(0);
+        $this->editdetail->edittovar->setText('');
         $this->docform->setVisible(false);
         $this->_rowid = -1;
     }

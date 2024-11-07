@@ -38,8 +38,6 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('viber', $this->user->viber));
 
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
-        $form->add(new CheckBox('emailnotify', $this->user->emailnotify));
-        $form->add(new CheckBox('botnotify', $this->user->botnotify))->setVisible(strlen($this->user->chat_id)>0);
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
@@ -95,6 +93,11 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
+        
+        $form = new Form('scaleform');
+        $form->add(new TextInput('scaleserver', $this->user->scaleserver));
+        $form->onSubmit($this, 'saveScalelOnClick');
+        $this->add($form);     
 
         if(strlen($this->user->prtype) == 0) {
             $this->user->prtype = 0 ;
@@ -102,6 +105,7 @@ class UserProfile extends \App\Pages\Base
             $this->user->pwsym     = 32;
         }
 
+    
         $form = new Form('printer');
         $form->add(new DropDownChoice('prtype',[], 0))->onChange($this, "onPSType");
         $form->prtype->setValue($this->user->prtype);
@@ -133,6 +137,8 @@ class UserProfile extends \App\Pages\Base
         $this->add($form);
 
         $this->onPSTypelabel(null);
+        
+         
 
     }
 
@@ -143,8 +149,6 @@ class UserProfile extends \App\Pages\Base
         $this->user->viber = $sender->viber->getText();
 
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
-        $this->user->botnotify = $sender->botnotify->isChecked() ? 1 : 0;
-        $this->user->emailnotify = $sender->emailnotify->isChecked() ? 1 : 0;
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();
@@ -274,9 +278,8 @@ class UserProfile extends \App\Pages\Base
             if($prtype==2) {
               $pr->labelrow("CLS");
 //              $pr->text("CODEPAGE 866");
-              $pr->text("DIRECTION 0");
+              $pr->text("DIRECTION 1");
               $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"Printer test\"");
-              $pr->labelrow("FEED 50");
               $pr->labelrow("PRINT 1,1");
             }
             $buf = $pr->getBuffer() ;
@@ -292,6 +295,13 @@ class UserProfile extends \App\Pages\Base
 
     }
 
+    public function saveScalelOnClick($sender) {
+        $this->user->scaleserver = $sender->scaleserver->getText() ;
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+          
+    }
     public function savePrinterlabelOnClick($sender) {
 
 

@@ -47,13 +47,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = 7; 
-        if($common['usesnumber'] >0) {
-            $this->_tvars["colspan"] = 8;
-        }
-        if($common['usesnumber'] ==2) {
-            $this->_tvars["colspan"] = 9;
-        }
+  
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));

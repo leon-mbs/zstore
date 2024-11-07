@@ -59,11 +59,15 @@ class IncomeMoney extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
-
-            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->detail->setValue($this->_doc->headerdata['detail']);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
+
+            if($this->_doc->headerdata['detail']==1 || $this->_doc->headerdata['detail']==2 ) {
+               $this->docform->customer->setKey($this->_doc->customer_id);
+               $this->docform->customer->setText($this->_doc->customer_name);
+            }
+            if($this->_doc->headerdata['detail']==3) {
+               $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            }
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 

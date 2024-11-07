@@ -192,7 +192,7 @@
                 <div class="form-check">
                     <input zippy="editisholding" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editisholding">Холдинг</label>
-                    <small>Компанія, що об'єднує дочірні компанії. Використовується для консолідованих звітів</small>
+                    <br><small>Компанія, що об'єднує дочірні компанії. </small>
                 </div>
                 <div class="form-group">
                     <label for="editholding">Дочірня для холдинга</label>
@@ -225,11 +225,7 @@
                     <label class="form-check-label" for="editdisabled">Більше не використовується</label>
                 </div>        
                 {{/leadmode}} 
-               <div class="form-group">
-                   <label for="edittags">Теги</label>
-                   <div zippy="edittags"> </div>
-                   <small>Вводяться по  Enter</small>
-              </div> 
+       
             </div>
 
             <div class="col-12 col-md-4 ">
@@ -273,6 +269,11 @@
                     <label for="editcomment">Примітка</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
                 </div>
+        <div class="form-group">
+                   <label for="edittags">Теги</label>
+                   <div zippy="edittags"> </div>
+                   <small>Вводяться по  Enter</small>
+              </div>                 
             </div>    
 
             <div class="w-100"></div>

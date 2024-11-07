@@ -97,9 +97,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list = array();
         $list[self::MSG_NOTIFY] = "Текст";
       
-        if(\App\System::useEmail()) {
-            $list[self::MSG_EMAIL] = "E-mail";
-        }
+        $list[self::MSG_EMAIL] = "E-mail";
 
         if($sms['smstype'] > 0) {
             $list[self::MSG_SMS] = "SMS";
@@ -513,9 +511,7 @@ class Subscribe extends \ZCL\DB\Entity
     public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
 
-        if(System::useEmail()==false) {
-            return "No email";
-        }
+       
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
@@ -731,8 +727,8 @@ class Subscribe extends \ZCL\DB\Entity
                 curl_close($ch);
 
                 if ($httpcode >200) {
-                    H::log("code ".$httpcode) ;
-                    H::log($response) ;
+                    H::logerror("code ".$httpcode) ;
+                    H::logerror($response) ;
                     return "Error. See logs";
                 }
 

@@ -83,6 +83,7 @@ class PosList extends \App\Pages\Base
     public function poslistOnRow($row) {
         $item = $row->getDataItem();
 
+        $row->add(new Label('pos_id', $item->pos_id));
         $row->add(new Label('pos_name', $item->pos_name));
         $row->add(new Label('branch_name', $this->_blist[$item->branch_id]??''));
         $row->add(new Label('comment', $item->comment));

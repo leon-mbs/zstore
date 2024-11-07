@@ -84,7 +84,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
-
+ 
         //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
@@ -93,7 +93,11 @@ class InvoiceCust extends \App\Pages\Base
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
-
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+ 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+  
+ 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -207,6 +211,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->_rowid = -1;
         $this->editdetail->editprice->setText("0");
         $this->editdetail->editcustcode->setText("");
+        $this->wselitem->setVisible(false);
+        
     }
 
     public function saverowOnClick($sender) {
@@ -248,11 +254,14 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->editcustcode->setText("");
+        $this->wselitem->setVisible(false);
+        
     }
 
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->wselitem->setVisible(false);        
     }
 
     public function savedocOnClick($sender) {
@@ -516,6 +525,25 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
+    }
+ 
+    public function onOpenItemSel($sender) {
+  
+        $this->wselitem->setVisible(true);
+        $this->wselitem->Reload();
+    }
+    public function onSelectItem($item_id, $itemname, $price=null) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        $item = Item::load($item_id);
+
+        if($price==null) {
+        //    $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+
+        }
+        
+        $this->editdetail->editprice->setText(H::fa($price));
+        
     }
 
 }

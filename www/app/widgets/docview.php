@@ -367,7 +367,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
+    /*
     public function onMail($arg, $post) {
         try {
             $doc = Document::Load($arg[0])->cast();
@@ -386,6 +386,6 @@ class DocView extends \Zippy\Html\PageFragment
         }
 
     }
-
+    */
 
 }

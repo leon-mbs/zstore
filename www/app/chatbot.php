@@ -159,7 +159,7 @@ class ChatBot
 
 
             } else {
-                H::log($ret['description']) ;
+                H::logerror($ret['description']) ;
             }
 
         }

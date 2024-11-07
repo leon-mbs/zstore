@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "6.11.7";
-    public const PREV_VERSION = "6.11.6";
+    public const CURR_VERSION = "6.11.8";
+    public const PREV_VERSION = "6.11.7";
     public const REQUIRED_DB  = "6.11.0";
 
     private static $_options = array();   //  для кеширования
@@ -206,11 +206,7 @@ class System
     public static function useCron() {
         return  \App\Helper::getKeyVal('cron') ?? false;
     }
-    public static function useEmail() {
-        $o=  self::getOption('common', 'noemail') ?? false;
-        return !$o;
-
-    }
+  
 
 
 }

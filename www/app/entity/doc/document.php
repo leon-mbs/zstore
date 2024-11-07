@@ -977,9 +977,7 @@ class Document extends \ZCL\DB\Entity
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
         }
-
-
-        // @unlink($f);
+ 
     }
 
     /**

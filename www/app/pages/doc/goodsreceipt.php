@@ -46,14 +46,7 @@ class GoodsReceipt extends \App\Pages\Base
         parent::__construct();
 
         $common = System::getOptions("common");
-
-        $this->_tvars["colspan"] = 8; 
-        if($common['usesnumber'] >0) {
-            $this->_tvars["colspan"] = 9;
-        }
-        if($common['usesnumber'] ==2) {
-            $this->_tvars["colspan"] = 10;
-        }
+ 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
