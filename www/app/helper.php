@@ -1154,6 +1154,11 @@ class Helper
             if($pqty > 0) {
                 $qty = $pqty;
             }
+            if($item->isweight ==1) {
+                $qty = 1;  //весовой товар
+            }
+            
+            
             for($i = 0; $i < intval($qty); $i++) {
                 $htmls = $htmls . $report->generate($header);
             }
@@ -1255,6 +1260,9 @@ class Helper
             }
             if($pqty > 0) {
                 $qty = $pqty;
+            }
+            if($item->isweight ==1) {
+                $qty = 1;  //весовой товар
             }
           
 
