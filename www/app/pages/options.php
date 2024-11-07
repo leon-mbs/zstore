@@ -54,7 +54,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('showchat'));
-        $this->common->add(new CheckBox('noemail'));
+
 
 
         $this->common->add(new CheckBox('capcha'));
@@ -80,7 +80,7 @@ class Options extends \App\Pages\Base
 
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->showchat->setChecked($common['showchat']);
-        $this->common->noemail->setChecked($common['noemail']);
+
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->sell2->setChecked($common['sell2']);
         $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
@@ -372,7 +372,7 @@ class Options extends \App\Pages\Base
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
-        $common['noemail'] = $this->common->noemail->isChecked() ? 1 : 0;
+
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
         $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
 

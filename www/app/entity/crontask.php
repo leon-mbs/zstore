@@ -179,8 +179,8 @@ class CronTask extends \ZCL\DB\Entity
 
                     if(strlen($user->chat_id) >0) {
                         $ret= \App\Entity\Subscribe::sendBot($user->chat_id, $text) ;
-                    } elseif(strlen($user->email) >0  && System::useEmail()) {
-                        $ret= \App\Entity\Subscribe::sendEmail($user->email, $text, "XStore  notify") ;
+                    } elseif(strlen($user->email) >0  ) {
+                        $ret= \App\Entity\Subscribe::sendEmail($user->email, $text, "ZStore  notify") ;
                     }
                     if(strlen($ret)==0) {
                         $done = true;

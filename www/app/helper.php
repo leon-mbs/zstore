@@ -283,10 +283,7 @@ class Helper
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 
-
-        if(\App\System::useEmail() == false) {
-            return;
-        }
+   
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom) == 0) {
