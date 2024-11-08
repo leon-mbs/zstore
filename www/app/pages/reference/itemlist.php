@@ -1110,7 +1110,7 @@ class ItemList extends \App\Pages\Base
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
      
-        $item =  \App\Entity\Item::load($post["stitemid"]) ;
+        $item =   Item::load($post["stitemid"]) ;
      
         $header = [];  
               
@@ -1126,9 +1126,13 @@ class ItemList extends \App\Pages\Base
         $header['qty'] = H::fqty($post["stqty"]);
         $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
      
-        $barcode =  sprintf("%06d", $header['price'] *100) . sprintf("%06d", $header['qty'] *1000) . $item->item_id;  
-    
+ 
+        $price= str_replace(',','.',$header['price'] )  ;
+        $qty= str_replace(',','.', $header['qty'] ) ;
+   
+        $barcode= Item::packStBC($price,$qty,$post["stitemid"]);
         $header['barcode'] = $barcode;
+         
       
         if(intval($user->prtypelabel) == 0) {
             $report = new \App\Report('item_sticker.tpl');
@@ -1141,12 +1145,9 @@ class ItemList extends \App\Pages\Base
                 $header['turn'] = 'transform: rotate(-90deg);';
             }
  
-            if($header['isbarcode']) {
-         
-               $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-               $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;
-           
-            }
+            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+            $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;
+
             $html =  $report->generate($header);
             $html = str_replace("'", "`", $html);
             
