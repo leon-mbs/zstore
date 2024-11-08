@@ -731,16 +731,16 @@ class DocList extends \App\Pages\Base
         }
 
         $user = \App\System::getUser() ;
-          
+        $ret = H::printItems($items);   
+           
         if(intval($user->prtypelabel) == 0) {
         
-            $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
-
+           
             if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $htmls;
+                \App\Session::getSession()->printform =  $ret;
                 $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
-                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
+                $this->addAjaxResponse("  $('#tag').html('{$ret}') ; $('#pform').modal()");
             }
             return;
         }
@@ -748,7 +748,6 @@ class DocList extends \App\Pages\Base
         
         try {
 
-            $ret = H::printItemsEP($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
             if(intval($user->prtypelabel) == 1) {
                 if(strlen($ret)==0) {
                    $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");

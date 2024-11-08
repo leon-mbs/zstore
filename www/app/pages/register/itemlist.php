@@ -474,10 +474,13 @@ class ItemList extends \App\Pages\Base
         if (count($items) == 0) {
             return;
         }
-        if(intval(\App\System::getUser()->prtypelabel) == 0) {
+        
+        $user= \App\System::getUser() ;
+        $ret = H::printItems($items);   
+        
+        if(intval($user->prtypelabel) == 0) {
 
-            $htmls = H::printItems($items);
-
+         
             if(\App\System::getUser()->usemobileprinter == 1) {
                 \App\Session::getSession()->printform =  $htmls;
 
@@ -491,10 +494,17 @@ class ItemList extends \App\Pages\Base
 
         try {
 
-            $xml = H::printItemsEP($items);
-            $buf = \App\Printer::xml2comm($xml);
-            $b = json_encode($buf) ;
-
+           
+            if(intval($user->prtypelabel) == 1) {
+               $buf = \App\Printer::xml2comm($ret);
+                        
+             }
+          
+            if(intval($user->prtypelabel) == 2) {
+               $buf = \App\Printer::arr2comm($ret);
+                         
+             }
+             $b = json_encode($buf) ;   
             $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;
