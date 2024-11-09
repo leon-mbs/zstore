@@ -1038,14 +1038,25 @@ class Helper
      * @param array $items
      */
     public static function printItems(array $items, $pqty = 0, array $tags = []) {
+        $user = \App\System::getUser();
+
         $printer = \App\System::getOptions('printer');
 
         $prturn = \App\System::getUser()->prturn;
 
         $htmls = "";
-
-        $report = new \App\Report('item_tag.tpl');
-
+        $rows = [];
+        
+        
+        if($user->prtypelabel == 0) {
+            $report = new \App\Report('item_tag.tpl');
+        }
+        if($user->prtypelabel == 1) {
+            $report = new \App\Report('item_tag_ps.tpl');
+        }
+        if($user->prtypelabel == 2) {
+            $report = new \App\Report('item_tag_ts.tpl');
+        }
         foreach($items as $item) {
             if(intval($item->item_id) == 0) {
                 continue;
@@ -1075,6 +1086,7 @@ class Helper
             $header['isarticle'] = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
             $header['isqrcode'] = false;
+            $header['isweight'] = $item->isweight ==1 && $item->quantity > 0 ;
 
 
             $header['article'] = $item->item_code;
@@ -1082,20 +1094,24 @@ class Helper
             $header['country'] = $item->country;
             $header['brand'] = $item->manufacturer;
             $header['notes'] = $item->notes;
+            $header['quantity'] = $item->quantity;
 
 
             if(strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
-                $writer = new \Endroid\QrCode\Writer\PngWriter();
+               
+                if($user->prtypelabel == 0) {
+                    $writer = new \Endroid\QrCode\Writer\PngWriter();
 
-                $qrCode = new \Endroid\QrCode\QrCode($item->url);
+                    $qrCode = new \Endroid\QrCode\QrCode($item->url);
 
-                $qrCode->setSize(500);
-                $qrCode->setMargin(5);
+                    $qrCode->setSize(500);
+                    $qrCode->setMargin(5);
 
-                $result = $writer->write($qrCode);
+                    $result = $writer->write($qrCode);
 
-                $dataUri = $result->getDataUri();
-                $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
+                    $dataUri = $result->getDataUri();
+                    $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
+                    }
                 $header['qrcode'] = $item->url;
                 $header['isqrcode'] = true;
 
@@ -1107,18 +1123,22 @@ class Helper
                 $barcode = $item->bar_code;
                 if(strlen($barcode) == 0) {
                     $barcode = $item->item_code;
-                }
+                }   
+                $header['barcode'] = $barcode;
+                $header['isbarcode'] = true;                 
+                
                 if(strlen($barcode) > 0) {
-                    try{
-                        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                        $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . "\"";
-                        $header['barcodeattr'] = $da;
-                        $header['barcodewide'] = \App\Util::addSpaces($barcode);
-                        $header['barcode'] = $barcode;
-                        $header['isbarcode'] = true;
-                    } catch (\Throwable $e) {
-                       Helper::logerror("barcode: ".$e->getMessage()) ;
-                    }
+                   if($user->prtypelabel == 0) {
+                        try{
+                            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                            $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . "\"";
+                            $header['barcodeattr'] = $da;
+                            $header['barcodewide'] = \App\Util::addSpaces($barcode);
+                         
+                        } catch (\Throwable $e) {
+                           Helper::logerror("barcode: ".$e->getMessage()) ;
+                        }
+                   }
                 }
             }
 
@@ -1154,22 +1174,57 @@ class Helper
             if($pqty > 0) {
                 $qty = $pqty;
             }
-            for($i = 0; $i < intval($qty); $i++) {
-                $htmls = $htmls . $report->generate($header);
+            if($item->isweight ==1) {
+                $qty = 1;  //весовой товар
             }
+            
+            if($user->prtypelabel == 2) {
+                $header['name'] = str_replace("\"", "`", $header['name']);
+                $header['description'] = str_replace("\"", "`", $header['description']);
+                $header['qrcode'] = str_replace("\"", "`", $header['qrcode']);
+                $header['brand'] = str_replace("\"", "`", $header['brand']);
+
+                if($user->pwsymlabel > 0) {
+                    $header['name'] = mb_substr($header['name'], 0, $user->pwsymlabel);
+                }
+
+
+                $text = $report->generate($header, false);
+
+                $r = explode("\n", $text);
+
+                for($i = 0; $i < intval($qty); $i++) {
+
+                    foreach($r as $row) {
+                        $row = str_replace("\n", "", $row);
+                        $row = str_replace("\r", "", $row);
+                        $row = trim($row);
+                        if($row != "") {
+                           $rows[] = $row;  
+                        }
+                    }
+                }
+
+            } else {
+                for($i = 0; $i < intval($qty); $i++) {
+                    $htmls = $htmls . $report->generate($header);
+                }
+            }           
+         
 
         }
-        $htmls = str_replace("\'", "", $htmls);
+        
 
-        return $htmls;
+        if($user->prtypelabel == 2) {
+            return $rows;
+        } else {
+            $htmls = str_replace("\'", "", $htmls);
+            return $htmls;
+        }
     }
 
 
-    /**
-     * Печать  этикеток на узком  принтере
-     *
-     * @param array $items
-     */
+    /* 
     public static function printItemsEP(array $items, $pqty = 0, array $tags = []) {
         $user = \App\System::getUser();
 
@@ -1200,6 +1255,7 @@ class Helper
             $header['isarticle'] = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
             $header['isqrcode'] = false;
+            $header['isweight'] = $item->isweight ==1;
 
 
             $header['article'] = $item->item_code;
@@ -1207,6 +1263,8 @@ class Helper
             $header['country'] = $item->country;
             $header['brand'] = $item->manufacturer;
             $header['notes'] = $item->notes;
+            $header['quantity'] = $item->quantity;
+
 
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
             if(intval($item->price) > 0) {
@@ -1256,6 +1314,9 @@ class Helper
             if($pqty > 0) {
                 $qty = $pqty;
             }
+            if($item->isweight ==1) {
+                $qty = 1;  //весовой товар
+            }
           
 
             if($user->prtypelabel == 2) {
@@ -1303,7 +1364,8 @@ class Helper
 
 
     }
-
+    */
+    
     //"соль" для  шифрования
     public static function getSalt() {
         $salt = self::getKeyVal('salt');

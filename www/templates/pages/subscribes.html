@@ -137,7 +137,7 @@
             <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Опис тегiв</h5>
+                        <h5 class="modal-title">Опис тегiв шаблонізатора</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -145,9 +145,11 @@
                     <div class="modal-body">
                         Теги використовуються для підстановки даних з контексту (наприклад, документа).
                         Для системних повідомлень та e-mail в розмітці можна використовувати HTML.
-                        <a href="https://core.telegram.org/bots/api#html-style">Доступні теги</a> для відправки через Телеграм.
+                        <a href="https://core.telegram.org/bots/api#html-style">Доступні HTML теги</a> для відправки через Телеграм.
                         <br>
-                        Допускаються наступні теги для документу :
+                        <br>Для реалізації логіки в шаблоні використовується синтаксис шаблонізатора  Mustache
+                        <br>
+                        Допускаються наступні змінні шаблонізатора для документу :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Телефон контрагента</small></td></tr>
@@ -176,7 +178,7 @@
                             <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
                           
                         </table>
-                        Допускаються наступні теги для контрагента :
+                        Допускаються наступні змінні для контрагента :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_id}</b></small></td><td><small>ID контрагента</small></td></tr>

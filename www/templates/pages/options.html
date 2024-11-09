@@ -497,16 +497,18 @@
                               <tr><td><b>garterm</b></td><td>Гарантiйний термін</td></tr>
                               <tr><td><b>brand</b></td><td>Бренд</td></tr>
                               <tr><td><b>notes</b></td><td>Примітка</td></tr>
+                              <tr><td><b>weight</b></td><td>Вага (для вагового ТМЦ)</td></tr>
                               
                               <tr><td colspan="2" align="center">Управляючi теги</td></tr>
                               <tr><td><b>isprice</b></td><td>Друкувати цiну</td></tr>
                               <tr><td><b>isarticle</b></td><td>Друкувати артикул</td></tr>
                               <tr><td><b>isbarcode</b></td><td>Друкувати штрих-код</td></tr>
                               <tr><td><b>isqrcode</b></td><td>Друкувати QR код</td></tr>
+                              <tr><td><b>isweight</b></td><td>Друкувати вагу</td></tr>
                               <tr><td colspan="2" align="center">Для  системного  принтера</td></tr>
-                              <tr><td><b>qrcodeattr</b></td><td>вставляеться  в  тег img</td></tr>
-                              <tr><td><b>barcodeattr</b></td><td>вставляеться  в  тег img</td></tr>
-                              <tr><td><b>barcodewide</b></td><td>Надпис під штрих-кодом </td></tr>
+                              <tr><td><b>qrcodeattr</b></td><td>Вставляеться  в  тег img</td></tr>
+                              <tr><td><b>barcodeattr</b></td><td>Вставляеться  в  тег img</td></tr>
+                              <tr><td><b>barcodewide</b></td><td>Напис під штрих-кодом </td></tr>
                               <tr><td colspan="2" align="center">Для ESCPOS принтера (принт-сервера)</td></tr>
                               <tr><td><b>qrcode</b></td><td>Текст для  QR коду</td></tr>                              
                               <tr><td><b>barcode</b></td><td>Текст для штрих коду</td></tr>                              
@@ -535,7 +537,11 @@
                             <div class="form-check">
                                 <input zippy="pprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="pprice">Друкувати ціну</label>
-                            </div>                  
+                            </div>   
+                             <div class="form-check">
+                                <input zippy="pqrcode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="pqrcode">Друкувати QR код</label>
+                            </div>                                           
                             <div class="form-check">
                                 <input zippy="pbarcode" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="pbarcode">Друкувати штрих код</label>
@@ -545,10 +551,7 @@
                                 <select class="form-control" zippy="barcodetype">
                                 </select>
                             </div>
-                            <div class="form-check">
-                                <input zippy="pqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="pqrcode">Друкувати QR код</label>
-                            </div>
+                         
 
                            
                          

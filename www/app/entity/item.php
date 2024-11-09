@@ -859,4 +859,59 @@ class Item extends \ZCL\DB\Entity
     public function getID() {
         return $this->item_id;
     }
+
+     /**
+     * упаковка  штрих кода для  стикера для уменьшения длины
+     * 
+     * @param mixed $price
+     * @param mixed $qty
+     * @param mixed $item_id
+     */
+     public static function packStBC($price,$qty,$item_id) {
+        $common = \App\System::getOptions("common");
+         
+        if($common['amdigits'] == 1) {
+           $price=   $price *100 ;
+        }   
+          
+        if($common['qtydigits'] ==1) {
+            $qty=  $qty *10;
+        }  
+        if($common['qtydigits'] ==2) {
+            $qty=  $qty *100;
+        }  
+        if($common['qtydigits'] ==3) {
+            $qty=  $qty *1000 ;
+        }  
+        //убираем нули
+        $price= intval($price) ;
+        $qty= intval($qty) ;
+        
+        $barcode = strlen($price) . $price .strlen($qty) . $qty . $item_id;  
+        
+        return $barcode;
+     }
+    
+    /**
+    * раcпаковка  кода стикера
+    * 
+    * @param mixed $barcode
+    */
+     public static function unpackStBC($barcode) {
+        $common = \App\System::getOptions("common");
+        $lprice=  substr($barcode,0,1);
+        $price=  substr($barcode,1,$lprice);
+        $lqty=  substr($barcode,$lprice+1,1);
+        $qty=  substr($barcode,$lprice+2,$lqty);
+        $id=  substr($barcode,$lprice+2+$lqty);
+        
+        $item= Item::load(trim($id));
+        if($item != null)  {
+                
+                $item->price = \App\Helper::fa($price);
+                $item->quantity =\App\Helper::fqty($qty);
+               
+        }   
+        return $item;            
+     }
 }

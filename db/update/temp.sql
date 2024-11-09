@@ -1,5 +1,8 @@
 SET NAMES 'utf8';
 
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0);
+
+
 ALTER TABLE promocodes ADD dateto DATE DEFAULT  NULL ;
 
 ALTER TABLE note_topics ADD ispublic   tinyint(1) DEFAULT 0;

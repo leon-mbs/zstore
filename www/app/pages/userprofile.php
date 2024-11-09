@@ -40,6 +40,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
+        $form->add(new CheckBox('usebotfornotify', $this->user->usebotfornotify));
         $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
@@ -118,8 +119,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
         $this->add($form);
 
-
-
+  
 
         $this->onPSType(null);
 
@@ -138,7 +138,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->onPSTypelabel(null);
         
-         
+        $this->_tvars['usebot'] = strlen($this->user->chat_id) > 0  ;
 
     }
 
@@ -150,6 +150,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
+        $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;
 
         $this->user->deffirm = $sender->deffirm->getValue();
         $this->user->defstore = $sender->defstore->getValue();
