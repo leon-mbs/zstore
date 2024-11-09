@@ -1086,7 +1086,7 @@ class Helper
             $header['isarticle'] = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
             $header['isqrcode'] = false;
-            $header['isweight'] = $item->isweight ==1;
+            $header['isweight'] = $item->isweight ==1 && $item->quantity > 0 ;
 
 
             $header['article'] = $item->item_code;
@@ -1224,11 +1224,7 @@ class Helper
     }
 
 
-    /**
-     * Печать  этикеток на узком  принтере
-     *
-     * @param array $items
-     */
+    /* 
     public static function printItemsEP(array $items, $pqty = 0, array $tags = []) {
         $user = \App\System::getUser();
 
@@ -1368,7 +1364,8 @@ class Helper
 
 
     }
-
+    */
+    
     //"соль" для  шифрования
     public static function getSalt() {
         $salt = self::getKeyVal('salt');

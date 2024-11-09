@@ -70,7 +70,15 @@
                                 <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
 
                             </div>
-                          
+
+                           {{#usebot}}
+                             <div class="form-check">
+                                <input zippy="usebotfornotify" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usebotfornotify">Дублювати повiдомлення в телеграмi </label>
+
+                            </div>
+                           {{/usebot}}
+
                            <div class="form-check">
                                 <input zippy="darkmode" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="darkmode">Нiчна тема </label>

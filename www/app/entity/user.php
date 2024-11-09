@@ -22,6 +22,7 @@ class User extends \ZCL\DB\Entity
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
+        $this->usebotfornotify = 0;
         $this->prturn = 0;
 
         $this->usemobileprinter = 0;
@@ -105,6 +106,7 @@ class User extends \ZCL\DB\Entity
 
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
+        $this->usebotfornotify = $options['usebotfornotify']?? 0;
 
         $this->prtype = $options['prtype'] ?? 0;
         $this->pwsym = $options['pwsym']?? 0;
@@ -148,6 +150,7 @@ class User extends \ZCL\DB\Entity
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['usebotfornotify'] = $this->usebotfornotify;
         $options['darkmode'] = $this->darkmode;
 
         $options['usemobileprinter'] = $this->usemobileprinter;
