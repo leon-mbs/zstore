@@ -868,31 +868,10 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $item_id
      */
      public static function packStBC($price,$qty,$item_id) {
-        /*
-        $common = \App\System::getOptions("common");
-         
-        if($common['amdigits'] == 1) {
-           $price=   $price *100 ;
-        }   
-          
-        if($common['qtydigits'] ==1) {
-            $qty=  $qty *10;
-        }  
-        if($common['qtydigits'] ==2) {
-            $qty=  $qty *100;
-        }  
-        if($common['qtydigits'] ==3) {
-            $qty=  $qty *1000 ;
-        }  
-        //убираем нули
-        $price= intval($price) ;
-        $qty= intval($qty) ;
-        */
+   
         $price=doubleval(\App\Helper::fa($price));
         $qty=doubleval(\App\Helper::fqty($qty));
-        
-        
-        
+          
         $barcode = "".$price.'-'.$qty. '-' . $item_id;  
         
         return $barcode;
@@ -904,13 +883,7 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $barcode
     */
      public static function unpackStBC($barcode) {
-       /* $common = \App\System::getOptions("common");
-        $lprice=  substr($barcode,0,1);
-        $price=  substr($barcode,1,$lprice);
-        $lqty=  substr($barcode,$lprice+1,1);
-        $qty=  substr($barcode,$lprice+2,$lqty);
-        $id=  substr($barcode,$lprice+2+$lqty);
-        */
+ 
         
         $s=explode('-',$barcode) ;
         

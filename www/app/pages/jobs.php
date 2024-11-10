@@ -109,6 +109,7 @@ class Jobs extends \App\Pages\Base
             $row->stwait->setVisible(false);
             $row->sttoday->setVisible(false);
             $row->stpast->setVisible(false);
+            $row->done->setVisible(false);
         }
 
 
