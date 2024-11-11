@@ -39,6 +39,13 @@ class ItemList extends \App\Pages\Base
             return;
         }
 
+        $options = System::getOptions('common');
+        $this->_cflist = $options['cflist'];
+        if (is_array($this->_cflist) == false) {
+            $this->_cflist = [];
+        }        
+         
+        
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
 
         $this->filter->add(new TextInput('searchbrand'));
@@ -240,6 +247,7 @@ class ItemList extends \App\Pages\Base
         $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
         
         
+        $row->add(new ClickLink('cfedit',$this, 'cfeditOnClick'))->setVisible(count($this->_cflist)>0);
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -1215,11 +1223,6 @@ class ItemList extends \App\Pages\Base
     
   
     public function cfOnClick($sender) {
-        $options = System::getOptions('common');
-        $this->_cflist = $options['cflist'];
-        if (is_array($this->_cflist) == false) {
-            $this->_cflist = [];
-        }        
         $this->customform->cflist->Reload();        
         $this->itemtable->setVisible(false);
         $this->customform->setVisible(true);
@@ -1247,6 +1250,8 @@ class ItemList extends \App\Pages\Base
         $this->_cflist = array_diff_key($this->_cflist, array($item->id => $this->_cflist[$item->id]));
 
         $this->customform->cflist->Reload();
+      
+        
     }    
     public function savec($sender) {
         $options = System::getOptions('common');
@@ -1255,7 +1260,12 @@ class ItemList extends \App\Pages\Base
         
         $this->itemtable->setVisible(true);
         $this->customform->setVisible(false);
+        $this->Reload();
+        
     }  
+    public function cfeditOnClick($sender) {
+        
+    }
       
 }
 

@@ -443,18 +443,29 @@ class GoodsIssue extends \App\Pages\Base
                 $st = array_pop($st) ;
                 $item = Item::load($st->item_id);
 
-            }
-            if ($item == null) {
-                $this->setWarn("Товар з кодом `{$code}` не знайдено");
-                return;
-            } else {
+            }    
+            if ($item != null) {  
                 $item->snumber =   $code;
-
-
             }
         }
+      // проверка  на  стикер
+        if ($item == null) {
+       
+            $item = Item::unpackStBC($barcode);
+            $item->pureprice = $item->getPurePrice();
+            $this->_itemlist[ ] = $item;
+            $this->_rownumber  = 1;
 
-
+            $this->docform->detail->Reload();
+            $this->calcTotal();
+            $this->calcPay();
+            return;           
+        } 
+        if ($item == null) {  
+                $this->setWarn("Товар з кодом `{$code}` не знайдено");
+                return;
+        }  
+        
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
