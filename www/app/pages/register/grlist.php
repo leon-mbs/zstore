@@ -96,6 +96,14 @@ class GRList extends \App\Pages\Base
                 $row->istruck->setVisible(count($n)==0);
 
             }
+            if($doc->meta_name=='GoodsReceipt') {
+                if($doc->payamount == $doc->headerdata['prepaid'])  {
+                   $row->ispay->setVisible(false);    
+                }
+            }            
+            if($doc->state==9) {
+                $row->ispay->setVisible(false);    
+            }            
         }
 
 

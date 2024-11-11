@@ -173,6 +173,10 @@ class GIList extends \App\Pages\Base
                    $row->ispay->setVisible(false);    
                 }
             }
+            if($doc->state==9) {
+               $row->ispay->setVisible(false);    
+            }            
+            
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');

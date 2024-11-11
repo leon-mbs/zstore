@@ -599,11 +599,22 @@
             </div>
         </div>
 
-      <div class="col-12  ">
+      <div class="col-12  col-md-8 col-xl-6 ">
                
                 <form zippy="customform"  >
                    <h4>Кастомнi поля   </h4>
-                   <small> Поля, що створюются користувачем   </small>
+                   <small> Поля, що створюються користувачем   </small>
+                   <br><a  zippy="addnewcf">Додати</a>
+
+                       <table class="ctable mt-2">
+                        <tr zippy="cflist">
+                            <td>Код </td>
+                            <td> <input pattern="[a-zA-Z0-9]+" placeholder="Латиниця, цифри" required="on" class="form-control" style="width:100px;" zippy="cfcode"  ></td>
+                            <td>Назва </td>
+                            <td><input required="on" class="form-control" style="width:250px;" zippy="cfname"  > </td>
+                            <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
+                         </tr>    
+                      </table>                       
                         <div class="form-group">
                                 <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
                                 <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
@@ -704,6 +715,7 @@
                 </div>
             </div>
         </div>
+    
         <script>
             $(document).ready(function () {
 
@@ -807,7 +819,11 @@
                 $("#stsum").text('') 
             }        
          }   
-            
+       function check_delcf() {
+
+            return confirm("Видалити?")
+
+            }       
         </script>
 
     </body>

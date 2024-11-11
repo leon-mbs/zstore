@@ -21,6 +21,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SubmitLink;
+use Zippy\Binding\PropertyBinding as Bind;
 
 class ItemList extends \App\Pages\Base
 {
@@ -30,7 +31,8 @@ class ItemList extends \App\Pages\Base
     public $_itemset  = array();
     public $_serviceset  = array();
     public $_tag = '' ; 
-
+    public $_cflist = array();
+  
     public function __construct($add = false) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('ItemList')) {
@@ -179,7 +181,9 @@ class ItemList extends \App\Pages\Base
         $this->add(new Form('customform'))->setVisible(false);        
         $this->customform->add(new SubmitButton('savec'))->onClick($this, 'savec');
         $this->customform->add(new Button('cancelc'))->onClick($this, 'cancelOnClick');
-        
+        $this->customform->add(new DataView('cflist', new ArrayDataSource(new Bind($this, '_cflist')), $this, 'cfOnRow'));
+        $this->customform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
+           
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
         $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
@@ -1211,11 +1215,43 @@ class ItemList extends \App\Pages\Base
     
   
     public function cfOnClick($sender) {
+        $options = System::getOptions('common');
+        $this->_cflist = $options['cflist'];
+        if (is_array($this->_cflist) == false) {
+            $this->_cflist = [];
+        }        
+        $this->customform->cflist->Reload();        
         $this->itemtable->setVisible(false);
         $this->customform->setVisible(true);
     }  
+    
+    public function OnAddCF($sender) {
+        $ls = new \App\DataItem();
+        $ls->code = '';
+        $ls->name = '';
+        $ls->id = time();
+        $this->_cflist[$ls->id] = $ls;
+        $this->customform->cflist->Reload();
+    }    
+    
+    public function cfOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new TextInput('cfcode', new Bind($item, 'code')));
+        $row->add(new TextInput('cfname', new Bind($item, 'name')));
+        $row->add(new ClickLink('delcf', $this, 'onDelCF'));
+        
+    }  
+    public function onDelCF($sender) {
+        $item = $sender->getOwner()->getDataItem();
+
+        $this->_cflist = array_diff_key($this->_cflist, array($item->id => $this->_cflist[$item->id]));
+
+        $this->customform->cflist->Reload();
+    }    
     public function savec($sender) {
-         
+        $options = System::getOptions('common');
+        $options['cflist'] = $this->_cflist;
+        System::setOptions('common', $options);        
         
         $this->itemtable->setVisible(true);
         $this->customform->setVisible(false);
