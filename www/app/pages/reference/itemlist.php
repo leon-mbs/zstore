@@ -55,6 +55,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->itemtable->add(new ClickLink('customlist'))->onClick($this, 'cfOnClick');
 
         $this->itemtable->add(new Form('listform'));
 
@@ -72,6 +73,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
 
         
+   
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
@@ -173,6 +175,11 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->add(new Label('stotal'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
 
+        
+        $this->add(new Form('customform'))->setVisible(false);        
+        $this->customform->add(new SubmitButton('savec'))->onClick($this, 'savec');
+        $this->customform->add(new Button('cancelc'))->onClick($this, 'cancelOnClick');
+        
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
         $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
@@ -365,6 +372,7 @@ class ItemList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
+        $this->customform->setVisible(false);
     }
 
     public function OnFilter($sender) {
@@ -1106,6 +1114,8 @@ class ItemList extends \App\Pages\Base
       
     }
  
+
+ 
     public function getSticker($args, $post) {
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
@@ -1199,7 +1209,18 @@ class ItemList extends \App\Pages\Base
         }        
     }
     
-    
+  
+    public function cfOnClick($sender) {
+        $this->itemtable->setVisible(false);
+        $this->customform->setVisible(true);
+    }  
+    public function savec($sender) {
+         
+        
+        $this->itemtable->setVisible(true);
+        $this->customform->setVisible(false);
+    }  
+      
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource

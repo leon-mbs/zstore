@@ -82,16 +82,27 @@
                                <input class="btn btn-outline-success  " type="submit" value="ОК">
                            </div>
                     </form>
+                   
+                    
                 </div>
+               
                     
                  <details class="mb-2 ml-2">
                     <summary >Теги</summary>
                     <small zippy="taglist"></small>
                  </details>
-                                     
+                   
+                 <div class="row "  >
+                 <div class="col-8   "  >
+                                
                 <a zippy="addnew" class="btn btn-primary mr-4  ">Додати</a>
-               
-                              
+                 </div>  
+                 <div class="col-4  "  >
+                 
+                   <a class="btn btn-outline-success mr-2"   zippy="customlist"  ><i class="fa fa-rectangle-list"> Кастомні поля</i> </a>
+                
+                </div>               
+                </div>               
                 <form zippy="listform">
                     <table class="table table-hover  table-sm  ">
                         <tr>
@@ -588,6 +599,20 @@
             </div>
         </div>
 
+      <div class="col-12  ">
+               
+                <form zippy="customform"  >
+                   <h4>Кастомнi поля   </h4>
+                   <small> Поля, що створюются користувачем   </small>
+                        <div class="form-group">
+                                <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
+                                <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                
+                      </div>         
+                </form>   
+     </div>             
+        
+        
         <div id="pform" class="modal fade   " tabindex="-1" role="dialog"  aria-hidden="true">
             <div class="modal-dialog modal-sm ">
                 <div class="modal-content">
