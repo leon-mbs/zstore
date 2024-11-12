@@ -1178,6 +1178,14 @@ class Helper
                 $qty = 1;  //весовой товар
             }
             
+            
+            //кастомные поля
+            foreach($item->getcf() as $cf){
+               $v=  str_replace("\"", "`", $v);
+               $v=  str_replace("'", "`", $v);
+               $header['cf_'.$cf->code]  = $cf->val; 
+            }
+            
             if($user->prtypelabel == 2) {
                 $header['name'] = str_replace("\"", "`", $header['name']);
                 $header['description'] = str_replace("\"", "`", $header['description']);
