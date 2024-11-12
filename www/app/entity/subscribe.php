@@ -31,6 +31,7 @@ class Subscribe extends \ZCL\DB\Entity
     public const RSV_WH        = 4;
     public const RSV_SYSTEM    = 5;
     public const RSV_DOCRESP   = 6;
+    public const RSV_TG        = 7;
 
     protected function init() {
         $this->sub_id = 0;
@@ -47,6 +48,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->doctypename = (string)($xml->doctypename[0]);
         $this->msgsubject = (string)($xml->msgsubject[0]);
         $this->url = (string)($xml->url[0]);
+        $this->chat_id = (string)($xml->chat_id[0]);
         $this->username = (string)($xml->username[0]);
         $this->user_id = (int)($xml->user_id[0]);
         $this->state = (int)($xml->state[0]);
@@ -75,6 +77,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<username>{$this->username}</username>";
         $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<chat_id>{$this->chat_id}</chat_id>";
 
         $this->detail .= "</detail>";
 
@@ -108,8 +111,9 @@ class Subscribe extends \ZCL\DB\Entity
         }
 
         if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
-            $list[self::MSG_BOT] = "Телеграм бот";
+            $list[self::MSG_BOT] = "Телеграм";
         }
+      
         
         if($rt==self::RSV_CUSTOMER) {
            unset($list[self::MSG_NOTIFY])  ;
@@ -121,6 +125,15 @@ class Subscribe extends \ZCL\DB\Entity
            unset($list[self::MSG_BOT])  ;
            unset($list[self::MSG_SMS])  ;
         }
+     
+        if($rt==self::RSV_TG ) {
+           unset($list[self::MSG_EMAIL])  ;
+           unset($list[self::MSG_VIBER])  ;
+ 
+           unset($list[self::MSG_SMS])  ;
+           unset($list[self::MSG_NOTIFY])  ;
+        }
+     
     
 
         return $list;
@@ -139,6 +152,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::RSV_SYSTEM] = "Системний лог";
         $list[self::RSV_USER] = "Користувач системи";
         $list[self::RSV_WH] = "Web Hook";
+        $list[self::RSV_TG] = "Телеграм";
 
         return $list;
     }
@@ -183,9 +197,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
                 
             }   
-            if($c==null && $u== null){
-                continue;
-            }
+         
                
             if ($c != null  ) {
                 $options['phone'] = $c->phone;
@@ -201,6 +213,9 @@ class Subscribe extends \ZCL\DB\Entity
                 $options['chat_id'] = $u->chat_id;
                 $options['notifyuser'] = $u->user_id;
             }  
+            if ($sub->reciever_type == self::RSV_TG) {
+                $options['chat_id'] = $sub->chat_id;;
+            }
                       
             $options['doc']  = $doc;
             
@@ -250,7 +265,10 @@ class Subscribe extends \ZCL\DB\Entity
                 $options['chat_id'] = $u->chat_id;
                 $options['notifyuser'] = $u->user_id;
             }            
-//            $options['c']  = $c;
+//      
+            if ($sub->reciever_type == self::RSV_TG) {
+                $options['chat_id'] = $sub->chat_id;;
+            }
             
             $text = $sub->getTextCust($c);
             
@@ -303,6 +321,7 @@ class Subscribe extends \ZCL\DB\Entity
             if(strlen($options['chat_id'])>0 && $this->msg_type == self::MSG_BOT) {
                 $ret =   self::sendBot($options['chat_id'], $text, $this->attach==1 ? $options['doc'] : null,$this->html==1) ;
             }
+         
             if($this->reciever_type == self::RSV_WH) {
                 $ret =   self::sendHook($this->url, $text) ;
             }
@@ -819,3 +838,4 @@ class Subscribe extends \ZCL\DB\Entity
     }
     
 }
+////217130115

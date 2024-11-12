@@ -43,6 +43,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
         $this->editform->add(new TextInput('editurl'));
+        $this->editform->add(new TextInput('editchatid'));
 
         $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(), Subscribe::EVENT_DOCSTATE))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(), 0));
@@ -97,6 +98,7 @@ class Subscribes extends \App\Pages\Base
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
+            $this->editform->editchatid->setVisible($rt == Subscribe::RSV_TG);
                
                     
             return;       
@@ -174,6 +176,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgtext->setText($this->_sub->msgtext);
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
         $this->editform->editurl->setText($this->_sub->url);
+        $this->editform->editchatid->setText($this->_sub->chat_id);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
         $this->editform->editattach->setCheCked($this->_sub->attach);
         $this->editform->edithtml->setCheCked($this->_sub->html);
@@ -204,6 +207,7 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
         $this->_sub->url = trim($this->editform->editurl->getText());
+        $this->_sub->chat_id = trim($this->editform->editchatid->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
         $this->_sub->html = $this->editform->edithtml->isCheCked() ? 1 : 0;
 

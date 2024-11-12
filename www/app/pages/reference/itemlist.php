@@ -32,6 +32,7 @@ class ItemList extends \App\Pages\Base
     public $_serviceset  = array();
     public $_tag = '' ; 
     public $_cflist = array();
+    public $_cflistv = array();
   
     public function __construct($add = false) {
         parent::__construct();
@@ -191,6 +192,12 @@ class ItemList extends \App\Pages\Base
         $this->customform->add(new DataView('cflist', new ArrayDataSource(new Bind($this, '_cflist')), $this, 'cfOnRow'));
         $this->customform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
            
+        $this->add(new Form('customformv'))->setVisible(false);        
+        $this->customformv->add(new SubmitButton('savecv'))->onClick($this, 'savec');
+        $this->customformv->add(new Button('cancelcv'))->onClick($this, 'cancelOnClick');
+        $this->customformv->add(new TextInput('cflistvitem')) ;
+        $this->customform->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
+
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
         $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
@@ -385,6 +392,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
         $this->customform->setVisible(false);
+        $this->customformv->setVisible(false);
     }
 
     public function OnFilter($sender) {
@@ -1237,7 +1245,7 @@ class ItemList extends \App\Pages\Base
         $this->customform->cflist->Reload();
     }    
     
-    public function cfOnRow($row) {
+     public function cfOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new TextInput('cfcode', new Bind($item, 'code')));
         $row->add(new TextInput('cfname', new Bind($item, 'name')));
@@ -1253,6 +1261,7 @@ class ItemList extends \App\Pages\Base
       
         
     }    
+ 
     public function savec($sender) {
         $options = System::getOptions('common');
         $options['cflist'] = $this->_cflist;
@@ -1264,9 +1273,22 @@ class ItemList extends \App\Pages\Base
         
     }  
     public function cfeditOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->customformv->cflistvitem->setText($item->item_id);
+        
+        
+        
+        $this->itemtable->setVisible(false);
+        $this->customformv->setVisible(true);      
+    }
+    public function savecv($sender) {        
         
     }
-      
+    public function cfvOnRow($row) {
+        
+    }
+    
+     
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
