@@ -193,10 +193,10 @@ class ItemList extends \App\Pages\Base
         $this->customform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
            
         $this->add(new Form('customformv'))->setVisible(false);        
-        $this->customformv->add(new SubmitButton('savecv'))->onClick($this, 'savec');
+        $this->customformv->add(new SubmitButton('savecv'))->onClick($this, 'savecv');
         $this->customformv->add(new Button('cancelcv'))->onClick($this, 'cancelOnClick');
         $this->customformv->add(new TextInput('cflistvitem')) ;
-        $this->customform->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
+        $this->customformv->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
 
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
@@ -1269,23 +1269,39 @@ class ItemList extends \App\Pages\Base
         
         $this->itemtable->setVisible(true);
         $this->customform->setVisible(false);
-        $this->Reload();
+        $this->Reload(false);
         
     }  
     public function cfeditOnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
         $this->customformv->cflistvitem->setText($item->item_id);
+        $this->_cflistv =  $item->getcf();
         
-        
-        
+        $this->customformv->cflistv->Reload();        
         $this->itemtable->setVisible(false);
         $this->customformv->setVisible(true);      
     }
     public function savecv($sender) {        
+        $v=[];
+        foreach($this->_cflistv as $r) {
+             if(strlen($r->val)>0) {
+                 $v[$r->code]=$r->val;
+             }
+        }
+        $item = Item::load( $this->customformv->cflistvitem->getText());
+        $item->savecf($v);
+        $item->save();
+        $this->Reload(false);
         
+        $this->itemtable->setVisible(true);
+        $this->customformv->setVisible(false);      
+         
     }
     public function cfvOnRow($row) {
-        
+        $item = $row->getDataItem();
+        $row->add(new Label('cfd', $item->name));
+        $row->add(new TextInput('cfval', new Bind($item, 'val')));
+         
     }
     
      

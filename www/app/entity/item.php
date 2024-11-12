@@ -73,6 +73,7 @@ class Item extends \ZCL\DB\Entity
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
         $reclist = (string)$xml->reclist[0];
+        $this->cflist = (string)$xml->cflist[0];
 
         if(strlen($reclist) >0) {
             $this->reclist = @unserialize(@base64_decode($reclist))   ;
@@ -172,6 +173,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<url>{$this->url}</url>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
+        $this->detail .= "<cflist>{$this->cflist}</cflist>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -896,4 +898,49 @@ class Item extends \ZCL\DB\Entity
         }   
         return $item;            
      }
+     
+     /**
+     * сохранить значения  кастомных  полей
+     * 
+     * @param mixed $cf
+     */
+     public function savecf($cf){
+         if(!is_array($cf)) {
+             $cf=[];
+         }
+        $this->cflist  = serialize($cf);
+     }
+     /**
+     * вернуть  значения кастомных  полей
+     * 
+     */
+     public function getcf(){
+        $cfv = []  ;
+        if(strlen($this->cflist)>0) {
+          $cfv=unserialize($this->cflist)   ;   
+        }
+        $options = \App\System::getOptions('common');
+        $cflist = $options['cflist'];
+        $i=1;
+        $ret=[];
+        foreach($cflist as $cf=>$f) {
+
+                  $it = new \App\DataItem()  ;
+                  $it->id= $i++;
+                  $it->code= $f->code;
+                  $it->name= $f->name;
+                  $it->val='';
+                  foreach($cfv as $cv=>$v) {
+                    if($f->code==$cv)  {    
+                       $it->val= $v;
+                    }
+                  }
+                  $ret[]=$it;
+             
+         
+        }  
+       
+        return $ret;
+     }
+     
 }
