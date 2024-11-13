@@ -31,14 +31,18 @@ class Admin extends \App\Pages\Base
             \App\Application::RedirectError();
             return false;
         }  
-        $sms = System::getOptions("sms");       
-        $this->_tvars['issms'] = $sms['smstype']>0;
+        $options = System::getOptions("common");       
+              
+        $this->_tvars['issms'] = $options['smstype']>0;
+        $this->_tvars['isbot'] = strlen($options['tbtoken'])>0;
         
         $form = $this->add(new Form('sendform'));
         $form->add(new TextInput('email'))  ;
         $form->add(new SubmitButton('sendemail'))->onClick($this, 'sendEmail');
         $form->add(new TextInput('phone'))  ;
         $form->add(new SubmitButton('sendphone'))->onClick($this, 'sendSms');
+        $form->add(new TextInput('chat_id'))  ;
+        $form->add(new SubmitButton('sendbot'))->onClick($this, 'sendBot');
  
     }   
 
@@ -53,10 +57,22 @@ class Admin extends \App\Pages\Base
         }
    
     }
+  
     public function sendSms($sender) {
         $phone = trim( $this->sendform->phone->getText() );
         try{
-            \App\Entity\sendSMS::sendSMS($phone,"test sms");
+            \App\Entity\Subscribe::sendSMS($phone,"test sms");
+        } catch(\Exception $e) {
+        
+            $this->setError($e->getMessage())  ;
+        }
+        
+    }
+
+    public function sendBot($sender) {
+        $chat_id = trim( $this->sendform->chat_id->getText() );
+        try{
+            \App\Entity\Subscribe::sendBot($chat_id,"test bot");
         } catch(\Exception $e) {
         
             $this->setError($e->getMessage())  ;
