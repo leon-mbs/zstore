@@ -902,7 +902,7 @@ class Item extends \ZCL\DB\Entity
      /**
      * сохранить значения  кастомных  полей
      * 
-     * @param mixed $cf
+     * @param mixed $cf     код=>значение
      */
      public function savecf($cf){
          if(!is_array($cf)) {
