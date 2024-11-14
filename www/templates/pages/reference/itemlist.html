@@ -398,7 +398,8 @@
                                 <div class="col-7">
                                     <input class="form-control" zippy="editcell"/>
                                 </div>
-                            </div>                
+                            </div>    
+                            {{#np}}            
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editweight">Вага </label>
                                 <div class="col-7">
@@ -417,7 +418,7 @@
                                     <input class="form-control qtyprice" zippy="editvolume" pattern="[0-9,\.]+"/>
                                 </div>
                             </div>
-
+                             {{/np}}
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcustomsize">Параметр для покупця (об'єм, вага)</label>
                                 <div class="col-7">
@@ -478,7 +479,7 @@
                                         <option value="3">За кiлькiстю на складi (або в документi) </option>
                                         <option value="4">За кiл. на складi але не бiльше 10</option>
                                     </select>
-
+                                      <small>Для вагового товару завжди 1</small>
                                 </div>
                             </div>
                             <div class="form-group row">
