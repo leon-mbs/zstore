@@ -863,7 +863,7 @@ class Item extends \ZCL\DB\Entity
     }
 
      /**
-     * упаковка  штрих кода для  стикера для уменьшения длины
+     * упаковка  штрих кода для  стикера 
      * 
      * @param mixed $price
      * @param mixed $qty
@@ -880,7 +880,7 @@ class Item extends \ZCL\DB\Entity
      }
     
     /**
-    * раcпаковка  кода стикера
+    * раcпаковка штрих кода стикера
     * 
     * @param mixed $barcode
     */

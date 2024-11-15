@@ -607,13 +607,13 @@
                
                 <form zippy="customform"  >
                    <h4>Кастомнi поля   </h4>
-                   <small> Поля, що створюються користувачем   </small>
+                   <small> Поля, що створюються користувачем. Код має бути унiкальним, допускається латиниця i  цифри     </small>
                    <br><a  zippy="addnewcf">Додати</a>
 
                        <table class="ctable mt-2">
                         <tr zippy="cflist">
                             <td>Код </td>
-                            <td> <input pattern="[a-zA-Z0-9]+" placeholder="Латиниця, цифри" required="on" class="form-control" style="width:100px;" zippy="cfcode"  ></td>
+                            <td> <input pattern="[a-zA-Z0-9]+"   required="on" class="form-control" style="width:100px;" zippy="cfcode"  ></td>
                             <td>Назва </td>
                             <td><input required="on" class="form-control" style="width:250px;" zippy="cfname"  > </td>
                             <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
