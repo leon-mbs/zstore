@@ -1033,9 +1033,11 @@ class Helper
 
 
     /**
-     * Печать  этикеток  на  системном принтере
+     * Печать  этикеток     
      *
-     * @param array $items
+     * @param array $items  ТМЦ
+     * @param array $pqty  явное  указание  количества копий
+     * @param array $tags  дополнительные поля
      */
     public static function printItems(array $items, $pqty = 0, array $tags = []) {
         $user = \App\System::getUser();
@@ -1111,7 +1113,7 @@ class Helper
 
                     $dataUri = $result->getDataUri();
                     $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
-                    }
+                }
                 $header['qrcode'] = $item->url;
                 $header['isqrcode'] = true;
 
@@ -1178,6 +1180,14 @@ class Helper
                 $qty = 1;  //весовой товар
             }
             
+            
+            //кастомные поля
+            foreach($item->getcf() as $cf){
+               $v=  str_replace("\"", "`", $v);
+               $v=  str_replace("'", "`", $v);
+               $header['cf_'.$cf->code]  = $cf->val; 
+            }
+            
             if($user->prtypelabel == 2) {
                 $header['name'] = str_replace("\"", "`", $header['name']);
                 $header['description'] = str_replace("\"", "`", $header['description']);
@@ -1224,148 +1234,7 @@ class Helper
     }
 
 
-    /* 
-    public static function printItemsEP(array $items, $pqty = 0, array $tags = []) {
-        $user = \App\System::getUser();
-
-
-        $printer = \App\System::getOptions('printer');
-
-        $htmls = "";
-        $rows = [];
-
-        $report = new \App\Report('item_tag_ps.tpl');
-        if($user->prtypelabel == 2) {
-            $report = new \App\Report('item_tag_ts.tpl');
-        }
-
-        foreach($items as $item) {
-            $header = [];
-            if(strlen($item->shortname) > 0) {
-                $header['name'] = $item->shortname;
-            } else {
-                $header['name'] = $item->itemname;
-            }
-            $header['name'] = str_replace("'", "`", $header['name']);
-            $header['description'] = str_replace("'", "`", $item->description);
-
-            $header['docnumber'] = $tags['docnumber'] ?? "";
-
-            $header['isprice'] = $printer['pprice'] == 1;
-            $header['isarticle'] = $printer['pcode'] == 1;
-            $header['isbarcode'] = false;
-            $header['isqrcode'] = false;
-            $header['isweight'] = $item->isweight ==1;
-
-
-            $header['article'] = $item->item_code;
-            $header['garterm'] = $item->warranty;
-            $header['country'] = $item->country;
-            $header['brand'] = $item->manufacturer;
-            $header['notes'] = $item->notes;
-            $header['quantity'] = $item->quantity;
-
-
-            $header['price'] = self::fa($item->getPrice($printer['pricetype']));
-            if(intval($item->price) > 0) {
-                $header['price'] = self::fa($item->price);  //по  документу
-            }
-
-
-            if(strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
-                $header['qrcode'] = $item->url;
-                $header['isqrcode'] = true;
-
-            }
-            if($printer['pbarcode'] == 1) {
-
-                $barcode = $item->bar_code;
-                if(strlen($barcode) == 0) {
-                    $barcode = $item->item_code;
-                }
-                if(strlen($barcode) > 0) {
-                    $header['barcode'] = $barcode;
-                    $header['isbarcode'] = true;
-                }
-            }
-
-            $qty = intval($item->getQuantity());
-
-            $printqty = intval($item->printqty);
-            if($printqty == 0) {
-                $printqty = 1;
-            }
-
-            if($printqty == 1) {
-                $qty = 1;
-            }
-            if($printqty == 2) {
-                $qty = 2;
-            }
-            if($printqty == 3) ;
-            if($printqty == 4) {
-                if($qty > 10) {
-                    $qty = 10;
-                }
-            }
-            if(intval($item->quantity) > 0) {
-                $qty = intval($item->quantity);  //по  документу
-            }
-            if($pqty > 0) {
-                $qty = $pqty;
-            }
-            if($item->isweight ==1) {
-                $qty = 1;  //весовой товар
-            }
-          
-
-            if($user->prtypelabel == 2) {
-                $header['name'] = str_replace("\"", "`", $header['name']);
-                $header['description'] = str_replace("\"", "`", $header['description']);
-                $header['qrcode'] = str_replace("\"", "`", $header['qrcode']);
-                $header['brand'] = str_replace("\"", "`", $header['brand']);
-
-                if($user->pwsymlabel > 0) {
-                    $header['name'] = mb_substr($header['name'], 0, $user->pwsymlabel);
-                }
-
-
-                $text = $report->generate($header, false);
-
-                $r = explode("\n", $text);
-
-                for($i = 0; $i < intval($qty); $i++) {
-
-                    foreach($r as $row) {
-                        $row = str_replace("\n", "", $row);
-                        $row = str_replace("\r", "", $row);
-                        $row = trim($row);
-                        if($row != "") {
-                           $rows[] = $row;  
-                        }
-                       
-                    }
-                }
-
-            } else {
-                for($i = 0; $i < intval($qty); $i++) {
-                    $htmls = $htmls . $report->generate($header);
-                }
-
-            }
-
-
-        }
-        if($user->prtypelabel == 2) {
-            return $rows;
-        } else {
-            return $htmls;
-        }
-
-
-    }
-    */
-    
+  
     //"соль" для  шифрования
     public static function getSalt() {
         $salt = self::getKeyVal('salt');

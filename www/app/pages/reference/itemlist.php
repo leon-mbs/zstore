@@ -21,6 +21,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SubmitLink;
+use Zippy\Binding\PropertyBinding as Bind;
 
 class ItemList extends \App\Pages\Base
 {
@@ -30,13 +31,22 @@ class ItemList extends \App\Pages\Base
     public $_itemset  = array();
     public $_serviceset  = array();
     public $_tag = '' ; 
-
+    public $_cflist = array();
+    public $_cflistv = array();
+  
     public function __construct($add = false) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('ItemList')) {
             return;
         }
 
+        $options = System::getOptions('common');
+        $this->_cflist = $options['cflist'];
+        if (is_array($this->_cflist) == false) {
+            $this->_cflist = [];
+        }        
+         
+        
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
 
         $this->filter->add(new TextInput('searchbrand'));
@@ -55,6 +65,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->itemtable->add(new ClickLink('customlist'))->onClick($this, 'cfOnClick');
 
         $this->itemtable->add(new Form('listform'));
 
@@ -72,6 +83,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
 
         
+   
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
@@ -173,6 +185,19 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->add(new Label('stotal'));
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
 
+        
+        $this->add(new Form('customform'))->setVisible(false);        
+        $this->customform->add(new SubmitButton('savec'))->onClick($this, 'savec');
+        $this->customform->add(new Button('cancelc'))->onClick($this, 'cancelOnClick');
+        $this->customform->add(new DataView('cflist', new ArrayDataSource(new Bind($this, '_cflist')), $this, 'cfOnRow'));
+        $this->customform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
+           
+        $this->add(new Form('customformv'))->setVisible(false);        
+        $this->customformv->add(new SubmitButton('savecv'))->onClick($this, 'savecv');
+        $this->customformv->add(new Button('cancelcv'))->onClick($this, 'cancelOnClick');
+        $this->customformv->add(new TextInput('cflistvitem')) ;
+        $this->customformv->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
+
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
         $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
@@ -229,6 +254,7 @@ class ItemList extends \App\Pages\Base
         $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
         
         
+        $row->add(new ClickLink('cfedit',$this, 'cfeditOnClick'))->setVisible(count($this->_cflist)>0);
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -365,6 +391,8 @@ class ItemList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
+        $this->customform->setVisible(false);
+        $this->customformv->setVisible(false);
     }
 
     public function OnFilter($sender) {
@@ -1106,6 +1134,8 @@ class ItemList extends \App\Pages\Base
       
     }
  
+
+ 
     public function getSticker($args, $post) {
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
@@ -1199,7 +1229,82 @@ class ItemList extends \App\Pages\Base
         }        
     }
     
+  
+    public function cfOnClick($sender) {
+        $this->customform->cflist->Reload();        
+        $this->itemtable->setVisible(false);
+        $this->customform->setVisible(true);
+    }  
     
+    public function OnAddCF($sender) {
+        $ls = new \App\DataItem();
+        $ls->code = '';
+        $ls->name = '';
+        $ls->id = time();
+        $this->_cflist[$ls->id] = $ls;
+        $this->customform->cflist->Reload();
+    }    
+    
+     public function cfOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new TextInput('cfcode', new Bind($item, 'code')));
+        $row->add(new TextInput('cfname', new Bind($item, 'name')));
+        $row->add(new ClickLink('delcf', $this, 'onDelCF'));
+        
+    }  
+    public function onDelCF($sender) {
+        $item = $sender->getOwner()->getDataItem();
+
+        $this->_cflist = array_diff_key($this->_cflist, array($item->id => $this->_cflist[$item->id]));
+
+        $this->customform->cflist->Reload();
+      
+        
+    }    
+ 
+    public function savec($sender) {
+        $options = System::getOptions('common');
+        $options['cflist'] = $this->_cflist;
+        System::setOptions('common', $options);        
+        
+        $this->itemtable->setVisible(true);
+        $this->customform->setVisible(false);
+        $this->Reload(false);
+        
+    }  
+    public function cfeditOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->customformv->cflistvitem->setText($item->item_id);
+        $this->_cflistv =  $item->getcf();
+        
+        $this->customformv->cflistv->Reload();        
+        $this->itemtable->setVisible(false);
+        $this->customformv->setVisible(true);      
+    }
+    public function savecv($sender) {        
+        $v=[];
+        foreach($this->_cflistv as $r) {
+             if(strlen($r->val)>0) {
+                 $v[$r->code]=$r->val;
+             }
+        }
+        $item = Item::load( $this->customformv->cflistvitem->getText());
+        $item->savecf($v);
+        $item->save();
+        $this->Reload(false);
+        
+        $this->itemtable->setVisible(true);
+        $this->customformv->setVisible(false);      
+         
+    }
+    public function cfvOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('cfd', $item->name));
+        $row->add(new TextInput('cfval', new Bind($item, 'val')));
+         
+    }
+    
+     
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource

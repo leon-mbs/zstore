@@ -130,7 +130,7 @@
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>
-                        <select v-model="edittype"  class="form-control">
+                        <select v-on:change="ontype()" v-model="edittype"  class="form-control">
                             <option value="0">Не обрано</option>
                             <option v-for="t in types" :value="t.key">{{t.value}}</option>
                         </select>
@@ -269,6 +269,19 @@ var calendar
                   this.editto = this.end;
                   this.editbreak = this.break;
                   $('#editmodal').modal('show')   
+
+               } ,    
+               ontype:function(){
+                
+                  this.edited = 0;
+                  if(this.edittype == 1 || this.edittype == 3 ){
+                     this.editbreak = this.break;    
+                  }   else {
+                     this.editbreak=0  
+                  }
+                   
+                 
+                
 
                } ,    
                save:function(i){

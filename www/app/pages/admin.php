@@ -52,7 +52,7 @@ class Admin extends \App\Pages\Base
         try{
           H::sendLetter($email,"test body","test email")   ;
         } catch(\Exception $e) {
-        
+            H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
         }
    
@@ -63,7 +63,7 @@ class Admin extends \App\Pages\Base
         try{
             \App\Entity\Subscribe::sendSMS($phone,"test sms");
         } catch(\Exception $e) {
-        
+            H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
         }
         
@@ -74,7 +74,7 @@ class Admin extends \App\Pages\Base
         try{
             \App\Entity\Subscribe::sendBot($chat_id,"test bot");
         } catch(\Exception $e) {
-        
+            H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
         }
         

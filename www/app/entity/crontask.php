@@ -102,7 +102,7 @@ class CronTask extends \ZCL\DB\Entity
                 \App\Helper::setKeyVal('lastcronm', time()) ;
 
                 //очищаем статистику
-                $dt = $conn->DBDate(strtotime('-1 month', time())) ;
+                $dt = $conn->DBDate(strtotime('-12 month', time())) ;
                 $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
                    

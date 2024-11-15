@@ -8,6 +8,7 @@ use App\Entity\Employee;
 use App\Entity\MoneyFund;
 use App\Entity\SalType;
 use App\Entity\EmpAcc;
+use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
 
@@ -70,6 +71,14 @@ class CalcSalary extends \App\Pages\Base
         $calcvar .= "var salaryh = fa(emp.salaryh)   \n" ;
         $calcvar .= "var hours = fa(emp.hours)   \n" ;
         $calcvar .= "var days = fa(emp.days)   \n" ;
+        $calcvar .= "var hours_week = fa(emp.hours_week)   \n" ;
+        $calcvar .= "var hours_over = fa(emp.hours_over)   \n" ;
+        $calcvar .= "var days_week = fa(emp.days_week)   \n" ;
+        $calcvar .= "var days_vac = fa(emp.days_vac)   \n" ;
+        $calcvar .= "var days_sick = fa(emp.days_sick)   \n" ;
+        $calcvar .= "var days_bt = fa(emp.days_bt)   \n" ;
+     
+     
        
         // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st) {
@@ -296,12 +305,45 @@ class CalcSalary extends \App\Pages\Base
                $e['sellvalue'] = doubleval($emp->sellvalue)  ;
             }
 
-            $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
+            
+             $e['hours'] =0;
+             $e['hours_week'] =0;
+             $e['hours_over'] =0;
+             $e['days'] =0;
+             $e['days_week'] =0;
+             $e['days_vac'] =0;
+             $e['days_sick'] =0;
+             $e['days_bt'] =0;
+            
+            $sql="select sum(tm) as tm, count(distinct dd) as dd,t_type   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm,t_type from timesheet where    emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t  group by t_type ";
           
 
-            $t = $conn->GetRow($sql);
-            $e['hours']  = intval($t['tm']/3600);
-            $e['days']   = doubleval($t['dd']);
+            $rs = $conn->Execute($sql);
+            foreach($rs as $row) {
+               if($row['t_type']==TimeItem::TIME_WORK ) {
+                  $e['hours']  += intval($row['tm']/3600);
+                  $e['days']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_WN  ) {
+                  $e['hours_week']  += intval($row['tm']/3600);
+                  $e['days_week']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_OVER  ) {
+                  $e['hours_over']  += intval($row['tm']/3600);
+       
+               }
+               if($row['t_type']==TimeItem::TINE_HL  ) {
+                  $e['days_vac']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_ILL  ) {
+                  $e['days_sick']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_BT  ) {
+                  $e['days_bt']   += doubleval($row['dd']); 
+               }
+            }
+            
+            
 
             $e['invalid'] = $emp->invalid == 1  ;
             $e['salarytype'] = $emp->ztype ;

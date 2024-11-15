@@ -73,6 +73,7 @@ class Item extends \ZCL\DB\Entity
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
         $reclist = (string)$xml->reclist[0];
+        $this->cflist = (string)$xml->cflist[0];
 
         if(strlen($reclist) >0) {
             $this->reclist = @unserialize(@base64_decode($reclist))   ;
@@ -172,6 +173,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<url>{$this->url}</url>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
+        $this->detail .= "<cflist>{$this->cflist}</cflist>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -868,26 +870,11 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $item_id
      */
      public static function packStBC($price,$qty,$item_id) {
-        $common = \App\System::getOptions("common");
-         
-        if($common['amdigits'] == 1) {
-           $price=   $price *100 ;
-        }   
+   
+        $price=doubleval(\App\Helper::fa($price));
+        $qty=doubleval(\App\Helper::fqty($qty));
           
-        if($common['qtydigits'] ==1) {
-            $qty=  $qty *10;
-        }  
-        if($common['qtydigits'] ==2) {
-            $qty=  $qty *100;
-        }  
-        if($common['qtydigits'] ==3) {
-            $qty=  $qty *1000 ;
-        }  
-        //убираем нули
-        $price= intval($price) ;
-        $qty= intval($qty) ;
-        
-        $barcode = strlen($price) . $price .strlen($qty) . $qty . $item_id;  
+        $barcode = "".$price.'-'.$qty. '-' . $item_id;  
         
         return $barcode;
      }
@@ -898,20 +885,62 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $barcode
     */
      public static function unpackStBC($barcode) {
-        $common = \App\System::getOptions("common");
-        $lprice=  substr($barcode,0,1);
-        $price=  substr($barcode,1,$lprice);
-        $lqty=  substr($barcode,$lprice+1,1);
-        $qty=  substr($barcode,$lprice+2,$lqty);
-        $id=  substr($barcode,$lprice+2+$lqty);
+ 
         
-        $item= Item::load(trim($id));
+        $s=explode('-',$barcode) ;
+        
+        $item= Item::load(trim($s[2]));
         if($item != null)  {
                 
-                $item->price = \App\Helper::fa($price);
-                $item->quantity =\App\Helper::fqty($qty);
+                $item->price = \App\Helper::fa($s[0]);
+                $item->quantity =\App\Helper::fqty($s[1]);
                
         }   
         return $item;            
      }
+     
+     /**
+     * сохранить значения  кастомных  полей
+     * 
+     * @param mixed $cf     код=>значение
+     */
+     public function savecf($cf){
+         if(!is_array($cf)) {
+             $cf=[];
+         }
+        $this->cflist  = serialize($cf);
+     }
+     /**
+     * вернуть  значения кастомных  полей
+     * 
+     */
+     public function getcf(){
+        $cfv = []  ;
+        if(strlen($this->cflist)>0) {
+          $cfv=unserialize($this->cflist)   ;   
+        }
+        $options = \App\System::getOptions('common');
+        $cflist = $options['cflist'];
+        $i=1;
+        $ret=[];
+        foreach($cflist as $cf=>$f) {
+
+                  $it = new \App\DataItem()  ;
+                  $it->id= $i++;
+                  $it->code= $f->code;
+                  $it->name= $f->name;
+                  $it->val='';
+                  foreach($cfv as $cv=>$v) {
+                    if($f->code==$cv)  {    
+                       $it->val= $v;
+                    }
+                  }
+                  $ret[]=$it;
+             
+         
+        }  
+       
+        return $ret;
+     }
+     
 }

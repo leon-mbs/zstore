@@ -7,7 +7,7 @@ use App\Entity\Doc\Document;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\Pager;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -41,7 +41,7 @@ class SalaryList extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new SalListDataSource($this), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
