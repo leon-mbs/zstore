@@ -103,6 +103,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('brand', $item->manufacturer));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('cell', $item->cell));
 
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));

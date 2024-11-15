@@ -720,7 +720,7 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        $one = $this->statusform->print1->isChecked();
+        $one = $this->statusform->print1->isChecked() ? 1:0;
         $items=[];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             if($this->_doc->meta_name=='GoodsReceipt') {
@@ -731,7 +731,7 @@ class DocList extends \App\Pages\Base
         }
 
         $user = \App\System::getUser() ;
-        $ret = H::printItems($items);   
+        $ret = H::printItems($items,$one);   
            
         if(intval($user->prtypelabel) == 0) {
         
