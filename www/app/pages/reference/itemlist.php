@@ -40,12 +40,7 @@ class ItemList extends \App\Pages\Base
             return;
         }
 
-        $options = System::getOptions('common');
-        $this->_cflist = $options['cflist'];
-        if (is_array($this->_cflist) == false) {
-            $this->_cflist = [];
-        }        
-         
+  
         
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
 
@@ -65,7 +60,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->add(new ClickLink('customlist'))->onClick($this, 'cfOnClick');
+        $this->itemtable->add(new ClickLink('options'))->onClick($this, 'optionsfOnClick');
 
         $this->itemtable->add(new Form('listform'));
 
@@ -161,6 +156,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->itemdetail->add(new \ZCL\BT\Tags("edittags"));
+        $this->itemdetail->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
 
         
         $this->add(new Panel('setpanel'))->setVisible(false);
@@ -186,18 +182,16 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
 
         
-        $this->add(new Form('customform'))->setVisible(false);        
-        $this->customform->add(new SubmitButton('savec'))->onClick($this, 'savec');
-        $this->customform->add(new Button('cancelc'))->onClick($this, 'cancelOnClick');
-        $this->customform->add(new DataView('cflist', new ArrayDataSource(new Bind($this, '_cflist')), $this, 'cfOnRow'));
-        $this->customform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
-           
-        $this->add(new Form('customformv'))->setVisible(false);        
-        $this->customformv->add(new SubmitButton('savecv'))->onClick($this, 'savecv');
-        $this->customformv->add(new Button('cancelcv'))->onClick($this, 'cancelOnClick');
-        $this->customformv->add(new TextInput('cflistvitem')) ;
-        $this->customformv->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
-
+        $this->add(new Form('optionsform'))->setVisible(false);        
+        $this->optionsform->add(new SubmitButton('savec'))->onClick($this, 'saveopt');
+        $this->optionsform->add(new Button('cancelc'))->onClick($this, 'cancelOnClick');
+        $this->optionsform->add(new DataView('cflist', new ArrayDataSource(new Bind($this, '_cflist')), $this, 'cfOnRow'));
+        $this->optionsform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
+        $this->optionsform->add(new CheckBox('autoarticle'));
+        $this->optionsform->add(new CheckBox('nocheckarticle'));
+        $this->optionsform->add(new TextInput('articleprefix'));
+          
+     
         $this->_tvars['hp1'] = strlen($common['price1']) > 0 ? $common['price1'] : false;
         $this->_tvars['hp2'] = strlen($common['price2']) > 0 ? $common['price2'] : false;
         $this->_tvars['hp3'] = strlen($common['price3']) > 0 ? $common['price3'] : false;
@@ -254,7 +248,7 @@ class ItemList extends \App\Pages\Base
         $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
         
         
-        $row->add(new ClickLink('cfedit',$this, 'cfeditOnClick'))->setVisible(count($this->_cflist)>0);
+
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
@@ -363,7 +357,11 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id));
         $this->itemdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_ITEM));
          
+        $this->_cflistv =  $this->_item->getcf();
         
+        $this->itemdetail->cflistv->Reload(); 
+        $this->_tvars['cflist'] = count($this->_cflistv) > 0 ;
+                      
     }
 
     public function addOnClick($sender) {
@@ -391,8 +389,8 @@ class ItemList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
-        $this->customform->setVisible(false);
-        $this->customformv->setVisible(false);
+        $this->optionsform->setVisible(false);
+        
     }
 
     public function OnFilter($sender) {
@@ -485,20 +483,14 @@ class ItemList extends \App\Pages\Base
 
         if (strlen($this->_item->item_code) == 0  ) {
             $this->_item->item_code = Item::getNextArticle();
-//            $this->itemdetail->editcode->setText($this->_item->item_code);
+        }
+
+        if (strlen($this->_item->item_code) > 9  ) {
+            $this->setError('Надто довгий артикул');
+            return;
         }
    
-        $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
-        if($digits > 100000000) {
-            
-          if (\App\System::getOption("common", "autoarticle") == 1) {
-             $this->setWarn('Надто велике  число в  артикулі');
-          }  else {
-             $this->setError('Надто велике  число в  артикулі');
-             return;
-          }             
-            
-        }
+ 
         //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {
             $code = Item::qstr($this->_item->bar_code);
@@ -541,6 +533,14 @@ class ItemList extends \App\Pages\Base
             $this->_item->thumb="";
         }
 
+        $v=[];
+        foreach($this->_cflistv as $r) {
+             if(strlen($r->val)>0) {
+                 $v[$r->code]=$r->val;
+             }
+        }
+        $this->_item->savecf($v);        
+        
         $this->_item->save();
 
         $file = $this->itemdetail->editaddfile->getFile();
@@ -582,7 +582,7 @@ class ItemList extends \App\Pages\Base
                 $this->_item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
             }
         
-        
+          
 
             $image->save();
             $this->_item->image_id = $image->image_id;
@@ -1230,10 +1230,22 @@ class ItemList extends \App\Pages\Base
     }
     
   
-    public function cfOnClick($sender) {
-        $this->customform->cflist->Reload();        
+    public function optionsfOnClick($sender) {
+        $options = System::getOptions('common');
+        
+        $this->optionsform->articleprefix->setText($options['articleprefix'] ?? "ID");
+        $this->optionsform->nocheckarticle->setChecked($options['nocheckarticle']);
+        $this->optionsform->autoarticle->setChecked($options['autoarticle']);
+        
+        
+        $this->_cflist = $options['cflist']  ;
+        if (is_array($this->_cflist) == false) {
+            $this->_cflist = [];
+        }        
+                 
+        $this->optionsform->cflist->Reload();        
         $this->itemtable->setVisible(false);
-        $this->customform->setVisible(true);
+        $this->optionsform->setVisible(true);
     }  
     
     public function OnAddCF($sender) {
@@ -1242,7 +1254,7 @@ class ItemList extends \App\Pages\Base
         $ls->name = '';
         $ls->id = time();
         $this->_cflist[$ls->id] = $ls;
-        $this->customform->cflist->Reload();
+        $this->optionsform->cflist->Reload();
     }    
     
      public function cfOnRow($row) {
@@ -1257,46 +1269,29 @@ class ItemList extends \App\Pages\Base
 
         $this->_cflist = array_diff_key($this->_cflist, array($item->id => $this->_cflist[$item->id]));
 
-        $this->customform->cflist->Reload();
+        $this->optionsform->cflist->Reload();
       
         
     }    
  
-    public function savec($sender) {
+    public function saveopt($sender) {
         $options = System::getOptions('common');
+        
+        $options['nocheckarticle'] = $this->optionsform->nocheckarticle->isChecked() ? 1 : 0;
+        $options['autoarticle'] = $this->optionsform->autoarticle->isChecked() ? 1 : 0;
+        $options['articleprefix'] = $this->optionsform->articleprefix->getText() ;
+        
+        
         $options['cflist'] = $this->_cflist;
         System::setOptions('common', $options);        
         
         $this->itemtable->setVisible(true);
-        $this->customform->setVisible(false);
+        $this->optionsform->setVisible(false);
         $this->Reload(false);
         
     }  
-    public function cfeditOnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $this->customformv->cflistvitem->setText($item->item_id);
-        $this->_cflistv =  $item->getcf();
-        
-        $this->customformv->cflistv->Reload();        
-        $this->itemtable->setVisible(false);
-        $this->customformv->setVisible(true);      
-    }
-    public function savecv($sender) {        
-        $v=[];
-        foreach($this->_cflistv as $r) {
-             if(strlen($r->val)>0) {
-                 $v[$r->code]=$r->val;
-             }
-        }
-        $item = Item::load( $this->customformv->cflistvitem->getText());
-        $item->savecf($v);
-        $item->save();
-        $this->Reload(false);
-        
-        $this->itemtable->setVisible(true);
-        $this->customformv->setVisible(false);      
-         
-    }
+  
+ 
     public function cfvOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new Label('cfd', $item->name));

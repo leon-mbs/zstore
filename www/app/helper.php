@@ -1145,7 +1145,7 @@ class Helper
             }
 
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
-            if(intval($item->price) > 0) {
+            if(doubleval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
             }
 

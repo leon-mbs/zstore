@@ -93,13 +93,13 @@
                  </details>
                    
                  <div class="row "  >
-                 <div class="col-8   "  >
+                 <div class="col-2   "  >
                                 
-                <a zippy="addnew" class="btn btn-primary mr-4  ">Додати</a>
+                <a zippy="addnew" class="btn btn-primary mr-4  "> <i class="fa fa-plus-circle"> Додати новий</a>
                  </div>  
                  <div class="col-4  "  >
                  
-                   <a class="btn btn-outline-success mr-2"   zippy="customlist"  ><i class="fa fa-cog"> Кастомні поля</i> </a>
+                   <a class="btn btn-outline-success mr-2"   zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
                 
                 </div>               
                 </div>               
@@ -134,7 +134,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
-                            <th></th>
+                       
                             <th></th>
 
 
@@ -179,9 +179,7 @@
                              <td  >
                                 <a zippy="printst" title="Стікер для розфасованого"><i class="fa fa-balance-scale"></i></a>
                             </td>
-                            <td  >
-                               <a zippy="cfedit" title="Редагувати кастомні поля"><i class="fa fa-bars-progress"></i></a> &nbsp;
-                            </td>
+                           
                             <td aling="center">
                                 <a zippy="copy" title="Копіювати"><i class="fa fa-copy"></i></a> &nbsp;&nbsp;&nbsp;
   
@@ -394,7 +392,7 @@
 
                       
                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editcell">Номер комірки на складі</label>
+                                <label class="col-5 col-form-label" for="editcell">Комірка на складі</label>
                                 <div class="col-7">
                                     <input class="form-control" zippy="editcell"/>
                                 </div>
@@ -504,7 +502,20 @@
                                </div>
                           </div>                                
                         </div>
+                        {{#cflist}}
+                       <div class="col-12 col-md-8 col-lg-4 col-xl-2">
+                     
+                        <div class="form-group  " zippy="cflistv">
+                                <label zippy="cfd"  >   </label>
+                              
+                                    <input zippy="cfval" class="form-control"  />
 
+                               
+                            </div> 
+                          
+                       </div>
+                        {{/cflist}}
+                       
                         <div class="col-12  ">
 
                             <div class="form-group">
@@ -604,11 +615,33 @@
         </div>
 
       <div class="col-12  col-md-8 col-xl-6 ">
-               
-                <form zippy="customform"  >
-                   <h4>Кастомнi поля   </h4>
-                   <small> Поля, що створюються користувачем. Код має бути унiкальним, допускається латиниця i  цифри     </small>
-                   <br><a  zippy="addnewcf">Додати</a>
+                <form zippy="optionsform"  >
+                 <h4>Налаштування довідника   </h4>
+                     <div class="form-check">
+                                <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="nocheckarticle">Не перевіряти унікальність артикулів</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Використовується, наприклад, в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника й імені виробника.
+                                    Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
+                            </div> 
+                             <div class="form-check ">
+                                <input zippy="autoarticle" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="autoarticle"> Автоматично створювати
+                                    артикули</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Автоматична генерація номерів артикулів для товарів"></i>
+                            </div> 
+                             <div class="form-group row">
+                                <label class="col-3 col-form-label" for="articleprefix">Префікс в артикулах</label>
+                                <div class="col-2">
+                                    <input pattern="[a-zA-Z]+"    class="form-control" zippy="articleprefix"/>
+                                </div>
+                            </div> 
+                                                                                
+                   <h5 class="mt-2">Кастомні поля   </h5>
+                   <small> Поля, що створюються користувачем. Переважно  для  друку в  цiнниках   </small>
+                   <br><small>   Код має бути унiкальним, допускається латиниця i  цифри     </small>
+                   <br><a  zippy="addnewcf"><b>Додати</b></a>
 
                        <table class="ctable mt-2">
                         <tr zippy="cflist">
@@ -619,7 +652,7 @@
                             <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
                          </tr>    
                       </table>                       
-                        <div class="form-group">
+                        <div class="form-group mt-2">
                                 <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
                                 <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 
@@ -627,53 +660,7 @@
                 </form>   
      </div>             
         
-     <div class="col-12  col-md-8 col-xl-6 ">
-               
-                <form zippy="customformv"  >
-                   <h4>Значення кастомних полiв   </h4>
-
-                       <input zippy="cflistvitem" type="hidden">
-                       <table class="ctable mt-2">
-                        <tr zippy="cflistv">
-                          
-                            <td zippy="cfd"> </td>
-                        
-                            <td><input   class="form-control" style="width:250px;" zippy="cfval"  > </td>
-                     
-                         </tr>    
-                      </table>                       
-                        <div class="form-group">
-                                <input zippy="cancelcv" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
-                                <input zippy="savecv" type="submit" value="Зберегти" class="btn btn-primary  ">
-                                
-                      </div>         
-                </form>   
-     </div>             
-         
-        <div id="pform" class="modal fade   " tabindex="-1" role="dialog"  aria-hidden="true">
-            <div class="modal-dialog modal-sm ">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <table>
-                            <tr>
-                                <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success btn-sm mb-2 ">Друк</a></td>
-                            <tr>
-                         
-                            <tr>
-                                <td align="center" id="tag"></td>
-                            <tr>
-                            <tr>
-                                <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success btn-sm mt-2 ">Друк</a></td>
-                            <tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+ 
 
         
      <div id="pscale" class="modal fade   " tabindex="-1" role="dialog"  aria-hidden="true">
@@ -852,5 +839,6 @@
             }       
         </script>
 
+    
     </body>
 </html>

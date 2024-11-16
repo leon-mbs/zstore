@@ -122,12 +122,12 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('noallowfiz'));
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
-        $this->business->add(new CheckBox('autoarticle'));
+
 
         $this->business->add(new CheckBox('useimages'));
         $this->business->add(new CheckBox('numberttn'));
         $this->business->add(new CheckBox('usecattree'));
-        $this->business->add(new CheckBox('nocheckarticle'));
+
         $this->business->add(new CheckBox('spreaddelivery'));
         $this->business->add(new CheckBox('baydelivery'));
 
@@ -150,14 +150,13 @@ class Options extends \App\Pages\Base
         $this->business->noallowfiz->setChecked($common['noallowfiz']);
         $this->business->useval->setChecked($common['useval']);
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
-        $this->business->autoarticle->setChecked($common['autoarticle']);
+
         $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->useimages->setChecked($common['useimages']);
         $this->business->numberttn->setChecked($common['numberttn']);
         $this->business->usecattree->setChecked($common['usecattree']);
         $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
         $this->business->baydelivery->setChecked($common['baydelivery']);
-        $this->business->nocheckarticle->setChecked($common['nocheckarticle']);
 
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
@@ -409,10 +408,10 @@ class Options extends \App\Pages\Base
         $common['checkslogan'] = trim($this->business->checkslogan->getText());
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
-        $common['autoarticle'] = $this->business->autoarticle->isChecked() ? 1 : 0;
+
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
         $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
-        $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
+
         $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
         $common['baydelivery'] = $this->business->baydelivery->isChecked() ? 1 : 0;
 
