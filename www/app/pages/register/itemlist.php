@@ -587,8 +587,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($text) > 0) {
 
             if ($p == false) {
+                $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
                 $text = Item::qstr('%' . $text . '%');
-                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
+                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text}  or detail like {$det}  )  ";
             } else {
                 $text = Item::qstr($text);
                 $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";

@@ -189,6 +189,8 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
         $this->optionsform->add(new CheckBox('autoarticle'));
         $this->optionsform->add(new CheckBox('nocheckarticle'));
+        $this->optionsform->add(new CheckBox('usecattree'));
+        $this->optionsform->add(new CheckBox('useimages'));
         $this->optionsform->add(new TextInput('articleprefix'));
           
      
@@ -272,7 +274,6 @@ class ItemList extends \App\Pages\Base
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
 
     }
-
 
     public function copyOnClick($sender) {
         $this->editOnClick($sender);
@@ -1134,8 +1135,6 @@ class ItemList extends \App\Pages\Base
       
     }
  
-
- 
     public function getSticker($args, $post) {
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
@@ -1228,13 +1227,14 @@ class ItemList extends \App\Pages\Base
 
         }        
     }
-    
   
     public function optionsfOnClick($sender) {
         $options = System::getOptions('common');
         
         $this->optionsform->articleprefix->setText($options['articleprefix'] ?? "ID");
+        $this->optionsform->usecattree->setChecked($options['usecattree']);
         $this->optionsform->nocheckarticle->setChecked($options['nocheckarticle']);
+        $this->optionsform->useimages->setChecked($options['useimages']);
         $this->optionsform->autoarticle->setChecked($options['autoarticle']);
         
         
@@ -1257,13 +1257,14 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->cflist->Reload();
     }    
     
-     public function cfOnRow($row) {
+    public function cfOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new TextInput('cfcode', new Bind($item, 'code')));
         $row->add(new TextInput('cfname', new Bind($item, 'name')));
         $row->add(new ClickLink('delcf', $this, 'onDelCF'));
         
     }  
+   
     public function onDelCF($sender) {
         $item = $sender->getOwner()->getDataItem();
 
@@ -1277,7 +1278,11 @@ class ItemList extends \App\Pages\Base
     public function saveopt($sender) {
         $options = System::getOptions('common');
         
+        $options['useimages'] = $this->optionsform->useimages->isChecked() ? 1 : 0;
+        $this->_tvars["useimages"] = $options['useimages'] == 1;        
+        
         $options['nocheckarticle'] = $this->optionsform->nocheckarticle->isChecked() ? 1 : 0;
+        $options['usecattree'] = $this->optionsform->usecattree->isChecked() ? 1 : 0;
         $options['autoarticle'] = $this->optionsform->autoarticle->isChecked() ? 1 : 0;
         $options['articleprefix'] = $this->optionsform->articleprefix->getText() ;
         
@@ -1290,7 +1295,6 @@ class ItemList extends \App\Pages\Base
         $this->Reload(false);
         
     }  
-  
  
     public function cfvOnRow($row) {
         $item = $row->getDataItem();
@@ -1365,8 +1369,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         if (strlen($text) > 0) {
             if ($p == false) {
+                $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
                 $text = Item::qstr('%' . $text . '%');
-                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
+                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or detail like {$det} )  ";
             } else {
                 $text = Item::qstr($text);
                 $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} )  ";

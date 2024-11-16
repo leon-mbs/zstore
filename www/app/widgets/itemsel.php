@@ -141,9 +141,10 @@ class ItemSel extends \Zippy\Html\PageFragment
         }
 
         if (strlen($text) > 0) {
+            $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
 
             $text = Item::qstr('%' . $text . '%');
-            $where = $where . " and (itemname like {$text} or item_code like {$text} or bar_code like {$text}   or description like {$text} )  ";
+            $where = $where . " and (itemname like {$text} or item_code like {$text} or bar_code like {$text}   or description like {$text}  or detail like {$det}  )  ";
         }
         if (strlen($man) > 0) {
 

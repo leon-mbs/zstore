@@ -124,9 +124,9 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('printoutqrcode'));
 
 
-        $this->business->add(new CheckBox('useimages'));
+
         $this->business->add(new CheckBox('numberttn'));
-        $this->business->add(new CheckBox('usecattree'));
+        
 
         $this->business->add(new CheckBox('spreaddelivery'));
         $this->business->add(new CheckBox('baydelivery'));
@@ -152,9 +152,9 @@ class Options extends \App\Pages\Base
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
 
         $this->business->usesnumber->setValue($common['usesnumber']??0);
-        $this->business->useimages->setChecked($common['useimages']);
+
         $this->business->numberttn->setChecked($common['numberttn']);
-        $this->business->usecattree->setChecked($common['usecattree']);
+
         $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
         $this->business->baydelivery->setChecked($common['baydelivery']);
 
@@ -410,13 +410,12 @@ class Options extends \App\Pages\Base
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
 
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
-        $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
-
+        
         $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
         $common['baydelivery'] = $this->business->baydelivery->isChecked() ? 1 : 0;
 
         $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
-        $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
+
 
 
         System::setOptions("common", $common);
