@@ -116,17 +116,19 @@
    </div>  
             {{/showdb}}       
          
-         {{#rollback}}
+       
        <div class="col-12  mt-2">
-    
+          {{#reinstall}}    
         <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
         <br><small>Повторити оновлення коду, наприклад пiсля виходу виправлення (хотфiксу)</small>
+           {{/reinstall}}    
+          {{#rollback}}
         <br>  <br> 
         <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити код до попередньої версії </b> </a> 
         <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
-           
+          {{/rollback}}        
      </div>  
-         {{/rollback}}                 
+                   
                       
     </div>         
   </div>        
