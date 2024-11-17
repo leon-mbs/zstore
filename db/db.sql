@@ -96,7 +96,7 @@ CREATE TABLE documents (
   priority smallint(6) DEFAULT '100',
   lastupdate datetime DEFAULT NULL,
   PRIMARY KEY (document_id),
-  UNIQUE KEY unuqnumber (meta_id, document_number, branch_id),
+
   KEY document_date (document_date),
   KEY customer_id (customer_id),
   KEY user_id (user_id),

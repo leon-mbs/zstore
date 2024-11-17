@@ -1080,7 +1080,7 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
      
         $list = [];
               
-        foreach(PromoCode::findYield("", "   id desc ", $count, $start) as $p) {
+        foreach(PromoCode::findYield("disabled=0", "   id desc ", $count, $start) as $p) {
             if($p->dateto > 0 && $p->dateto < time()) {
                continue;
             }      

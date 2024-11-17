@@ -1333,7 +1333,8 @@ class Helper
      *
      */
     public static function migration() {
-        $conn = \ZDB\DB::getConnect();
+       global $logger;
+       $conn = \ZDB\DB::getConnect();
 
         $vdb=\App\System::getOptions('version', false) ;
      
@@ -1352,7 +1353,7 @@ class Helper
                 $conn->CommitTrans();
 
             } catch(\Throwable $ee) {
-                global $logger;
+                
                 $conn->RollbackTrans();
                 System::setErrorMsg($ee->getMessage());
                 $logger->error($ee->getMessage());
@@ -1421,7 +1422,7 @@ class Helper
                 $conn->CommitTrans();
 
             } catch(\Throwable $ee) {
-                global $logger;
+              
                 $conn->RollbackTrans();
                 System::setErrorMsg($ee->getMessage());
                 $logger->error($ee->getMessage());
@@ -1429,54 +1430,34 @@ class Helper
             }
         }
        
-        $migration6120 = \App\Helper::getKeyVal('migration6120'); 
-        if($migration6120 != "done" && version_compare($vdb,'6.12.0')>=0) {
-            
-      
-           Helper::log("Миграция 6120");
-          
-           
-           
-           $conn->BeginTrans();
+        $migration6118 = \App\Helper::getKeyVal('migration6118'); 
+        if($migration6118 != "done"  ) {
+            Helper::log("Миграция 6118");
+         
+            \App\Helper::setKeyVal('migration6118', "done");           
+        
             try {
-                //встатвить SalaryList
-
+          
+                 
                  $w=  $conn->GetOne("select count(*) from metadata where meta_name='SalaryList' ");
                  if(intval($w)==0){
-                  //   $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0) ");
+                      $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0) ");
                  }
               
                
-               //  \App\Helper::setKeyVal('migration6120', "done");     
-                 $conn->CommitTrans();
-
-            } catch(\Throwable $ee) {
-                global $logger;
-                $conn->RollbackTrans();
-                System::setErrorMsg($ee->getMessage());
-                $logger->error($ee->getMessage());
-                return;
-            }           
-        
-            try {
-             
-               //удалить unuqnumber
-               
-            
+       
                  $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
                            
                  foreach($w as $e){
                      if($e['Key_name']=='unuqnumber'){
-                        //  $conn->Execute("ALTER TABLE documents DROP INDEX `unuqnumber` ");
+                          $conn->Execute("ALTER TABLE documents DROP INDEX `unuqnumber` ");
                      }             
       
                  }
               
                        
             } catch(\Throwable $ee) {
-                global $logger;
-             
-                System::setErrorMsg($ee->getMessage());
+         
                 $logger->error($ee->getMessage());
                
             }           
