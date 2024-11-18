@@ -164,6 +164,10 @@
                     <label for="editviber">Viber</label>
                     <input class="form-control" zippy="editviber"/>
                 </div>
+                <div class="form-group">
+                    <label for="edittelega">Телеграм</label>
+                    <input class="form-control" zippy="edittelega"/>
+                </div>
 
 
 
@@ -200,22 +204,7 @@
                         <option value="0">Не обрано</option>
                     </select>
                 </div>
-                {{#shop}}        
-                <div class="form-group">
-                    <label for="editpassword">Пароль логiна для онлайн-каталогу</label>
-                    <input class="form-control" zippy="editpassword"  type="password"/>
-                    <small>Залиште порожнiм, якщо пароль не змiнюється</small>
-                </div>
-                 <div class="form-group">
-                    <label for="editconfirm">Пiдтвердити пароль</label>
-                    <input class="form-control" zippy="editconfirm" type="password"/>
-                </div>
-           
-               <div class="form-check">
-                    <input zippy="editallowedshop" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editallowedshop"   data-label="editallowedshop">Дозвiл на перегляд онлайн каталогу</label>
-                </div>        
-                {{/shop}}        
+            
                 <div class="form-check">
                     <input zippy="editnosubs" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editnosubs">Не враховувати в пiдписках</label>
@@ -265,6 +254,23 @@
                     </div>         
                 
                 {{/leadmode}} 
+                
+               {{#shop}}        
+                <div class="form-group">
+                    <label for="editpassword">Пароль логiна для онлайн-каталогу</label>
+                    <input class="form-control" zippy="editpassword"  type="password"/>
+                    <small>Залиште порожнiм, якщо пароль не змiнюється</small>
+                </div>
+                 <div class="form-group">
+                    <label for="editconfirm">Пiдтвердити пароль</label>
+                    <input class="form-control" zippy="editconfirm" type="password"/>
+                </div>
+           
+               <div class="form-check">
+                    <input zippy="editallowedshop" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editallowedshop"   data-label="editallowedshop">Дозвiл на перегляд онлайн каталогу</label>
+                </div>        
+                {{/shop}}                 
                 <div class="form-group">
                     <label for="editcomment">Примітка</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
