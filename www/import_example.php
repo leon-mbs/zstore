@@ -40,7 +40,10 @@ try{
         foreach ($data as $row) {
             $itemcode = trim( $row["буква  колонуи с  артикулом"] ?? '');
             $item = new   \App\Entity\Item();
+            
+           
             $item->item_code=$itemcode;   
+          //  $item->item_code= \App\Entity\Item::getNextArticle(); // автоматическое  создание артикула   
 
             if(strlen($itemcode) >0 )  { //ищем существующий
                $item= \App\Entity\Item::getFirst("item_code=".\App\Entity\Item::qstr($itemcode)) ;    

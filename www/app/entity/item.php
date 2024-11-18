@@ -941,7 +941,7 @@ class Item extends \ZCL\DB\Entity
                        $it->val= $v;
                     }
                   }
-                  $ret[]=$it;
+                  $ret[$it->code]=$it;
              
          
         }  

@@ -18,9 +18,14 @@ try{
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->shortname;
             //...
+            /*
+              кастомные поля
+              $cf= $item->getcf() ;
+              $data['H' . $i] = $cf['код поля']->val;
+            */
         } 
         
-    
+        
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
         $sheet = $spreadsheet->getActiveSheet();

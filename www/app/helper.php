@@ -1340,7 +1340,7 @@ class Helper
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
-            Helper::log("Миграция бонус");
+            Helper::log("Міграція бонус");
             $conn->BeginTrans();
             try {
                 $conn->Execute("delete from custacc where optype=1 ");
@@ -1366,7 +1366,7 @@ class Helper
 
         $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
         if($migrationbalans != "done" && version_compare($vdb,'6.11.0')>=0) {
-            Helper::log("Миграция баланс");
+            Helper::log("Міграція баланс");
             //  + контрагента (active)  - наш кредитовый  долг
             //  - контрагента (passive)  - наш дебетовый  долг
             $conn->BeginTrans();
@@ -1432,7 +1432,7 @@ class Helper
        
         $migration6118 = \App\Helper::getKeyVal('migration6118'); 
         if($migration6118 != "done"  ) {
-            Helper::log("Миграция 6118");
+            Helper::log("Міграція 6118");
          
             \App\Helper::setKeyVal('migration6118', "done");           
         
