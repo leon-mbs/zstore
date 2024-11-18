@@ -586,12 +586,14 @@ class ARMPos extends \App\Pages\Base
         if ($item == null) {
        
             $item = Item::unpackStBC($barcode);
-            $item->pureprice = $item->getPurePrice();
-            $this->_itemlist[ ] = $item;
+            if($item instanceof Item) {
+                $item->pureprice = $item->getPurePrice();
+                $this->_itemlist[ ] = $item;
 
-            $this->docpanel->form2->detail->Reload();
-            $this->calcTotal();  
-            return;           
+                $this->docpanel->form2->detail->Reload();
+                $this->calcTotal();  
+                return;           
+            }
         }  
           
         if ($item == null) {

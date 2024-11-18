@@ -452,14 +452,16 @@ class GoodsIssue extends \App\Pages\Base
         if ($item == null) {
        
             $item = Item::unpackStBC($barcode);
-            $item->pureprice = $item->getPurePrice();
-            $this->_itemlist[ ] = $item;
-            $this->_rownumber  = 1;
+            if($item instanceof Item) {
+                $item->pureprice = $item->getPurePrice();
+                $this->_itemlist[ ] = $item;
+                $this->_rownumber  = 1;
 
-            $this->docform->detail->Reload();
-            $this->calcTotal();
-            $this->calcPay();
-            return;           
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->calcPay();
+                return; 
+            }          
         } 
         if ($item == null) {  
                 $this->setWarn("Товар з кодом `{$code}` не знайдено");
