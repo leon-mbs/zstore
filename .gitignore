@@ -1,9 +1,8 @@
+www/logs/
+www/update/
 www/vendor/
 www/composer.cmd
 www/cron.cmd
-
-.idea/
-www/.idea/
  
  
 www/sitemap.xml

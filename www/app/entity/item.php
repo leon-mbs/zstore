@@ -743,11 +743,13 @@ class Item extends \ZCL\DB\Entity
         if (\App\System::getOption("common", "autoarticle") != 1) {
             return "";    //не генерим
         }        
-        
+        $options = \App\System::getOptions('common');
+            
         $conn = \ZDB\DB::getConnect();
-        $letters = "ID";
+        $letters = $options['articleprefix'] ?? "ID";
+        $like= $letters=="" ?"" : " like '{$letters}%'" ;
         $last=0;
-        $sql = "select item_code from  items where  item_code like 'ID%'   order  by  item_id desc   ";  
+        $sql = "select item_code from  items where  item_code {$like}   order  by  item_id desc   ";  
  
         foreach($conn->Execute($sql) as $row) {
            $digits = intval( preg_replace('/[^0-9]/', '', $row['item_code']) );
@@ -761,7 +763,11 @@ class Item extends \ZCL\DB\Entity
         if( strlen( ''.$last) >$d){ //если не  влазит
            $d =  strlen( ''.$last); 
         }
-        $next = $letters . sprintf("%0{$d}d", $last);
+        if(strlen($letters) >0){
+           $next = "".$letters . sprintf("%0{$d}d", $last);
+        } else {
+           $next = "".$last;
+        }
 
         return $next;
     }
@@ -863,7 +869,7 @@ class Item extends \ZCL\DB\Entity
     }
 
      /**
-     * упаковка  штрих кода для  стикера для уменьшения длины
+     * упаковка  штрих кода для  стикера 
      * 
      * @param mixed $price
      * @param mixed $qty
@@ -880,7 +886,7 @@ class Item extends \ZCL\DB\Entity
      }
     
     /**
-    * раcпаковка  кода стикера
+    * раcпаковка штрих кода стикера
     * 
     * @param mixed $barcode
     */
@@ -935,7 +941,7 @@ class Item extends \ZCL\DB\Entity
                        $it->val= $v;
                     }
                   }
-                  $ret[]=$it;
+                  $ret[$it->code]=$it;
              
          
         }  

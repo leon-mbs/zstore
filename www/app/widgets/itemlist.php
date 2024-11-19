@@ -9,7 +9,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 
 /**
- * Виджет для подбора  товаров
+ * Виджет для подбора  товаров   для страниц  на  vue
  */
 class ItemList extends \Zippy\Html\PageFragment
 {
@@ -54,10 +54,11 @@ class ItemList extends \Zippy\Html\PageFragment
 
 
         if(strlen($post->searchkey) > 0) {
+            $det = Item::qstr('%' . "<cflist>%{$post->searchkey}%</cflist>" . '%');
             $_sk= Item::qstr($post->searchkey);
             $_skn= Item::qstr('%'.$post->searchkey.'%');
 
-            $where = $where. " and ( itemname  like {$_skn}  or item_code= {$_sk} or bar_code= {$_sk}  ) " ;
+            $where = $where. " and ( itemname  like {$_skn}  or item_code= {$_sk} or bar_code= {$_sk}  or detail like {$det}  ) " ;
         }
 
         if($post->searchcat > 0) {

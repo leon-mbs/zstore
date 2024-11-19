@@ -54,6 +54,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
+        $this->detail .= "<telega>{$this->telega}</telega>";
         $this->detail .= "<nosubs>{$this->nosubs}</nosubs>";
         $this->detail .= "<allowedshop>{$this->allowedshop}</allowedshop>";
         $this->detail .= "<edrpou>{$this->edrpou}</edrpou>";
@@ -101,6 +102,7 @@ class Customer extends \ZCL\DB\Entity
         $this->addressdel = (string)($xml->addressdel[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
+        $this->telega = (string)($xml->telega[0]);
         $this->edrpou = (string)($xml->edrpou[0]);
         $this->firstname = (string)($xml->firstname[0]);
         $this->lastname = (string)($xml->lastname[0]);

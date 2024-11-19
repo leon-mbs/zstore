@@ -131,20 +131,21 @@ class Update extends \App\Pages\Base
              
         }  
         
+        $this->_tvars['reinstall']  = true;
         $this->_tvars['rollback']  = false;
 
          // откат к предыдущей       
          if(strlen(System::PREV_VERSION) >0 ) {
              $this->_tvars['rollback']  = true;
-             $this->_tvars['prevversipn']  = System::PREV_VERSION;
-             
-             
+               
          }     
          if($this->_tvars['tooold'] == true) {
              $this->_tvars['rollback']  = false;
+             $this->_tvars['reinstall']  = false;
          }     
          if($this->_tvars['show'] == true) {
              $this->_tvars['rollback']  = false;
+             $this->_tvars['reinstall']  = false;
          } 
      
           $this->_tvars['oldphpv']  = $phpv;    

@@ -8,8 +8,14 @@
   {{/smscode}}
    
    {{#email}}
-     <tr><td>E-mail</td><td>{{email}}</td></tr>
+     <tr><td>E-mail</td><td>{{{email}}}</td></tr>
    {{/email}}  
+   {{#viber}}
+     <tr><td>Viber</td><td>{{{viber}}}</td></tr>
+   {{/viber}}  
+   {{#telega}}
+     <tr><td>Телеграм</td><td>{{{telega}}}</td></tr>
+   {{/telega}}  
    {{#address}}   
      <tr><td>Адреса</td><td>{{address}}</td></tr>
    {{/address}}   

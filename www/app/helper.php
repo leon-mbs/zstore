@@ -1145,7 +1145,7 @@ class Helper
             }
 
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
-            if(intval($item->price) > 0) {
+            if(doubleval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
             }
 
@@ -1333,13 +1333,14 @@ class Helper
      *
      */
     public static function migration() {
-        $conn = \ZDB\DB::getConnect();
+       global $logger;
+       $conn = \ZDB\DB::getConnect();
 
         $vdb=\App\System::getOptions('version', false) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
-            Helper::log("Миграция бонус");
+            Helper::log("Міграція бонус");
             $conn->BeginTrans();
             try {
                 $conn->Execute("delete from custacc where optype=1 ");
@@ -1352,7 +1353,7 @@ class Helper
                 $conn->CommitTrans();
 
             } catch(\Throwable $ee) {
-                global $logger;
+                
                 $conn->RollbackTrans();
                 System::setErrorMsg($ee->getMessage());
                 $logger->error($ee->getMessage());
@@ -1365,7 +1366,7 @@ class Helper
 
         $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
         if($migrationbalans != "done" && version_compare($vdb,'6.11.0')>=0) {
-            Helper::log("Миграция баланс");
+            Helper::log("Міграція баланс");
             //  + контрагента (active)  - наш кредитовый  долг
             //  - контрагента (passive)  - наш дебетовый  долг
             $conn->BeginTrans();
@@ -1421,7 +1422,7 @@ class Helper
                 $conn->CommitTrans();
 
             } catch(\Throwable $ee) {
-                global $logger;
+              
                 $conn->RollbackTrans();
                 System::setErrorMsg($ee->getMessage());
                 $logger->error($ee->getMessage());
@@ -1429,10 +1430,38 @@ class Helper
             }
         }
        
-        $migration6120 = \App\Helper::getKeyVal('migration6120'); 
-        if($migration6120 != "done" && version_compare($vdb,'6.12.0')>=0) {
-           Helper::log("Миграция 6120");
-     
+        $migration6118 = \App\Helper::getKeyVal('migration6118'); 
+        if($migration6118 != "done"  ) {
+            Helper::log("Міграція 6118");
+         
+            \App\Helper::setKeyVal('migration6118', "done");           
+        
+            try {
+          
+                 
+                 $w=  $conn->GetOne("select count(*) from metadata where meta_name='SalaryList' ");
+                 if(intval($w)==0){
+                      $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0) ");
+                 }
+              
+               
+       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                           
+                 foreach($w as $e){
+                     if($e['Key_name']=='unuqnumber'){
+                          $conn->Execute("ALTER TABLE documents DROP INDEX `unuqnumber` ");
+                     }             
+      
+                 }
+              
+                       
+            } catch(\Throwable $ee) {
+         
+                $logger->error($ee->getMessage());
+               
+            }           
+           
         }
     }
 

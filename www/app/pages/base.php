@@ -475,8 +475,11 @@ class Base extends \Zippy\Html\WebPage
 
         $header['name'] = $c->customer_name;
         $header['phone'] = $c->phone;
-        $header['email'] = strlen($c->email) > 0 ? $c->email : false;
+        $header['email'] = strlen($c->email) > 0 ?  "<a target=\"_blank\" href=\"mailtp:{$c->email}\">{$c->email}</a>"  : false;
         $header['address'] = strlen($c->address) > 0 ? $c->address : false;
+        $header['telega'] = strlen($c->telega) > 0 ? "<a target=\"_blank\" href=\"tg://resolve?domain={$c->telega}\">{$c->telega}</a>" : false;  
+        
+        $header['viber'] = strlen($c->viber) > 0 ? "<a target=\"_blank\" href=\"viber://chat?number={$c->viber}\">{$c->viber}</a>" : false;    
         $header['comment'] = strlen($c->comment) > 0 ? $c->comment : false;
 
         $header['bonus'] = intval($c->getBonus());
