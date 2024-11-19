@@ -335,6 +335,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
         $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
+        $this->modules->add(new CheckBox('modtecdoc', $modules['tecdoc']));
 //    
         
         $fisctype=0;
@@ -707,6 +708,7 @@ class Options extends \App\Pages\Base
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
         $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
         $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
+        $modules['tecdoc'] = $sender->modtecdoc->isChecked() ? 1 : 0;
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
 
