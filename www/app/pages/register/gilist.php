@@ -431,7 +431,7 @@ class GIList extends \App\Pages\Base
         $bmlist['NonCash'] = 'Безготiвка';
         $bmlist['Control'] = 'Контроль доставки';
         $this->nppan->npform->nppmback->setOptionList($bmlist);
-        $this->nppan->npform->nppmback->setValue('Cash');
+        $this->nppan->npform->nppmback->setValue('0');
         //кто оплачивает
         $stlist = array();
         foreach ($tp['data'] as $r) {
@@ -684,6 +684,10 @@ class GIList extends \App\Pages\Base
         if ($moneyback > 0) {   //если  введена  обратная сумма
             $back = $this->nppan->npform->nppmback->getValue();
 
+            if ($back == '0') {
+                $this->setError('Не вказано тип оплати зворотньої доставки'); 
+                return;
+            }
             if ($back == 'Control') {
                 $params['AfterpaymentOnGoodsCost'] = $moneyback;
             } else {

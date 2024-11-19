@@ -9,7 +9,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 
 /**
- * Виджет для подбора  товаров
+ * Виджет для подбора  товаров   для страниц  на  vue
  */
 class ItemList extends \Zippy\Html\PageFragment
 {

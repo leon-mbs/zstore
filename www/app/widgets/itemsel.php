@@ -25,9 +25,9 @@ class ItemSel extends \Zippy\Html\PageFragment
 {
     private $_page;
     private $_event;
-    private $_pricetype;
-    private $_store = 0;
-    public $_list  = array();
+    public $_pricetype;
+    public $_store = 0;
+ 
     public $_catlist  = array();
     public $_prodlist = array();
 
@@ -55,9 +55,8 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->witempan->wisfilter->add(new TextInput('wissearchmanufacturer'));
         $this->witempan->wisfilter->wissearchmanufacturer->setDataList(Item::getManufacturers());
 
-        $ds = new ArrayDataSource($this, '_list');
 
-        $table = $this->witempan->add(new DataTable('witemselt', $ds, true, true));
+        $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
         $table->AddColumn(new Column('itemname', "Назва", true, true, true));
         $table->AddColumn(new Column('item_code', "Артикул", true, true, false));
@@ -120,51 +119,8 @@ class ItemSel extends \Zippy\Html\PageFragment
 
     public function ReloadData($sender) {
 
-        $where = "disabled <> 1";
-              
-        if($this->witempan->wisfilter->wissearchonstore->isChecked()) {
-            $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
-        }
-
-        $br = \App\ACL::getBranchConstraint();
-        if (strlen($br) > 0) {
-           $where .= " and  item_id in (select item_id from store_stock where  store_id in (select store_id from stores where {$br} ))  "; 
-        }
-
-
-        $text = trim($this->witempan->wisfilter->wissearchkey->getText());
-        $man = trim($this->witempan->wisfilter->wissearchmanufacturer->getText());
-        $cat = $this->witempan->wisfilter->wissearchcat->getValue();
-
-        if ($cat > 0) {
-            $where = $where . " and cat_id=" . $cat;
-        }
-
-        if (strlen($text) > 0) {
-            $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
-
-            $text = Item::qstr('%' . $text . '%');
-            $where = $where . " and (itemname like {$text} or item_code like {$text} or bar_code like {$text}   or description like {$text}  or detail like {$det}  )  ";
-        }
-        if (strlen($man) > 0) {
-
-            $man = Item::qstr($man);
-            $where = $where . " and  manufacturer like {$man}      ";
-        }
-
-        //$where)   ;
-        
-
-        $this->_list = array();
-        foreach (Item::findYield($where) as $item) {
-
-            if (strlen($this->_pricetype) > 0) {
-                $item->price = $item->getPrice($this->_pricetype, $this->_store);
-            }
-
-            $this->_list[] = $item;
-        }
-
+   
+  
         $this->witempan->witemselt->Reload();
     }
     //категории
@@ -221,5 +177,74 @@ class ItemSel extends \Zippy\Html\PageFragment
 
     }
 
+
+}
+class WISDataSource implements \Zippy\Interfaces\DataSource
+{
+    private $page;
+
+    public function __construct($page) {
+        $this->page = $page;
+    }
+
+    private function getWhere($p = false) {
+
+        $where = "disabled <> 1";
+              
+        if($this->page->witempan->wisfilter->wissearchonstore->isChecked()) {
+            $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
+        }
+
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+           $where .= " and  item_id in (select item_id from store_stock where  store_id in (select store_id from stores where {$br} ))  "; 
+        }
+
+
+        $text = trim($this->page->witempan->wisfilter->wissearchkey->getText());
+        $man = trim($this->page->witempan->wisfilter->wissearchmanufacturer->getText());
+        $cat = $this->page->witempan->wisfilter->wissearchcat->getValue();
+
+        if ($cat > 0) {
+            $where = $where . " and cat_id=" . $cat;
+        }
+
+        if (strlen($text) > 0) {
+            $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
+
+            $text = Item::qstr('%' . $text . '%');
+            $where = $where . " and (itemname like {$text} or item_code like {$text} or bar_code like {$text}   or description like {$text}  or detail like {$det}  )  ";
+        }
+        if (strlen($man) > 0) {
+
+            $man = Item::qstr($man);
+            $where = $where . " and  manufacturer like {$man}      ";
+        }
+
+
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Item::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        $list = array();
+        foreach (Item::findYield($where, $sortfield, $count, $start) as $item) {
+
+          //  if (strlen($this->page->_pricetype) > 0) {
+           //     $item->price = $item->getPrice($this->page->_pricetype, $this->_store);
+          //  }
+
+            $list[] = $item;
+        }
+        return $list;
+    }
+
+    public function getItem($id) {
+        return Item::load($id);
+    }
 
 }
