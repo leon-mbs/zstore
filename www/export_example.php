@@ -4,9 +4,12 @@
 * вызов  с браузера  <адрес сайта> /export.php
 */
  
+ 
+/*    раскоментировать  для  работы
+ 
 require_once 'init.php';
  
-   $file   ="c:/Users/leonm/Downloads/items.xlsx";//путь  к  файлу
+   $file   ="";//путь  к  файлу
  
  
 try{ 
@@ -18,11 +21,11 @@ try{
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->shortname;
             //...
-            /*
+           
               кастомные поля
               $cf= $item->getcf() ;
               $data['H' . $i] = $cf['код поля']->val;
-            */
+           
         } 
         
         
@@ -48,3 +51,4 @@ try{
     echo $e->getMessage();
     $logger->error($e);
 }
+ 

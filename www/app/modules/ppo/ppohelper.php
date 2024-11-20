@@ -806,7 +806,7 @@ class PPOHelper
                 'cost'  => number_format($item->quantity * $item->price, 2, '.', '')
             );
             $n++;
-            $header['amount'] = $header['amount'] + $item->quantity * $item->price;
+            $header['amount'] = $header['amount'] + doubleval( number_format($item->quantity * $item->price, 2, '.', '') );
         }
 
 

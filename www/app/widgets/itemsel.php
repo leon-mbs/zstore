@@ -222,7 +222,7 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
         }
 
 
-
+     
         return $where;
     }
 
@@ -232,11 +232,11 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $list = array();
-        foreach (Item::findYield($where, $sortfield, $count, $start) as $item) {
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $item) {
 
-          //  if (strlen($this->page->_pricetype) > 0) {
-           //     $item->price = $item->getPrice($this->page->_pricetype, $this->_store);
-          //  }
+            if (strlen($this->page->_pricetype) > 0) {
+                $item->price = $item->getPrice($this->page->_pricetype, $this->_store);
+            }
 
             $list[] = $item;
         }
