@@ -102,17 +102,15 @@ class Search extends \App\Pages\Base
         $this->tpanel->tabbarcode->setVisible($sender->id == 'tabb');
 
         if ($sender->id == 'tabc') {
-            $api = new APIHelper();
+            $api = new DBHelper();
 
             $ret = $api->getAllBrands();
 
-            if ($ret['success'] == true) {
-                foreach ($ret['data'] as $name) {
-                    $this->_tvars['brandslist'][] = array('bname' => $name);
-                }
-            } else {
-                $this->setError($ret['error']);
+          
+            foreach ($ret as $name) {
+                $this->_tvars['brandslist'][] = array('bname' => $name);
             }
+        
 
 
         }
@@ -122,15 +120,12 @@ class Search extends \App\Pages\Base
     }
 
     public function onType($sender) {
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
-        $ret = $api->getManufacturers();
-        if ($ret['success'] == true) {
-            $this->tpanel->tablist->search1form->sbrand->setOptionList($ret['data']);
-        } else {
-            $this->setError($ret['error']);
-        }
-
+        $ret = $api->getBrands();
+  
+        $this->tpanel->tablist->search1form->sbrand->setOptionList($ret);
+       
         $this->tpanel->tablist->search1form->smodel->setOptionList(array());
         $this->tpanel->tablist->search1form->smodif->setOptionList(array());
         $this->tpanel->tablist->search1form->modifdetail->setText('');
@@ -141,15 +136,13 @@ class Search extends \App\Pages\Base
 
     public function onBrand($sender) {
 
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->getModels($this->tpanel->tablist->search1form->sbrand->getValue());
 
-        if ($ret['success'] == true) {
-            $this->tpanel->tablist->search1form->smodel->setOptionList($ret['data']);
-        } else {
-            $this->setError($ret['error']);
-        }
+   
+        $this->tpanel->tablist->search1form->smodel->setOptionList($ret);
+        
 
 
         $this->tpanel->tablist->search1form->smodif->setOptionList(array());
@@ -160,15 +153,13 @@ class Search extends \App\Pages\Base
 
     public function onModel($sender) {
 
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->getModifs($this->tpanel->tablist->search1form->smodel->getValue());
 
-        if ($ret['success'] == true) {
-            $this->tpanel->tablist->search1form->smodif->setOptionList($ret['data']);
-        } else {
-            $this->setError($ret['error']);
-        }
+     
+        $this->tpanel->tablist->search1form->smodif->setOptionList($ret);
+     
 
 
         $this->tpanel->tablist->search1form->modifdetail->setText('');
@@ -176,17 +167,14 @@ class Search extends \App\Pages\Base
     }
 
     public function onModif($sender) {
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->getModifDetail($this->tpanel->tablist->search1form->smodif->getValue());
 
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+     
 
         $t = "<table  style='font-size:smaller;'>";
-        foreach ($ret['data'] as $k => $v) {
+        foreach ($ret as $k => $v) {
 
             if ($k == 'ConstructionInterval') {
                 $t = $t . "<tr><td>Годы выпуска</td><td>{$v}</td></tr>";
@@ -298,17 +286,14 @@ class Search extends \App\Pages\Base
         if ($id == -1) {
             return;
         }
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->searchByCategory($id, $this->tpanel->tablist->search1form->smodif->getValue());
 
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+ 
 
         $this->_ds = array();
-        foreach ($ret['data'] as $row) {
+        foreach ($ret as $row) {
             $item = new \App\DataItem();
             $item->part_number = $row['part_number'];
             $item->supplier_name = $row['supplier_name'];
@@ -334,16 +319,13 @@ class Search extends \App\Pages\Base
         $code = trim($sender->searchcode->getText());
         $brand = trim($sender->searchbrand->getText());
 
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->searchByBrandAndCode($code, $brand);
 
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+   
         $this->_ds = array();
-        foreach ($ret['data'] as $row) {
+        foreach ($ret as $row) {
             $item = new \App\DataItem();
             $item->part_number = $row['part_number'];
             $item->supplier_name = $row['supplier_name'];
@@ -368,16 +350,13 @@ class Search extends \App\Pages\Base
     public function onSearch2($sender) {
 
         $code = trim($sender->searchbarcode->getText());
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->searchByBarCode($code);
 
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+   
         $this->_ds = array();
-        foreach ($ret['data'] as $row) {
+        foreach ($ret as $row) {
             $item = new \App\DataItem();
             $item->part_number = $row['part_number'];
             $item->supplier_name = $row['supplier_name'];
@@ -433,15 +412,12 @@ class Search extends \App\Pages\Base
         $part = $sender->getOwner()->getDataItem();
 
 
-        $api = new APIHelper($this->tpanel->tablist->search1form->stype->getValue());
+        $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
 
         $ret = $api->getAttributes($part->part_number, $part->brand_id);
 
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
-        $list = $ret['data'];
+    
+        $list = $ret;
 
         $this->_tvars['isattr'] = count($list) > 0;
         $this->_tvars['attr'] = array();

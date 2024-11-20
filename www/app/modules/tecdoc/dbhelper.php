@@ -10,16 +10,13 @@ class DBHelper
     public function __construct($type = 'passenger') {
         $this->type = $type;
         $modules = \App\System::getOptions("modules");
-        if ($modules['td_seconddb'] == 1) {
-            $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-
+ 
 
             $this->conn = \ADONewConnection("mysqli");
-            $this->conn->NConnect($_config['tecdocdb']['host'], $_config['tecdocdb']['user'], $_config['tecdocdb']['pass'], $_config['tecdocdb']['name']);
+            $this->conn->NConnect('localhost', 'root', 'root', 'tecdoc');
             $this->conn->Execute("SET NAMES 'utf8'");
-        } else {
-            $this->conn = \ZDB\DB::getConnect();
-        }
+   
+         
     }
 
 
