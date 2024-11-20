@@ -45,7 +45,7 @@ try{
 
    $writer->save($file);  
    
-   echo "<br> Импортировано {$cnt} ТМЦ";      
+   echo "<br> экспортировано  {$cnt} ТМЦ";      
     
 } catch (Exception $e) {
     echo $e->getMessage();

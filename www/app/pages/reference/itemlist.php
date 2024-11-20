@@ -416,7 +416,7 @@ class ItemList extends \App\Pages\Base
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
-
+   
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->itemname = trim($this->_item->itemname);
 
@@ -485,13 +485,16 @@ class ItemList extends \App\Pages\Base
         if (strlen($this->_item->item_code) == 0  ) {
             $this->_item->item_code = Item::getNextArticle();
         }
-
-        if (strlen($this->_item->item_code) > 9  ) {
-            $this->setError('Надто довгий артикул');
-            return;
-        }
    
- 
+        
+        if (\App\System::getOption("common", "autoarticle") == 1) {
+            if (strlen($this->_item->item_code) > 9  ) {
+                $this->setError('Надто довгий артикул');
+                return;
+            }
+        }          
+        
+  
         //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {
             $code = Item::qstr($this->_item->bar_code);
