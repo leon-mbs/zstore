@@ -11,11 +11,9 @@ class DBHelper
         $this->type = $type;
         $modules = \App\System::getOptions("modules");
  
-
-            $this->conn = \ADONewConnection("mysqli");
-            $this->conn->NConnect('localhost', 'root', 'root', 'tecdoc');
-            $this->conn->Execute("SET NAMES 'utf8'");
-   
+        $this->conn = \ADONewConnection("mysqli");
+        $this->conn->NConnect($modules['td_dbhost'],$modules['td_dbuser'], $modules['td_dbpass'], $modules['td_dbname']);
+        $this->conn->Execute("SET NAMES 'utf8'");
          
     }
 

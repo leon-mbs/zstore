@@ -3,7 +3,7 @@
 <body>
 
 <div class="row  ">
-    <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+    <div class="col-12  col-sm-10 col-md-4    col-xl-3  ">
         <h4>Налаштування </h4>
         <form zippy="cform">
             <div class="form-group   ">
@@ -20,28 +20,45 @@
                 </select>
 
             </div>
-            <div class="form-group">
+     <div class="form-group">
                 <label for="ipath">Шлях до зображень
                     <input type="text" zippy="ipath" class="form-control"/>
-                    <small class="form-text text-muted">Шлях вiдносно кореню сайту</small>
+                    <small class="form-text text-muted">Шлях вiдносно кореню сайту. Якщо  зображення  не  використовуются  залишити пустим </small>
+            </div> 
+            <h5>Параметри з'єднання з   БД TECDOC</h5>           
+            <div class="form-group row">
+                <label class="col-5 col-form-label" for="dbhost">Хост </label> 
+                <div class="col-7">
+                    <input type="text" zippy="dbhost" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-5 col-form-label" for="dbname">Назва БД  </label>
+                 <div class="col-7">
+                  <input type="text" zippy="dbname" class="form-control"/>
+                </div>
+            </div>
+           <div class="form-group row">
+                <label class="col-5 col-form-label" for="dbuser">Користувач БД  </label>
+                 <div class="col-7">
+                  <input type="text" zippy="dbuser" class="form-control"/>
+                </div>
+            </div>
+           <div class="form-group row">
+                <label class="col-5 col-form-label" for="dbpass">Пароль  </label>
+                 <div class="col-7">
+                  <input type="text" zippy="dbpass" class="form-control"/>
+                </div>
             </div>
 
-            <div class="form-check">
-                <input zippy="seconddb" type="checkbox" class="form-check-input">
-                <label class="form-check-label" for="seconddb">Окрема БД</label>
-                <small class="form-text text-muted">Конект задаеться в config.ini в секцii [tecdocdb] аналогiчно
-                    основнiй БД:
-                    <br>[tecdocdb]
-                    <br>host=localhost
-                    <br>name=tecdoc
-                    <br>user=root
-                    <br>pass=root</small>
+     
 
-            </div>
+ 
 
             <div class="form-group">
-                <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
+                <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-4"/>
 
+                <a zippy="chconn">Перевiрити з'єднання </a>
 
             </div>
         </form>
@@ -49,9 +66,9 @@
 </div>
 <script>
 
-    function check_check() {
-
-       
+    function check_chconn() {
+       document.getElementById('dialogwait').showModal()
+       return true;
     }
 
 </script>
