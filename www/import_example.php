@@ -6,8 +6,10 @@
  
 require_once 'init.php';
  
+/*    раскоментировать  для  работы
+ 
 try{              
-        $file   ="c:/Users/leonm/Downloads/items_2024_11_18.xlsx";//путь  к  файлу
+        $file   ="";//путь  к  файлу
         $data = array();
         //загрузка  с  ексель
         $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file ); 
@@ -63,11 +65,11 @@ try{
         //     $item->cat_id ...   id категории
         //     $item->isweight ...   весовой товар  0 или  1
         
-               /*
-               $cf=[];  //кастоные поля если  есть
-               $cf['код поля']= "значение  с  колонки" ;
-               $item->savecf($cf)  ;
-               */
+            
+             //  $cf=[];  //кастоные поля если  есть
+            //   $cf['код поля']= "значение  с  колонки" ;
+            //   $item->savecf($cf)  ;
+             
                
                $item->save()  ;
                $cnt++;
@@ -78,3 +80,4 @@ try{
     echo $e->getMessage();
     $logger->error($e);
 }
+ 
