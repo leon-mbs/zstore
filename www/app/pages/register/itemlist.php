@@ -325,7 +325,7 @@ class ItemList extends \App\Pages\Base
             $interval = date_diff($d1,$d2);
 
             if($interval->days >30)  {
-                $conn=\ZDB\db::getConnect()  ;
+                $conn=\ZDB\DB::getConnect()  ;
                 $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
                 $sell =   $conn->GetOne($sql)  ;
                 $sell =  number_format($sell/$interval->days*30, 1, '.', '');
@@ -483,11 +483,11 @@ class ItemList extends \App\Pages\Base
 
          
             if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $htmls;
+                \App\Session::getSession()->printform =  $ret;
 
                 $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
-                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+                $this->addAjaxResponse("  $('#tag').html('{$ret}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
 
             }
             return;
@@ -506,7 +506,7 @@ class ItemList extends \App\Pages\Base
                          
              }
              $b = json_encode($buf) ;   
-            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
+             $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;
             $message = str_replace(";", "`", $message)  ;

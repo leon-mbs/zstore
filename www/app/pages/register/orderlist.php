@@ -559,7 +559,7 @@ class OrderList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
-        $conn= \ZDB\db::getConnect() ;
+        $conn= \ZDB\DB::getConnect() ;
 
         $stl = array() ;
         foreach($conn->Execute("select store_id,storename from stores") as $row) {

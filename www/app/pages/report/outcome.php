@@ -433,7 +433,7 @@ class Outcome extends \App\Pages\Base
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
  
-        $header['totall'] = H::fa($totsum - $disc);
+        $header['totall'] = H::fa($totsum );
 
         $header['noshowpartion'] = $this->_tvars['noshowpartion'] ;
 

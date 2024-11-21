@@ -659,7 +659,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['complout']  = $item->item_type== Item::TYPE_MAT  || $item->item_type== Item::TYPE_HALFPROD ;
         $this->_tvars['conploutlist']  = [];
         
-        $conn = \ZDB\db::getConnect()  ;
+        $conn = \ZDB\DB::getConnect()  ;
         
         $sql="SELECT s.qty,i.item_code,i.itemname  FROM 
             items i JOIN item_set s ON i.item_id=s.pitem_id 
@@ -1141,6 +1141,7 @@ class ItemList extends \App\Pages\Base
     public function getSticker($args, $post) {
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
+        
      
         $item =   Item::load($post["stitemid"]) ;
      
@@ -1170,10 +1171,10 @@ class ItemList extends \App\Pages\Base
             $report = new \App\Report('item_sticker.tpl');
          
             $header['turn'] = $user->prturn ??'';
-            if($prturn == 1) {
+            if($user->prturn == 1) {
                 $header['turn'] = 'transform: rotate(90deg);';
             }
-            if($prturn == 2) {
+            if($user->prturn == 2) {
                 $header['turn'] = 'transform: rotate(-90deg);';
             }
  

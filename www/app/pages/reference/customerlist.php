@@ -676,7 +676,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     private function updateDocs() {
-        $this->_doclist = \App\Entity\doc\Document::find(' state <> 9 and  customer_id=' . $this->_customer->customer_id,'document_date desc',10);
+        $this->_doclist = \App\Entity\Doc\Document::find(' state <> 9 and  customer_id=' . $this->_customer->customer_id,'document_date desc',10);
         $this->contentview->dw_doc->Reload();
 
     }
@@ -714,7 +714,7 @@ class CustomerList extends \App\Pages\Base
         $doc = $row->getDataItem();
 
         $row->add(new Label('doc_amount',  Helper::fa($doc->amount) ));
-        $row->add(new Label('doc_state',   \App\Entity\doc\Document::getStateName($doc->state) ));
+        $row->add(new Label('doc_state',   \App\Entity\Doc\Document::getStateName($doc->state) ));
 
         $row->add(new ClickLink('doc'))->onClick($this, 'docOnClick');
         $row->doc->setValue($doc->document_number);

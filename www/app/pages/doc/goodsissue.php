@@ -451,7 +451,7 @@ class GoodsIssue extends \App\Pages\Base
       // проверка  на  стикер
         if ($item == null) {
        
-            $item = Item::unpackStBC($barcode);
+            $item = Item::unpackStBC($code);
             if($item instanceof Item) {
                 $item->pureprice = $item->getPurePrice();
                 $this->_itemlist[ ] = $item;
