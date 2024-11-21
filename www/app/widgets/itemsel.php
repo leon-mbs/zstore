@@ -235,7 +235,7 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
         foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $item) {
 
             if (strlen($this->page->_pricetype) > 0) {
-                $item->price = $item->getPrice($this->page->_pricetype, $this->_store);
+                $item->price = $item->getPrice($this->page->_pricetype, $this->page->_store);
             }
 
             $list[] = $item;
