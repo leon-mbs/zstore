@@ -110,9 +110,9 @@
                 <tr>
                     <th>Бренд</th>
                     <th>Код</th>
-                    <th>Наименование</th>
-                    <th class="text-right">Кол.</th>
-                    <th class="text-right">Цена</th>
+                    <th>Назва</th>
+                    <th class="text-right">На складi</th>
+                    <th class="text-right">Цiна</th>
                     <th>
 
                     </th>
@@ -124,7 +124,7 @@
                     <td class="text-right"><span zippy="qty" class="badge badge-info badge-pill"></span></td>
                     <td class="text-right"><span zippy="price" class="badge badge-info badge-pill"></span></td>
                     <td>
-                        <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+                        <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
             </table>
@@ -134,7 +134,7 @@
         <div zippy="tview" class="row">
             <div class="col-12 col-md-6 col-xl-4">
                 {{#isattr}}
-                <b>Детализация</b>
+                <b>Деталiзацiя</b>
                 <table class="ctable">
                     {{#attr}}
                     <tr>
@@ -146,7 +146,7 @@
                 {{/isattr}}
 
                 {{#ispart}}
-                <b>Составные части</b>
+                <b>Складовi частини</b>
                 <table class="ctable">
                     {{#part}}
                     <tr>
@@ -171,7 +171,7 @@
             {{/isimage}}
             {{#isoem}}
             <div class="col-12 col-md-3  col-xl-2  ">
-                <b>Оригинальные номера</b>
+                <b>Оригiнальнi номери</b>
                 <table class="ctable">
                     {{#oem}}
                     <tr>
@@ -183,7 +183,7 @@
             {{/isoem}}
             {{#isrep}}
             <div class="col-12 col-md-6   col-xl-4">
-                <b>Замены</b>
+                <b>Замiни</b>
                 <table class="ctable">
                     {{#rep}}
                     <tr>
@@ -214,7 +214,7 @@
 
             {{#isapp}}
             <div class="col-12   col-xl-8">
-                <b>Применимость</b>
+                <b>Застосованiсть</b>
                 <table class="ctable">
                     {{#applist}}
                     <tr>

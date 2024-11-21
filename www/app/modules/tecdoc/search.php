@@ -229,12 +229,8 @@ class Search extends \App\Pages\Base
         $ret = $api->getTree($this->tpanel->tablist->search1form->smodif->getValue());
 
         $list = array();
-        foreach ($ret['data'] as $row) {
-            $item = new \App\DataItem();
+        foreach ($ret as $item) {
             $item->intree = false;
-            $item->id = $row['id'];
-            $item->parentId = $row['parentId'];
-            $item->description = $row['description'];
             $list[$item->id] = $item;
         }
 

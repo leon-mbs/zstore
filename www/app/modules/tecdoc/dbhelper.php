@@ -336,7 +336,7 @@ class DBHelper
                 break;
         }
 
-
+        \App\Helper::log($sql)  ;
         $res = $this->conn->Execute($sql);
         $list = array();
         foreach ($res as $row) {
