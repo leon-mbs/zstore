@@ -22,7 +22,7 @@ use \Zippy\Binding\PropertyBinding as Bind;
 class Search extends \App\Pages\Base
 {
     public $_ds   = array();
-    public $_card = array();
+  
 
     public function __construct() {
         parent::__construct();
@@ -74,17 +74,7 @@ class Search extends \App\Pages\Base
 
         $this->add(new Panel('tview'))->setVisible(false);
 
-
-        //Корзина
-        $this->_card = \App\Session::getSession()->clipboard;
-        if (!is_array($this->_card)) {
-            $this->_card = array();
-        }
-        $this->tlist->add(new Panel('cartpan'))->setVisible(count($this->_card) > 0);
-        $this->tlist->cartpan->add(new DataView('cardlist', new ArrayDataSource(new Bind($this, "_card")), $this, 'cardOnRow'));
-        $this->tlist->cartpan->cardlist->Reload();
-        $this->tlist->cartpan->add(new  ClickLink('copycart', $this, 'OnCopy'));
-
+       
 
         $this->onTab($this->tpanel->tabl);
         $this->onType($tablist->search1form->stype);
@@ -305,7 +295,7 @@ class Search extends \App\Pages\Base
             $this->tlist->setVisible(true);
 
         } else {
-            $this->setWarn('notfound');
+            $this->setWarn('Не знайдено');
         }
         $this->tview->setVisible(false);
     }
@@ -337,7 +327,7 @@ class Search extends \App\Pages\Base
             $this->tlist->setVisible(true);
 
         } else {
-            $this->setWarn('notfound');
+            $this->setWarn('Не знайдено');
         }
         $this->tview->setVisible(false);
 
@@ -367,7 +357,7 @@ class Search extends \App\Pages\Base
             $this->tlist->setVisible(true);
 
         } else {
-            $this->setWarn('notfound');
+            $this->setWarn('Не знайдено');
         }
         $this->tview->setVisible(false);
 
@@ -394,7 +384,7 @@ class Search extends \App\Pages\Base
             $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store'])));
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('cart', $this, "OnCart"));//->setVisible($item->quantity>0);
+
 
     }
 
@@ -425,16 +415,12 @@ class Search extends \App\Pages\Base
 
 
         $ret = $api->getImage($part->part_number, $part->brand_id);
-        if ($ret['success'] != true) {
-           // $this->setError($ret['error']);
-           // return;
-        }
+     
 
-        if (strlen($ret['data']) > 0) {
+        if (strlen($ret['PictureName'] ??'') > 0) {
             $this->_tvars['isimage'] = true;
 
-            //$this->_tvars['imagepath'] = "/proxy.php?im=" . $ret['data'];
-            $this->_tvars['imagepath'] =   $ret['data'];
+            $this->_tvars['imagepath'] =   $ret['PictureName'];
 
         }
 
@@ -442,13 +428,10 @@ class Search extends \App\Pages\Base
         $this->_tvars['isoem'] = false;
         $this->_tvars['oem'] = array();
         $ret = $api->getOemNumbers($part->part_number, $part->brand_id);
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
-        if (count($ret['data']) > 0) {
+   
+        if (count($ret) > 0) {
             $this->_tvars['isoem'] = true;
-            foreach ($ret['data'] as $row) {
+            foreach ($ret as $row) {
 
                 $this->_tvars['oem'][] = array('oemnum' => $row['OENbr'], 'manufacturer_name' => $row['manufacturer_name']);
             }
@@ -462,14 +445,11 @@ class Search extends \App\Pages\Base
 
 
         $ret = $api->getReplace($part->part_number, $part->brand_id);
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+   
 
-        if (count($ret['data']) > 0) {
+        if (count($ret) > 0) {
             $this->_tvars['isrep'] = true;
-            foreach ($ret['data'] as $r) {
+            foreach ($ret as $r) {
 
                 $item = Item::getFirst("manufacturer=" . Item::qstr($r['supplier']) . " and item_code=" . Item::qstr($r['replacenbr']));
 
@@ -492,15 +472,11 @@ class Search extends \App\Pages\Base
         $this->_tvars['part'] = array();
 
         $ret = $api->getArtParts($part->part_number, $part->brand_id);
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+  
 
-
-        if (count($ret['data']) > 0) {
+        if (count($ret) > 0) {
             $this->_tvars['ispart'] = true;
-            foreach ($ret['data'] as $r) {
+            foreach ($ret as $r) {
                 $this->_tvars['part'][] = array('Brand' => $r['Brand'], 'partnumber' => $r['partnumber'], 'Quantity' => $r['Quantity']);
             }
         }
@@ -512,14 +488,11 @@ class Search extends \App\Pages\Base
         $this->_tvars['cross'] = array();
 
         $ret = $api->getArtCross($part->part_number, $part->brand_id);
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+   
 
-        if (count($ret['data']) > 0) {
+        if (count($ret) > 0) {
             $this->_tvars['iscross'] = true;
-            foreach ($ret['data'] as $c) {
+            foreach ($ret as $c) {
                 $item = Item::getFirst("manufacturer=" . Item::qstr($c['description']) . " and item_code=" . Item::qstr($c['crossnumber']));
 
                 if ($item instanceof Item) {
@@ -541,78 +514,17 @@ class Search extends \App\Pages\Base
         $this->_tvars['applist'] = array();
 
         $ret = $api->getArtVehicles($part->part_number, $part->brand_id);
-        if ($ret['success'] != true) {
-            $this->setError($ret['error']);
-            return;
-        }
+    
 
-        if (count($ret['data']) > 0) {
+        if (count($ret) > 0) {
             $this->_tvars['isapp'] = true;
-            foreach ($ret['data'] as $r) {
+            foreach ($ret as $r) {
                 $this->_tvars['applist'][] = array('years' => $r['years'], 'desc' => $r['desc']);
             }
         }
 
 
     }
-
-    public function cardOnRow($row) {
-        $item = $row->getDataItem();
-        $row->add(new Label('carditem', $item->itemname));
-        $row->add(new Label('carcode', $item->item_code));
-        $row->add(new Label('cardbrand', $item->manufacturer));
-        $row->add(new ClickLink('delcard', $this, "OnDelCart"));
-    }
-
-
-    public function OnCart($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $item->itemname = $item->product_name;
-        $item->manufacturer = $item->brand;
-        $item->item_code = $item->part_number;
-
-        if ($item->item_id > 0) {
-            $item->item_code = $item->product_name;
-
-            $this->_card[$item->item_id] = $item;
-        } else {
-            $_item = Item::getFirst("item_code=" . Item::qstr($item->part_number) . " and manufacturer=" . Item::qstr($item->brand));
-            if ($_item instanceof Item) {
-                $item->item_id = $_item->item_id;
-
-
-            } else {
-                $_item = new Item();
-                $_item->itemname = $item->product_name;
-
-                $_item->item_code = $item->part_number;
-                $_item->manufacturer = $item->brand;
-
-                $_item->save();
-                $item->item_id = $_item->item_id;
-                $item->quantity = 1;
-                $this->_card[$item->item_id] = $item;
-            }
-        }
-
-        $this->_card[$item->item_id] = $item;
-        $this->tlist->cartpan->cardlist->Reload();
-        $this->tlist->cartpan->setVisible(count($this->_card) > 0);
-
-    }
-
-    public function OnDelCart($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $this->_card = array_diff_key($this->_card, array($item->item_id => $this->_card[$item->item_id]));
-        $this->tlist->cartpan->cardlist->Reload();
-        $this->tlist->cartpan->setVisible(count($this->_card) > 0);
-
-    }
-
-    public function OnCopy($sender) {
-
-        \App\Session::getSession()->clipboard = $this->_card;
-        $this->setInfo('Скопировано');
-    }
+ 
 
 }

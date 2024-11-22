@@ -38,7 +38,14 @@ class Category extends \ZCL\DB\Entity
         $this->discount = doubleval($xml->discount[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
-
+        $this->cflist = (string)$xml->cflist[0];
+        if(strlen($this->cflist) >0) {
+          $this->cflist=unserialize($this->cflist)   ;   
+        }
+        else {
+           $this->cflist=[]; 
+        }
+      
         parent::afterLoad();
     }
 
@@ -63,6 +70,13 @@ class Category extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
+        
+        if(!is_array($this->cflist)) {
+             $this->cflist=[];
+        }
+        $this->cflist  = serialize($this->cflist);        
+        
+        $this->detail .= "<cflist>{$this->cflist}</cflist>";
 
         $this->detail .= "</detail>";
 

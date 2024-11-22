@@ -249,12 +249,10 @@ class DBHelper
         $res = $this->conn->Execute($sql);
         $list = array();
         foreach ($res as $row) {
-            $item = new \App\DataItem();
-            $item->intree = false;
-            $item->id = $row['id'];
-            $item->parentId = $row['parentId'];
-            $item->description = $row['description'];
-            $list[$item->id] = $item;
+     
+            $row['intree']  = false;
+   
+            $list[$item->id] = $row;
         }
         return $list;
     }
@@ -340,12 +338,8 @@ class DBHelper
         $res = $this->conn->Execute($sql);
         $list = array();
         foreach ($res as $row) {
-            $item = new \App\DataItem();
-            $item->part_number = $row['part_number'];
-            $item->supplier_name = $row['supplier_name'];
-            $item->product_name = $row['product_name'];
-            $item->brand_id = $row['brand_id'];
-            $list[] = $item;
+         
+            $list[] = $row;
         }
         return $list;
 
@@ -393,12 +387,8 @@ class DBHelper
 
         $list = array();
         foreach ($res as $row) {
-            $item = new \App\DataItem();
-            $item->part_number = $row['part_number'];
-            $item->supplier_name = $row['supplier_name'];
-            $item->product_name = $row['product_name'];
-            $item->brand_id = $row['brand_id'];
-            $list[] = $item;
+           
+            $list[] = $row;
         }
 
 
@@ -436,12 +426,8 @@ class DBHelper
 
         $list = array();
         foreach ($res as $row) {
-            $item = new \App\DataItem();
-            $item->part_number = $row['part_number'];
-            $item->supplier_name = $row['supplier_name'];
-            $item->product_name = $row['product_name'];
-            $item->brand_id = $row['brand_id'];
-            $list[] = $item;
+ 
+            $list[] = $row;
         }
 
 
@@ -502,11 +488,8 @@ class DBHelper
              ");
 
         foreach ($rs as $r) {
-            $item = new \App\DataItem();
-            $item->sid = $r['id'];
-            $item->supplier = $r['supplier'];
-            $item->replacenbr = $r['replacenbr'];
-            $list[] = $item;
+ 
+            $list[] = $r;
         }
 
         return $list;
@@ -522,11 +505,8 @@ class DBHelper
              ");
 
         foreach ($rs as $r) {
-            $item = new \App\DataItem();
-            $item->Brand = $r['Brand'];
-            $item->Quantity = $r['Quantity'];
-            $item->partnumber = $r['partnumber'];
-            $list[] = $item;
+   
+            $list[] = $r;
         }
 
         return $list;
@@ -545,11 +525,9 @@ class DBHelper
              ");
 
         foreach ($r as $row) {
-            $item = new \App\DataItem();
-            $item->description = $row['description'];
-            $item->cross = $row['crossnumber'];
+             
 
-            $list[] = $item;
+            $list[] = $row;
         }
         return $list;
     }
@@ -588,7 +566,7 @@ class DBHelper
 
                     break;
                 case 'Axle':
-                    $sql = "SELECT DISTINCT      p.constructioninterval, p.fulldescription FROM axles p 
+                    $sql = "SELECT DISTINCT      p.constructioninterval as years, p.fulldescription as desc FROM axles p 
                         
                         WHERE p.id=" . $r['linkageId'];
 
@@ -599,13 +577,8 @@ class DBHelper
             if (strlen($sql) > 0) {
                 $r = $this->conn->Execute($sql);
                 foreach ($r as $row) {
-                    $item = new \App\DataItem();
-
-
-                    $item->years = $row['constructioninterval'];
-                    $item->desc = $row['fulldescription'];
-
-                    $list[] = $item;
+                  
+                    $list[] = $row;
                 }
 
 
