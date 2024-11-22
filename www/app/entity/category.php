@@ -21,7 +21,7 @@ class Category extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-
+        \App\Helper::log($this->detail);
         $xml = @simplexml_load_string($this->detail);
 
         $this->price1 = (string)($xml->price1[0]);
@@ -74,10 +74,10 @@ class Category extends \ZCL\DB\Entity
         if(!is_array($this->cflist)) {
              $this->cflist=[];
         }
-        $this->cflist  = serialize($this->cflist);        
+        $flist  = serialize($this->cflist);        
         
-        $this->detail .= "<cflist>{$this->cflist}</cflist>";
-
+        $this->detail .= "<cflist><![CDATA[{$flist}]]></cflist>";
+      
         $this->detail .= "</detail>";
 
         return true;

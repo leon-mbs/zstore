@@ -136,7 +136,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new TextInput('editnotes'));
 
-        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
+        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0))->onChange($this,"onCat");
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
@@ -358,13 +358,18 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id));
         $this->itemdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_ITEM));
          
+        $this->onCat($this->itemdetail->editcat);                 
+    }
+
+    public function onCat($sender) {
+        $id = $sender->getValue();
+        $this->_item->cat_id= $id;//подставляем выбраную
         $this->_cflistv =  $this->_item->getcf();
         
         $this->itemdetail->cflistv->Reload(); 
         $this->_tvars['cflist'] = count($this->_cflistv) > 0 ;
-                      
+   
     }
-
     public function addOnClick($sender) {
         $this->_copy = 0;
         $this->itemtable->setVisible(false);

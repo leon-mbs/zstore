@@ -508,14 +508,21 @@ class CategoryList extends \App\Pages\Base
     
     public function cfieldsOnClick($sender) {
         $this->_category = $sender->owner->getDataItem();
-        $this->_category = Category::load($this->_category->cat_id);
         $this->cfform->catprname2->setText($this->_category->cat_name);        
- 
-         
-        $this->_cflist = $this->_category->cflist  ;
-        if (is_array($this->_cflist) == false) {
-            $this->_cflist = [];
-        }        
+
+        $this->_category = Category::load($this->_category->cat_id);
+        $this->_cflist = [];
+        $i=0;
+        foreach($this->_category->cflist as $k=>$v){
+            $ls = new \App\DataItem();
+            $ls->code = $k;
+            $ls->name = $v;
+            $ls->id = $i++;
+            $this->_cflist[$ls->id] = $ls;          
+                
+        }
+      
+      
                  
         $this->cfform->cflist->Reload();        
 
@@ -551,9 +558,11 @@ class CategoryList extends \App\Pages\Base
     }    
  
     public function savecf($sender) {
-         
-    
-        $this->_category->cflist = $this->_cflist;
+        $cflist=[]; 
+        foreach($this->_cflist  as $v){
+            $cflist[$v->code]=$v->name;
+        }   
+        $this->_category->cflist=$cflist; 
         $this->_category->save();
         $this->categorytable->setVisible(true);
         $this->cfform->setVisible(false);

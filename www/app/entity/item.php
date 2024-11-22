@@ -926,7 +926,19 @@ class Item extends \ZCL\DB\Entity
           $cfv=unserialize($this->cflist)   ;   
         }
         $options = \App\System::getOptions('common');
-        $cflist = $options['cflist'];
+        $cflist = $options['cflist'] ?? [];
+        $i=1;
+        $cat = Category::load($this->cat_id);
+        if($cat != null)   {
+            foreach($cat->cflist as $k=>$v){
+                $ls = new \App\DataItem();
+                $ls->code = $k;
+                $ls->name = $v;
+               
+              $cflist[$i++] = $ls;          
+                    
+            }
+        }
         $i=1;
         $ret=[];
         foreach($cflist as $cf=>$f) {
