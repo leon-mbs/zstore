@@ -72,8 +72,8 @@ class Item extends \ZCL\DB\Entity
         $this->url = (string)$xml->url[0];
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
-        $reclist = (string)$xml->reclist[0];
         $this->cflist = (string)$xml->cflist[0];
+        $reclist = (string)$xml->reclist[0];
 
         if(strlen($reclist) >0) {
             $this->reclist = @unserialize(@base64_decode($reclist))   ;

@@ -1240,7 +1240,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
 
-        if ($this->_doc->payed > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
+        if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
