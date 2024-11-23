@@ -249,10 +249,8 @@ class DBHelper
         $res = $this->conn->Execute($sql);
         $list = array();
         foreach ($res as $row) {
-     
-            $row['intree']  = false;
-   
-            $list[$item->id] = $row;
+          
+            $list[$row['id']] = $row;
         }
         return $list;
     }
@@ -334,7 +332,7 @@ class DBHelper
                 break;
         }
 
-        \App\Helper::log($sql)  ;
+    
         $res = $this->conn->Execute($sql);
         $list = array();
         foreach ($res as $row) {
@@ -381,7 +379,7 @@ class DBHelper
             $sql .= "  and s.description  = {$brand} ";
         }
 
-
+     
         $res = $this->conn->Execute($sql);
 
 
@@ -462,7 +460,7 @@ class DBHelper
 
         $number = $this->conn->qstr($number);
 
-        $row = $this->conn->GetRow("SELECT Description, PictureName FROM article_images WHERE DocumentType ='Picture'  and  DataSupplierArticleNumber=" . $number . "  AND supplierId=" . $brand_id . "    limit 0,1");
+        $row = $this->conn->GetRow("SELECT supplierId, Description, PictureName FROM article_images WHERE DocumentType ='Picture'  and  DataSupplierArticleNumber=" . $number . "  AND supplierId=" . $brand_id . "    limit 0,1");
 
         return $row;
     }
@@ -483,7 +481,7 @@ class DBHelper
         $number = $this->conn->qstr($number);
         $list = array();
         $rs = $this->conn->Execute("SELECT s.id, s.description as  supplier, a.replacenbr   FROM article_rn a 
-            JOIN suppliers s ON s.id=a.replacesupplierid  
+            JOIN suppliers s ON s.id=a.replacedupplierid  
             WHERE a.datasupplierarticlenumber=" . $number . " AND a.supplierid=" . $brand_id . "
              ");
 

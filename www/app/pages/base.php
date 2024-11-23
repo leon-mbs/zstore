@@ -561,7 +561,7 @@ class Base extends \Zippy\Html\WebPage
 
     
     /**
-    * добавляет стьроку  заказа в  заявку  поставщику
+    * добавляет строку  заказа в  заявку  поставщику
     * 
     * @param mixed $args
     * @param mixed $post

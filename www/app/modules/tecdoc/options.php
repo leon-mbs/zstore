@@ -59,6 +59,7 @@ class Options extends \App\Pages\Base
         $modules['td_pricetype'] = $this->cform->defpricetype->getValue();
         $modules['td_store'] = $this->cform->defstore->getValue();
         $modules['td_ipath'] = $this->cform->ipath->getText();
+        $modules['td_ipath']  = rtrim($modules['td_ipath'],'/' ) .'/';
         $modules['td_dbhost'] = $this->cform->dbhost->getText();
         $modules['td_dbname'] = $this->cform->dbname->getText();
         $modules['td_dbuser'] = $this->cform->dbuser->getText();

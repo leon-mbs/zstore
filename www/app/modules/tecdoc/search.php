@@ -220,8 +220,12 @@ class Search extends \App\Pages\Base
 
         $list = array();
         foreach ($ret as $item) {
-            $item->intree = false;
-            $list[$item->id] = $item;
+            $it= new \App\DataItem() ;
+            $it->id = $item['id'];
+            $it->parentId = $item['parentId'];
+            $it->description = $item['description'];
+            $it->intree = false;
+            $list[$it->id] = $it;
         }
 
 
@@ -375,19 +379,21 @@ class Search extends \App\Pages\Base
         $row->add(new Label("lcode", $item->part_number));
         $row->add(new Label("lname", $item->product_name));
         $item = Item::getFirst("manufacturer=" . Item::qstr($item->supplier_name) . " and item_code=" . Item::qstr($item->part_number));
-
-        $row->add(new Label("qty"))->setVisible($item instanceof Item);
-        $row->add(new Label("price"))->setVisible($item instanceof Item);
-        if ($item instanceof Item) {
+        $onstore= ($item instanceof Item);
+        $row->add(new Label("qty"))->setVisible($onstore);
+        $row->add(new Label("price"))->setVisible($onstore);
+        if ($onstore) {
             $modules = System::getOptions("modules");
             $row->qty->setText(H::fqty($item->getQuantity($modules['td_store'])));
             $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store'])));
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-
+        $row->add(new ClickLink('tobay',$this, 'tobayOnClick'))->setVisible($onstore);;
+        $row->tobay->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
 
     }
 
+    
     public function showOnClick($sender) {
         $modules = System::getOptions("modules");
 
@@ -420,7 +426,7 @@ class Search extends \App\Pages\Base
         if (strlen($ret['PictureName'] ??'') > 0) {
             $this->_tvars['isimage'] = true;
 
-            $this->_tvars['imagepath'] =   $ret['PictureName'];
+            $this->_tvars['imagepath'] = $modules['td_ipath'] .'/'. $ret['supplierId'].'/'. $ret['PictureName'];
 
         }
 
@@ -526,5 +532,8 @@ class Search extends \App\Pages\Base
 
     }
  
+    public function tobayOnClick($sender) {
+        
+    }
 
 }
