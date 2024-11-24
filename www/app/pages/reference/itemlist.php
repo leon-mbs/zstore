@@ -130,6 +130,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
         $this->itemdetail->add(new TextInput('editlost'));
+        $this->itemdetail->add(new TextInput('editimageurl'));
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('edituktz'));
@@ -263,11 +264,15 @@ class ItemList extends \App\Pages\Base
         $row->printst->setVisible($item->isweight ==1 );
 
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
-     
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
-        $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
-        if ($item->image_id == 0) {
+        $url=$item->imageurl;
+        if ($item->image_id > 0){
+           $url = "/loadimage.php?id=".$item->image_id;
+        }
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($url);
+        $row->imagelistitem->setAttribute('href', $url);
+        $row->imagelistitem->setAttribute('data-gallery', $item->item_id);
+        
+        if ($item->image_id == 0 && strlen($item->imageurl)==0) {
             $row->imagelistitem->setVisible(false);
         }
 
@@ -324,6 +329,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edittype->setValue($this->_item->item_type);
         $this->itemdetail->editprintqty->setValue($this->_item->printqty);
 
+        $this->itemdetail->editimageurl->setText($this->_item->imageurl);
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
@@ -466,6 +472,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
         $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
+        $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();

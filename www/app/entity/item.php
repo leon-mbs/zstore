@@ -57,6 +57,7 @@ class Item extends \ZCL\DB\Entity
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+        $this->imageurl = (string)$xml->imageurl[0];
 
         $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
@@ -174,6 +175,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
         $this->detail .= "<cflist>{$this->cflist}</cflist>";
+        $this->detail .= "<imageurl>{$this->imageurl}</imageurl>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
