@@ -1,5 +1,5 @@
 www/logs/
-www/update/
+www/upload/
 www/vendor/
 www/composer.cmd
 www/cron.cmd

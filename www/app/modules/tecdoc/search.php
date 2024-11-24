@@ -47,7 +47,7 @@ class Search extends \App\Pages\Base
 
         $tablist->add(new Form('search1form'));
 
-        $tablist->search1form->add(new DropDownChoice('stype', array('passenger' => 'Авто', 'commercial' => 'Грузовик', 'motorbike' => 'Мотоцикл'), 'passenger'))->onChange($this, 'onType');
+        $tablist->search1form->add(new DropDownChoice('stype', array('passenger' => 'Легкове авто', 'commercial' => 'Вантажiвка', 'motorbike' => 'Мотоцикл'), 'passenger'))->onChange($this, 'onType');
         $tablist->search1form->add(new DropDownChoice('sbrand', array(), 0))->onChange($this, 'onBrand');
         $tablist->search1form->add(new DropDownChoice('smodel', array(), 0))->onChange($this, 'onModel');
         $tablist->search1form->add(new DropDownChoice('smodif', array(), 0))->onChange($this, 'onModif');
@@ -426,7 +426,7 @@ class Search extends \App\Pages\Base
         if (strlen($ret['PictureName'] ??'') > 0) {
             $this->_tvars['isimage'] = true;
 
-            $this->_tvars['imagepath'] = $modules['td_ipath'] .'/'. $ret['supplierId'].'/'. $ret['PictureName'];
+            $this->_tvars['imagepath'] = $modules['td_ipath'] .  $ret['supplierId'].'/'. $ret['PictureName'];
 
         }
 
