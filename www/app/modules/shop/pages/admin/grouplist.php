@@ -55,6 +55,7 @@ class GroupList extends \App\Pages\Base
         //$this->UpdateAttrList();
 
         $attrpanel->add(new ClickLink('addattr'))->onClick($this, 'OnAddAttribute');
+        $attrpanel->add(new ClickLink('addcustom'))->onClick($this, 'OnAddCustom');
         $form = $attrpanel->add(new Form('attreditform'));
         $form->setVisible(false);
         $form->onSubmit($this, 'OnSaveAttribute');
@@ -104,8 +105,8 @@ class GroupList extends \App\Pages\Base
         $attrlist = Helper::getAttributeTypes();
         $datarow->add(new Label("itemtype", $attrlist[$item->attributetype]));
         $datarow->add(new Label("itemvalues", $item->valueslist));
-        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
-        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
+        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id );
+        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id && $item-> attributetype != 6);
         $datarow->add(new ClickLink("orderup", $this, 'OnUp'))->setVisible($item->ordern > $this->mm["mi"]);
         $datarow->add(new ClickLink("orderdown", $this, 'OnDown'))->setVisible($item->ordern < $this->mm["mm"]);
 
@@ -224,7 +225,7 @@ class GroupList extends \App\Pages\Base
             $attr->valueslist = implode(",", $r);
         }
 
-        $attr->Save();
+        $attr->save();
 
         if ($attrid == "0") {
             $conn = \ZCL\DB\DB::getConnect();
@@ -278,4 +279,40 @@ class GroupList extends \App\Pages\Base
         }
     }
 
+    public function OnAddCustom($sender) {
+         $cat = Category::load($this->group->cat_id);
+         $conn = \ZCL\DB\DB::getConnect();
+       
+         foreach($cat->cflist as $c=>$n){
+             
+            $found= false; 
+            foreach($this->attrlist as $a){
+              if($a->attributetype == 6 && $a->valueslist == $c )  {
+                    $found=true;
+                    if($a->attributename !== $n)  {
+                        $a->attributename = $n;
+                        $a->save();  
+                    }
+              }
+                
+            } 
+            if($found) continue; 
+            
+            $attr = new ProductAttribute();
+            $attr->cat_id = $this->group->cat_id;
+            $attr->attributetype = 6;   
+            $attr->attributename  = $n;
+            $attr->valueslist   = $c;  //код           
+            $attr->save();              
+            
+            $no = $conn->GetOne("select coalesce(max(ordern),0)+1 from shop_attributes_order");
+            $conn->Execute("insert into shop_attributes_order (pg_id,attr_id,ordern)values({$attr->cat_id},{$attr->attribute_id},{$no} )");
+            
+            
+         }
+     
+         $this->UpdateAttrList();       
+         
+    }
+    
 }

@@ -1,6 +1,6 @@
 SET NAMES 'utf8';
 
- 
+ALTER TABLE promocodes ADD enddate  DATE DEFAULT null; 
 ALTER TABLE note_topics ADD ispublic   tinyint(1) DEFAULT 0;
 ALTER TABLE note_topicnode ADD islink  tinyint(1) DEFAULT 0;
  
