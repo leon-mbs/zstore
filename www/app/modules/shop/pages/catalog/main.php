@@ -81,13 +81,13 @@ class Main extends Base
     public function OnCatRow($datarow) {
         $g = $datarow->getDataItem();
         $link = $g->hasChild() > 0 ? "/scat/" . $g->cat_id : "/pcat/" . $g->cat_id;
-        $datarow->add(new BookmarkableLink("scatimg", $link))->setValue("/loadshopimage.php?id=" . $g->image_id);
+        $datarow->add(new BookmarkableLink("scatimg", $link))->setValue(  $g->getImageUrl(true));
         $datarow->add(new BookmarkableLink("scatname", $link))->setValue($g->cat_name);
     }
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("nimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("nimage", $item->getSEF()))->setValue(  $item->getImageUrl(true,true));
         $row->add(new BookmarkableLink("nname", $item->getSEF()))->setValue($item->itemname);
     }
 

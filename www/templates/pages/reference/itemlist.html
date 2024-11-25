@@ -456,10 +456,13 @@
                                 </div>
                             </div>
                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editimageurl"> URL зображення</label>
+                                <label class="col-5 col-form-label" for="editimageurl"> URL зображення
+                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Посилання наприклад на зовнішнє зображення. Якщо каталог локальний можна вказати відносну адресу. При прямому посиланні не превіряється право доступу"></i>
+                                                               </label>
                                 <div class="col-7">
                                     <input class="form-control" zippy="editimageurl"   />
-                                    <small>Пріоритет  має локально завантажене зображення</small>
+                                    <small>Пріоритет  має завантажене (вище) зображення</small>
                                 </div>
                             </div>  
                             {{/useimages}}

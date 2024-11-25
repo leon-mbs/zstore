@@ -962,5 +962,28 @@ class Item extends \ZCL\DB\Entity
        
         return $ret;
      }
+   
+     /**
+     * возвращает ссылку  на  изображение
+     * 
+     * @param mixed $shop  для  онлайн каталога (не проверяется  доступ)
+     * @param mixed $t предпросмотр (thumbmil) если  есть
+     * @return mixed
+     */
+     public function getImageUrl($shop=false,$t=false){ 
+        
+        if ($this->image_id > 0){
+           if($shop) {
+               return "/loadshopimage.php?id=".$this->image_id . ($t ? '&t=t' : '');    
+           }   else {
+               return "/loadimage.php?id=".$this->image_id;           
+           }
+           
+        }   
+        if (strlen($this->imageurl)>0){
+           return $this->imageurl;
+        }   
+        return;    
+     } 
      
 }

@@ -100,7 +100,7 @@ class CategoryList extends \App\Pages\Base
         $this->categoryprice->add(new DropDownChoice('ptype',$ptype,1 ));
 
 
-        $this->categorydetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
+        $this->categorydetail->add(new \Zippy\Html\Image('editimage' ));
         $this->categorydetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->categorydetail->add(new CheckBox('editdelimage'));
         $this->categorydetail->add(new CheckBox('editnoshop'));
@@ -172,8 +172,8 @@ class CategoryList extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl());
+        $row->imagelistitem->setAttribute('href', $item->getImageUrl());
         $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
@@ -237,7 +237,7 @@ class CategoryList extends \App\Pages\Base
             $this->categorydetail->editdelimage->setChecked(false);
             $this->categorydetail->editdelimage->setVisible(true);
             $this->categorydetail->editimage->setVisible(true);
-            $this->categorydetail->editimage->setUrl('/loadimage.php?id=' . $this->_category->image_id);
+            $this->categorydetail->editimage->setUrl(  $this->_category->getImageUrl());
         } else {
             $this->categorydetail->editdelimage->setVisible(false);
             $this->categorydetail->editimage->setVisible(false);

@@ -211,11 +211,11 @@ class Custom extends \App\Pages\Base
         $i = $row->getDataItem();
         $row->add(new Label("newname", $i->itemname));
         $row->add(new ClickLink("newdel", $this, "newdelOnClick"));
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$i->image_id}");
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($i->getImageUrl());
         if(strlen($i->thumb)>0) {
             $row->imagelistitem->setValue($i->thumb);
         }
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$i->image_id}");
+        $row->imagelistitem->setAttribute('href', $i->getImageUrl());
 
     }
 

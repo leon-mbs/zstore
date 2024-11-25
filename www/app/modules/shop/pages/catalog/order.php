@@ -403,7 +403,7 @@ class Order extends Base
         $datarow->add(new Label('price', $item->price));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity'))) ;
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));
-        $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
+        $datarow->add(new Image('photo',$item->getImageUrl(true,true)));
     }
 
 

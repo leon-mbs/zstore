@@ -147,7 +147,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editnoshop'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
-        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage' ));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
@@ -264,15 +264,13 @@ class ItemList extends \App\Pages\Base
         $row->printst->setVisible($item->isweight ==1 );
 
 
-        $url=$item->imageurl;
-        if ($item->image_id > 0){
-           $url = "/loadimage.php?id=".$item->image_id;
-        }
+        $url=$item->getImageUrl();
+    
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($url);
         $row->imagelistitem->setAttribute('href', $url);
         $row->imagelistitem->setAttribute('data-gallery', $item->item_id);
         
-        if ($item->image_id == 0 && strlen($item->imageurl)==0) {
+        if (  strlen($url)==0) {
             $row->imagelistitem->setVisible(false);
         }
 
@@ -347,7 +345,7 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setChecked(false);
             $this->itemdetail->editdelimage->setVisible(true);
             $this->itemdetail->editimage->setVisible(true);
-            $this->itemdetail->editimage->setUrl('/loadimage.php?id=' . $this->_item->image_id);
+            $this->itemdetail->editimage->setUrl(  $this->_item->getImageUrl());
         } else {
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);

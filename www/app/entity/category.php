@@ -172,7 +172,20 @@ class Category extends \ZCL\DB\Entity
         return $ret;
     }
 
-
+      /**
+     * возвращает ссылку  на  изображение
+     * 
+     * @return mixed
+     */
+     public function getImageUrl( ){ 
+        
+        if ($this->image_id > 0){
+            return "/loadimage.php?id=".$this->image_id;           
+        }   
+         
+        return;    
+     } 
+     
 
 
 }

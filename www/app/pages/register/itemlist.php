@@ -141,8 +141,8 @@ class ItemList extends \App\Pages\Base
             $row->setAttribute('class', 'text-warning');
         }
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl());
+        $row->imagelistitem->setAttribute('href', $item->getImageUrl());
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
