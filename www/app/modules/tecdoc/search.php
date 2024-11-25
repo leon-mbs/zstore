@@ -382,14 +382,16 @@ class Search extends \App\Pages\Base
         $onstore= ($item instanceof Item);
         $row->add(new Label("qty"))->setVisible($onstore);
         $row->add(new Label("price"))->setVisible($onstore);
+        $row->add(new Label("tobay"))->setVisible($onstore);
         if ($onstore) {
+            $row->tobay->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
+            
             $modules = System::getOptions("modules");
             $row->qty->setText(H::fqty($item->getQuantity($modules['td_store'])));
             $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store'])));
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('tobay',$this, 'tobayOnClick'))->setVisible($onstore);;
-        $row->tobay->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
+     
 
     }
 

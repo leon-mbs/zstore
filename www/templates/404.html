@@ -7,14 +7,3 @@
     </body>
 </html>
  
- 
-
- LOAD DATA INFILE 'd:/leon/download/TecDoc/csv/article_cross.csv'
-INTO TABLE article_cross
-COLUMNS TERMINATED BY ','
-ENCLOSED BY '"' 
-LINES TERMINATED BY '\n'
-IGNORE 1 LINES
-
-mysqldump -uroot -proot    --skip-comments   tecdoc article_acc > article_acc.sql
-

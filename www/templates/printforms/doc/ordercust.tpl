@@ -20,7 +20,9 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код продавця</th>
+
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Штрих-код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Бренд</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;"> </th>
 
@@ -33,7 +35,9 @@
         <td align="right">{{no}}</td>
         <td>{{itemname}}</td>
         <td>{{itemcode}}</td>
-        <td>{{custcode}}</td>
+      
+        <td>{{barcode}}</td>
+        <td>{{brand}}</td>
         <td>{{msr}}</td>
         <td valign="top">{{desc}}</td>
         <td align="right">{{quantity}}</td>
