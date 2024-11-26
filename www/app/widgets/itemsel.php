@@ -10,7 +10,6 @@ use Zippy\Html\Panel;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
 
-use Zippy\Html\DataList\Column;
 use Zippy\Html\DataList\DataTable;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -58,10 +57,10 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new Column('itemname', "Назва", true, true, true));
-        $table->AddColumn(new Column('item_code', "Артикул", true, true, false));
-        $table->AddColumn(new Column('bar_code', "Штрих-код", true, true, false));
-        $table->AddColumn(new Column('manufacturer', "Бренд", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
 

@@ -3,9 +3,12 @@
 <body>
 
 <div class="row  ">
-    <div class="col-12  col-sm-10 col-md-4    col-xl-3  ">
+    <div class="col-12    ">
         <h4>Налаштування </h4>
         <form zippy="cform">
+         <div class="row  ">
+          <div class="col-12    col-md-4    col-xl-3 ">
+          <h5>Загальнi налаштування</h5>  
             <div class="form-group   ">
                 <label for="defpricetype">Тип цiны </label>
                 <select class="form-control" zippy="defpricetype">
@@ -14,17 +17,19 @@
                 <small class="form-text text-muted">Цiна для показу в списку </small>
             </div>
             <div class="form-group   ">
-                <label for="defstore">Склад </label>
+                <label for="defstore">Склад за зпиоачанням </label>
                 <select class="form-control" zippy="defstore">
                     <option value='0'>По всiх</option>
                 </select>
 
             </div>
-     <div class="form-group">
-                <label for="ipath">Шлях до зображень
-                    <input type="text" zippy="ipath" class="form-control"/>
-                    <small class="form-text text-muted">  URL каталога зображень. Якщо  зображення  не  використовуются  залишити пустим </small>
-            </div> 
+              <div class="form-group">
+                <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-4"/>
+    
+            </div>            
+           </div>
+            <div class="col-12    col-md-4    col-xl-3 ">
+     
             <h5>Параметри з'єднання з   БД TECDOC</h5>           
             <div class="form-group row">
                 <label class="col-5 col-form-label" for="dbhost">Хост </label> 
@@ -50,17 +55,26 @@
                   <input type="text" zippy="dbpass" class="form-control"/>
                 </div>
             </div>
-
-     
-
- 
-
             <div class="form-group">
-                <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-4"/>
+                <label for="ipath">Шлях до зображень
+                    <input type="text" zippy="ipath" class="form-control"/>
+                    <small class="form-text text-muted">  URL каталога зображень. Якщо  зображення  не  використовуются  залишити пустим </small>
+            </div> 
+          <div class="form-group">
+                <input type="submit" value="Зберегти" zippy="savetd" class="btn   btn-primary mr-4"/>
 
                 <a zippy="chconn">Перевiрити з'єднання </a>
 
             </div>
+           </div>
+            
+           <div class="col-12    col-md-4    col-xl-3 ">
+         
+         
+          </div> 
+        
+
+         
         </form>
     </div>
 </div>

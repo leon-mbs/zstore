@@ -2,6 +2,10 @@
 
 namespace App\Modules\Tecdoc;
 
+
+/**
+* класс для  работы  с БД TECDOC
+*/
 class DBHelper
 {
     private $type = "passenger";
