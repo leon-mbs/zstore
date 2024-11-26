@@ -336,7 +336,8 @@ class DBHelper
         $res = $this->conn->Execute($sql);
         $list = array();
         foreach ($res as $row) {
-         
+            $row['ean']=$this->getEan($row['part_number'], $row[ 'brand_id'])  ;
+     
             $list[] = $row;
         }
         return $list;
@@ -385,7 +386,7 @@ class DBHelper
 
         $list = array();
         foreach ($res as $row) {
-           
+            $row['ean']=$this->getEan($row['part_number'], $row['$item->brand_id'])  ;
             $list[] = $row;
         }
 
@@ -424,7 +425,8 @@ class DBHelper
 
         $list = array();
         foreach ($res as $row) {
- 
+            $row['ean']=$barcode  ;
+
             $list[] = $row;
         }
 
@@ -436,15 +438,15 @@ class DBHelper
         $list = array();
         $number = $this->conn->qstr($number);
 
-        $r = $this->conn->GetOne("   SELECT   ArticleStateDisplayValue FROM articles WHERE DataSupplierArticleNumber=" . $number . " AND supplierId=" . $brand_id);
-        if (strlen($r) > 0) {
-            $list['Статус'] = $r;
-        }
+    //    $r = $this->conn->GetOne("   SELECT   ArticleStateDisplayValue FROM articles WHERE DataSupplierArticleNumber=" . $number . " AND supplierId=" . $brand_id);
+     //   if (strlen($r) > 0) {
+      //      $list['Статус'] = $r;
+     //   }
 
-        $r = $this->conn->GetOne("   SELECT   ean FROM article_ean WHERE datasupplierarticlenumber=" . $number . " AND supplierid=" . $brand_id);
-        if (strlen($r) > 0) {
-            $list['Штрих-код'] = $r;
-        }
+   //     $r = $this->conn->GetOne("   SELECT   ean FROM article_ean WHERE datasupplierarticlenumber=" . $number . " AND supplierid=" . $brand_id);
+     //   if (strlen($r) > 0) {
+    //        $list['Штрих-код'] = $r;
+     //   }
 
 
         $res = $this->conn->Execute("SELECT   description, displayvalue FROM article_attributes WHERE datasupplierarticlenumber=" . $number . "  AND supplierId=" . $brand_id);
@@ -587,4 +589,10 @@ class DBHelper
 
         return $list;
     }
+    
+    public function getEan($number, $brand_id){
+        $r = $this->conn->GetOne("   SELECT   ean FROM article_ean WHERE datasupplierarticlenumber=" . $number . " AND supplierid=" . $brand_id);
+        return $r ?? '';
+    }
+    
 }

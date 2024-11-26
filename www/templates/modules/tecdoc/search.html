@@ -108,9 +108,11 @@
             <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> К поиску</a>
             <table class="table table-sm">
                 <tr>
-                    <th>Бренд</th>
-                    <th>Код</th>
                     <th>Назва</th>
+                    <th>Бренд</th>
+                    <th>Артикул</th>
+                    <th>Штрих-код</th>
+                  
                     <th class="text-right">На складi</th>
                     <th class="text-right">Цiна</th>
                     <th>  </th>
@@ -118,13 +120,16 @@
                   
                 </tr>
                 <tr zippy="itemlist">
+                    <td zippy="lname"></td>
                     <td zippy="lbrand"></td>
                     <td zippy="lcode"></td>
-                    <td zippy="lname"></td>
+                    <td zippy="bcode"></td>
+
                     <td class="text-right"><span zippy="qty" class="badge badge-info badge-pill"></span></td>
                     <td class="text-right"><span zippy="price" class="badge badge-info badge-pill"></span></td>
                     <td>
-                       <span title="Додати в заявку постачальнику" zippy="tobay" style="cursor:pointer"   > В закупку</span>
+                       <span title="Додати в заявку постачальнику" zippy="tobay" style="cursor:pointer"   >В закупку</span>
+                       <span title="Додати в довiдник  ТМЦ" zippy="toitems" style="cursor:pointer" > В довiдник ТМЦ</span>
                     </td>
                     <td>
                         <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>

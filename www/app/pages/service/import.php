@@ -422,46 +422,9 @@ class Import extends \App\Pages\Base
             // $image="http://local.zstore/assets/images/logo.png";
 
             if (strlen($image) > 0) {
-                $file = file_get_contents($image) ;
-                if(strlen($file)==0) {
-                    continue;
-                }
-                $tmp = tempnam(sys_get_temp_dir(), "import") ;
-                file_put_contents($tmp, $file) ;
+                $item->saveImage($image);
 
-                $imagedata = getimagesize($tmp);
-                if ($imagedata== false) {
-                    continue;
-
-                }
-                $image = new \App\Entity\Image();
-                $image->content = file_get_contents($tmp);
-                $image->mime = $imagedata['mime'];
-
-                if ($imagedata[0] != $imagedata[1]) {
-                    $thumb = new \App\Thumb($tmp);
-                    if ($imagedata[0] > $imagedata[1]) {
-                        $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
-                    }
-                    if ($imagedata[0] < $imagedata[1]) {
-                        $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
-                    }
-
-
-                    $image->content = $thumb->getImageAsString();
-                    $thumb->resize(512, 512);
-                    $image->thumb = $thumb->getImageAsString();
-                    $thumb->resize(128, 128);
-
-                    $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
-                }
-        
-
-                $image->save();
-                $item->image_id = $image->image_id;
                 $item->save();
-
-
 
             }
 

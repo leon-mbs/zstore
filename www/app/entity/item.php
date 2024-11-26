@@ -986,4 +986,56 @@ class Item extends \ZCL\DB\Entity
         return;    
      } 
      
+    /**
+    * аплоад  в БД изображения  по  url
+    * 
+    * @param mixed $url
+    * @param mixed $dothumb
+    */
+    public   function saveImage($url,$dothumb=true) {
+        $file = file_get_contents($url) ;
+        if(strlen($file)==0) {
+           return 0  ;
+        }
+        $tmp = tempnam(sys_get_temp_dir(), "import") ;
+        file_put_contents($tmp, $file) ;
+
+        $imagedata = getimagesize($tmp);
+        if ($imagedata== false) {
+            return 0  ;
+
+        }
+        $image = new \App\Entity\Image();
+        $image->content = file_get_contents($tmp);
+        $image->mime = $imagedata['mime'];
+
+        if ($imagedata[0] != $imagedata[1]) {
+            $thumb = new \App\Thumb($tmp);
+            if ($imagedata[0] > $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+            }
+            if ($imagedata[0] < $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+            }
+
+
+            $image->content = $thumb->getImageAsString();
+  
+            $thumb->resize(512, 512);
+            if($dothumb) {
+               $image->thumb = $thumb->getImageAsString();
+               $thumb->resize(128, 128);
+               $this->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());               
+            }   
+
+           
+        }
+
+
+        $image->save(); 
+        $this->image_id=$image->image_id ;
+        return $image->image_id;       
+    }
+     
+     
 }

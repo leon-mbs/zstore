@@ -22,6 +22,7 @@ use \Zippy\Binding\PropertyBinding as Bind;
 class Search extends \App\Pages\Base
 {
     public $_ds   = array();
+    
   
 
     public function __construct() {
@@ -74,7 +75,7 @@ class Search extends \App\Pages\Base
 
         $this->add(new Panel('tview'))->setVisible(false);
 
-       
+        
 
         $this->onTab($this->tpanel->tabl);
         $this->onType($tablist->search1form->stype);
@@ -289,6 +290,7 @@ class Search extends \App\Pages\Base
             $item->supplier_name = $row['supplier_name'];
             $item->product_name = $row['product_name'];
             $item->brand_id = $row['brand_id'];
+            $item->ean = $row['ean'];
             $this->_ds[] = $item;
         }
         $this->tlist->itemlist->Reload();
@@ -321,6 +323,7 @@ class Search extends \App\Pages\Base
             $item->supplier_name = $row['supplier_name'];
             $item->product_name = $row['product_name'];
             $item->brand_id = $row['brand_id'];
+            $item->ean = $row['ean'];
             $this->_ds[] = $item;
         }
         $this->tlist->itemlist->Reload();
@@ -352,6 +355,7 @@ class Search extends \App\Pages\Base
             $item->supplier_name = $row['supplier_name'];
             $item->product_name = $row['product_name'];
             $item->brand_id = $row['brand_id'];
+            $item->ean = $row['ean'];
             $this->_ds[] = $item;
         }
         $this->tlist->itemlist->Reload();
@@ -375,21 +379,35 @@ class Search extends \App\Pages\Base
 
     public function listOnRow($row) {
         $item = $row->getDataItem();
+         
+        
         $row->add(new Label("lbrand", $item->supplier_name));
         $row->add(new Label("lcode", $item->part_number));
+        $row->add(new Label("bcode", $item->ean));
         $row->add(new Label("lname", $item->product_name));
         $item = Item::getFirst("manufacturer=" . Item::qstr($item->supplier_name) . " and item_code=" . Item::qstr($item->part_number));
+        
         $onstore= ($item instanceof Item);
+        
+        
         $row->add(new Label("qty"))->setVisible($onstore);
         $row->add(new Label("price"))->setVisible($onstore);
-        $row->add(new Label("tobay"))->setVisible($onstore);
+        $row->add(new Label("tobay"))->setVisible(false);
+      
+      
         if ($onstore) {
-            $row->tobay->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
             
             $modules = System::getOptions("modules");
             $row->qty->setText(H::fqty($item->getQuantity($modules['td_store'])));
             $row->price->setText(H::fa($item->getPrice($modules['td_pricetype'], $modules['td_store'])));
+            $bayed = \App\Entity\Entry::findCnt("quantity > 0 and item_id=".$item->item_id);   //закупался
+            if($bayed >0) {
+                $row->tobay->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
+                $row->tobay->setVisible(true);    
+            }
+            
         }
+        $row->add(new ClickLink("toitems",$this,'toitemsOnClick'))->setVisible(!$onstore);
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
      
 
@@ -534,8 +552,31 @@ class Search extends \App\Pages\Base
 
     }
  
-    public function tobayOnClick($sender) {
-        
+    public function toitemsOnClick($sender) {
+         $part = $sender->getOwner()->getDataItem();
+         $modules = System::getOptions("modules");
+
+         $api = new DBHelper($this->tpanel->tablist->search1form->stype->getValue());
+         $ret = $api->getImage($part->part_number, $part->brand_id);
+     
+
+    
+        $item = new \App\Entity\Item();
+        $item->itemname=  $part->product_name;
+        $item->item_code=  $part->part_number;
+        $item->manufacturer =  $part->supplier_name;
+        $item->bar_code=  $part->ean;
+        if (strlen($ret['PictureName'] ??'') > 0) {
+          
+            $url =  $modules['td_ipath'] .  $ret['supplierId'].'/'. $ret['PictureName'];
+            $item->saveImage($url);
+
+        }        
+                 
+        $item->save();
+        $this->setSuccess('Додано') ;
+        $this->tlist->itemlist->Reload();
+              
     }
 
 }
