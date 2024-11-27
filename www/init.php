@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL & ~E_WARNING & ~E_STRICT & ~E_NOTICE & ~E_DEPRECATED);
+error_reporting(E_ALL & ~E_WARNING   & ~E_NOTICE & ~E_DEPRECATED);
 
 
 $http = 'http';
