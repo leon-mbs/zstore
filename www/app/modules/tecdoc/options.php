@@ -33,11 +33,16 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('dbname', $modules['td_dbname']));
         $form->add(new TextInput('dbuser', $modules['td_dbuser']));
         $form->add(new TextInput('dbpass', $modules['td_dbpass']));
+        $form->add(new TextInput('bpkey', $modules['td_bpkey']));
+        $form->add(new TextInput('omkey', $modules['td_omkeys']));
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['td_pricetype']));
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $modules['td_store']));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
+        $form->add(new SubmitButton('savetd'))->onClick($this, 'saveOnClick');
+        $form->add(new SubmitButton('savebp'))->onClick($this, 'saveOnClick');
+        $form->add(new SubmitButton('saveom'))->onClick($this, 'saveOnClick');
         $form->add(new ClickLink('chconn'))->onClick($this, 'chconnOnClick');
 
     }
@@ -55,18 +60,29 @@ class Options extends \App\Pages\Base
     public function saveOnClick($sender) {
 
         $modules = System::getOptions("modules");
+        
+        if($sender->id=="save")  {
+            $modules['td_pricetype'] = $this->cform->defpricetype->getValue();
+            $modules['td_store'] = $this->cform->defstore->getValue();
+        }
+        
+        if($sender->id=="save")  {
+            $modules['td_ipath'] = $this->cform->ipath->getText();
+            $modules['td_ipath']  = rtrim($modules['td_ipath'],'/' ) .'/';
+            $modules['td_dbhost'] = $this->cform->dbhost->getText();
+            $modules['td_dbname'] = $this->cform->dbname->getText();
+            $modules['td_dbuser'] = $this->cform->dbuser->getText();
+            $modules['td_dbpass'] = $this->cform->dbpass->getText();
+        }
 
-        $modules['td_pricetype'] = $this->cform->defpricetype->getValue();
-        $modules['td_store'] = $this->cform->defstore->getValue();
-        $modules['td_ipath'] = $this->cform->ipath->getText();
-        $modules['td_ipath']  = rtrim($modules['td_ipath'],'/' ) .'/';
-        $modules['td_dbhost'] = $this->cform->dbhost->getText();
-        $modules['td_dbname'] = $this->cform->dbname->getText();
-        $modules['td_dbuser'] = $this->cform->dbuser->getText();
-        $modules['td_dbpass'] = $this->cform->dbpass->getText();
+        if($sender->id=="savebp")  {
+            $modules['td_bpkey'] = trim( $this->cform->bpkey->getText() );
+        }
 
-
-
+        if($sender->id=="saveom")  {
+            $modules['td_omkey'] = trim($this->cform->omkey->getText() );
+        }
+ 
         System::setOptions("modules", $modules);
         $this->setSuccess('saved');
     }
