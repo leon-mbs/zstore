@@ -6,6 +6,7 @@ namespace App\Entity;
  * Класс-сущность  категория товара
  *
  * @table=item_cat
+ * @view=item_cat_view
  * @keyfield=cat_id
  */
 class Category extends \ZCL\DB\Entity

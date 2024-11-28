@@ -15,8 +15,7 @@ class CustItem extends \ZCL\DB\Entity
         $this->custitem_id = 0;
 
     }
-
-
+ 
 
     protected function afterLoad() {
 

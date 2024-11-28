@@ -124,7 +124,7 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function Reload() {
-        $this->_catlist = Category::find('', 'cat_name', -1, -1, "item_cat.*,    coalesce((  select     count(*)   from     items i   where     (i.cat_id = item_cat.cat_id)),0) AS qty, coalesce ((select count(*) from item_cat ic where  ic.parent_id= item_cat.cat_id),0) as  childs ");
+        $this->_catlist = Category::find('', 'cat_name', -1, -1 );
         foreach (Category::findFullData() as $c) {
             $this->_catlist[$c->cat_id]->full_name = $c->full_name;
             $this->_catlist[$c->cat_id]->parents = $c->parents;
@@ -168,7 +168,7 @@ class CategoryList extends \App\Pages\Base
         }
 
         $row->add(new Label('p_name', $parent));
-        $row->add(new Label('qty', $item->qty))->setVisible(($item->qty ?? 0) > 0);
+        $row->add(new Label('qty', $item->itemscnt))->setVisible(($item->itemscnt ?? 0) > 0);
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
@@ -182,8 +182,8 @@ class CategoryList extends \App\Pages\Base
         $row->add(new ClickLink("up", $this, "OnMove"))->setVisible($this->_rn>0)   ;
         $row->add(new ClickLink("down", $this, "OnMove"))->setVisible($this->_rn<count($this->_catlist)-1)   ;
         $this->_rn++;
-        $row->add(new ClickLink('prices',$this, 'pricesOnClick'))->setVisible(($item->qty ?? 0) > 0);
-        $row->add(new ClickLink('cfields',$this, 'cfieldsOnClick'))->setVisible($item->childs==0);
+        $row->add(new ClickLink('prices',$this, 'pricesOnClick'))->setVisible(($item->itemscnt ?? 0) > 0);
+        $row->add(new ClickLink('cfields',$this, 'cfieldsOnClick'))->setVisible($item->childcnt==0);
 
     }
 
@@ -530,7 +530,8 @@ class CategoryList extends \App\Pages\Base
         $this->categorytable->setVisible(false);       
 
     }
-     public function OnAddCF($sender) {
+  
+    public function OnAddCF($sender) {
         $ls = new \App\DataItem();
         $ls->code = '';
         $ls->name = '';

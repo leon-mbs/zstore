@@ -71,7 +71,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
 
-        $catlist = Category::findArray("cat_name", "cat_id not in (select COALESCE(parent_id,0) from item_cat )", "cat_name");
+        $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
@@ -137,7 +137,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new TextInput('editnotes'));
 
-        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0))->onChange($this,"onCat");
+        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "childcnt=0", "cat_name"), 0))->onChange($this,"onCat");
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));

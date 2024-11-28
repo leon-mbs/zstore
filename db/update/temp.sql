@@ -21,11 +21,11 @@ SELECT
     COALESCE((SELECT
       COUNT(*)
     FROM item_cat ic2
-    WHERE ic2.cat_id = ic.parent_id), 0) AS childcnt
+    WHERE ic.cat_id = ic2.parent_id), 0) AS childcnt
 FROM item_cat ic   ;
 
 
-DROP VIEW IF EXISTS item_cat_view  ;
+DROP VIEW IF EXISTS custitems_view  ;
 DROP TABLE IF EXISTS custitems  ;
 
 CREATE TABLE custitems (
@@ -36,7 +36,7 @@ CREATE TABLE custitems (
   price decimal(10, 2) NOT NULL DEFAULT '0.00',
   cust_code varchar(255) NOT NULL,
   brand varchar(255) NOT NULL,
-  details vaTEXT DEFAULT NULL,
+  details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
   PRIMARY KEY (custitem_id),
   KEY item_id (item_id)
@@ -52,19 +52,21 @@ SELECT
   s.customer_id AS customer_id,
   s.quantity AS quantity,
   s.price AS price,
-  s.updatedon AS updatedon,
   s.cust_code AS cust_code,
-  s.cust_itemname AS cust_itemname,
+  s.brand AS brand,
   s.details AS details,
+  s.updatedon AS updatedon,
   i.itemname AS itemname,
   i.item_code AS item_code,
+  i.cat_id AS cat_id,
   c.customer_name AS customer_name
 FROM ((custitems s
-  LEDT JOIN items i
+  LEFT JOIN items i
     ON ((s.item_id = i.item_id)))
   JOIN customers c
     ON ((s.customer_id = c.customer_id)))
-WHERE ((i.disabled <> 1) AND (c.status <> 1)) ;
+WHERE ((i.disabled <> 1)
+AND (c.status <> 1));
 
  
 delete  from  options where  optname='version' ;
