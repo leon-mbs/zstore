@@ -46,7 +46,9 @@ class PromoCode extends \ZCL\DB\Entity
         $this->used = (string)($xml->used[0]);
         $this->showcheck = (int)($xml->showcheck[0]);
         $this->refbonus = (int)($xml->refbonus[0]);
-   
+    
+        $this->enddate = strtotime($this->enddate);
+  
         parent::afterLoad();
     }
 

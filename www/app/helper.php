@@ -261,7 +261,7 @@ class Helper
         }
         if(($modules['tecdoc'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => "Пошук (tecdoc)"));
+              //  $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => "Пошук (tecdoc)"));
             }
         }
         return $mdata;
@@ -1472,13 +1472,18 @@ class Helper
         
         $migrationpcode = \App\Helper::getKeyVal('migrationpcode');  
         if($migrationpcode != "done" && version_compare($vdb,'6.12.0')>=0) {
-          //  Helper::log("Міграція pcode");
+            Helper::log("Міграція pcode");
          
-         //   \App\Helper::setKeyVal('migrationpcode', "done");           
+            \App\Helper::setKeyVal('migrationpcode', "done");           
+         
         
             try {
           
-               
+              foreach( \App\Entity\PromoCode::find("" ) as $p) {
+                  $p->enddate = $p->dateto ; 
+                  $p->save();
+              }   
+                     
                        
             } catch(\Throwable $ee) {
          

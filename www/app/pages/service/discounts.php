@@ -707,10 +707,10 @@ class Discounts extends \App\Pages\Base
            
         }    
         
-        $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
+        $row->add(new  Label("pdateto", $p->enddate > 0 ? H::fd($p->enddate) :''));
         $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
         
-        if($p->dateto > 0 && $p->dateto < time()) {
+        if($p->enddate > 0 && $p->enddate < time()) {
            $p->disabled = 1;
         }
         $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
@@ -774,8 +774,8 @@ class Discounts extends \App\Pages\Base
         $pc->disc = doubleval($sender->peditdisc->getText() );
         $pc->discf = doubleval($sender->peditdiscf->getText() );
         $pc->refbonus = intval( $sender->peditbonus->getText() );
-        $pc->dateto = $sender->peditdate->getDate();
-        if($pc->dateto >0 && $pc->dateto < time()) {
+        $pc->enddate = $sender->peditdate->getDate();
+        if($pc->enddate >0 && $pc->enddate < time()) {
            $this->setError('Неправильна дата') ;
            return; 
         }
@@ -1080,10 +1080,7 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
      
         $list = [];
               
-        foreach(PromoCode::findYield("disabled=0", "   id desc ", $count, $start) as $p) {
-            if($p->dateto > 0 && $p->dateto < time()) {
-               continue;
-            }      
+        foreach(PromoCode::findYield("disabled=0  and coalesce(enddate,now()) >=now()", "   id desc ", $count, $start) as $p) {
             $list[] = $p; 
         }
         
