@@ -88,9 +88,10 @@ class CronTask extends \ZCL\DB\Entity
                   
                 
                 //очистка товаров у поставщика
-                $days = H::getKeyValint('CI_optclean') ;
+                $days = $options['ci_clean'] ?? 0;
                 if($days >0) {
                     $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
+                    $conn->Execute("optimize table custitems ")   ;
                 }
 
                 

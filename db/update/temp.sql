@@ -35,6 +35,7 @@ CREATE TABLE custitems (
   quantity decimal(10, 3) DEFAULT NULL,
   price decimal(10, 2) NOT NULL DEFAULT '0.00',
   cust_code varchar(255) NOT NULL,
+  cust_name varchar(255) NOT NULL,
   brand varchar(255) NOT NULL,
   details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
@@ -48,6 +49,7 @@ VIEW custitems_view
 AS
 SELECT
   s.custitem_id AS custitem_id,
+  s.cust_name AS cust_name,
   s.item_id AS item_id,
   s.customer_id AS customer_id,
   s.quantity AS quantity,
@@ -65,8 +67,7 @@ FROM ((custitems s
     ON ((s.item_id = i.item_id)))
   JOIN customers c
     ON ((s.customer_id = c.customer_id)))
-WHERE ((i.disabled <> 1)
-AND (c.status <> 1));
+ ;
 
  
 delete  from  options where  optname='version' ;

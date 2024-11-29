@@ -29,6 +29,7 @@ use Zippy\Html\Link\SubmitLink;
 class CustItems extends \App\Pages\Base
 {
     private $_item;
+    private $_edit;
 
 
     public function __construct($add = false) {
@@ -40,14 +41,17 @@ class CustItems extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
 
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
+        $this->filter->add(new TextInput('searchbrand'));
+        $this->filter->add(new DropDownChoice('searchcat', [] , 0));
 
-        $this->filter->add(new DropDownChoice('searchcust', Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
-
+        $this->filter->add(new DropDownChoice('searchcust', [], 0));
+        $this->updateFilter();
+        
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->itemtable->add(new ClickLink('imports'))->onClick($this, 'onImport');
         $this->itemtable->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->itemtable->add(new ClickLink('options', $this, 'onOption'));
 
         $this->itemtable->add(new Form('listform'));
 
@@ -58,36 +62,38 @@ class CustItems extends \App\Pages\Base
 
 
         $this->add(new Form('itemdetail'))->setVisible(false);
-        $this->itemdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
+        $this->itemdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCust');
+        $this->itemdetail->add(new TextInput('editbrand'));
         $this->itemdetail->add(new TextInput('editprice'));
         $this->itemdetail->add(new TextInput('editqty'));
         $this->itemdetail->add(new TextInput('editcustcode'));
-        $this->itemdetail->add(new TextArea('editdescription'));
-        $this->itemdetail->add(new DropDownChoice('editcust', Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
+        $this->itemdetail->add(new TextInput('editcustname'));
+        $this->itemdetail->add(new TextArea('editcomment'));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+  
 
-
+       
         $this->add(new Form('importform'))->setVisible(false);
-        $this->importform->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
-        $this->importform->onSubmit($this, 'onLoad');
-
-
+        $this->importform->add(new Button('back'))->onClick($this, 'cancelOnClick');
         $this->importform->add(new \Zippy\Html\Form\File("filename"));
         $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G');
+        $this->importform->add(new DropDownChoice("colcustname", $cols));
         $this->importform->add(new DropDownChoice("colcustcode", $cols));
-        $this->importform->add(new DropDownChoice("colitemcode", $cols));
+        $this->importform->add(new DropDownChoice("colbrand", $cols));
         $this->importform->add(new DropDownChoice("colqty", $cols));
         $this->importform->add(new DropDownChoice("colprice", $cols));
         $this->importform->add(new DropDownChoice("colcomment", $cols));
         $this->importform->add(new CheckBox("passfirst"));
-        $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
-
-        
-        $this->add(new Form('options'))->onSubmit($this, 'OnOption');
-        $this->options->add(new CheckBox("optupdate"))->setChecked(H::getKeyValBool('CI_optupdate'));
-        $this->options->add(new TextInput('optclean',H::getKeyVal('CI_optclean')));
+        $this->importform->add(new AutocompleteTextInput("icust"))->onText($this, 'OnAutoCust');
+        $this->importform->add(new SubmitButton('loadimport'))->onClick($this, 'onLoad');
+     
+        $this->add(new Form('optionsform'))->onSubmit($this, 'OnSaveOption');
+        $this->optionsform->setVisible(false); 
+        $this->optionsform->add(new CheckBox("optupdate"))  ;
+        $this->optionsform->add(new TextInput('optclean' ));
+        $this->optionsform->add(new Button('cancelo'))->onClick($this, 'cancelOnClick');
                                             
                                    
         $this->itemtable->listform->itemlist->Reload();
@@ -100,6 +106,8 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('cust_code', $item->cust_code));
+        $row->add(new Label('cust_name', $item->cust_name));
+        $row->add(new Label('brand', $item->brand));
         $row->add(new Label('customer_name', $item->customer_name));
         $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
@@ -113,27 +121,8 @@ class CustItems extends \App\Pages\Base
 
     }
 
-
-    public function editOnClick($sender) {
-        $this->_copy = false;
-        $item = $sender->owner->getDataItem();
-        $this->_item = CustItem::load($item->custitem_id);
-
-        $this->itemtable->setVisible(false);
-        $this->itemdetail->setVisible(true);
-
-        $this->itemdetail->edititem->setKey($this->_item->item_id);
-        $this->itemdetail->edititem->setText($this->_item->itemname);
-        $this->itemdetail->editprice->setText($this->_item->price);
-        $this->itemdetail->editqty->setText($this->_item->quantity);
-        $this->itemdetail->editcustcode->setText($this->_item->cust_code);
-        $this->itemdetail->editcust->setValue($this->_item->customer_id);
-        $this->itemdetail->editdescription->setText($this->_item->comment);
-
-    }
-
     public function addOnClick($sender) {
-        $this->_copy = false;
+        $this->_edit = false;
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
@@ -144,52 +133,100 @@ class CustItems extends \App\Pages\Base
 
     }
 
+    public function editOnClick($sender) {
+        $this->_edit = true;
+        $item = $sender->owner->getDataItem();
+        $this->_item = CustItem::load($item->custitem_id);
+
+        $this->itemtable->setVisible(false);
+        $this->itemdetail->setVisible(true);
+
+        $this->itemdetail->editcust->setKey($this->_item->customer_id);
+        $this->itemdetail->editcust->setText($this->_item->customer_name);
+        $this->itemdetail->editcustname->setText($this->_item->cust_name);
+        $this->itemdetail->editprice->setText($this->_item->price);
+        $this->itemdetail->editqty->setText($this->_item->quantity);
+        $this->itemdetail->editcustcode->setText($this->_item->cust_code);
+        $this->itemdetail->editbrand->setText($this->_item->brand);
+        $this->itemdetail->editcomment->setText($this->_item->comment);
+
+    }
+
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(false);
-    }
-
-    public function OnFilter($sender) {
+        $this->optionsform->setVisible(false);
+        $this->updateFilter();
         $this->itemtable->listform->itemlist->Reload();
+        
     }
 
     public function OnSubmit($sender) {
         if (false == \App\ACL::checkEditRef('CustItems')) {
             return;
         }
-
-        $this->_item->item_id = $this->itemdetail->edititem->getKey();
-        $this->_item->customer_id = $this->itemdetail->editcust->getValue();
+        $this->_item->customer_id = $this->itemdetail->editcust->getKey();
         $this->_item->price = $this->itemdetail->editprice->getText();
         $this->_item->quantity = $this->itemdetail->editqty->getText();
-        $this->_item->cust_code = $this->itemdetail->editcustcode->getText();
-        $this->_item->comment = $this->itemdetail->editdescription->getText();
+        $this->_item->cust_code = trim($this->itemdetail->editcustcode->getText());
+        $this->_item->cust_name = $this->itemdetail->editcustname->getText();
+        $this->_item->brand = trim($this->itemdetail->editbrand->getText() );
+        $this->_item->comment = $this->itemdetail->editcomment->getText();
         $this->_item->updatedon = time();
 
 
-        if ($this->_item->item_id == 0) {
-            $this->setError('Не обрано товар');
-            return;
-        }
+    
         if ($this->_item->customer_id == 0) {
             $this->setError('Не обрано постачальника');
             return;
         }
 
-
-
+        
+        $it= Item::getFirst("item_code='{$this->_item->cust_code}' and manufacturer='{$this->_item->brand}'") ;
+        if($it != null) {
+           $this->_item->item_id= $it->item_id; 
+        }
         $this->_item->save();
 
 
-        $this->itemtable->listform->itemlist->Reload(false);
-
-        $this->itemtable->setVisible(true);
-        $this->itemdetail->setVisible(false);
+        if($this->_edit) {
+            $this->itemtable->setVisible(true);
+            $this->itemdetail->setVisible(false);
+            $this->itemtable->listform->itemlist->Reload(false);
+             
+        }  else {
+            $this->itemdetail->editcustname->setText('');
+            $this->itemdetail->editprice->setText('');
+            $this->itemdetail->editqty->setText('');
+            $this->itemdetail->editcustcode->setText('');
+            $this->itemdetail->editbrand->setText('');
+            $this->itemdetail->editcomment->setText('');
+            $this->_item = new CustItem();            
+        }
+    }
+    
+    public function OnFilter($sender) {
+        $this->itemtable->listform->itemlist->Reload();
     }
 
+    public function updateFilter( ) {
+       $this->filter->searchcust->setOptionList( Customer::findArray("customer_name", "  customer_id in (select customer_id from custitems )", "customer_name") );
+       $this->filter->searchcat->setOptionList( Category::findArray("cat_name", "  cat_id in (select cat_id from custitems )", "cat_name") );
+       $conn = \ZDB\DB::getConnect();
+     
+       $d=[];
+       foreach($conn->GetCol("select distinct(brand) from custitems order  by brand ") as $b){
+           if(strlen($b ??'') >0) {
+              $d[]=$b; 
+           }
+       }
 
-
+       $this->filter->searchbrand->setDataList($d);
+       
+       
+    }
+  
     public function OnDelAll($sender) {
 
         $ids = array();
@@ -214,18 +251,15 @@ class CustItems extends \App\Pages\Base
 
 
         $this->itemtable->listform->itemlist->Reload();
-
+  
     }
 
-    public function OnAutoItem($sender) {
+    public function OnAutoCust($sender) {
         $text = trim($sender->getText());
-        $stext = Item::qstr('%' . $text . '%');
-        $text = Item::qstr($text);
+        $stext = Customer::qstr('%' . $text . '%');
 
-        return Item::findArray("itemname", " (itemname like {$stext} or item_code = {$text}    ) ");
+        return Customer::findArray("customer_name", "  customer_name like {$stext}   ");
     }
-
-
 
     public function onImport($sender) {
         $this->itemtable->setVisible(false);
@@ -235,19 +269,20 @@ class CustItems extends \App\Pages\Base
     }
 
     public function onLoad($sender) {
-        $cust = $sender->icust->getValue();
-        $passfirst = $sender->passfirst->isChecked();
-        $colcustcode = $sender->colcustcode->getValue();
-        $colitemcode = $sender->colitemcode->getValue();
-        $colprice = $sender->colprice->getValue();
-        $colqty = $sender->colqty->getValue();
-        $colcomment = $sender->colcomment->getValue();
-        if ($colcustcode === '0') {
+        $cust =  $this->importform->icust->getKey();
+        $passfirst =  $this->importform->passfirst->isChecked();
+        $colcustname =  $this->importform->colcustname->getValue();
+        $colcustcode =  $this->importform->colcustcode->getValue();
+        $colbrand =  $this->importform->colbrand->getValue();
+        $colprice =  $this->importform->colprice->getValue();
+        $colqty =  $this->importform->colqty->getValue();
+        $colcomment =  $this->importform->colcomment->getValue();
+        if ( $this->importform === '0') {
             $this->setError('Не вказано колонку з кодом постачальника');
             return;
         }
-        if ($colitemcode === '0') {
-            $this->setError('Не вказано колонку з артикулом');
+        if ($colcustname === '0') {
+            $this->setError('Не вказано колонку з назвою');
             return;
         }
         if ($colprice === '0') {
@@ -259,7 +294,7 @@ class CustItems extends \App\Pages\Base
             return;
         }
 
-        $file = $sender->filename->getFile();
+        $file =  $this->importform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
             $this->setError('Не обрано файл');
@@ -297,8 +332,9 @@ class CustItems extends \App\Pages\Base
             if($qty==0) {
                 $qty=null;
             }
+            $custname =  trim($row[$colcustname])   ;
             $comment =  trim($row[$colcomment])   ;
-            $itemcode =  trim($row[$colitemcode])   ;
+            $brand =  trim($row[$colbrand])   ;
             $custcode =  trim($row[$colcustcode])   ;
 
             if(strlen($custcode)==0) {
@@ -306,28 +342,26 @@ class CustItems extends \App\Pages\Base
             }
 
 
-            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode))   ;
+            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode). " and cust_name=".CustItem::qstr($custname))   ;
 
             if($item == null) {
-                if(strlen($itemcode)==0) {
-                    continue;
-                }
-                $it = Item::getFirst('item_code='. Item::qstr($itemcode)) ;
-                if($it==null) {
-                    continue;
-                }
-
                 $item = new CustItem();
-                $item->customer_id = $cust;
-                $item->cust_code = $custcode;
-                $item->item_id = $it->item_id;
             }
+              
+            $item->customer_id = $cust;
+            $item->cust_name = $custname;
+            $item->cust_code = $custcode;
+            $item->item_id = $it->item_id;            
             $item->price = $price;
             $item->quantity = $qty;
             $item->comment =$comment;
+            $item->brand =$brand;
             $item->updatedon = time();
 
-
+            $it = Item::getFirst("item_code='{$item->cust_code}' and manufacturer='{$item->brand}'") ;
+            if($it != null) {
+                $item->item_id= $it->item_id; 
+            }
             $item->save();
             $cnt++;
 
@@ -339,12 +373,30 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(false);
 
+        $this->updateFilter();
 
     }
 
-    public function OnOption($sender) {
-       H::setKeyVal('CI_optupdate',$sender->optupdate->isChecked()) ;
-       H::setKeyVal('CI_optclean',$sender->optclean->getText()) ;
+    public function onOption($sender) {
+        $common = System::getOptions("common");
+   
+        $this->optionsform->optupdate->setChecked($common['ci_update'] ??0) ;
+        $this->optionsform->optclean->getText($common['ci_clean'] ??'') ;
+      
+        $this->itemtable->setVisible(false);
+        $this->optionsform->setVisible(true);
+         
+    }
+
+    public function OnSaveOption($sender) {
+        $common = System::getOptions("common");
+   
+        $common['ci_update'] = $this->optionsform->optupdate->isChecked() ? 1:0 ;
+        $common['ci_clean'] = $this->optionsform->optclean->getText()  ;
+  
+        $this->itemtable->setVisible(true);
+        $this->optionsform->setVisible(false);
+   
     }
     
     public function oncsv($sender) {
@@ -356,18 +408,18 @@ class CustItems extends \App\Pages\Base
         foreach ($list as $item) {
             $i++;
 
-            $data['A' . $i] = $item->itemname;
-            $data['B' . $i] = $item->item_code;
-            $data['C' . $i] = $item->cust_code;
-            $data['D' . $i] = $item->customer_name;
+            $data['A' . $i] = $item->customer_name;
+            $data['B' . $i] = $item->custname;
+            $data['D' . $i] = $item->cust_code;
             $data['E' . $i] = $item->quantity;
             $data['F' . $i] = $item->price;
-            $data['G' . $i] = $item->comment;
+            $data['G' . $i] = $item->brand;
+            $data['H' . $i] = $item->comment;
+       
         }
 
         H::exportExcel($data, $header, 'custitems.xlsx');
     }
-
 
 
 }
@@ -380,7 +432,7 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $this->page = $page;
     }
 
-    private function getWhere($p = false) {
+    private function getWhere( ) {
 
         $form = $this->page->filter;
         $where = "1=1 ";
@@ -388,12 +440,12 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $cat = $form->searchcat->getValue();
         $cust = $form->searchcust->getValue();
 
-        if ($cat != 0) {
+        if ($cat > 0) {
 
             $where = $where . " and cat_id=" . $cat;
 
         }
-        if ($cust != 0) {
+        if ($cust  > 0) {
 
             $where = $where . " and customer_id=" . $cust;
 
@@ -403,7 +455,7 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
 
             $skey = CustItem::qstr('%' . $key . '%');
             $key = CustItem::qstr($key);
-            $where = $where  = "   (itemname like {$skey} or item_code = {$key}  or cust_code = {$key} )  ";
+            $where = $where  = "   (cust_name like {$skey} or vust_code = {$key}  or cust_code = {$key} )  ";
 
         }
 
@@ -417,7 +469,7 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $sortfield = "itemname asc";
+        $sortfield = "cust_name asc";
 
         $l = CustItem::find($this->getWhere(), $sortfield, $count, $start);
 

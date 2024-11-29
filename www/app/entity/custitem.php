@@ -13,7 +13,6 @@ class CustItem extends \ZCL\DB\Entity
 {
     protected function init() {
         $this->custitem_id = 0;
-
     }
  
 
@@ -21,15 +20,23 @@ class CustItem extends \ZCL\DB\Entity
 
         $this->updatedon = strtotime($this->updatedon);
 
-
-        //распаковываем  данные из item detail
-        $xml = simplexml_load_string($this->detail);
-        $this->itemprice = (string)($xml->price1[0]);
-
+        $d = @unserialize($this->details);
+        if(!is_array($d)){
+           $d=[]; 
+        }
+        $this->comment = $d['comment'];
 
         parent::afterLoad();
     }
 
-
+    protected function beforeSave() {
+        parent::beforeSave();
+        
+        $d = []    ;
+        $d['comment'] = $this->comment;
+   
+        $this->details = serialize($d)  ;
+        return true;
+    }
 
 }

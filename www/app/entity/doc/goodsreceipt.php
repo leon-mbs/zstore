@@ -183,7 +183,7 @@ class GoodsReceipt extends Document
         }
 
         
-        if(H::getKeyValBool('CI_optupdate')==true) {
+        if(($common['ci_update'] ?? 0 )==1) {
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;

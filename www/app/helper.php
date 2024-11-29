@@ -1468,6 +1468,26 @@ class Helper
             }           
            
         }
+        
+        
+        $migrationpcode = \App\Helper::getKeyVal('migrationpcode');  
+        if($migrationpcode != "done" && version_compare($vdb,'6.12.0')>=0) {
+          //  Helper::log("Міграція pcode");
+         
+         //   \App\Helper::setKeyVal('migrationpcode', "done");           
+        
+            try {
+          
+               
+                       
+            } catch(\Throwable $ee) {
+         
+                $logger->error($ee->getMessage());
+               
+            }  
+        }
+            
+        
     }
 
 
