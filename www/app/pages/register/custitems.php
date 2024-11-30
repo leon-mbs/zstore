@@ -79,9 +79,10 @@ class CustItems extends \App\Pages\Base
         $this->add(new Form('importform'))->setVisible(false);
         $this->importform->add(new Button('back'))->onClick($this, 'cancelOnClick');
         $this->importform->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G');
+        $cols = array(0=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D','E'=>'E','F'=>'F','G'=>'G','H'=>'H');
         $this->importform->add(new DropDownChoice("colcustname", $cols));
         $this->importform->add(new DropDownChoice("colcustcode", $cols));
+        $this->importform->add(new DropDownChoice("colcustbarcode", $cols));
         $this->importform->add(new DropDownChoice("colbrand", $cols));
         $this->importform->add(new DropDownChoice("colqty", $cols));
         $this->importform->add(new DropDownChoice("colprice", $cols));
@@ -213,7 +214,8 @@ class CustItems extends \App\Pages\Base
             $this->itemdetail->editcustcode->setText('');
             $this->itemdetail->editbrand->setText('');
             $this->itemdetail->editcomment->setText('');
-            $this->_item = new CustItem();            
+            $this->_item = new CustItem(); 
+
         }
     }
     
@@ -284,6 +286,7 @@ class CustItems extends \App\Pages\Base
         $passfirst =  $this->importform->passfirst->isChecked();
         $colcustname =  $this->importform->colcustname->getValue();
         $colcustcode =  $this->importform->colcustcode->getValue();
+        $colcustbarcode =  $this->importform->colcustbarcode->getValue();
         $colbrand =  $this->importform->colbrand->getValue();
         $colprice =  $this->importform->colprice->getValue();
         $colqty =  $this->importform->colqty->getValue();
@@ -344,16 +347,17 @@ class CustItems extends \App\Pages\Base
                 $qty=null;
             }
             $custname =  trim($row[$colcustname])   ;
-            $comment =  trim($row[$colcomment])   ;
-            $brand =  trim($row[$colbrand])   ;
+            $comment  =  trim($row[$colcomment])   ;
+            $brand    =  trim($row[$colbrand])   ;
             $custcode =  trim($row[$colcustcode])   ;
+            $custbarcode =  trim($row[$colcustbarcode])   ;
 
             if(strlen($custcode)==0) {
                 continue;
             }
 
 
-            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode). " and cust_name=".CustItem::qstr($custname))   ;
+            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode) )   ;
 
             if($item == null) {
                 $item = new CustItem();
@@ -362,6 +366,7 @@ class CustItems extends \App\Pages\Base
             $item->customer_id = $cust;
             $item->cust_name = $custname;
             $item->cust_code = $custcode;
+            $item->bar_code = $custbarcode;
             $item->item_id = $it->item_id;            
             $item->price = $price;
             $item->quantity = $qty;
@@ -420,12 +425,14 @@ class CustItems extends \App\Pages\Base
             return   ;
         }
       
-      
+        try{
+            
         $item = $ci->findItem();
         if($item==null){
            $item = new  Item();
            $item->itemname =  $ci->cust_name;
            $item->item_code =  $ci->cust_code;
+           $item->bar_code =  $ci->bar_code;
            $item->manufacturer =  $ci->brand;
            
            $item->save(); 
@@ -446,6 +453,48 @@ class CustItems extends \App\Pages\Base
             $co->save();
         }      
       
+     
+        
+
+            $items=  $co->unpackDetails('detaildata');
+            $i=-1;
+            foreach($items as $k=>$v)  {
+                if($v->item_id == $item->item_id ) {
+                    $i = $k;
+                    break;
+                }
+            }
+            if($i==-1)  {
+            //  $item = \App\Entity\Item::load($item->item_id);
+     
+                $item->quantity = $ci->cartqty;
+                $item->price = $ci->price;
+                $item->rowid = $item->item_id;        
+                $items[$item->rowid]=$item;
+            }   else {
+                $items[$i]->quantity += $ci->cartqty;  
+            }
+            $total = 0;
+
+
+            foreach ($items as $item) {
+                $item->amount = \App\Helper::fa($item->price * $item->quantity);
+
+                $total = $total + $item->amount;
+            }
+            $co->amount= \App\Helper::fa($total);
+            
+            
+            $co->packDetails('detaildata',$items);
+            $co->save();
+
+            $ci->cartqty='';     
+            
+            return "";
+        } catch(\Exception $e){
+            return $e->getMessage() ;
+        }        
+        
         
     }
     
@@ -461,10 +510,11 @@ class CustItems extends \App\Pages\Base
 
             $data['A' . $i] = $item->customer_name;
             $data['B' . $i] = $item->custname;
-            $data['D' . $i] = $item->cust_code;
-            $data['E' . $i] = $item->quantity;
-            $data['F' . $i] = $item->price;
-            $data['G' . $i] = $item->brand;
+            $data['C' . $i] = $item->cust_code;
+            $data['D' . $i] = $item->bar_code;
+            $data['E' . $i] = $item->brand;
+            $data['F' . $i] = $item->quantity;
+            $data['G' . $i] = $item->price;
             $data['H' . $i] = $item->comment;
        
         }

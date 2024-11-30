@@ -761,6 +761,11 @@ class Item extends \ZCL\DB\Entity
         }
         
         $last++;
+          
+      //  $l =  gmp_init($last, 10);
+     //   $l=   gmp_add( $l , (gmp_init(1))) ;
+      //  $last = gmp_strval($l, 10);
+        
         $d=5;
         if( strlen( ''.$last) >$d){ //если не  влазит
            $d =  strlen( ''.$last); 

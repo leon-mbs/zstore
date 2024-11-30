@@ -498,8 +498,10 @@ class ItemList extends \App\Pages\Base
    
         
         if (\App\System::getOption("common", "autoarticle") == 1) {
-            if (strlen($this->_item->item_code) > 9  ) {
-                $this->setError('Надто довгий артикул');
+            $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
+             
+            if (strlen($digits) > ( strlen(''.PHP_INT_MAX)-1)  ) {    
+                $this->setError('Надто велике  число в артикулі');
                 return;
             }
         }          
