@@ -188,6 +188,7 @@ class CronTask extends \ZCL\DB\Entity
                     }
 
                 }
+             
                 if($task->tasktype==self::TYPE_AUTOSHIFT) {
                     $msg = unserialize($task->taskdata);
 

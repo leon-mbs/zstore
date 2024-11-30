@@ -37,6 +37,7 @@ CREATE TABLE custitems (
   cust_code varchar(255) NOT NULL,
   cust_name varchar(255) NOT NULL,
   brand varchar(255) NOT NULL,
+  bar_code varchar(64) NOT NULL,
   details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
   PRIMARY KEY (custitem_id),
@@ -50,23 +51,20 @@ AS
 SELECT
   s.custitem_id AS custitem_id,
   s.cust_name AS cust_name,
-  s.item_id AS item_id,
+  coalesce(s.item_id,0) AS item_id,
   s.customer_id AS customer_id,
   s.quantity AS quantity,
   s.price AS price,
   s.cust_code AS cust_code,
   s.brand AS brand,
+  s.bar_code AS bar_code,
   s.details AS details,
   s.updatedon AS updatedon,
-  i.itemname AS itemname,
-  i.item_code AS item_code,
-  i.cat_id AS cat_id,
   c.customer_name AS customer_name
-FROM ((custitems s
-  LEFT JOIN items i
-    ON ((s.item_id = i.item_id)))
+FROM   custitems s
+ 
   JOIN customers c
-    ON ((s.customer_id = c.customer_id)))
+    ON   s.customer_id = c.customer_id 
  ;
 
  

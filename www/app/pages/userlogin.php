@@ -154,8 +154,8 @@ class UserLogin extends \Zippy\Html\WebPage
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
-            $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-
+            $msg .= $_SERVER['REMOTE_ADDR'] ;
+         
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
 

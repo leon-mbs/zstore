@@ -6,7 +6,7 @@
     <body>
         <div class="row">
 
-            <div class="col-12  " zippy="itemtable">
+            <div class="col-12  col-xl-11" zippy="itemtable">
                 <h3>Товари у постачальникiв               </h3>
 
                 <div class="navbar nav">
@@ -42,23 +42,27 @@
                 <a zippy="options"  class="mr-4" ><i  class="fa fa-cog" ></i> Налаштування</a>
                   </div>
                 <form zippy="listform">
+
                     <table class="table table-hover  table-sm  ">
                         <tr>
                             <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                                 style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
                                     class="fa fa-check-double "></i></th>                    
                             <th>Постачальник</th>
-                            <th>Назва у пост.</th>
-                            <th>Код у пост.</th>
+                            <th>Найменування </th>
+                            <th>Артикул  </th>
                             <th>Бренд</th>
-                            <th>Нвзва ТМЦ</th>
-                            <th>Артикул ТМЦ</th>
+                            <th>Штрих-код</th>
+                    
                             <th class="text-right  ">Кiл.</th>
                             <th class="text-right  ">Цiна </th>
-                         
-                            <th>Примiтка</th>
-                            <th>Оновлено</th>
+                            <th>На дату</th>
+                            <th> </th>
+                            <th> </th>
+                           
                             <th></th>
+                            <th colspan="2" >В закупку</th>
+                          
                            
                         </tr>
                         <tr zippy="itemlist">
@@ -68,6 +72,7 @@
                             <td zippy="cust_name"></td>
                             <td zippy="cust_code"></td>
                             <td zippy="brand"></td>
+                            <td zippy="bar_code"></td>
                             <td zippy="itemname"></td>
                             
                             <td zippy="item_code"></td>
@@ -75,11 +80,23 @@
                             <td zippy="price" class="text-right  "></td>
                             <td zippy="updatedon"  ></td>
             
-                            <td zippy="comment">  </td>
+                            <td > <small zippy="comment"></small> </td>
+                            <td  > <span style="cursor:pointer" title="Вiдповiдний ТМЦ" zippy="onstore"><i class="fa fa-store"></i></span> </td>
                             <td  > <a zippy="edit"><i class="fa fa-edit"></i></a> </td>
+                            <td  align="right" > 
+                               <input placeholder="Кiлькiсть" zippy="cartqty" pattern="[0-9\.]+" class="form-control" style="width:50px" >
+                              
+                             </td>
+                             <td>
+                              <a title="Додати в  заявку постачальнику" zippy="cart"><i class="fa fa-shopping-cart"></i></a> 
+                             </td>
                         </tr>
-                        <tr><td colspan="8">
-                                <a class="text-danger" zippy="deleteall" title="Видалити"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
+                        <tr>
+                        <td  >
+                                <a   zippy="deleteall" title="Видалити"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
+                              </td>
+                        <td colspan="13">
+                                
                               </td>
                         </tr>                 
                     </table>
@@ -102,16 +119,24 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editcustname">Назва у постачальника</label>
+                                <label class="col-5 col-form-label" for="editcustname">Назва (у постачальника)</label>
                                 <div class="col-7">
                                    <input required="on"     class="form-control" zippy="editcustname"/>
                                  
                                 </div>
                             </div>
                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editcustcode">Код   у постачальника</label>
+                                <label class="col-5 col-form-label" for="editcustcode">Код  </label>
                                 <div class="col-7">
                                    <input required="on"     class="form-control" zippy="editcustcode"/>
+                                 
+                                </div>
+                            </div>
+                         
+                           <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editcustbarcode">Штрих-код</label>
+                                <div class="col-7">
+                                   <input required="on"     class="form-control" zippy="editcustbarcode"/>
                                  
                                 </div>
                             </div>
@@ -164,6 +189,17 @@
            <div class="col-12 col-md-5 col-xl-3">
                        
                     <form zippy="optionsform">
+                         <div class="form-group">
+                            <label for="compare">Шукати вiдповiдний ТМЦ в номенклатурi</label>
+                            <select zippy="compare" class="form-control">
+                               <option value="0">По артикулу+бренду</option>
+                               <option value="1">По штрих коду</option>
+                               <option value="2">Штрих код потiм артикул+бренд,</option>
+                            </select>
+                             <small  >Для закупки або оновлення цiн. Якщо ТМЦ не знайдено вiн буде  створений. 
+                             В разi  активного  використання прайсiв рiзних постачальникiв слiд  вимкнути в  довiднику  ТМЦ автоматичне  
+                             створення артикулу та/або перевiрку артикула  на  унiкальнiсть</small>                                  
+                        </div>                     
                         <div class="form-group">
                             <label for="optclean">Очищати неактуальне за</label>
                             <div style="width:100px;" class="input-group  ">

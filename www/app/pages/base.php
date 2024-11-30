@@ -475,8 +475,7 @@ class Base extends \Zippy\Html\WebPage
             return  "N/A";
         }
 
-        $report = new \App\Report('cinfo.tpl');
-        $header = [];
+         $header = [];
 
         $header['name'] = $c->customer_name;
         $header['phone'] = $c->phone;
@@ -538,17 +537,49 @@ class Base extends \Zippy\Html\WebPage
         $header['sumall'] = \App\Helper::fa($c->sumAll());
 
 
+        $report = new \App\Report('cinfo.tpl');
         $data = $report->generate($header);
         $data = str_replace("'", "`", $data)  ;
         //  $data = str_replace("\"","`",$data)  ;
 
-
-
-
+  
         return $data;
 
     }
 
+    public function getItemInfo($args, $post) {
+        $conn= \ZDB\DB::getConnect() ;
+
+        $it = \App\Entity\Item::load($args[0]);
+        if($it==null) {
+            return  "N/A";
+        }
+
+        
+        $header = [];
+
+        $header['itemname'] = $it->itemname;
+        $header['item_code'] = $it->item_code;
+        $header['bar_code'] = $it->bar_code;
+        $header['brand'] = $it->manufacturer;
+        $header['cat_name'] = $it->cat_name;
+        $header['qty'] =  Helper::fqty( $it->getQuantity() );
+        $header['price'] = Helper::fa(  $it->getPrice() );
+        $header['notes'] = str_replace("'","`",$it->notes) ;
+        $header['image'] = false;
+        if($it->image_id >0) {
+            $url=$it->getImageUrl();
+            $header['image'] = $url;
+        }
+    
+        $report = new \App\Report('iteminfo.tpl');
+        $data = $report->generate($header);
+        $data = str_replace("'", "`", $data)  ;
+        //  $data = str_replace("\"","`",$data)  ;
+ 
+        return $data;
+
+    }
 
     public function sendSMSCode($args, $post) {
 
@@ -581,7 +612,8 @@ class Base extends \Zippy\Html\WebPage
             if($args[1] > 0) {
                 $quantity = $args[1] ;
             }
-            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$d->customer_id}   and state=1 ","document_id desc") ;
+            //ищем незакрытую заявку
+            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$customer_id}   and state=1 ","document_id desc") ;
             
             if($co==null) {
                 $co = \App\Entity\Doc\Document::create('OrderCust');

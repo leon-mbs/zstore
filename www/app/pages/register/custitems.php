@@ -68,6 +68,7 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editqty'));
         $this->itemdetail->add(new TextInput('editcustcode'));
         $this->itemdetail->add(new TextInput('editcustname'));
+        $this->itemdetail->add(new TextInput('editcustbarcode'));
         $this->itemdetail->add(new TextArea('editcomment'));
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
@@ -93,6 +94,7 @@ class CustItems extends \App\Pages\Base
         $this->optionsform->setVisible(false); 
         $this->optionsform->add(new CheckBox("optupdate"))  ;
         $this->optionsform->add(new TextInput('optclean' ));
+        $this->optionsform->add(new DropDownChoice('compare',0 ));
         $this->optionsform->add(new Button('cancelo'))->onClick($this, 'cancelOnClick');
                                             
                                    
@@ -108,6 +110,7 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('cust_name', $item->cust_name));
         $row->add(new Label('brand', $item->brand));
+        $row->add(new Label('bar_code', $item->bar_code));
         $row->add(new Label('customer_name', $item->customer_name));
         $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
@@ -118,6 +121,12 @@ class CustItems extends \App\Pages\Base
 
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new Label('onstore'))->setVisible($item->item_id >0);
+        $row->onstore->setAttribute('onclick',"itemInfo({$item->item_id})");
+     
+
+        $row->add(new TextInput('cartqty', new \Zippy\Binding\PropertyBinding($item, 'cartqty'))) ;
+        $row->add(new SubmitLink('cart'))->onClick($this, 'cartOnClick');
 
     }
 
@@ -144,6 +153,7 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->editcust->setKey($this->_item->customer_id);
         $this->itemdetail->editcust->setText($this->_item->customer_name);
         $this->itemdetail->editcustname->setText($this->_item->cust_name);
+        $this->itemdetail->editcustbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editprice->setText($this->_item->price);
         $this->itemdetail->editqty->setText($this->_item->quantity);
         $this->itemdetail->editcustcode->setText($this->_item->cust_code);
@@ -171,6 +181,7 @@ class CustItems extends \App\Pages\Base
         $this->_item->quantity = $this->itemdetail->editqty->getText();
         $this->_item->cust_code = trim($this->itemdetail->editcustcode->getText());
         $this->_item->cust_name = $this->itemdetail->editcustname->getText();
+        $this->_item->bar_code = $this->itemdetail->editcustbarcode->getText();
         $this->_item->brand = trim($this->itemdetail->editbrand->getText() );
         $this->_item->comment = $this->itemdetail->editcomment->getText();
         $this->_item->updatedon = time();
@@ -183,7 +194,7 @@ class CustItems extends \App\Pages\Base
         }
 
         
-        $it= Item::getFirst("item_code='{$this->_item->cust_code}' and manufacturer='{$this->_item->brand}'") ;
+        $it =  $this->_item->findItem();
         if($it != null) {
            $this->_item->item_id= $it->item_id; 
         }
@@ -358,7 +369,7 @@ class CustItems extends \App\Pages\Base
             $item->brand =$brand;
             $item->updatedon = time();
 
-            $it = Item::getFirst("item_code='{$item->cust_code}' and manufacturer='{$item->brand}'") ;
+            $it =  $item->findItem();
             if($it != null) {
                 $item->item_id= $it->item_id; 
             }
@@ -381,23 +392,63 @@ class CustItems extends \App\Pages\Base
         $common = System::getOptions("common");
    
         $this->optionsform->optupdate->setChecked($common['ci_update'] ??0) ;
-        $this->optionsform->optclean->getText($common['ci_clean'] ??'') ;
+        $this->optionsform->optclean->setText($common['ci_clean'] ??'') ;
+        $this->optionsform->compare->setValue($common['ci_compare'] ?? 0) ;
       
         $this->itemtable->setVisible(false);
         $this->optionsform->setVisible(true);
          
     }
 
+    
     public function OnSaveOption($sender) {
         $common = System::getOptions("common");
    
         $common['ci_update'] = $this->optionsform->optupdate->isChecked() ? 1:0 ;
         $common['ci_clean'] = $this->optionsform->optclean->getText()  ;
-  
+        $common['ci_compare'] = $this->optionsform->compare->getValue()  ;
+        System::setOptions("common",$common)  ;
         $this->itemtable->setVisible(true);
         $this->optionsform->setVisible(false);
    
     }
+    
+    public function cartOnClick($sender) {
+        $ci =  $sender->getOwner()->getDataItem();
+        if(intval($ci->cartqty)==0)  {
+            $this->setError('Не задана кiлькiсть ') ;
+            return   ;
+        }
+      
+      
+        $item = $ci->findItem();
+        if($item==null){
+           $item = new  Item();
+           $item->itemname =  $ci->cust_name;
+           $item->item_code =  $ci->cust_code;
+           $item->manufacturer =  $ci->brand;
+           
+           $item->save(); 
+        }   
+          
+           
+        //ищем незакрытую заявку
+        $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$ci->customer_id}   and state=1 ","document_id desc") ;
+        
+        if($co==null) {
+            $co = \App\Entity\Doc\Document::create('OrderCust');
+            $co->document_number = $co->nextNumber();        
+            $co->customer_id = $ci->customer_id;        
+            $co->save();
+            $co->updateStatus(1);
+        }  else {
+            $co->document_date = time(); 
+            $co->save();
+        }      
+      
+        
+    }
+    
     
     public function oncsv($sender) {
         $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
