@@ -489,8 +489,8 @@ class ItemList extends \App\Pages\Base
         
         if (\App\System::getOption("common", "autoarticle") == 1) {
             if (strlen($this->_item->item_code) > 9  ) {
-                $this->setError('Надто довгий артикул');
-                return;
+              //  $this->setError('Надто довгий артикул');
+              //  return;
             }
         }          
         

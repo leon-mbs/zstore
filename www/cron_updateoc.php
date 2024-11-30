@@ -1,5 +1,7 @@
 <?php
 
+//$_SERVER['REMOTE_ADDR']    можно проверять  IP  откуда запрос
+
 //синхронизация  с  опенкартом
 
 require_once 'init.php';
