@@ -12,7 +12,9 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Form\Date;
@@ -36,6 +38,13 @@ class Admin extends \App\Pages\Base
         $this->_tvars['issms'] = $options['smstype']>0;
         $this->_tvars['isbot'] = strlen($options['tbtoken'])>0;
         
+        $form = $this->add(new Form('optionsform'));
+        $form->add(new CheckBox('capcha',$options['capcha']??0));
+        $form->add(new CheckBox('checkip',$options['checkip'] ??0));
+        $form->add(new TextArea('iplist',$options['iplist'] ??'' ));
+        $form->add(new SubmitButton('save'))->onClick($this, 'saveOptions');
+        
+        
         $form = $this->add(new Form('sendform'));
         $form->add(new TextInput('email'))  ;
         $form->add(new SubmitButton('sendemail'))->onClick($this, 'sendEmail');
@@ -47,6 +56,16 @@ class Admin extends \App\Pages\Base
     }   
 
     
+    public function saveOptions($sender) {
+        $options = System::getOptions("common");       
+        $options['capcha']  =  $this->optionsform->capcha->isChecked() ? 1 : 0;
+        $options['checkip']  =  $this->optionsform->checkip->isChecked() ? 1 : 0;
+        $options['iplist']  =  $this->optionsform->iplist->getText();
+
+
+        System::setOptions("common",$options) ;
+        $this->setSuccess('Збережено')  ;        
+    }
     public function sendEmail($sender) {
         $email = trim( $this->sendform->email->getText() );
         try{

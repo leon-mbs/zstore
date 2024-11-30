@@ -5,10 +5,9 @@
 */
  
  
-die; //убрать
+ die;// убрать для  работы
 
-//$_SERVER['REMOTE_ADDR']    можно проверять  IP  откуда запрос
-
+ \App\System::checkIP()  ;
  
 require_once 'init.php';
  

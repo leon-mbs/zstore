@@ -56,9 +56,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('showchat'));
 
 
-
-        $this->common->add(new CheckBox('capcha'));
-
+      
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
@@ -86,8 +84,7 @@ class Options extends \App\Pages\Base
         $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
 
         $this->common->usebranch->setChecked($common['usebranch']);
-        $this->common->capcha->setChecked($common['capcha']);
-
+       
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
@@ -374,8 +371,7 @@ class Options extends \App\Pages\Base
         $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
 
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
-        $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
-
+       
         System::setOptions("common", $common);
 
 

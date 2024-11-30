@@ -207,6 +207,25 @@ class System
         return  \App\Helper::getKeyVal('cron') ?? false;
     }
   
+  /**
+  * проверка  на  входязий IP
+  * 
+  */
+    public static function checkIP() {
+        $options=self::getOptions('common') ;
+        if($options['checkip']  != 1) return;
+        if($_SERVER['REMOTE_ADDR']=='127.0.0.1')  return;
+        
+        $list = explode("\n",$options['iplist'] ) ;
+        foreach($list as $ip) {
+            if(trim($ip)=== $_SERVER['REMOTE_ADDR']) {
+                return;
+            }
+        }
+
+        http_response_code(403) ;
+        die;
+    }
 
 
 }
