@@ -42,8 +42,8 @@ class CustItems extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new TextInput('searchbrand'));
-        $this->filter->add(new DropDownChoice('searchcat', [] , 0));
-
+        $this->filter->add(new TextInput('searchstore'));
+        
         $this->filter->add(new DropDownChoice('searchcust', [], 0));
         $this->updateFilter();
         
@@ -64,6 +64,7 @@ class CustItems extends \App\Pages\Base
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCust');
         $this->itemdetail->add(new TextInput('editbrand'));
+        $this->itemdetail->add(new TextInput('editstore'));
         $this->itemdetail->add(new TextInput('editprice'));
         $this->itemdetail->add(new TextInput('editqty'));
         $this->itemdetail->add(new TextInput('editcustcode'));
@@ -79,7 +80,8 @@ class CustItems extends \App\Pages\Base
         $this->add(new Form('importform'))->setVisible(false);
         $this->importform->add(new Button('back'))->onClick($this, 'cancelOnClick');
         $this->importform->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D','E'=>'E','F'=>'F','G'=>'G','H'=>'H');
+        $cols = array(0=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D','E'=>'E','F'=>'F','G'=>'G','H'=>'H','I'=>'I');
+        
         $this->importform->add(new DropDownChoice("colcustname", $cols));
         $this->importform->add(new DropDownChoice("colcustcode", $cols));
         $this->importform->add(new DropDownChoice("colcustbarcode", $cols));
@@ -106,11 +108,12 @@ class CustItems extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
-        $row->add(new Label('itemname', $item->itemname));
-        $row->add(new Label('item_code', $item->item_code));
+        
+     
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('cust_name', $item->cust_name));
         $row->add(new Label('brand', $item->brand));
+        $row->add(new Label('store', $item->store));
         $row->add(new Label('bar_code', $item->bar_code));
         $row->add(new Label('customer_name', $item->customer_name));
         $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
@@ -159,6 +162,7 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->editqty->setText($this->_item->quantity);
         $this->itemdetail->editcustcode->setText($this->_item->cust_code);
         $this->itemdetail->editbrand->setText($this->_item->brand);
+        $this->itemdetail->editstore->setText($this->_item->store);
         $this->itemdetail->editcomment->setText($this->_item->comment);
 
     }
@@ -184,6 +188,7 @@ class CustItems extends \App\Pages\Base
         $this->_item->cust_name = $this->itemdetail->editcustname->getText();
         $this->_item->bar_code = $this->itemdetail->editcustbarcode->getText();
         $this->_item->brand = trim($this->itemdetail->editbrand->getText() );
+        $this->_item->store = trim($this->itemdetail->editstore->getText() );
         $this->_item->comment = $this->itemdetail->editcomment->getText();
         $this->_item->updatedon = time();
 
@@ -212,7 +217,9 @@ class CustItems extends \App\Pages\Base
             $this->itemdetail->editprice->setText('');
             $this->itemdetail->editqty->setText('');
             $this->itemdetail->editcustcode->setText('');
+            $this->itemdetail->editcustbarcode->setText('');
             $this->itemdetail->editbrand->setText('');
+            $this->itemdetail->editstore->setText('');
             $this->itemdetail->editcomment->setText('');
             $this->_item = new CustItem(); 
 
@@ -225,7 +232,7 @@ class CustItems extends \App\Pages\Base
 
     public function updateFilter( ) {
        $this->filter->searchcust->setOptionList( Customer::findArray("customer_name", "  customer_id in (select customer_id from custitems )", "customer_name") );
-       $this->filter->searchcat->setOptionList( Category::findArray("cat_name", "  cat_id in (select cat_id from custitems )", "cat_name") );
+
        $conn = \ZDB\DB::getConnect();
      
        $d=[];
@@ -234,8 +241,16 @@ class CustItems extends \App\Pages\Base
               $d[]=$b; 
            }
        }
-
        $this->filter->searchbrand->setDataList($d);
+
+       $d=[];
+       foreach($conn->GetCol("select distinct(store) from custitems order  by store ") as $b){
+           if(strlen($b ??'') >0) {
+              $d[]=$b; 
+           }
+       }
+
+       $this->filter->searchstore->setDataList($d);
        
        
     }
@@ -288,6 +303,7 @@ class CustItems extends \App\Pages\Base
         $colcustcode =  $this->importform->colcustcode->getValue();
         $colcustbarcode =  $this->importform->colcustbarcode->getValue();
         $colbrand =  $this->importform->colbrand->getValue();
+        $colstore =  $this->importform->colstore->getValue();
         $colprice =  $this->importform->colprice->getValue();
         $colqty =  $this->importform->colqty->getValue();
         $colcomment =  $this->importform->colcomment->getValue();
@@ -349,6 +365,7 @@ class CustItems extends \App\Pages\Base
             $custname =  trim($row[$colcustname])   ;
             $comment  =  trim($row[$colcomment])   ;
             $brand    =  trim($row[$colbrand])   ;
+            $store    =  trim($row[$colstore])   ;
             $custcode =  trim($row[$colcustcode])   ;
             $custbarcode =  trim($row[$colcustbarcode])   ;
 
@@ -371,7 +388,8 @@ class CustItems extends \App\Pages\Base
             $item->price = $price;
             $item->quantity = $qty;
             $item->comment =$comment;
-            $item->brand =$brand;
+            $item->brand = $brand;
+            $item->store = $store;
             $item->updatedon = time();
 
             $it =  $item->findItem();
@@ -538,25 +556,26 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $form = $this->page->filter;
         $where = "1=1 ";
         $key = $form->searchkey->getText();
-        $cat = $form->searchcat->getValue();
+        $brand = $form->searchbrand->getText();
+        $store = $form->searchstore->getText();
+  
         $cust = $form->searchcust->getValue();
-
-        if ($cat > 0) {
-
-            $where = $where . " and cat_id=" . $cat;
-
-        }
         if ($cust  > 0) {
-
             $where = $where . " and customer_id=" . $cust;
-
+        }
+        $cust = $form->searchcust->getValue();
+        if (strlen($brand)  > 0) {
+            $where = $where . " and brand=" . CustItem::qstr($brand);  
+        }
+        if (strlen($store)  > 0) {
+            $where = $where . " and store=" . CustItem::qstr($store);  
         }
 
         if (strlen($key) > 0) {
 
             $skey = CustItem::qstr('%' . $key . '%');
             $key = CustItem::qstr($key);
-            $where = $where  = "   (cust_name like {$skey} or vust_code = {$key}  or cust_code = {$key} )  ";
+            $where  = "   (cust_name like {$skey} or cust_code = {$key}  or bar_code = {$key} )  ";
 
         }
 

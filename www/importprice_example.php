@@ -34,7 +34,8 @@ try{
                $citem->price = // цена  у поставшика 
                $citem->quantity = // количество  у поставшика
                $citem->comment = // примечание
-               $citem->brand =$brand; // бренд
+               $citem->brand = ; // бренд
+               $citem->store = ; // склад
                $it =  $citem->findItem();  // поиск  соответствия  в  справочнике  ТМЦ (алгоритм задается  в  журнале товары у  поставщмка )
                if($it != null) {
                    $citem->item_id= $it->item_id; 

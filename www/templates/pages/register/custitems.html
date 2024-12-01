@@ -17,17 +17,15 @@
                         <input class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
                         <label for="searchbrand">бренд</label>
                         <input class="form-control mr-2" type="text" zippy="searchbrand"  >
-                       
-                        <label for="searchcat">категорія</label>
-                        <select class="form-control mr-2" zippy="searchcat">
-                            <option value="0">Не вказано</option>
-                        </select>
+                     
                         <label for="searchcust">постачальник </label>
 
                         <select class="form-control   mr-2" zippy="searchcust">
                             <option   value="0">Не вказано</option>
                         </select>
-                 
+                        <label for="searchstore">склад</label>
+                        <input class="form-control mr-2" type="text" zippy="searchstore"  >
+                  
    
                         <input class="btn btn-success mr-4 " type="submit" value="ОК">
                         
@@ -51,11 +49,12 @@
                             <th>Постачальник</th>
                             <th>Найменування </th>
                             <th>Артикул  </th>
-                            <th>Бренд</th>
                             <th>Штрих-код</th>
+                            <th>Бренд</th>
+                            <th>Склад</th>
                     
-                            <th class="text-right  ">Кiл.</th>
                             <th class="text-right  ">Цiна </th>
+                            <th class="text-right  ">Кiл.</th>
                             <th>На дату</th>
                             <th> </th>
                             <th> </th>
@@ -71,13 +70,12 @@
                             <td zippy="customer_name"></td>
                             <td zippy="cust_name"></td>
                             <td zippy="cust_code"></td>
-                            <td zippy="brand"></td>
                             <td zippy="bar_code"></td>
-                            <td zippy="itemname"></td>
-                            
-                            <td zippy="item_code"></td>
-                            <td zippy="qty" class="text-right  "></td>
+                            <td zippy="brand"></td>
+                            <td zippy="store"></td>
+                       
                             <td zippy="price" class="text-right  "></td>
+                            <td zippy="qty" class="text-right  "></td>
                             <td zippy="updatedon"  ></td>
             
                             <td > <small zippy="comment"></small> </td>
@@ -95,7 +93,7 @@
                         <td  >
                                 <a   zippy="deleteall" title="Видалити"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
                               </td>
-                        <td colspan="13">
+                        <td colspan="14">
                                 
                               </td>
                         </tr>                 
@@ -144,6 +142,14 @@
                                 <label class="col-5 col-form-label" for="editbrand">Бренд</label>
                                 <div class="col-7">
                                    <input      class="form-control" zippy="editbrand"/>
+                                 
+                                </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editstore">Склад</label>
+                                <div class="col-7">
+                                   <input      class="form-control" zippy="editstore"/>
                                  
                                 </div>
                             </div>
@@ -281,6 +287,13 @@
                                 <label  class="col-8 col-form-label" for="colbrand">Бренд</label>
                                 <div class="col-4">
                                     <select   zippy="colbrand" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                     
+                          <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="colstore">Склад</label>
+                                <div class="col-4">
+                                    <select   zippy="colstore" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                     

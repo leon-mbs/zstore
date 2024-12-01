@@ -232,7 +232,7 @@ class CronTask extends \ZCL\DB\Entity
         $ret=[];
         $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
         $ret[self::TYPE_EVENTCUST]  = 'Подія з контрагентом ';
-        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ';
+        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ПРРО';
             
             
         return $ret;
