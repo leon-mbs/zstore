@@ -7,7 +7,7 @@
  
  die;// убрать для  работы
 
- \App\System::checkIP()  ;
+ \App\System::checkIP()  ;  //проверка  IP (задается  на станице  администратора)
  
 require_once 'init.php';
  
@@ -47,7 +47,7 @@ try{
 
    $writer->save($file);  
    
-   echo "<br> экспортировано  {$cnt} ТМЦ";      
+   echo "<br> Экспортовано  {$cnt} ТМЦ";      
     
 } catch (Exception $e) {
     echo $e->getMessage();

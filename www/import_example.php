@@ -8,7 +8,7 @@ require_once 'init.php';
  
  die;// убрать для  работы
 
- \App\System::checkIP()  ;
+ \App\System::checkIP()  ;  //проверка  IP (задается  на станице  администратора)
  
 try{              
         $file   ="";//путь  к  файлу
@@ -76,7 +76,7 @@ try{
                $item->save()  ;
                $cnt++;
         }
-        echo "<br> Импортировано {$cnt} ТМЦ";
+        echo "<br> Імпортовано {$cnt} ТМЦ";
         
 } catch (Exception $e) {
     echo $e->getMessage();

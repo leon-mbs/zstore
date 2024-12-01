@@ -367,7 +367,7 @@ class CustItems extends \App\Pages\Base
             $item->cust_name = $custname;
             $item->cust_code = $custcode;
             $item->bar_code = $custbarcode;
-            $item->item_id = $it->item_id;            
+                    
             $item->price = $price;
             $item->quantity = $qty;
             $item->comment =$comment;
