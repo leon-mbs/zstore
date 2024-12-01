@@ -37,7 +37,7 @@ class ARMPos extends \App\Pages\Base
     public $_paytype    = 0;
     private $pos;
     private $_doc        = null;
-    private $_rowid      = 0;
+    private $_rowid      = -1;
     private $_pt         = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
