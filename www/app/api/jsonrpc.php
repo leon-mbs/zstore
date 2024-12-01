@@ -11,7 +11,7 @@ abstract class JsonRPC
     public const VERSION = '2.0';
 
     public function Execute() {
-
+      
 
         $request = file_get_contents('php://input');
         // $request = '{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}';

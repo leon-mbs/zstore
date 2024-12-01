@@ -59,7 +59,8 @@ class Application extends \Zippy\WebApplication
         $api = explode('/', $uri);
 
         if ($api[0] == 'api' && count($api) > 1) {
-
+            \App\System::checkIP()  ;
+          
             $class = $api[1];
 
             try {

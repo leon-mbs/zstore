@@ -31,7 +31,7 @@ class Order extends \App\Pages\Base
     public $_tovarlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     /**
     * @param mixed $docid     редактирование

@@ -34,7 +34,7 @@ class GoodsReceipt extends \App\Pages\Base
     public $_itemlist  = [];
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     public $_sllist     = [];
     private $_rownumber = 1;
 

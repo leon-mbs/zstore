@@ -33,7 +33,7 @@ class IncomeService extends \App\Pages\Base
 {
     public $_servicelist = array();
     private $_doc;
-    private $_rowid       = 0;
+    private $_rowid       = -1;
     private $_basedocid   = 0;
 
     public $_itemlist     = array();
