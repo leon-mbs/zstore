@@ -22,12 +22,16 @@ CREATE TABLE contracts (
 
 CREATE TABLE custitems (
   custitem_id int(11) NOT NULL AUTO_INCREMENT,
-  item_id int(11) NOT NULL,
+  item_id int(11)   NULL,
   customer_id int(11) NOT NULL,
   quantity decimal(10, 3) DEFAULT NULL,
   price decimal(10, 2) NOT NULL DEFAULT '0.00',
   cust_code varchar(255) NOT NULL,
-  comment varchar(255) DEFAULT NULL,
+  cust_name varchar(255) NOT NULL,
+  brand varchar(255) NOT NULL,
+  store varchar(255) NOT NULL,
+  bar_code varchar(64) NOT NULL,
+  details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
   PRIMARY KEY (custitem_id),
   KEY item_id (item_id)
@@ -438,6 +442,7 @@ CREATE TABLE note_topicnode (
   topic_id int(11) NOT NULL,
   node_id int(11) NOT NULL,
   tn_id int(11) NOT NULL AUTO_INCREMENT,
+  islink  tinyint(1) DEFAULT 0,
   PRIMARY KEY (tn_id),
   KEY topic_id (topic_id),
   KEY node_id (node_id)
@@ -449,6 +454,7 @@ CREATE TABLE note_topics (
   content longtext NOT NULL,
   acctype smallint(4) DEFAULT '0',
   user_id int(11) NOT NULL,
+  ispublic   tinyint(1) DEFAULT 0 , 
   PRIMARY KEY (topic_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -770,31 +776,29 @@ FROM ((contracts co
     ON ((co.firm_id = f.firm_id))) ;
 
  
-
 CREATE
 VIEW custitems_view
 AS
 SELECT
   s.custitem_id AS custitem_id,
-  s.item_id AS item_id,
+  s.cust_name AS cust_name,
+  coalesce(s.item_id,0) AS item_id,
   s.customer_id AS customer_id,
   s.quantity AS quantity,
   s.price AS price,
-  s.updatedon AS updatedon,
   s.cust_code AS cust_code,
-  s.comment AS comment,
-  i.itemname AS itemname,
-  i.cat_id AS cat_id,
-  i.item_code AS item_code,
-  i.detail AS detail,
+  s.brand AS brand,
+  s.store AS store,
+  s.bar_code AS bar_code,
+  s.details AS details,
+  s.updatedon AS updatedon,
   c.customer_name AS customer_name
-FROM ((custitems s
-  JOIN items i
-    ON ((s.item_id = i.item_id)))
+FROM   custitems s
+ 
   JOIN customers c
-    ON ((s.customer_id = c.customer_id)))
-WHERE ((i.disabled <> 1)
-AND (c.status <> 1)) ;
+    ON   s.customer_id = c.customer_id 
+WHERE c.status <> 1 
+ ;
 
 CREATE
 VIEW customers_view
@@ -1372,7 +1376,7 @@ CREATE TABLE promocodes (
   code varchar(16) NOT NULL,
   type tinyint(4) NOT NULL,
   disabled tinyint(1) NOT NULL default 0,
-  
+  enddate  DATE DEFAULT null,  
   details text DEFAULT NULL,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8
@@ -1412,6 +1416,25 @@ FROM ((custacc e
   JOIN customers c
     ON ((c.customer_id = e.customer_id))) ;
     
+  
+ 
+
+CREATE VIEW item_cat_view
+AS
+SELECT
+  ic.cat_id AS cat_id,
+  ic.cat_name AS cat_name,
+  ic.detail AS detail,
+  ic.parent_id AS parent_id,
+  COALESCE((SELECT
+      COUNT(*)
+    FROM items i
+    WHERE i.cat_id = ic.cat_id), 0) AS itemscnt  ,
+    COALESCE((SELECT
+      COUNT(*)
+    FROM item_cat ic2
+    WHERE ic.cat_id = ic2.parent_id), 0) AS childcnt
+FROM item_cat ic   ;  
   
 
 INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
@@ -1534,7 +1557,7 @@ INSERT INTO options (optname, optvalue) VALUES('printer', 'YTo3OntzOjg6InBtYXhuY
 INSERT INTO options (optname, optvalue) VALUES('salary', 'YTo1OntzOjEzOiJjb2RlYmFzZWluY29tIjtzOjM6IjEwNSI7czoxMDoiY29kZXJlc3VsdCI7czozOiI5MDAiO3M6NDoiY2FsYyI7czoyMTk6InYyMDAgPSB2MTA1DQovL9C');
 INSERT INTO options (optname, optvalue) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0IjtzOjE6IjEiO3M6MTE6ImRlZmN1c3RuYW1lIjtzOjI5OiLQm9C10L7QvdC40LQg0JzQsNGA0YLRi9C90Y7QuiI7czo5OiJkZWZicmFuY2giO047czo5OiJvcmRlcnR5cGUiO3M6MToiMCI7czoxMjoiZGVmcHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czo1OiJlbWFpbCI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MTc6ItCd0LDRiCDQvNCw0LPQsNC3IjtzOjEyOiJjdXJyZW5jeW5hbWUiO3M6Njoi0YDRg9CxIjtzOjg6InVzZWxvZ2luIjtpOjA7czo5OiJ1c2VmaWx0ZXIiO2k6MDtzOjEzOiJjcmVhdGVuZXdjdXN0IjtpOjA7czoxMToidXNlZmVlZGJhY2siO2k6MDtzOjExOiJ1c2VtYWlucGFnZSI7aTowO3M6NzoiYWJvdXR1cyI7czoxNjoiUEhBK1BHSnlQand2Y0Q0PSI7czo3OiJjb250YWN0IjtzOjA6IiI7czo4OiJkZWxpdmVyeSI7czowOiIiO3M6NDoibmV3cyI7czowOiIiO3M6NToicGFnZXMiO2E6Mjp7czo0OiJuZXdzIjtPOjEyOiJBcHBcRGF0YUl0ZW0iOjI6e3M6MjoiaWQiO047czo5OiIAKgBmaWVsZHMiO2E6NDp7czo0OiJsaW5rIjtzOjQ6Im5ld3MiO3M6NToidGl0bGUiO3M6MTE6Imtra3JycnJycnJyIjtzOjU6Im9yZGVyIjtzOjE6IjIiO3M6NDoidGV4dCI7czoyNDoiUEhBK1pXVmxaV1ZsWldWbFBDOXdQZz09Ijt9fXM6ODoiYWJvdXRfdXMiO086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7TjtzOjk6IgAqAGZpZWxkcyI7YTo0OntzOjQ6ImxpbmsiO3M6ODoiYWJvdXRfdXMiO3M6NToidGl0bGUiO3M6OToi0J4g0L3QsNGBIjtzOjU6Im9yZGVyIjtzOjE6IjMiO3M6NDoidGV4dCI7czozMjoiUEhBK1BHSSswSjRnMEwzUXNOR0JQQzlpUGp3dmNEND0iO319fXM6NToicGhvbmUiO3M6MDoiIjtzOjEwOiJzYWxlc291cmNlIjtzOjE6IjAiO30=');
 INSERT INTO options (optname, optvalue) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
-INSERT INTO options (optname, optvalue) VALUES('version', '6.11.0');
+INSERT INTO options (optname, optvalue) VALUES('version', '6.12.0');
 
 
 

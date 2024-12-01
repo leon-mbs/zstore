@@ -67,6 +67,7 @@ FROM   custitems s
  
   JOIN customers c
     ON   s.customer_id = c.customer_id 
+WHERE c.status <> 1 
  ;
 
  

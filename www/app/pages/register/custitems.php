@@ -531,9 +531,10 @@ class CustItems extends \App\Pages\Base
             $data['C' . $i] = $item->cust_code;
             $data['D' . $i] = $item->bar_code;
             $data['E' . $i] = $item->brand;
-            $data['F' . $i] = $item->quantity;
-            $data['G' . $i] = $item->price;
-            $data['H' . $i] = $item->comment;
+            $data['F' . $i] = $item->store;
+            $data['G' . $i] = $item->quantity;
+            $data['H' . $i] = $item->price;
+            $data['I' . $i] = $item->comment;
        
         }
 
