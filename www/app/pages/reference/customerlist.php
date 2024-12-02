@@ -227,6 +227,7 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
+        $row->add(new Label('customeredrpou', $item->edrpou));
         $row->add(new Label('leadstatus', $item->leadstatus));
         $row->add(new Label('createddate', Helper::fd($item->createdon)));
         $row->add(new Label('docs', $item->docs))->setVisible($item->docs > 0);

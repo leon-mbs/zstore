@@ -441,6 +441,7 @@ class Base extends \Zippy\Html\WebPage
 
         $header['name'] = $c->customer_name;
         $header['phone'] = $c->phone;
+        $header['edrpou'] = $c->edrpou;
         $header['email'] = strlen($c->email) > 0 ?  "<a target=\"_blank\" href=\"mailtp:{$c->email}\">{$c->email}</a>"  : false;
         $header['address'] = strlen($c->address) > 0 ? $c->address : false;
         $header['telega'] = strlen($c->telega) > 0 ? "<a target=\"_blank\" href=\"tg://resolve?domain={$c->telega}\">{$c->telega}</a>" : false;  

@@ -126,6 +126,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colphone", $cols));
         $form->add(new DropDownChoice("colemail", $cols));
         $form->add(new DropDownChoice("colcity", $cols));
+        $form->add(new DropDownChoice("coledrpou", $cols));
         $form->add(new DropDownChoice("coladdress", $cols));
         $form->add(new \Zippy\Html\Form\File("cfilename"));
 
@@ -473,6 +474,7 @@ class Import extends \App\Pages\Base
         $colphone = $this->cform->colphone->getValue();
         $colemail = $this->cform->colemail->getValue();
         $colcity = $this->cform->colcity->getValue();
+        $coledrpou = $this->cform->coledrpou->getValue();
         $coladdress = $this->cform->coladdress->getValue();
 
         if ($colcname === '0') {
@@ -518,6 +520,7 @@ class Import extends \App\Pages\Base
                     'colname'    => $row[$colcname] ?? '',
                     'colphone'   => $row[$colphone] ?? '',
                     'colemail'   => $row[$colemail] ?? '',
+                    'coledrpou'   => $row[$coledrpoul] ?? '',
                     'colcity'    => $row[$colcity] ?? '',
                     'coladdress' => $row[$coladdress]  ?? ''
                 );
@@ -552,6 +555,9 @@ class Import extends \App\Pages\Base
                 }
                 if (strlen($row[$colemail] ?? '') > 0) {
                     $c->email = $row[$colemail];
+                }
+                if (strlen($row[$coledrpoul] ?? '') > 0) {
+                    $c->edrpou = $row[$coledrpou];
                 }
                 if (strlen($row[$colcity] ?? '') > 0) {
                     $c->city = $row[$colcity];

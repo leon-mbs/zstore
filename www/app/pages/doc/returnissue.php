@@ -451,7 +451,11 @@ class ReturnIssue extends \App\Pages\Base
 
         if($this->_basedocid >0) {
             $parent = Document::load($this->_basedocid) ;
-            $k = 1 - ($parent->amount - $total) / $parent->amount;
+            $k=1;
+            if($parent->amount >0) {
+                $k = 1 - ($parent->amount - $total) / $parent->amount;               
+            }
+
             $parentbonus = intval($parent->getBonus(false));   //списано
             if($parentbonus >0) {
                $retbonus = intval($parentbonus * $k) ;// доля
