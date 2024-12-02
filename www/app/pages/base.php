@@ -272,32 +272,7 @@ class Base extends \Zippy\Html\WebPage
 
         }
 
-
-        if((Session::getSession()->toasts ?? true) ==false) {
-           Session::getSession()->toasts = false;  
-           
-            if ($user->defstore == 0) {
-                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
-            }
-            if ($user->deffirm == 0) {
-                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
-            }
-            if ($user->defmf == 0) {
-                //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
-            }
-            if ($user->userlogin == "admin") {
-                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                    $this->addToastrWarn("Змініть у профілі пароль за замовчуванням"); 
-                }
-            }
-            if ($user->rolename == "admins") {
-                if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                    $this->addToastrInfo("Є непрочитані системні повідомлення"); 
-                }
-            }           
-                 
-           
-        }
+  
      
     //    $duration =  Session::getSession()->duration() ;
      //   $this->_tvars['showver'] = $duration < 60   ;
@@ -381,32 +356,15 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
-        $this->_tvars['alerterror'] = "";
-        $this->_tvars['alertinfo'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
-            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-
-            $this->goAnkor('topankor');
-
-
-        }
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
-            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
-
-            $this->goAnkor('topankor');
-
-
-        }
+        
     }
 
     protected function afterRender() {
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
-
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
-
         if (strlen(System::getWarnMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
         }
@@ -416,8 +374,12 @@ class Base extends \Zippy\Html\WebPage
         if (strlen(System::getInfoMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
-
-
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
+            $this->addJavaScript("$(\"#alerterror\").html('" . System::getErrorMsgTopPage() . "');$(\"#alerterror\").show(); window.location='#topankor' ", true);
+        }
+        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
+            $this->addJavaScript("$(\"#alertinfo\").html('" . System::getInfoMsgTopPage() . "');$(\"#alertinfo\").show();  window.location='#topankor'", true);
+        }
         $this->setError('');
         $this->setErrorTopPage('');
         $this->setInfoTopPage('');
@@ -665,11 +627,7 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    /**
-    *  всплывающая  подсказка
-    * 
-    * @param mixed $text
-    */
+    /*
     protected function addToastrInfo($text,$ajax=false) {
         $text = str_replace('`',"'",$text) ;
         $text = str_replace('`',"\"",$text) ;
@@ -703,7 +661,7 @@ class Base extends \Zippy\Html\WebPage
           $this->addAjaxResponse($js) ; 
         }
     }
-    
+    */
     //callPM
 
     public function vonTextCust($args, $post=null) {

@@ -24,6 +24,7 @@ try {
             \App\System::setUser($user);
             $user->lastactive = time();
             $user->save() ;
+            \App\System::checkUpdate()  ;
         }
     }
 

@@ -819,6 +819,10 @@ class Document extends \ZCL\DB\Entity
         return '';
     }
 
+    /**
+    * возвращает  условия для  ограничений  доступа...
+    * 
+    */
     public static function getConstraint() {
         $c = \App\ACL::getBranchConstraint();
         $user = System::getUser();
