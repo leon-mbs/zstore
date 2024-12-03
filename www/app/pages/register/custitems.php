@@ -307,7 +307,7 @@ class CustItems extends \App\Pages\Base
         $colprice =  $this->importform->colprice->getValue();
         $colqty =  $this->importform->colqty->getValue();
         $colcomment =  $this->importform->colcomment->getValue();
-        if ( $this->importform === '0') {
+        if ( $colcustcode === '0') {
             $this->setError('Не вказано колонку з кодом постачальника');
             return;
         }
