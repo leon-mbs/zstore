@@ -259,11 +259,7 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }
-        if(($modules['tecdoc'] ?? 0) == 1) {
-            if($role->rolename == 'admins' || strpos($role->modules, 'tecdoc') !== false) {
-              //  $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/Tecdoc/Search", 'meta_type' => 6, 'description' => "Пошук (tecdoc)"));
-            }
-        }
+      
         return $mdata;
     }
 
