@@ -240,9 +240,12 @@ CREATE TABLE equipments (
   eq_id int(11) NOT NULL AUTO_INCREMENT,
   eq_name varchar(255) DEFAULT NULL,
   detail mediumtext,
-  disabled tinyint(1) DEFAULT '0',
+  invnumber  varchar(255) DEFAULT NULL,
+  disabled tinyint(1) DEFAULT 0,
+  pa_id int(11) DEFAULT  NULL,
+  emp_id int(11) DEFAULT  NULL,
   description text,
-   branch_id INT NULL,  
+  branch_id INT NULL,  
   PRIMARY KEY (eq_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -478,6 +481,7 @@ CREATE TABLE options (
 CREATE TABLE parealist (
   pa_id int(11) NOT NULL AUTO_INCREMENT,
   pa_name varchar(255) NOT NULL,
+  notes varchar(255) DEFAULT NULL,
   PRIMARY KEY (pa_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -1435,8 +1439,69 @@ SELECT
     FROM item_cat ic2
     WHERE ic.cat_id = ic2.parent_id), 0) AS childcnt
 FROM item_cat ic   ;  
+
+
+CREATE
+VIEW equipments_view
+AS
+SELECT
+  e.eq_id AS eq_id,
+  e.eq_name AS eq_name,
+  e.detail AS detail,
+  e.disabled AS disabled,
+  e.description AS description,
+  e.branch_id AS branch_id,
+  e.invnumber AS invnumber,
+  e.pa_id AS pa_id,
+  e.emp_id AS emp_id,
+  p.pa_name AS pa_name,
+  employees.emp_name AS emp_name
+FROM ((equipments e
+  LEFT JOIN employees
+    ON ((employees.employee_id = e.emp_id)))
+  LEFT JOIN parealist p
+    ON ((p.pa_id = e.pa_id))); 
   
 
+CREATE TABLE  eqentry (
+  id int NOT NULL AUTO_INCREMENT,
+  eq_id int NOT NULL,
+  updatedon date NOT NULL,
+  qtype smallint NOT NULL,
+  amount decimal(10, 2) DEFAULT NULL,
+  emp_id int DEFAULT NULL,
+  pa_id int DEFAULT NULL,
+  document_id int DEFAULT NULL,
+  KEY (eq_id) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+ 
+CREATE
+VIEW eqentry_view
+AS
+SELECT
+  `e`.`id` AS `id`,
+  `e`.`eq_id` AS `eq_id`,
+  `e`.`updatedon` AS `updatedon`,
+  `e`.`qtype` AS `qtype`,
+  `e`.`amount` AS `amount`,
+  `e`.`emp_id` AS `emp_id`,
+  `e`.`pa_id` AS `pa_id`,
+  `e`.`document_id` AS `document_id`,
+  d.document_number,
+  em.emp_name,
+  pa.pa_name
+FROM `eqentry` `e`
+  JOIN `equipments` `eq`
+    ON `e`.`eq_id` = `eq`.`eq_id`
+   LEFT JOIN `employees` `em`
+    ON `e`.`emp_id` = `em`.`employee_id`
+   LEFT JOIN `parealist` `pa`
+    ON `e`.`pa_id` = `pa`.`pa_id`
+   LEFT JOIN `documents` d 
+   ON `e`.`document_id` = `d`.`document_id` ;
+  
+  
 INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
 INSERT INTO roles (rolename, acl) VALUES( 'admins', 'a:11:{s:13:\"noshowpartion\";N;s:15:\"showotherstores\";N;s:7:\"aclview\";N;s:7:\"acledit\";N;s:6:\"aclexe\";N;s:9:\"aclcancel\";N;s:8:\"aclstate\";N;s:9:\"acldelete\";N;s:7:\"widgets\";N;s:7:\"modules\";N;s:9:\"smartmenu\";s:3:\"8,2\";}');
 UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin' ;

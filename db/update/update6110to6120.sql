@@ -4,6 +4,10 @@ ALTER TABLE promocodes ADD enddate  DATE DEFAULT null;
 ALTER TABLE note_topics ADD ispublic   tinyint(1) DEFAULT 0;
 ALTER TABLE note_topicnode ADD islink  tinyint(1) DEFAULT 0;
 ALTER TABLE parealist ADD notes  varchar(255) DEFAULT NULL;
+ALTER TABLE equipments ADD pa_id int(11) DEFAULT  NULL;
+ALTER TABLE equipments ADD emp_id int(11) DEFAULT  NULL;
+ALTER TABLE equipments ADD invnumber  varchar(255) DEFAULT NULL;
+
  
 
 DROP VIEW IF EXISTS item_cat_view  ;
@@ -71,6 +75,71 @@ FROM   custitems s
 WHERE c.status <> 1 
  ;
 
+ 
+
+ 
+CREATE
+VIEW equipments_view
+AS
+SELECT
+  e.eq_id AS eq_id,
+  e.eq_name AS eq_name,
+  e.detail AS detail,
+  e.disabled AS disabled,
+  e.description AS description,
+  e.branch_id AS branch_id,
+  e.invnumber AS invnumber,
+  e.pa_id AS pa_id,
+  e.emp_id AS emp_id,
+  p.pa_name AS pa_name,
+  employees.emp_name AS emp_name
+FROM ((equipments e
+  LEFT JOIN employees
+    ON ((employees.employee_id = e.emp_id)))
+  LEFT JOIN parealist p
+    ON ((p.pa_id = e.pa_id))); 
+ 
+ 
+ 
+CREATE TABLE  eqentry (
+  id int NOT NULL AUTO_INCREMENT,
+  eq_id int NOT NULL,
+  updatedon date NOT NULL,
+  qtype smallint NOT NULL,
+  amount decimal(10, 2) DEFAULT NULL,
+  emp_id int DEFAULT NULL,
+  pa_id int DEFAULT NULL,
+  document_id int DEFAULT NULL,
+  KEY (eq_id) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+
+ 
+
+CREATE
+VIEW eqentry_view
+AS
+SELECT
+  `e`.`id` AS `id`,
+  `e`.`eq_id` AS `eq_id`,
+  `e`.`updatedon` AS `updatedon`,
+  `e`.`qtype` AS `qtype`,
+  `e`.`amount` AS `amount`,
+  `e`.`emp_id` AS `emp_id`,
+  `e`.`pa_id` AS `pa_id`,
+  `e`.`document_id` AS `document_id`,
+   d.document_number,
+   em.emp_name,
+   pa.pa_name
+FROM `eqentry` `e`
+  JOIN `equipments` `eq`
+    ON `e`.`eq_id` = `eq`.`eq_id`
+   LEFT JOIN `employees` `em`
+    ON `e`.`emp_id` = `em`.`employee_id`
+   LEFT JOIN `parealist` `pa`
+    ON `e`.`pa_id` = `pa`.`pa_id`
+   LEFT JOIN `documents` d 
+   ON `e`.`document_id` = `d`.`document_id` 
  
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.12.0'); 

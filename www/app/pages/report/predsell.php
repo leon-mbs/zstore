@@ -69,9 +69,14 @@ class PredSell extends \App\Pages\Base
         if (strlen($brand)>0) {
             $br = " and i.manufacturer= ".$conn->qstr($brand);
         }
-
+        $cs='';
+        $c = \App\ACL::getBranchIDsConstraint();
+        if($c != '') {
+           $cs = " and store_id in ( select store_id from stores where  branch_id in ({$c}) ) "; 
+           $c = " and d.branch_id in ({$c}) "; 
+        }
         $onstore = [];
-        $sql = "select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1) group  by item_id";
+        $sql = "select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1)  {$cs} group  by item_id";
         foreach ($conn->Execute($sql) as $r) {
             if ($r['q'] > 0) {
                 $onstore[$r['item_id']] = $r['q'];
@@ -103,10 +108,7 @@ class PredSell extends \App\Pages\Base
 
         $m1 = $conn->DBDate(strtotime('-1 month'));
         $m2 = $conn->DBDate(strtotime('-2 month'));
-        $c = \App\ACL::getBranchIDsConstraint();
-        if($c != '') {
-           $c = " and d.branch_id in ({$c}) "; 
-        }
+    
 
         $sql = "select i.item_id,i.itemname,i.item_code, 
         sum( case when d.document_date < now() and d.document_date >= {$m1} then 0-e.quantity else 0 end ) as m1,
