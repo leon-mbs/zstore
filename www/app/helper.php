@@ -1466,11 +1466,11 @@ class Helper
         }
         
         
-        $migrationpcode = \App\Helper::getKeyVal('migrationpcode');  
-        if($migrationpcode != "done" && version_compare($vdb,'6.12.0')>=0) {
-            Helper::log("Міграція pcode");
+        $migration12 = \App\Helper::getKeyVal('migration12');  
+        if($migration12 != "done" && version_compare($vdb,'6.12.0')>=0) {
+            Helper::log("Міграція 12");
          
-            \App\Helper::setKeyVal('migrationpcode', "done");           
+            \App\Helper::setKeyVal('migration12', "done");           
          
         
             try {
@@ -1478,6 +1478,10 @@ class Helper
               foreach( \App\Entity\PromoCode::find("" ) as $p) {
                   $p->enddate = $p->dateto ; 
                   $p->save();
+              }   
+              foreach( \App\Entity\Equipment::find("" ) as $e) {
+                  $e->invnumber = $p->code ; 
+                  $e->save();
               }   
                      
                        

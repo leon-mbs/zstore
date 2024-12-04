@@ -55,7 +55,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editserial'));
         $this->itemdetail->add(new DropDownChoice('editemp', Employee::findArray("emp_name", "", "emp_name"), 0));
         $this->itemdetail->add(new DropDownChoice('editpa', ProdArea::findArray("pa_name", "", "pa_name"), 0));
-        $this->itemdetail->add(new TextInput('editcode'));
+        $this->itemdetail->add(new TextInput('editinvnumber'));
         $this->itemdetail->add(new Date('editenterdate'));
         $this->itemdetail->add(new TextInput('editbalance'));
         $this->itemdetail->add(new TextArea('editdescription'));
@@ -73,8 +73,8 @@ class EqList extends \App\Pages\Base
     public function eqlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('eq_name', $item->eq_name));
-        $row->add(new Label('code', $item->code));
-        $row->add(new Label('serial', $item->serial));
+        $row->add(new Label('invnumber', $item->invnumber));
+      
         $row->add(new Label('branch', $this->_blist[$item->branch_id]));
 
         $row->add(new ClickLink('use'))->onClick($this, 'useOnClick');
@@ -149,7 +149,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editbranch->setValue($this->_item->branch_id);
 
         $this->itemdetail->editdescription->setText($this->_item->description);
-        $this->itemdetail->editcode->setText($this->_item->code);
+        $this->itemdetail->editinvnumber->setText($this->_item->invnumber);
         $this->itemdetail->editserial->setText($this->_item->serial);
         $this->itemdetail->editbalance->setText($this->_item->balance);
         $this->itemdetail->editenterdate->setDate($this->_item->enterdate);
@@ -191,7 +191,7 @@ class EqList extends \App\Pages\Base
         $this->_item->pa_id = $this->itemdetail->editpa->getValue();
         $this->_item->pa_name = $this->itemdetail->editpa->getValueName();
 
-        $this->_item->code = $this->itemdetail->editcode->getText();
+        $this->_item->invnumber = $this->itemdetail->editinvnumber->getText();
         $this->_item->setBalance ( doubleval($this->itemdetail->editbalance->getText()) );
         $this->_item->enterdate = $this->itemdetail->editenterdate->getDate();
         $this->_item->branch_id = $this->itemdetail->editbranch->getValue();

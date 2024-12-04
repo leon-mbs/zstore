@@ -23,7 +23,7 @@ class Equipment extends \ZCL\DB\Entity
         $this->detail .= "<emp_name>{$this->emp_name}</emp_name>";
         $this->detail .= "<pa_name>{$this->pa_name}</pa_name>";
         $this->detail .= "<serial>{$this->serial}</serial>";
-        $this->detail .= "<code>{$this->code}</code>";
+      //  $this->detail .= "<code>{$this->code}</code>";
         $this->detail .= "<balance>{$this->balance}</balance>";
         $this->detail .= "<eq>{$this->eq}</eq>";
         $this->detail .= "<pa_id>{$this->pa_id}</pa_id>";

@@ -1629,4 +1629,4 @@ INSERT INTO options (optname, optvalue) VALUES('version', '6.12.0');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbalans','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');
-INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationpcode','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration12','done');
