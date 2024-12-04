@@ -103,7 +103,10 @@ class PredSell extends \App\Pages\Base
 
         $m1 = $conn->DBDate(strtotime('-1 month'));
         $m2 = $conn->DBDate(strtotime('-2 month'));
-
+        $c = \App\ACL::getBranchIDsConstraint();
+        if($c != '') {
+           $c = " and d.branch_id in ({$c}) "; 
+        }
 
         $sql = "select i.item_id,i.itemname,i.item_code, 
         sum( case when d.document_date < now() and d.document_date >= {$m1} then 0-e.quantity else 0 end ) as m1,
@@ -113,7 +116,7 @@ class PredSell extends \App\Pages\Base
         join documents_view d on e.document_id = d.document_id 
         where  i.disabled <> 1 and d.meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ReturnIssue') 
         and i.cat_id={$cat} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
-        and {$tp}   {$br}
+        and {$tp}   {$br} {$c}  
         group  by i.item_id,i.itemname,i.item_code 
         order  by i.itemname 
         ";
