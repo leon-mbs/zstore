@@ -139,7 +139,7 @@ FROM `eqentry` `e`
    LEFT JOIN `parealist` `pa`
     ON `e`.`pa_id` = `pa`.`pa_id`
    LEFT JOIN `documents` d 
-   ON `e`.`document_id` = `d`.`document_id` 
+   ON `e`.`document_id` = `d`.`document_id`   ;
  
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.12.0'); 
