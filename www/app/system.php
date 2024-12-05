@@ -235,7 +235,10 @@ class System
     * 
     */
     public static function checkUpdate() {
-       
+        $options = System::getOptions("common");       
+        if($options['noupdate']==1) {
+           return;  
+        }
         $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
         if(strtotime('-7 day') < $lastcheck ) {
             return;

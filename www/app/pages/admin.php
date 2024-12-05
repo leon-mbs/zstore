@@ -40,6 +40,7 @@ class Admin extends \App\Pages\Base
         
         $form = $this->add(new Form('optionsform'));
         $form->add(new CheckBox('capcha',$options['capcha']??0));
+        $form->add(new CheckBox('noupdate',$options['noupdate']??0));
         $form->add(new CheckBox('checkip',$options['checkip'] ??0));
         $form->add(new TextArea('iplist',$options['iplist'] ??'' ));
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOptions');
@@ -59,6 +60,7 @@ class Admin extends \App\Pages\Base
     public function saveOptions($sender) {
         $options = System::getOptions("common");       
         $options['capcha']  =  $this->optionsform->capcha->isChecked() ? 1 : 0;
+        $options['noupdate']  =  $this->optionsform->noupdate->isChecked() ? 1 : 0;
         $options['checkip']  =  $this->optionsform->checkip->isChecked() ? 1 : 0;
         $options['iplist']  =  $this->optionsform->iplist->getText();
 

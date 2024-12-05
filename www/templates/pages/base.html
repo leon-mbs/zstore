@@ -1042,13 +1042,15 @@
                                             <p>&nbsp;&nbsp;Системний лог</p>
                                         </a>
                                     </li>
-                                  {{#isadmin}}                                    
+                                  {{#isadmin}}    
+                                    {{^noupdate}}                              
                                    <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Update" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;Оновлення</p>
                                         </a>
                                     </li>
+                                      {{/noupdate}}                              
                                  <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Admin" class="nav-link">
                                             <i class="fa    nav-icon"></i>
