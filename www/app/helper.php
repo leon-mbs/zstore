@@ -1480,7 +1480,11 @@ class Helper
                   $p->save();
               }   
               foreach( \App\Entity\Equipment::find("" ) as $e) {
-                  $e->invnumber = $p->code ; 
+                  $e->invnumber = $e->code ; 
+                  $e->pa_id = $e->pa_id_old ; 
+                  $e->emp_id = $e->emp_id_old ; 
+                  $e->invnumber = $e->code ; 
+               
                   $e->save();
               }   
                      

@@ -104,10 +104,15 @@ class PredSell extends \App\Pages\Base
 
             }
         }
-
+     
 
         $m1 = $conn->DBDate(strtotime('-1 month'));
         $m2 = $conn->DBDate(strtotime('-2 month'));
+    
+        $cati="";
+        if($cat > 0) {
+           $cati = " and i.cat_id=".$cat; 
+        }
     
 
         $sql = "select i.item_id,i.itemname,i.item_code, 
@@ -117,7 +122,7 @@ class PredSell extends \App\Pages\Base
         join items i on e.item_id = i.item_id 
         join documents_view d on e.document_id = d.document_id 
         where  i.disabled <> 1 and d.meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ReturnIssue') 
-        and i.cat_id={$cat} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
+        {$cati} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
         and {$tp}   {$br} {$c}  
         group  by i.item_id,i.itemname,i.item_code 
         order  by i.itemname 

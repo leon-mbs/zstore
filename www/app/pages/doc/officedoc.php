@@ -85,9 +85,7 @@ class OfficeDoc extends \App\Pages\Base
         $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name");
         $this->docform->add(new DropDownChoice("emp", $emplist, 0))->onChange($this, 'onEmp');
 
-        $eqlist = \App\Entity\Equipment::findArray("eq_name", "disabled<>1", "eq_name");
-        $this->docform->add(new DropDownChoice("eq", $eqlist, 0))->setVisible(count($eqlist)>0) ;
-
+      
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
@@ -155,7 +153,7 @@ class OfficeDoc extends \App\Pages\Base
             $d = $this->_doc->unpackDetails('detaildata');
             $this->docform->doccontent->setText($d['data'] ?? '');
             $this->docform->user->setValue($this->_doc->user_id);
-            $this->docform->eq->setValue($this->_doc->headerdata['eq'] ?? 0);
+
 
         } else {
             if ($copyid > 0) {
@@ -216,8 +214,8 @@ class OfficeDoc extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', array('data' => $data));
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
-        $this->_doc->headerdata['eq'] = $this->docform->eq->getValue();
-        $this->_doc->headerdata['eq_name'] = $this->docform->eq->getValueName();
+
+
 
 
         $customer_id = $this->docform->customer->getKey();
