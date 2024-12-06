@@ -65,9 +65,6 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-        $this->add(new Panel('usetable'))->setVisible(false);
-        $this->usetable->add(new Label('usename'));
-        $this->usetable->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
     }
 
     public function eqlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -77,7 +74,7 @@ class EqList extends \App\Pages\Base
       
         $row->add(new Label('branch', $this->_blist[$item->branch_id]));
 
-        $row->add(new ClickLink('use'))->onClick($this, 'useOnClick');
+ 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -93,46 +90,7 @@ class EqList extends \App\Pages\Base
         $this->resetURL();
     }
 
-    public function useOnClick($sender) {
-        $this->itemtable->setVisible(false);
-        $this->usetable->setVisible(true);
-        $item = $sender->getOwner()->getDataItem();
-        $this->usetable->usename->setText($item->eq_name);
-
-        $this->_tvars['use1'] =[] ;
-        $this->_tvars['use2'] =[] ;
-
-        foreach (\App\Entity\Doc\Document::findYield("meta_name='task' and state not in(2,3,1,9) ", "document_date asc") as $task) {
-            foreach ($task->unpackDetails('eqlist') as $eq) {
-                if ($eq->eq_id == $item->eq_id) {
-
-                    $this->_tvars['use1'][] = array(
-
-                        "usedate"  => Helper::fd($task->document_date),
-                        "usedn"  => $task->document_number,
-                        "useplace" => $task->headerdata['pareaname']
-                    );
-                }
-            }
-        }
-     
-        foreach (\App\Entity\Doc\Document::findYield("meta_name='officedoc' and content  not like '%<eq>0</eq>%'  and state not in(2,3,1,9) ", "document_date asc") as $office) {
-                if (intval($office->headerdata['eq'] ??0) == $item->eq_id) {
-
-                    $this->_tvars['use2'][] = array(
-                        "usedate"  => Helper::fd($office->document_date),
-              
-                        "usedn"  => $office->document_number,
-                        "usetitle" => $office->notes
-                    );
-                }
-
-        }
-    
-
-       
-    }
-
+   
  
 
     public function editOnClick($sender) {
@@ -164,6 +122,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editbranch->setValue($b > 0 ? $b : 0);
         
         $this->itemdetail->editeq->setChecked(true);
+ 
         $this->_item = new Equipment();
     }
 
