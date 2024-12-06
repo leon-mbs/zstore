@@ -253,16 +253,26 @@ class GoodsIssue extends \App\Pages\Base
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
-                        $this->docform->total->setText($invoice->amount);
+
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
-                        $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
+                    
 
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        
+                        $this->_itemlist = [];
+                        foreach($basedoc->unpackDetails('detaildata') as $k=>$v) {
+                            
+                           if($v instanceof \App\Entity\Service) {
+                               $this->setError('Послуги не  можуть додаватись до накладної') ;
+                               return;
+                           }
+                           $this->_itemlist[$k] =$v;
+                        }
+                 
+                        
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
-
+                        $this->docform->total->setText($invoice->amount);
 
 
                         $this->docform->total->setText($basedoc->amount);
