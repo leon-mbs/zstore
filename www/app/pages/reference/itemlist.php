@@ -833,6 +833,7 @@ class ItemList extends \App\Pages\Base
         }
        
         try {
+            $buf=[];
             if(intval($user->prtypelabel) == 1) {
                 
                $report = new \App\Report('item_qr_ps.tpl');
@@ -843,7 +844,8 @@ class ItemList extends \App\Pages\Base
                 $buf = \App\Printer::xml2comm($html);
             }
             if(intval($user->prtypelabel) == 2) {
-                
+                $rows=[];
+              
                 $report = new \App\Report('item_qr_ts.tpl');
                 $header['qrcode'] = $item->url;
 
@@ -1214,7 +1216,8 @@ class ItemList extends \App\Pages\Base
             
             }
             if(intval($user->prtypelabel) == 2) {
-                
+                $rows=[]; 
+               
                 $report = new \App\Report('item_sticker_ts.tpl');
                 $header['qrcode'] = $item->url;
 

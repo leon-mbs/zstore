@@ -283,7 +283,8 @@ class Subscribe extends \ZCL\DB\Entity
 
     
     private    function sendmsg($text, $options=[]){
-            if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
+        $ret=[];    
+        if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($options['notifyuser'], $text);
             }
             if (  $this->reciever_type== self::RSV_SYSTEM) {

@@ -1184,8 +1184,8 @@ class Helper
             
             //кастомные поля
             foreach($item->getcf() as $cf){
-               $v=  str_replace("\"", "`", $v);
-               $v=  str_replace("'", "`", $v);
+             //  $v=  str_replace("\"", "`", $v);
+             //  $v=  str_replace("'", "`", $v);
                $header['cf_'.$cf->code]  = $cf->val; 
             }
             

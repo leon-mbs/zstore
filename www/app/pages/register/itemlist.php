@@ -494,7 +494,7 @@ class ItemList extends \App\Pages\Base
         }
 
         try {
-
+            $buf=[];
            
             if(intval($user->prtypelabel) == 1) {
                $buf = \App\Printer::xml2comm($ret);

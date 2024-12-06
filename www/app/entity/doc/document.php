@@ -149,8 +149,7 @@ class Document extends \ZCL\DB\Entity
 
             $value= str_replace('<![CDATA[', '', $value) ;
             $value= str_replace(']]>', '', $value) ;
-
-            $value = $value ?? '';
+ 
 
             if (is_numeric($value) || strlen($value) == 0) {
 

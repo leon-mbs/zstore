@@ -31,6 +31,7 @@ class Options extends \App\Pages\Base
             return;
         }
 
+        $shop = System::getOptions("shop");
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
 
@@ -56,7 +57,7 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name", "disabled <>1"), "0"));
-        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
+        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), 0 ));
 
 
 
@@ -72,8 +73,7 @@ class Options extends \App\Pages\Base
 
 
 
-        $shop = System::getOptions("shop");
-        if (!is_array($shop)) {
+         if (!is_array($shop)) {
             $shop = array();
         }
         $this->_pages =    $shop['pages'];

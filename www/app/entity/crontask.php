@@ -192,7 +192,7 @@ class CronTask extends \ZCL\DB\Entity
                 if($task->tasktype==self::TYPE_AUTOSHIFT) {
                     $msg = unserialize($task->taskdata);
 
-                      
+                    $b=false;  
                     if($msg['type']=='ppro') {
                        $b=  \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
                     }

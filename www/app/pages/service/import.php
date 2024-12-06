@@ -520,7 +520,7 @@ class Import extends \App\Pages\Base
                     'colname'    => $row[$colcname] ?? '',
                     'colphone'   => $row[$colphone] ?? '',
                     'colemail'   => $row[$colemail] ?? '',
-                    'coledrpou'   => $row[$coledrpoul] ?? '',
+                    'coledrpou'   => $row[$coledrpou] ?? '',
                     'colcity'    => $row[$colcity] ?? '',
                     'coladdress' => $row[$coladdress]  ?? ''
                 );
@@ -556,7 +556,7 @@ class Import extends \App\Pages\Base
                 if (strlen($row[$colemail] ?? '') > 0) {
                     $c->email = $row[$colemail];
                 }
-                if (strlen($row[$coledrpoul] ?? '') > 0) {
+                if (strlen($row[$coledrpou] ?? '') > 0) {
                     $c->edrpou = $row[$coledrpou];
                 }
                 if (strlen($row[$colcity] ?? '') > 0) {

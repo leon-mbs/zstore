@@ -32,7 +32,7 @@ class CustItems extends \App\Pages\Base
     private $_edit;
 
 
-    public function __construct($add = false) {
+    public function __construct( ) {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('CustItems')) {
             return;

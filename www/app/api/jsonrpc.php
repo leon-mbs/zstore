@@ -257,6 +257,7 @@ abstract class JsonRPC
         if ($result != false) {
             return self::response($id, $result);
         }
+        return [];
     }
 
     /**

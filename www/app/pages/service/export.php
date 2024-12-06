@@ -182,9 +182,11 @@ class Export extends \App\Pages\Base
         }
 
         $root="<root>";
-        $qty=0;
+        
         $i = 1;
         foreach (Item::findYield($sql, "itemname asc") as $item) {
+            $qty=0;
+            $sum=0;
             $i++;
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->shortname;

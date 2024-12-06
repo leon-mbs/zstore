@@ -567,7 +567,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->save();
         $this->categorytable->setVisible(true);
         $this->cfform->setVisible(false);
-        $this->Reload(false);
+        $this->Reload( );
         
     }    
 }
