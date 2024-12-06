@@ -71,7 +71,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
 
-        $catlist = Category::findArray("cat_name", "cat_id not in (select COALESCE(parent_id,0) from item_cat )", "cat_name");
+        $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
@@ -130,13 +130,14 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
         $this->itemdetail->add(new TextInput('editlost'));
+        $this->itemdetail->add(new TextInput('editimageurl'));
 
         $this->itemdetail->add(new TextInput('editcell'));
         $this->itemdetail->add(new TextInput('edituktz'));
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new TextInput('editnotes'));
 
-        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
+        $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "childcnt=0", "cat_name"), 0))->onChange($this,"onCat");
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
@@ -146,7 +147,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editnoshop'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
-        $this->itemdetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
+        $this->itemdetail->add(new \Zippy\Html\Image('editimage' ));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
@@ -263,11 +264,13 @@ class ItemList extends \App\Pages\Base
         $row->printst->setVisible($item->isweight ==1 );
 
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
-     
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
-        $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
-        if ($item->image_id == 0) {
+        $url=$item->getImageUrl();
+    
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($url);
+        $row->imagelistitem->setAttribute('href', $url);
+        $row->imagelistitem->setAttribute('data-gallery', $item->item_id);
+        
+        if (  strlen($url)==0) {
             $row->imagelistitem->setVisible(false);
         }
 
@@ -324,6 +327,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edittype->setValue($this->_item->item_type);
         $this->itemdetail->editprintqty->setValue($this->_item->printqty);
 
+        $this->itemdetail->editimageurl->setText($this->_item->imageurl);
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
@@ -341,7 +345,7 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editdelimage->setChecked(false);
             $this->itemdetail->editdelimage->setVisible(true);
             $this->itemdetail->editimage->setVisible(true);
-            $this->itemdetail->editimage->setUrl('/loadimage.php?id=' . $this->_item->image_id);
+            $this->itemdetail->editimage->setUrl(  $this->_item->getImageUrl());
         } else {
             $this->itemdetail->editdelimage->setVisible(false);
             $this->itemdetail->editimage->setVisible(false);
@@ -358,13 +362,18 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id));
         $this->itemdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_ITEM));
          
+        $this->onCat($this->itemdetail->editcat);                 
+    }
+
+    public function onCat($sender) {
+        $id = $sender->getValue();
+        $this->_item->cat_id= $id;//подставляем выбраную
         $this->_cflistv =  $this->_item->getcf();
         
         $this->itemdetail->cflistv->Reload(); 
         $this->_tvars['cflist'] = count($this->_cflistv) > 0 ;
-                      
+   
     }
-
     public function addOnClick($sender) {
         $this->_copy = 0;
         $this->itemtable->setVisible(false);
@@ -461,6 +470,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
         $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
+        $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
@@ -488,9 +498,11 @@ class ItemList extends \App\Pages\Base
    
         
         if (\App\System::getOption("common", "autoarticle") == 1) {
-            if (strlen($this->_item->item_code) > 9  ) {
-              //  $this->setError('Надто довгий артикул');
-              //  return;
+            $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
+             
+            if (strlen($digits) > ( strlen(''.PHP_INT_MAX)-1)  ) {    
+                $this->setError('Надто велике  число в артикулі');
+                return;
             }
         }          
         
@@ -821,6 +833,7 @@ class ItemList extends \App\Pages\Base
         }
        
         try {
+            $buf=[];
             if(intval($user->prtypelabel) == 1) {
                 
                $report = new \App\Report('item_qr_ps.tpl');
@@ -831,7 +844,8 @@ class ItemList extends \App\Pages\Base
                 $buf = \App\Printer::xml2comm($html);
             }
             if(intval($user->prtypelabel) == 2) {
-                
+                $rows=[];
+              
                 $report = new \App\Report('item_qr_ts.tpl');
                 $header['qrcode'] = $item->url;
 
@@ -1202,7 +1216,8 @@ class ItemList extends \App\Pages\Base
             
             }
             if(intval($user->prtypelabel) == 2) {
-                
+                $rows=[]; 
+               
                 $report = new \App\Report('item_sticker_ts.tpl');
                 $header['qrcode'] = $item->url;
 

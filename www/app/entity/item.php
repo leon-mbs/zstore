@@ -57,6 +57,7 @@ class Item extends \ZCL\DB\Entity
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+        $this->imageurl = (string)$xml->imageurl[0];
 
         $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
@@ -174,6 +175,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
         $this->detail .= "<cflist>{$this->cflist}</cflist>";
+        $this->detail .= "<imageurl>{$this->imageurl}</imageurl>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -759,6 +761,11 @@ class Item extends \ZCL\DB\Entity
         }
         
         $last++;
+          
+      //  $l =  gmp_init($last, 10);
+     //   $l=   gmp_add( $l , (gmp_init(1))) ;
+      //  $last = gmp_strval($l, 10);
+        
         $d=5;
         if( strlen( ''.$last) >$d){ //если не  влазит
            $d =  strlen( ''.$last); 
@@ -926,7 +933,19 @@ class Item extends \ZCL\DB\Entity
           $cfv=unserialize($this->cflist)   ;   
         }
         $options = \App\System::getOptions('common');
-        $cflist = $options['cflist'];
+        $cflist = $options['cflist'] ?? [];
+        $i=1;
+        $cat = Category::load($this->cat_id);
+        if($cat != null)   {
+            foreach($cat->cflist as $k=>$v){
+                $ls = new \App\DataItem();
+                $ls->code = $k;
+                $ls->name = $v;
+               
+              $cflist[$i++] = $ls;          
+                    
+            }
+        }
         $i=1;
         $ret=[];
         foreach($cflist as $cf=>$f) {
@@ -948,5 +967,80 @@ class Item extends \ZCL\DB\Entity
        
         return $ret;
      }
+   
+     /**
+     * возвращает ссылку  на  изображение
+     * 
+     * @param mixed $shop  для  онлайн каталога (не проверяется  доступ)
+     * @param mixed $t предпросмотр (thumbmil) если  есть
+     * @return mixed
+     */
+     public function getImageUrl($shop=false,$t=false){ 
+        
+        if ($this->image_id > 0){
+           if($shop) {
+               return "/loadshopimage.php?id=".$this->image_id . ($t ? '&t=t' : '');    
+           }   else {
+               return "/loadimage.php?id=".$this->image_id;           
+           }
+           
+        }   
+        if (strlen($this->imageurl)>0){
+           return $this->imageurl;
+        }   
+        return;    
+     } 
+     
+    /**
+    * аплоад  в БД изображения  по  url
+    * 
+    * @param mixed $url
+    * @param mixed $dothumb
+    */
+    public   function saveImage($url,$dothumb=true) {
+        $file = file_get_contents($url) ;
+        if(strlen($file)==0) {
+           return 0  ;
+        }
+        $tmp = tempnam(sys_get_temp_dir(), "import") ;
+        file_put_contents($tmp, $file) ;
+
+        $imagedata = getimagesize($tmp);
+        if ($imagedata== false) {
+            return 0  ;
+
+        }
+        $image = new \App\Entity\Image();
+        $image->content = file_get_contents($tmp);
+        $image->mime = $imagedata['mime'];
+
+        if ($imagedata[0] != $imagedata[1]) {
+            $thumb = new \App\Thumb($tmp);
+            if ($imagedata[0] > $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+            }
+            if ($imagedata[0] < $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+            }
+
+
+            $image->content = $thumb->getImageAsString();
+  
+            $thumb->resize(512, 512);
+            if($dothumb) {
+               $image->thumb = $thumb->getImageAsString();
+               $thumb->resize(128, 128);
+               $this->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());               
+            }   
+
+           
+        }
+
+
+        $image->save(); 
+        $this->image_id=$image->image_id ;
+        return $image->image_id;       
+    }
+     
      
 }

@@ -6,6 +6,7 @@ namespace App\Entity;
  * Класс-сущность  категория товара
  *
  * @table=item_cat
+ * @view=item_cat_view
  * @keyfield=cat_id
  */
 class Category extends \ZCL\DB\Entity
@@ -21,7 +22,7 @@ class Category extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-
+        \App\Helper::log($this->detail);
         $xml = @simplexml_load_string($this->detail);
 
         $this->price1 = (string)($xml->price1[0]);
@@ -38,7 +39,14 @@ class Category extends \ZCL\DB\Entity
         $this->discount = doubleval($xml->discount[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
-
+        $this->cflist = (string)$xml->cflist[0];
+        if(strlen($this->cflist) >0) {
+          $this->cflist=unserialize($this->cflist)   ;   
+        }
+        else {
+           $this->cflist=[]; 
+        }
+      
         parent::afterLoad();
     }
 
@@ -63,7 +71,14 @@ class Category extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
-
+        
+        if(!is_array($this->cflist)) {
+             $this->cflist=[];
+        }
+        $flist  = serialize($this->cflist);        
+        
+        $this->detail .= "<cflist><![CDATA[{$flist}]]></cflist>";
+      
         $this->detail .= "</detail>";
 
         return true;
@@ -158,7 +173,20 @@ class Category extends \ZCL\DB\Entity
         return $ret;
     }
 
-
+      /**
+     * возвращает ссылку  на  изображение
+     * 
+     * @return mixed
+     */
+     public function getImageUrl( ){ 
+        
+        if ($this->image_id > 0){
+            return "/loadimage.php?id=".$this->image_id;           
+        }   
+         
+        return;    
+     } 
+     
 
 
 }

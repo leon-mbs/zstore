@@ -441,7 +441,7 @@
                             <div class="form-group row">
                                 <label class="col-5 col-form-label">Зображення
                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Зображення повинно бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M"></i>
+                                   title="Зображення має бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M"></i>
                                 </label>   
 
                                 <div class="col-7">
@@ -455,7 +455,16 @@
 
                                 </div>
                             </div>
-
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editimageurl"> URL зображення
+                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Посилання наприклад на зовнішнє зображення. Якщо каталог локальний можна вказати відносну адресу. При прямому посиланні не превіряється право доступу"></i>
+                                                               </label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="editimageurl"   />
+                                    <small>Пріоритет  має завантажене (вище) зображення</small>
+                                </div>
+                            </div>  
                             {{/useimages}}
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editurl">URL для QR коду
@@ -720,7 +729,7 @@
             </div>
         </div>
         
-<div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+ <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
             <div class="modal-dialog  ">
                 <div class="modal-content">
@@ -738,7 +747,7 @@
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>            
         
         <div id="idesc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
