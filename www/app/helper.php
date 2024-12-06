@@ -259,6 +259,7 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }
+      
         return $mdata;
     }
 
@@ -1183,8 +1184,8 @@ class Helper
             
             //кастомные поля
             foreach($item->getcf() as $cf){
-               $v=  str_replace("\"", "`", $v);
-               $v=  str_replace("'", "`", $v);
+             //  $v=  str_replace("\"", "`", $v);
+             //  $v=  str_replace("'", "`", $v);
                $header['cf_'.$cf->code]  = $cf->val; 
             }
             
@@ -1463,6 +1464,40 @@ class Helper
             }           
            
         }
+        
+        
+        $migration12 = \App\Helper::getKeyVal('migration12');  
+        if($migration12 != "done" && version_compare($vdb,'6.12.0')>=0) {
+            Helper::log("Міграція 12");
+         
+            \App\Helper::setKeyVal('migration12', "done");           
+         
+        
+            try {
+          
+              foreach( \App\Entity\PromoCode::find("" ) as $p) {
+                  $p->enddate = $p->dateto ; 
+                  $p->save();
+              }   
+              foreach( \App\Entity\Equipment::find("" ) as $e) {
+                  $e->invnumber = $e->code ; 
+                  $e->pa_id = $e->pa_id_old ; 
+                  $e->emp_id = $e->emp_id_old ; 
+                  $e->invnumber = $e->code ; 
+               
+                  $e->save();
+              }   
+                     
+                       
+            } catch(\Throwable $ee) {
+         
+                $logger->error($ee->getMessage());
+               
+            }  
+        }
+            
+        
     }
+
 
 }

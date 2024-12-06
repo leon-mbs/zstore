@@ -93,26 +93,8 @@ class UserLogin extends \Zippy\Html\WebPage
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
              
-  
-                if($user->rolename=='admins'   ){
-                    $b=0;
-                    $phpv =   phpversion()  ;
-
-                    $v = @file_get_contents("https://zippy.com.ua/version.json" );
-                    $data = @json_decode($v, true);
-                    if(is_array($data)){
-                       $b= version_compare($data['version'] , System::CURR_VERSION);
-                    }               
-                         
-                    if(  $b==1 ){
-                        $lastshow=intval(Helper::getKeyVal('lastshowupdate')) ;
-                        if(strtotime('-7 day') > $lastshow ) {
-                            Helper::setKeyVal('lastshowupdate',time()) ;
-                            App::Redirect('\App\Pages\Update');
-                            return;   
-                        }
-                    }
-                }
+                \App\System::checkUpdate()  ;
+                
                 
                 $modules = \App\System::getOptions("modules");
 
@@ -154,8 +136,8 @@ class UserLogin extends \Zippy\Html\WebPage
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
-            $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-
+            $msg .= $_SERVER['REMOTE_ADDR'] ;
+         
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
 

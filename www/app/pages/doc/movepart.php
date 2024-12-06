@@ -28,7 +28,7 @@ class MovePart extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
      /**
     * @param mixed $docid     редактирование

@@ -14,7 +14,7 @@ class Base extends \Zippy\Html\WebPage
     public $branch_id = 0;
 
 
-    public function __construct($params = null) {
+    public function __construct( ) {
         global $_config;
 
 
@@ -39,6 +39,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
+        $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
         $this->_tvars["canevent"] = $user->canevent == 1;
@@ -137,7 +138,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
         $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
-
+       
 
 
         //  $printer = System::getOptions('printer');
@@ -187,6 +188,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
         }
+       
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
 
@@ -198,6 +200,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
             $this->_tvars["horoshop"] ||
+         
             $this->_tvars["vdoc"] ||
             $this->_tvars["np"]
         ) {
@@ -267,32 +270,7 @@ class Base extends \Zippy\Html\WebPage
 
         }
 
-
-        if((Session::getSession()->toasts ?? true) ==false) {
-           Session::getSession()->toasts = false;  
-           
-            if ($user->defstore == 0) {
-                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
-            }
-            if ($user->deffirm == 0) {
-                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
-            }
-            if ($user->defmf == 0) {
-                //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
-            }
-            if ($user->userlogin == "admin") {
-                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                    $this->addToastrWarn("Змініть у профілі пароль за замовчуванням"); 
-                }
-            }
-            if ($user->rolename == "admins") {
-                if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                    $this->addToastrInfo("Є непрочитані системні повідомлення"); 
-                }
-            }           
-                 
-           
-        }
+  
      
     //    $duration =  Session::getSession()->duration() ;
      //   $this->_tvars['showver'] = $duration < 60   ;
@@ -376,32 +354,15 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
-        $this->_tvars['alerterror'] = "";
-        $this->_tvars['alertinfo'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
-            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-
-            $this->goAnkor('topankor');
-
-
-        }
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
-            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
-
-            $this->goAnkor('topankor');
-
-
-        }
+        
     }
 
     protected function afterRender() {
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
-
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
-
         if (strlen(System::getWarnMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
         }
@@ -411,8 +372,12 @@ class Base extends \Zippy\Html\WebPage
         if (strlen(System::getInfoMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
-
-
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
+            $this->addJavaScript("$(\"#alerterror\").html('" . System::getErrorMsgTopPage() . "');$(\"#alerterror\").show(); window.location='#topankor' ", true);
+        }
+        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
+            $this->addJavaScript("$(\"#alertinfo\").html('" . System::getInfoMsgTopPage() . "');$(\"#alertinfo\").show();  window.location='#topankor'", true);
+        }
         $this->setError('');
         $this->setErrorTopPage('');
         $this->setInfoTopPage('');
@@ -470,11 +435,11 @@ class Base extends \Zippy\Html\WebPage
             return  "N/A";
         }
 
-        $report = new \App\Report('cinfo.tpl');
-        $header = [];
+         $header = [];
 
         $header['name'] = $c->customer_name;
         $header['phone'] = $c->phone;
+        $header['edrpou'] = $c->edrpou;
         $header['email'] = strlen($c->email) > 0 ?  "<a target=\"_blank\" href=\"mailtp:{$c->email}\">{$c->email}</a>"  : false;
         $header['address'] = strlen($c->address) > 0 ? $c->address : false;
         $header['telega'] = strlen($c->telega) > 0 ? "<a target=\"_blank\" href=\"tg://resolve?domain={$c->telega}\">{$c->telega}</a>" : false;  
@@ -533,17 +498,49 @@ class Base extends \Zippy\Html\WebPage
         $header['sumall'] = \App\Helper::fa($c->sumAll());
 
 
+        $report = new \App\Report('cinfo.tpl');
         $data = $report->generate($header);
         $data = str_replace("'", "`", $data)  ;
         //  $data = str_replace("\"","`",$data)  ;
 
-
-
-
+  
         return $data;
 
     }
 
+    public function getItemInfo($args, $post) {
+        $conn= \ZDB\DB::getConnect() ;
+
+        $it = \App\Entity\Item::load($args[0]);
+        if($it==null) {
+            return  "N/A";
+        }
+
+        
+        $header = [];
+
+        $header['itemname'] = $it->itemname;
+        $header['item_code'] = $it->item_code;
+        $header['bar_code'] = $it->bar_code;
+        $header['brand'] = $it->manufacturer;
+        $header['cat_name'] = $it->cat_name;
+        $header['qty'] =  Helper::fqty( $it->getQuantity() );
+        $header['price'] = Helper::fa(  $it->getPrice() );
+        $header['notes'] = str_replace("'","`",$it->notes) ;
+        $header['image'] = false;
+        if($it->image_id >0) {
+            $url=$it->getImageUrl();
+            $header['image'] = $url;
+        }
+    
+        $report = new \App\Report('iteminfo.tpl');
+        $data = $report->generate($header);
+        $data = str_replace("'", "`", $data)  ;
+        //  $data = str_replace("\"","`",$data)  ;
+ 
+        return $data;
+
+    }
 
     public function sendSMSCode($args, $post) {
 
@@ -556,7 +553,7 @@ class Base extends \Zippy\Html\WebPage
 
     
     /**
-    * добавляет стьроку  заказа в  заявку  поставщику
+    * добавляет строку  заказа в  заявку  поставщику
     * 
     * @param mixed $args
     * @param mixed $post
@@ -576,7 +573,8 @@ class Base extends \Zippy\Html\WebPage
             if($args[1] > 0) {
                 $quantity = $args[1] ;
             }
-            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$d->customer_id}   and state=1 ","document_id desc") ;
+            //ищем незакрытую заявку
+            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$customer_id}   and state=1 ","document_id desc") ;
             
             if($co==null) {
                 $co = \App\Entity\Doc\Document::create('OrderCust');
@@ -628,11 +626,7 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    /**
-    *  всплывающая  подсказка
-    * 
-    * @param mixed $text
-    */
+    /*
     protected function addToastrInfo($text,$ajax=false) {
         $text = str_replace('`',"'",$text) ;
         $text = str_replace('`',"\"",$text) ;
@@ -666,7 +660,7 @@ class Base extends \Zippy\Html\WebPage
           $this->addAjaxResponse($js) ; 
         }
     }
-    
+    */
     //callPM
 
     public function vonTextCust($args, $post=null) {

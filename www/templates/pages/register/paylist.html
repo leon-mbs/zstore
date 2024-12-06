@@ -41,13 +41,13 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" zippy="tpanel">
             <div class="col-12 col-xl-10">
+                <small>Скасування оплати виконується проведенням оплати зi знаком мiнус </small>
 
-
-                <br><a zippy="csv">Експорт у Excel</a>
-                <br><small>Скасування оплати виконується проведенням оплати зi знаком мiнус </small>
-
+                <br><a zippy="csv"><i  class="fa fa-upload" ></i> Експорт у Excel</a>
+                <a zippy="import" class="ml-4"><i  class="fa fa-download" ></i> Iмпорт виписок</a>
+      
                 <table class="table   table-sm   ">
                     <tr>
 
@@ -160,7 +160,106 @@
             </div>
         </div>
 
+   
+                
+                <form zippy="importform" enctype="multipart/form-data"  >
+                 
+                    <h4>Iмпорт банківських виписок  </h4>
+                        <div class="row">
+                         <div class="col-12 col-md-4 col-xl-3">
+                          
+                             <div class="form-group  ">
+                                <label for="bipayment">Банк</label>
+                                 <select   zippy="bipayment" class="form-control  ">
+                                    <option value="0">Не вибраний</option>
+                                </select> 
+                             </div>
+                               
+                        
+                             <div class="form-group  ">
+                                <label for="filename">Файл імпорту</label>
+                                <input type="file" zippy="filename" class="form-control  "/>
+                             </div>                  
+                             <div class="  form-check">
+                                <input zippy="passfirst" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                            </div>
+                          
+                                   
+                      
+                             <div class="form-group  ">
+                                <label><b>Номери колонок Excel файлу</b> </label>
 
+                            </div>
+                                              
+                              <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="coltran">Номер тран.  </label>
+                                <div class="col-4">
+                                    <select style="width:100px;" zippy="coltran" class="form-control  ">
+                                </select>   
+                                </div> 
+                            </div>                                                                                
+                             <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="coledrpou">ЄДРПОУ контрагента  </label>
+                                <div class="col-4">
+                                    <select style="width:100px;" zippy="coledrpou" class="form-control  ">
+                                </select>   
+                                </div> 
+                            </div>                                                                                
+                            <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="colsum">Сума</label>
+                                <div class="col-4">
+                                    <select   zippy="colsum" class="form-control  ">
+                                </select> 
+                                 </div> 
+                            </div>                     
+                          <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="coldate">Дата</label>
+                                <div class="col-4">
+                                    <select   zippy="coldate" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                     
+                                                                             
+                            <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="colnotes">Призначення</label>
+                                <div class="col-4">
+                                    <select style="width:100px;" zippy="colnotes" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                                                                                
+                                                                                                      
+                     
+                         <div class="form-group">
+                           <a zippy="biback" class="btn btn-secondary  mr-4 " >Скасувати</a>                          
+                                
+                            <input zippy="bipreview"    type="submit" value="Завантажити" class="btn btn-primary  "> 
+                          
+                           </div>                                                                                                            
+                        </div> 
+                      
+                        <div class="col-12 col-md-8 col-xl-6">
+                           <a zippy="biload" class="btn btn-success  mr-4 " >Iмпортувати</a>                          
+                           <table class="ctable">
+                              {{#ilist}}
+                              <tr>
+                                 <td>{{tran}}</td>
+                                 <td>{{edrpou}}</td>
+                                 <td>{{customer_name}}</td>
+                                 <td align="right">{{sum}}</td>
+                                 <td>{{dates}}</td>
+                                 <td>{{notes}}</td>
+                              </tr>
+                               {{/ilist}}
+                           </table>
+                       </div>
+                        </div>  
+                 
+                 
+                 </form>
+            
+      
+      
         <script>
             function delpay(id) {
                 $('#pl_id').val(id);

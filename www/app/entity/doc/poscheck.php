@@ -202,12 +202,10 @@ class POSCheck extends Document
         }
 
         //промокод        
-        $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1','id desc') ;
+        $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1  and coalesce(enddate,now()) >=now()' ,'id desc') ;
         foreach($pc as $p) {
            
-           if($p->dateto >0 && $p->dateto < time() ) {
-               continue;               
-           }
+          
            if($p->showcheck==1 && $p->disc>0) {
                $header['promo']  = 'Промокод '. $p->code . " на {$p->disc}% знижку";
                break;

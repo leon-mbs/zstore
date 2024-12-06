@@ -72,7 +72,7 @@ class CatItemList extends \Zippy\Html\PageFragment
                 $ret['cats'][] = array(
                   'cat_id'=>$cat->cat_id,
                   'cat_name'=>$cat->cat_name,
-                  'image'=>"/loadimage.php?id=" . $cat->image_id
+                  'image'=>  $cat->getImageUrl()
                 ) ;
             }
 
@@ -84,7 +84,7 @@ class CatItemList extends \Zippy\Html\PageFragment
                   'item_id'=>$prod->item_id,
                   'itemname'=>$prod->itemname,
                   'price'=>$prod->getPrice(),
-                  'image'=>"/loadimage.php?id=" . $prod->image_id
+                  'image'=> $prod->getImageUrl()
                 ) ;
             }
 

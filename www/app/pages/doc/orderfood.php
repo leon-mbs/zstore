@@ -32,7 +32,7 @@ class OrderFood extends \App\Pages\Base
 
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     private $_prevcust = 0;   // преыдущий контрагент
 

@@ -32,7 +32,7 @@ class Entry extends \ZCL\DB\Entity
         parent::__construct();
 
         $this->document_id = $document_id;
-        // $this->amount = $amount;
+        $this->amount = $amount;
 
         $this->quantity = $quantity;
         $this->tag = 0;

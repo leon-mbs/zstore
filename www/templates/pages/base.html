@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html  lang="uk">
     <head>
         <title>Zippy-склад</title>
@@ -856,21 +857,22 @@
                                                     <p>&nbsp;&nbsp;Документи</p>
                                                 </a>
                                             </li>   
-                                              {{#hideblock}}
+                                            
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/VDoc/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;Налаштування</p>
                                                 </a>
                                             </li>    
-                                              {{/hideblock}}
+                                           
 
                                         </ul>
 
                                     </li>
                                     {{/vdoc}}                                    
                                     
-                                    
+                                                  
+                                      
                                   {{#promua}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
@@ -1040,13 +1042,15 @@
                                             <p>&nbsp;&nbsp;Системний лог</p>
                                         </a>
                                     </li>
-                                  {{#isadmin}}                                    
+                                  {{#isadmin}}    
+                                    {{^noupdate}}                              
                                    <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Update" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;Оновлення</p>
                                         </a>
                                     </li>
+                                      {{/noupdate}}                              
                                  <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Admin" class="nav-link">
                                             <i class="fa    nav-icon"></i>
@@ -1092,17 +1096,16 @@
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
 
-                            {{#alerterror}}
-                            <div class="alert alert-danger" role="alert">
-                                {{{alerterror}}}
+                           
+                            <div style="display:none;" id="alerterror" class="alert alert-danger" role="alert">
+                             
                             </div>
-                            {{/alerterror}}
                          
-                            {{#alertinfo}}
-                            <div class="alert alert-info" role="alert">
-                                {{{alertinfo}}}
+                      
+                            <div style="display:none;" id="alertinfo" class="alert alert-info" role="alert">
+                               
                             </div>
-                            {{/alertinfo}}
+                      
 
                         </div>
                     </div>
@@ -1186,7 +1189,27 @@
                     </div>
                 </div>
             </div>
-            
+             <div id="modalitinfo" class="modal fade  " tabindex="-1"  
+                 aria-hidden="true">
+                <div class="modal-dialog  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="mitinfo" class="modal-body">
+                             
+                        </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+
+                      </div>
+                    </div>
+                </div>
+            </div>
+           
 
     <dialog id="dialogwait">
                      
@@ -1307,7 +1330,7 @@
         });    
           
           
-          
+      /*    
       $(document).on("input", "input:file", function(e) {
         let size = e.target.files[0].size;
         if(size > 10000000){
@@ -1316,7 +1339,7 @@
         };
         
       });    
-      
+       */
                    
        function check_execdoc(ele){
             
@@ -1403,6 +1426,19 @@
                     
                     $('#modalcinfo').modal('show')  
                     $('#mcinfo').html(data)  
+                 
+                  
+         
+                } )          
+        }
+        
+      //инфо о  ТМЦ
+        function itemInfo(id){
+                callPageMethod('getItemInfo',[id],null,(data)=> 
+                {
+                    
+                    $('#modalitinfo').modal('show')  
+                    $('#mitinfo').html(data)  
                  
                   
          

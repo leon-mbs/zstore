@@ -81,7 +81,7 @@ class docs extends JsonRPC
         $n->save();
     }
     
-    
+     // /api/list
     public function list($args) {
 
         $list = [];
@@ -121,7 +121,7 @@ class docs extends JsonRPC
         return $list;
     }
 
-  // /api/docs
+ 
     // {"jsonrpc": "2.0", "method": "createprodissue", "params": { "store_id":"1","parea":"1","items":[{"item_code":"cbs500-1","quantity":2.1},{"item_code":"ID0018","quantity":2}] }, "id": 1}
     //Списание ТМЦ в  производсво
     public function createprodissue($args) {

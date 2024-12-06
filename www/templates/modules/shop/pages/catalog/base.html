@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html  lang="uk">
 
     <head>
@@ -49,17 +50,13 @@
                             <div class="col-12 col-sm-8 d-flex align-items-center justify-content-end">
                                 <nav class="main-header navbar navbar-expand ">
                                    <ul class="navbar-nav ml-auto">
-                                    {{#phone}}
-                                    <li class="nav-item pt-2">
-                                       <i class="fa fa-phone"></i> {{phone}} &nbsp;&nbsp;
-                                   </li>
-                                     {{/phone}}
+                               
                                     <li class="nav-item">
                                    
                                     <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
                                         
                                        <div class="input-group mr-3">
-                                          <input style="width:300px;" zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
+                                          <input style="width:400px;" zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
                                           <div class="input-group-append">
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                           </div>
@@ -67,7 +64,11 @@
                                         
                                     </form>
                                    </li>
-                                 
+                                     {{#phone}}
+                                    <li class="nav-item pt-2">
+                                       <i class="fa fa-phone"></i> {{phone}} &nbsp;&nbsp;
+                                   </li>
+                                     {{/phone}} 
                                   <li class="nav-item">
                                      <a title="Корзина" class="btn btn-outline-success  mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>  Корзина     </a>  
                                       

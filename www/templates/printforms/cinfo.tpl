@@ -1,6 +1,7 @@
  <table class="table  table-sm">
-   <tr><td>Назва</td><td>{{name}}</td></tr>
+   <tr><th colspan="2">{{name}}</th></tr>
    <tr><td>Тел.</td><td>{{phone}}</td></tr>
+   <tr><td>ЄДРПОУ</td><td>{{edrpou}}</td></tr>
    {{#smscode}} 
    <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Відправити</a>   
    <br><small> Відправка коду на телефон для перевірки номеру   </small>

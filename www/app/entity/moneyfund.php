@@ -83,7 +83,7 @@ class MoneyFund extends \ZCL\DB\Entity
      * список счетов для комбо
      *
      *
-     * @param mixed $nal 0 - все, 1- нол,2- безнал
+     * @param mixed $nal 0 - все, 1- нал,2- безнал
      */
     public static function getList($nal = 0) {
         $ml = array();

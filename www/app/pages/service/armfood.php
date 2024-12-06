@@ -516,7 +516,7 @@ class ARMFood extends \App\Pages\Base
         $cat = $row->getDataItem();
         $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
-        $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
+        $row->catbtn->add(new Image('catimage',   $cat->getImageUrl()));
     }
 
     
@@ -563,7 +563,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
-        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+        $row->prodbtn->add(new Image('prodimage', $prod->getImageUrl()));
     }
 
     //выбрана  группа

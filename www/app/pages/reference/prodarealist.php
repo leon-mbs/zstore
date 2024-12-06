@@ -28,6 +28,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->patable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('padetail'))->setVisible(false);
         $this->padetail->add(new TextInput('editpa_name'));
+        $this->padetail->add(new TextInput('editpa_notes'));
         $this->padetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->padetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
     }
@@ -36,6 +37,7 @@ class ProdAreaList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('pa_name', $item->pa_name));
+        $row->add(new Label('pa_notes', $item->notes));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -59,6 +61,8 @@ class ProdAreaList extends \App\Pages\Base
         $this->patable->setVisible(false);
         $this->padetail->setVisible(true);
         $this->padetail->editpa_name->setText($this->_pa->pa_name);
+        $this->padetail->editpa_notes->setText($this->_pa->notes);
+
     }
 
     public function addOnClick($sender) {
@@ -77,6 +81,7 @@ class ProdAreaList extends \App\Pages\Base
 
 
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();
+        $this->_pa->notes = $this->padetail->editpa_notes->getText();
         if ($this->_pa->pa_name == '') {
             $this->setError("Не введено назву");
             return;

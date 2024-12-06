@@ -10,7 +10,6 @@ use Zippy\Html\Panel;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
 
-use Zippy\Html\DataList\Column;
 use Zippy\Html\DataList\DataTable;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -58,10 +57,10 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new Column('itemname', "Назва", true, true, true));
-        $table->AddColumn(new Column('item_code', "Артикул", true, true, false));
-        $table->AddColumn(new Column('bar_code', "Штрих-код", true, true, false));
-        $table->AddColumn(new Column('manufacturer', "Бренд", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
 
@@ -85,7 +84,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->_pricetype = $pricetype;
         $this->_store = $store;
         if (strlen($this->_pricetype) > 0) {
-            $this->witempan->witemselt->AddColumn(new Column('price', 'Цiна', true, true, false, "text-right", "text-right"));
+            $this->witempan->witemselt->AddColumn(new \Zippy\Html\DataList\Column('price', 'Цiна', true, true, false, "text-right", "text-right"));
         }
     }
 
@@ -128,7 +127,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $cat = $row->getDataItem();
         $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
-        $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
+        $row->catbtn->add(new Image('catimage',   $cat->getImageUrl()));
     }
 
     //товары
@@ -140,7 +139,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
-        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+        $row->prodbtn->add(new Image('prodimage', $prod->getImageUrl()));
     }
 
     //выбрана  группа

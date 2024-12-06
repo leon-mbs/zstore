@@ -56,7 +56,7 @@ class Menu extends \Zippy\Html\WebPage
             
                 $items[]=array(
                     'itemname'=>$item->itemname ,
-                    'imglink'=>"/loadshopimage.php?id=".  $item->image_id ,
+                    'imglink'=>$item->getImageUrl() ,
                     'desc'=> substr($item->description, 0, 200) ,
                     'price'=>$item->getPrice() ,
                     'customsize'=> $item->customsize 

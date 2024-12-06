@@ -47,7 +47,7 @@ class Update extends \App\Pages\Base
  
         if($this->_tvars['curversiondb'] != $requireddb){
            $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
-           $this->_tvars['actualdb'] = false;
+           $this->_tvars['actualdb'] = false;  
         } else{
            $this->_tvars['reqversion']  = '';
            $this->_tvars['actualdb'] =true;

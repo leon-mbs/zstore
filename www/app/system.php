@@ -10,11 +10,12 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "6.11.9";
-    public const PREV_VERSION = "6.11.8";
-    public const REQUIRED_DB  = "6.11.0";
+    public const CURR_VERSION = "6.11.0";
+    public const PREV_VERSION = "6.11.9";
+    public const REQUIRED_DB  = "6.12.0";
 
     private static $_options = array();   //  для кеширования
+
     private static $_cache   = array();   //  для кеширования
 
     /**
@@ -137,6 +138,7 @@ class System
 
         self::setOptions($group, $options) ;
     }
+
     public static function setCache($key, $data) {
         self::$_cache[$key] = $data;
     }
@@ -157,7 +159,6 @@ class System
         return Session::getSession()->smsg;
     }
 
-
     public static function setErrorMsg($msg, $toppage=false) {
         if($toppage) {
             Session::getSession()->emsgtp = $msg;
@@ -169,6 +170,7 @@ class System
     public static function getErrorMsg() {
         return Session::getSession()->emsg;
     }
+
     public static function getErrorMsgTopPage() {
         return Session::getSession()->emsgtp;
     }
@@ -189,24 +191,104 @@ class System
             Session::getSession()->imsg = $msg;
         }
     }
+
     public static function getInfoMsgTopPage() {
         return Session::getSession()->imsgtp;
     }
-
    
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
+
     public static function clean() {
         self::$_cache = [] ;
 
     }
 
-
     public static function useCron() {
         return  \App\Helper::getKeyVal('cron') ?? false;
     }
   
+  /**
+  * проверка  на  входязий IP
+  * 
+  */
+    public static function checkIP() {
+        $options=self::getOptions('common') ;
+        if($options['checkip']  != 1) return;
+        if($_SERVER['REMOTE_ADDR']=='127.0.0.1')  return;
+        
+        $list = explode("\n",$options['iplist'] ) ;
+        foreach($list as $ip) {
+            if(trim($ip)=== $_SERVER['REMOTE_ADDR']) {
+                return;
+            }
+        }
 
+        http_response_code(403) ;
+        die;
+    }
+
+    
+    /**
+    * проверка  обновлений  и ряа  параметров  настроек
+    * 
+    */
+    public static function checkUpdate() {
+        $options = System::getOptions("common");       
+        if($options['noupdate']==1) {
+           return;  
+        }
+        $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
+        if(strtotime('-7 day') < $lastcheck ) {
+            return;
+        }
+     
+        \App\Helper::setKeyVal('lastchecksystem',time()) ;
+       
+        $user = System::getUser() ;
+        if ($user->userlogin == "admin") {
+                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = $user->user_id;
+                    $n->message = "Змініть у профілі пароль за замовчуванням " ;
+                    $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                    $n->save();                 
+                          
+                }
+        }
+         
+        if($user->rolename=='admins'   ){
+          
+            if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id;
+                $n->message = "Є непрочитані системні повідомлення " ;
+                $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                $n->save();                 
+            }          
+          
+             
+            $b=0;
+            $phpv =   phpversion()  ;
+
+            $v = @file_get_contents("https://zippy.com.ua/version.json" );
+            $data = @json_decode($v, true);
+            if(is_array($data)){
+               $b= version_compare($data['version'] , System::CURR_VERSION);
+            }               
+                 
+            if( $b==1 ){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id;
+                $n->message = "Доступна  нова  версія <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальнішк</a>" ;
+                $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                $n->save();              
+            }                                                     
+        }        
+    }
 
 }

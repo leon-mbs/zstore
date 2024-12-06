@@ -14,6 +14,10 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
@@ -25,8 +29,7 @@ use App\Application as App;
 class PayList extends \App\Pages\Base
 {
     private $_doc = null;
-
-
+    private $_importlist = [];
 
     /**
      *
@@ -47,33 +50,54 @@ class PayList extends \App\Pages\Base
 
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
-        $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
+        $this->add(new Panel('tpanel' ));
+        $doclist = $this->tpanel->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        
+        $this->tpanel->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
-        $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
+        $this->tpanel->add(new \App\Widgets\DocView('docview'))->setVisible(false);
+        
         $this->add(new Form('fnotes'))->onSubmit($this, 'delOnClick');
         $this->fnotes->add(new TextInput('pl_id'));
         $this->fnotes->add(new TextInput('notes'));
-        $this->add(new Label('totp'));
-        $this->add(new Label('totm'));
-        $this->add(new Label('tottot'));
+        $this->tpanel->add(new Label('totp'));
+        $this->tpanel->add(new Label('totm'));
+        $this->tpanel->add(new Label('tottot'));
 
         //   $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
-
+        $this->tpanel->add(new ClickLink('csv', $this, 'oncsv'));
+    
         $this->filterOnSubmit(null);
+  
+        $this->tpanel->add(new ClickLink('import', $this, 'onimportcsv'));
+        
+        $this->add(new Form('importform'))->setVisible(false);
+        $this->importform->add(new Button('biback'))->onClick($this, 'bicancelOnClick');
+        $this->importform->add(new \Zippy\Html\Form\File("filename"));
+        $cols = array(0=>'-','A'=>'A','B'=>'B','C'=>'C','D'=>'D','E'=>'E','F'=>'F','G'=>'G','H'=>'H','I'=>'I');
+        $this->importform->add(new DropDownChoice("coltran", $cols));
+        $this->importform->add(new DropDownChoice("coledrpou", $cols));
+        $this->importform->add(new DropDownChoice("colsum", $cols));
+        $this->importform->add(new DropDownChoice("coldate", $cols));
+        $this->importform->add(new DropDownChoice("colnotes", $cols));
+        $this->importform->add(new CheckBox("passfirst"));
+        $this->importform->add(new SubmitButton('bipreview'))->onClick($this, 'onPreview');
+        $this->importform->add(new DropDownChoice('bipayment',\App\Entity\MoneyFund::getList(2), H::getDefMF()));
+        $this->importform->add(new ClickLink('biload',$this, 'biLoadOnClick'))->setVisible(true);
+              
+        
     }
 
     public function filterOnSubmit($sender) {
 
-        $this->docview->setVisible(false);
-        $this->doclist->Reload();
+        $this->tpanel->docview->setVisible(false);
+        $this->tpanel->doclist->Reload();
 
         $totp = 0;
         $totm = 0;
-        foreach($this->doclist->getDataSource()->getItems() as $doc) {
+        foreach($this->tpanel->doclist->getDataSource()->getItems() as $doc) {
             if(doubleval($doc->amount) >0) {
                 $totp += $doc->amount;
             }
@@ -84,9 +108,9 @@ class PayList extends \App\Pages\Base
 
 
 
-        $this->totp->setText(H::fa($totp)) ;
-        $this->totm->setText(H::fa($totm)) ;
-        $this->tottot->setText(H::fa($totp - $totm)) ;
+        $this->tpanel->totp->setText(H::fa($totp)) ;
+        $this->tpanel->totm->setText(H::fa($totm)) ;
+        $this->tpanel->tottot->setText(H::fa($totp - $totm)) ;
 
 
 
@@ -132,8 +156,8 @@ class PayList extends \App\Pages\Base
             return;
         }
 
-        $this->docview->setVisible(true);
-        $this->docview->setDoc($this->_doc);
+        $this->tpanel->docview->setVisible(true);
+        $this->tpanel->docview->setDoc($this->_doc);
     }
 
     public function delOnClick($sender) {
@@ -183,7 +207,7 @@ class PayList extends \App\Pages\Base
         }
 
 
-        $this->doclist->Reload(true);
+        $this->tpanel->doclist->Reload(true);
 
         $user = \App\System::getUser();
 
@@ -196,19 +220,19 @@ class PayList extends \App\Pages\Base
     }
 
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1);
+        $list = $this->tpanel->doclist->getDataSource()->getItems(-1, -1);
 
         $header = array();
         $data = array();
 
         $header['A1'] = "Дата";
-        $header['B1'] = "Счет";
-        $header['C1'] = "Приход";
-        $header['D1'] = "Расход";
+        $header['B1'] = "Рахунок";
+        $header['C1'] = "Прибуток";
+        $header['D1'] = "Видаток";
         $header['E1'] = "Документ";
-        $header['F1'] = "Создал";
+        $header['F1'] = "Створив";
         $header['G1'] = "Контрагент";
-        $header['H1'] = "Примечание";
+        $header['H1'] = "Примітка";
 
         $i = 1;
         foreach ($list as $doc) {
@@ -269,6 +293,140 @@ class PayList extends \App\Pages\Base
 
 
     }
+    
+    public function bicancelOnClick($sender) {
+       $this->importform->setVisible(false);
+       $this->filter->setVisible(true);
+       $this->tpanel->setVisible(true);
+        
+    }    
+
+    public function onimportcsv($sender) {
+       $this->importform->setVisible(true);
+       $this->filter->setVisible(false);
+       $this->tpanel->setVisible(false);
+       $this->importform->biload->setVisible(false);
+                      
+    }    
+    
+    public function onPreview($sender) {
+        $passfirst =  $this->importform->passfirst->isChecked();
+        $bank =  $this->importform->bipayment->getValue();
+        if($bank==0){
+            $this->setError('Не вибраний банк') ;
+            return;
+        }
+        $file =  $this->importform->filename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+
+            $this->setError('Не обрано файл');
+            return;
+        }        
+        $coltran =  $this->importform->coltran->getValue();
+        $coledrpou =  $this->importform->coledrpou->getValue();
+        $colsum =  $this->importform->colsum->getValue();
+        $coldate =  $this->importform->coldate->getValue();
+        $colcomment =  $this->importform->colnotes->getValue();
+               
+        
+        $this->_importlist = [];
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']);
+
+        $this->_importlist =[];
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = [];
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+            }
+            
+            $d= [] ;
+            $d['tran']     = $row[$coltran] ??'' ;      
+            $d['edrpou']   = $row[$coledrpou]  ??'' ;   
+            $d['sum']      = doubleval($row[$colsum]  ??'' );   
+            $d['date']     = strtotime( $row[$coldate]  ??'') ;  
+            if($d['date']>0) {
+               $d['dates'] = H::fd($d['date'])  ;
+            }
+            
+            $d['notes']    = $row[$colcomment]  ??'' ;    
+            $c= \App\Entity\Customer::getByEdrpou( $d['edrpou']) ;
+            if($c != null){
+               $d['customer_name']  = $c->customer_name;
+               $d['customer_id']  = $c->customer_id;
+            }
+            $this->_importlist[] = $d;
+
+        }
+      
+        unset($oSpreadsheet);
+        
+        $this->_tvars['ilist'] =  $this->_importlist;
+        
+        $this->importform->biload->setVisible(true);
+
+    }   
+     
+    public function biLoadOnClick($sender) {
+        $cnt=0;
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+        
+           foreach($this->_importlist as $d){
+                if($d['date']==0)  continue;
+                if($d['sum']==0)  continue;
+                if($d['sum']<0)  continue;
+                if(strlen($d['customer_name'])==0)  continue;
+                
+                $doc = Document::create('IncomeMoney');
+                $doc->document_number= $doc->nextNumber();
+                $doc->document_date = $d['date'];
+                $doc->customer_id =  $d['customer_id'];
+                $doc->payed     = 0;
+                $doc->amount    = H::fa( $d['sum']);
+                $doc->payamount =H::fa( $d['sum']);
+                $doc->notes = $d['tran'].' '.$d['notes'] ;
+                $doc->headerdata['payment']  =  $this->importform->bipayment->getValue() ;
+                $doc->headerdata['paymentname']  = $this->importform->bipayment->getValueName()  ;
+                $doc->headerdata['type']    =  1 ;
+                $doc->headerdata['detail']  = 1  ;
+                
+                
+                $doc->save();
+                $doc->updateStatus(Document::STATE_NEW);
+                $doc->updateStatus(Document::STATE_EXECUTED);
+                $cnt++;
+           }
+           $conn->CommitTrans();
+      
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+          
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() );
+
+            return;
+        }     
+    
+       $this->setSuccess(" Iмпортовано {$cnt} строк" );
+      
+       $this->importform->setVisible(false);
+       $this->filter->setVisible(true);
+       $this->tpanel->setVisible(true);
+       $this->tpanel->doclist->Reload( );
+   
+                      
+    }    
+    
 
 }
 

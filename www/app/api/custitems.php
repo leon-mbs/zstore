@@ -222,6 +222,30 @@ class items extends JsonRPC
         return array('item_code' => $item->item_code);
     }
 
- 
-  
+
+    //  список  работ и услуг
+    public function servicelist($args) {
+
+        $list = array();
+        $w = 'disabled<> 1 ';
+
+
+        foreach (\App\Entity\Service::find($w, 'service_name') as $item) {
+            $plist = array();
+
+            $it = array(
+                'service_name' => $item->service_name,
+                'price'        => $item->price,
+                'category'     => $item->category,
+                'service_id'   => $item->service_id
+            );
+
+
+            $list[] = $it;
+        }
+
+
+        return $list;
+    }
+
 }

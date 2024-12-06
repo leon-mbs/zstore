@@ -20,6 +20,8 @@ class OrderCust extends Document
             $detail[] = array("no"       => $i++,
                               "itemname" => $item->itemname,
                               "itemcode" => $item->item_code,
+                              "brand" =>    $item->manufacturer,
+                              "barcode" =>  $item->bar_code,
                               "custcode" => $item->custcode,
                               "quantity" => H::fqty($item->quantity),
                               "price"    => H::fa($item->price),

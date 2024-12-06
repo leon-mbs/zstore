@@ -151,6 +151,14 @@ class Customer extends \ZCL\DB\Entity
         return Customer::getFirst(' phone = ' . $conn->qstr($phone) .' or   phone = ' . $conn->qstr('38'.$phone));
     }
 
+    public static function getByEdrpou($edrpou) {
+        $edrpou = trim($edrpou);
+        if (strlen($edrpou) == 0) {
+            return null;
+        }
+       
+        return Customer::getFirst(' detail like  ' . Customer::qstr("%<edrpou>{$edrpou}</edrpou>%") );
+    }
     public static function getByEmail($email) {
         if (strlen($email) == 0) {
             return null;

@@ -126,6 +126,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colphone", $cols));
         $form->add(new DropDownChoice("colemail", $cols));
         $form->add(new DropDownChoice("colcity", $cols));
+        $form->add(new DropDownChoice("coledrpou", $cols));
         $form->add(new DropDownChoice("coladdress", $cols));
         $form->add(new \Zippy\Html\Form\File("cfilename"));
 
@@ -422,46 +423,9 @@ class Import extends \App\Pages\Base
             // $image="http://local.zstore/assets/images/logo.png";
 
             if (strlen($image) > 0) {
-                $file = file_get_contents($image) ;
-                if(strlen($file)==0) {
-                    continue;
-                }
-                $tmp = tempnam(sys_get_temp_dir(), "import") ;
-                file_put_contents($tmp, $file) ;
+                $item->saveImage($image);
 
-                $imagedata = getimagesize($tmp);
-                if ($imagedata== false) {
-                    continue;
-
-                }
-                $image = new \App\Entity\Image();
-                $image->content = file_get_contents($tmp);
-                $image->mime = $imagedata['mime'];
-
-                if ($imagedata[0] != $imagedata[1]) {
-                    $thumb = new \App\Thumb($tmp);
-                    if ($imagedata[0] > $imagedata[1]) {
-                        $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
-                    }
-                    if ($imagedata[0] < $imagedata[1]) {
-                        $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
-                    }
-
-
-                    $image->content = $thumb->getImageAsString();
-                    $thumb->resize(512, 512);
-                    $image->thumb = $thumb->getImageAsString();
-                    $thumb->resize(128, 128);
-
-                    $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
-                }
-        
-
-                $image->save();
-                $item->image_id = $image->image_id;
                 $item->save();
-
-
 
             }
 
@@ -510,6 +474,7 @@ class Import extends \App\Pages\Base
         $colphone = $this->cform->colphone->getValue();
         $colemail = $this->cform->colemail->getValue();
         $colcity = $this->cform->colcity->getValue();
+        $coledrpou = $this->cform->coledrpou->getValue();
         $coladdress = $this->cform->coladdress->getValue();
 
         if ($colcname === '0') {
@@ -555,6 +520,7 @@ class Import extends \App\Pages\Base
                     'colname'    => $row[$colcname] ?? '',
                     'colphone'   => $row[$colphone] ?? '',
                     'colemail'   => $row[$colemail] ?? '',
+                    'coledrpou'   => $row[$coledrpou] ?? '',
                     'colcity'    => $row[$colcity] ?? '',
                     'coladdress' => $row[$coladdress]  ?? ''
                 );
@@ -589,6 +555,9 @@ class Import extends \App\Pages\Base
                 }
                 if (strlen($row[$colemail] ?? '') > 0) {
                     $c->email = $row[$colemail];
+                }
+                if (strlen($row[$coledrpou] ?? '') > 0) {
+                    $c->edrpou = $row[$coledrpou];
                 }
                 if (strlen($row[$colcity] ?? '') > 0) {
                     $c->city = $row[$colcity];

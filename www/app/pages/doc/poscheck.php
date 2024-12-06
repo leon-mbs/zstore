@@ -32,7 +32,7 @@ class POSCheck extends \App\Pages\Base
     public $_serlist   = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     private $_order_id  = 0;
     private $_prevcust  = 0;   // предыдущий контрагент
 

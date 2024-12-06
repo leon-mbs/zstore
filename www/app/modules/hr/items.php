@@ -170,11 +170,7 @@ class Items extends \App\Pages\Base
 
             $this->exportform->newitemlist->Reload();
             $this->exportform->ecat->setValue(0);
-        } else {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
-        }
+        }  
     }
 
     public function itemOnRow($row) {

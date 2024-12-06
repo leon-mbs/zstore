@@ -480,6 +480,12 @@
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colcity">ЄДРПОУ</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colcity" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                         <div class="form-group  row">
                             <label class="col-8 col-form-label" for="colcity">Місто</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="colcity" class="form-control  ">
@@ -503,6 +509,7 @@
                         <table class="table table-sm">
                             <tr>
                                 <th>Найменування</th>
+                                <th>ЄДРПОУ</th>
                                 <th>Тел.</th>
                                 <th>E-mail</th>
                                 <th>Місто</th>
@@ -512,6 +519,7 @@
                             {{#list2}}
                             <tr>
                                 <td>{{colname}}</td>
+                                <td>{{coledrpou}}</td>
                                 <td>{{colphone}}</td>
                                 <td>{{colemail}}</td>
                                 <td>{{colcity}}</td>

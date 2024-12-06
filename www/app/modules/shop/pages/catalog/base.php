@@ -10,7 +10,7 @@ use Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
-    public function __construct($params = null) {
+    public function __construct( ) {
 
         \Zippy\Html\WebPage::__construct();
         global $_config;

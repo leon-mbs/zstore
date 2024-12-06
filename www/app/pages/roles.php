@@ -67,11 +67,12 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
         $this->editpan->editform->add(new CheckBox('editpu'));
-        $this->editpan->editform->add(new CheckBox('editpl'));
+
         $this->editpan->editform->add(new CheckBox('editcb'));
         $this->editpan->editform->add(new CheckBox('editvk'));
         $this->editpan->editform->add(new CheckBox('edithr'));
         $this->editpan->editform->add(new CheckBox('editvdoc'));
+
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -203,6 +204,7 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'vdoc') !== false) {
             $this->editpan->editform->editvdoc->setChecked(true);
         }
+        
     }
 
     public function savenameOnClick($sender) {
@@ -341,6 +343,7 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editvdoc->isChecked()) {
             $modules = $modules . ',vdoc';
         }
+    
 
         $this->role->modules = trim($modules, ',');
 

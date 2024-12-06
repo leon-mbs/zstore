@@ -32,7 +32,7 @@ class GoodsIssue extends \App\Pages\Base
     public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     private $_rownumber = 1;
     private $_orderid   = 0;
 
@@ -461,7 +461,7 @@ class GoodsIssue extends \App\Pages\Base
       // проверка  на  стикер
         if ($item == null) {
        
-            $item = Item::unpackStBC($barcode);
+            $item = Item::unpackStBC($code);
             if($item instanceof Item) {
                 $item->pureprice = $item->getPurePrice();
                 $this->_itemlist[ ] = $item;
