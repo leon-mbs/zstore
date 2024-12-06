@@ -602,6 +602,7 @@
                     data.doc.total = parseVal( this.total )
                     data.doc.totaldisc = parseVal( this.totaldisc )
                     data.doc.payamount = parseVal(this.payamount)
+                    data.doc.payed = parseVal(this.payed)
                     data.doc.bonus = parseVal(this.bonus)
 
 
@@ -772,7 +773,7 @@
          payamount:function(){
              
             var tmp = fa( parseVal(this.total) - parseVal(this.totaldisc) - parseVal(this.bonus) ) 
-            this.payed = tmp
+           
             return tmp
          } ,
           
