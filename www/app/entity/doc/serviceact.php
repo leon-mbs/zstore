@@ -105,6 +105,10 @@ class ServiceAct extends Document
         }
 
 
+        if ($state == self::STATE_WP) {
+            $this->DoBalans() ;      
+        }
+        
         if ($state == self::STATE_FINISHED) {
 
           //  $this->DoStore() ;
