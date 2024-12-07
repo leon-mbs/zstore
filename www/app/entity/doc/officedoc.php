@@ -146,7 +146,7 @@ class OfficeDoc extends Document
     /**
      * отметка  что  подписан
      *
-     * @param mixed $user
+     * @param mixed $user_id
      */
     public function sign($user_id) {
         $d = $this->unpackDetails('accessdata');

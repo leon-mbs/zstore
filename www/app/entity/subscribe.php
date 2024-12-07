@@ -176,8 +176,9 @@ class Subscribe extends \ZCL\DB\Entity
             
             
             if ($sub->reciever_type == self::RSV_CUSTOMER) {
-                if($c->nosubs != 1) {
-                   $c = \App\Entity\Customer::load($doc->customer_id);
+                $c = \App\Entity\Customer::load($doc->customer_id);
+                if($c->nosubs == 1) {
+                   $c=null; 
                 }
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
@@ -283,7 +284,7 @@ class Subscribe extends \ZCL\DB\Entity
 
     
     private    function sendmsg($text, $options=[]){
-        $ret=[];    
+        $ret='';    
         if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($options['notifyuser'], $text);
             }
@@ -597,6 +598,7 @@ class Subscribe extends \ZCL\DB\Entity
             return "See log";
 
         }
+        return '';
     }
 
     public static function sendViber($phone, $text) {
@@ -675,6 +677,7 @@ class Subscribe extends \ZCL\DB\Entity
             $f = tempnam(sys_get_temp_dir(), "bot");
             file_put_contents($f, $data);
             $bot->sendDocument($chat_id, $f, $filename) ;
+            return '';
         }
     }
 

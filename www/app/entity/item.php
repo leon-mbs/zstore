@@ -578,7 +578,6 @@ class Item extends \ZCL\DB\Entity
     /**
      * возвращает количество на складах
      *
-     * @param mixed $item_id
      * @param mixed $store_id
      * @param mixed $snumber партия проиводителя
      */
@@ -612,7 +611,6 @@ class Item extends \ZCL\DB\Entity
     /**
      * возвращает сумму на складах
      *
-     * @param mixed $item_id
      * @param mixed $store_id
      */
     public function getAmount($store_id = 0) {
@@ -699,8 +697,7 @@ class Item extends \ZCL\DB\Entity
     /**
      * Метод  для   получения  имени  ТМЦ   для выпадающих списков
      *
-     * @param mixed $criteria
-     * @return []
+     * @param mixed $partname
      * @static
      */
     public static function findArrayAC($partname, $store = 0, $cat = 0) {

@@ -32,7 +32,7 @@ class GIList extends \App\Pages\Base
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+     * @param mixed $doc Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
     public function __construct($doc = 0) {
@@ -539,8 +539,9 @@ class GIList extends \App\Pages\Base
             $cust = $cust . ', ' . $this->_doc->headerdata["phone"];
             $tel = $this->_doc->headerdata["phone"];
         } else {
-            $cust = $cust . ', ' . $cust->phone;
             $tel = $cust->phone;
+            $cust = $cust . ', ' . $cust->phone;
+            
         }
 
         $this->nppan->npform->baytel->setText($tel);

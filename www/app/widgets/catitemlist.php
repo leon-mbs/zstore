@@ -19,9 +19,8 @@ class CatItemList extends \Zippy\Html\PageFragment
      *
      *
      * @param mixed $id
-     * @param mixed $page
-     * @param mixed $event
-     * @param mixed $pricetype
+     * @param mixed $food
+ 
      */
     public function __construct($id, $food = false) {
         parent::__construct($id);

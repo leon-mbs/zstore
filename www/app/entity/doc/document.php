@@ -797,7 +797,7 @@ class Document extends \ZCL\DB\Entity
     /**
      *  проверка  был ли документ в  таких состояниях
      *
-     * @param mixed $states
+     * @param array $states
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
@@ -1076,8 +1076,7 @@ class Document extends \ZCL\DB\Entity
     /**
     * put your comment there...
     *
-    * @param mixed $text
-    * @return mixed
+      * @return mixed
     */
     public function getQRPay() {
 

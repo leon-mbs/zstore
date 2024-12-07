@@ -37,7 +37,7 @@ class ItemSel extends \Zippy\Html\PageFragment
      * @param mixed $id
      * @param mixed $page
      * @param mixed $event
-     * @param mixed $pricetype
+
      */
     public function __construct($id, $page, $event) {
         parent::__construct($id);

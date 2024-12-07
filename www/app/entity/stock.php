@@ -24,8 +24,8 @@ class Stock extends \ZCL\DB\Entity
     /**
      * Метод  для   получения  имени  ТМЦ  с  ценой для выпадающих списков
      *
-     * @param mixed $criteria
-     * @return []
+     * @param mixed $store
+ 
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
@@ -64,9 +64,11 @@ class Stock extends \ZCL\DB\Entity
      * Возвращает запись  со  склада по  цене (партии  для  оптового)  товара.
      *
      * @param mixed $store_id Склад
-     * @param mixed $tovar_id Товар
+     * @param mixed $item_id Товар
      * @param mixed $price Цена
-     * @param mixed $create Создать  если  не   существует
+     * @param mixed $snumber 
+     * @param mixed $sdate  
+     * @param mixed $create  Создать  если  не   существует
      * @param mixed $customer_id Поставщик
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0) {

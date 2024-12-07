@@ -69,6 +69,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<addressdel><![CDATA[{$this->addressdel}]]></addressdel>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
+        $this->detail .= "<passw><![CDATA[{$this->passw}]]></passw>";
         $this->detail .= "</detail>";
 
   
@@ -107,6 +108,7 @@ class Customer extends \ZCL\DB\Entity
         $this->firstname = (string)($xml->firstname[0]);
         $this->lastname = (string)($xml->lastname[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
+        $this->passw = (string)($xml->passw[0]);
 
         $this->createdon = strtotime($this->createdon ?? '');
         
@@ -172,7 +174,7 @@ class Customer extends \ZCL\DB\Entity
      *
      * @param mixed $search
      * @param mixed $type
-     * @param mixed $edrpou
+     * @param mixed $searchedrpou
      */
     public static function getList($search = '', $type = 0, $searchedrpou = false) {
 

@@ -397,8 +397,8 @@ class Base extends \Zippy\Html\WebPage
 
     /**
      * Вставляет  JavaScript  в  конец   выходного HTML потока
-     * @param string  Код  скрипта
-     * @param boolean Если  true  - вставка  после  загрузки  документа в  браузер
+     * @param string $js Код  скрипта
+     * @param mixed $docready Если  true  - вставка  после  загрузки  документа в  браузер
      */
     public function addJavaScript($js, $docready = false) {
         App::$app->getResponse()->addJavaScript($js, $docready);

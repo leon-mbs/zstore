@@ -312,7 +312,7 @@ class Items extends \App\Pages\Base
             $w = $product['weight'];
             $w = str_replace(',', '.', $w);
             if ($product['weight_class_id'] == 2) {
-                $w = $w / 1000;
+                $w = doubleval($w) / 1000;
             } //граммы
             if ($w > 0) {
                 $item->weight = floatval($w);

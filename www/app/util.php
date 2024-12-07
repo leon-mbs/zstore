@@ -76,7 +76,7 @@ class Util
     /**
      * Вставляет пробелы  между символами строки
      *
-     * @param mixed $data
+     * @param mixed $string
      */
     public static function addSpaces($string) {
         $_data = "";

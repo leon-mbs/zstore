@@ -32,7 +32,7 @@ class MovePart extends \App\Pages\Base
 
      /**
     * @param mixed $docid     редактирование
-    * @param mixed $basedocid  создание на  основании
+    * @param mixed $tostock  создание на  основании
     */
    public function __construct($docid = 0, $tostock = 0) {
         parent::__construct();

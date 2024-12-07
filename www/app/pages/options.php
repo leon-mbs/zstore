@@ -649,8 +649,8 @@ class Options extends \App\Pages\Base
         $this->_vallist=[];
         foreach($xml->children() as $row){
             $code=(string)$row->CurrencyCodeL[0];
-            $amount=(string)$row->Amount[0];
-            $unit=(string)$row->Units[0];
+            $amount=doubleval($row->Amount[0]);
+            $unit=(string)$row->Units[0]);
             $rate=   @number_format(doubleval($amount/$unit), 3, '.', '')  ;
             foreach($vl as $v){
                if($v->code == $code ) {
