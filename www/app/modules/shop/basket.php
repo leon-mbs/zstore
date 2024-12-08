@@ -37,11 +37,11 @@ class Basket implements \Zippy\Interfaces\DataSource
     public function addProduct($product) {
 
         $p = new \App\DataItem();
-        $p->price  = $product->getPriceFinal();
+        $p->price  =   $product->getPriceFinal();
         $p->quantity  = $product->quantity;
         $p->itemname  = $product->itemname;
         $p->item_id   = $product->item_id;
-        $p->image_id   = $product->image_id;
+        $p->image_url   = $product->getImageUrl();
 
         if (isset($this->list[$p->item_id])) {
             $this->list[$p->item_id]->quantity++;
