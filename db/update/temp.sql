@@ -38,3 +38,6 @@ FROM ((((eqentry e
     ON ((e.pa_id = pa.pa_id)))
   LEFT JOIN documents d
     ON ((e.document_id = d.document_id)));
+    
+    
+    DROP VIEW if exists cust_acc_view;

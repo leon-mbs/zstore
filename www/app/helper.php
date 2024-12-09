@@ -424,7 +424,7 @@ class Helper
     /**
      * возварщает список  документов
      *
-     * @param mixed $id
+ 
      */
     public static function getDocTypes() {
         $conn = \ZDB\DB::getConnect();
@@ -932,7 +932,7 @@ class Helper
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
-        $spreadsheet = $reader->loadSpreadsheetFromFile($csvfile);
+        $spreadsheet = $reader->loadSpreadsheetFromString(file_get_contents($csvfile));
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
@@ -1015,9 +1015,9 @@ class Helper
     /**
      * Вставка  данных  в  таблицу  статистики
      *
-     * @param mixed $cat
-     * @param mixed $key
-     * @param mixed $data
+     * @param int $cat
+     * @param int $key
+     * @param int $data
      * @return mixed
      */
     public static function insertstat(int $cat, int $key, int $data) {
@@ -1037,7 +1037,7 @@ class Helper
      * Печать  этикеток     
      *
      * @param array $items  ТМЦ
-     * @param array $pqty  явное  указание  количества копий
+     * @param mixed $pqty  явное  указание  количества копий
      * @param array $tags  дополнительные поля
      */
     public static function printItems(array $items, $pqty = 0, array $tags = []) {

@@ -34,37 +34,33 @@ class docs extends JsonRPC
         return $list;
     }
     
-   // проверка  статусов документов по  списку  номеров
-    public function checkstatus($args) {
-        $list = array();
-
-        if (!is_array($args['numbers'])) {
-            throw new \Exception("Невірні параметри");
+ 
+    //изменить статус
+    public function updatestatus($args) {
+        $doc = null;
+        if (strlen($args['number']) > 0) {
+            $num1 = Document::qstr($args['number']);
+            $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
-        foreach ($args['numbers'] as $num) {
-            $num1 = Document::qstr("%<apinumber>{$num}</apinumber>%");
-            $num2 = Document::qstr("%<apinumber><![CDATA[{$num}]]></apinumber>%");
-            $doc = Document::getFirst("  content   like  {$num1} or content   like  {$num2}  ");
-            if ($doc instanceof Document) {
-                $list[] = array(
-                    "number"     => $num,
-                    "status"     => $doc->state,
-                    "statusname" => Document::getStateName($doc->state)
-                );
-            }
+        if ($doc == null) {
+            throw new \Exception("Документ не  знайдено");
         }
+   
+        $status=intval($args['status']); 
+        if(false== in_array($status,[5,7,18,9]) ) {
+            throw new \Exception("Недопустимий статус");
+           
+        }
+        $doc->updateStatus($status);
+        
+    }   
 
-        return $list;
-    }
-
-    //запрос на  отмену
+     //запрос на  отмену
     public function cancel($args) {
         $doc = null;
         if (strlen($args['number']) > 0) {
-            $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
-            $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
-
-            $doc = Document::getFirst(" content like {$num1}  or content like {$num2} ");
+            $num1 = Document::qstr($args['number']);
+            $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
         if ($doc == null) {
             throw new \Exception("Документ не  знайдено");
@@ -81,18 +77,35 @@ class docs extends JsonRPC
         $n->save();
     }
     
-     // /api/list
+     // /api/docs 
+  // {"jsonrpc": "2.0", "method": "list", "params":{  "datefrom":"16.01.2021","dateto":"16.01.2026", "state":5,  "type":"Order"   } , "id": 1}
+       
     public function list($args) {
-
+        $conn = \ZDB\DB::getConnect()  ;
+        
+        $states=  Document::getStateList()  ;
+        
         $list = [];
-        $where= "content like '<apinumber>' ";
+        $where= "1=1  ";
         if($args['state']>0) {
-          $where .= " and state= ".$args['state'];
+          $where .= " and state = ".$args['state'];
         }
         if(strlen($args['type'])>0) {
           $where .= " and meta_name= ". Document::qstr($args['type']);
         }
-        
+       
+        $from = strtotime($args['datefrom'] );
+        if($from==0) {
+           $from = strtotime('- 1 months',time())  ;
+        }
+        $to = strtotime($args['dateto'] );
+        if($from>0) {
+            $where .= " and document_date>= ". $conn->DBDate($from) ;
+        }
+        if($to>0) {
+            $where .= " and document_date<= ". $conn->DBDate($to)  ;
+        }
+       
           foreach(Document::findYield($where,"document_id")  as $d) {
             $doc=[];
             $doc['document_id'] = $d->document_id;
@@ -102,19 +115,55 @@ class docs extends JsonRPC
             $doc['customer_name'] = $d->customer_name;
             $doc['amount'] = H::fa( $d->amount);
             $doc['state'] =  $d->state;
+            $doc['statename'] =  $states[$d->state] ;
             $doc['store'] =  $d->headerdata['store'];
+            $doc['type'] =   $d->meta_name;
+            $doc['typename'] =   $d->meta_desc;
+
             $doc['items'] = [];
+            $doc['services'] = [];
             foreach($d->unpackDetails('detaildata') as $i){
-               $item=[];
-               $item['item_id']= $i->item_id;
-               $item['itemname']= $i->itemname;
-               $item['item_code']= $i->item_code;
-               $item['quantity']= H::fqty($i->quantity);
-               $item['price']= H::fa($i->price);
-               
-               $doc['items'][]=$item;                     
+               if($i->item_id >0) {
+                   $item=[];
+                   $item['item_id']= $i->item_id;
+                   $item['itemname']= $i->itemname;
+                   $item['item_code']= $i->item_code;
+                   $item['quantity']= H::fqty($i->quantity);
+                   $item['price']= H::fa($i->price);
+                   
+                   $doc['items'][]=$item;  
+               }                   
+               if($i->service_id >0) {
+                   $item=[];
+                   $item['service_id']= $i->service_id;
+                   $item['service_name']= $i->service_name;
+                   $item['quantity']= H::fqty($i->quantity);
+                   $item['price']= H::fa($i->price);
+                   
+                   $doc['services'][]=$item;  
+               }                   
             }
-           
+            foreach($d->unpackDetails('detail2data') as $i){
+               if($i->item_id >0) {
+                   $item=[];
+                   $item['item_id']= $i->item_id;
+                   $item['itemname']= $i->itemname;
+                   $item['item_code']= $i->item_code;
+                   $item['quantity']= H::fqty($i->quantity);
+                   $item['price']= H::fa($i->price);
+                   
+                   $doc['items'][]=$item;  
+               }                   
+               if($i->service_id >0) {
+                   $item=[];
+                   $item['service_id']= $i->service_id;
+                   $item['service_name']= $i->service_name;
+                   $item['quantity']= H::fqty($i->quantity);
+                   $item['price']= H::fa($i->price);
+                   
+                   $doc['services'][]=$item;  
+               }                 
+            } 
            
             $list[]=$doc;
         }
@@ -182,21 +231,13 @@ class docs extends JsonRPC
     //записать заказ
     public function createorder($args) {
         $options = \App\System::getOptions('common');
-
-        if (strlen($args['number']) == 0) {
-            throw new \Exception("Не вказано номер документа");  //не задан  номер
-        }
-
-
-        $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
-        $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
-        $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
-        if ($doc != null) {
-            throw new \Exception("Документ з номером {$args['number']} вже існує");   //номер уже  существует
-        }
-
-
+     
+     
         $doc = Document::create('Order');
+        $doc->headerdata["outnumber"] = $args['number'];
+  
+        $doc->document_number = $doc->nextNumber();
+        
 
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
@@ -214,15 +255,10 @@ class docs extends JsonRPC
                 throw new \Exception("Не вказано філію");
             }
         }
-
-        $doc->document_number = $doc->nextNumber();
-        if (strlen($doc->document_number) == 0) {
-            $doc->document_number = 'API-00001';
-        }
+   
         $doc->document_date = time();
 
-        $doc->headerdata["outnumber"] = $args['number'];
-        $doc->headerdata["apinumber"] = $args['number'];
+      
         // $doc->document_number = $args['number'];
         $doc->headerdata["phone"] = $args['phone'];
         $doc->headerdata["email"] = $args['email'];

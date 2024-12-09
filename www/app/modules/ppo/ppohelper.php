@@ -411,7 +411,7 @@ class PPOHelper
      * отправка  чека
      *
      * @param mixed $doc
-     * @param mixed $delayfisc  отложить  фискализацию
+
      */
     public static function check($doc ) {
         $common = \App\System::getOptions('common');
@@ -1034,7 +1034,7 @@ class PPOHelper
     /**
     * состояние фискального сервера
     *
-    * @param mixed $firm
+    * @param mixed $pos
     */
     public static function checkServer($pos) {
         $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $pos);
@@ -1054,7 +1054,7 @@ class PPOHelper
     * состояние  регистратора
     *
     * @param mixed $fiscnumber
-    * @param mixed $firm
+    * @param mixed $pos
     */
     public static function rroState($fiscnumber, $pos) {
         $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
@@ -1070,7 +1070,7 @@ class PPOHelper
     * получение итоговых  данных по смене  для  z отчета
     *
     * @param mixed $fiscnumber
-    * @param mixed $firm
+    * @param mixed $pos
     */
     public static function shiftTotal($fiscnumber, $pos) {
         $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
@@ -1105,7 +1105,7 @@ class PPOHelper
   /**
     * состояние сессии
     *
-    * @param mixed $firm
+    * @param mixed $pos
     */
     public static function checkSession($pos) {
        

@@ -377,7 +377,7 @@ class POSCheck extends Document
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
-                $sc = new Entry($this->document_id, $required->quantity * $price, $required);
+                $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
                 $sc->tag=Entry::TAG_FROMPROD;
 

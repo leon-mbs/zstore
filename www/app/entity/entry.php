@@ -24,7 +24,7 @@ class Entry extends \ZCL\DB\Entity
     /**
      *
      *
-     * @param mixed $document Ссылка  на  документ
+     * @param mixed $document_id Ссылка  на  документ
      * @param mixed $amount Сумма.
      * @param mixed $quantity количество
      */
@@ -70,7 +70,6 @@ class Entry extends \ZCL\DB\Entity
      * неиспользуемые значения  заполняются  нулем
      *
      * @param mixed $date дата на  конец дня
-     * @param mixed $acc синтетичкеский счет
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
@@ -102,7 +101,6 @@ class Entry extends \ZCL\DB\Entity
      * неиспользуемые значения  заполняются  нулем
      *
      * @param mixed $date дата на  конец дня
-     * @param mixed $acc синтетичкеский счет
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник

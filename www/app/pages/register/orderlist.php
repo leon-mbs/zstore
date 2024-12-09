@@ -31,7 +31,7 @@ class OrderList extends \App\Pages\Base
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+
      * @return DocList
      */
     public function __construct() {

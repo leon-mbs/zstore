@@ -55,11 +55,11 @@ class Helper
     }
 
     /**
-    *
-    * @param mixed $token      токен с  конекта
-    * @param mixed $docdata    содержимое  документа ( можно  уже  с ЭЦП )
-    * @param mixed $docname    имя  которое будет  показано в  сервиве (имя  файла, номер накладной  и т.д.)
-    * @param mixed $email      если задано, файл будет расшарен на  соответствующего контрагента
+    * put your comment there...
+    * 
+    * @param mixed $doc
+    * @param mixed $filename
+    * @param mixed $token
     */
     public static function senddoc(  $doc, $filename,$token ) {
                                                 

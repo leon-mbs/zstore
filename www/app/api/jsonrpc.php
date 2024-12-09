@@ -108,7 +108,7 @@ abstract class JsonRPC
      * @param string $json
      * Single request object, or an array of request objects, as a JSON string.
      *
-     * @return array|null
+     * @return array|null   $input
      * Returns a response object (or an error object) when a query is made.
      * Returns an array of response/error objects when multiple queries are made.
      * Returns null when no response is necessary.

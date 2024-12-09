@@ -21,7 +21,7 @@ class Report
     /**
      * Генерация  простой формы
      *
-     * @param mixed $header Массив  с даннымы  шапки
+     * @param array $header Массив  с даннымы  шапки
      * @param mixed $removeendline  убирать перевод  строки
      */
     public function generate(array $header,$removeendline=true) {

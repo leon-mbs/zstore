@@ -430,7 +430,7 @@ class Printer
     * вывод QR кода
     *
     * @param mixed $text
-    * @param mixed $type     EAN13 Code128 Code39
+    * @param mixed $size     
     */
     public function QR($text, int $size=12) {
 
@@ -474,7 +474,7 @@ class Printer
     * @param mixed $text
     * @param mixed $type     EAN13 Code128 Code39
     */
-    public function BarCode($text, int $type) {
+    public function BarCode($text,   $type) {
         if($type == self::BARCODE_CODE128) {
 
             $text = "{B".$text;
@@ -537,7 +537,7 @@ class Printer
     *
     * @param mixed $height
     */
-    public function barcodeHeight(int $height = 100) {
+    public function barcodeHeight(  $height = 100) {
         if($height < 1 || $height > 255) {
             return;
         }
@@ -550,7 +550,7 @@ class Printer
     *
     * @param mixed $width
     */
-    public function barcodeWidth(int $width = 2) {
+    public function barcodeWidth(  $width = 2) {
         if($width < 2 || $width > 6) {
             return;
         }
@@ -589,10 +589,10 @@ class Printer
     /**
     * размер  текста
     *
-    * @param mixed $widthMultiplier   1 - 8
-    * @param mixed $heightMultiplier  1 - 8
+    * @param int $widthMultiplier   1 - 8
+    * @param int $heightMultiplier  1 - 8
     */
-    public function textSize(int $widthMultiplier, int $heightMultiplier) {
+    public function textSize(int  $widthMultiplier, int $heightMultiplier) {
         if($widthMultiplier < 1 ||  $widthMultiplier >8) {
             $widthMultiplier=1;
         }

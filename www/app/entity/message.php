@@ -37,7 +37,7 @@ class Message extends \ZCL\DB\Entity
      *
      * @param mixed $type
      * @param mixed $item_d
-     * @param mixed $sort
+  
      */
     public static function getMessages($type, $item_id) {
         return \App\Entity\Message::find("item_type ={$type} and item_id={$item_id}", "message_id ");

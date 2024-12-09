@@ -797,7 +797,7 @@ class Document extends \ZCL\DB\Entity
     /**
      *  проверка  был ли документ в  таких состояниях
      *
-     * @param mixed $states
+     * @param array $states
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
@@ -1076,8 +1076,7 @@ class Document extends \ZCL\DB\Entity
     /**
     * put your comment there...
     *
-    * @param mixed $text
-    * @return mixed
+      * @return mixed
     */
     public function getQRPay() {
 
@@ -1221,5 +1220,22 @@ class Document extends \ZCL\DB\Entity
         $payed = doubleval($conn->GetOne($sql));
         return $payed;
     }    
+    
+   /**
+   * кастомный  экспорт в  ексель вместо автоматического  преобразования  с HTML
+   * возвращает  готовый файл
+   * реализация производится  в  соответствующемклассе-наследнике
+   */
+   public function customExportExcel() { 
+       return '';
+   }   
+   /**
+   * кастомный  экспорт в  pdf вместо автоматического  преобразования  с HTML
+   * возвращает  готовый файл
+   * реализация производится  в  соответствующемклассе-наследнике
+   */
+   public function customExportPDF() { 
+       return ''; 
+   }   
     
 }
