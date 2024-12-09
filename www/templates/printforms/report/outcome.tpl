@@ -329,7 +329,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td>
      {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
