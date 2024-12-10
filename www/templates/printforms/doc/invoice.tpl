@@ -4,7 +4,7 @@
     <tr>
 
         <td colspan="9">
-            <img style="height:100px;" src='{{logo}}'/>
+            <img style="height:100px;" src="{{logo}}"/>
         </td>
 
     </tr>
@@ -161,14 +161,14 @@
   {{/payamount}}
     <tr>                  <td colspan="5">
                             {{#isstamp}}
-                            <img style="height:100px;" src='{{stamp}}'/>
+                            <img style="height:100px;" src="{{stamp}}"/>
                             {{/isstamp}}
 
 
                         </td>
                         <td colspan="4">
                             {{#issign}}
-                            <img style="height:100px;" src='{{sign}}'/>
+                            <img style="height:100px;" src="{{sign}}"/>
                             {{/issign}}
 
 

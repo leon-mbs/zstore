@@ -1,4 +1,4 @@
-<table class="ctable" border="0" class="ctable"  >
+<table class="ctable" border="0"    >
 
 
     <tr style="font-size:larger; font-weight: bolder;">

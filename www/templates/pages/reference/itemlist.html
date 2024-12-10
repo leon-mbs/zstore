@@ -375,7 +375,7 @@
                                     <input list="manlist" class="form-control" zippy="editmanufacturer"/>
                                     <datalist id="manlist">
                                         {{#manlist}}
-                                        <option label='{{mitem}}' value='{{mitem}}'></option>
+                                        <option label="{{mitem}}" value="{{mitem}}"></option>
                                             {{/manlist}}
 
                                     </datalist>
@@ -552,7 +552,7 @@
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
 
                     <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required 
                            pattern="[0-9,\.]+" style="width:60px">
                     <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
                 </form>
@@ -578,7 +578,7 @@
                     </select>
 
                     <label class="ml-sm-2" for="editscost">Вартість</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost" required="required"
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost"  required 
                            pattern="[0-9,\.]+" style="width:60px">
                            
                     <input zippy="setsformbtn" class="btn btn-outline-success  " type="submit" value="Додати">

@@ -12,7 +12,7 @@
             Перiод з {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
-
+     <tr>
         <td colspan="3">
             <b>Прибутки</b>
         </td>
@@ -93,6 +93,7 @@
    {{#is3}}    
     
     </tr>
+     <tr> 
         <td colspan="3"> <br>
             <b>Деталiзацiя по ТМЦ </b>
         </td>       
