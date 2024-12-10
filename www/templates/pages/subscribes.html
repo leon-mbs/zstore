@@ -202,7 +202,7 @@
                         <br>
                         <br>
                         Для виведення списків, наприклад, позицій документа, потрібно додати інформацію мiж тегами
-                        {#list}  та  {/list>}  
+                        {#list}  та  {/list&gt;}  
                         <br>  Всередині рядка списку допускаються наступні теги:
 
                         <table  >
@@ -217,16 +217,16 @@
                         </table>
                         Наприклад:<br>
                         <p class="text-bold">
-                            Привiт {customer_name}&lt;br> <br> 
+                            Привiт {customer_name}&lt;br&gt; <br> 
                             Ми впарили тобi наступне <br>
-                            &lt;table>  <br>
-                            &lt;tr> &lt;th>Товар&lt;/th> &lt;th align="right" >Кiл. &lt;/th> &lt;/tr><br>
+                            &lt;table&gt;  <br>
+                            &lt;tr&gt; &lt;th&gt;Товар&lt;/th&gt; &lt;th align="right" &gt;Кiл. &lt;/th&gt; &lt;/tr&gt;<br>
                             {#list} <br>
-                            &lt;tr> &lt;td>{item_name} &lt;/td> &lt;td align="right" >{qty} &lt;/td>&lt;/tr> <br>
+                            &lt;tr&gt; &lt;td&gt;{item_name} &lt;/td&gt; &lt;td align="right" &gt;{qty} &lt;/td&gt;&lt;/tr&gt; <br>
                             {/list} <br>
-                            &lt;/table>&lt;br>   <br> 
-                            До сплати {forpay} чистоганом &lt;br><br> 
-                            Прайси за &lt;a href="https://price.com/">посиланням&lt;/a>&lt;br><br>
+                            &lt;/table&gt;&lt;br&gt;   <br> 
+                            До сплати {forpay} чистоганом &lt;br&gt;<br> 
+                            Прайси за &lt;a href="https://price.com/"&gt;посиланням&lt;/a&gt;&lt;br&gt;<br>
                             Пока, лошара
                         </p>
 

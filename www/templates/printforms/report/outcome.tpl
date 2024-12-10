@@ -107,8 +107,8 @@
 <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
-<td align="right" ><b>{{totnavar}}</b></b></td> 
-<td align="right" ><b>{{totnavarproc}}</b></b></td> 
+<td align="right" ><b>{{totnavar}}</b> </td> 
+<td align="right" ><b>{{totnavarproc}}</b> </td> 
 
     {{/noshowpartion}}
 
@@ -483,8 +483,8 @@
 <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
-<td align="right" ><b>{{totnavar}}</b></b></td> 
-<td align="right" ><b>{{totnavarproc}}</b></b></td> 
+<td align="right" ><b>{{totnavar}}</b> </td> 
+<td align="right" ><b>{{totnavarproc}}</b> </td> 
 
     {{/noshowpartion}}
 

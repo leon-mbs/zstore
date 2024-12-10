@@ -95,7 +95,7 @@
                  <div class="row "  >
                  <div class="col-2   "  >
                                 
-                <a zippy="addnew" class="btn btn-primary mr-4  "> <i class="fa fa-plus-circle"> Додати новий</a>
+                <a zippy="addnew" class="btn btn-primary mr-4  "> <i class="fa fa-plus-circle"></i> Додати новий</a>
                  </div>  
                  <div class="col-4  "  >
                  
@@ -190,7 +190,7 @@
                         <tr><td colspan="9">
                                 <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
                                 <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  &nbsp;&nbsp;
-                                перемiстити в <select   zippy="allcat"><option value="0">Не вказано</select>
+                                перемiстити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
                             </td> </tr>                 
                     </table>
                     <div style="width:50%" zippy="pag"></div>   
@@ -375,7 +375,7 @@
                                     <input list="manlist" class="form-control" zippy="editmanufacturer"/>
                                     <datalist id="manlist">
                                         {{#manlist}}
-                                        <option label='{{mitem}}' value='{{mitem}}'>
+                                        <option label='{{mitem}}' value='{{mitem}}'></option>
                                             {{/manlist}}
 
                                     </datalist>
@@ -737,12 +737,12 @@
                         <table>
                             <tr>
                                 <td align="center" id="tag"></td>
-                            <tr>
+                            </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
                                                       class="btn btn-success  ">Друк</a></td>
-                            <tr>
+                            </tr>
                         </table>
                     </div>
                 </div>

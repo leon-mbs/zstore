@@ -315,9 +315,10 @@ class Base extends \Zippy\Html\WebPage
 
         System::setErrorMsg($msg);
     }
-    //вывод  как  bootstrap alert  (для сообщений что  могут  вызвать  ошибку  javascript)
+
     public function setErrorTopPage($msg) {
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
 
         System::setErrorMsg($msg, true);
     }
@@ -339,8 +340,10 @@ class Base extends \Zippy\Html\WebPage
 
         System::setInfoMsg($msg);
     }
+ 
     public function setInfoTopPage($msg) {
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
 
         System::setInfoMsg($msg, true);
     }

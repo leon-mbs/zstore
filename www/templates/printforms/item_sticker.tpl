@@ -1,6 +1,6 @@
-    <div style="{{turn}}border: 1px solid   #ccc;width:100%;;">
+   <div style="{{turn}}border: 1px solid   #ccc;width:100%;;">
     <table class="ctable" border="0" cellpadding="2" cellspacing="0" style="width:100%"  > 
-       <td>
+    <tr>   <td>
            <table>
             <tr  >
                 <td   colspan="3"  ><b> {{name}}</b></td>
@@ -22,7 +22,7 @@
             <tr  >
                 <td style="padding:20px;" align="center" colspan="3">
                 <img style="width:80%" src="{{dataUri}}" >
-                
+                 </td>
                 </tr>
            
           

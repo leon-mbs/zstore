@@ -22,7 +22,7 @@
         <th style="border: solid black 1px">ФН</th>
         <th style="border: solid black 1px">Тип</th>
         <th align="right" style="border: solid black 1px">Сума</th>
-  
+   </tr>
         {{#detail}}
     <tr>
 
@@ -48,7 +48,7 @@
         </td>
       
        
-    <tr> 
+   </tr> 
  
 
 </table>

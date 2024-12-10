@@ -29,7 +29,7 @@
         <th align="right" style="border: solid black 1px">Кіл.</th>
 
 
-   
+        </tr>
 
         {{#_detail}}
     <tr>
@@ -63,7 +63,7 @@
 
         <th align="right" style="border: solid black 1px">Кіл.</th>
         <th align="right" style="border: solid black 1px">На суму</th>
-
+       </tr>
         
         {{#_detail2}}
     <tr>

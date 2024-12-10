@@ -5,7 +5,7 @@
             Прибутки та видатки
         </td>
     </tr>
-    <tr>
+   
     <tr>
 
         <td align="center" colspan="3">

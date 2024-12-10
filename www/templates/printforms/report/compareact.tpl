@@ -39,3 +39,5 @@
 
     </tr>
     {{/_detail}}
+    
+   </table> 

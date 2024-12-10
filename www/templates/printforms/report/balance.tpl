@@ -5,7 +5,7 @@
             Управлiнський  баланс
         </td>
     </tr>
-    <tr>
+  
     <tr>
 
         <td align="center" colspan="2">
