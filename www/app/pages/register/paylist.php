@@ -361,7 +361,9 @@ class PayList extends \App\Pages\Base
                $d['customer_name']  = $c->customer_name;
                $d['customer_id']  = $c->customer_id;
             }
-            $this->_importlist[] = $d;
+            if($d['sum'] != 0) {
+                $this->_importlist[] = $d;
+            }
 
         }
       
@@ -382,23 +384,33 @@ class PayList extends \App\Pages\Base
            foreach($this->_importlist as $d){
                 if($d['date']==0)  continue;
                 if($d['sum']==0)  continue;
-                if($d['sum']<0)  continue;
                 if(strlen($d['customer_name'])==0)  continue;
+                if($d['sum']>0)  {
                 
-                $doc = Document::create('IncomeMoney');
-                $doc->document_number= $doc->nextNumber();
-                $doc->document_date = $d['date'];
-                $doc->customer_id =  $d['customer_id'];
-                $doc->payed     = 0;
-                $doc->amount    = H::fa( $d['sum']);
-                $doc->payamount =H::fa( $d['sum']);
+                    $doc = Document::create('IncomeMoney');
+                    $doc->payed     = 0;
+                    $doc->amount    = H::fa( $d['sum']);
+                    $doc->payamount =H::fa( $d['sum']);
+                    $doc->headerdata['type']    =  1 ;
+                    $doc->headerdata['detail']  = 1  ;
+                }
+                
+                if($d['sum']<0)  {
+                
+                    $doc = Document::create('OutcomeMoney');
+                    $doc->payed     = 0;
+                    $doc->amount    = H::fa(0- $d['sum']);
+                    $doc->payamount =H::fa(0- $d['sum']);
+                    $doc->headerdata['type']    =  50 ;
+                    $doc->headerdata['detail']  = 2  ;
+                }
+
                 $doc->notes = $d['tran'].' '.$d['notes'] ;
                 $doc->headerdata['payment']  =  $this->importform->bipayment->getValue() ;
                 $doc->headerdata['paymentname']  = $this->importform->bipayment->getValueName()  ;
-                $doc->headerdata['type']    =  1 ;
-                $doc->headerdata['detail']  = 1  ;
-                
-                
+                $doc->document_number= $doc->nextNumber();
+                $doc->document_date = $d['date'];
+                $doc->customer_id =  $d['customer_id'];
                 $doc->save();
                 $doc->updateStatus(Document::STATE_NEW);
                 $doc->updateStatus(Document::STATE_EXECUTED);
