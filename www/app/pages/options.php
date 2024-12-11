@@ -120,11 +120,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
 
-
-
-        $this->business->add(new CheckBox('numberttn'));
-        
-
+   
         $this->business->add(new CheckBox('spreaddelivery'));
         $this->business->add(new CheckBox('baydelivery'));
 
@@ -150,7 +146,7 @@ class Options extends \App\Pages\Base
 
         $this->business->usesnumber->setValue($common['usesnumber']??0);
 
-        $this->business->numberttn->setChecked($common['numberttn']);
+
 
         $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
         $this->business->baydelivery->setChecked($common['baydelivery']);
@@ -410,8 +406,6 @@ class Options extends \App\Pages\Base
         
         $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
         $common['baydelivery'] = $this->business->baydelivery->isChecked() ? 1 : 0;
-
-        $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
 
 
 
