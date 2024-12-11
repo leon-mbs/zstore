@@ -362,7 +362,7 @@ class PosList extends \App\Pages\Base
 
                 }
 
-                $this->_pos->ppoowner =  $cert->getOwner()   ;
+                $this->_pos->ppoowner =  $cert->getOwnerName()   ;
                 $this->_pos->ppokeyid =  $cert->getKeyId()   ;
                 $this->_pos->ppocert = base64_encode(serialize($cert))  ;
                 $this->_pos->ppokey =  base64_encode(serialize($key))  ;
