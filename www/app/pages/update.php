@@ -147,7 +147,7 @@ class Update extends \App\Pages\Base
              $this->_tvars['rollback']  = false;
              $this->_tvars['reinstall']  = false;
          } 
-     
+          $phpv =   phpversion()  ;
           $this->_tvars['oldphpv']  = $phpv;    
         
  
