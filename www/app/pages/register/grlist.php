@@ -41,7 +41,7 @@ class GRList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Не проведені', 2 => 'Не сплачені', 3 => 'Всі'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті',   1 => 'Не сплачені', 2 => 'Всі'), 0));
         $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -243,16 +243,13 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
         $status = $this->page->filter->status->getValue();
 
         if ($status == 0) {
-            $where .= " and ( (payamount > 0 and payamount > payed) or  (state <>" . Document::STATE_EXECUTED . ")) ";
+            $where .= "  and    state >3 and  state  not in(14,5,9 )        ";
         }
-
+      
         if ($status == 1) {
-            $where .= " and  state <>" . Document::STATE_EXECUTED;
+            $where .= " and state=". Document::STATE_WP;
         }
         if ($status == 2) {
-            $where .= " and  (payamount > 0 and payamount > payed)";
-        }
-        if ($status == 3) {
 
         }
 

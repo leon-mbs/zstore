@@ -12,6 +12,7 @@ use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -39,7 +40,9 @@ class StockList extends \App\Pages\Base
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
         $this->filter->add(new DropDownChoice('fstore', Store::getList(), H::getDefStore()));
         $this->filter->add(new AutocompleteTextInput('fitem'))->onText($this, 'OnAutoItem');
-
+        $this->filter->fitem->onChange($this, "onItem");
+        $this->filter->add(new TextInput('fsnumber'))->setVisible(false);
+ 
         $doclist = $this->add(new DataView('doclist', new StockListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -83,7 +86,19 @@ class StockList extends \App\Pages\Base
         }
         return $r;
     }
+     public function onItem($sender) {
+        $this->filter->fsnumber->setVisible(false);
 
+        $item = Item::load($sender->getKey());
+        if ($item != null) {
+            if ($item->useserial == 1) {
+                $this->filter->fsnumber->setVisible(true);
+
+            }
+
+        }
+
+    }
     //просмотр
     public function showOnClick($sender) {
 
@@ -117,9 +132,12 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
 
         $store_id = $this->page->filter->fstore->getValue();
         $item_id = $this->page->filter->fitem->getKey();
+        $snumber = $this->page->filter->fsnumber->getText();
 
         $where = " s.item_id = {$item_id} and date(d.document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(d.document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
+        if (strlen($snumber) > 0) {
+            $where .= " and s.snumber=" . $conn->qstr($snumber);
+        }
         if ($store_id > 0) {
             $where .= " and s.store_id=" . $store_id;
         }
