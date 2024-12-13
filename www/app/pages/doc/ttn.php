@@ -190,14 +190,11 @@ class TTN extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        //проверяем  что уже есть отправка
-                        $list = $order->getChildren('TTN');
-
-                  
-                        $list = $order->getChildren('GoodsIssue');
+                        if($order->getNotSendedItem() > 0){
+                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                        }
                 
                         $this->docform->total->setText($order->amount);
-
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);

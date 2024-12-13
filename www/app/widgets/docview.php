@@ -154,13 +154,14 @@ class DocView extends \Zippy\Html\PageFragment
 
         $ret['pdoc_id'] = 0;
         $ret['pdoc_name'] = 0;
-        $p = Document::load($doc->parent_id);
-        if($p instanceof Document) {
-            $ret['pdoc_id'] = $doc->parent_id;
-            $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number;
+        if($doc->parent_id >0){
+            $p = Document::load($doc->parent_id);
+            if($p instanceof Document) {
+                $ret['pdoc_id'] = $doc->parent_id;
+                $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number. ' ' . $p->getStateName($p->state);
 
+            }
         }
-
         $ret['reldocs'] = array();
 
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
@@ -177,7 +178,11 @@ class DocView extends \Zippy\Html\PageFragment
 
         $docs = array();
         foreach($doc->getChildren() as $d) {
-            $docs[]=array('id'=>$d->document_id,'name'=>$d->meta_desc . ' ' . $d->document_number,'candel'=>($user->user_id == $d->user_id || $user->rolename  =='admins'));
+            $docs[]=array('id'=>$d->document_id,
+                          'name'=>$d->meta_desc . ' ' . $d->document_number,
+                          'status'=>$d->getStateName($d->state),
+                          'candel'=>($user->user_id == $d->user_id || $user->rolename  =='admins')
+                          );
         }
 
 

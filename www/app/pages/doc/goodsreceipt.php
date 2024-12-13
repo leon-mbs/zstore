@@ -215,10 +215,24 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->docform->val->setValue(0);
                         $this->docform->rate->setText(1);
+                        $this->docform->basedoc->setText($basedoc->document_number);
 
                         $order = $basedoc->cast();
-                        $this->docform->basedoc->setText($order->document_number);
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $nr=$order->getNotReceivedItems();
+                        if(count($nr)==0) {
+                           $this->setWarn('Всі позиції вже доставлені') ;
+                        }
+                        $this->_itemlist = [];
+                      
+                        foreach($order->unpackDetails('detaildata') as $item){
+                            if($nr[$item->item_id] ??0 > 0 )  {
+                                $item->quantity =   $nr[$item->item_id] ;
+                                $this->_itemlist[] = $item; 
+                                
+                            }
+                           
+                        }
+                        
                         $this->CalcTotal();
                         $this->CalcPay();
                     }
@@ -691,10 +705,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         $file = $this->docform->scan->getFile();
-        if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
-            return;
-        }
+     
 
         if ($this->_doc->payed == 0) {
             $this->_doc->headerdata['payment'] = 0;
@@ -733,16 +744,18 @@ class GoodsReceipt extends \App\Pages\Base
                 }
 
                 if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                    if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-
-                    } else {
                         $order = Document::load($this->_doc->parent_id);
-                        if ($order->meta_name =="OrderCust" && $order->state == Document::STATE_INPROCESS) {
-                            $order->updateStatus(Document::STATE_CLOSED);
-
-                            $this->setSuccess("Заявка {$order->document_number} закрита");
-                        }
-                    }
+                        
+                        if ($order->meta_name =="OrderCust"){
+                            $order = $order->cast();
+                            $nr=$order->getNotReceivedItems();
+                            if(count($nr)==0){ // все доставлено
+                               if($order->state == Document::STATE_INPROCESS  ||  $order->state == Document::STATE_INSHIPMENT  ) {
+                                   $order->updateStatus(Document::STATE_DELIVERED);
+                               }
+                            }                   
+                       }
+                     
                 }
 
                 //обновляем  курс

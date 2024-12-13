@@ -239,7 +239,6 @@ class Order extends \App\Entity\Doc\Document
 
             }
         }
-
     }
     //отмена  резерва
     public function unreserve() {
@@ -301,5 +300,34 @@ class Order extends \App\Entity\Doc\Document
         }
              
     }
-    
+    /**
+    * список  неотправленных позиций
+    * 
+    */
+    public function getNotSendedItem() {
+         $notsendqty=[]; 
+         $sendqty=[]; 
+         $notsend=0;
+         $docs= Document::find("state >=5 and meta_name  in ('GoodsIssue','TTN') and parent_id=". $this->document_id);   
+         foreach($docs as $d)  {
+             foreach($d->unpackDetails('detaildata') as $item){
+                if(!isset($sendqty[$item->item_id]) ) $sendqty[$item->item_id]=0;
+                
+                $sendqty[$item->item_id] += $item->quantity;
+             }
+         }
+         foreach($this->unpackDetails('detaildata') as $item){
+            if(($sendqty[$item->item_id] ?? 0) ==0)  {
+                $notsend=$item->quantity;
+            }   else {
+                $notsend=$item->quantity - $sendqty[$item->item_id];  
+            }
+            if($notsend > 0) {
+                $notsendqty[$item->item_id] = $notsend;
+            }
+            
+         }        
+     
+         return $notsendqty;
+    }    
 }

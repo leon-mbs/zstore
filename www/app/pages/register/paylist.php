@@ -45,7 +45,8 @@ class PayList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
-        $this->filter->add(new Date('from', time()));
+        $this->filter->add(new DropDownChoice('fsort', [], 0));
+        $this->filter->add(new Date('from', strtotime('-1 week')));
         $this->filter->add(new Date('to', time()));
 
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
@@ -503,9 +504,18 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start=-1, $count=-1, $sortfield = null, $asc = null) {
+        $sort = $this->page->filter->fsort->getValue();
 
+        $order =" pl_id desc ";
+        if($sort==1) {
+           $order =" p.amount desc ";
+        }
+        if($sort==2) {
+           $order =" (0-p.amount) desc ";
+        }
+        
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.customer_name,d.meta_id,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by  pl_id desc   ";
+        $sql = "select  p.*,d.customer_name,d.meta_id,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by   " . $order;
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
         

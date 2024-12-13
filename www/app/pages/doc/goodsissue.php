@@ -190,13 +190,9 @@ class GoodsIssue extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        //проверяем  что уже есть отправка
-                        $list = $order->getChildren('TTN');
-
-                     
-                        $list = $order->getChildren('GoodsIssue');
-
-                   
+                        if($order->getNotSendedItem() > 0){
+                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                        }
 
                         $this->docform->total->setText(H::fa($order->amount));
 
