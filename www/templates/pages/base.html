@@ -368,7 +368,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -381,7 +381,7 @@
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -416,7 +416,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -429,7 +429,7 @@
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -464,7 +464,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -477,7 +477,7 @@
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -511,7 +511,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -524,7 +524,7 @@
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -561,7 +561,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -574,7 +574,7 @@
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -1096,16 +1096,11 @@
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
 
-                           
-                            <div style="display:none;" id="alerterror" class="alert alert-danger" role="alert">
-                             
+                            {{#alerterror}}
+                            <div class="alert alert-danger" role="alert">
+                                {{{alerterror}}}
                             </div>
-                         
-                      
-                            <div style="display:none;" id="alertinfo" class="alert alert-info" role="alert">
-                               
-                            </div>
-                      
+                            {{/alerterror}}
 
                         </div>
                     </div>
@@ -1151,12 +1146,12 @@
                              <form id="sendmsgform"  >
                                <div class="form-group">
                                   <label  >Отримувач</label>
-                                  <input  id="sendmsgrecname"  name="sendmsgrecname"  readonly class="form-control-plaintext"  />  
-                                  <input  id="sendmsgrecid" name="sendmsgrecid" type="hidden"     />  
+                                  <input  id="sendmsgrecname"  name="sendmsgrecname"  readonly class="form-control-plaintext"  >  
+                                  <input  id="sendmsgrecid" name="sendmsgrecid" type="hidden"     >  
                                </div>
                               <div class="form-group">
                                   <label for="sendmsgtext">Повiдомлення</label>
-                                  <textarea required="required" class="form-control" name="sendmsgtext" id="sendmsgtext"  >  </textarea>
+                                  <textarea required  class="form-control" name="sendmsgtext" id="sendmsgtext"  >  </textarea>
                                </div>
                              
                              </form>
