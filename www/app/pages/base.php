@@ -357,7 +357,14 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
-        
+        $this->_tvars['alerterror'] = "";
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
+            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
+
+            $this->goAnkor('topankor');
+
+
+        }       
     }
 
     protected function afterRender() {
@@ -375,15 +382,11 @@ class Base extends \Zippy\Html\WebPage
         if (strlen(System::getInfoMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
-            $this->addJavaScript("$(\"#alerterror\").html('" . System::getErrorMsgTopPage() . "');$(\"#alerterror\").show(); window.location='#topankor' ", true);
-        }
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
-            $this->addJavaScript("$(\"#alertinfo\").html('" . System::getInfoMsgTopPage() . "');$(\"#alertinfo\").show();  window.location='#topankor'", true);
-        }
+      
+        
         $this->setError('');
         $this->setErrorTopPage('');
-        $this->setInfoTopPage('');
+     
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
