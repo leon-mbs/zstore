@@ -951,7 +951,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $where = "     meta_name  = 'Order'  ";
+        $where = "     meta_name  = 'Order'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date ";
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {

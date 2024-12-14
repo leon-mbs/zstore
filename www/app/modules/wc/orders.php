@@ -217,7 +217,7 @@ class Orders extends \App\Pages\Base
 
     public function onRefresh($sender) {
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%'   and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 

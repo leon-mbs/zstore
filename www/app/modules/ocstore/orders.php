@@ -92,7 +92,7 @@ class Orders extends \App\Pages\Base
             foreach ($data['orders'] as $ocorder) {
 
 
-                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'")  ;
+                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date  ")  ;
 
                 if (intval($cnt) > 0) { //уже импортирован
                     continue;
