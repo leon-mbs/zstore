@@ -67,10 +67,10 @@ class OutFood extends \App\Pages\Base
         if($rtype ==0) {
 
             $sql = "
-              SELECT  DATE(document_date) AS dt,COUNT(*) AS qty  FROM documents_view dv  
+              SELECT  document_date  AS dt,COUNT(*) AS qty  FROM documents_view dv  
                 WHERE  dv.meta_name='OrderFood' AND  state = 9
-                AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
-                AND DATE(dv.document_date) <= " . $conn->DBDate($to) . "
+                AND dv.document_date >= " . $conn->DBDate($from) . "
+                AND dv.document_date <= " . $conn->DBDate($to) . "
                 {$forbar}
                 GROUP BY dt
                 ORDER BY dt 

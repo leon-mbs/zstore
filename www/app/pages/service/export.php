@@ -250,7 +250,7 @@ class Export extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "meta_name='{$dt}' and date(document_date) >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  date(document_date) <= " . $conn->DBDate($sender->dto->getDate());
+        $sql = "meta_name='{$dt}' and   document_date  >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  document_date <= " . $conn->DBDate($sender->dto->getDate());
         $this->_docs = Document::find($sql);
         $this->dformlist->doclist->Reload();
     }

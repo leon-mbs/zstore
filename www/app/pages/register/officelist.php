@@ -531,10 +531,10 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
         $to = $filterform->to->getDate();
 
         if ($from > 0) {
-            $where .= " and date(document_date) >= " . $conn->DBDate($from);
+            $where .= " and  document_date >= " . $conn->DBDate($from);
         }
         if ($to > 0) {
-            $where .= " and date(document_date) <= " . $conn->DBDate($to);
+            $where .= " and  document_date <= " . $conn->DBDate($to);
         }
 
 

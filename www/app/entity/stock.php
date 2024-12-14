@@ -118,7 +118,7 @@ class Stock extends \ZCL\DB\Entity
             $stock = Stock::load($stock_id);
             if ($date > 0) {
                 $conn = \ZDB\DB::getConnect();
-                $where = "   stock_id = {$stock_id} and date(document_date) <= " . $conn->DBDate($date);
+                $where = "   stock_id = {$stock_id} and  document_date  <= " . $conn->DBDate($date);
                 $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
                 return $conn->GetOne($sql);
             } else {
