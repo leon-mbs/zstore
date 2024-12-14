@@ -22,7 +22,7 @@ class Category extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-        \App\Helper::log($this->detail);
+      
         $xml = @simplexml_load_string($this->detail);
 
         $this->price1 = (string)($xml->price1[0]);

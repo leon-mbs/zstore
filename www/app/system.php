@@ -236,7 +236,7 @@ class System
     */
     public static function checkUpdate() {
         $options = System::getOptions("common");       
-        if($options['noupdate']==1) {
+        if(($options['noupdate'] ??0)==1) {
            return;  
         }
         $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
