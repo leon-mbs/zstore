@@ -27,6 +27,7 @@ class Employee extends \ZCL\DB\Entity
         //упаковываем  данные в detail
       //  $this->detail = "<detail><login>{$this->login}</login>";
         //  $this->detail .= "<balance>{$this->balance}</balance>";
+        $this->detail = "<detail>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
         $this->detail .= "<hiredate>{$this->hiredate}</hiredate>";
