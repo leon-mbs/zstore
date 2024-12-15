@@ -817,10 +817,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $filter = Filter::getFilter("doclist");
         if($usedate == true   ) {
             if($filter->from > 0) {
-                $where .= " and date(document_date) >= " . $conn->DBDate($filter->from) ;
+                $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
             }
             if($filter->to > 0) {
-                $where .= " and date(document_date) <= " . $conn->DBDate($filter->to) ;
+                $where .= " and  document_date <= " . $conn->DBDate($filter->to) ;
             }
         }    
             
