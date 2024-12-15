@@ -99,35 +99,53 @@ class Main extends \App\Pages\Base
 
     public function opTopic($args, $post=null) {
         if($args[0] =="delete") {
-            Topic::delete($args[1]);
-        }
-        if($args[0] =="paste") {
-            $node = Node::Load($args[2]);
-            $topic = Topic::load($args[1]);
-
-            if ($topic->acctype > 0 && $node->ispublic != 1) {
-                return "Не можна додавати публічий топік до приватного вузла";
-
-                 
+            if($args[3]=="true") {  //ссылка
+               $conn = \ZCL\DB\DB::getConnect();
+               $conn->Execute("delete from note_topicnode where topic_id={$args[1]} and node_id={$args[2]}" );
+ 
             }
-            $topic->removeFromNode($this->clipboard[3]);
-            $topic->addToNode($this->tree->selectedNodeId());
-
+            else {
+               Topic::delete($args[1]);
+            }
         }
-        if($args[0] =="pastel") {
+        if($args[0] =="pastecopy") {      //вставка  как  перенос
             $node = Node::Load($args[2]);
             $topic = Topic::load($args[1]);
 
-            if ($topic->acctype > 0 && $node->ispublic != 1) {
-                return "Не можна додавати публічий топік до приватного вузла";
+            if ($topic->ispublic ==1 && $node->ispublic != 1) {
+                return "Не можна додавати публічний топік до приватного вузла";
+            }
+            $tn = TopicNode::getFirst("topic_id={$args[1]} and node_id={$args[3]}") ;
+            if($tn==null) return;
+            $topic->removeFromNode($args[3]);
+            $topic->addToNode($args[2],$tn->islink==1);
 
+        }
+        if($args[0] =="pastelink") {   //вставка  как  ссылка
+            $node = Node::Load($args[2]);
+            $topic = Topic::load($args[1]);
+            if($args[2]==$args[3]) {
+                return;
+            }
+            if ($topic->ispublic ==1 && $node->ispublic != 1) {
+                return "Не можна додавати публічний топік до приватного вузла";
+            }
+            $topic->addToNode($node->node_id,true);
+  
+        }
+        if($args[0] =="move") {   //вставка  как  ссылка
+            $node = Node::Load($args[2]);
+            $topic = Topic::load($args[1]);
 
+            if ($topic->ispublic ==1 && $node->ispublic != 1) {
+                return "Не можна додавати публічний топік до приватного вузла";
             }
             $newtopic = new Topic();
             $newtopic->user_id = System::getUser()->user_id;
             $newtopic->title = $topic->title;
+            $newtopic->content = $topic->content;
             if ($node->node_id == $topic->node_id) {
-                $newtopic->title = $topic->title . " (Копія)";
+                $newtopic->title = $topic->title . " (Копия)";
             }
             $newtopic->detail = $topic->detail;
             $newtopic->save();
@@ -160,7 +178,7 @@ class Main extends \App\Pages\Base
 
         $topic->title = $post->title;
         $topic->detail = $post->data;
-        $topic->acctype = $post->acctype;
+        $topic->ispublic = $post->ispublic ?1:0;
 
         if (strlen($topic->title) == 0) {
             return 'Не введено заголовок';
@@ -168,7 +186,7 @@ class Main extends \App\Pages\Base
 
 
         $node = Node::load($args[1]);
-        if ($topic->acctype > 0 && $node->ispublic != 1) {
+        if ($topic->ispublic == 0 && $node->ispublic != 1) {
             return "Не можна додавати приватний топік у публічний вузол" ;
         }
         $topic->updatedon = time();
@@ -264,7 +282,7 @@ class Main extends \App\Pages\Base
             $root->user_id = 0;
             $root->ispublic = 1;
             $root->state = array('expanded'=>true) ;
-
+ 
             $root->save();
 
             $itemlist = Node::find($w, "pid,mpath,title");
@@ -279,13 +297,17 @@ class Main extends \App\Pages\Base
             $node->pid = $item->pid;
             $node->text = $item->title;
             $node->ispublic = $item->ispublic;
+            $node->isowner = $item->user_id==$user->user_id || $user->username=='admin';
 
             if ($node->ispublic == 1) {
                 $node->icon = 'fa fa-users fa-xs';
             } else {
                 $node->icon = 'fa fa-lock fa-xs';
             }
-
+           if ($node->pid==0  ) {
+                $node->icon='';
+                $node->isowner=false;
+            }
             if(in_array($node->id, $expanded)) {    //восстанавливаем развернутые
                 $node->state = array('expanded'=>true) ;
 
@@ -316,9 +338,9 @@ class Main extends \App\Pages\Base
     public function loadTopic($args, $post=null) {
         $t = Topic::load($args[0]) ;
 
-
+            
         $ret = array();
-        $ret['acctype'] = $t->acctype;
+        $ret['ispublic'] = $t->ispublic == "1" ;
         $ret['detail'] = $t->detail;
         $ret['tags'] = $t->getTags();
         $ret['files'] = array();
@@ -337,24 +359,36 @@ class Main extends \App\Pages\Base
     }
   
     public function loadTopics($args, $post=null) {
-
+        $user = \App\System::getUser();
+  
         $conn = \ZCL\DB\DB::getConnect();
         $res = $conn->Execute("select topic_id from note_fav where user_id= " . System::getUser()->user_id);
         $favorites = array();
         foreach ($res as $r) {
             $favorites[] = $r['topic_id'];
         }
-
+        $links = [];
+        $res = $conn->Execute("select topic_id from note_topicnode where islink=1 and  node_id= ".$args[0] );
+        foreach ($res as $r) {
+            $links[] = $r['topic_id'];
+        }
 
         $arr = array()  ;
         foreach(Topic::findByNode($args[0]) as $t) {
-            $t->fav = in_array($t->topic_id, $favorites)  ;
+            $islink =in_array($t->topic_id, $links)  ;         
             $arr[]=array(
              "title"=>$t->title,
-             "fav"=>$t->fav,
+             "fav"=>in_array($t->topic_id, $favorites) ,
              "topic_id"=>$t->topic_id,
+             "ispublic"=>$t->ispublic==1,
+             'canedit' => $user->user_id==$t->user_id,
+     
+           
+             'islink' =>$islink ,
+                 
              "hash" =>md5($t->topic_id . \App\Helper::getSalt()),
-             
+             'isowner' => $user->user_id==$t->user_id 
+            
              );
         }
 
@@ -376,3 +410,4 @@ class Node2
     public $nodes = null;
     public $state = array();
 }
+
