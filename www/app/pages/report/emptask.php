@@ -59,8 +59,8 @@ class EmpTask extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
 
         $where = "   meta_name='Task'   
-              AND DATE( document_date) >= " . $conn->DBDate($from) . "
-              AND DATE( document_date) <= " . $conn->DBDate($to) . "
+              AND   document_date  >= " . $conn->DBDate($from) . "
+              AND   document_date  <= " . $conn->DBDate($to) . "
                 
         and state= " . Document::STATE_CLOSED;
 

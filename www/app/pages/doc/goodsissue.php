@@ -190,22 +190,8 @@ class GoodsIssue extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        //проверяем  что уже есть отправка
-                        $list = $order->getChildren('TTN');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
-                        }
-                        $list = $order->getChildren('GoodsIssue');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
+                        if($order->getNotSendedItem() > 0){
+                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
 
                         $this->docform->total->setText(H::fa($order->amount));

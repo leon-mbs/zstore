@@ -39,7 +39,7 @@
    
    {{#last}}
      <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
-     <tr><td colspan="2"> Останні товари: <td></tr>
+     <tr><td colspan="2"> Останні товари: </td></tr>
      <tr><td colspan="2"> 
          <table      style="font-size:smaller">
             {{#goods}}

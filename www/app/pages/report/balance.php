@@ -70,7 +70,7 @@ class Balance extends \App\Pages\Base
         }
 
         $stview ="SELECT  SUM( (SELECT COALESCE(SUM(quantity), 0)  FROM entrylist_view
-          WHERE entrylist_view.stock_id = store_stock_view.stock_id and date(document_date) < {$dbdt} ) * partion)  from store_stock_view ";
+          WHERE entrylist_view.stock_id = store_stock_view.stock_id and  document_date < {$dbdt} ) * partion)  from store_stock_view ";
 
         $sql = $stview. " where {$brst} item_type=   ".Item::TYPE_MAT;
         $amat = doubleval($conn->GetOne($sql)) ;

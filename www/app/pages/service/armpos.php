@@ -1518,7 +1518,7 @@ class ARMPos extends \App\Pages\Base
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
             
-            
+            //задача  для  автозакрытия
             if($this->pos->autoshift >0){
                 $task = new  \App\Entity\CronTask()  ;
                 $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
@@ -1705,7 +1705,7 @@ class ARMPos extends \App\Pages\Base
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
 
-        $where = "meta_name='PosCheck' and date(document_date) >= " . $conn->DBDate(strtotime('-1 month'))    ;
+        $where = "meta_name='PosCheck' and  document_date  >= " . $conn->DBDate(strtotime('-1 month'))    ;
 
 
         if ($sender instanceof Form) {

@@ -85,8 +85,8 @@ class Dashboard extends \App\Pages\Base
         $this->_tvars['ord'] = json_encode($ord);
 
         $sql = " content  LIKE '%<shoporder>1</shoporder>%' "  ;
-        $sql .= " and date(document_date) <= " . $conn->DBDAte(time());
-        $sql .= " and date(document_date) > " . $conn->DBDAte(strtotime("- 30 day", time()));
+        $sql .= " and  (document_date) <= " . $conn->DBDAte(time());
+        $sql .= " and  (document_date) > " . $conn->DBDAte(strtotime("- 30 day", time()));
         
         $items = array();
         $cats = array();
@@ -151,7 +151,7 @@ class Dashboard extends \App\Pages\Base
         
         $sql   = "  state in (9,10,20) and   
                   content  LIKE '%<shoporder>1</shoporder>%'   
-                   and date(document_date) <= {$to}  and date(document_date) > {$from} " ;
+                   and  (document_date) <= {$to}  and  (document_date) > {$from} " ;
         
         $docs = \App\Entity\Doc\Document::find($sql);   
       

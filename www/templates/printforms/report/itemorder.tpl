@@ -1,4 +1,4 @@
-<table class="ctable" border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0"   cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">

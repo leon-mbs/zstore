@@ -89,7 +89,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="editcust"> Замовник </label>
-                                <typeahead   v-model="editcust"  v-model="customer_id"  ref="cust"  :onquery="ontext"   placeholder="Почнiть вводити ..."></typeahead>   
+                                <typeahead   v-model="editcust"     ref="cust"  :onquery="ontext"   placeholder="Почнiть вводити ..."></typeahead>   
 
                             </div>
                             <div class="form-group">
@@ -183,7 +183,7 @@
           </div>
            <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
                 <h4>Опис</h4>
-                <p v-html="desc"><p>
+                <p v-html="desc"></p>
           </div>
         </div>
 

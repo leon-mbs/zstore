@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "6.12.0";
-    public const PREV_VERSION = "6.11.9";
+    public const CURR_VERSION = "6.12.1";
+    public const PREV_VERSION = "6.12.0";
     public const REQUIRED_DB  = "6.12.0";
 
     private static $_options = array();   //  для кеширования
@@ -231,12 +231,12 @@ class System
 
     
     /**
-    * проверка  обновлений  и ряа  параметров  настроек
-    * 
+    * проверка  обновлений  и ряда  параметров  настроек
+    * вызывается  раз в  неделю
     */
     public static function checkUpdate() {
         $options = System::getOptions("common");       
-        if($options['noupdate']==1) {
+        if(($options['noupdate'] ??0)==1) {
            return;  
         }
         $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
@@ -256,6 +256,14 @@ class System
 
                     $n->save();                 
                           
+                }
+                if(System::useCron() == false){
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = $user->user_id;
+                    $n->message = "Планувальник вимкнено. Деякі  фонові завдання  не  будуть виконуватись " ;
+                    $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                    $n->save();                    
                 }
         }
          

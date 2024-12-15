@@ -128,7 +128,7 @@
                         <td> </td>
                         <td colspan="4">
                             {{#isstamp}}
-                            <img style="height:100px;" src='{{stamp}}'/>
+                            <img style="height:100px;" src="{{stamp}}"/>
                             {{/isstamp}}
 
                             {{^isstamp}}

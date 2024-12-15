@@ -36,7 +36,7 @@
 
 
         <th align="right" style="border: solid black 1px">Сума</th>
-
+       </tr>
         {{#_detail}}
     <tr>
 
@@ -76,7 +76,7 @@
 
 
         <th align="right" style="border: solid black 1px">Сума</th>
-
+      </tr>
         {{#_detail2}}
     <tr>
 
@@ -103,9 +103,10 @@
 
         <td colspan="4"><br>
             <h5> Готово до виробництва </h5>
-            <small>Напівфабрикати та готова продукція, які можуть бути виготовлені на <b> {{currdate}} </b> <br>відповідно до комплектів. 
+            <small>Напівфабрикати та готова продукція, які можуть бути виготовлені на <b> {{currdate}} </b> 
+            <br>відповідно до комплектів. 
              Якщо матеріал або комплектуючі входять <br>в кілька позицій, будуть показані всі варіанти.
-            
+              </small>
         </td>
     </tr>
 
@@ -117,7 +118,7 @@
         <th style="border: solid black 1px">Код</th>
         <th colspan="2" align="right" style="border: solid black 1px">Кіл.</th>
 
-
+    </tr>
 
 
         {{#_detail3}}

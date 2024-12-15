@@ -521,19 +521,13 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->resform->setVisible(false);
         }
 
-        if (count($list) > 0 && $common['numberttn'] <> 1) {
-            $this->statuspan->statusform->bttn->setVisible(false);
-        }
+       
         $list = $this->_doc->getChildren('GoodsIssue');
 
         if(count($list)>0) {
             $this->statuspan->resform->setVisible(false);
         }
-
-        if (count($list) > 0 && $common['numberttn'] <> 1) {
-            $this->statuspan->statusform->bgi->setVisible(false);
-        }
-
+    
     
         if ($this->_doc->hasPayments()) {
             $this->statuspan->statusform->bpos->setVisible(false);
@@ -957,7 +951,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $where = "     meta_name  = 'Order'  ";
+        $where = "     meta_name  = 'Order'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date ";
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {

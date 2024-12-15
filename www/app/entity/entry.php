@@ -78,7 +78,7 @@ class Entry extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
-            $where = $where . "   date(document_date) <= " . $conn->DBDate($date);
+            $where = $where . "   document_date  <= " . $conn->DBDate($date);
         }
 
         if ($emp > 0) {
@@ -109,7 +109,7 @@ class Entry extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
-            $where = $where . " and  date(document_date) <= " . $conn->DBDate($date);
+            $where = $where . " and   document_date <= " . $conn->DBDate($date);
         }
 
         if ($emp > 0) {

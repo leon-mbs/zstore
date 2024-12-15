@@ -95,7 +95,7 @@
                  <div class="row "  >
                  <div class="col-2   "  >
                                 
-                <a zippy="addnew" class="btn btn-primary mr-4  "> <i class="fa fa-plus-circle"> Додати новий</a>
+                <a zippy="addnew" class="btn btn-primary mr-4  "> <i class="fa fa-plus-circle"></i> Додати новий</a>
                  </div>  
                  <div class="col-4  "  >
                  
@@ -106,8 +106,8 @@
                 <form zippy="listform">
                     <table class="table table-hover  table-sm  ">
                         <tr>
-                            <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                            <th style="width:20px"><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="cursor:pointer" title="Зняти/виставити прапорець"
                                     class="fa fa-check-double "></i></th>                    
                             {{#useimages}}
                             <th></th>
@@ -190,7 +190,7 @@
                         <tr><td colspan="9">
                                 <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
                                 <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  &nbsp;&nbsp;
-                                перемiстити в <select   zippy="allcat"><option value="0">Не вказано</select>
+                                перемiстити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
                             </td> </tr>                 
                     </table>
                     <div style="width:50%" zippy="pag"></div>   
@@ -375,7 +375,7 @@
                                     <input list="manlist" class="form-control" zippy="editmanufacturer"/>
                                     <datalist id="manlist">
                                         {{#manlist}}
-                                        <option label='{{mitem}}' value='{{mitem}}'>
+                                        <option label="{{mitem}}" value="{{mitem}}"></option>
                                             {{/manlist}}
 
                                     </datalist>
@@ -552,7 +552,7 @@
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
 
                     <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required 
                            pattern="[0-9,\.]+" style="width:60px">
                     <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
                 </form>
@@ -578,7 +578,7 @@
                     </select>
 
                     <label class="ml-sm-2" for="editscost">Вартість</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost" required="required"
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost"  required 
                            pattern="[0-9,\.]+" style="width:60px">
                            
                     <input zippy="setsformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
@@ -737,12 +737,12 @@
                         <table>
                             <tr>
                                 <td align="center" id="tag"></td>
-                            <tr>
+                            </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
                                                       class="btn btn-success  ">Друк</a></td>
-                            <tr>
+                            </tr>
                         </table>
                     </div>
                 </div>

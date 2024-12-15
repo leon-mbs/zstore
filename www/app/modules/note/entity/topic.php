@@ -17,27 +17,40 @@ class Topic extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
-        //упаковываем  данные в detail
+        
+        /*
         $this->content = "<content>";
         $this->detail = base64_encode($this->detail) ;
         $this->content .= "<detail>{$this->detail}</detail>";
         $this->content .= "<isbasa64>1</isbasa64>";
         $this->content .= "<updatedon>{$this->updatedon}</updatedon>";
         $this->content .= "</content>";
-
-        return true;
+        */
+        
+        $content=[]  ;
+        $content['detail'] =$this->detail ;
+        $content['updatedon'] =$this->updatedon ;
+        $this->content = serialize($content) ;
+        
     }
 
     protected function afterLoad() {
-        //распаковываем  данные из detail
-        $xml = @simplexml_load_string($this->content);
+        
+        if(strpos($this->content,'<content>') ===0  ) {
+            $xml = @simplexml_load_string($this->content);
 
-        $this->detail = (string)($xml->detail[0]);
-        $this->isbasa64 = (int)($xml->isbasa64[0]);
-        if($this->isbasa64==1) {
-            $this->detail = base64_decode($this->detail) ;
+            $this->detail = (string)($xml->detail[0]);
+            $this->isbasa64 = (int)($xml->isbasa64[0]);
+            if($this->isbasa64==1) {
+                $this->detail = base64_decode($this->detail) ;
+            }
+            $this->updatedon = (int)($xml->updatedon[0]);       
+        }  else  {
+            $content = unserialize($this->content) ;
+            $this->updatedon = $content['updatedon'] ;
+            $this->detail = $content['detail'] ;
         }
-        $this->updatedon = (int)($xml->updatedon[0]);
+     
         
         parent::afterLoad();
     }
