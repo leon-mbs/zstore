@@ -239,6 +239,13 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpanmenu->setVisible(false);
+        
+      //обновляем текущего
+        $user = \App\Entity\User::load( \App\System::getUser()->user_id);
+        \App\System::setUser($user);
+        
+        App::Redirect("\\App\\Pages\\Roles");       
+        
     }
 
     public function saveaclOnClick($sender) {
@@ -351,6 +358,12 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
+        
+        //обновляем текущего
+        $user = \App\Entity\User::load( \App\System::getUser()->user_id);
+        \App\System::setUser($user);
+        App::Redirect("\\App\\Pages\\Roles");       
+        
     }
 
     public function cancelOnClick($sender) {

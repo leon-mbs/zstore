@@ -26,7 +26,7 @@ class ShowTopic extends \App\Pages\Base
             die;
         }
 
-        if ($this->_topic->acctype == 0) {   //приватный
+        if ($this->_topic->ispublic == 0) {   //приватный
             http_response_code(404) ;
             die;
         }

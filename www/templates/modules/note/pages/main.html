@@ -502,6 +502,7 @@
             onCutTopic:function(){
                this.clipboard={}
                this.clipboard.topic = this.selectedTopic;
+               this.clipboard.fromnode = this.selectedNode;
                
                this.clipboard.op = "cut";
             }   ,
@@ -525,8 +526,8 @@
                   this.opTopic(["pastelink",this.clipboard.topic.topic_id,this.selectedNode.id,this.clipboard.topic.islink])                               
                }
                if(this.clipboard.op=="cut")  {
-                  this.opTopic(["move",     this.clipboard.topic.topic_id,this.selectedNode.id,this.clipboard.topic.islink])                               
-                  this.clipboard={topic:null,node:null,op:""}
+                  this.opTopic(["move",     this.clipboard.topic.topic_id,this.selectedNode.id,this.clipboard.fromnode.id])                               
+                  this.clipboard={}
 
                }
              

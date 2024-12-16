@@ -108,7 +108,7 @@ class Main extends \App\Pages\Base
                Topic::delete($args[1]);
             }
         }
-        if($args[0] =="pastecopy") {      //вставка  как  копия
+        if($args[0] =="move") {    
             $node = Node::Load($args[2]);
             $topic = Topic::load($args[1]);
 
@@ -133,7 +133,7 @@ class Main extends \App\Pages\Base
             $topic->addToNode($node->node_id,true);
   
         }                                                 
-        if($args[0] =="move") {    
+        if($args[0] =="pastecopy") {       //вставка  как  копия
             $node = Node::Load($args[2]);
             $topic = Topic::load($args[1]);
 
@@ -144,6 +144,7 @@ class Main extends \App\Pages\Base
             $newtopic->user_id = System::getUser()->user_id;
             $newtopic->title = $topic->title;
             $newtopic->content = $topic->content;
+            $newtopic->ispublic = $topic->ispublic;
             if ($node->node_id == $topic->node_id) {
                 $newtopic->title = $topic->title . " (Копія)";
             }
