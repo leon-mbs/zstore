@@ -1,3 +1,5 @@
+ALTER TABLE documents ADD   INDEX parent_id (parent_id)   ; 
+
  
 CREATE TABLE  eqentry (
   id int NOT NULL AUTO_INCREMENT,
@@ -40,4 +42,9 @@ FROM ((((eqentry e
     ON ((e.document_id = d.document_id)));
     
     
-    DROP VIEW if exists cust_acc_view;
+DROP VIEW if exists cust_acc_view;
+
+delete  from  options where  optname='version' ;
+insert  into options (optname,optvalue) values('version','6.13.0'); 
+
+ 
