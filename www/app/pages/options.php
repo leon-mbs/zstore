@@ -34,7 +34,7 @@ class Options extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратори');
             App::RedirectError();
-            return false;
+            return  ;
         }
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');

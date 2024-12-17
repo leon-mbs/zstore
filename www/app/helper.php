@@ -1337,7 +1337,7 @@ class Helper
        global $logger;
        $conn = \ZDB\DB::getConnect();
 
-        $vdb=\App\System::getOptions('version', false) ;
+        $vdb=\App\System::getOptions('version' ) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {

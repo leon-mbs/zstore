@@ -1,4 +1,5 @@
 ALTER TABLE documents ADD   INDEX parent_id (parent_id)   ; 
+ALTER TABLE employees ADD   INDEX login (login)   ; 
 
  
 CREATE TABLE  eqentry (
@@ -11,6 +12,9 @@ CREATE TABLE  eqentry (
   pa_id int DEFAULT NULL,
   document_id int DEFAULT NULL,
   KEY (eq_id) ,
+  KEY (emp_id) ,
+  KEY (pa_id) ,
+  KEY (document_id) ,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
 

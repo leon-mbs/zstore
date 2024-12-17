@@ -25,7 +25,7 @@ class MenuList extends \App\Pages\Base
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             App::RedirectError();
-            return false;
+            return  ;
         }
 
 

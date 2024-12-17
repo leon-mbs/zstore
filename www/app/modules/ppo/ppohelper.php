@@ -22,7 +22,7 @@ class PPOHelper
      *
      * @param mixed $data
      * @param mixed $type cmd (команда) или  doc (документ)
-     * @param mixed $pos pos терминал
+     * @param \App\Entity\Pos $pos pos терминал
      * @param mixed $onlysign только  наложить  подпись
      */
     public static function send($data, $type, \App\Entity\Pos $pos, $onlysign = false) {
@@ -438,7 +438,8 @@ class PPOHelper
         $header['posnumber'] = $pos->fiscalnumber;
         $header['username'] = self::getCashier($doc);
         $header['guid'] = \App\Util::guid();
-
+        $header['amount'] = 0;
+ 
 
      //   $header['comment'] = strlen($common["checkslogan"] ??'') >0 ? $common["checkslogan"]  :  false;
         $header['comment'] = false;
@@ -491,10 +492,7 @@ class PPOHelper
          
         }        
         
-        foreach($header['services'] as $p ) {
-           $sum += $p['cost'] ;
-         
-        }        
+          
        
          // к  оплате
         $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);

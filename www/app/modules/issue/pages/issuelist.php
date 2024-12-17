@@ -31,7 +31,7 @@ class IssueList extends \App\Pages\Base
     public $isnew;
 
 
-    public function __construct($id = 0, $project_id = 0, $new = false) {
+    public function __construct($id = '0', $project_id = 0, $new = false) {
         parent::__construct();
         $id = intval($id);
         $project_id = intval($project_id);

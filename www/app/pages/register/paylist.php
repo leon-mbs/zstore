@@ -386,6 +386,7 @@ class PayList extends \App\Pages\Base
                 if($d['date']==0)  continue;
                 if($d['sum']==0)  continue;
                 if(strlen($d['customer_name'])==0)  continue;
+                $doc=null;
                 if($d['sum']>0)  {
                 
                     $doc = Document::create('IncomeMoney');

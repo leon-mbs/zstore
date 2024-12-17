@@ -451,6 +451,7 @@ GROUP BY c.customer_name,
              WHERE  cv.customer_id={$this->_cust->customer_id} 
             {$br} AND optype IN (3)    
             GROUP BY cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
+              HAVING  active <> passive
             ORDER  BY  cv.document_id ";
      
         foreach ( $conn->Execute($sql) as $d) {

@@ -24,11 +24,7 @@ class SalaryList extends \App\Pages\Base
 {
     private $_doc = null;
 
-    /**
-     *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
-     * @return DocList
-     */
+ 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('SalaryList')) {

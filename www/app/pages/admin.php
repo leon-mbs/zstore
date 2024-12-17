@@ -31,7 +31,7 @@ class Admin extends \App\Pages\Base
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }  
         $options = System::getOptions("common");       
               

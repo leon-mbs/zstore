@@ -36,7 +36,7 @@ class Message extends \ZCL\DB\Entity
      * возвращает список сообщений
      *
      * @param mixed $type
-     * @param mixed $item_d
+     * @param mixed $item_id
   
      */
     public static function getMessages($type, $item_id) {

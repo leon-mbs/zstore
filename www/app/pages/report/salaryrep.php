@@ -24,10 +24,10 @@ class SalaryRep extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), round(date('Y'))));
-        $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), round(date('m'))));
-        $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), round(date('Y'))));
-        $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), round(date('m'))));
+        $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), intval(date('Y'))));
+        $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), intval(date('m'))));
+        $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), intval(date('Y'))));
+        $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), intval(date('m'))));
 
         $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
 

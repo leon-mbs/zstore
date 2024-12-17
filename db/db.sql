@@ -733,7 +733,7 @@ SELECT
   d.amount AS amount,
   d.meta_id AS meta_id,
   u.username AS username,
-  c.customer_id AS customer_id,
+  d.customer_id AS customer_id,
   c.customer_name AS customer_name,
   d.state AS state,
   d.notes AS notes,

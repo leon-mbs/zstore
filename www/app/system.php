@@ -70,7 +70,7 @@ class System
      * Возвращает набор  параметром  по  имени набора
      *
      * @param mixed $group
-     * @param mixed $isserialise
+ 
      */
     public static function getOptions($group ) {
 
