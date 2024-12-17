@@ -16,6 +16,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\DataList\Paginator;
 
 /**
  * журнал расчет с покупателями
@@ -61,6 +62,8 @@ class PayBayList extends \App\Pages\Base
         $this->dlist->add(new Label("cnamed"));
         $this->dlist->add(new ClickLink("backd", $this, "onBack"));
         $this->dlist->add(new DataView('blist', new ArrayDataSource($this, '_blist'), $this, 'blistOnRow'));
+        $this->dlist->add(new Paginator('pagd', $this->dlist->blist));
+        $this->dlist->blist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -75,7 +78,7 @@ class PayBayList extends \App\Pages\Base
         $this->paypan->payform->add(new Date('pdate', time()));
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-
+    
 
         $this->updateCust();
 
@@ -465,7 +468,10 @@ GROUP BY c.customer_name,
      
         foreach ( $conn->Execute($sql) as $d) {
                 
-            
+                $diff = $d['active'] - $d['passive'];
+                if($diff==0) {
+                    continue;
+                }    
                 $r = new  \App\DataItem() ;
                 $r->document_id = $d['document_id'];
                 $r->meta_desc = $d['meta_desc'];
@@ -476,17 +482,14 @@ GROUP BY c.customer_name,
                 $r->b_passive = $d['passive'];
 
        
-                $diff = $d['active'] - $d['passive'];
-                if($diff==0) {
-                    continue;
-                }
+       
                 $bal +=  $diff;
 
                 $r->bal =  $bal;
 
                 $this->_blist[] = $r;
                 if($bal==0) {
-                    $this->_blist = array();
+                    $this->_blist = [];
                 }
 
            
