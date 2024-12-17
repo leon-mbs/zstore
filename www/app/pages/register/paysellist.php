@@ -16,6 +16,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\DataList\Paginator;
 
 /**
  * журнал расчет с поставщиками
@@ -59,6 +60,8 @@ class PaySelList extends \App\Pages\Base
         $this->dlist->add(new Label("cnamed"));
         $this->dlist->add(new ClickLink("backd", $this, "onBack"));
         $this->dlist->add(new DataView('blist', new ArrayDataSource($this, '_blist'), $this, 'blistOnRow'));
+        $this->dlist->add(new Paginator('pagd', $this->dlist->blist));
+        $this->dlist->blist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -73,7 +76,7 @@ class PaySelList extends \App\Pages\Base
         $this->paypan->payform->add(new Date('pdate', time()));
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-
+      
 
         $this->updateCust();
 
@@ -451,11 +454,15 @@ GROUP BY c.customer_name,
              WHERE  cv.customer_id={$this->_cust->customer_id} 
             {$br} AND optype IN (3)    
             GROUP BY cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
+              HAVING  active <> passive
             ORDER  BY  cv.document_id ";
      
         foreach ( $conn->Execute($sql) as $d) {
          
-          
+                $diff = $d['active'] - $d['passive'];
+                if($diff==0) {
+                    continue;
+                }    
 
                 $r = new  \App\DataItem() ;
                 $r->document_id = $d['document_id'];
@@ -466,10 +473,7 @@ GROUP BY c.customer_name,
                 $r->s_active = $d['active'];
                 $r->s_passive = $d['passive'];
 
-                $diff = $d['active'] - $d['passive'];
-                if($diff==0) {
-                    continue;
-                }
+  
                 $bal +=  $diff;
                 $r->bal =  $bal;
 
