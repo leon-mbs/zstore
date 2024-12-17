@@ -479,7 +479,7 @@ GROUP BY c.customer_name,
 
                 $this->_blist[] = $r;
                 if($bal==0) {
-                    $this->_blist = array();
+                    $this->_blist = [];
                 }
 
 
