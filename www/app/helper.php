@@ -534,7 +534,7 @@ class Helper
         if(!is_array($common)) {
             $common = array();
         }
-        $salesourceslist = $common['salesources'];
+        $salesourceslist = $common['salesources'] ??'';
         if(is_array($salesourceslist) == false) {
             $salesourceslist = array();
         }

@@ -409,9 +409,9 @@ class DocList extends \App\Pages\Base
 
         $user = System::getUser();
 
-        if( $this->_doc->meta_name == 'OfficeDoc' ){
+        if($item->meta_name == 'OfficeDoc' ){
               
-            if (false == $this->_doc->checkExe($user)) {
+            if (false == $item->checkExe($user)) {
                 return;
             }
         }            

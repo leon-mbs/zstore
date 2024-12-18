@@ -12,8 +12,10 @@ class Topic extends \ZCL\DB\Entity
     protected function init() {
         $this->topic_id = 0;
         $this->ispublic = 0;
-        $this->updatedon=time()  ;
-      }
+        $this->readusers = [];
+        $this->readusers = [];
+        $this->editusers=time()  ;
+    }
 
     protected function beforeSave() {
         parent::beforeSave();
@@ -28,8 +30,10 @@ class Topic extends \ZCL\DB\Entity
         */
         
         $content=[]  ;
-        $content['detail'] =$this->detail ;
-        $content['updatedon'] =$this->updatedon ;
+        $content['detail']    = $this->detail ;
+        $content['updatedon'] = $this->updatedon ;
+        $content['readusers'] = $this->readusers  ;
+        $content['editusers'] = $this->editusers  ;
         $this->content = serialize($content) ;
         
     }
@@ -49,6 +53,8 @@ class Topic extends \ZCL\DB\Entity
             $content = unserialize($this->content) ;
             $this->updatedon = $content['updatedon'] ;
             $this->detail = $content['detail'] ;
+            $this->readusers = $content['readusers'] ??[];
+            $this->editusers = $content['editusers'] ??[];
         }
      
         

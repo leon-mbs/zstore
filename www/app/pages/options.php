@@ -308,7 +308,7 @@ class Options extends \App\Pages\Base
 
         $this->salesourcesform->add(new DataView('salesourceslist', new ArrayDataSource(new Bind($this, '_salesourceslist')), $this, 'salesourceListOnRow'));
 
-        $this->_salesourceslist = $common['salesources'];
+        $this->_salesourceslist = $common['salesources'] ??'';
         if (is_array($this->_salesourceslist) == false) {
             $this->_salesourceslist = array();
         }
