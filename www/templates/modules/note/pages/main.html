@@ -36,15 +36,15 @@
              <div class="row">
                <div class="col-md-5 col-12">
                     <div class=" mb-1" style="height:30px;">
-                            <a v-on:click.prevent="onNewTopic()" class="btn btn-primary btn-sm   " title="Новий топік"  ><i  class="fa fa-plus"></i></a> 
-                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null && selectedTopic.canedit==true" title="Редагувати"  class="btn btn-sm btn-info  "><i class="fa fa-edit"></i></a>
-                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null && selectedTopic.isowner==true" title="Вирізати"  class="btn btn-sm btn-info   "><i class="fa fa-cut"></i></a>
-                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null && selectedTopic.islink!=true" title="Копіювати для вставки як копію "  class="btn btn-sm btn-info  "><i class="fa fa-copy"></i></a>
-                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null && selectedTopic.islink!=true " title="Копіювати для вставки  як лінк"  class="btn btn-sm btn-info  "><i       class="fa fa-share"></i></a>
+                            <a v-on:click.prevent="onNewTopic()" v-show="selectedNode != null" class="btn btn-primary btn-sm   " title="Новий топік"  ><i  class="fa fa-plus"></i></a> 
+                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null && selectedTopic.canedit==true && selectedTopic.islink==false" title="Редагувати"  class="btn btn-sm btn-info  "><i class="fa fa-edit"></i></a>
+                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null &&   selectedTopic.candelcut==true  && selectedTopic.islink==false" title="Вирізати"  class="btn btn-sm btn-info   "><i class="fa fa-cut"></i></a>
+                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копіювати для вставки як копію "  class="btn btn-sm btn-info  "><i class="fa fa-copy"></i></a>
+                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копіювати для вставки  як лінк"  class="btn btn-sm btn-info  "><i       class="fa fa-share"></i></a>
                             <a v-on:click.prevent="onPasteTopic" v-show="clipboard.topic != null " title="Вставити"  class="btn btn-sm btn-info  "><i class="fa fa-paste"></i></a>
-                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedTopic.ispublic && selectedTopic.isowner " title="Зовнішнє посилання"  target="_blank" class="btn btn-sm btn-info  "><i       class="fa      fa-link"></i></a>
-                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null" title="Видалити"  class="ml-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
-                            <a v-on:click.prevent="onUsers" v-show="selectedTopic != null" title="Доступ"  class="ml-4 btn btn-sm btn-success  "><i class="fa fa-users"></i></a>
+                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedTopic.ispublic && selectedTopic.isowner  && selectedTopic.islink==false" title="Зовнішнє посилання"  target="_blank" class="btn btn-sm btn-info  "><i       class="fa      fa-link"></i></a>
+                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null && selectedTopic.candelcut==true" title="Видалити"  class="ml-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
+                            <a v-on:click.prevent="onUsers" v-show="selectedTopic != null && selectedTopic.canacc==true  && selectedTopic.islink==false" title="Доступ"  class="ml-4 btn btn-sm btn-success  "><i class="fa fa-users"></i></a>
                            </div>           
                    <table class="table table-sm table-hover">
                    <tr v-for="t in topics"    v-bind:class="{'bg-success':issel(t.topic_id)}" >
@@ -169,6 +169,7 @@
             </div>
             
         </div>
+   
    <div id="fileedit" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -214,7 +215,7 @@
                                 <div id="editdetail" class="form-control"  ></div>
                             </div>
                             <div class="form-check">
-                                <input v-model="publicTopic"  id="edittopicpublic" type="checkbox" class="form-check-input">
+                                <input v-model="isPublic"  id="edittopicpublic" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="edittopicpublic">Публiчний</label>
                             </div> 
                               <div class="form-group">
@@ -236,33 +237,33 @@
                              
 </div>   
   
-   <div id="usersaccess" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+   <div id="usersaccess" class="modal fade" tabindex="-1"  >
+            <div class="modal-dialog"  >
                 <div class="modal-content">
                     <form id="usersform"   >
                              
                         <div   class="modal-header">
                             <h5 v-show="selectedTopic != null && selectedTopic.ispublic==false" class="modal-title">Право  перегляду</h5>
                             <h5 v-show="selectedTopic != null && selectedTopic.ispublic==true" class="modal-title">Право  редагування</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span      aria-hidden="true">&times;</span></button>
                         </div>
                         
-                           <div class="input-group  ">
-                              <select>
+                        <div class="input-group  ">
+                              <select v-model="selectedUser">  
                                   <option value="0">Не вибраний</option>
+                                  <option v-for="u in allUsers"  v-bind:value="u.id"  >{{u.name}}</option>
                               </select>  
                              <div class="input-group-append">
-                                 <a title="Додати  " class="btn btn-success"   >+</a>
+                                 <a v-on:click.prevent="onaddUser( )" title="Додати  " class="btn btn-success"   >+</a>
                             </div>                    
                         </div>  
                          
-                          <table class="table table-sm">
-                             <tr>
-                               <td></td>  
-                               <td><a><i class="fa fa-trash"></i></a></td>  
+                         <table class="table table-sm">
+                             <tr v-for="u in accUsers">
+                               <td>{{u.name}}</td>  
+                               <td><a v-on:click.prevent="ondelUser(u )"><i class="fa fa-trash"></i></a></td>  
                              </tr>
-                          </table>
+                         </table>
                           
                         <div class="modal-footer">
                             <button v-on:click.prevent="onSaveUsers()" type="button" class="btn btn-primary">Зберегти                            </button>
@@ -308,10 +309,15 @@
             newTopic:false ,
             editTitle:"" ,
             editTags:"" ,
+
             allUsers:[] ,
-            selectedUsers:[] ,
+            accUsers:[] ,
+            selectedUser:0 , 
        
-            publicTopic:false              
+            isPublic:false    
+            
+            
+                       
             
         } } ,  
         computed:{
@@ -411,7 +417,6 @@
             onAddFile:function(t){    
                 
                $("#fileedit").modal('show') 
-          
                 
             },
             onSaveFile:function(t){    
@@ -432,25 +437,31 @@
             },
                 
             onTopic:function(t){    //завантаження  топіку
-                
+                   console.log(this.selectedNode)
                    this.selectedTopic = t
                
-                   callPageMethod('loadTopic',[t.topic_id], null,(data)=> 
+                   callPageMethod('loadTopic',[t.topic_id, this.selectedNode.id], null,(data)=> 
                    {    
                       data = JSON.parse(data)
                      
                       this.topicData = data.detail
-                      this.publicTopic = data.ispublic  
+                      this.isPublic = data.ispublic  
                       this.topicTags = data.tags
                       this.topicFiles = data.files
                       this.topicSuggestions = data.sugs     
+                     
+                      this.selectedTopic.canedit = data.canedit 
+                      this.selectedTopic.candelcut = data.candelcut 
+                      this.selectedTopic.canacc = data.canacc 
+                     
                    })          
                       
                   
             }   ,
          
             onNewTopic:function(){
-                  this.publicTopic = false;
+              
+                  this.isPublic =  this.selectedNode.ispublic=="1"
                   this.newTopic = true;
                   this.editTitle = "";
                   this.editTags = "";
@@ -468,7 +479,7 @@
               
                   this.newTopic = false;
                   this.editTitle = this.selectedTopic.title;
-                  this.publicTopic = this.selectedTopic.ispublic  ;
+                  this.isPublic = this.selectedTopic.ispublic  ;
                   this.editDetail = this.selectedTopic.detail;
                   this.editTags = this.topicTags.join();
                   $('#topicedit').modal('show');
@@ -485,7 +496,7 @@
                
                var d = {
                    "title": this.editTitle,
-                   "ispublic": this.publicTopic,
+                   "ispublic": this.isPublic,
                    "tags": this.editTags,
                    "data":$('#editdetail').summernote("code") ,
                }
@@ -513,10 +524,48 @@
               
             }   ,       
             onUsers:function(){
-                 $("#usersaccess").modal('show')     
+
+                  callPM('loadUsers',[this.selectedTopic.topic_id], null,(data)=> 
+                   {    
+                     
+                     
+                      this.allUsers = data.allUsers
+                      this.accUsers = data.accUsers  
+       
+                      $("#usersaccess").modal('show')   
+                   })   
+
+                  
+                 
             }   ,
+            onaddUser:function(){ 
+                 
+                for (let u of this.allUsers) {
+                  
+                    if(u.id== this.selectedUser)  {
+                       this.accUsers.push(u) ;
+                       this.allUsers=  arrayRemove(this.allUsers,u)
+                       this.selectedUser=0;
+                       return;
+                    }
+                } 
+                     
+                            
+            } ,
+            ondelUser:function(u){ 
+                 this.accUsers=  arrayRemove(this.accUsers,u)
+                 this.allUsers.push(u) ; 
+                 this.selectedUser=0;      
+            } ,
+        
             onSaveUsers:function(){
-                 $("#usersaccess").modal('hide')     
+                  $("#usersaccess").modal('hide')   
+                 
+                   callPM('saveUsers',[this.selectedTopic.topic_id], this.accUsers,(data)=> 
+                   {    
+                    
+                   })             
+                   
             }   ,
             
             onNewNode:function(){

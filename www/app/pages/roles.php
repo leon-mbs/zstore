@@ -431,27 +431,27 @@ class Roles extends \App\Pages\Base
         $item->stateacc = false;
         $item->cancelacc = false;
         $item->deleteacc = false;
-        $earr = @explode(',', $this->role->acledit);
+        $earr = @explode(',', $this->role->acledit ??'');
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
         }
-        $sarr = @explode(',', $this->role->aclstate);
+        $sarr = @explode(',', $this->role->aclstate??'');
         if (is_array($sarr)) {
             $item->stateacc = in_array($item->meta_id, $sarr);
         }
-        $varr = @explode(',', $this->role->aclview);
+        $varr = @explode(',', $this->role->aclview??'');
         if (is_array($varr)) {
             $item->viewacc = in_array($item->meta_id, $varr);
         }
-        $xarr = @explode(',', $this->role->aclexe);
+        $xarr = @explode(',', $this->role->aclexe??'');
         if (is_array($xarr)) {
             $item->exeacc = in_array($item->meta_id, $xarr);
         }
-        $carr = @explode(',', $this->role->aclcancel);
+        $carr = @explode(',', $this->role->aclcancel??'');
         if (is_array($carr)) {
             $item->cancelacc = in_array($item->meta_id, $carr);
         }
-        $darr = @explode(',', $this->role->acldelete);
+        $darr = @explode(',', $this->role->acldelete??'');
         if (is_array($carr)) {
             $item->deleteacc = in_array($item->meta_id, $darr);
         }

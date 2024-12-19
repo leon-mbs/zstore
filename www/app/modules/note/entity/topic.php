@@ -9,12 +9,13 @@ namespace App\Modules\Note\Entity;
  */
 class Topic extends \ZCL\DB\Entity
 {
+    public $accusers = [];
+    
     protected function init() {
         $this->topic_id = 0;
         $this->ispublic = 0;
-        $this->readusers = [];
-        $this->readusers = [];
-        $this->editusers=time()  ;
+ 
+        $this->accusers=[] ;
     }
 
     protected function beforeSave() {
@@ -32,8 +33,8 @@ class Topic extends \ZCL\DB\Entity
         $content=[]  ;
         $content['detail']    = $this->detail ;
         $content['updatedon'] = $this->updatedon ;
-        $content['readusers'] = $this->readusers  ;
-        $content['editusers'] = $this->editusers  ;
+        $content['accusers'] = $this->accusers  ;
+      
         $this->content = serialize($content) ;
         
     }
@@ -49,12 +50,13 @@ class Topic extends \ZCL\DB\Entity
                 $this->detail = base64_decode($this->detail) ;
             }
             $this->updatedon = (int)($xml->updatedon[0]);       
-        }  else  {
+            $this->accusers =  [];
+       }  else  {
             $content = unserialize($this->content) ;
             $this->updatedon = $content['updatedon'] ;
             $this->detail = $content['detail'] ;
-            $this->readusers = $content['readusers'] ??[];
-            $this->editusers = $content['editusers'] ??[];
+            $this->accusers = $content['accusers'] ??[];
+     
         }
      
         

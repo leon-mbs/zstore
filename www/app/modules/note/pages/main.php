@@ -33,7 +33,6 @@ class Main extends \App\Pages\Base
 
     }
 
-
     public function onSearch($args, $post=null) {
         $cr = json_decode($post) ;
         $ret = array();
@@ -41,10 +40,10 @@ class Main extends \App\Pages\Base
         if($cr->fav == true) {
             $l = TopicNode::searchFav();
         }
-        if(strlen($cr->tag) >0) {
+        if(strlen($cr->tag ?? '') >0) {
             $l = TopicNode::searchByTag($cr->tag)    ;
         }
-        if(strlen($cr->text) > 0) {
+        if(strlen($cr->text?? '') > 0) {
             $l =  TopicNode::searchByText($cr->text, $cr->type, $cr->title);
         }
 
@@ -63,13 +62,13 @@ class Main extends \App\Pages\Base
 
     }
 
-
     public function onDelFile($args, $post=null) {
 
         Helper::deleteFile($args[0]);
 
 
     }
+ 
     public function onAddFile($args, $post=null) {
 
         $file =  $_FILES['editfile']  ;
@@ -83,7 +82,6 @@ class Main extends \App\Pages\Base
 
     }
 
-
     public function onFav($args, $post=null) {
 
 
@@ -95,7 +93,6 @@ class Main extends \App\Pages\Base
         }
 
     }
-
 
     public function opTopic($args, $post=null) {
         if($args[0] =="delete") {
@@ -179,6 +176,10 @@ class Main extends \App\Pages\Base
 
         $topic->title = $post->title;
         $topic->detail = $post->data;
+        if($topic->ispublic != ($post->ispublic ?1:0 ))    
+        {
+            $topic->accusers=[]; //сбрасываем  при смене  доступа
+        }
         $topic->ispublic = $post->ispublic ?1:0;
 
         if (strlen($topic->title) == 0) {
@@ -304,8 +305,11 @@ class Main extends \App\Pages\Base
                 $node->icon = 'fa fa-users fa-xs';
             } else {
                 $node->icon = 'fa fa-lock fa-xs';
+                if(!$node->isowner) {
+                    continue;
+                }
             }
-           if ($node->pid==0  ) {
+            if ($node->pid==0  ) {
                 $node->icon='';
                 $node->isowner=false;
             }
@@ -338,13 +342,15 @@ class Main extends \App\Pages\Base
 
     public function loadTopic($args, $post=null) {
         $t = Topic::load($args[0]) ;
-
+        $n = Node::load($args[1]) ;
+        $user = \App\System::getUser();
+  
             
         $ret = array();
         $ret['ispublic'] = $t->ispublic == "1" ;
         $ret['detail'] = $t->detail;
         $ret['tags'] = $t->getTags();
-        $ret['files'] = array();
+        $ret['files'] = [];
         $ret['sugs'] = $t->getSuggestionTags();
         foreach(Helper::findFileByTopic($t->topic_id) as $f) {
             $ret['files'][] = array('file_id'=>$f->file_id,
@@ -352,13 +358,24 @@ class Main extends \App\Pages\Base
              'link'=>"/loadfile.php?id=" . $f->file_id
              );
         }
-
-
-
+     
+        $ret['canedit'] = $user->user_id==$t->user_id ;
+        
+        if($ret['ispublic'] )  {
+            if(in_array( $user->user_id,$t->accusers)) {
+               $ret['canedit'] = true;
+            }
+        }     
+        
+        $ret['candelcut'] = ($user->user_id==$t->user_id  || $user->user_id==$n->user_id )  ;
+        $ret['canacc'] = $user->user_id==$t->user_id ;
+  
+       
+   
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
     }
-  
+
     public function loadTopics($args, $post=null) {
         $user = \App\System::getUser();
   
@@ -375,29 +392,72 @@ class Main extends \App\Pages\Base
         }
 
         $arr = array()  ;
-        foreach(Topic::findByNode($args[0]) as $t) {
-            $islink =in_array($t->topic_id, $links)  ;         
-            $arr[]=array(
+        foreach(Topic:: findYield("   topic_id in (select topic_id from note_topicnode where  node_id={$args[0]})" )  as $t) {
+                   
+            $a=array(
              "title"=>$t->title,
              "fav"=>in_array($t->topic_id, $favorites) ,
              "topic_id"=>$t->topic_id,
              "ispublic"=>$t->ispublic==1,
-             'canedit' => $user->user_id==$t->user_id,
-     
            
-             'islink' =>$islink ,
+             'islink' =>in_array($t->topic_id, $links)  ,
                  
              "hash" =>md5($t->topic_id . \App\Helper::getSalt()),
              'isowner' => $user->user_id==$t->user_id 
             
              );
+             
+             if($a['ispublic'] ==false && $a['isowner'] ==false ) {
+                 
+                 if(!in_array($user->user_id,$t->accusers??[]))  {
+                     continue;
+                 }
+                 
+             }
+             
+             
+             $arr[] = $a;
+             
         }
 
         return json_encode($arr, JSON_UNESCAPED_UNICODE);
 
     }
-
-
+    
+    public function loadUsers($args, $post=null) {
+        $user = \App\System::getUser();
+     
+        $t = Topic::load($args[0]) ;
+        $ret = ['allUsers'=>[],'accUsers'=>[]] ;
+        
+        foreach( \App\Entity\User::findArray('username', 'disabled <> 1','username') as $id=>$name ){
+            if($id==$user->user_id) continue;
+            
+            if(  in_array($id,$t->accusers)  ) {
+               $ret['accUsers'][]  =['id'=>$id,'name'=>$name] ;
+            } else {
+               $ret['allUsers'][]  =['id'=>$id,'name'=>$name] ;
+            }
+            
+        }
+        
+        
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+       
+    }
+ 
+   
+    public function saveUsers($args, $post=null) {
+        $post= json_decode($post)    ;
+        $t = Topic::load($args[0]) ;
+        $t->accusers=[];
+        foreach($post as $u){
+            $t->accusers[]=$u->id;  
+        }
+        
+        $t->save();
+        
+    }
 
 }
 
