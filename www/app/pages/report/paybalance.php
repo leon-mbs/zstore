@@ -245,9 +245,9 @@ class PayBalance extends \App\Pages\Base
         $inv = 0;
 
         foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {
-            if ($oc->getBalance($to) > 0) {
-                $inv += $oc->getBalance($to);
-            }
+           // if ($oc->getBalance($to) > 0) {
+             //todo   $inv += $oc->getBalance($to);
+          //  }
         }
         $sql = " 
          SELECT   coalesce(  sum(partion*qty),0)     FROM store_stock_view 

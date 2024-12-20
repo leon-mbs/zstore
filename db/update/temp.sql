@@ -1,7 +1,10 @@
 ALTER TABLE documents ADD   INDEX parent_id (parent_id)   ; 
 ALTER TABLE documents ADD   INDEX document_number (document_number)   ; 
 ALTER TABLE employees ADD   INDEX login (login)   ; 
-ALTER TABLE metadata ADD   INDEX meta_name (meta_name)   ; 
+ALTER TABLE metadata  ADD   INDEX meta_name (meta_name)   ; 
+
+ALTER TABLE equipments ADD  type  smallint DEFAULT 0;
+
 
  
 CREATE TABLE  eqentry (
@@ -35,20 +38,34 @@ SELECT
   e.pa_id AS pa_id,
   e.document_id AS document_id,
   d.document_number AS document_number,
-  em.emp_name AS emp_name,
-  pa.pa_name AS pa_name
-FROM ((((eqentry e
-  JOIN equipments eq
-    ON ((e.eq_id = eq.eq_id)))
-  LEFT JOIN employees em
-    ON ((e.emp_id = em.employee_id)))
-  LEFT JOIN parealist pa
-    ON ((e.pa_id = pa.pa_id)))
+  d.notes AS notes 
+ 
+FROM  eqentry e
   LEFT JOIN documents d
-    ON ((e.document_id = d.document_id)));
+    ON  e.document_id = d.document_id ;
     
+
+
+DROP VIEW if exists equipments_view  ;
+
+CREATE
+VIEW equipments_view
+AS
+SELECT
+  `e`.`eq_id` AS `eq_id`,
+  `e`.`eq_name` AS `eq_name`,
+  `e`.`detail` AS `detail`,
+  `e`.`disabled` AS `disabled`,
+  `e`.`description` AS `description`,
+  `e`.`branch_id` AS `branch_id`,
+  `e`.`invnumber` AS `invnumber`,
+  `e`.`type` AS `type` ,
+   (select sum(amount) from eqentry en where  e.eq_id=en.eq_id ) as balance 
+  
+FROM  `equipments` e  ;
+
     
-    
+убрать линки с  поиска
 DROP VIEW if exists note_topicnodeview  ;
 
 SELECT

@@ -122,7 +122,7 @@ class Balance extends \App\Pages\Base
 
         $aeq=0;
         foreach(\App\Entity\Equipment::find("") as $eq){
-            $aeq += doubleval($eq->getBalance($dt));
+         //todo   $aeq += doubleval($eq->getBalance($dt));
         }
         
  
