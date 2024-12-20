@@ -85,6 +85,10 @@ FROM ((`note_topics`
     
 DROP VIEW if exists cust_acc_view;
 
+
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
+
+
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.13.0'); 
 
