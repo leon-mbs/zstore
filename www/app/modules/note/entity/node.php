@@ -22,9 +22,14 @@ class Node extends TreeEntity
 
     protected function beforeDelete() {
         $conn = \ZCL\DB\DB::getConnect();
+        $tlist=  $conn->GetCol(" select topic_id from note_topicnode where node_id=" . $this->node_id. " and islink != 1  " );
+        foreach($tlist as $tid){
+            Topic::delete($tid);
+        }
+        
         $conn->Execute("delete from note_topicnode where node_id=" . $this->node_id);
 
-        return true;
+        return "";
     }
 
     /**

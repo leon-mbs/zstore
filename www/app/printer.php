@@ -430,7 +430,7 @@ class Printer
     * вывод QR кода
     *
     * @param mixed $text
-    * @param mixed $size     
+    * @param int $size     
     */
     public function QR($text, int $size=12) {
 
@@ -560,7 +560,7 @@ class Printer
     /**
     * цвет
     *
-    * @param mixed $color   0,1
+    * @param int $color   0,1
     */
     public function color(int $color) {
         if($color == 0  || $color ==1) {
@@ -722,7 +722,7 @@ class Printer
                 return;
             }
 
-            $this->textSize($attr['width'], $attr['height']) ;
+            $this->textSize(intval($attr['width']), intval($attr['height']) ) ;
         }
         if($name==='qrcode') {
             if(isset($attr['size'])) {

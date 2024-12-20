@@ -1257,7 +1257,7 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->autoarticle->setChecked($options['autoarticle']);
         
         
-        $this->_cflist = $options['cflist']  ;
+        $this->_cflist = $options['cflist'] ?? '' ;
         if (is_array($this->_cflist) == false) {
             $this->_cflist = [];
         }        

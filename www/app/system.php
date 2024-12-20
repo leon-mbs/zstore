@@ -14,9 +14,8 @@ class System
     public const PREV_VERSION = "6.12.0";
     public const REQUIRED_DB  = "6.12.0";
 
-    private static $_options = array();   //  для кеширования
-
-    private static $_cache   = array();   //  для кеширования
+   
+   
 
     /**
      * Возвращает  текущего  юзера
@@ -71,30 +70,36 @@ class System
      * Возвращает набор  параметром  по  имени набора
      *
      * @param mixed $group
-     * @param mixed $isserialise
+ 
      */
-    public static function getOptions($group, $isserialise=true) {
+    public static function getOptions($group ) {
 
-        if (isset(self::$_options[$group])) {
-            return self::$_options[$group];
+        $opp  = Session::getSession()->options ??[] ;
+       
+        if(isset($opp[$group])) {
+            return $opp[$group];
         }
+       
+       
         $conn = \ZDB\DB::getConnect();
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
-            if(!$isserialise) {
-                self::$_options[$group] = $rs;
-                return $rs;
-            }  //неупакопано
+            if(strpos($rs,':')>0) {
+                $d =  @unserialize($rs);
+                $opp[$group]  = $d;
+                Session::getSession()->options = $opp;
+                return $d;
+            }   
 
             $d =    @unserialize(@base64_decode($rs));
-            if(!is_array($d)) {
-                $d =  @unserialize($rs); //для  совместивости
-            }
-            self::$_options[$group] = $d;
+            $opp[$group]  = $d;
+            Session::getSession()->options = $opp;
+            return $d;
+            
         }
 
-        return self::$_options[$group] ?? [];
+        
     }
 
     /**
@@ -117,12 +122,13 @@ class System
      * @param mixed $options
      */
     public static function setOptions($group, $options) {
-        self::$_options[$group] = $options;
+     
         $options = serialize($options);
         $options = base64_encode($options) ;
         $conn = \ZDB\DB::getConnect();
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
+        Session::getSession()->options = [];
     }
     /**
     * установить отьедный параметр
@@ -139,18 +145,7 @@ class System
         self::setOptions($group, $options) ;
     }
 
-    public static function setCache($key, $data) {
-        self::$_cache[$key] = $data;
-    }
-
-    public static function getCache($key) {
-
-        if (isset(self::$_cache[$key])) {
-            return self::$_cache[$key];
-        }
-        return null;
-    }
-
+   
     public static function setSuccessMsg($msg) {
         Session::getSession()->smsg = $msg;
     }
@@ -201,7 +196,7 @@ class System
     }
 
     public static function clean() {
-        self::$_cache = [] ;
+        
 
     }
 

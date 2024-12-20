@@ -290,8 +290,8 @@ class Main extends Base
         $this->_tvars['ts'] = json_encode($ts);
 
         //инфоблоки
-        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order')  
-         {$br}   and d.state in (7,21)      ";
+        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order','ServiceAct')  
+         {$br}   and d.state in (7,8,21,16)      ";
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 

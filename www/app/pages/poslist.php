@@ -29,7 +29,7 @@ class PosList extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 

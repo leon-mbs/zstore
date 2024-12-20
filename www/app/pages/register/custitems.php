@@ -97,7 +97,7 @@ class CustItems extends \App\Pages\Base
         $this->optionsform->setVisible(false); 
         $this->optionsform->add(new CheckBox("optupdate"))  ;
         $this->optionsform->add(new TextInput('optclean' ));
-        $this->optionsform->add(new DropDownChoice('compare',0 ));
+        $this->optionsform->add(new DropDownChoice('compare',[],0 ));
         $this->optionsform->add(new Button('cancelo'))->onClick($this, 'cancelOnClick');
                                             
                                    

@@ -29,7 +29,7 @@ class Roles extends \App\Pages\Base
         if (System::getUser()->userlogin != 'admin') {
             $this->setError("До сторінки має доступ тільки користувач admin");
             App::RedirectError();
-            return false;
+            return  ;
         }
 
 
@@ -239,6 +239,13 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpanmenu->setVisible(false);
+        
+      //обновляем текущего
+        $user = \App\Entity\User::load( \App\System::getUser()->user_id);
+        \App\System::setUser($user);
+        
+        App::Redirect("\\App\\Pages\\Roles");       
+        
     }
 
     public function saveaclOnClick($sender) {
@@ -351,6 +358,12 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
+        
+        //обновляем текущего
+        $user = \App\Entity\User::load( \App\System::getUser()->user_id);
+        \App\System::setUser($user);
+        App::Redirect("\\App\\Pages\\Roles");       
+        
     }
 
     public function cancelOnClick($sender) {
@@ -418,27 +431,27 @@ class Roles extends \App\Pages\Base
         $item->stateacc = false;
         $item->cancelacc = false;
         $item->deleteacc = false;
-        $earr = @explode(',', $this->role->acledit);
+        $earr = @explode(',', $this->role->acledit ??'');
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
         }
-        $sarr = @explode(',', $this->role->aclstate);
+        $sarr = @explode(',', $this->role->aclstate??'');
         if (is_array($sarr)) {
             $item->stateacc = in_array($item->meta_id, $sarr);
         }
-        $varr = @explode(',', $this->role->aclview);
+        $varr = @explode(',', $this->role->aclview??'');
         if (is_array($varr)) {
             $item->viewacc = in_array($item->meta_id, $varr);
         }
-        $xarr = @explode(',', $this->role->aclexe);
+        $xarr = @explode(',', $this->role->aclexe??'');
         if (is_array($xarr)) {
             $item->exeacc = in_array($item->meta_id, $xarr);
         }
-        $carr = @explode(',', $this->role->aclcancel);
+        $carr = @explode(',', $this->role->aclcancel??'');
         if (is_array($carr)) {
             $item->cancelacc = in_array($item->meta_id, $carr);
         }
-        $darr = @explode(',', $this->role->acldelete);
+        $darr = @explode(',', $this->role->acldelete??'');
         if (is_array($carr)) {
             $item->deleteacc = in_array($item->meta_id, $darr);
         }

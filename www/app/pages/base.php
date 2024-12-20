@@ -277,11 +277,15 @@ class Base extends \Zippy\Html\WebPage
 
         //планировщик
         $this->_tvars['cron']  = false;
-
-        $last = \App\Helper::getKeyValInt('lastcron')  ;
-        if(\App\System::useCron()  &&  (time() - $last) > \App\Entity\CronTask::MIN_INTERVAL) {
-            $this->_tvars['cron']  = true;
+        if(\App\System::useCron() ) {
+              $last = \App\Session::getSession()->lastcron ?? 0  ;
+              if(   (time() - $last) > \App\Entity\CronTask::MIN_INTERVAL) {
+                  $this->_tvars['cron'] = true;
+                  \App\Session::getSession()->lastcron = time();
+              }         
         }
+        
+ 
 
         //миграция  данных
         if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {

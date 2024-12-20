@@ -215,7 +215,7 @@ class MoveItem extends \App\Pages\Base
             $this->_itemlist[$this->_rowid] = $item;
         }
 
-
+        $this->wselitem->setVisible(false);
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -233,6 +233,7 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setText('');
 
         $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
         
         $this->editsnitem->setVisible(false);        
     }
@@ -245,9 +246,9 @@ class MoveItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
+        $this->_doc->headerdata['tostore'] =  intval( $this->docform->tostore->getValue());
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -328,13 +329,17 @@ class MoveItem extends \App\Pages\Base
         }
 
 
-        if (($this->docform->store->getValue() > 0) == false) {
+        if ( $this->_doc->headerdata['store'] == 0) {
             $this->setError("Не обрано склад");
         }
-        if (($this->docform->tostore->getValue() > 0) == false) {
+        if ( $this->_doc->headerdata['tostore'] == 0) {
             $this->setError("Не обрано склад");
         }
-
+        if ( $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
+            $this->setError("Той самий склад");
+        }
+    
+      
 
         return !$this->isError();
     }

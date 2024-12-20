@@ -29,7 +29,7 @@ class Subscribes extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }
         $this->add(new Panel('plist'));
         $this->plist->add(new ClickLink('addnew', $this, 'onAdd'));

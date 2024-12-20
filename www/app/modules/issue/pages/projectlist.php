@@ -25,7 +25,7 @@ class ProjectList extends \App\Pages\Base
 {
     public $id=0;
 
-    public function __construct($id = 0) {
+    public function __construct($id = '0') {
         parent::__construct();
         $this->_user = System::getUser();
         $id = intval($id);

@@ -28,7 +28,7 @@ class Users extends \App\Pages\Base
 
             $this->setError('onlyadmisaccess');
             App::RedirectError();
-            return false;
+            return  ;
         }
 
 

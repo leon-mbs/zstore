@@ -28,7 +28,7 @@ class Update extends \App\Pages\Base
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }  
         
         $t = '?t='.time(); 
@@ -41,7 +41,7 @@ class Update extends \App\Pages\Base
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversiondb'] =   System::getOptions('version', false);
+        $this->_tvars['curversiondb'] =   System::getOptions('version' );
 
         $requireddb=  System::REQUIRED_DB ;
  
@@ -99,9 +99,12 @@ class Update extends \App\Pages\Base
         
         $ca = explode('.', $c) ;
         $na = explode('.', $n) ;
-                
+        $na[0]   = intval($na[0]);      
+        $na[1]   = intval($na[1]);      
+        $na[2]   = intval($na[2]);      
+        
         $this->_tvars['tooold']  = false;    
-        if ($na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
+        if (  $na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
 
            $this->_tvars['tooold']  = true   ;//пропущено несколько
      //      $this->_tvars['show']  = false   ;

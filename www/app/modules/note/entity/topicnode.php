@@ -38,7 +38,7 @@ class TopicNode extends \ZCL\DB\Entity
         if ($user->rolename == 'admins') {
             $n = '';
         }
-        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or acctype>0  )  and ";
+        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or ispublic=1  )  and ";
         if ($user->rolename == 'admins') {
             $t = '';
         }
@@ -75,7 +75,7 @@ class TopicNode extends \ZCL\DB\Entity
         if ($user->rolename == 'admins') {
             $n = '';
         }
-        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or acctype>0  )  and ";
+        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or ispublic=1  )  and ";
         if ($user->rolename == 'admins') {
             $t = '';
         }
@@ -90,7 +90,7 @@ class TopicNode extends \ZCL\DB\Entity
     // поиск избранных
     public static function searchFav() {
 
-        $sql = "  select * from note_topicnodeview   where topic_id in (select  topic_id from note_fav where user_id = " . \App\System::getUser()->user_id . ") ";
+        $sql = "  select * from note_topicnodeview   where    topic_id in (select  topic_id from note_fav where user_id = " . \App\System::getUser()->user_id . ") ";
 
         $list = TopicNode::findBySql($sql);
 

@@ -9,11 +9,14 @@ namespace App\Modules\Note\Entity;
  */
 class Topic extends \ZCL\DB\Entity
 {
+    public $accusers = [];
+    
     protected function init() {
         $this->topic_id = 0;
-        $this->acctype = 0;
-        $this->updatedon=time()  ;
-      }
+        $this->ispublic = 0;
+ 
+        $this->accusers=[] ;
+    }
 
     protected function beforeSave() {
         parent::beforeSave();
@@ -28,8 +31,10 @@ class Topic extends \ZCL\DB\Entity
         */
         
         $content=[]  ;
-        $content['detail'] =$this->detail ;
-        $content['updatedon'] =$this->updatedon ;
+        $content['detail']    = $this->detail ;
+        $content['updatedon'] = $this->updatedon ;
+        $content['accusers'] = $this->accusers  ;
+      
         $this->content = serialize($content) ;
         
     }
@@ -45,10 +50,13 @@ class Topic extends \ZCL\DB\Entity
                 $this->detail = base64_decode($this->detail) ;
             }
             $this->updatedon = (int)($xml->updatedon[0]);       
-        }  else  {
+            $this->accusers =  [];
+       }  else  {
             $content = unserialize($this->content) ;
             $this->updatedon = $content['updatedon'] ;
             $this->detail = $content['detail'] ;
+            $this->accusers = $content['accusers'] ??[];
+     
         }
      
         
@@ -63,7 +71,7 @@ class Topic extends \ZCL\DB\Entity
     public static function findByNode($node_id) {
 
         $user = \App\System::getUser();
-        $w = "(user_id={$user->user_id} or acctype > 0  ) and ";
+        $w = "(user_id={$user->user_id} or ispublic=1  ) and ";
         if ($user->rolename == 'admins') {
             $w = '';
         }
@@ -88,12 +96,13 @@ class Topic extends \ZCL\DB\Entity
 
     /**
      * добавить  к  узлу
-     *
+     * 
      * @param mixed $node_id
      */
-    public function addToNode($node_id) {
+    public function addToNode($node_id,$islink=false) {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("insert into note_topicnode(topic_id,node_id)values({$this->topic_id},{$node_id})");
+        $conn->Execute("delete from note_topicnode where topic_id={$this->topic_id} and node_id = {$node_id} ");
+        $conn->Execute("insert into note_topicnode(topic_id,node_id,islink)values({$this->topic_id},{$node_id}," . ($islink ? 1:0  ). ")");
     }
 
     /**

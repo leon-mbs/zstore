@@ -124,7 +124,7 @@ class UserProfile extends \App\Pages\Base
         $this->onPSType(null);
 
         $form = new Form('printerlabel');
-        $form->add(new DropDownChoice('prtypelabel', 0))->onChange($this, "onPSTypelabel");
+        $form->add(new DropDownChoice('prtypelabel', [],0))->onChange($this, "onPSTypelabel");
         $form->prtypelabel->setValue($this->user->prtypelabel);
         $form->add(new DropDownChoice('prturn'));
         $form->prturn->setValue($this->user->prturn);

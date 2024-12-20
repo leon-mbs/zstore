@@ -15,7 +15,7 @@ class UserLogin extends \Zippy\Html\WebPage
     public function __construct() {
         parent::__construct();
 
-        System::clean() ;
+     //   System::clean() ;
         System::getSession()->clean();
 
 

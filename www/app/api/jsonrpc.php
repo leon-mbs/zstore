@@ -105,7 +105,7 @@ abstract class JsonRPC
     /**
      * Processes the user input, and prepares a response (if necessary).
      *
-     * @param string $json
+     * @param mixed $input
      * Single request object, or an array of request objects, as a JSON string.
      *
      * @return array|null   $input
