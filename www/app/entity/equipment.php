@@ -11,6 +11,17 @@ namespace App\Entity;
  */
 class Equipment extends \ZCL\DB\Entity
 {
+    public const IYPR_EQ = 1;
+    public const IYPR_OS = 2;
+    public const IYPR_NMA = 3;
+      
+    
+    public const OP_INCOME = 1;
+    public const OP_OUTCOME = 2;
+    public const OP_BAL = 3;
+    public const OP_MOVE = 4;
+      
+    
     private $bh=[]; 
     protected function init() {
         $this->eq_id = 0;
@@ -22,9 +33,7 @@ class Equipment extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail = "<detail><resemp_id>{$this->resemp_id}</resemp_id>";
         $this->detail .= "<serial>{$this->serial}</serial>";
-        $this->detail .= "<datein>{$this->datein}</datein>";
-        $this->detail .= "<dateout>{$this->dateout}</dateout>";
-           
+            
         $this->detail .= "</detail>";
 
         return true;
@@ -34,8 +43,6 @@ class Equipment extends \ZCL\DB\Entity
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->detail);
         $this->resemp_id = (int)($xml->resemp_id[0]);
-        $this->datein = (int)($xml->datein[0]);
-        $this->dateout = (int)($xml->dateout[0]);
         $this->serial = (string)($xml->serial[0]);
  
      
@@ -65,6 +72,19 @@ class Equipment extends \ZCL\DB\Entity
         return $br;
     }
 
+    public static function getTypeName(int $t){
+        if($t==self::IYPR_EQ) return 'Обладнання' ;
+        if($t==self::IYPR_OS) return 'Основні фонди' ;
+        if($t==self::IYPR_NMA) return 'Нематеріальні активи' ;
+        return 'N/A' ;
+    }
     
+    public static function getOpName(int $t){
+        if($t==self::OP_INCOME) return 'Ввод в  експлуатацію' ;
+        if($t==self::OP_OUTCOME) return 'Виведення з експлуатації' ;
+        if($t==self::OP_BAL) return 'Зміна балансової вартості' ;
+        if($t==self::OP_MOVE) return 'Переміщення' ;
+        return 'N/A' ;
+   }
     
 }

@@ -13,12 +13,10 @@ CREATE TABLE  eqentry (
   updatedon date NOT NULL,
   optype smallint NOT NULL,
   amount decimal(10, 2) DEFAULT NULL,
-  emp_id int DEFAULT NULL,
-  pa_id int DEFAULT NULL,
+ 
   document_id int DEFAULT NULL,
   KEY (eq_id) ,
-  KEY (emp_id) ,
-  KEY (pa_id) ,
+ 
   KEY (document_id) ,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
@@ -29,20 +27,17 @@ CREATE
 VIEW eqentry_view
 AS
 SELECT
-  e.id AS id,
-  e.eq_id AS eq_id,
- COALESCE(d.document_date, e.updatedon) AS updatedon,
-  e.optype AS optype,
-  e.amount AS amount,
-  e.emp_id AS emp_id,
-  e.pa_id AS pa_id,
-  e.document_id AS document_id,
-  d.document_number AS document_number,
-  d.notes AS notes 
- 
-FROM  eqentry e
-  LEFT JOIN documents d
-    ON  e.document_id = d.document_id ;
+  `e`.`id` AS `id`,
+  `e`.`eq_id` AS `eq_id`,
+  `d`.`document_date` AS `document_date`,
+  `e`.`optype` AS `optype`,
+  `e`.`amount` AS `amount`,
+  `e`.`document_id` AS `document_id`,
+  `d`.`document_number` AS `document_number`,
+  `d`.`notes` AS `notes`
+FROM (`eqentry` `e`
+  JOIN `documents` `d`
+    ON ((`e`.`document_id` = `d`.`document_id`)))
     
 
 

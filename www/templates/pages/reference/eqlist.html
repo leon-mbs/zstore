@@ -5,7 +5,7 @@
 
     <body>
         <div class="row">
-
+        
             <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
                 <h3>Обладнання та основнi засоби </h3>
                 <div class="navbar nav  ">
@@ -13,7 +13,12 @@
 
                         <label for="searchkey">Пошук</label>
                         <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-                        <label for="searchemp">мат. відповідальний</label>
+                        <label for="searchtype">Тип</label>
+
+                        <select class="form-control mr-sm-2  " zippy="searchtype">
+                            <option value="0">Не обрано</option>
+                        </select>
+                       <label for="searchemp">мат. відповідальний</label>
 
                         <select class="form-control mr-sm-2  " zippy="searchemp">
                             <option value="0">Не обрано</option>
@@ -40,6 +45,8 @@
 
 
                         <th   ></th>
+                        <th   ></th>
+                        <th   ></th>
                     </tr>
                     <tr zippy="eqlist">
                         <td zippy="eq_name"></td>
@@ -48,9 +55,11 @@
                         {{/usebranch}}
                      
                         <td zippy="invnumber"></td>
-                   
-
-                        <td aling="center">
+                        <td ><small zippy="notes"></small></td>
+                        <td  >
+                             <a zippy="view" title="Перегляд операцій"><i class="fa fa-cog"></i></a>
+                       </td>
+                        <td  >
                     
                          <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
                          &nbsp;    &nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
@@ -60,26 +69,18 @@
                 <div zippy="pag"></div>
             </div>
 
-          
-
-           
             <div class="col-12  ">
              
             <form zippy="itemdetail" >
              <h4>Редагування </h4>
-               <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
+              <div class="row">
+               <div class="col-12 col-md-4 col-xl-3">
                 <div class="form-group  ">
                     <label   for="editname">Найменування</label>
-                   
                     <input  autofocus="on"    required  class="form-control" zippy="editname"/>
-                    
                 </div>
               
-                    <div class="form-check">
-                        <input zippy="editeq" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editeq">Обладнання</label>
-                    </div>
+             
                {{#usebranch}}
                 <div class="form-group">
                     <label for="editbranch">Філія</label>
@@ -89,76 +90,63 @@
                 </div>
                 {{/usebranch}}
                
-                <div class="form-group  ">
-                    <label   for="editemp">Мат. відповідальний</label>
-                    
-                        <select class="form-control  " zippy="editemp">
-                            <option value="0">Не вказано</option>
-                        </select>
-                    
-                </div>
                  <div class="form-group  ">
-                    <label   for="editpa">Вир. дiльниця</label>
-                    
-                        <select class="form-control  " zippy="editpa">
-                            <option value="0">Не вказано</option>
-                        </select>
-                   <small class="form-text text-muted">Якщо постiйно встановлено на певнiй виробничiй дiлянцi</small>
-                    
-                </div>
-   
+                    <label   for="edittype">Тип</label>
+                    <select class="form-control  " zippy="edittype">
+                      
+                    </select>
+                </div>                
+    
 
                 <div class="form-group  ">
                     <label   for="editdescription">Опис</label>
-                    
-                        <textarea class="form-control" zippy="editdescription"></textarea>
-                  
-
+                    <textarea class="form-control" zippy="editdescription"></textarea>
                 </div>
                
                   
-                    <div class="form-check">
-                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Не використовується</label>
-                    </div>
+                 <div class="form-check">
+                    <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                </div>
              
-                <div class="form-group">
+           
+               </div> 
+               <div class="col-12 col-md-3 col-xl-2">
+                 <div class="form-group  ">
+                    <label   for="editemp">Мат. відповідальний</label>
+                    <select class="form-control  " zippy="editemp">
+                        <option value="0">Не вказано</option>
+                    </select>
+                </div>                 
+                 <div class="form-group  ">
+                    <label   for="editinvnumber">Інвентарний номер</label>
+                    <input class="form-control" zippy="editinvnumber"/>
+                </div>
+                 <div class="form-group  ">
+                    <label   for="editserial">Серійний номер</label>
+                    <input class="form-control" zippy="editserial"/>
+                </div>
+                
+             </div>
+              
+              <div class="col-12">
                     <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 ">
                     <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                     
-                </div>
-               </div> 
-                 <div class="col-12 col-md-3 col-xl-2">
-                 <div class="form-group  ">
-                    <label   for="editinvnumber">Інвентарний номер</label>
-                  
-                        <input class="form-control" zippy="editinvnumber"/>
-                   
-                </div>
-                <div class="form-group  ">
-                    <label   for="editserial">Серійний номер</label>
-                   
-                        <input class="form-control" zippy="editserial"/>
-                     
-                </div>
-                <div class="form-group  ">
-                    <label   for="editenterdate">Уведено в експлуатацiю</label>
-                    
-                        <input class="form-control" zippy="editenterdate"/>
-                   
-                </div>
-                <div class="form-group  ">
-                    <label   for="editbalance">Балансова вартiсть</label>
-                   
-                        <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editbalance"/>
-                        <small class="form-text text-muted">Закупівельна ціна мінус амортизація</small>
-                 
-               
-                </div>
-                </div>
-             </div>
+                </div>    
+                </div>    
             </form>
             </div>
+        
+        <div class="w-100"></div>
+        <div zippy="infopan" class="col-12 col-md-10 col-xl-8  ">
+          <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
+          <h5 zippy="oname"> </h5>
+          <a zippy="addop" class="btn  btn-info btn-sm" >  Додати</a>                 
+       </div>    
+            
+            
+            
              <script>               
          function check_delete() {
                 return confirm("Видалити?")

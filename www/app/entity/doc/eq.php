@@ -13,9 +13,7 @@ class EQ extends Document
 {
     public function Execute() {
 
-        Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['paymentfrom'], $this->notes, true);
-        Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['paymentto'], $this->notes, true);
-
+    
         return true;
     }
 
@@ -24,10 +22,7 @@ class EQ extends Document
 
         $header = array(
             'amount'          => H::fa($this->amount),
-            'date'            => H::fd($this->document_date),
             "notes"           => nl2br($this->notes),
-            "from"            => $this->headerdata["paymentfromname"],
-            "to"              => $this->headerdata["paymenttoname"],
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/movemoney.tpl');
@@ -38,7 +33,7 @@ class EQ extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПК-000000';
+        return 'ОС-000000';
     }
 
 }
