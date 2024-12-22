@@ -21,7 +21,7 @@ if (isset($_REQUEST['id']) > 0) {
 
         $file = _ROOT . 'assets/images/noimage.jpg';
         $type = 'image/jpeg';
-        header('Content-Type:' . $type);
+        header('Content-Type: ' . $type);
         header('Content-Length: ' . filesize($file));
         readfile($file);
     }
