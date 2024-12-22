@@ -102,8 +102,11 @@ class EqList extends \App\Pages\Base
 
         $item = $sender->owner->getDataItem();
 
-        Equipment::delete($item->eq_id);
-
+        $del=  Equipment::delete($item->eq_id);
+        if (strlen($del) > 0) {
+            $this->setError($del);
+            return;
+        }
         $this->itemtable->eqlist->Reload();
         $this->resetURL();
     }

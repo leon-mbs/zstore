@@ -35,13 +35,13 @@ class EQ extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('optype' ))->onChange($this,'onType');
 
-        $this->docform->add(new DropDownChoice('store' ));
-        $this->docform->add(new DropDownChoice('emp' ));
-        $this->docform->add(new DropDownChoice('parea' ));
+        $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),0 ));
+        $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
+        $this->docform->add(new DropDownChoice('parea',\App\Entity\ProdArea::findArray('pa_name','disabled<>1','pa_name'),0 ));
         $this->docform->add(new TextInput('amount'));
-        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this,'oneqItem');
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this,'onCust');
         $this->docform->add(new AutocompleteTextInput('eq'))->onText($this,'oneqItem');
-        $this->docform->add(new AutocompleteTextInput('item'))->onText($this,'oneqItem');
+        $this->docform->add(new AutocompleteTextInput('item'))->onText($this,'onItem');
         
         if($eq_id > 0) {
            $eq= Equipment::load($eq_id);
@@ -124,10 +124,16 @@ class EQ extends \App\Pages\Base
         }
         $this->_doc->notes = $this->docform->notes->getText();
         $eq_id = $this->docform->eq->getKey();
-        $this->_doc->header_data['eq_id'] = $eq_id;
-
-    
+        $this->_doc->headerdata['eq_id'] = $eq_id;
+        $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['store_id'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['item_id'] = $this->docform->item->getKey();
+        $this->_doc->headerdata['optype'] = $this->docform->item->getValue();
+        $this->_doc->headerdata['optypename'] = $this->docform->item->getValueName();
+        $this->_doc->customer_id = $this->docform->customer->optype();
         $this->_doc->amount = H::fa($this->docform->amount->getText());
+        
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->payment = 0;
@@ -171,10 +177,48 @@ class EQ extends \App\Pages\Base
      *
      */
     private function checkForm() {
-
-      
+        
+        
+        
+         $amount = doubleval($this->docform->amount->getText() );
+         $с = intval($this->docform->customer->getKey() );
+         $item = intval($this->docform->item->getKey() );
+         $eq = intval($this->docform->eq->getKey() );
+         if($eq==0)  {
+             $this->setError('Не вибрано ОЗ') ;
+         }
+         $op = intval($this->docform->optype->getValue() );
+     
+         if($op==2){
+             if($с==0)  {
+                 $this->setError('Не вибрано контрагента') ;
+             }
+     
+ 
+         }
+         if($op==3 ||$op==9   ){
+             if($item==0)  {
+                 $this->setError('Не вибрано ТМЦ') ;
+             }
+    
+         }
+         if($op==4){
+            $parea = intval($this->docform->parea->getValue() );
+            $emp = intval($this->docform->emp->getValue() );
+            if($parea==0 && $emp)   {
+               $this->setError('Не вибрано дільницю та/або  відповідального ') ;
+            
+            }
+             
+         }
+         if($op==1 ||  $op==2 || $op==5 || $op==6 || $op==8  ){
+             if($amount==0)  {
+                 $this->setError('Не вказано суму  ') ;
+             }
+         }
    
-
+  
+  
         return !$this->isError();
     }
 
@@ -182,4 +226,17 @@ class EQ extends \App\Pages\Base
         App::RedirectBack();
     }
 
+    public function OnAutoItem($sender) {
+        $store_id = $this->docform->store->getValue();
+        $text = trim($sender->getText());
+        return \App\Entity\Item::findArrayAC($text, $store_id);
+    }
+
+    public function onCust($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 1, true);
+    } 
+    public function oneqItem($sender) {
+        return \App\Entity\Equipment::getList($sender->getText(), 1, true);
+    } 
+       
 }

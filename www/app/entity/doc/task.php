@@ -52,7 +52,7 @@ class Task extends Document
 
             $detail2[] = array(
                 "eq_name" => $eq->eq_name,
-                "code"    => $eq->code
+                "invnumber"    => $eq->invnumber
             );
         }
         $detail3 = array();

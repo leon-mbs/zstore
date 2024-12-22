@@ -4,6 +4,8 @@ ALTER TABLE employees ADD   INDEX login (login)   ;
 ALTER TABLE metadata  ADD   INDEX meta_name (meta_name)   ; 
 
 ALTER TABLE equipments ADD  type  smallint DEFAULT 0;
+ALTER TABLE parealist  ADD  disabled  tinyint(1) DEFAULT 0;
+ALTER TABLE parealist  ADD  branch_id  int(11) DEFAULT null;
 
 
  

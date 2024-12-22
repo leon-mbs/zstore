@@ -29,10 +29,22 @@
                         <label for="editpa_name">Назва</label>
                         <input autofocus="on"    required  class="form-control" zippy="editpa_name"/>
                     </div>
+               {{#usebranch}}
+                <div class="form-group">
+                    <label for="editbranch">Філія</label>
+                    <select class="form-control" zippy="editbranch">
+                        <option value="0">Не обрано</option>
+                    </select>
+                </div>
+                {{/usebranch}}                    
                   <div class="form-group">
                         <label for="editpa_notes">Примітка</label>
                         <input      class="form-control" zippy="editpa_notes"/>
                     </div>
+                 <div class="form-check">
+                    <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                </div>                    
                     <div class="form-group">
 
                       <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2  ">

@@ -54,7 +54,7 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
-        $this->docform->add(new DropDownChoice('parea', ProdArea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', ProdArea::findArray("pa_name", "disabled<>1","pa_name"), 0));
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -83,7 +83,7 @@ class Task extends \App\Pages\Base
 
         //equipment
         $this->add(new Form('editdetail4'));
-        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getQuipment()));
+        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getList('',true)));
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
         if ($docid > 0) {

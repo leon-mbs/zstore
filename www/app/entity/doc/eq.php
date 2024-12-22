@@ -21,11 +21,13 @@ class EQ extends Document
 
 
         $header = array(
+            
+            'opname'          => $this->headerdata['optypename'],
             'amount'          => H::fa($this->amount),
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
-        $report = new \App\Report('doc/movemoney.tpl');
+        $report = new \App\Report('doc/eq.tpl');
 
         $html = $report->generate($header);
 
