@@ -103,8 +103,8 @@
                                 </textarea>
                             </div>
                             <div class="form-group">
+                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-seconadry  ">
                                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">
                             </div>
                         </div>
                          <div class="col-6 col-md-4 col-xl-3">
@@ -186,16 +186,7 @@
             <form class="col-6 col-md-6  col-xl-4" zippy="keyform" enctype="multipart/form-data">
                 <h5>Завантаження ключа та сертифiкату</h5>
             <small>Опис роботи з ключами <a  target="_blank" href="https://zippy.com.ua/ext#id6">тут</a> </small>
-                  <div class="form-group">
-                    <label for="signtype">Метод пiдпису </label>
-                    <select   class="form-control" type="text" zippy="signtype">
-                      <option value="0">Внутрiшня бiблiотека</option>
-                  <!--    <option value="1">Сервер з передачею ключа</option>
-                      <option value="2">Сервер з встроєним ключем</option>
-                      -->
-                    </select>
-                    
-                </div>  
+                  
             
                              
                 <div class="form-group">
@@ -211,23 +202,16 @@
                 <div class="form-group">
                     <label for="certfile">Файл сертифiкату </label>
                     <input class="form-control" type="file" zippy="certfile">
-                </div>
    <small>Для jks ключiв (ПриватБанк) необов'язково</small>                      
-                <div class="form-group">
-                    <label for="serhost">Адреса сервера пiдпису </label>
-                    <input class="form-control"   zippy="serhost">
                 </div>
-                <div class="form-group">
-                    <label for="serport">Порт сервера </label>
-                    <input class="form-control"   zippy="serport">
-                </div>
-                <div class="form-check">
-                    <input zippy="usessl" type="checkbox" class="form-check-input">
-                    <label class="form-check-label text-bold" for="usessl">Перевiряти SSL сертифiкат</label>
-             <small for="usessl">У разі проблем із самопідписаним сертифікатом потрібно додати його до системи до списку довірених,
-                 або покласти файл сертифіката в папку config, перейменувавши в 'ssl.srt'
-                </small>       
-                </div>   
+               <div class="form-check">
+                   <input zippy="loadsert" type="checkbox" class="form-check-input">
+                   <label class="form-check-label" for="loadsert"> Завантажити сертифiкат</label>
+                  <br> <small>Завантажити з АЦСК якщо нема  файлу з сертифiкатом</small>
+               </div>                              
+
+             
+             
 
                 <div class="form-check">
                    <input zippy="outher" type="checkbox" class="form-check-input">
@@ -235,13 +219,13 @@
                   <br> <small>Якщо помилка з таймаутом (завантаження  може  зайняти кілька хвилин)</small>
                </div>                              
                  
-
+              <div class="form-group">
                 <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-outline-primary mr-1 ">
                 <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  mr-2 ">
                 
                 <input zippy="delppo" type="button" value="Видалити" class="btn btn-outline-danger  ">  
       
-
+               </div>  
             </form>
             
             </div>
