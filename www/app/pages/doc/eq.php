@@ -14,7 +14,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Equipment;
- 
+use App\Entity\EqEntry; 
 
 /**
  * Страница  документа операции с ОС и НМА
@@ -33,7 +33,18 @@ class EQ extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('optype' ))->onChange($this,'onType');
+        $ops=[];
+        $ops[1]='Ввод в эксплуатацію';
+        $ops[2]='Ввод в эксплуатацію (закупка)';
+        $ops[3]='Ввод в эксплуатацію (зі складу)';
+        $ops[4]='Переміщення';
+        $ops[5]='Нарахування амортизації';
+        $ops[6]='Ремонт та відновлення';
+        $ops[7]='Списання';
+        $ops[8]='Списання (продажа)';
+        $ops[9]='Списання (на  склад)';
+        
+        $this->docform->add(new DropDownChoice('optype',$ops,0 ))->onChange($this,'onType');
 
         $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),0 ));
         $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
@@ -61,9 +72,18 @@ class EQ extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->amount->setText($this->_doc->amount);
-            $this->docform->parea->setText($this->_doc->amount);
-        } else {
+            $this->docform->amount->setText( H::fa( $this->_doc->amount));
+            $this->docform->optype->setValue($this->_doc->headerdata['optype']);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
+            $this->docform->store->setValue($this->_doc->headerdata['store_id']);
+            $this->docform->parea->setValue($this->_doc->headerdata['pa_id']);
+            $this->docform->item->setKey($this->_doc->headerdata['item_id']);
+            $this->docform->item->setText($this->_doc->headerdata['item_name']);
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->eq->setKey($this->_doc->headerdata['eq_id']);
+            $this->docform->eq->setText($this->_doc->headerdata['eq_name']);
+       } else {
             $this->_doc = Document::create('EQ');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
@@ -123,19 +143,25 @@ class EQ extends \App\Pages\Base
             return;
         }
         $this->_doc->notes = $this->docform->notes->getText();
-        $eq_id = $this->docform->eq->getKey();
+         
+        $eq_id= $this->docform->eq->getKey();
         $this->_doc->headerdata['eq_id'] = $eq_id;
+        $this->_doc->headerdata['eq_name'] = $this->docform->eq->getText();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
         $this->_doc->headerdata['store_id'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['item_id'] = $this->docform->item->getKey();
-        $this->_doc->headerdata['optype'] = $this->docform->item->getValue();
-        $this->_doc->headerdata['optypename'] = $this->docform->item->getValueName();
-        $this->_doc->customer_id = $this->docform->customer->optype();
+        $this->_doc->headerdata['item_name'] = $this->docform->item->getKey();
+        $this->_doc->headerdata['optype'] = $this->docform->optype->getValue();
+        $this->_doc->headerdata['optypename'] = $this->docform->optype->getValueName();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->amount = H::fa($this->docform->amount->getText());
         
         $this->_doc->document_number = trim($this->docform->document_number->getText());
-        $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+        $this->_doc->document_date =   $this->docform->document_date->getDate();
         $this->_doc->payment = 0;
         $this->_doc->payed = 0;
       
@@ -177,20 +203,33 @@ class EQ extends \App\Pages\Base
      *
      */
     private function checkForm() {
-        
-        
-        
-         $amount = doubleval($this->docform->amount->getText() );
-         $с = intval($this->docform->customer->getKey() );
-         $item = intval($this->docform->item->getKey() );
          $eq = intval($this->docform->eq->getKey() );
          if($eq==0)  {
              $this->setError('Не вибрано ОЗ') ;
-         }
+             return false;
+         }        
+         $isoutcome = intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_OUTCOME) );
+         if($isoutcome>0)  {
+             $this->setError('Вже виведено з експлуатації') ;
+             return false;
+         }           
+         $isincome = intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_INCOME) );
          $op = intval($this->docform->optype->getValue() );
-     
-         if($op==2){
-             if($с==0)  {
+         
+         if($op < 4 && $isincome>0){
+             $this->setError('Вже введено в експлуатацію')  ;
+         }
+         if($op>3 && $isincome==0 ){
+             $this->setError('Не введено в експлуатацію')  ;
+         }
+          
+         $amount = doubleval($this->docform->amount->getText() );
+         $c = intval($this->docform->customer->getKey() );
+         $item = intval($this->docform->item->getKey() );
+
+      
+         if($op==2 || $op==8){
+             if($c==0)  {
                  $this->setError('Не вибрано контрагента') ;
              }
      
@@ -205,7 +244,7 @@ class EQ extends \App\Pages\Base
          if($op==4){
             $parea = intval($this->docform->parea->getValue() );
             $emp = intval($this->docform->emp->getValue() );
-            if($parea==0 && $emp)   {
+            if($parea==0 && $emp==0)   {
                $this->setError('Не вибрано дільницю та/або  відповідального ') ;
             
             }
@@ -226,10 +265,18 @@ class EQ extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnAutoItem($sender) {
+    public function OnItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        return \App\Entity\Item::findArrayAC($text, $store_id);
+        $op = $this->docform->optype->getValue();
+        if($op==3) {
+            
+        }
+        if($op==8) {
+            return \App\Entity\Item::findArrayAC($text, $store_id);            
+        }
+        
+
     }
 
     public function onCust($sender) {

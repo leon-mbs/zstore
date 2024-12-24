@@ -12,7 +12,7 @@ ALTER TABLE parealist  ADD  branch_id  int(11) DEFAULT null;
 CREATE TABLE  eqentry (
   id int NOT NULL AUTO_INCREMENT,
   eq_id int NOT NULL,
-  updatedon date NOT NULL,
+ 
   optype smallint NOT NULL,
   amount decimal(10, 2) DEFAULT NULL,
  

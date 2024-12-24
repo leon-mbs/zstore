@@ -16,12 +16,6 @@ class Equipment extends \ZCL\DB\Entity
     public const IYPR_NMA = 3;
       
     
-    public const OP_INCOME = 1;
-    public const OP_OUTCOME = 2;
-    public const OP_BAL = 3;
-    public const OP_MOVE = 4;
-      
-   
     
     protected function init() {
         $this->eq_id = 0;
@@ -67,13 +61,7 @@ class Equipment extends \ZCL\DB\Entity
         return 'N/A' ;
     }
     
-    public static function getOpName(int $t){
-        if($t==self::OP_INCOME) return 'Ввод в  експлуатацію' ;
-        if($t==self::OP_OUTCOME) return 'Виведення з експлуатації' ;
-        if($t==self::OP_BAL) return 'Зміна балансової вартості' ;
-        if($t==self::OP_MOVE) return 'Переміщення' ;
-        return 'N/A' ;
-   }
+
     //todo
     protected function beforeDelete() {
 

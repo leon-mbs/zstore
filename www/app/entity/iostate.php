@@ -20,6 +20,8 @@ class IOState extends \ZCL\DB\Entity
     //доход ТМЦ
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
     public const TYPE_INSERVICE = 31;     //с внешних услуг
+    public const TYPE_INEQ  = 32;        //ввод в  экплуатацию ОС
+    public const TYPE_INVEQ  = 33;        //ремонт и восстановдение ОС
 
     //расход платежи
     public const TYPE_BASE_OUTCOME     = 50;    //операционные расходы
@@ -42,6 +44,8 @@ class IOState extends \ZCL\DB\Entity
     //потери ТМЦ
     public const TYPE_LOST           = 80;     //потери при инвентаризации
     public const TYPE_TRASH          = 81;     //отходы производства
+    public const TYPE_OUTEQ          = 82;     // списание ОС
+    public const TYPE_ФЬEQ          = 83;     //  вмортизация ОС
 
 
 

@@ -4,6 +4,7 @@ namespace App\Pages\Reference;
 
 use App\Entity\Employee;
 use App\Entity\Equipment;
+use App\Entity\EqEntry;
 use App\Entity\ProdArea;
 use App\Helper;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -76,6 +77,7 @@ class EqList extends \App\Pages\Base
         $this->add(new Panel('infopan'))->setVisible(false);        
         $this->infopan->add(new ClickLink('backd',$this,'viewBack'));
         $this->infopan->add(new ClickLink('addop',$this,'createDoc'));
+        $this->infopan->add(new ClickLink('showall',$this,'showAll'));
         $this->infopan->add(new Label('oname' ));
         
         if($id>0) {
@@ -176,8 +178,8 @@ class EqList extends \App\Pages\Base
         $this->itemtable->eqlist->Reload();
     }
     public function viewOnClick($sender) {
-        $item= $sender->getOwner()->getDataItem()  ;
-        $this->show($item->eq_id)  ;
+        $this->_item= $sender->getOwner()->getDataItem()  ;
+        $this->show($this->_item->eq_id)  ;
     }
     public function show($id) {
         $this->infopan->setVisible(true);
@@ -186,6 +188,38 @@ class EqList extends \App\Pages\Base
         $this->_item = Equipment::load($id) ;
         $this->infopan->oname->setText($this->_item->eq_name);
         
+        $this->viewList($id);
+        
+        
+    }
+    public function showAll( ) {
+       $this->show($this->_item->eq_id,true)  ;
+    }
+    public function viewList($id,$all=false) {
+        $this->_tvars['oplist'] =[];
+        $where="eq_id=".$id;
+        if(!$all)  {
+           $where  .= " and optype <> ". EqEntry::OP_MOVE; 
+        }
+        $total = 0;
+        
+        foreach(EqEntry::find($where,"id") as $ee )  {
+           $notes = ""; 
+           $det = ""; 
+            
+           $total += $ee->amount; 
+            
+           $this->_tvars['oplist'][]=array(
+             'opdate'=>  Helper::fd($ee->document_date) , 
+             'number'=>   $ee->document_number , 
+             'amount'=>  Helper::fa($ee->amount) , 
+             'opname'=> EqEntry::getOpName($ee->optype) , 
+             'det'=> $det,   
+             'notes'=> $notes   
+           ) ;
+        }
+        
+       $this->_tvars['total']= Helper::fa($total)   ;
     }
     public function viewBack($sender) {
         $this->infopan->setVisible(false);

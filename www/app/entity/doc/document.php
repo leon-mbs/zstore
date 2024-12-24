@@ -324,7 +324,7 @@ class Document extends \ZCL\DB\Entity
             //лицевые счета  контрагентов
             $conn->Execute("delete from custacc where document_id=" . $this->document_id);
             
-        //todo    $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
+            $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
 
  
     }

@@ -143,6 +143,29 @@
           <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
           <h5 zippy="oname"> </h5>
           <a zippy="addop" class="btn  btn-info btn-sm" >  Додати</a>                 
+          <br><a zippy="showall"   >  Показати всі</a>                 
+      
+      
+           <table class="ctable">
+             {{#oplist}}
+             <tr>
+                <td>{{opdate}}</td>
+                <td>{{number}}</td>
+                <td>{{opname}}</td>
+                <td align="right">{{amount}}</td>
+
+                <td  >{{det}}</td>
+                <td  >{{notes}}</td>
+             </tr>
+               {{/oplist}}
+             <tr style="font-weight:bolder">
+                 <td align="right"   colspan="3">Балансова вартість: </td>  
+                 <td align="right" >{{total}} </td>  
+          
+                 <td colspan="2">   </td>  
+              </tr> 
+           </table>
+      
        </div>    
             
             
