@@ -25,10 +25,7 @@ class EqEntry extends \ZCL\DB\Entity
      */
     public function __construct(   ) {
         parent::__construct();
-
-      
-     
-      
+        
     }
 
     protected function init() {

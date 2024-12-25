@@ -24,36 +24,33 @@ class EQ extends Document
         if($optype==1  )  {
            $entry->optype = EqEntry::OP_INCOME;
            $entry->amount = $this->amount ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INEQ) ;
+     //      IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INEQ) ;
         }
         if($optype==2  )  {                                                         
            $entry->optype = EqEntry::OP_INCOME;
            $entry->amount = $this->amount ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INEQ) ;
+     //      IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INEQ) ;
  
-            $b = new \App\Entity\CustAcc();
-            $b->customer_id = $this->customer_id;
-            $b->document_id = $this->document_id;
-            $b->amount = $this->amount;
-            $b->createdon = $this->document_date;
-            $b->optype = \App\Entity\CustAcc::SELLER;
-            $b->save();           
+           $b = new \App\Entity\CustAcc();
+           $b->customer_id = $this->customer_id;
+           $b->document_id = $this->document_id;
+           $b->amount = $this->amount;
+           $b->createdon = $this->document_date;
+           $b->optype = \App\Entity\CustAcc::SELLER;
+           $b->save();           
  
         }
         if($optype==3  )  {
            $entry->optype = EqEntry::OP_INCOME;
            $entry->amount = $this->amount ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INEQ) ;
+     //      IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INEQ) ;
 
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $this->headerdata['item_id'], 1, $this->headerdata['item_ser'] );
+           $stock = \App\Entity\Stock::load($this->headerdata['item_id'] );
 
-            $sc = new \App\Entity\Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
-            $sc->setStock($stock->stock_id);
-            // $sc->setExtCode($iprice); //Для АВС
-            $sc->setOutPrice($iprice);
-            $sc->tag=Entry::TAG_BAY;
-
-            $sc->save();          
+           $sc = new \App\Entity\Entry($this->document_id, $stock->partion, 1);
+           $sc->setStock($stock->stock_id);
+ 
+           $sc->save();          
            
         }
         if($optype==4   )  {
@@ -63,38 +60,38 @@ class EQ extends Document
         if($optype==5   )  {
            $entry->optype = EqEntry::OP_AMOR;
            $entry->amount = 0-$this->amount   ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_ФЬEQ) ;
+        //   IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_ФЬEQ) ;
            
         }
         if($optype==6   )  {
            $entry->optype = EqEntry::OP_REM;
            $entry->amount = $this->amount   ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INVEQ) ;
+       //    IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_INVEQ) ;
         }
   
        if($optype==7 )  {
            $entry->optype= EqEntry::OP_OUTCOME;
            $entry->amount = 0-$eq->balance ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$eq->balance,IOState::TYPE_OUTEQ) ;
+        //   IOState::addIOState($entry->document_id,$entry->document_id,$eq->balance,IOState::TYPE_OUTEQ) ;
        }
        if($optype==8 )  {
            $entry->optype= EqEntry::OP_OUTCOME;
            $entry->amount = 0-$eq->balance ;
            IOState::addIOState($entry->document_id,$entry->document_id,$entry->balance,IOState::TYPE_OUTEQ) ;
            $b = new \App\Entity\CustAcc();
-            $b->customer_id = $this->customer_id;
-            $b->document_id = $this->document_id;
-            $b->amount = 0-$this->amount;
-            $b->createdon = $this->document_date;
-            $b->optype = \App\Entity\CustAcc::BUYER;
-            $b->save();           
+           $b->customer_id = $this->customer_id;
+           $b->document_id = $this->document_id;
+           $b->amount = 0-$this->amount;
+           $b->createdon = $this->document_date;
+           $b->optype = \App\Entity\CustAcc::BUYER;
+           $b->save();           
      
        
        }
        if($optype==9 )  {
            $entry->optype= EqEntry::OP_OUTCOME;
            $entry->amount = 0-$eq->balance ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->balance,IOState::TYPE_OUTEQ) ;
+         //  IOState::addIOState($entry->document_id,$entry->document_id,$eq->balance,IOState::TYPE_OUTEQ) ;
        }
        
        $entry->save();

@@ -152,7 +152,7 @@
                 <td>{{opdate}}</td>
                 <td>{{number}}</td>
                 <td>{{opname}}</td>
-                <td align="right">{{amount}}</td>
+                <td align="right"> {{amount}}</td>
 
                 <td  >{{det}}</td>
                 <td  >{{notes}}</td>
@@ -170,10 +170,14 @@
             
             
             
-             <script>               
-         function check_delete() {
+        <script>               
+             function check_delete() {
                 return confirm("Видалити?")
-            }
+             }
+      
+             function check_showall() {
+                document.getElementById('dialogwait').showModal()      
+             }
         </script>     
 
     </body>

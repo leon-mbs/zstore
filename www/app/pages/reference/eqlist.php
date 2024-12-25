@@ -193,7 +193,7 @@ class EqList extends \App\Pages\Base
         
     }
     public function showAll( ) {
-       $this->show($this->_item->eq_id,true)  ;
+       $this->viewList($this->_item->eq_id,true)  ;
     }
     public function viewList($id,$all=false) {
         $this->_tvars['oplist'] =[];
@@ -203,9 +203,24 @@ class EqList extends \App\Pages\Base
         }
         $total = 0;
         
-        foreach(EqEntry::find($where,"id") as $ee )  {
-           $notes = ""; 
+        foreach(EqEntry::find($where,"document_date,id") as $ee )  {
+         
            $det = ""; 
+           
+           $doc = \App\Entity\Doc\Document::load($ee->document_id)  ;
+           
+           if($doc->customer_id >0 ) {
+              $det = $det. ' '. $doc->customer_name;  
+           }
+           if($doc->headerdata['pa_id'] > 0 ) {
+              $det = $det. ' '. $doc->headerdata['pa_name'];  
+           }
+           if($doc->headerdata['emp_id'] > 0 ) {
+              $det = $det. ' '. $doc->headerdata['emp_name'];  
+           }
+           if($doc->headerdata['item_id'] > 0 ) {
+              $det = $det. ' '. $doc->headerdata['item_name'];  
+           }
             
            $total += $ee->amount; 
             
@@ -215,7 +230,7 @@ class EqList extends \App\Pages\Base
              'amount'=>  Helper::fa($ee->amount) , 
              'opname'=> EqEntry::getOpName($ee->optype) , 
              'det'=> $det,   
-             'notes'=> $notes   
+             'notes'=> $ee->notes   
            ) ;
         }
         

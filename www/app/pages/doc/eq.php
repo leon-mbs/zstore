@@ -46,14 +46,16 @@ class EQ extends \App\Pages\Base
         
         $this->docform->add(new DropDownChoice('optype',$ops,0 ))->onChange($this,'onType');
 
-        $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),0 ));
+        $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),H::getDefStore() ));
         $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
         $this->docform->add(new DropDownChoice('parea',\App\Entity\ProdArea::findArray('pa_name','disabled<>1','pa_name'),0 ));
         $this->docform->add(new TextInput('amount'));
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this,'onCust');
         $this->docform->add(new AutocompleteTextInput('eq'))->onText($this,'oneqItem');
-        $this->docform->add(new AutocompleteTextInput('item'))->onText($this,'onItem');
+        $this->docform->eq->onChange($this,"onEQSelect");
         
+        $this->docform->add(new AutocompleteTextInput('item'))->onText($this,'onItem');
+        $this->docform->item->onChange($this,"onItemSelect");
         if($eq_id > 0) {
            $eq= Equipment::load($eq_id);
            if($eq != null) {
@@ -74,13 +76,13 @@ class EQ extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->amount->setText( H::fa( $this->_doc->amount));
             $this->docform->optype->setValue($this->_doc->headerdata['optype']);
-            $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
-            $this->docform->store->setValue($this->_doc->headerdata['store_id']);
-            $this->docform->parea->setValue($this->_doc->headerdata['pa_id']);
-            $this->docform->item->setKey($this->_doc->headerdata['item_id']);
-            $this->docform->item->setText($this->_doc->headerdata['item_name']);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp_id']??0);
+            $this->docform->store->setValue($this->_doc->headerdata['store_id']??0);
+            $this->docform->parea->setValue($this->_doc->headerdata['pa_id']??0);
+            $this->docform->item->setKey($this->_doc->headerdata['item_id']??0);
+            $this->docform->item->setText($this->_doc->headerdata['item_name']??'');
+            $this->docform->customer->setKey($this->_doc->customer_id??0);
+            $this->docform->customer->setText($this->_doc->customer_name??'');
             $this->docform->eq->setKey($this->_doc->headerdata['eq_id']);
             $this->docform->eq->setText($this->_doc->headerdata['eq_name']);
        } else {
@@ -142,21 +144,43 @@ class EQ extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
+        
+        if ($this->checkForm() == false) {
+            return;
+        }        
         $this->_doc->notes = $this->docform->notes->getText();
          
         $eq_id= $this->docform->eq->getKey();
+        $this->_doc->headerdata = [];
+        $this->_doc->headerdata['optype'] = $this->docform->optype->getValue();
+        $this->_doc->headerdata['optypename'] = $this->docform->optype->getValueName();
+          
         $this->_doc->headerdata['eq_id'] = $eq_id;
         $this->_doc->headerdata['eq_name'] = $this->docform->eq->getText();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
-        $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
+        if($this->_doc->headerdata['emp_id'] >0) {
+            $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
+        }
+        
         $this->_doc->headerdata['store_id'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
+        if($this->_doc->headerdata['store_id'] >0) {
+            $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();            
+        }
         $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
-        $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();
+        if($this->_doc->headerdata['pa_id'] >0) {
+            $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();            
+        }
+      
         $this->_doc->headerdata['item_id'] = $this->docform->item->getKey();
-        $this->_doc->headerdata['item_name'] = $this->docform->item->getKey();
-        $this->_doc->headerdata['optype'] = $this->docform->optype->getValue();
-        $this->_doc->headerdata['optypename'] = $this->docform->optype->getValueName();
+        if($this->_doc->headerdata['item_id'] >0) {
+            $this->_doc->headerdata['item_name'] = $this->docform->item->getText();            
+            if($this->_doc->headerdata['optype'] ==3 ) {
+               $st = \App\Entity\Stock::load($this->_doc->headerdata['item_id']);
+               $this->_doc->headerdata['item_name'] = $st->itemname.' '. $st->snumber; 
+            }
+        }
+       
+
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->amount = H::fa($this->docform->amount->getText());
         
@@ -165,9 +189,7 @@ class EQ extends \App\Pages\Base
         $this->_doc->payment = 0;
         $this->_doc->payed = 0;
       
-        if ($this->checkForm() == false) {
-            return;
-        }
+   
 
         $isEdited = $this->_doc->document_id > 0;
 
@@ -265,12 +287,35 @@ class EQ extends \App\Pages\Base
         App::RedirectBack();
     }
 
+    public function onItemSelect($sender) {
+        
+        $op = $this->docform->optype->getValue();
+        if($op==3) {
+           $st=  \App\Entity\Stock::load($sender->getKey());
+           $this->docform->amount->setText(H::fa($st->partion));
+        }
+        if($op==8) {
+           $st=  \App\Entity\Stock::load($sender->getKey());
+           $this->docform->amount->setText(H::fa($st->partion));
+        }
+   
+    }
+    public function onEQSelect($sender) {
+        
+        $op = $this->docform->optype->getValue();
+     
+        if($op==9) {
+           $eq=  Equipment::load($sender->getKey());
+           $this->docform->amount->setText(H::fa($eq->balance));
+        }
+   
+    }
     public function OnItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         $op = $this->docform->optype->getValue();
         if($op==3) {
-            
+           return   \App\Entity\Stock::findArrayAC($store_id,$text) ;
         }
         if($op==8) {
             return \App\Entity\Item::findArrayAC($text, $store_id);            
@@ -283,7 +328,7 @@ class EQ extends \App\Pages\Base
         return \App\Entity\Customer::getList($sender->getText(), 1, true);
     } 
     public function oneqItem($sender) {
-        return \App\Entity\Equipment::getList($sender->getText(), 1, true);
+        return \App\Entity\Equipment::getList(trim($sender->getText() )   );
     } 
        
 }
