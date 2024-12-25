@@ -12,13 +12,10 @@ ALTER TABLE parealist  ADD  branch_id  int(11) DEFAULT null;
 CREATE TABLE  eqentry (
   id int NOT NULL AUTO_INCREMENT,
   eq_id int NOT NULL,
- 
   optype smallint NOT NULL,
   amount decimal(10, 2) DEFAULT NULL,
- 
   document_id int DEFAULT NULL,
   KEY (eq_id) ,
- 
   KEY (document_id) ,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
@@ -29,17 +26,17 @@ CREATE
 VIEW eqentry_view
 AS
 SELECT
-  `e`.`id` AS `id`,
-  `e`.`eq_id` AS `eq_id`,
-  `d`.`document_date` AS `document_date`,
-  `e`.`optype` AS `optype`,
-  `e`.`amount` AS `amount`,
-  `e`.`document_id` AS `document_id`,
-  `d`.`document_number` AS `document_number`,
-  `d`.`notes` AS `notes`
-FROM (`eqentry` `e`
-  JOIN `documents` `d`
-    ON ((`e`.`document_id` = `d`.`document_id`)))
+  e.id AS id,
+  e.eq_id AS eq_id,
+  d.document_date AS document_date,
+  e.optype AS optype,
+  e.amount AS amount,
+  e.document_id AS document_id,
+  d.document_number AS document_number,
+  d.notes AS notes
+FROM (eqentry e
+  JOIN documents d
+    ON ((e.document_id = d.document_id)))
     
 
 
@@ -49,34 +46,39 @@ CREATE
 VIEW equipments_view
 AS
 SELECT
-  `e`.`eq_id` AS `eq_id`,
-  `e`.`eq_name` AS `eq_name`,
-  `e`.`detail` AS `detail`,
-  `e`.`disabled` AS `disabled`,
-  `e`.`description` AS `description`,
-  `e`.`branch_id` AS `branch_id`,
-  `e`.`invnumber` AS `invnumber`,
-  `e`.`type` AS `type` ,
-   (select sum(amount) from eqentry en where  e.eq_id=en.eq_id ) as balance 
-  
-FROM  `equipments` e  ;
+  e.eq_id AS eq_id,
+  e.eq_name AS eq_name,
+  e.detail AS detail,
+  e.disabled AS disabled,
+  e.description AS description,
+  e.branch_id AS branch_id,
+  e.invnumber AS invnumber,
+  e.type AS type,
+  (SELECT
+      COALESCE(SUM(e1.amount), 0)
+    FROM eqentry e1
+    WHERE (e.eq_id = e1.eq_id)) AS balance
+FROM equipments e
 
     
 убрать линки с  поиска
 DROP VIEW if exists note_topicnodeview  ;
 
+CREATE
+VIEW note_topicnodeview
+AS
 SELECT
-  `note_topicnode`.`topic_id` AS `topic_id`,
-  `note_topicnode`.`node_id` AS `node_id`,
-  `note_topicnode`.`tn_id` AS `tn_id`,
-  `note_topicnode`.`islink` AS `islink`,
-  `note_topics`.`title` AS `title`,
-  `note_topics`.`content` AS `content`,
-  `note_nodes`.`user_id` AS `user_id`
-FROM ((`note_topics`
-  JOIN `note_topicnode`
-    ON ((`note_topics`.`topic_id` = `note_topicnode`.`topic_id`)))
-  JOIN `note_nodes`    
+  note_topicnode.topic_id AS topic_id,
+  note_topicnode.node_id AS node_id,
+  note_topicnode.tn_id AS tn_id,
+  note_topicnode.islink AS islink,
+  note_topics.title AS title,
+  note_topics.content AS content,
+  note_nodes.user_id AS user_id
+FROM ((note_topics
+  JOIN note_topicnode
+    ON ((note_topics.topic_id = note_topicnode.topic_id)))
+  JOIN note_nodes    
     
     
     
