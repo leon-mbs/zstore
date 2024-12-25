@@ -60,8 +60,7 @@ SELECT
     WHERE (e.eq_id = e1.eq_id)) AS balance
 FROM equipments e
 
-    
-убрать линки с  поиска
+
 DROP VIEW if exists note_topicnodeview  ;
 
 CREATE
@@ -73,13 +72,15 @@ SELECT
   note_topicnode.tn_id AS tn_id,
   note_topicnode.islink AS islink,
   note_topics.title AS title,
-  note_topics.content AS content,
-  note_nodes.user_id AS user_id
-FROM ((note_topics
+  note_topics.content AS content 
+   
+FROM note_topics
   JOIN note_topicnode
-    ON ((note_topics.topic_id = note_topicnode.topic_id)))
-  JOIN note_nodes    
-    
+    ON note_topics.topic_id = note_topicnode.topic_id
+  JOIN note_nodes
+    ON note_topicnode.node_id = note_nodes.node_id
+ 
+  
     
     
 DROP VIEW if exists cust_acc_view;
