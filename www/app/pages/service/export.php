@@ -41,7 +41,7 @@ class Export extends \App\Pages\Base
         $form->brand->setDataList(Item::getManufacturers());
          
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
-        $form->add(new DropDownChoice("item_type", Item::getTypes(), H::getDefStore()));
+        $form->add(new DropDownChoice("item_type", Item::getTypes(), 0));
         $form->add(new CheckBox("itemxml"));
 
         $form->onSubmit($this, "onExport");
