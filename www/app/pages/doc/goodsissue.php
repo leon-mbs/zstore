@@ -191,7 +191,7 @@ class GoodsIssue extends \App\Pages\Base
                         $order = $basedoc->cast();
 
                         if($order->getNotSendedItem() == 0){
-                           . $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                           $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
 
                         $this->docform->total->setText(H::fa($order->amount));

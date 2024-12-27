@@ -147,7 +147,7 @@ class Options extends \App\Pages\Base
 
         try {
             
-           $api = new Helper();
+           $api = new Helper(true);
 
            $ret = $api->updatetCache()  ;
            
@@ -158,15 +158,17 @@ class Options extends \App\Pages\Base
            if(strlen($ret['warn'] ??'')>0 ) {
                $this->setWarn($ret['warn']);                           
            }
-           
+           $this->setSuccess('Збережено'); 
+           $this->updateData();           
+              
         } catch(\Exception $ee) {
             $msg = $ee->getMessage();
             $this->setError($msg);            
         }
         
-        $this->updateData();
+        
 
-        $this->setSuccess('Збережено');
+        
     }
    
     public function gabListOnRow(  $row) {
