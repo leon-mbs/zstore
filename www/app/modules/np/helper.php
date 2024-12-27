@@ -1222,9 +1222,12 @@ class Helper
         $areas = array();
         $tmplist = $this->getAreas();
         if($tmplist['success']==false) {
+            
+  
             if(count($tmplist['errors'] ??[])>0) {
-                $this->setError(array_pop($tmplist['errors'])) ;
-                $ret['error']=array_pop($tmplist['errors']);
+                $error = array_pop($tmplist['errors'] );
+                $this->setError($error)  ;
+                $ret['error']=$error ;
                 return $ret;                  
             }
             if(count($tmplist['warnings']??[])>0) {

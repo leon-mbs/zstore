@@ -190,7 +190,7 @@ class TTN extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        if($order->getNotSendedItem() > 0){
+                        if($order->getNotSendedItem() == 0){
                             $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
                 

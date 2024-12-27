@@ -414,6 +414,13 @@ class GIList extends \App\Pages\Base
         //   $st = $api->getServiceTypes() ;
         //   $ct = $api->getTypesOfCounterparties() ;
         $pf = $api->getPaymentForms();
+        if($pf['success'] == false) {
+            $error = array_pop($pf['errors'] );
+            $this->setError($error) ;
+            
+            return;
+                     
+        }
         // $ct = $api->getCargoTypes()  ;
         $tp = $api->getTypesOfPayers();
 
@@ -729,19 +736,20 @@ class GIList extends \App\Pages\Base
         $recipient = array();
 
         try {
-
+       
 
             $result = $api->model('Counterparty')->getCounterparties("Sender");
             if ($result['success'] == false) {
-                $errors = implode(',', $result['errors']);
-                $this->setError($errors);
+                $error = array_pop($result['errors'] );
+                $this->setError($error) ;
+            
                 return;
             }
 
             $resultc = $api->model('Counterparty')->getCounterpartyContactPersons($result['data'][0]['Ref']);
             if ($resultc['success'] == false) {
-                $errors = implode(',', $result['errors']);
-                $this->setError($errors);
+                $error = array_pop($result['errors'] );
+                $this->setError($error) ;
                 return;
             }
 
@@ -764,8 +772,8 @@ class GIList extends \App\Pages\Base
             $result = $api->model('Counterparty')->save($recipient);
 
             if ($result['success'] == false) {
-                $errors = implode(',', $result['errors']);
-                $this->setError($errors);
+                $error = array_pop($result['errors'] );
+                $this->setError($error) ;
                 return;
             }
 
@@ -818,8 +826,8 @@ class GIList extends \App\Pages\Base
             $this->listpan->setVisible(true);
             $this->nppan->setVisible(false);
         } else {
-            $errors = implode(',', $result['errors']);
-            $this->setError($errors);
+            $error = array_pop($result['errors'] );
+            $this->setError($error) ;
         }
     }
 

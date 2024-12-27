@@ -311,8 +311,9 @@ class Order extends \App\Entity\Doc\Document
          $docs= Document::find("state >=5 and meta_name  in ('GoodsIssue','TTN') and parent_id=". $this->document_id);   
          foreach($docs as $d)  {
              foreach($d->unpackDetails('detaildata') as $item){
-                if(!isset($sendqty[$item->item_id]) ) $sendqty[$item->item_id]=0;
-                
+                if(!isset($sendqty[$item->item_id]) ) {
+                    $sendqty[$item->item_id]=0; 
+                }  
                 $sendqty[$item->item_id] += $item->quantity;
              }
          }
