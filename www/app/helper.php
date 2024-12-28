@@ -1334,10 +1334,10 @@ class Helper
      *
      */
     public static function migration() {
-       global $logger;
-       $conn = \ZDB\DB::getConnect();
+        global $logger;
+        $conn = \ZDB\DB::getConnect();
 
-        $vdb=\App\System::getOptions('version' ) ;
+        $vdb=\App\System::getOptions('version',true ) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {

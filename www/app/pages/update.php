@@ -41,7 +41,7 @@ class Update extends \App\Pages\Base
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversiondb'] =   System::getOptions('version' );
+        $this->_tvars['curversiondb'] =   System::getOptions('version',true );
 
         $requireddb=  System::REQUIRED_DB ;
  
