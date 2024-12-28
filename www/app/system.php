@@ -84,6 +84,10 @@ class System
         $conn = \ZDB\DB::getConnect();
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
+        
+        if($group=='version')  {
+           return $rs; 
+        }
         if (strlen($rs) > 0) {
             if(strpos($rs,':')>0) {
                 $d =  @unserialize($rs);
