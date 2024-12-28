@@ -364,10 +364,12 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['alerterror'] = "";
         if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-
             $this->goAnkor('topankor');
-
-
+        }       
+        $this->_tvars['alertinfo'] = "";
+        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) {
+            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
+            $this->goAnkor('topankor');
         }       
     }
 
@@ -390,6 +392,7 @@ class Base extends \Zippy\Html\WebPage
         
         $this->setError('');
         $this->setErrorTopPage('');
+        $this->setInfoTopPage('');
      
         $this->setSuccess('');
         $this->setInfo('');

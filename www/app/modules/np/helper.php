@@ -62,14 +62,14 @@ class Helper
     
  
 
-    public function __construct() {
+    public function __construct($throwErrors = false) {
 
 
         $modules = \App\System::getOptions("modules");
 
        // parent::__construct($modules['npapikey']);
        
-      //  $this->throwErrors = $throwErrors;
+        $this->throwErrors = $throwErrors;
         $this
             ->setKey($modules['npapikey'])
          //   ->setLanguage($language)
@@ -230,6 +230,8 @@ class Helper
             ? self::API_URI.'/xml/'
             : self::API_URI.'/json/';
 
+     //   $url = "https://api-cdn.novaposhta.ua/api-warehouses/api2/generated-cache/warehouses/warehouses.json";
+
         $data = array(
             'apiKey' => $this->key,
             'modelName' => $model,
@@ -253,6 +255,19 @@ class Helper
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
                 $result = curl_exec($ch);
+                
+                if (curl_errno($ch) > 0) {
+                    $msg = "sign server error: ".curl_error($ch);
+                    $msg = str_replace("'", "\"", $msg) ;
+                    $result = array('success' => false, 'errors' => $msg);
+                }                
+                $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                if ($status_code !== 200) {
+              
+       
+                    $result = array('success' => false, 'errors' => "Код  ".$status_code);
+         
+                }                
                 curl_close($ch);
 
         } else {
@@ -1211,9 +1226,6 @@ class Helper
     //обновление  кеща  списков
     public function updatetCache() {
         
-        @unlink(_ROOT . "upload/arealist.dat");
-        @unlink(_ROOT . "upload/citylist.dat");
-        @unlink(_ROOT . "upload/pointlist.dat");
 
         @mkdir(_ROOT . "upload") ;
 
@@ -1241,7 +1253,8 @@ class Helper
         }
 
         $d = serialize($areas);
-
+        @unlink(_ROOT . "upload/arealist.dat");
+  
         file_put_contents(_ROOT . "upload/arealist.dat", $d);
         unset($d);
     
@@ -1255,12 +1268,13 @@ class Helper
         }
 
         $d = serialize($cities);
-
+        @unlink(_ROOT . "upload/citylist.dat");
+  
         file_put_contents(_ROOT . "upload/citylist.dat", $d);
         unset($tmplist);
         unset($cities);
         unset($d);
-        gc_collect_cycles() ;
+      //  gc_collect_cycles() ;
 
         $wlist = array();
         $tmplist = $this->getWarehouses('');
@@ -1269,7 +1283,8 @@ class Helper
             $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => trim($a['Description']) );
         }
         unset($tmplist) ;
-        gc_collect_cycles() ;
+     //   gc_collect_cycles() ;
+        @unlink(_ROOT . "upload/pointlist.dat");
 
         $d = serialize($wlist);
         file_put_contents(_ROOT . "upload/pointlist.dat", $d);
