@@ -36,7 +36,7 @@ SELECT
   d.notes AS notes
 FROM (eqentry e
   JOIN documents d
-    ON ((e.document_id = d.document_id)))
+    ON ((e.document_id = d.document_id)))  ;
     
 
 
@@ -58,7 +58,7 @@ SELECT
       COALESCE(SUM(e1.amount), 0)
     FROM eqentry e1
     WHERE (e.eq_id = e1.eq_id)) AS balance
-FROM equipments e
+FROM equipments e    ;
 
 
 DROP VIEW if exists note_topicnodeview  ;
@@ -78,7 +78,7 @@ FROM note_topics
   JOIN note_topicnode
     ON note_topics.topic_id = note_topicnode.topic_id
   JOIN note_nodes
-    ON note_topicnode.node_id = note_nodes.node_id
+    ON note_topicnode.node_id = note_nodes.node_id    ;
  
   
     

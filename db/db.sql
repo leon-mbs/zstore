@@ -105,6 +105,8 @@ CREATE TABLE documents (
   KEY customer_id (customer_id),
   KEY user_id (user_id),
   KEY branch_id (branch_id),
+  KEY parent_id (parent_id),
+  KEY document_number (document_number),
   KEY state (state),
   CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (user_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -173,6 +175,7 @@ CREATE TABLE employees (
   disabled tinyint(1) DEFAULT '0',
   emp_name varchar(64) NOT NULL,
   branch_id int(11) DEFAULT '0',
+  KEY (login) ,
   PRIMARY KEY (employee_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -244,6 +247,7 @@ CREATE TABLE equipments (
   disabled tinyint(1) DEFAULT 0,
   pa_id int(11) DEFAULT  NULL,
   emp_id int(11) DEFAULT  NULL,
+  type  smallint DEFAULT 0,
   description text,
   branch_id INT NULL,  
   PRIMARY KEY (eq_id)
@@ -402,6 +406,7 @@ CREATE TABLE metadata (
   meta_name varchar(255) NOT NULL,
   menugroup varchar(255) DEFAULT NULL,
   disabled tinyint(4) NOT NULL,
+  KEY (meta_name) ,
   PRIMARY KEY (meta_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -481,6 +486,8 @@ CREATE TABLE options (
 CREATE TABLE parealist (
   pa_id int(11) NOT NULL AUTO_INCREMENT,
   pa_name varchar(255) NOT NULL,
+  disabled  tinyint(1) DEFAULT 0,
+  branch_id  int(11) DEFAULT null,
   notes varchar(255) DEFAULT NULL,
   PRIMARY KEY (pa_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -1090,14 +1097,15 @@ SELECT
   note_topicnode.topic_id AS topic_id,
   note_topicnode.node_id AS node_id,
   note_topicnode.tn_id AS tn_id,
+  note_topicnode.islink AS islink,
   note_topics.title AS title,
-  note_nodes.user_id AS user_id,
-  note_topics.content AS content
-FROM ((note_topics
+  note_topics.content AS content 
+   
+FROM note_topics
   JOIN note_topicnode
-    ON ((note_topics.topic_id = note_topicnode.topic_id)))
+    ON note_topics.topic_id = note_topicnode.topic_id
   JOIN note_nodes
-    ON ((note_nodes.node_id = note_topicnode.node_id))) ;
+    ON note_topicnode.node_id = note_nodes.node_id    ;
 
 CREATE
 VIEW note_topicsview
@@ -1441,6 +1449,38 @@ SELECT
 FROM item_cat ic   ;  
 
 
+CREATE TABLE  eqentry (
+  id int NOT NULL AUTO_INCREMENT,
+  eq_id int NOT NULL,
+  optype smallint NOT NULL,
+  amount decimal(10, 2) DEFAULT NULL,
+  document_id int DEFAULT NULL,
+  KEY (eq_id) ,
+  KEY (document_id) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+
+ 
+
+CREATE
+VIEW eqentry_view
+AS
+SELECT
+  e.id AS id,
+  e.eq_id AS eq_id,
+  d.document_date AS document_date,
+  e.optype AS optype,
+  e.amount AS amount,
+  e.document_id AS document_id,
+  d.document_number AS document_number,
+  d.notes AS notes
+FROM (eqentry e
+  JOIN documents d
+    ON ((e.document_id = d.document_id)))  ;
+    
+
+ 
+
 CREATE
 VIEW equipments_view
 AS
@@ -1452,15 +1492,12 @@ SELECT
   e.description AS description,
   e.branch_id AS branch_id,
   e.invnumber AS invnumber,
-  e.pa_id AS pa_id,
-  e.emp_id AS emp_id,
-  p.pa_name AS pa_name,
-  employees.emp_name AS emp_name
-FROM ((equipments e
-  LEFT JOIN employees
-    ON ((employees.employee_id = e.emp_id)))
-  LEFT JOIN parealist p
-    ON ((p.pa_id = e.pa_id))); 
+  e.type AS type,
+  (SELECT
+      COALESCE(SUM(e1.amount), 0)
+    FROM eqentry e1
+    WHERE (e.eq_id = e1.eq_id)) AS balance
+FROM equipments e    ;
   
   
   
@@ -1565,6 +1602,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товари на комісії', 'ItemComission', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
 
 
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(2, 105, 'Основна зарплата', 'осн', 0);
@@ -1580,13 +1618,12 @@ INSERT INTO `options` (`optname`, `optvalue`) VALUES('api', 'YTozOntzOjM6ImV4cCI
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('common', 'YTo0Mjp7czo5OiJxdHlkaWdpdHMiO3M6MToiMCI7czo4OiJhbWRpZ2l0cyI7czoxOiIwIjtzOjEwOiJkYXRlZm9ybWF0IjtzOjU6ImQubS5ZIjtzOjExOiJwYXJ0aW9udHlwZSI7czoxOiIxIjtzOjY6InBob25lbCI7czoyOiIxMCI7czo2OiJwcmljZTEiO3M6MTg6ItCg0L7Qt9C00YDRltCx0L3QsCI7czo2OiJwcmljZTIiO3M6MTI6ItCe0L/RgtC+0LLQsCI7czo2OiJwcmljZTMiO3M6MDoiIjtzOjY6InByaWNlNCI7czowOiIiO3M6NjoicHJpY2U1IjtzOjA6IiI7czo4OiJkZWZwcmljZSI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MDoiIjtzOjg6InRzX2JyZWFrIjtzOjI6IjYwIjtzOjg6InRzX3N0YXJ0IjtzOjU6IjA5OjAwIjtzOjY6InRzX2VuZCI7czo1OiIxODowMCI7czoxMToiY2hlY2tzbG9nYW4iO3M6MDoiIjtzOjExOiJhdXRvYXJ0aWNsZSI7aToxO3M6MTA6InVzZXNudW1iZXIiO3M6MToiMCI7czoxMDoidXNlc2Nhbm5lciI7aTowO3M6MTY6InVzZW1vYmlsZXNjYW5uZXIiO2k6MDtzOjk6InVzZWltYWdlcyI7aTowO3M6MTQ6InByaW50b3V0cXJjb2RlIjtpOjA7czoxNDoibm9jaGVja2FydGljbGUiO2k6MDtzOjE1OiJzaG93YWN0aXZldXNlcnMiO2k6MDtzOjg6InNob3djaGF0IjtpOjA7czoxMDoidXNlY2F0dHJlZSI7aTowO3M6OToidXNlYnJhbmNoIjtpOjA7czoxMDoibm9hbGxvd2ZpeiI7aTowO3M6MTA6ImFsbG93bWludXMiO2k6MDtzOjY6InVzZXZhbCI7aTowO3M6NjoiY2FwY2hhIjtpOjA7czo5OiJudW1iZXJ0dG4iO2k6MDtzOjk6InBheXR5cGVpbiI7czoxOiIwIjtzOjEwOiJwYXl0eXBlb3V0IjtzOjE6IjAiO3M6MTI6ImFsbG93bWludXNtZiI7aTowO3M6NzoiY2FzaGllciI7czowOiIiO3M6MTA6ImFjdHVhbGRhdGUiO2k6MTcwNDA2MDAwMDtzOjE0OiJzcHJlYWRkZWxpdmVyeSI7aTowO3M6MTE6ImJheWRlbGl2ZXJ5IjtpOjA7czo4OiJub3VwZGF0ZSI7aTowO3M6NzoiY2hlY2tpcCI7aTowO3M6NjoiaXBsaXN0IjtzOjA6IiI7fQ==');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('discount', 'YToxODp7czo4OiJmaXJzdGJheSI7czoyOiIxMSI7czo2OiJib251czEiO3M6MzoiMS4xIjtzOjY6ImxldmVsMiI7czowOiIiO3M6NjoiYm9udXMyIjtzOjM6IjEuNCI7czo2OiJzdW1tYTEiO3M6MzoiMTAwIjtzOjY6InN1bW1hMiI7czo0OiIxMDAwIjtzOjY6ImJvbnVzMyI7czoxOiIzIjtzOjY6InN1bW1hMyI7czo0OiIzMDAwIjtzOjY6ImJvbnVzNCI7czoxOiI0IjtzOjY6InN1bW1hNCI7czo0OiI0MDAwIjtzOjU6ImRpc2MxIjtzOjE6IjEiO3M6MTA6ImRpc2NzdW1tYTEiO3M6MToiMCI7czo1OiJkaXNjMiI7czoxOiIzIjtzOjEwOiJkaXNjc3VtbWEyIjtzOjE6IjAiO3M6NToiZGlzYzMiO3M6MToiNyI7czoxMDoiZGlzY3N1bW1hMyI7czoxOiIwIjtzOjU6ImRpc2M0IjtzOjA6IiI7czoxMDoiZGlzY3N1bW1hNCI7czowOiIiO30=');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('food', 'YToxNTp7czo4OiJ3b3JrdHlwZSI7czoxOiIyIjtzOjk6InByaWNldHlwZSI7czo2OiJwcmljZTEiO3M6ODoiZGVsaXZlcnkiO2k6MTtzOjY6InRhYmxlcyI7aToxO3M6NDoicGFjayI7aToxO3M6NDoibWVudSI7aToxO3M6NDoibmFtZSI7czo2OiJkZGRkZGQiO3M6NToicGhvbmUiO3M6ODoiNTU1NTU1NTUiO3M6NjoidGltZXBuIjtzOjI6IjExIjtzOjY6InRpbWVzYSI7czowOiIiO3M6NjoidGltZXN1IjtzOjA6IiI7czoxMjoiZm9vZGJhc2VtZW51IjtzOjE6IjAiO3M6MTY6ImZvb2RiYXNlbWVudW5hbWUiO3M6MDoiIjtzOjk6ImZvb2RtZW51MiI7czoxOiIwIjtzOjEyOiJmb29kbWVudW5hbWUiO3M6MDoiIjt9');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('modules', 'YToxMjp7czo3OiJvY3N0b3JlIjtpOjA7czo0OiJzaG9wIjtpOjA7czoxMDoid29vY29tZXJjZSI7aTowO3M6MjoibnAiO2k6MDtzOjY6InByb211YSI7aTowO3M6ODoiaG9yb3Nob3AiO2k6MDtzOjQ6InZkb2MiO2k6MDtzOjU6Imlzc3VlIjtpOjA7czo0OiJub3RlIjtpOjA7czozOiJwcG8iO2k6MDtzOjg6ImNoZWNrYm94IjtpOjA7czo2OiJ2a2Fzc2EiO2k6MDt9');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('printer', 'YTo3OntzOjg6InBtYXhuYW1lIjtzOjE6IjciO3M6OToicHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czoxMToiYmFyY29kZXR5cGUiO3M6NDoiQzEyOCI7czo2OiJwcHJpY2UiO2k6MTtzOjU6InBjb2RlIjtpOjE7czo4OiJwYmFyY29kZSI7aToxO3M6NzoicHFyY29kZSI7aTowO30=');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('salary', 'YTo1OntzOjEzOiJjb2RlYmFzZWluY29tIjtzOjM6IjEwNSI7czoxMDoiY29kZXJlc3VsdCI7czozOiI5MDAiO3M6NDoiY2FsYyI7czoyMTk6InYyMDAgPSB2MTA1DQovL9C');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0IjtzOjE6IjEiO3M6MTE6ImRlZmN1c3RuYW1lIjtzOjI5OiLQm9C10L7QvdC40LQg0JzQsNGA0YLRi9C90Y7QuiI7czo5OiJkZWZicmFuY2giO047czo5OiJvcmRlcnR5cGUiO3M6MToiMCI7czoxMjoiZGVmcHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czo1OiJlbWFpbCI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MTc6ItCd0LDRiCDQvNCw0LPQsNC3IjtzOjEyOiJjdXJyZW5jeW5hbWUiO3M6Njoi0YDRg9CxIjtzOjg6InVzZWxvZ2luIjtpOjA7czo5OiJ1c2VmaWx0ZXIiO2k6MDtzOjEzOiJjcmVhdGVuZXdjdXN0IjtpOjA7czoxMToidXNlZmVlZGJhY2siO2k6MDtzOjExOiJ1c2VtYWlucGFnZSI7aTowO3M6NzoiYWJvdXR1cyI7czoxNjoiUEhBK1BHSnlQand2Y0Q0PSI7czo3OiJjb250YWN0IjtzOjA6IiI7czo4OiJkZWxpdmVyeSI7czowOiIiO3M6NDoibmV3cyI7czowOiIiO3M6NToicGFnZXMiO2E6Mjp7czo0OiJuZXdzIjtPOjEyOiJBcHBcRGF0YUl0ZW0iOjI6e3M6MjoiaWQiO047czo5OiIAKgBmaWVsZHMiO2E6NDp7czo0OiJsaW5rIjtzOjQ6Im5ld3MiO3M6NToidGl0bGUiO3M6MTE6Imtra3JycnJycnJyIjtzOjU6Im9yZGVyIjtzOjE6IjIiO3M6NDoidGV4dCI7czoyNDoiUEhBK1pXVmxaV1ZsWldWbFBDOXdQZz09Ijt9fXM6ODoiYWJvdXRfdXMiO086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7TjtzOjk6IgAqAGZpZWxkcyI7YTo0OntzOjQ6ImxpbmsiO3M6ODoiYWJvdXRfdXMiO3M6NToidGl0bGUiO3M6OToi0J4g0L3QsNGBIjtzOjU6Im9yZGVyIjtzOjE6IjMiO3M6NDoidGV4dCI7czozMjoiUEhBK1BHSSswSjRnMEwzUXNOR0JQQzlpUGp3dmNEND0iO319fXM6NToicGhvbmUiO3M6MDoiIjtzOjEwOiJzYWxlc291cmNlIjtzOjE6IjAiO30=');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('sms', 'YToxMTp7czoxMjoic21zY2x1YnRva2VuIjtzOjA6IiI7czoxMjoic21zY2x1YmxvZ2luIjtzOjA6IiI7czoxMToic21zY2x1YnBhc3MiO3M6MDoiIjtzOjk6InNtc2NsdWJhbiI7czowOiIiO3M6MTA6InNtc2NsdWJ2YW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15dG9rZW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15ZGV2aWQiO3M6MDoiIjtzOjExOiJmbHlzbXNsb2dpbiI7czowOiIiO3M6MTA6ImZseXNtc3Bhc3MiO3M6MDoiIjtzOjg6ImZseXNtc2FuIjtzOjA6IiI7czo3OiJzbXN0eXBlIjtzOjE6IjAiO30=');
 INSERT INTO `options` (`optname`, `optvalue`) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
-INSERT INTO `options` (`optname`, `optvalue`) VALUES('version', '6.12.0');
+INSERT INTO `options` (`optname`, `optvalue`) VALUES('version', '6.13.0');
 
 
 
