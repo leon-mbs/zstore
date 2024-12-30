@@ -71,13 +71,13 @@ class EQ extends Document
   
        if($optype==7 )  {
            $entry->optype= EqEntry::OP_OUTCOME;
-           $entry->amount = 0-$eq->balance ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$eq->balance,IOState::TYPE_OUTEQ) ;
+           $entry->amount = 0-$eq->getBalance() ;
+           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_OUTEQ) ;
        }
        if($optype==8 )  {
            $entry->optype= EqEntry::OP_OUTCOME;
-           $entry->amount = 0-$eq->balance ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$entry->balance,IOState::TYPE_OUTEQ) ;
+           $entry->amount = 0-$eq->getBalance() ;
+           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_OUTEQ) ;
            $b = new \App\Entity\CustAcc();
            $b->customer_id = $this->customer_id;
            $b->document_id = $this->document_id;
@@ -90,8 +90,8 @@ class EQ extends Document
        }
        if($optype==9 )  {
            $entry->optype= EqEntry::OP_OUTCOME;
-           $entry->amount = 0-$eq->balance ;
-           IOState::addIOState($entry->document_id,$entry->document_id,$eq->balance,IOState::TYPE_OUTEQ) ;
+           $entry->amount = 0-$eq->getBalance() ;
+           IOState::addIOState($entry->document_id,$entry->document_id,$entry->amount,IOState::TYPE_OUTEQ) ;
        }
        
        $entry->save();

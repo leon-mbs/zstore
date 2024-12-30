@@ -306,7 +306,7 @@ class EQ extends \App\Pages\Base
      
         if($op==9) {
            $eq=  Equipment::load($sender->getKey());
-           $this->docform->amount->setText(H::fa($eq->balance));
+           $this->docform->amount->setText(H::fa($eq->getBalance()));
         }
    
     }

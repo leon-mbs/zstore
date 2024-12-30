@@ -128,6 +128,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editinvnumber->setText($this->_item->invnumber);
         $this->itemdetail->editserial->setText($this->_item->serial);
+        $this->itemdetail->editemp->setValue($this->_item->resemp_id);
     }
 
     public function addOnClick($sender) {
@@ -161,7 +162,8 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
 
         $this->_item->eq_name = $this->itemdetail->editname->getText();
-        $this->_item->emp_id = $this->itemdetail->editemp->getValue();
+        $this->_item->resemp_id = $this->itemdetail->editemp->getValue();
+        $this->_item->resemp_name = $this->itemdetail->editemp->getValueName();
       
         $this->_item->invnumber = $this->itemdetail->editinvnumber->getText();
         $this->_item->branch_id = $this->itemdetail->editbranch->getValue();

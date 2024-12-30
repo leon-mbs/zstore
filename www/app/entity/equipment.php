@@ -6,7 +6,6 @@ namespace App\Entity;
  * Клас-сущность  оборудование
  *
  * @table=equipments
- * @view=equipments_view
  * @keyfield=eq_id
  */
 class Equipment extends \ZCL\DB\Entity
@@ -26,6 +25,7 @@ class Equipment extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail><resemp_id>{$this->resemp_id}</resemp_id>";
+        $this->detail .= "<resemp_name>{$this->resemp_name}</resemp_name>";
         $this->detail .= "<serial>{$this->serial}</serial>";
             
         $this->detail .= "</detail>";
@@ -38,6 +38,7 @@ class Equipment extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
         $this->resemp_id = (int)($xml->resemp_id[0]);
         $this->serial = (string)($xml->serial[0]);
+        $this->resemp_name = (string)($xml->resemp_name[0]);
  
      
         parent::afterLoad();
@@ -91,5 +92,8 @@ class Equipment extends \ZCL\DB\Entity
          
          return $ret;
     }    
-     
+
+    public  function getBalance($tm=0) {
+
+    }   
 }

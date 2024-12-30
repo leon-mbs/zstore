@@ -131,6 +131,7 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
                 $neworder->headerdata['phone'] = strlen($wcorder->billing->phone ??'') > 0 ? $wcorder->billing->phone :  ($wcorder->billing->phone ??'')   ;
+                $neworder->headerdata['email'] = $wcorder->billing->email;
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
@@ -143,13 +144,12 @@ class Orders extends \App\Pages\Base
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
                 $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
-                if (strlen($wcorder->billing->email) > 0) {
-                    $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
-                }
+                $neworder->notes .= " Адреса доставки:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= " Адреса платіжна:" . $wcorder->billing->city . ' ' . $wcorder->billing->address_1 . ";";
+   
                 if (strlen($wcorder->billing->phone) > 0) {
                     $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
                 }
-                $neworder->notes .= " Адреса:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
                 $neworder->notes .= " Комментар:" . $wcorder->customer_note . ";";
 
                 $this->_neworders[$wcorder->id] = $neworder;

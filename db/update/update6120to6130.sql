@@ -40,25 +40,7 @@ FROM (eqentry e
     
 
 
-DROP VIEW if exists equipments_view  ;
 
-CREATE
-VIEW equipments_view
-AS
-SELECT
-  e.eq_id AS eq_id,
-  e.eq_name AS eq_name,
-  e.detail AS detail,
-  e.disabled AS disabled,
-  e.description AS description,
-  e.branch_id AS branch_id,
-  e.invnumber AS invnumber,
-  e.type AS type,
-  (SELECT
-      COALESCE(SUM(e1.amount), 0)
-    FROM eqentry e1
-    WHERE (e.eq_id = e1.eq_id)) AS balance
-FROM equipments e    ;
 
 
 DROP VIEW if exists note_topicnodeview  ;
