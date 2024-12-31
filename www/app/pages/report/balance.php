@@ -120,7 +120,7 @@ class Balance extends \App\Pages\Base
         $debet = H::fa($sum);
 
       
-        $sql = "SELECT COALESCE( SUM(  amount     ) ,0)    FROM  eqentry where eq_id in (select eq_id from  equipments where  disabled<> 1  )    ";
+        $sql = "SELECT COALESCE( SUM(  amount     ) ,0)    FROM  eqentry_view where date(document_date) <  {$dbdt} and eq_id in (select eq_id from  equipments where  disabled<> 1  )    ";
         $aeq = doubleval($conn->GetOne($sql));
     
         

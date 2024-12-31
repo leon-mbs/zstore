@@ -110,8 +110,7 @@ class IncomeService extends Document
                           
            }
            
-           \App\Entity\IOState::addIOState($this->document_id, $amount, \App\Entity\IOState::TYPE_INSERVICE);
-           
+            
            
         }
 

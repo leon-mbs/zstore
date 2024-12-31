@@ -183,7 +183,7 @@ class Main extends Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              iotype >= 50    {$brpay}
+              iotype >= 50 and  iotype < 80    {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
              GROUP BY  iotype order  by  iotype  

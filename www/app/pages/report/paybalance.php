@@ -97,14 +97,14 @@ class PayBalance extends \App\Pages\Base
               GROUP BY  iotype order  by  iotype  
                          
         ";
-
+        
         $rs = $conn->Execute($sql);
         $tin = 0;
         foreach ($rs as $row) {
             $detailitem = array();
 
             $detailitem["in"]   = H::fa($row['am']);
-            $detailitem["type"] = $pl[$row['iotype'] ] ;
+            $detailitem["type"] = $pl[$row['iotype'] ] ??0;
             $detailitem["docdet"] = false ;
             if($det) {
 

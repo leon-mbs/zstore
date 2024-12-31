@@ -28,14 +28,7 @@ class IncomeItem extends Document
 
 
         }
-        if ($this->headerdata['mtype'] > 0) {
-            $io = new \App\Entity\IOState();
-            $io->document_id = $this->document_id;
-            $io->amount = $amount;
-            $io->iotype = $this->headerdata['mtype'];
-
-            $io->save();
-        }
+ 
         
         
         if ($this->headerdata['examount'] > 0) {
