@@ -59,20 +59,8 @@ class Update extends \App\Pages\Base
 
         $this->_tvars['show']  = false   ; 
  
-        $phpv =   phpversion()  ;
-        $phpv = substr(str_replace('.','',$phpv),0,2) ;
-        
-        $conn = \ZDB\DB::getConnect();
-     
-        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
-    
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
-        $data = @json_decode($v, true);
-        if(!is_array($data)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json");
-            $data = @json_decode($v, true);
-            
-        }        
+        $data = System::checkVersion() ;
+       
     
          
         if(!is_array($data)){

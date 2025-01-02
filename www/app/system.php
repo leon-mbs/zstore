@@ -240,7 +240,7 @@ class System
         }
         $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
         if(strtotime('-7 day') < $lastcheck ) {
-            return;
+           return;
         }
      
         \App\Helper::setKeyVal('lastchecksystem',time()) ;
@@ -279,10 +279,8 @@ class System
           
              
             $b=0;
-            $phpv =   phpversion()  ;
+            $data = System::checkVersion() ;
 
-            $v = @file_get_contents("https://zippy.com.ua/version.json" );
-            $data = @json_decode($v, true);
             if(is_array($data)){
                $b= version_compare($data['version'] , System::CURR_VERSION);
             }               
@@ -297,5 +295,23 @@ class System
             }                                                     
         }        
     }
-
+    /**
+    * проверка   версии
+    * 
+    */
+    public static function checkVersion() {
+        $phpv =   phpversion()  ;
+        $phpv = substr(str_replace('.','',$phpv),0,2) ;
+       
+        $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
+    
+        $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
+        $data = @json_decode($v, true);
+        if(!is_array($data)) {
+            $v = @file_get_contents("https://zippy.com.ua/version.json");
+            $data = @json_decode($v, true);
+        }   
+        
+        return $data;     
+    }
 }

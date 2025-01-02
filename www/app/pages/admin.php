@@ -35,8 +35,8 @@ class Admin extends \App\Pages\Base
         }  
         $options = System::getOptions("common");       
               
-        $this->_tvars['issms'] = $options['smstype']>0;
-        $this->_tvars['isbot'] = strlen($options['tbtoken'])>0;
+        $this->_tvars['issms'] = ($options['smstype'] ?? 0)>0;
+        $this->_tvars['isbot'] = strlen($options['tbtoken']??'')>0;
         
         $form = $this->add(new Form('optionsform'));
         $form->add(new CheckBox('capcha',$options['capcha']??0));
