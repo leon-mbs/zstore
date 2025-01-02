@@ -107,21 +107,7 @@ class CronTask extends \ZCL\DB\Entity
                 $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
                    
-                //обновление  НП
-                if($modules['np'] == 1) {
-                    $api = new  \App\Modules\NP\Helper();
-
-                    $ret = $api->updatetCache()  ;
-                   
-                    if(strlen($ret['error'] ??'')>0 ) {
-                       $logger->error($ret['error']);  
-                    }
-                    if(strlen($ret['warn'] ??'')>0 ) {
-                       $logger->warn($ret['warn']);                           
-                       
-                    }           
-                }    
-                
+              
         
                 
             }

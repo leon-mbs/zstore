@@ -101,13 +101,11 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
 
-        $api = new \App\Modules\NP\Helper();
+        $this->docform->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
+        $this->docform->baycity->onChange($this, 'onBayCity');
+        $this->docform->add(new AutocompleteTextInput('baypoint'))->onText($this, 'onTextBayPoint');;
+        
       
-     
-        $areas = $api->getAreaListCache();
-        $this->docform->add(new DropDownChoice('bayarea',$areas,0))->onChange($this, 'onBayArea');
-        $this->docform->add(new DropDownChoice('baycity'))->onChange($this, 'onBayCity');
-        $this->docform->add(new DropDownChoice('baypoint'));
         $this->docform->add(new TextInput('bayhouse'));
         $this->docform->add(new TextInput('bayflat'));
   
@@ -168,11 +166,12 @@ class Order extends \App\Pages\Base
             $this->docform->deliverynp->setValue($this->_doc->headerdata['deliverynp']);
             $this->OnDeliverynp($this->docform->deliverynp);
 
-            $this->docform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
-            $this->onBayArea($this->docform->bayarea) ;
-            $this->docform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
-            $this->onBayCity($this->docform->baycity) ;
-            $this->docform->baypoint->setValue($this->_doc->headerdata['baypoint'] ?? 0);
+            
+            $this->docform->baycity->setKey($this->_doc->headerdata['baycity'] ?? '');
+            $this->docform->baypoint->setKey($this->_doc->headerdata['baypoint'] ?? '');
+            $this->docform->baycity->setText($this->_doc->headerdata['baycityname'] ?? '');
+            $this->docform->baypoint->setText($this->_doc->headerdata['baypointname'] ?? '');
+            
             $this->docform->bayhouse->setText($this->_doc->headerdata['bayhouse'] );
             $this->docform->bayflat->setText($this->_doc->headerdata['bayflat'] );
             $this->docform->store->setValue($this->_doc->headerdata['store'] );
@@ -495,21 +494,23 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['deliverynp'] = $this->docform->deliverynp->getValue();
-        $this->_doc->headerdata['bayarea'] = $this->docform->bayarea->getValue();
-        $this->_doc->headerdata['baycity'] = $this->docform->baycity->getValue();
-        $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getValue();
+
+        $this->_doc->headerdata['baycity'] = $this->docform->baycity->getKey();
+        $this->_doc->headerdata['baycityname'] = $this->docform->baycity->getText();
+        $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getKey();
+        $this->_doc->headerdata['baypointname'] = $this->docform->baypoint->getText();
+        
         $this->_doc->headerdata['bayhouse'] = $this->docform->bayhouse->getText();
         $this->_doc->headerdata['bayflat'] = $this->docform->bayflat->getText();
         $this->_doc->headerdata['npaddress'] = $this->docform->address->getText();
         $this->_doc->headerdata['npaddressfull'] ='';
-        if(strlen($this->_doc->headerdata['bayarea'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->bayarea->getValueName() );   
-        }
+
+       
         if(strlen($this->_doc->headerdata['baycity'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baycity->getValueName() );   
+           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baycity->getText() );   
         }
         if(strlen($this->_doc->headerdata['baypoint'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getValueName() );   
+           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getText() );   
         }
         if(strlen($this->_doc->headerdata['bayhouse'])>0) {
            $this->_doc->headerdata['npaddressfull']  .= (' буд '. $this->docform->bayhouse->getText() );   
@@ -832,7 +833,7 @@ class Order extends \App\Pages\Base
         }
 
         $this->docform->deliverynp->setVisible($dt == Document::DEL_NP);
-        $this->docform->bayarea->setVisible($dt  == Document::DEL_NP ) ;
+
         $this->docform->baycity->setVisible($dt  == Document::DEL_NP ) ;
         $this->docform->baypoint->setVisible($dt == Document::DEL_NP ) ;
         $this->docform->bayhouse->setVisible($dt == Document::DEL_NP ) ;
@@ -846,12 +847,12 @@ class Order extends \App\Pages\Base
 
     public function OnDeliverynp($sender) {
       $dt = $sender->getValue() ;        
-      $this->docform->baypoint->setOptionList([]) ;   
-      $this->docform->baypoint->setValue(0) ;   
+      $this->docform->baypoint->setKey('') ;   
+      $this->docform->baypoint->setText('') ;   
 
-      $this->docform->baycity->setValue(0) ;   
-      $this->docform->baycity->setOptionList([]) ;   
-      $this->docform->bayarea->setValue(0) ;   
+      $this->docform->baycity->setKey('');   
+      $this->docform->baycity->setText('')  ;   
+
      
       $this->docform->address->setVisible($dt ==2) ;   
       $this->docform->bayhouse->setVisible($dt ==2) ;   
@@ -1000,22 +1001,45 @@ class Order extends \App\Pages\Base
 
     }
 
-    public function onBayArea($sender) {
-
+    public function onTextBayCity($sender) {
+        $text = $sender->getText()  ;
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getCityListCache($sender->getValue());
+        $list = $api->searchCity($text);
 
-        $this->docform->baycity->setOptionList($list);
+        if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+            foreach($d['Addresses'] as $c) {
+               $opt[$c['Ref']]=$c['Present']; 
+            }
+        }
+        
+        return $opt;
+       
     }
 
     public function onBayCity($sender) {
-        $dt =  $this->docform->deliverynp->getValue(); 
-
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue(),$dt==1);
-
-        $this->docform->baypoint->setOptionList($list);
+     
+        $this->docform->baypoint->setKey('');
+        $this->docform->baypoint->setText('');
     }
+  
+    public function onTextBayPoint($sender) {
+        $text = $sender->getText()  ;
+        $ref=  $this->docform->baycity->getKey();
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchPoints($ref,$text);
+       
+        if($list['success']!=true) return;
+        
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+           $opt[$d['Ref']]=$d['Description']; 
+        }
+        
+        return $opt;        
+    }
+
 
     public function onSavePromo($sender) {
         $code= trim($this->docform->editpromo->getText());
