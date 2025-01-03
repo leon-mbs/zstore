@@ -214,7 +214,7 @@ class Customer extends \ZCL\DB\Entity
     public static function getLeadSources() {
         $options = \App\System::getOptions('common');
 
-        if (is_array($options['leadsources']) == false) {
+        if (is_array($options['leadsources']??null) == false) {
             $options['leadsources'] = array();
         }
 
@@ -233,7 +233,7 @@ class Customer extends \ZCL\DB\Entity
     public static function getLeadStatuses() {
         $options = \App\System::getOptions('common');
 
-        if (is_array($options['leadstatuses']) == false) {
+        if (is_array($options['leadstatuses']??null) == false) {
             $options['leadstatuses'] = array();
         }
 

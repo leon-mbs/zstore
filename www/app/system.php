@@ -70,13 +70,14 @@ class System
      * Возвращает набор  параметром  по  имени набора
      *
      * @param mixed $group
+     * @param mixed $reload
  
      */
-    public static function getOptions($group ) {
+    public static function getOptions($group,$reload= false ) {
 
         $opp  = Session::getSession()->options ??[] ;
        
-        if(isset($opp[$group])) {
+        if(isset($opp[$group]) && $reload==false  ) {
             return $opp[$group];
         }
        
