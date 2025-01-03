@@ -37,11 +37,7 @@ SELECT
 FROM (eqentry e
   JOIN documents d
     ON ((e.document_id = d.document_id)))  ;
-    
-
-
-
-
+ 
 
 DROP VIEW if exists note_topicnodeview  ;
 
@@ -62,8 +58,7 @@ FROM note_topics
   JOIN note_nodes
     ON note_topicnode.node_id = note_nodes.node_id    ;
  
-  
-    
+     
     
 DROP VIEW if exists cust_acc_view;
 
@@ -71,7 +66,7 @@ DROP VIEW if exists cust_acc_view;
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
 
 
-delete  from  options where  optname='version' ;
+delete  from options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.13.0'); 
 
  

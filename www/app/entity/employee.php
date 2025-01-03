@@ -20,6 +20,7 @@ class Employee extends \ZCL\DB\Entity
         $this->branch_id = 0;
         $this->children = 0;
         $this->disabled = 0;
+        $this->_baseval = 0;
     }
 
     protected function beforeSave() {
@@ -30,6 +31,7 @@ class Employee extends \ZCL\DB\Entity
         $this->detail = "<detail>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<phone>{$this->phone}</phone>";
+        $this->detail .= "<baseval>{$this->_baseval}</baseval>";
         $this->detail .= "<hiredate>{$this->hiredate}</hiredate>";
         $this->detail .= "<ztype>{$this->ztype}</ztype>";
         $this->detail .= "<zmon>{$this->zmon}</zmon>";
@@ -68,6 +70,7 @@ class Employee extends \ZCL\DB\Entity
         $this->children = (int)($xml->children[0]);
         $this->coworker = (int)($xml->coworker[0]);
         $this->invalid = (int)($xml->invalid[0]);
+        $this->_baseval = doubleval($xml->baseval[0]);
 
      
         

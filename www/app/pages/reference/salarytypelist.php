@@ -47,17 +47,17 @@ class SalaryTypeList extends \App\Pages\Base
         $opt = System::getOptions("salary");
 
         $this->add(new Form('calcform'));
-        $this->calcform->add(new TextArea('calc', $opt['calc']));
-        $this->calcform->add(new TextArea('calcbase', $opt['calcbase']));
+        $this->calcform->add(new TextArea('calc', $opt['calc']??''));
+        $this->calcform->add(new TextArea('calcbase', $opt['calcbase']??''));
         $this->calcform->add(new SubmitLink('savecalc'))->onClick($this, "onSaveCalc", true);
 
 
         $this->add(new Form('optform'));
-        $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']));
-        $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']));
-        $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']));
-        $this->optform->add(new DropDownChoice('optfine', SalType::getList(), $opt['codefine']));
-        $this->optform->add(new DropDownChoice('optbonus', SalType::getList(), $opt['codebonus']));
+        $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']??''));
+        $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']??''));
+        $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']??''));
+        $this->optform->add(new DropDownChoice('optfine', SalType::getList(), $opt['codefine']??''));
+        $this->optform->add(new DropDownChoice('optbonus', SalType::getList(), $opt['codebonus']??''));
         $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
 
 
@@ -70,6 +70,8 @@ class SalaryTypeList extends \App\Pages\Base
         $row->add(new Label('shortname', $item->salshortname));
         $row->add(new Label('code', $item->salcode));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        
     }
 
     public function deleteOnClick($sender) {
@@ -141,6 +143,11 @@ class SalaryTypeList extends \App\Pages\Base
         $codeadvance = $this->optform->optadvance->getValue();
         $coderesult = $this->optform->optresult->getValue();
 
+        if($codebaseincom==0) {
+           $this->setError('Не вказано поле  основної зарплати') ;
+           return;
+        }
+        
         $this->optform->optbaseincom->setOptionList($sl);
         $this->optform->optresult->setOptionList($sl);
         $this->optform->optadvance->setOptionList($sl);
@@ -164,7 +171,11 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['codeadvance'] = $this->optform->optadvance->getValue();
         $opt['codefine'] = $this->optform->optfine->getValue();
         $opt['codebonus'] = $this->optform->optbonus->getValue();
-
+        if($opt['codebaseincom']==0) {
+           $this->addAjaxResponse("toastr.error('Не вказано поле  основної зарплати')");
+           
+           return;
+        }
         System::setOptions('salary', $opt);
 
         $this->addAjaxResponse("toastr.success('Збережено')");

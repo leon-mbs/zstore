@@ -59,7 +59,8 @@ class SalaryList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $row->add(new ClickLink('number'))->onClick($this, 'showOnClick');
+        $row->number->setValue( $doc->document_number);
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
@@ -77,8 +78,10 @@ class SalaryList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == @$this->_doc->document_id) {
-            $row->setAttribute('class', 'table-success');
+        if ($this->_doc != null) {
+            if ($doc->document_id == $this->_doc->document_id) {
+                $row->setAttribute('class', 'table-success');
+            }
         }
 
     }

@@ -104,7 +104,7 @@
                    {{emp.emp_name}}  
                  </td>
                  <td class="text-right" v-for=" v in stlist  ">
-                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp.sellvalue" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
+                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp._baseval" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
                     <!--
                     <i v-if="v.salcode == '_c'+opt.codebaseincom" class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"                                   :title="emp.info"></i>
                     -->
@@ -219,7 +219,7 @@
                     year:this.doc.year,
                     month:this.doc.month
                     
-             }
+                }
                 
                 
              callPageMethod('loaddata',[ ], JSON.stringify(data),(data)=> 
@@ -231,6 +231,12 @@
                        this.emps = data.emps 
                        
                        if(data.newdoc || this.hchanged ) {
+                           for(var e of this.emps) {
+                          
+                               this.calcempinit(e)
+                           }                   
+                           
+                           
                             this.recalc()
                        }
                         
@@ -256,7 +262,13 @@
              }  ,            
             
                  
-            
+             //однократно при загрузке
+             calcempinit:  function (emp){   
+               
+                 {{{calcsinit}}} 
+                 
+             } ,
+          
              calcemp:  function (emp){   
                
                 {{{calcs}}}
