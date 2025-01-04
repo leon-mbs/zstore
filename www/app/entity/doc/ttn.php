@@ -79,7 +79,7 @@ class TTN extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
-        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
 
         $report = new \App\Report('doc/ttn.tpl');
 

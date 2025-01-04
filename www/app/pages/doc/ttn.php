@@ -183,9 +183,11 @@ class TTN extends \App\Pages\Base
                         $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
-                        $this->_doc->headerdata['bayarea'] = $basedoc->headerdata['bayarea'];
+              
                         $this->_doc->headerdata['baycity'] = $basedoc->headerdata['baycity'];
+                        $this->_doc->headerdata['baycityname'] = $basedoc->headerdata['baycityname'];
                         $this->_doc->headerdata['baypoint'] = $basedoc->headerdata['baypoint'];
+                        $this->_doc->headerdata['baypointname'] = $basedoc->headerdata['baypointname'];
  
                         $notfound = array();
                         $order = $basedoc->cast();
