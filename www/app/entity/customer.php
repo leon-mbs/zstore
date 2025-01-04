@@ -70,6 +70,10 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<addressdel><![CDATA[{$this->addressdel}]]></addressdel>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "<passw><![CDATA[{$this->passw}]]></passw>";
+        $this->detail .= "<npcityref><![CDATA[{$this->npcityref}]]></npcityref>";
+        $this->detail .= "<npcityname><![CDATA[{$this->npcityname}]]></npcityname>";
+        $this->detail .= "<nppointref><![CDATA[{$this->nppointref}]]></nppointref>";
+        $this->detail .= "<nppointname><![CDATA[{$this->nppointname}]]></nppointname>";
         $this->detail .= "</detail>";
 
   
@@ -109,6 +113,10 @@ class Customer extends \ZCL\DB\Entity
         $this->lastname = (string)($xml->lastname[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
         $this->passw = (string)($xml->passw[0]);
+        $this->npcityref = (string)($xml->npcityref[0]);
+        $this->npcityname = (string)($xml->npcityname[0]);
+        $this->nppointref = (string)($xml->nppointref[0]);
+        $this->nppointname = (string)($xml->nppointname[0]);
 
         $this->createdon = strtotime($this->createdon ?? '');
         
