@@ -466,14 +466,14 @@ class GIList extends \App\Pages\Base
            $this->nppan->npform->bayhouse->setText($order->headerdata['bayhouse']);    
            $this->nppan->npform->bayflat->setText($order->headerdata['bayflat']);    
            $this->nppan->npform->bayaddr->setText($order->headerdata['ship_address']);    
-           
+           $this->nppan->npform->baycity->setKey($order->headerdata['baycity'] ?? '');
+           $this->nppan->npform->baypoint->setKey($order->headerdata['baypoint'] ?? '');
+           $this->nppan->npform->baycity->setText($order->headerdata['baycityname'] ?? '');
+           $this->nppan->npform->baypoint->setText($order->headerdata['baypointname'] ?? '');
+            
         }
      
-        $this->nppan->npform->baycity->setKey($order->headerdata['baycity'] ?? '');
-        $this->nppan->npform->baypoint->setKey($order->headerdata['baypoint'] ?? '');
-        $this->nppan->npform->baycity->setText($order->headerdata['baycityname'] ?? '');
-        $this->nppan->npform->baypoint->setText($order->headerdata['baypointname'] ?? '');
-        
+      
         
         $this->nppan->npform->seltel->setText($modules['nptel']);
         $this->nppan->npform->selcity->setKey($modules['npcityref']);
@@ -542,11 +542,24 @@ class GIList extends \App\Pages\Base
             $cust = $cust . ', ' . $this->_doc->headerdata["phone"]??'';
             $tel = $this->_doc->headerdata["phone"]??'';
         } else {
-            $tel = $cust->phone??'';
-            $cust = $cust . ', ' . $cust->phone;
+            $tel = $c->phone??'';
+            $cust = $cust . ', ' . $c->phone;
             
         }
 
+        
+      
+        if(  strlen($this->nppan->npform->baycity->getKey()) <2 ){
+              
+                if(strlen ($c->npcityref??'')>0)  {
+                   $this->nppan->npform->baycity->setKey($c->npcityref) ;
+                   $this->nppan->npform->baycity->setText( $c->npcityname) ;
+                   $this->nppan->npform->baypoint->setKey($c->nppointref) ;
+                   $this->nppan->npform->baypoint->setText($c->nppointname) ;
+                }
+        }          
+        
+        
         $this->nppan->npform->baytel->setText($tel);
         $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
@@ -655,7 +668,7 @@ class GIList extends \App\Pages\Base
         
         $opt=[];  
         foreach($list['data'] as $d ) {
-           $opt[$d['Ref']]=$d['Description']; 
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
         }
         
         return $opt;        
@@ -695,7 +708,7 @@ class GIList extends \App\Pages\Base
         
         $opt=[];  
         foreach($list['data'] as $d ) {
-           $opt[$d['Ref']]=$d['Description']; 
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
         }
         
         return $opt;        
@@ -715,14 +728,15 @@ class GIList extends \App\Pages\Base
         $params['SeatsAmount'] = $this->nppan->npform->npplaces->getText();
         $params['Description'] = trim($this->nppan->npform->npdesc->getText());
         $params['CargoType'] = 'Cargo';
-
+     
         $params['Weight'] = $this->nppan->npform->npw->getText();
         if ($params['SeatsAmount'] > 1) {
             $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
      
         if($dt==1) {
-            
+            $params['CargoType'] = 'Parcel';
+     
             $params['OptionsSeat'] =[] ;
             $params['OptionsSeat'][] =array(
                             'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
@@ -731,7 +745,7 @@ class GIList extends \App\Pages\Base
                             'weight' => $params['Weight']  
                            
                           );
-        
+                
         }
         
         $moneyback = $this->nppan->npform->npback->getText();
@@ -806,8 +820,9 @@ class GIList extends \App\Pages\Base
             $sender['CitySender'] = $this->nppan->npform->selcity->getKey();
             $sender['SenderType'] = $result['data'][0]['CounterpartyType'];
             $sender['ContactSender'] = $resultc['data'][0]['Ref'];
-            $sender['SenderAddress'] = $this->nppan->npform->selpoint->getKey();
-
+          //  $sender['SenderAddress'] = $this->nppan->npform->selpoint->getKey();
+            $sender['SenderWarehouseIndex'] = $this->nppan->npform->selpoint->getKey();
+     
             $recipient['FirstName'] = $this->nppan->npform->bayfirstname->getText();
             $recipient['MiddleName'] = $this->nppan->npform->baymiddlename->getText();
             $recipient['LastName'] = $this->nppan->npform->baylastname->getText();
@@ -829,7 +844,8 @@ class GIList extends \App\Pages\Base
               $recipient['Recipient'] = $result['data'][0]['Ref'];
               $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
               $recipient['CityRecipient'] = $this->nppan->npform->baycity->getKey();
-              $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getKey();
+            //   $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getKey();
+              $recipient['RecipientWarehouseIndex'] = $this->nppan->npform->baypoint->getKey();
     
             if($dt==2) {
               $recipient['RecipientCityName'] = $this->nppan->npform->baycity->getText();
@@ -845,6 +861,7 @@ class GIList extends \App\Pages\Base
             $paramsInternetDocument = array_merge($sender, $recipient, $params);
 
             $result = $api->model('InternetDocument')->save($paramsInternetDocument);
+            
         } catch(\Throwable $e) {
             $this->setError($e->getMessage());
             return;
@@ -868,6 +885,15 @@ class GIList extends \App\Pages\Base
                 }
             }
 
+            if($this->_doc->customer_id > 0){
+                $c = \App\Entity\Customer::load($this->_doc->customer_id);
+                $c->npcityref   =  $this->nppan->npform->baycity->getKey() ;
+                $c->npcityname  =  $this->nppan->npform->baycity->getText() ;
+                $c->nppointref  =  $this->nppan->npform->baypoint->getKey() ;
+                $c->nppointname =  $this->nppan->npform->baypoint->getText() ;
+                $c->save();
+            }
+            
 
             $this->statuspan->setVisible(false);
             $this->listpan->setVisible(true);

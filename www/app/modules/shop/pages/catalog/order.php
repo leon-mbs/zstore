@@ -435,7 +435,7 @@ class Order extends Base
         
         $opt=[];  
         foreach($list['data'] as $d ) {
-           $opt[$d['Ref']]=$d['Description']; 
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
         }
         
         return $opt;        
