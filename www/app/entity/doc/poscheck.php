@@ -412,7 +412,7 @@ class POSCheck extends Document
 
         $disc = \App\System::getOptions("discount");
         $emp_id = \App\System::getUser()->employee_id ;
-        if($emp_id >0 && $disc["bonussell"] >0) {
+        if($emp_id >0 && ($disc["bonussell"]??0) >0) {
             $b =  $this->amount * $disc["bonussell"] / 100;
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::BONUS;

@@ -12,7 +12,7 @@ class System
 {
     public const CURR_VERSION = "6.13.0";
     public const PREV_VERSION = "6.12.2";
-    public const REQUIRED_DB  = "6.12.0";
+    public const REQUIRED_DB  = "6.13.0";
 
    
    

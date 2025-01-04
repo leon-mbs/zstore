@@ -133,6 +133,11 @@
         <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити код до попередньої версії </b> </a> 
         <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
           {{/rollback}}        
+         {{^oldphp}}
+        <br>  <br> 
+        <i class="fa fa-undo"></i> <a zippy="updatevendor"><b>Оновити папку  vendor</b> </a> 
+        <br><small>Якщо буои оновленi стороннi бiблiотеки</small>
+          {{/oldphp}}        
      </div>  
                    
                       
@@ -159,6 +164,14 @@
         } 
         function check_reload(ele){
            return confirm("Повторити оновлення?")
+        } 
+        function check_updatevendor(ele){
+            var b = confirm("Оновити vendor?")
+            if(b==true) {     
+              document.getElementById('dialogwait').showModal()
+              return true; 
+            }          
+            return false;
         } 
         
  </script> 

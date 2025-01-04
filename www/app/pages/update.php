@@ -37,6 +37,7 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
         $this->add(new  ClickLink('rollback',$this,'OnRollback')) ;
         $this->add(new  ClickLink('reload',$this,'OnFileUpdate')) ;
+        $this->add(new  ClickLink('updatevendor',$this,'OnVendorUpdate')) ;
       
  
          
@@ -169,6 +170,53 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
          
             if(filesize($archive)==0) {
+                $this->setError('Помилка завантаження файлу');
+                return;        
+            }
+
+            if ($zip->open($archive) === TRUE) {
+           
+                $destination =_ROOT; 
+                
+                $zip->extractTo($destination);
+                $zip->close();
+
+           }  else {
+                $this->setError('Помилка  архіву');
+                return;        
+               
+           }
+           $this->setSuccess('Файли оновлені')  ;
+           App::RedirectURI("/index.php?p=/App/Pages/Update");
+
+         
+      } catch(\Exception $e){
+            $msg = $e->getMessage()  ;
+     
+            $this->setErrorTopPage($msg)  ;
+   
+       } 
+         
+    }
+ 
+   public function OnVendorUpdate($sender)   {
+    
+        try {
+            if (!is_writeable( _ROOT .'vendor/')) {
+                $this->setError('Нема  права  запису');
+                return;        
+            }
+
+               
+            $zip = new \ZipArchive()  ;
+
+            $archive = _ROOT.'upload/update.zip' ;
+            @unlink($archive) ;
+            
+            @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
+         
+            if(filesize($archive)==0) {
+  
                 $this->setError('Помилка завантаження файлу');
                 return;        
             }
