@@ -616,10 +616,10 @@ class GIList extends \App\Pages\Base
       
       $dt=$sender->getValue();  
         
-      $this->nppan->npform->baypoint->setKey('') ;   
-      $this->nppan->npform->baypoint->setText('') ;   
-      $this->nppan->npform->baycity->setKey('') ;   
-      $this->nppan->npform->baycity->setText('') ;   
+ //     $this->nppan->npform->baypoint->setKey('') ;   
+  //    $this->nppan->npform->baypoint->setText('') ;   
+  //    $this->nppan->npform->baycity->setKey('') ;   
+   //   $this->nppan->npform->baycity->setText('') ;   
 
 
       $this->nppan->npform->npgab->setVisible($dt ==1) ;   
@@ -899,7 +899,11 @@ class GIList extends \App\Pages\Base
             $this->listpan->setVisible(true);
             $this->nppan->setVisible(false);
         } else {
-            $error = array_pop($result['errors'] );
+            $error =" ". implode(";", $result['errors'] );
+            if(strpos($error,'OptionsSeat')>0) {
+                $error= "Не вказано габарити для поштомата або невідповідний тип доставки";
+            }
+            
             $this->setError($error) ;
         }
     }
