@@ -1001,7 +1001,11 @@ class Item extends \ZCL\DB\Entity
         }
         $tmp = tempnam(sys_get_temp_dir(), "import") ;
         file_put_contents($tmp, $file) ;
-
+        if (filesize($tmp) > 1024*1024) {
+             
+             return 0;
+        }
+            
         $imagedata = getimagesize($tmp);
         if ($imagedata== false) {
             return 0  ;

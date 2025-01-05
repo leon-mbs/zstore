@@ -344,7 +344,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
-        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa($item->quantity * doubleval($item->price  ) )));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -738,7 +738,7 @@ class GoodsReceipt extends \App\Pages\Base
 
 
                 if($this->_doc->headerdata['comission'] != 1) {
-                    if(( H::fa( $this->_doc->headerdata['payamount']) - H::fa(doubleval($this->_doc->headerdata['prepaid']))  )> H::fa( $this->_doc->headerdata['payed'] ) ) {
+                    if(( H::fa( $this->_doc->headerdata['payamount']) - H::fa(doubleval($this->_doc->headerdata['prepaid']??0))  )> H::fa( $this->_doc->headerdata['payed'] ) ) {
                         $this->_doc->updateStatus(Document::STATE_WP);
                     }
                 }
@@ -774,11 +774,10 @@ class GoodsReceipt extends \App\Pages\Base
 
             if ($file['size'] > 0) {
                 $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-                $imagedata = getimagesize($file["tmp_name"]);
-                if ($imagedata[0] > 0) {
-                    $this->_doc->headerdata["scan"] = $id;
-                    $this->_doc->save();
-                }
+       
+                $this->_doc->headerdata["scan"] = $id;
+                $this->_doc->save();
+         
             }
 
             //если  накладная  выполнена  и оплачена
@@ -827,12 +826,12 @@ class GoodsReceipt extends \App\Pages\Base
 
     }
 
-
     public function onDisc($sender) {
         $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
         $this->CalcPay();
 
     }
+
     public function onDelivery($sender) {
         $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getText()));
         $this->CalcPay();
@@ -860,7 +859,7 @@ class GoodsReceipt extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = doubleval($item->price) * $item->quantity;
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
@@ -884,7 +883,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
-        if(doubleval($this->_doc->headerdata['prepaid'])>0) {
+        if(doubleval($this->_doc->headerdata['prepaid']??0)>0) {
             $total = $total - $this->_doc->headerdata['prepaid'];
         }
 

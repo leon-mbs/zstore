@@ -96,7 +96,7 @@ class GRList extends \App\Pages\Base
 
             }
             if($doc->meta_name=='GoodsReceipt') {
-                if($doc->payamount == $doc->headerdata['prepaid'])  {
+                if($doc->payamount == ($doc->headerdata['prepaid']??0) )  {
                    $row->ispay->setVisible(false);    
                 }
             }            

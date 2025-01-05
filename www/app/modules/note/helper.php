@@ -11,6 +11,13 @@ class Helper
 {
     public static function addFile($file, $itemid) {
         $conn = DB::getConnect();
+
+        $data = file_get_contents($file['tmp_name']);
+       
+        if(strlen($data) > (1024*1024*4) ) {
+           // throw new \Exception('Розмір файлу більше 4M');
+           return 0;
+        }  
         $filename = $file['name'];
 
         $filename = $conn->qstr($filename);
@@ -18,7 +25,7 @@ class Helper
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
-        $data = file_get_contents($file['tmp_name']);
+
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
         $conn->Execute($sql);

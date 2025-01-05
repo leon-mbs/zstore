@@ -301,13 +301,10 @@ class IncomeItem extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
                 $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-                $imagedata = getimagesize($file["tmp_name"]);
-                if ($imagedata[0] > 0) {
-                    $this->_doc->headerdata["scan"] = $id;
-                    $this->_doc->save();
-                }
+                $this->_doc->headerdata["scan"] = $id;
+                $this->_doc->save();
+                 
             }
 
             $conn->CommitTrans();

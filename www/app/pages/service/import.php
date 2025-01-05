@@ -419,9 +419,8 @@ class Import extends \App\Pages\Base
                 $newitems[] = $item; //для склада
             }
 
-
-            // $image="http://local.zstore/assets/images/logo.png";
-
+       
+             
             if (strlen($image) > 0) {
                 $item->saveImage($image);
 

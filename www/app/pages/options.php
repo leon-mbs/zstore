@@ -574,10 +574,7 @@ class Options extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('Занадто великий розмір зображення');
-                return;
-            }
+          
 
             $name = basename($file["name"]);
             move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
