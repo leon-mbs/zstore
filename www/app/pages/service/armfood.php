@@ -255,7 +255,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->setVisible(false);
 
         $this->_doc = \App\Entity\Doc\Document::create('OrderFood');
-
+        $this->_doc->headerdata['delivery'] = 0;
 
         $this->_itemlist = array();
 

@@ -373,6 +373,40 @@ class Discounts extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
+ 
+   public function onAddBonus($sender) {
+        
+        $am=intval($sender->amountbc->getText() );
+        $cid=intval($sender->custbc->getKey() );
+        $sender->amountbc->setText('') ;
+        $sender->custbc->setText('') ;
+        $sender->custbc->setKey(0) ;
+         
+        if($am != 0  && $cid >0) {
+             
+            $cb = new \App\Entity\CustAcc();
+
+            $cb->customer_id = $cid;
+          //  $cb->document_id = $this->document_id;
+            $cb->amount =    $am;
+            $cb->optype = \App\Entity\CustAcc::BONUS;
+            $cb->createdon = time();
+            $cb->save();
+            
+            $this->OnPL(null);
+            if($am > 0) {
+                $am = "+". $am;
+            }
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::SYSTEM;
+
+            $n->message = "Користувач ".System::getUser()->username." змінив ({$am}) бонуси контрагента  " .$sender->custbc->getText()  ;
+            $n->save();            
+            
+            
+        }
+    }
+ 
      
      //список  бонусоы ц контрагентов
     public function OnPL($sender) {
@@ -816,29 +850,7 @@ class Discounts extends \App\Pages\Base
         $this->setSuccess('Збережено');
     }
   
-    public function onAddBonus($sender) {
-        
-        $am=intval($sender->amountbc->getText() );
-        $cid=intval($sender->custbc->getKey() );
-        $sender->amountbc->setText('') ;
-        $sender->custbc->setText('') ;
-        $sender->custbc->setKey(0) ;
-         
-        if($am != 0  && $cid >0) {
-             
-            $cb = new \App\Entity\CustAcc();
-
-            $cb->customer_id = $cid;
-          //  $cb->document_id = $this->document_id;
-            $cb->amount =    $am;
-            $cb->optype = \App\Entity\CustAcc::BONUS;
-            $cb->createdon = time();
-            $cb->save();
-            
-            $this->OnPL(null);
-        }
-    }
-
+ 
 }
 
 class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource

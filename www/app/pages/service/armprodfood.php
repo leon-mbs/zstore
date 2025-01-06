@@ -32,7 +32,6 @@ class ArmProdFood extends \App\Pages\Base
 
     }
 
-
     public function onReady($args, $post) {
 
 
@@ -109,6 +108,7 @@ class ArmProdFood extends \App\Pages\Base
 
 
     }
+
     public function onInprocess($args, $post) {
 
 
@@ -146,7 +146,6 @@ class ArmProdFood extends \App\Pages\Base
 
 
     }
-
 
     public function onSend($args, $post) {
 
@@ -200,8 +199,6 @@ class ArmProdFood extends \App\Pages\Base
 
 
     }
-
-
 
     public function getItems($args, $post) {
 
@@ -257,6 +254,7 @@ class ArmProdFood extends \App\Pages\Base
 
         return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
     }
+
     public function getMessages($args, $post) {
 
         $text = '';

@@ -54,14 +54,27 @@ class IOState extends \ZCL\DB\Entity
 
     }
 
-    public static function addIOState($document_id, $amount, $type) {
+    /**
+    * Добавление  записи  о расходах-доходах
+    * 
+    * @param mixed $document_id
+    * @param mixed $amount
+    * @param mixed $type
+    * @param mixed $storno   для возвратов
+    * @return mixed
+    */
+    public static function addIOState($document_id, $amount, $type,$storno=false) {
         if (0 == doubleval($amount) || 0 == intval($document_id) || 0 == intval($type)) {
             return;
         }
 
         $amount = abs($amount) ;
-        if(intval($type) >=50) { //расходы
-            $amount = 0- $amount;
+        if(intval($type) >= 50) { //расходы
+            $amount = 0 - $amount;
+        }
+
+        if($storno) {  
+            $amount = 0 - $amount;
         }
 
 
@@ -93,7 +106,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
             $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
             $list[self::TYPE_INEQ] = "Інші доходи";
-         }
+        }
 
         if ($type == 2 ||   $type == 0  ) {
             $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";

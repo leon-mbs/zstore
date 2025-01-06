@@ -113,7 +113,7 @@ class GoodsReceipt extends Document
         $total = $total * $rate;
 
 
-        $k = $this->amount >0 ? $total / $this->amount : 1;
+        $k = $this->amount > 0 ? $total / $this->amount : 1;
 
 
         //аналитика
