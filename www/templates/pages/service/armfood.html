@@ -574,6 +574,7 @@
   
 
                         <td zippy="docnotes"></td>
+                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Бiгунок</a></td>
                         <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Рахунок</a></td>
                         <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
@@ -634,7 +635,25 @@
             </div>
         </form>
 
-
+  <div id="prform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="rtag"></td>
+                            </tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#rtag').printThis();$('#prform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>      
 
         <script>
             $(document).ready(function () {

@@ -412,12 +412,14 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('bredit', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brclose', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brrefuse', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('brrunner', $this, 'OnPrintRunner',true)) ;
 
         $row->brpay->setVisible(false);
         $row->brprint->setVisible(false);
         $row->brclose->setVisible(false);
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
+        $row->brrunner->setVisible(false);
 
 
         $haspayment = $doc->hasPayments() ;
@@ -444,6 +446,10 @@ class ARMFood extends \App\Pages\Base
             $row->brprint->setVisible(true);
         }
         
+        if ( $doc->state>4   ) {
+           $row->brrunner->setVisible(true);
+        }
+        
         
         if ($inprod) {
             $row->brclose->setVisible(false);
@@ -462,6 +468,7 @@ class ARMFood extends \App\Pages\Base
             $row->brrefuse->setVisible(false);
             $row->bredit->setVisible(false);
             $row->brprint->setVisible(false);
+            $row->brrunner->setVisible(false);
         }
      
         if ($doc->state == Document::STATE_WP   ) {
@@ -1043,7 +1050,8 @@ class ARMFood extends \App\Pages\Base
        
         $this->toprod()  ;
 
-        $this->onNewOrder();
+       // $this->onOrderList();
+        $this->onOrderList(null);
     }
 
     private function toprod() {
@@ -1624,6 +1632,7 @@ class ARMFood extends \App\Pages\Base
 
     }
     
+
     public function OnPrintBill($sender) {
 
 
@@ -1651,6 +1660,59 @@ class ARMFood extends \App\Pages\Base
         }
 
     }
+  
+    public function OnPrintRunner($sender) {
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+
+        $doc = $sender->getOwner()->getDataItem();
+        $header = [];
+        
+        $header['document_number']    =  $doc->document_number   ;
+        $header['time']    =  H::ft($doc->headerdata['time']) ;
+        $header['table']   =  $doc->headerdata['table'] ;
+        $header['notes']   =  $doc->notes ;
+        $header['detail']  =  [];
+        foreach ($doc->unpackDetails('detaildata') as $item) {
+
+            $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
+
+            $header['detail'] [] = array(
+                "itemname" => $name,
+                "qty"   => H::fqty($item->quantity)
+                
+            );
+        }        
+        if(intval($user->prtype) == 0) {
+  
+            $report = new \App\Report('runner.tpl');
+            $html =  $report->generate($header);                  
+
+            $this->addAjaxResponse("  $('#rtag').html('{$html}') ; $('#prform').modal()");
+            return;
+        }
+       
+        try {
+            $buf=[];
+            if(intval($user->prtype) == 1) {
+                
+                $report = new \App\Report('runner_ps.tpl');
+            
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+           
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPS('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }       
+    }  
     
     //фискализация
     public function OnOpenShift($sender) {

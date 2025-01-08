@@ -138,7 +138,7 @@ class OrderFood extends Document
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??'') > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]??'') > 0 ? $this->headerdata["fiscalnumberpos"] : false,
-                        "exchange"        => H::fasell($this->headerdata["exchange"]),
+                        "exchange"        => H::fasell($this->headerdata["exchange"]??0),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
