@@ -56,8 +56,6 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
-
     public function loaddata($arg, $post) {
         $docid =  $arg[0] ;
 
@@ -153,13 +151,14 @@ class DocView extends \Zippy\Html\PageFragment
 
 
         $ret['pdoc_id'] = 0;
-        $ret['pdoc_name'] = 0;
+        $ret['pdoc_name'] = '';
         if($doc->parent_id >0){
             $p = Document::load($doc->parent_id);
             if($p instanceof Document) {
-                $ret['pdoc_id'] = $doc->parent_id;
-                $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number. ' ' . $p->getStateName($p->state);
-
+                if ( \App\ACL::checkShowDoc($p)) {
+                   $ret['pdoc_id'] = $doc->parent_id;
+                   $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number. ' ' . $p->getStateName($p->state);
+                }
             }
         }
         $ret['reldocs'] = array();
@@ -178,6 +177,9 @@ class DocView extends \Zippy\Html\PageFragment
 
         $docs = array();
         foreach($doc->getChildren() as $d) {
+            
+            if(\App\ACL::checkShowDoc($d) ==false) return;
+            
             $docs[]=array('id'=>$d->document_id,
                           'name'=>$d->meta_desc . ' ' . $d->document_number,
                           'status'=>$d->getStateName($d->state),
@@ -210,7 +212,6 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
     public function getDocs($args, $post) {
 
         $q = $args[0];
@@ -223,7 +224,6 @@ class DocView extends \Zippy\Html\PageFragment
         return json_encode($data, JSON_UNESCAPED_UNICODE);
 
     }
-
 
     public function loadmessages($arg, $post) {
         $user = \App\System::getUser() ;
@@ -246,12 +246,14 @@ class DocView extends \Zippy\Html\PageFragment
         return json_encode($msglist, JSON_UNESCAPED_UNICODE);
 
     }
+
     public function delmsg($arg, $post) {
 
 
         \App\Entity\Message::delete($arg[0]);
 
     }
+
     public function addmsg($arg, $post) {
         if(strlen($post['msgtext'])==0) {
             return;
@@ -284,7 +286,6 @@ class DocView extends \Zippy\Html\PageFragment
 
 
     }
-
 
     public function loadfiles($arg, $post) {
         $user = \App\System::getUser() ;
@@ -319,7 +320,6 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
     public function delfile($arg, $post) {
 
         H::deleteFile($arg[0]);
@@ -330,6 +330,7 @@ class DocView extends \Zippy\Html\PageFragment
         }
 
     }
+
     public function addfile($arg, $post) {
 
 

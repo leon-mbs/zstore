@@ -44,7 +44,7 @@ class ReturnIssue extends Document
                         "customer_name"   => $this->customer_name,
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
-                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??0) > 0 ? $this->headerdata["fiscalnumber"] ??'' : false,
                         "total"           => H::fa($this->amount),
                         "payamount"           => H::fa($this->payamount),
                         "payed"           => H::fa($this->headerdata['payed'])
