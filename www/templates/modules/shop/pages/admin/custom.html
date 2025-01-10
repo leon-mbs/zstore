@@ -55,7 +55,7 @@
              </div>
            
            
-               <div class="col-12   ">
+               <div class="col-12  col-xl-10 ">
                  
                  <form zippy="pageform">
                   <input type="hidden" zippy="oldlink">
@@ -67,13 +67,13 @@
                     <small>Для вiдображення в  меню</small>
                 </div> 
                   <div class="form-group   ">
-                        <label for="pagelink">Вiдносне  посилання    </label>
+                        <label for="pagelink">Вiдносне  посилання (SEO посилання)   </label>
                         <input pattern="[0-9a-z_]+" required  style="width:200px;" zippy="pagelink" class="form-control ">
 
                         <small>Не включаючи адресу сайту. Допускаються тiльки  латиничнi символи (наприклад:  news,  about_us,  dostavka)</small>
                         
                     </div> 
-               <div class="form-group   ">
+                    <div class="form-group   ">
                         <label for="pageorder">Порядковий  номер    </label>
                         <input pattern="[0-9]+" required="required" style="width:40px;" zippy="pageorder" class="form-control ">
 
@@ -84,7 +84,7 @@
                         <label for="pagetext">Змiст  </label>
                         <textarea zippy="pagetext" class="form-control ">
                         </textarea>
-                <small>Зображення повинні бути якомога меншого розміру.</small>
+                       <small>Зображення повинні бути якомога меншого розміру.</small>
                         
                     </div>      
      
@@ -95,7 +95,7 @@
 
                     </div>
                 </form>      
-              </div>
+               </div>
  
  
               <div class="col-12 col-md-10   col-xl-8 " zippy="articlesspan">
@@ -117,10 +117,42 @@
                    
              </div>
 
-              <div class="col-12   ">
-                <form zippy="pagearticleform">
-                
-               </form>         
+              <div class="col-12 col-xl-10  ">
+                <form zippy="articleform">
+                  <input type="hidden" zippy="artid">
+                  <h4>Редагування статтi</h4>  
+                     <div class="form-group  row ">
+                        <label class="col-2 col-form-label" for="adate">Дата      </label>
+                       <div  class="col-5"> 
+                           <input required    zippy="adate" class="form-control ">
+                       </div>      
+                    </div>                      
+                     <div class="form-group   ">
+                        <label for="atitle">Заголовок    </label>
+                        <input required    zippy="atitle" class="form-control ">
+                           
+                    </div>                      
+                     <div class="form-group   ">
+                        <label for="ashort"> Короткий  текст    </label>    </label>
+                        <textarea      zippy="ashort" class="form-control "></textarea>
+                        <small>Для попереднього перегляду</small>
+                    </div>                      
+                      
+                    <div class="form-group   ">
+                        <label for="along"> Основний  текст    </label>    
+                        <textarea  style="width:400px"    zippy="along" class="form-control "></textarea>
+                    </div>                      
+                     <div class="form-check">
+                        <input zippy="apublic" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="apublic"> Опублiкувати</label>
+                    </div>          
+                     <div class="form-group   ">
+
+                        <a class="btn btn-outline-primary" zippy="artcancel">Скасувати</a>
+                       &nbsp; &nbsp; <button class="btn btn-primary" type="submit">Зберегти</button>
+
+                    </div>       
+                </form>         
              </div>
    
  
@@ -148,6 +180,22 @@
                         }
                     }
                 });
+                
+                $('#along').summernote({
+                    height: 600,
+                    lang: 'uk-UA',
+
+                    callbacks: {
+                   
+                        onPaste: function (e) {
+
+                            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                            e.preventDefault();
+                            document.execCommand('insertText', false, bufferText.replace(/\n/g, ''));
+                        }
+                    }
+                });
+                
             })
 
         function updateSiteMap(){
@@ -157,7 +205,22 @@
              toastr.success('Оновлено','',{'timeOut':'2000'})  
           });           
       
-   }
+        }
+        
+        
+        function check_artdel() {
+            return confirm("Видалити ?")
+        }    
+        
+        function check_newdel() {
+            return confirm("Видалити ?")
+        }    
+        
+        function check_pdel() {
+            return confirm("Видалити ?")
+        }    
+        
+            
         </script>
 
     </body>
