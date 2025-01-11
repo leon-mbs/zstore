@@ -1477,7 +1477,16 @@ FROM (eqentry e
     ON ((e.document_id = d.document_id)))  ;
     
 
- 
+     
+CREATE TABLE shop_articles (
+  id int NOT NULL AUTO_INCREMENT,
+  title varchar(255) NOT NULL,
+  shortdata text DEFAULT NULL,
+  longdata longtext NOT NULL,
+  createdon date NOT NULL,
+  isactive tinyint NOT NULL DEFAULT 0,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;   
   
   
   

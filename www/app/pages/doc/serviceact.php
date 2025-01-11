@@ -212,7 +212,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['device'] = $post->doc->device;
         $this->_doc->headerdata['gar'] = $post->doc->gar;
         $this->_doc->headerdata['contract_id'] = $post->doc->contract_id;
-        $this->_doc->headerdata['payment'] = $post->doc->payment;
+        $this->_doc->headerdata['payment'] = $post->doc->payment??0;
         $this->_doc->headerdata['totaldisc'] = $post->doc->totaldisc;
         $this->_doc->headerdata['bonus'] = $post->doc->bonus;
 
