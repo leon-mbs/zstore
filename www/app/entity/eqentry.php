@@ -16,13 +16,7 @@ class EqEntry extends \ZCL\DB\Entity
     public const OP_AMOR = 3;
     public const OP_REM = 4;
     public const OP_MOVE = 5;
-    /**
-     *
-     *
-     * @param mixed $document_id Ссылка  на  документ
-     * @param mixed $amount Сумма.
-     * @param mixed $quantity количество
-     */
+
     public function __construct(   ) {
         parent::__construct();
         

@@ -117,7 +117,6 @@ class EQ extends Document
             "item_name" => $this->headerdata['item_name']??'',
             "emp_name" => $this->headerdata['emp_name']??'',
             "pa_name" => $this->headerdata['pa_name']??'',
-            "document_number" => $this->document_number,
             "customer_name" => $this->customer_name ??''
         );
         

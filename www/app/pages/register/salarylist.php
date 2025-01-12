@@ -59,8 +59,8 @@ class SalaryList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new ClickLink('number'))->onClick($this, 'showOnClick');
-        $row->number->setValue( $doc->document_number);
+        $row->add(new ClickLink('document_number'))->onClick($this, 'showOnClick');
+        $row->document_number->setValue( $doc->document_number);
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));

@@ -47,7 +47,7 @@
             {{/goods}}
          
          </table>
-       <td></tr>
+       </td></tr>
       
       
      

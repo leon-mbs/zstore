@@ -8,3 +8,4 @@
    <tr>  <td colspan="2">   {{notes}}</td>  </tr>
             
     </tr>
+    </table>
