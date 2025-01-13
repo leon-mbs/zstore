@@ -91,7 +91,8 @@ class VK
         $check = [] ;
         $check["rows"] = [] ;
         $check["pays"] = [] ;
-    
+        $check["discounts"] = [] ;
+     
         $sum = 0;
  
 
@@ -203,30 +204,37 @@ class VK
             "type"=>4,
             "sum"=> self::fa($doc->payamount - $payed ) 
             );
-            $check["pays"][] = $payment;
+       //     $check["pays"][] = $payment;
 
         }
 
 
         if(($doc->headerdata["prepaid"]??0) >0) {
+            
             $payment=array(
             "type"=>3,
             "sum"=>self::fa( $doc->headerdata["prepaid"]  )  
             );
-            $check["pays"][] = $payment;
+         //   $check["pays"][] = $payment;
         }
 
-        $disc =  $sum - $doc->payamount  - doubleval($doc->headerdata["prepaid"])   ;
+        $disc =  $sum - $doc->payamount  - doubleval($doc->headerdata["totaldisc"])  - doubleval($doc->headerdata["bonus"])  - doubleval($doc->headerdata["prepaid"])   ;
         if($disc > 0) {
-       
-            $payment=array(
-            "type"=>11,
-            "sum"=> self::fa($disc ) 
-            );
-            $check["pays"][] = $payment;            
+            $check['disc'] = $disc;            
+            if($doc->headerdata['bonus'] >0) {
+                  $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
+                  $disc  = $disc -  $doc->headerdata['bonus'] ;
+            }
+            if($doc->headerdata['prepaid'] >0) {
+                  $check["discounts"][] = array("disc"=>$doc->headerdata['prepaid'],"disc_name"=> "Передплата" );
+                  $disc  = $disc -  $doc->headerdata['prepaid'] ;
+            }
+            if($disc >0) {
+                  $check["discounts"][] = array("disc"=>$disc,"disc_name"=> "Знижка" );
+            }
             
-            
-        }        
+
+        }      
         
         
        $paysum = 0;
@@ -335,18 +343,19 @@ class VK
 
         $check['total_sum'] = $sum  ;
 
-        $disc =  $sum - $doc->payamount;
+        $disc =  $sum - $doc->payamount  - doubleval($doc->headerdata["totaldisc"])  - doubleval($doc->headerdata["bonus"])   ;
         if($disc > 0) {
+            $check['disc'] = $disc;            
             if($doc->headerdata['bonus'] >0) {
-                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus'],  "mode"=> "VALUE");
-                $disc  = $disc -  $doc->headerdata['bonus'] ;
+                  $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
+                  $disc  = $disc -  $doc->headerdata['bonus'] ;
             }
             if($disc >0) {
-                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc ." грн", "value"=> $disc,  "mode"=> "VALUE");
+                  $check["discounts"][] = array("disc"=>$disc,"disc_name"=> "Знижка" );
             }
+            
 
-
-        }
+        } 
 
         // $check['total_payment'] = $doc->payamount*100;
         //   $check['total_rest'] = 0 ;
@@ -557,7 +566,7 @@ curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
 https://documenter.getpostman.com/view/26351974/2s93shy9To    
 https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
 
- 
+ https://wiki-kasa.vchasno.ua/uk/DeviceManager/Functionality/Prices&discount
  
  
 */

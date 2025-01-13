@@ -184,7 +184,7 @@ class Outcome extends \App\Pages\Base
          left  join customers  c on c.customer_id = e.customer_id
          join documents_view  d on d.document_id = e.document_id
            where  e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4)     
-             and d.meta_name in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderFood' )         AND  (e.document_date) >= " . $conn->DBDate($from) . "
+             and d.meta_name in ('GoodsIssue',  'ServiceAct' ,  'POSCheck','ReturnIssue','TTN','OrderFood' )         AND  (e.document_date) >= " . $conn->DBDate($from) . "
               {$br} {$u}   AND  (e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.customer_name,c.customer_id
@@ -231,7 +231,7 @@ class Outcome extends \App\Pages\Base
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4 ) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue', 'ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -283,7 +283,7 @@ class Outcome extends \App\Pages\Base
              
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  d.firm_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -303,7 +303,7 @@ class Outcome extends \App\Pages\Base
                 
              join documents_view d on d.document_id = e.document_id
                where   e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -324,7 +324,7 @@ class Outcome extends \App\Pages\Base
               
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4)   and  d.content like '%<salesource>{$salesource}</salesource>%'    
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -350,7 +350,7 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                and  manufacturer = {$man}       
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
                 
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
