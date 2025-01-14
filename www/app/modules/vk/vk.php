@@ -92,7 +92,6 @@ class VK
         $check["rows"] = [] ;
         $check["pays"] = [] ;
         $check["discounts"] = [] ;
-        $check["disc_type"] = 0 ;
      
         $sum = 0;
  
@@ -229,12 +228,13 @@ class VK
         $disc =    doubleval($doc->headerdata["totaldisc"])  + doubleval($doc->headerdata["bonus"])      ;
         if($disc > 0) {
             $check['disc'] = $disc;            
+            $check["disc_type"] = 0 ;
             if($doc->headerdata['bonus'] >0) {
                   $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
                   $disc  = $disc -  $doc->headerdata['bonus'] ;
             }
         
-            if($disc >0) {
+            if($disc > 0) {
                   $check["discounts"][] = array("disc"=>$disc,"disc_name"=> "Знижка" );
             }
             
@@ -255,7 +255,7 @@ class VK
         
         
         $receipt=json_encode($req, JSON_UNESCAPED_UNICODE);
- 
+      //  H::log($receipt);
         $curl = curl_init();
 
         curl_setopt_array($curl, [
