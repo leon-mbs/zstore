@@ -92,6 +92,7 @@ class VK
         $check["rows"] = [] ;
         $check["pays"] = [] ;
         $check["discounts"] = [] ;
+        $check["disc_type"] = 0 ;
      
         $sum = 0;
  
@@ -201,10 +202,11 @@ class VK
 
         if ($payed < $doc->payamount) {
             $payment=array(
-            "type"=>4,
+            "type"=>0,
+            "comment"=>'Постоплата',
             "sum"=> self::fa($doc->payamount - $payed ) 
             );
-       //     $check["pays"][] = $payment;
+            $check["pays"][] = $payment;
 
         }
 
@@ -212,23 +214,26 @@ class VK
         if(($doc->headerdata["prepaid"]??0) >0) {
             
             $payment=array(
-            "type"=>3,
+            "type"=>0,
+            "comment"=>'Передплата',
             "sum"=>self::fa( $doc->headerdata["prepaid"]  )  
             );
-         //   $check["pays"][] = $payment;
+            $check["pays"][] = $payment;
         }
 
-        $disc =  $sum - $doc->payamount  - doubleval($doc->headerdata["totaldisc"])  - doubleval($doc->headerdata["bonus"])  - doubleval($doc->headerdata["prepaid"])   ;
+       $paysum = 0;
+       foreach( $check["pays"] as $p) {
+           $paysum += self::fa($p['sum']) ;    
+       }        
+        
+        $disc =    doubleval($doc->headerdata["totaldisc"])  + doubleval($doc->headerdata["bonus"])      ;
         if($disc > 0) {
             $check['disc'] = $disc;            
             if($doc->headerdata['bonus'] >0) {
                   $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
                   $disc  = $disc -  $doc->headerdata['bonus'] ;
             }
-            if($doc->headerdata['prepaid'] >0) {
-                  $check["discounts"][] = array("disc"=>$doc->headerdata['prepaid'],"disc_name"=> "Передплата" );
-                  $disc  = $disc -  $doc->headerdata['prepaid'] ;
-            }
+        
             if($disc >0) {
                   $check["discounts"][] = array("disc"=>$disc,"disc_name"=> "Знижка" );
             }
@@ -237,13 +242,10 @@ class VK
         }      
         
         
-       $paysum = 0;
-       foreach( $check["pays"] as $p) {
-           $paysum += self::fa($p['sum']) ;    
-       }
+   
        
-       if(floatval( $check['sum'] ) != floatval($paysum))  {
-           $check['round'] =  self::fa($paysum - $check['sum']  ) ;  
+       if(floatval( $check['sum'] - $disc) != floatval($paysum))  {
+           $check['round'] =  self::fa($paysum - ($check['sum'] - $disc )  ) ;  
        }
         
 
@@ -253,7 +255,7 @@ class VK
         
         
         $receipt=json_encode($req, JSON_UNESCAPED_UNICODE);
-     //   H::log($receipt);
+ 
         $curl = curl_init();
 
         curl_setopt_array($curl, [
@@ -343,23 +345,9 @@ class VK
 
         $check['total_sum'] = $sum  ;
 
-        $disc =  $sum - $doc->payamount  - doubleval($doc->headerdata["totaldisc"])  - doubleval($doc->headerdata["bonus"])   ;
-        if($disc > 0) {
-            $check['disc'] = $disc;            
-            if($doc->headerdata['bonus'] >0) {
-                  $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
-                  $disc  = $disc -  $doc->headerdata['bonus'] ;
-            }
-            if($disc >0) {
-                  $check["discounts"][] = array("disc"=>$disc,"disc_name"=> "Знижка" );
-            }
-            
+ 
 
-        } 
-
-        // $check['total_payment'] = $doc->payamount*100;
-        //   $check['total_rest'] = 0 ;
-
+      
         if ($mf == 0 && $payed > 0) {
             $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
             $check["payments"][] = $payment;
@@ -549,24 +537,3 @@ class VK
     
         
 }
-/*
-curl --location 'https://kasa.vchasno.ua/api/v3/fiscal/execute' \
---header 'Authorization: {{token_vhasno}}' \
---data '{
-    "fiscal": {
-        "task": 18
-    }
-}'
-
-9999992475406556
-    TEST_t8Ue-3-BVOytQQ
-    
-    JRvbIyE8ri0CfbsHyUDx7RggQilRIWNz_8bSr1RL4_R1H33GkGWlQY9VhvgAoKNj0
-    
-https://documenter.getpostman.com/view/26351974/2s93shy9To    
-https://kasa.vchasno.ua/app/shops/0f77aeb2-8790-52c6-ed35-ffd399b9a15b/registers    
-
- https://wiki-kasa.vchasno.ua/uk/DeviceManager/Functionality/Prices&discount
- 
- 
-*/
