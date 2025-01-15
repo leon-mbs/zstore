@@ -168,8 +168,8 @@ class Outcome extends \App\Pages\Base
                where e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1 or e.tag = -4 )   {$cat}   {$cust}  
                and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','ServiceAct' )
                {$br}  {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.itemname,i.item_code
                order  by i.itemname
         ";
@@ -181,11 +181,11 @@ class Outcome extends \App\Pages\Base
           select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id, count(d.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e
 
-        left  join customers  c on c.customer_id = e.customer_id
+         left  join customers  c on c.customer_id = e.customer_id
          join documents_view  d on d.document_id = e.document_id
            where  e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4)     
-             and d.meta_name in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderFood' )         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+             and d.meta_name in ('GoodsIssue',  'ServiceAct' ,  'POSCheck','ReturnIssue','TTN','OrderFood' )         AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              {$br} {$u}   AND  (e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.customer_name,c.customer_id
           order  by c.customer_name
@@ -201,8 +201,8 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
               and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood')           
-               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+               {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.document_date
   order  by e.document_date
         ";
@@ -217,12 +217,12 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where e.service_id >0  and e.quantity <>0      {$cust}  
               and d.meta_name in (  'ServiceAct' ,'POSCheck' )
-               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+               {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.service_name
                order  by s.service_name      ";
         }
-
+     
         if ($type == 5 && strlen($cat) == 0) {    //по категориях
             $sql = "
             select  i.cat_name as itemname,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
@@ -231,10 +231,10 @@ class Outcome extends \App\Pages\Base
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4 ) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue', 'ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by    i.cat_name
                order  by i.cat_name
         ";
@@ -262,8 +262,8 @@ class Outcome extends \App\Pages\Base
                  join documents_view  d on d.document_id = e.document_id
                    where e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                      and d.meta_name in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )    
-                      {$br} {$u}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-                      AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                      {$br} {$u}  AND  (e.document_date) >= " . $conn->DBDate($from) . "
+                      AND  (e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
                 ";
 
@@ -283,10 +283,10 @@ class Outcome extends \App\Pages\Base
              
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  d.firm_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by    d.firm_name
                order  by d.firm_name
         ";
@@ -303,10 +303,10 @@ class Outcome extends \App\Pages\Base
                 
              join documents_view d on d.document_id = e.document_id
                where   e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by  sr.storename
                order  by sr.storename
         ";
@@ -324,10 +324,10 @@ class Outcome extends \App\Pages\Base
               
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4)   and  d.content like '%<salesource>{$salesource}</salesource>%'    
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by   i.itemname
                 order by   i.itemname
                
@@ -350,11 +350,11 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                and  manufacturer = {$man}       
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
                 
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
               
                group  by i.itemname 
                order  by i.itemname 
@@ -375,8 +375,8 @@ class Outcome extends \App\Pages\Base
                 from entrylist_view  e 
                 join documents_view  d on d.document_id = e.document_id
                 WHERE e.partion  is  not null and  (  e.tag = -1  or e.tag = -4)     
-                AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-                {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                AND  (e.document_date) >= " . $conn->DBDate($from) . "
+                {$br} {$u}   AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 ORDER BY e.entry_id DESC
                 )  t WHERE  t.customer_name IS NOT NULL
                 GROUP BY t.customer_name
@@ -399,7 +399,7 @@ class Outcome extends \App\Pages\Base
            
 
               $det = array(
-                    "code"      => $row['item_code'],
+                    "code"      => $row['item_code']??'',
                     "name"      => $row['itemname'],
                     "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
                     "qty"       => H::fqty($row['qty']),
