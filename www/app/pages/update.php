@@ -204,19 +204,28 @@ class Update extends \App\Pages\Base
                 return;        
             }
 
-               
-            $zip = new \ZipArchive()  ;
-
             $archive = _ROOT.'upload/update.zip' ;
+             
             @unlink($archive) ;
+    
+            $phpv =   phpversion()  ;
+            $b= version_compare( $phpv, "8.1.0" );
+            if($b==1) {
+                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
+            }   else {
+                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor74.zip")) ;
+            }
+ 
+     
             
-            @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
-         
-            if(filesize($archive)==0) {
+              if(filesize($archive)==0) {
   
                 $this->setError('Помилка завантаження файлу');
                 return;        
             }
+        
+        
+            $zip = new \ZipArchive()  ;
 
             if ($zip->open($archive) === TRUE) {
            

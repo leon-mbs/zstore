@@ -271,10 +271,21 @@ class DocView extends \Zippy\Html\PageFragment
         $msg->save();
 
         $conn = \ZDB\DB::getConnect();
-        $ids = $conn->GetCol("select distinct  user_id from  docstatelog where document_id = {$arg[0]} and  user_id <> {$user->user_id} ") ;
+        $ids = $conn->GetCol("select distinct  user_id from  docstatelog where document_id = {$arg[0]}   ") ;
 
+        
+        foreach(\App\Entity\Message::find("item_id = {$arg[0]} and  item_type = ".\App\Entity\Message::TYPE_DOC) as $msg){
+           
+           if(!in_array($msg->user_id,$ids)) {
+              $ids[]= $msg->user_id;
+           }
+        }
+        
+        
         foreach ($ids as $id) {
 
+            if($user->user_id==$id) continue;
+            
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
             $n->message = "<b>Новий коментар до документа:</b> {$doc->meta_desc} {$doc->document_number}  ";

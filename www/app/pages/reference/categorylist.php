@@ -245,6 +245,8 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function addOnClick($sender) {
+        $this->_category = new Category();
+ 
         $this->updateParentList($this->_category->cat_id);
         $this->categorytable->setVisible(false);
         $this->categorydetail->setVisible(true);
@@ -253,8 +255,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->editimage->setVisible(false);
         $this->categorydetail->editdelimage->setVisible(false);
         $this->updateParentList();
-        $this->_category = new Category();
-    }
+     }
 
     public function saveOnClick($sender) {
         if (false == \App\ACL::checkEditRef('CategoryList')) {
