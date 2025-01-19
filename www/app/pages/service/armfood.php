@@ -1674,7 +1674,9 @@ class ARMFood extends \App\Pages\Base
         $header['notes']   =  $doc->notes ;
         $header['detail']  =  [];
         foreach ($doc->unpackDetails('detaildata') as $item) {
-
+            if( intval( $item->foodstate) > 0)  {
+                return;
+            }
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
             $header['detail'] [] = array(
