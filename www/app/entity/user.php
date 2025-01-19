@@ -70,6 +70,7 @@ class User extends \ZCL\DB\Entity
         }
 
 
+        $this->custtype = $acl['custtype']??0;
         $this->canevent = $acl['canevent']??0;
         $this->noshowpartion = $acl['noshowpartion']??0;
         $this->showotherstores = $acl['showotherstores']??0;
@@ -186,7 +187,7 @@ class User extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : '';
+        return ($cnt > 0) ? "Не можна  видаляти користувача з документами" : '';
     }
 
     /**

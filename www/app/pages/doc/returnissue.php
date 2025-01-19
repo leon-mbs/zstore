@@ -559,7 +559,6 @@ class ReturnIssue extends \App\Pages\Base
         App::RedirectBack();
     }
 
-
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }

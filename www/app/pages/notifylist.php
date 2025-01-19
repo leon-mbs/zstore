@@ -50,7 +50,7 @@ class NotifyList extends \App\Pages\Base
 
         $row->add(new Label("sender"));
         $row->add(new Label("sendericon"));
-        $sender_name = $this->users[$notify->sender_id];
+        $sender_name = $this->users[$notify->sender_id]??'';
         if ($notify->sender_id > 0) {
             $row->sender->setText($sender_name);
             $row->sendericon->setAttribute('class', 'fa fa-user');

@@ -53,8 +53,7 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(3), 0));
-
+       
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -90,7 +89,7 @@ class IncomeItem extends \App\Pages\Base
             }
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
+
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
@@ -264,7 +263,7 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
 
-        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
@@ -302,13 +301,10 @@ class IncomeItem extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
                 $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-                $imagedata = getimagesize($file["tmp_name"]);
-                if ($imagedata[0] > 0) {
-                    $this->_doc->headerdata["scan"] = $id;
-                    $this->_doc->save();
-                }
+                $this->_doc->headerdata["scan"] = $id;
+                $this->_doc->save();
+                 
             }
 
             $conn->CommitTrans();

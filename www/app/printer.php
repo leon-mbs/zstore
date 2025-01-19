@@ -803,7 +803,7 @@ class Printer
                 }
                 $l += $cl;
 
-                $cols[]=array("text"=>$coltext,"length"=>$cl,"align"=>$attr['align'] );
+                $cols[]=array("text"=>$coltext,"length"=>$cl,"align"=>$attr['align']??'' );
 
 
             }

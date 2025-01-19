@@ -43,9 +43,10 @@ class Roles extends \App\Pages\Base
         $this->editpanname->editformname->add(new Button('cancelname'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel("editpan"))->setVisible(false);
+
         $this->editpan->add(new Form('editform'))->onSubmit($this, 'saveaclOnClick');
 
-
+        $this->editpan->editform->add(new DropDownChoice('editcusttype',[],0));
         $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
         $this->editpan->editform->add(new CheckBox('editcanevent'));
         $this->editpan->editform->add(new CheckBox('editshowotherstores'));
@@ -143,6 +144,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->metaaccess->metarow->Reload();
 
 
+        $this->editpan->editform->editcusttype->setValue($this->role->custtype);
         $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
         $this->editpan->editform->editcanevent->setChecked($this->role->canevent);
         $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
@@ -250,6 +252,7 @@ class Roles extends \App\Pages\Base
 
     public function saveaclOnClick($sender) {
 
+        $this->role->custtype = $this->editpan->editform->editcusttype->getValue() ;
         $this->role->canevent = $this->editpan->editform->editcanevent->isChecked() ? 1 : 0;
         $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ? 1 : 0;
         $this->role->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;

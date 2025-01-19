@@ -78,7 +78,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["nouseimages"] =  $this->op['nouseimages'] ==1;
         $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
         $this->_tvars["logo"] = false;
-        if(strlen($this->op['logo'])>0) {
+        if(strlen($this->op['logo']??'')>0) {
             $this->_tvars["logo"] = $this->op['logo'];
         }
 
@@ -96,13 +96,14 @@ class Base extends \Zippy\Html\WebPage
         if(!is_array($shop["pages"])) {
             $shop["pages"] =  array();
         }
+       
         $this->_tvars['pages'] =array();
         foreach($shop["pages"] as $p) {
             $link = _BASEURL .trim($p->link, "/");
 
             $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);
         }
-
+        $this->_tvars['isblog']  = intval(\App\Modules\Shop\Entity\Article::findCnt('isactive=1') ) > 0 ;
         if(strlen($_COOKIE['zippy_shop'] ?? '')==0) {
             \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP, 0, 0) ;
             setcookie("zippy_shop", "visited", time() + 60 * 60 * 24);

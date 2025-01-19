@@ -37,7 +37,7 @@ class Main extends \App\Pages\Base
         $cr = json_decode($post) ;
         $ret = array();
         $l = array();
-        if($cr->fav == true) {
+        if( ($cr->fav ?? false) == true) {
             $l = TopicNode::searchFav();
         }
         if(strlen($cr->tag ?? '') >0) {

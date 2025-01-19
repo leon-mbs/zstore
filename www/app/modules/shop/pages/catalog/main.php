@@ -76,6 +76,11 @@ class Main extends Base
         $this->newlistp->add(new DataView('newlist', new ArrayDataSource($this, "_newlist"), $this, 'OnNewRow'))->Reload();
         $this->newlistp->setVisible(count($this->_newlist)>0) ;
         //        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
+        
+        $this->_tvars['blogs']  = [];
+        foreach(\App\Modules\Shop\Entity\Article::findYield('isactive=1','createdon desc',2) as $art)  { 
+           $this->_tvars['blogs'][]  = [ 'blogtitle'=>$art->title, 'blogid'=>$art->id ] ;
+        }       
     }
 
     public function OnCatRow($datarow) {

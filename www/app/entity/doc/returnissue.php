@@ -44,7 +44,7 @@ class ReturnIssue extends Document
                         "customer_name"   => $this->customer_name,
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
-                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??0) > 0 ? $this->headerdata["fiscalnumber"] ??'' : false,
                         "total"           => H::fa($this->amount),
                         "payamount"           => H::fa($this->payamount),
                         "payed"           => H::fa($this->headerdata['payed'])
@@ -59,7 +59,11 @@ class ReturnIssue extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-
+        $dd =    doubleval($this->headerdata['discount']??0)  ; 
+        $k = 1;   //учитываем  скидку
+        if ($dd > 0 && $this->amount > 0) {
+            $k = ($this->amount - $dd) / $this->amount;
+        }
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $lp = $item->getLastPartion($this->headerdata['store'], $item->snumber, false);
@@ -71,14 +75,14 @@ class ReturnIssue extends Document
 
             //  $sc->setExtCode(($item->price - $stock->partion)); //Для АВС
             //  $sc->setCustomer($this->customer_id);
-            $sc->setOutPrice($item->price);
+            $sc->setOutPrice($item->price* $k);
             $sc->tag=Entry::TAG_RSELL;
             $sc->save();
         }
 
         $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['payed'], $this->headerdata['payment']);
     
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME,true);
         $this->DoBalans() ;
 
         if($this->headerdata["bonus"] > 0) {
@@ -99,7 +103,7 @@ class ReturnIssue extends Document
             $user = \App\Entity\User::load($parent->user_id);        
             $disc = \App\System::getOptions("discount");
             $emp_id = \App\System::getUser()->employee_id ;
-            if($emp_id >0 && $disc["fineret"] >0  && $parent->meta_name=='POSCheck') {
+            if($emp_id >0 && ($disc["fineret"]??0 )>0  && $parent->meta_name=='POSCheck') {
                 $b =  $this->amount * $disc["fineret"] / 100;
                 $ua = new \App\Entity\EmpAcc();
                 $ua->optype = \App\Entity\EmpAcc::FINE;

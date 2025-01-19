@@ -8,6 +8,7 @@ use Zippy\Html\Form\Button;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -16,12 +17,14 @@ use Zippy\Html\Panel;
 class ProdAreaList extends \App\Pages\Base
 {
     private $_pa;
+    private $_blist;
 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('ProdAreaList')) {
             return;
         }
+        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $this->add(new Panel('patable'))->setVisible(true);
         $this->patable->add(new DataView('palist', new \ZCL\DB\EntityDataSource('\App\Entity\ProdArea', '', 'pa_name'), $this, 'palistOnRow'))->Reload();
@@ -31,6 +34,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->padetail->add(new TextInput('editpa_notes'));
         $this->padetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->padetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->padetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
     }
 
     public function palistOnRow($row) {
@@ -61,6 +65,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->patable->setVisible(false);
         $this->padetail->setVisible(true);
         $this->padetail->editpa_name->setText($this->_pa->pa_name);
+        $this->padetail->editbranch->setValue($this->_pa->branch_id);
         $this->padetail->editpa_notes->setText($this->_pa->notes);
 
     }
@@ -80,6 +85,7 @@ class ProdAreaList extends \App\Pages\Base
         }
 
 
+        $this->_pa->branch_id = $this->padetail->editbranch->getValue();
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();
         $this->_pa->notes = $this->padetail->editpa_notes->getText();
         if ($this->_pa->pa_name == '') {

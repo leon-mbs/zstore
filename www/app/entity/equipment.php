@@ -6,12 +6,16 @@ namespace App\Entity;
  * Клас-сущность  оборудование
  *
  * @table=equipments
- * @view=equipments_view
  * @keyfield=eq_id
  */
 class Equipment extends \ZCL\DB\Entity
 {
-    private $bh=[]; 
+    public const IYPR_EQ = 1;
+    public const IYPR_OS = 2;
+    public const IYPR_NMA = 3;
+      
+    
+    
     protected function init() {
         $this->eq_id = 0;
         $this->branch_id = 0;
@@ -20,15 +24,10 @@ class Equipment extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные в detail
-        $this->detail = "<detail><emp_id>{$this->emp_id}</emp_id>";
+        $this->detail = "<detail><resemp_id>{$this->resemp_id}</resemp_id>";
+        $this->detail .= "<resemp_name>{$this->resemp_name}</resemp_name>";
         $this->detail .= "<serial>{$this->serial}</serial>";
-      //  $this->detail .= "<code>{$this->code}</code>";
-        $this->detail .= "<balance>{$this->balance}</balance>";
-        $this->detail .= "<eq>{$this->eq}</eq>";
-    //  $this->detail .= "<pa_id>{$this->pa_id}</pa_id>";
-        $this->detail .= "<enterdate>{$this->enterdate}</enterdate>";
-        $this->detail .= "<bh>". serialize($this->bh) ."</bh>";
-
+            
         $this->detail .= "</detail>";
 
         return true;
@@ -37,33 +36,15 @@ class Equipment extends \ZCL\DB\Entity
     protected function afterLoad() {
         //распаковываем  данные из detail
         $xml = simplexml_load_string($this->detail);
-        $this->emp_id_old = (int)($xml->emp_id[0]);
+        $this->resemp_id = (int)($xml->resemp_id[0]);
         $this->serial = (string)($xml->serial[0]);
-        $this->code = (string)($xml->code[0]);
-        $this->balance = (string)($xml->balance[0]);
-        $this->enterdate = (int)($xml->enterdate[0]);
-        $this->eq = (int)($xml->eq[0]);
-        $this->pa_id_old = (int)($xml->pa_id[0]);
-        $this->bh = @unserialize( (string)($xml->bh[0]) );
-        if(!is_array($this->bh)) {
-            $this->bh=[] ;
-        }
+        $this->resemp_name = (string)($xml->resemp_name[0]);
+ 
+     
         parent::afterLoad();
     }
 
-    //возвращает  оборудование для выпадающих списков
-    public static function getQuipment() {
-        $list = array();
-        foreach (Equipment::find("disabled<>1 and detail like'%<eq>1</eq>%' ", "eq_name") as $eq) {
-            $list[$eq->eq_id] = $eq->eq_name;
-            if (strlen($eq->serial) > 0) {
-                $list[$eq->eq_id] = $eq->eq_name . ', ' . $eq->serial;
-            }
-
-
-        }
-        return $list;
-    }
+  
    
  
     public static function getConstraint() {
@@ -74,25 +55,45 @@ class Equipment extends \ZCL\DB\Entity
         return $br;
     }
 
-    public  function getBalance($tm=0) {
-        if(count( $this->bh)==0) {
-           return $this->balance;
-        }
-        $keys= array_keys($this->bh) ;
-        sort($keys) ;
-        
-        foreach($keys as $i){
-            
-            if($i >$tm){
-               break; 
-            }
-            $this->balance = $this->bh[$i] ;
-        }
-        return $this->balance;
-    }
-    public  function setBalance($am) {
-      $this->bh[time()] = $am;
-      $this->balance = $am;
+    public static function getTypeName(int $t){
+        if($t==self::IYPR_EQ) return 'Обладнання' ;
+        if($t==self::IYPR_OS) return 'Основні фонди' ;
+        if($t==self::IYPR_NMA) return 'Нематеріальні активи' ;
+        return 'N/A' ;
     }
     
+
+    //todo
+    protected function beforeDelete() {
+
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
+        $cnt = $conn->GetOne($sql);
+        return ($cnt > 0) ? "Не можна  видаляти користувача з документами" : '';
+    }   
+    
+    
+    public static function getList($search = '',$eq=false ) {
+
+        $where = " disabled <> 1 ";
+        if (strlen($search) > 0) {
+            $search = Equipment::qstr('%' . $search . '%');
+            $where .= " and  eq_name like {$search}   ";
+        }
+        if($eq){   //оборудование
+           $where .= " and type = ".Equipment::IYPR_EQ;
+          
+        }
+        
+         $ret=[];
+         foreach(Equipment::find( $where, "eq_name")  as $e ){
+             $ret[$e->eq_id] = $e->eq_name. ', ' . $e->invnumber;
+         }
+         
+         return $ret;
+    }    
+
+    public  function getBalance($tm=0) {
+
+    }   
 }

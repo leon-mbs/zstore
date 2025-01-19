@@ -119,11 +119,17 @@ class Balance extends \App\Pages\Base
         $sum += doubleval($conn->GetOne($sql));
         $debet = H::fa($sum);
 
-
-        $aeq=0;
-        foreach(\App\Entity\Equipment::find("") as $eq){
-            $aeq += doubleval($eq->getBalance($dt));
-        }
+      
+        $sql = "SELECT COALESCE( SUM(  amount     ) ,0)    FROM  eqentry_view where date(document_date) <  {$dbdt} and eq_id in (select eq_id from  equipments where  disabled<> 1  )    ";
+        $aeq = doubleval($conn->GetOne($sql));
+    
+        
+        $prodrest=0;
+   
+        $sql = "SELECT COALESCE( SUM(  outprice  ) ,0)  from entrylist where tag=   ". \App\Entity\Entry::TAG_TOPROD;
+        $prodrest += doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(  outprice  ) ,0)  from entrylist where tag=   ". \App\Entity\Entry::TAG_FROMPROD;
+        $prodrest -= doubleval($conn->GetOne($sql));
         
  
         $amat = H::fa($amat);
@@ -137,8 +143,9 @@ class Balance extends \App\Pages\Base
         $pemp = H::fa($pemp);
  
         $aeq = H::fa($aeq);
+        $prodrest = H::fa($prodrest);
         
-        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+  doubleval($debet);
+        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+$aeq+$prodrest+  doubleval($debet);
         $ptotal = H::fa( doubleval($pemp) +   doubleval($credit) );
         $bal = $atotal - $ptotal ;
 
@@ -157,6 +164,7 @@ class Balance extends \App\Pages\Base
             'debet'      => $debet >0 ? $debet : false,
             'credit'      => $credit >0 ? $credit : false,
             'aeq'      => $aeq !=0 ? $aeq : false,
+            'aprodrest'      => $prodrest !=0 ? $prodrest : false,
 
             'atotal'    => H::fa($atotal) ,
             'ptotal'    => H::fa($ptotal) ,

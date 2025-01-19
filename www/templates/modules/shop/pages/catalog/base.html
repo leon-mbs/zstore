@@ -56,7 +56,7 @@
                                     <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
                                         
                                        <div class="input-group mr-3">
-                                          <input style="width:400px;" zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
+                                          <input style="width:250px;" zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
                                           <div class="input-group-append">
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                           </div>
@@ -69,6 +69,24 @@
                                        <i class="fa fa-phone"></i> {{phone}} &nbsp;&nbsp;
                                    </li>
                                      {{/phone}} 
+                                     
+                                {{#isblog}} 
+                        
+                            
+                                    <li class="nav-item pt-2 pl-2 pr-2 ">
+                                       <a href="/blog" >Блог </a>  
+                                   </li>
+                                 {{/isblog}}        
+                                     
+                                {{#pages}} 
+                        
+                            
+                                    <li class="nav-item pt-2 pl-2 pr-2 ">
+                                       <a href="{{link}}" >{{title}} </a>  
+                                   </li>
+                                 {{/pages}}        
+                                     
+                                     
                                   <li class="nav-item">
                                      <a title="Корзина" class="btn btn-outline-success  mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>  Корзина     </a>  
                                       
@@ -118,15 +136,9 @@
             <div class="footer mt-4">
                 <div class=" ">
                     <div class="row">
-                        <div class="col-12 text-center mt-2">
-                        {{#pages}} 
                         
-                             <a href="{{link}}" >{{title}} </a>  
-                           
-                           {{/pages}}  
-                        </div> 
                         <div  class="col-12 text-center mt-2 mb-2">
-                            <span style="color:#fff"> <a href="https://zippy.com.ua/zstore" target="_blank">Zippy-склад</a> @ 2019</span>
+                            <span style="color:#fff"> <a href="https://zippy.com.ua/zstore" target="_blank">Zippy CRM</a> @ 2025</span>
                              &nbsp;&nbsp;&nbsp;
                             <span style="color:#fff"> <a href="/index.php?p=App/Pages/Main" target="_blank">Админ панель</a> </span>
                         </div>

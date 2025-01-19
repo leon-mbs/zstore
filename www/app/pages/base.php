@@ -293,8 +293,8 @@ class Base extends \Zippy\Html\WebPage
             Session::getSession()->migrationcheck = true;
         }
        
-        
-      
+       
+    
     }
 
     public function LogoutClick($sender) {

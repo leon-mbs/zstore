@@ -230,7 +230,7 @@ class ServiceAct extends Document
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $wp = 'style="width:40mm"';
-        if (strlen($printer['pwidth']) > 0) {
+        if (strlen($printer['pwidth']??'') > 0) {
             $wp = 'style="width:' . $printer['pwidth'] . '"';
         }
 
@@ -241,7 +241,7 @@ class ServiceAct extends Document
                         "address"         => $firm['address'],
                         "phone"           => $firm['phone'],
                         "notes"           => nl2br($this->notes),
-                        "customer_name"   => $this->headerdata['customer_name'],
+                        "customer_name"   => $this->customer_name,
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
                         "device"          => $this->headerdata["device"],
                         "serial"          => $this->headerdata["devsn"],

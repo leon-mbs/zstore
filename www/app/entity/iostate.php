@@ -13,14 +13,15 @@ class IOState extends \ZCL\DB\Entity
 {
     //доход платежи
     public const TYPE_BASE_INCOME  = 1;     //операционные доходы
-    public const TYPE_OTHER_INCOME = 2;   //прочие доходы
-    public const TYPE_FIN          = 3;   //доходы от  фин.  деятельности
-    public const TYPE_CANCEL_CUST  = 5;    //отмена  платежа  покупки
+    public const TYPE_OTHER_INCOME = 2;     //прочие доходы
+    public const TYPE_FIN          = 3;     //доходы от  фин.  деятельности
+    public const TYPE_CANCEL_CUST  = 5;     //отмена  платежа  покупки
+    public const TYPE_INEQ         = 6;     //ввод в  экплуатацию ОС
+    public const TYPE_INVEQ        = 7;     //ремонт и восстановдение ОС
 
-    //доход ТМЦ
+    //внебалансовые доходы (для  статистики)
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
-    public const TYPE_INSERVICE = 31;     //с внешних услуг
-
+ 
     //расход платежи
     public const TYPE_BASE_OUTCOME     = 50;    //операционные расходы
     public const TYPE_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
@@ -38,11 +39,13 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_ADS              = 63;    //   расходы на  маркетинг
     public const TYPE_BILL_OUTCOME     = 64;    //расходы на  комуналку
     public const TYPE_OUTSERVICE       = 65;    //расходы на услуги
+    public const TYPE_OUTEQ            = 66;    // списание ОС
+    public const TYPE_AMOR             = 67;    // амортизация ОС
 
-    //потери ТМЦ
-    public const TYPE_LOST           = 80;     //потери при инвентаризации
-    public const TYPE_TRASH          = 81;     //отходы производства
-
+    //внебалансовые расходы (для  статичтики)   
+    public const TYPE_LOST             = 80;     //потери при инвентаризации
+    public const TYPE_TRASH            = 81;     //отходы производства
+ 
 
 
     protected function init() {
@@ -51,14 +54,27 @@ class IOState extends \ZCL\DB\Entity
 
     }
 
-    public static function addIOState($document_id, $amount, $type) {
+    /**
+    * Добавление  записи  о расходах-доходах
+    * 
+    * @param mixed $document_id
+    * @param mixed $amount
+    * @param mixed $type
+    * @param mixed $storno   для возвратов
+    * @return mixed
+    */
+    public static function addIOState($document_id, $amount, $type,$storno=false) {
         if (0 == doubleval($amount) || 0 == intval($document_id) || 0 == intval($type)) {
             return;
         }
 
         $amount = abs($amount) ;
-        if(intval($type) >=50) { //расходы
-            $amount = 0- $amount;
+        if(intval($type) >= 50) { //расходы
+            $amount = 0 - $amount;
+        }
+
+        if($storno) {  
+            $amount = 0 - $amount;
         }
 
 
@@ -79,19 +95,20 @@ class IOState extends \ZCL\DB\Entity
     /**
      * типы  доходов  и расходов
      *
-     * @param mixed $type 1= деньги  доход,2-деньги  расход, 3-ТМЦ доход,4 ТМЦ  расход
+     * @param mixed $type 1=    доход (для списков),2-   расход (для списков),   0 - все 
      */
     public static function getTypeList($type = 0) {
         $list = array();
-        if ($type == 1 || $type == 0 || $type == 13) {
+        if ($type == 1 ||   $type == 0  ) {
             $list[self::TYPE_BASE_INCOME] = "Доходи основної діяльності";
 
             $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
             $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
             $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
+            $list[self::TYPE_INEQ] = "Інші доходи";
         }
 
-        if ($type == 2 || $type == 0 || $type == 24) {
+        if ($type == 2 ||   $type == 0  ) {
             $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
@@ -107,35 +124,21 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_NAKL] =  "Накладні витрати";
             $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
-            $list[self::TYPE_OUTSERVICE] = "Витрати на отримані послуги";
+            $list[self::TYPE_OUTSERVICE] = "Витрати на   послуги";
         }
 
-        if ($type == 3 || $type == 0 || $type == 13) {
-            $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
-            $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
-            $list[self::TYPE_INSERVICE] = "Отримані послуги";
-
-
-        }
-
-        if ($type == 4 || $type == 0 || $type == 24) {
+  
+ 
+ 
+        if (  $type == 0) {
+            $list[self::TYPE_INEQ] = "Ввод в  експлуатацію ОЗ";
+            $list[self::TYPE_INVEQ] = "Ремонт та відновлення ОЗ";
+            $list[self::TYPE_OUTEQ] = "Списання ОЗ";
+            $list[self::TYPE_AMOR] = "Амортизація ОЗ";
             $list[self::TYPE_LOST] = "Втрати при інвентаризації";
             $list[self::TYPE_TRASH] = "Відходи виробництва";
-            $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
-            $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-            $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
-            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
-            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
-
-
-        }
-        if ($type == 5 || $type == 0) {
-            $list[self::TYPE_BASE_OUTCOME] = "Операційні витрати";
-            $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-            $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
-            $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
-            $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
- 
+            $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
+   
         }
 
         return $list;

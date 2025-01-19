@@ -173,7 +173,7 @@ class GIList extends \App\Pages\Base
 
             }
             if($doc->meta_name=='GoodsIssue') {
-                if($doc->payamount == $doc->headerdata['prepaid']??0)  {
+                if($doc->payamount == ($doc->headerdata['prepaid']??0 ) )  {
                    $row->ispay->setVisible(false);    
                 }
             }

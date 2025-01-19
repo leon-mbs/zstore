@@ -397,6 +397,12 @@ class Customer extends \ZCL\DB\Entity
 
     }
 
-
+    public static function getConstraint() {
+        $user  = \App\System::getUser() ;
+        if(($user->custtype??0)  ==0 ){
+            return '';
+        }
+        return "  detail like '%<type>{$user->custtype}</type>%'   ";
+    }
 
 }

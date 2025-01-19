@@ -107,6 +107,7 @@ class Application extends \Zippy\WebApplication
             "doclist"    => "\\App\\Pages\\Register\\DocList",
             "scat"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
             "pcat"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog",
+            "blog"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Blog",
             "project"    => "\\App\\Modules\\Issue\\Pages\\ProjectList",
             "issue"      => "\\App\\Modules\\Issue\\Pages\\IssueList",
             "topic"      => "\\App\\Modules\\Note\\Pages\\ShowTopic"

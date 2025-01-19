@@ -37,6 +37,7 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatesql',$this,'OnSqlUpdate')) ;
         $this->add(new  ClickLink('rollback',$this,'OnRollback')) ;
         $this->add(new  ClickLink('reload',$this,'OnFileUpdate')) ;
+        $this->add(new  ClickLink('updatevendor',$this,'OnVendorUpdate')) ;
       
  
          
@@ -59,20 +60,8 @@ class Update extends \App\Pages\Base
 
         $this->_tvars['show']  = false   ; 
  
-        $phpv =   phpversion()  ;
-        $phpv = substr(str_replace('.','',$phpv),0,2) ;
-        
-        $conn = \ZDB\DB::getConnect();
-     
-        $nocache= "?t=" . time()."&s=". H::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
-    
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
-        $data = @json_decode($v, true);
-        if(!is_array($data)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json");
-            $data = @json_decode($v, true);
-            
-        }        
+        $data = System::checkVersion() ;
+       
     
          
         if(!is_array($data)){
@@ -103,12 +92,9 @@ class Update extends \App\Pages\Base
         $na[1]   = intval($na[1]);      
         $na[2]   = intval($na[2]);      
         
-        $this->_tvars['tooold']  = false;    
-        if (  $na[0] > ($ca[0]+1) || $na[1] > ($ca[1]+1) || $na[2] > ($ca[2]+1)  ) {
-
+        $this->_tvars['tooold']  = false;  
+        if(version_compare($data['fordb'] , $this->_tvars['curversiondb']) ==1) {
            $this->_tvars['tooold']  = true   ;//пропущено несколько
-     //      $this->_tvars['show']  = false   ;
-          
         }        
 
           
@@ -184,6 +170,62 @@ class Update extends \App\Pages\Base
                 $this->setError('Помилка завантаження файлу');
                 return;        
             }
+
+            if ($zip->open($archive) === TRUE) {
+           
+                $destination =_ROOT; 
+                
+                $zip->extractTo($destination);
+                $zip->close();
+
+           }  else {
+                $this->setError('Помилка  архіву');
+                return;        
+               
+           }
+           $this->setSuccess('Файли оновлені')  ;
+           App::RedirectURI("/index.php?p=/App/Pages/Update");
+
+         
+      } catch(\Exception $e){
+            $msg = $e->getMessage()  ;
+     
+            $this->setErrorTopPage($msg)  ;
+   
+       } 
+         
+    }
+ 
+   public function OnVendorUpdate($sender)   {
+    
+        try {
+            if (!is_writeable( _ROOT .'vendor/')) {
+                $this->setError('Нема  права  запису');
+                return;        
+            }
+
+            $archive = _ROOT.'upload/update.zip' ;
+             
+            @unlink($archive) ;
+    
+            $phpv =   phpversion()  ;
+            $b= version_compare( $phpv, "8.1.0" );
+            if($b==1) {
+                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
+            }   else {
+                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor74.zip")) ;
+            }
+ 
+     
+            
+              if(filesize($archive)==0) {
+  
+                $this->setError('Помилка завантаження файлу');
+                return;        
+            }
+        
+        
+            $zip = new \ZipArchive()  ;
 
             if ($zip->open($archive) === TRUE) {
            

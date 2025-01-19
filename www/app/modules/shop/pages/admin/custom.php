@@ -14,15 +14,18 @@ use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Panel;
 use Zippy\Html\Label;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
+use App\Modules\Shop\Entity\Article;
 
 class Custom extends \App\Pages\Base
 {
     public $_pages = array();
     public $_newlist = array();
+    public $_artlist = array();
 
     public function __construct() {
         parent::__construct();
@@ -73,12 +76,25 @@ class Custom extends \App\Pages\Base
         }
         $this->newlist->Reload() ;
 
+        
+        $this->add(new Panel('articlesspan'));
+
+        $this->articlesspan->add(new ClickLink('artadd'))->onClick($this, 'artaddOnClick');
+        $this->articlesspan->add(new DataView('artlist', new ArrayDataSource($this, "_artlist"), $this, 'artlistOnRow'));
+        $this->ArtUpdate() ;
+    
+        $this->add(new Form('articleform'))->onSubmit($this, 'saveArtOnClick');
+        $this->articleform->setVisible(false) ;
+        $this->articleform->add(new ClickLink('artcancel'))->onClick($this, 'artcancelOnClick');
+        $this->articleform->add(new TextInput('artid'));  
+        $this->articleform->add(new TextInput('atitle'));  
+        $this->articleform->add(new TextArea('ashort'));  
+        $this->articleform->add(new TextArea('along'));  
+        $this->articleform->add(new CheckBox('apublic'));  
+        $this->articleform->add(new Date('adate'));  
+           
     }
-
-
-
-
-
+ 
     public function plistOnRow($row) {
         $p = $row->getDataItem();
         $row->add(new Label("ptitle", $p->title));
@@ -87,10 +103,12 @@ class Custom extends \App\Pages\Base
         $row->add(new ClickLink("pedit", $this, "peditOnClick"));
         $row->add(new ClickLink("pdel", $this, "pdelOnClick"));
     }
+ 
     public function paddOnClick($sender) {
         $this->pageform->clean();
         $this->pageform->setvisible(true);
         $this->pagespan->setvisible(false);
+        $this->articlesspan->setvisible(false);
 
     }
     public function peditOnClick($sender) {
@@ -106,13 +124,15 @@ class Custom extends \App\Pages\Base
 
         $this->pageform->setvisible(true);
         $this->pagespan->setvisible(false);
+        $this->articlesspan->setvisible(false);
 
     }
     public function pcancelOnClick($sender) {
 
         $this->pageform->setvisible(false);
         $this->pagespan->setvisible(true);
-
+        $this->articlesspan->setvisible(true);
+   
     }
     public function pdelOnClick($sender) {
 
@@ -127,7 +147,6 @@ class Custom extends \App\Pages\Base
         $this->pagespan->plist->Reload() ;
 
     }
-
     public function savePageOnClick($sender) {
 
         $oldlink = $sender->oldlink->getText();
@@ -211,11 +230,10 @@ class Custom extends \App\Pages\Base
         $i = $row->getDataItem();
         $row->add(new Label("newname", $i->itemname));
         $row->add(new ClickLink("newdel", $this, "newdelOnClick"));
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($i->getImageUrl());
-        if(strlen($i->thumb)>0) {
-            $row->imagelistitem->setValue($i->thumb);
-        }
-        $row->imagelistitem->setAttribute('href', $i->getImageUrl());
+        $item=\App\Entity\Item::load($i->item_id);
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl(true,true));
+        $row->imagelistitem->setAttribute('href', $item->getImageUrl(true,true));
+
 
     }
 
@@ -238,7 +256,95 @@ class Custom extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $text = Item::qstr('%' . $sender->getText() . '%');
-
         return Item::findArray('itemname', " disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' and (itemname like {$text} or item_code like {$text})  ", 'itemname');
     }
+    
+    
+    public function artlistOnRow($row) {
+        $a = $row->getDataItem();
+        $row->add(new Label("artdate", \App\Helper::fd( $a->createdon)  ));
+        $row->add(new Label("arttitle", $a->title));
+
+        $row->setAttribute('style', $a->isactive == 0 ? 'color: #aaa' : null);
+    
+        $row->add(new ClickLink("artedit", $this, "arteditOnClick"));
+        $row->add(new ClickLink("artdel", $this, "artdelOnClick"));
+    }
+
+    public function artaddOnClick($sender) {
+        $this->articleform->clean();
+        $this->articleform->adate->setDate(time());
+        $this->articleform->setvisible(true);
+        $this->articlesspan->setvisible(false);
+        $this->pagespan->setvisible(false);
+
+    }
+    
+    public function arteditOnClick($sender) {
+        $a = $sender->getOwner()->getDataItem();
+        $this->articleform->artid->setText($a->id) ;
+        $this->articleform->atitle->setText($a->title) ;
+        $this->articleform->ashort->setText($a->shortdata) ;
+        $this->articleform->along->setText($a->longdata) ;
+        $this->articleform->apublic->setChecked($a->isactive) ;
+        $this->articleform->adate->setDate($a->createdon) ;
+      
+        $this->articleform->setvisible(true);
+        $this->articlesspan->setvisible(false);
+        $this->pagespan->setvisible(false);
+    }
+    
+    public function saveArtOnClick($sender) {
+        $art = null;
+        $id =intval($sender->artid->getText());
+        if($id == 0)  {
+           $art = new Article() ;    
+        } else {
+           $art = Article::load($id);
+        }
+ 
+        $art->title = $sender->atitle->getText() ;
+        $art->shortdata = $sender->ashort->getText() ;
+        $art->longdata = $sender->along->getText() ;
+        $art->isactive = $sender->apublic->isChecked() ?1:0 ;
+        $art->createdon = $sender->adate->getDate() ;
+        $art->save();
+        
+        $this->ArtUpdate() ;
+
+        $this->articleform->setvisible(false);
+        $this->articlesspan->setvisible(true);
+        $this->pagespan->setvisible(true);
+ 
+    }
+    
+    public function artdelOnClick($sender) {
+
+        $a = $sender->getOwner()->getDataItem();
+        Article::delete($a->id);
+        
+        $this->ArtUpdate() ;        
+    }
+    
+    public function artcancelOnClick($sender) {
+
+        $this->articleform->setvisible(false);
+        $this->articlesspan->setvisible(true);
+        $this->pagespan->setvisible(true);
+
+    }
+  
+    public function ArtUpdate() {
+       
+       $this->_artlist=[];
+       
+       foreach(Article::findYield('','createdon desc') as $art)  { 
+           $this->_artlist[] = $art;
+       }
+     
+        
+       $this->articlesspan->artlist->Reload() ;
+
+    }
+    
 }

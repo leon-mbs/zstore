@@ -70,6 +70,7 @@ class CalcSalary extends \App\Pages\Base
         $calcvar .= "var salarym = fa(emp.salarym)   \n" ;
         $calcvar .= "var salaryh = fa(emp.salaryh)   \n" ;
         $calcvar .= "var hours = fa(emp.hours)   \n" ;
+        $calcvar .= "var tasksum = fa(emp.tasksum)   \n" ;
         $calcvar .= "var days = fa(emp.days)   \n" ;
         $calcvar .= "var hours_week = fa(emp.hours_week)   \n" ;
         $calcvar .= "var hours_over = fa(emp.hours_over)   \n" ;
@@ -82,18 +83,26 @@ class CalcSalary extends \App\Pages\Base
        
         // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st) {
-         //   $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
-
+         
             $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
 
         }
 
+        $calcinit = $calcvar;
+        $calcinit .= "\n\n";
+        $calcinit .= $opt['calcbase'];  //формулы начислений
+        $calcinit .= "\n\n";
+        $calcinit .= "emp._baseval=v".$opt['codebaseincom'];
+        $calcinit .= "\n\n";
+        
+  
         $calc = $calcvar;
         $calc .= "\n\n";
-        $calc .= $opt['calcbase'];  //формулы удержаний
+        $calc .= ("v".$opt['codebaseincom']."=emp._baseval" ) ;
         $calc .= "\n\n";
         $calc .= $opt['calc'];  //формулы удержаний
         $calc .= "\n\n";
+  
 
    
         // из  переменных в строку  сотрудника
@@ -102,10 +111,12 @@ class CalcSalary extends \App\Pages\Base
 
    
             $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
+            $calcinit .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
       
         }
 
         $this->_tvars['calcs'] = $calc;
+        $this->_tvars['calcsinit'] = $calcinit;
     
 
 
@@ -153,10 +164,11 @@ class CalcSalary extends \App\Pages\Base
             foreach ($this->_stlist as $st) {
                 $c   = "_c".$st->salcode ;
                 $emp->{$c} = $e->{$c};
-                $emp->sellvalue = $e->sellvalue;
-            }
-
-
+              
+            }          
+             
+            $emp->_baseval = $e->_baseval;
+          
             $this->_list[]= $emp;
         }
 
@@ -238,8 +250,7 @@ class CalcSalary extends \App\Pages\Base
 
         }
         
-        
-        
+        $etasklist = []; 
         
         $from =''.$post->year .'-'. $post->month .'-01' ;
         $from =  strtotime($from);
@@ -255,6 +266,45 @@ class CalcSalary extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
+       //по нарядам
+       $where = "   meta_name='Task'   
+              AND   document_date  >= " . $conn->DBDate($from) . "
+              AND   document_date  <= " . $conn->DBDate($to) . "
+                
+        and state= " . Document::STATE_CLOSED;      
+        if (strlen($brids) > 0) {
+            $where = " and branch_id in ({$brids}) ";
+        }     
+        
+       foreach (Document::findYield($where) as $doc) {
+
+            $emplist = $doc->unpackDetails('emplist');
+            if (count($emplist) == 0) {
+                continue;
+            }        
+            $total = 0;
+        
+            foreach ($doc->unpackDetails('detaildata') as $service) {
+                $ser = \App\Entity\Service::load($service->service_id);
+
+                $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
+              
+            }    
+    
+            foreach ($emplist as $emp) {
+
+               if(!isset($etasklist[$emp->employee_id])){
+                  $etasklist[$emp->employee_id]=0;  
+               }
+                
+
+                $etasklist[$emp->employee_id] += round($total * $emp->ktu);
+              
+            }        
+            
+                  
+       }  
+        //по  продажам
         $sqlitem = "
                   select   sum(0-e.quantity*e.outprice) as summa 
                       from entrylist_view  e
@@ -306,6 +356,7 @@ class CalcSalary extends \App\Pages\Base
             }
 
             
+          
              $e['hours'] =0;
              $e['hours_week'] =0;
              $e['hours_over'] =0;
@@ -343,18 +394,24 @@ class CalcSalary extends \App\Pages\Base
                }
             }
             
-            
+            $e['tasksum'] = 0  ;
+            if(isset($etasklist[$e['id']])){
+               $e['tasksum']  =   $etasklist[$e['id']] ?? 0; 
+
+            }        
 
             $e['invalid'] = $emp->invalid == 1  ;
             $e['salarytype'] = $emp->ztype ;
             $e['salarym'] = $emp->zmon  ;
             $e['salaryh'] = $emp->zhour  ;
-
+            
+         
 
             foreach($this->_stlist as $st) {
                 $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
             }
-
+            $e['_baseval'] = $emp->_baseval  ??0 ;
+    
             $ret['emps'][] = $e;
         }
 

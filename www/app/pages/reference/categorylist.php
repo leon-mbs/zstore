@@ -245,6 +245,8 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function addOnClick($sender) {
+        $this->_category = new Category();
+ 
         $this->updateParentList($this->_category->cat_id);
         $this->categorytable->setVisible(false);
         $this->categorydetail->setVisible(true);
@@ -253,8 +255,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->editimage->setVisible(false);
         $this->categorydetail->editdelimage->setVisible(false);
         $this->updateParentList();
-        $this->_category = new Category();
-    }
+     }
 
     public function saveOnClick($sender) {
         if (false == \App\ACL::checkEditRef('CategoryList')) {
@@ -292,7 +293,7 @@ class CategoryList extends \App\Pages\Base
         $file = $this->categorydetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             
-            if (filesize($file["tmp_name"])  > pow(2,20)) {
+            if (filesize($file["tmp_name"])  > 1024*1024) {
 
                     $this->setError('Розмір файлу більше 1M');
                     return;
@@ -305,11 +306,7 @@ class CategoryList extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-
-                $this->setError('Занадто великий розмір зображення');
-                return;
-            }
+           
 
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);

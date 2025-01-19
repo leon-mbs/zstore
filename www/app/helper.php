@@ -357,14 +357,20 @@ class Helper
             $mime = "application/pdf";
         }
 
+        $data = file_get_contents($file['tmp_name']);
+       
+        if(strlen($data) > (1024*1024*4) ) {
+           // throw new \Exception('Розмір файлу більше 4M');
+           return 0;
+        }        
+        
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
         $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
-        $data = file_get_contents($file['tmp_name']);
-
+     
 
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";

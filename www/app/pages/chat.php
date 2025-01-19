@@ -166,8 +166,8 @@ class Chat extends \App\Pages\Base
         }
         $file = $sender->msgfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
-            if ($file['size'] > 10000000) {
-                $this->setError("Файл більше 10 МБ!");
+            if ($file['size'] > 1024*1024) {
+                $this->setError("Файл більше 1 МБ!");
                 return;
             }
             $id = H::addFile($file, 0, '', \App\Entity\Message::TYPE_CHAT);

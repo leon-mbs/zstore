@@ -86,13 +86,15 @@
          
          <form zippy="calcform"  >
              <div class="form-group">
-                <label for="calcbase">Розрахунок  нарахування</label>             
-                <textarea style="height:400px;width:300px" class="form-control" zippy="calcbase" ></textarea>
+                <label for="calcbase">Розрахунок основної зарплати</label>             
+                <textarea style="height:100px;width:300px" class="form-control" zippy="calcbase" ></textarea>
+                <span>Виконується однократно для заповнення поля  редагування</span>
              </div> 
              <div class="form-group">
-                <label for="calc">Розрахунок утримань </label>
+                <label for="calc">Розрахунок нарахувань та утримань </label>
                 <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
-             </div> 
+                <span>Виконується після редагування основної зарплати</span>
+           </div> 
              <div class="form-group">
                     
                      <a zippy="savecalc"    class="btn btn-success  ">Зберегти</a>&nbsp;&nbsp;
@@ -111,6 +113,7 @@
        <b>salarym</b> - оклад    <br>
        <b>salaryh</b> - погодинна  сума    <br>
        <b>sellvalue</b> - виручка   по продажних документах співробітника <br>
+       <b>tasksum</b> - сума  по нарядах <br>
        <b>hours</b> - робочi години з облiку часу <br>
        <b>days</b> - робочi днi з облiку часу <br>
        <b>hours_over</b> - переробка <br>
@@ -163,7 +166,7 @@
                 <select  class="form-control" zippy="optbaseincom" >
                    <option value="0">Не вибрано</option>
                 </select>
-                <small>Якщо встановлено, показуєтся  як  поле ручного вводу </small>
+                <small>Показуєтся  як  поле ручного вводу </small>
                <br> <small> <i class="fa fa-exclamation-triangle"></i> Інші поля тільки на  основі  формул  </small>
              </div> 
              <div class="form-group">

@@ -52,7 +52,7 @@ class Task extends Document
 
             $detail2[] = array(
                 "eq_name" => $eq->eq_name,
-                "code"    => $eq->code
+                "invnumber"    => $eq->invnumber
             );
         }
         $detail3 = array();
@@ -81,7 +81,7 @@ class Task extends Document
                         "document_date"   => H::fd($this->document_date),
                         "document_number" => $this->document_number,
                         "notes"           => nl2br($this->notes),
-                        "baseddoc"        => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
+                        "baseddoc"        => strlen($this->headerdata["parent_number"]??'') > 0 ? $this->headerdata["parent_number"] : false,
                         "cust"            => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "_detail"         => $detail,
                         "_detailprod"     => $detailprod,

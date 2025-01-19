@@ -81,6 +81,13 @@
     </tr>
     {{/aeq}}                 
     
+    {{#aprodrest}}                 
+    <tr>
+        <td >  Незавершене виробництво       </td>
+        <td align="right">        {{aprodrest}}             </td>
+    </tr>
+    {{/aprodrest}}                 
+    
     
      <tr style="font-weight: bolder;">
         <td align="right">Всього:</td>
