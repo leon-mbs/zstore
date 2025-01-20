@@ -236,9 +236,15 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
     private function getWhere() {
         $user = System::getUser();
 
+        $common = System::getOptions("common");
+        $actualdate = $common['actualdate'] ??  strtotime('2023-01-01') ;
+        
         $conn = \ZDB\DB::getConnect();
 
-        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue','PayComitent' )  ";
+        $actualdate =   $conn->DBDate($actualdate );
+        
+  
+        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue','PayComitent' )   and document_date >= ".$actualdate;
 
         $status = $this->page->filter->status->getValue();
 

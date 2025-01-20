@@ -928,9 +928,9 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
         
         $conn = \ZDB\DB::getConnect();
 
-        $actualdate =   $conn->DBDate($actualdate );
+        $actualdate =   $conn->DBDate($actualdate  );
         
-        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_date > ".$actualdate;
+        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_date >= ".$actualdate;
 
         $salesource = $this->page->listpan->filter->salesource->getValue();
         if ($salesource > 0) {
