@@ -123,7 +123,7 @@ class TTN extends Document
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }

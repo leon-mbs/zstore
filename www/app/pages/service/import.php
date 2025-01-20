@@ -391,16 +391,10 @@ class Import extends \App\Pages\Base
             if ($colprice4 !='0') $item->price4 = doubleval($price4) ;
             if ($colprice5 !='0') $item->price5 = doubleval($price5) ;
 
-
-            if ($inprice > 0) {
-                $item->price = $inprice;
-            }
-            if ($qty > 0) {
-                $item->quantity = $qty;
-            }
-            if ($minqty > 0) {
-                $item->minqty = $minqty;
-            }
+            $item->price = $inprice >0 ? $inprice :0 ;
+            $item->quantity = $qty >0 ? $qty :0 ;
+            $item->minqty =  $minqty >0 ? $minqty :0;
+ 
 
             if ($cat_id > 0) {
                 $item->cat_id = $cat_id;

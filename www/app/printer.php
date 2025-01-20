@@ -773,7 +773,7 @@ class Printer
             if($val=="b") {
                 $m = $m | self::MODE_FONT_B;
             }
-            if($attr['bold']=="true") {
+            if(($attr['bold'] ?? false)=="true") {
                 $m = $m | self::MODE_EMPHASIZED ;
             }
 
