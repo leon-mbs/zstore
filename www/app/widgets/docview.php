@@ -69,11 +69,16 @@ class DocView extends \Zippy\Html\PageFragment
         }
         $doc = $doc->cast();
 
+        $exportlist = $doc->supportedExport();
 
         $html = $doc->generateReport();
 
-        $htmlpos = $doc->generatePosReport();
+        $htmlpos ='' ;
 
+        if(in_array(Document::EX_POS, $exportlist))  {
+            $htmlpos = $doc->generatePosReport();
+        }
+        
         $ret = array();
         $ret['usemobileprinter']=   $user->usemobileprinter ==1  ;
         $ret['showpartion']=   $user->noshowpartion  ==0  ;
@@ -84,8 +89,7 @@ class DocView extends \Zippy\Html\PageFragment
 
         $ret['exports']=  array() ;
 
-        $exportlist = $doc->supportedExport();
-
+ 
         $ret['exports']['word']  =  in_array(Document::EX_WORD, $exportlist) ;
         $ret['exports']['excel'] =  in_array(Document::EX_EXCEL, $exportlist) ;
         $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;

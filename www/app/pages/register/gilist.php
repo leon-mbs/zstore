@@ -563,8 +563,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->baytel->setText($tel);
         $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
-        $this->nppan->npform->bayfirstname->setText($name[1]);
-        $this->nppan->npform->baymiddlename->setText($name[2]);
+        $this->nppan->npform->bayfirstname->setText($name[1]??'');
+        $this->nppan->npform->baymiddlename->setText($name[2]??'');
 
         $this->nppan->npform->npttncust->setText($cust);
         $this->nppan->npform->npttaddress->setText($this->_doc->headerdata["ship_address"]);
@@ -923,10 +923,14 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $user = System::getUser();
-
+        $common = System::getOptions("common");
+        $actualdate = $common['actualdate'] ??  strtotime('2023-01-01') ;
+        
         $conn = \ZDB\DB::getConnect();
 
-        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
+        $actualdate =   $conn->DBDate($actualdate  );
+        
+        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_date >= ".$actualdate;
 
         $salesource = $this->page->listpan->filter->salesource->getValue();
         if ($salesource > 0) {
