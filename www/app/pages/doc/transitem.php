@@ -167,7 +167,12 @@ class TransItem extends \App\Pages\Base
 
             $this->setError("Однакові ТМЦ");
         }
+        $st= Stock::load($this->_doc->headerdata['fromitem']) ;
+        if ($this->_doc->headerdata['fromquantity'] > $st->qty ) {
 
+            $this->setError("  Недостатньо ТМЦ на складі");
+        }        
+        
         return !$this->isError();
     }
 
