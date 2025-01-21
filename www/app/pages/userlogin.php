@@ -6,7 +6,7 @@ use App\Application as App;
 use App\Entity\User;
 use App\Helper;
 use App\System;
-use Zippy\Html\Form\TextInput as TextInput;
+use Zippy\Html\Form\TextInput ;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
@@ -15,7 +15,7 @@ class UserLogin extends \Zippy\Html\WebPage
     public function __construct() {
         parent::__construct();
 
-        System::clean() ;
+     //   System::clean() ;
         System::getSession()->clean();
 
 
@@ -26,6 +26,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('capchacode'));
+
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
         $form->add(new \ZCL\Captcha\Captcha('capcha'));
         $form->onSubmit($this, 'onsubmit');
@@ -41,8 +42,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->_tvars['capcha'] = $common['capcha'] == 1;
 
         $this->_tvars['cron']  =  \App\System::useCron() ;
-
-
+          
     }
 
     public function onsubmit($sender) {
@@ -92,6 +92,10 @@ class UserLogin extends \Zippy\Html\WebPage
                 if (($_COOKIE['branch_id'] ?? 0) > 0) {
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
+             
+                \App\System::checkUpdate()  ;
+                
+                
                 $modules = \App\System::getOptions("modules");
 
                 if ($modules['shop'] == 1) {
@@ -132,8 +136,8 @@ class UserLogin extends \Zippy\Html\WebPage
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
-            $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-
+            $msg .= $_SERVER['REMOTE_ADDR'] ;
+         
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
 

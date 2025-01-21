@@ -24,7 +24,7 @@ class customers extends JsonRPC
                 'address'       => $cust->address,
                 'description'   => base64_encode($cust->comment)
             );
-
+           
             $list[] = $c;
         }
 

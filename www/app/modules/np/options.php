@@ -8,6 +8,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
@@ -37,16 +38,23 @@ class Options extends \App\Pages\Base
 
         $form->onSubmit($this, 'saveapiOnClick');
 
-        $form = $this->add(new Form("formcache"));
-
-        $form->onSubmit($this, 'savecacheOnClick');
+     
 
         $form = $this->add(new Form("oform"));
-        $form->add(new DropDownChoice('area'))->onChange($this, 'onArea');
-        $form->add(new DropDownChoice('city'))->onChange($this, 'onCity');
-        $form->add(new DropDownChoice('point'));
-        $form->add(new TextInput('tel'))->setText($modules['nptel']);
 
+        $form->add(new AutocompleteTextInput('city'))->onText($this, 'onTextCity');
+        $form->city->onChange($this, 'onCity');
+        $form->add(new AutocompleteTextInput('point'))->onText($this, 'onTextPoint');;
+        
+        $form->add(new TextInput('tel'))->setText($modules['nptel']??'');
+ 
+        $form->onSubmit($this, 'savedataOnClick');        
+        
+        $form->city->setKey($modules['npcityref']);
+        $form->city->setText($modules['npcity']);
+        $form->point->setKey($modules['nppointref']);
+        $form->point->setText($modules['nppoint']);
+        
         if(strlen( $modules['npgl'] ?? '') >0) {
            $this->_gablist = unserialize( $modules['npgl'] );    
         }
@@ -61,10 +69,7 @@ class Options extends \App\Pages\Base
         $this->gablist->Reload();
         
         
-        
-        $form->onSubmit($this, 'savedataOnClick');
-
-        $this->updateData();
+   
     }
 
     public function saveapiOnClick($sender) {
@@ -76,21 +81,17 @@ class Options extends \App\Pages\Base
 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
-        $this->updateData();
+        
     }
 
     public function savedataOnClick($sender) {
-        $arearef = $this->oform->area->getValue();
-        $area = $this->oform->area->getValueName();
-        $cityref = $this->oform->city->getValue();
-        $city = $this->oform->city->getValueName();
-        $pointref = $this->oform->point->getValue();
-        $point = $this->oform->point->getValueName();
+        $cityref = $this->oform->city->getKey();
+        $city = $this->oform->city->getText();
+        $pointref = $this->oform->point->getKey();
+        $point = $this->oform->point->getText();
 
         $modules = System::getOptions("modules");
 
-        $modules['nparea'] = $area;
-        $modules['nparearef'] = $arearef;
         $modules['npcity'] = $city;
         $modules['npcityref'] = $cityref;
         $modules['nppoint'] = $point;
@@ -101,74 +102,46 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Збережено');
     }
 
-    private function updateData() {
-        $modules = System::getOptions("modules");
-        if (strlen($modules['npapikey']) == 0) {
-            return;
-        }
-
-
+   
+    public function onTextCity($sender) {
+        $text = $sender->getText()  ;
         $api = new Helper();
+        $list = $api->searchCity($text);
 
-        $areas = $api->getAreaListCache();
-
-        $this->oform->area->setOptionList($areas);
-
-        $this->oform->area->setValue($modules['nparearef']);
-
-        if (strlen($modules['nparearef']) > 0) {
-            $this->onArea($this->oform->area);
-            $this->oform->city->setValue($modules['npcityref']);
+        if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+            foreach($d['Addresses'] as $c) {
+               $opt[$c['Ref']]=$c['Present']; 
+            }
         }
-        if (strlen($modules['npcityref']) > 0) {
-            $this->onCity($this->oform->city);
-            $this->oform->point->setValue($modules['nppointref']);
-        }
-    }
-
-    public function onArea($sender) {
-
-        $api = new Helper();
-        $list = $api->getCityListCache($sender->getValue());
-
-        $this->oform->city->setOptionList($list);
+        
+        return $opt;
+       
     }
 
     public function onCity($sender) {
-
-        $api = new Helper();
-        $list = $api->getPointListCache($sender->getValue());
-
-        $this->oform->point->setOptionList($list);
+     
+        $this->oform->point->setKey('');
+        $this->oform->point->setText('');
     }
-
-    public function savecacheOnClick($sender) {
-
-
-        try {
-            
-           $api = new Helper();
-
-           $ret = $api->updatetCache()  ;
-           
-           if(strlen($ret['error'] ??'')>0 ) {
-               $this->setError($ret['error']);                           
-               return;
-           }
-           if(strlen($ret['warn'] ??'')>0 ) {
-               $this->setWarn($ret['warn']);                           
-           }
-           
-        } catch(\Exception $ee) {
-            $msg = $ee->getMessage();
-            $this->setError($msg);            
+  
+    public function onTextPoint($sender) {
+        $text = $sender->getText()  ;
+        $ref=  $this->oform->city->getKey();
+        $api = new Helper();
+        $list = $api->searchPoints($ref,$text);
+       
+   if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
         }
         
-        $this->updateData();
-
-        $this->setSuccess('Збережено');
+        return $opt;        
     }
-   
+
+     
     public function gabListOnRow(  $row) {
         $item = $row->getDataItem();
         $row->add(new Label('gabname',$item->gabname ));

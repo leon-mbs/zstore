@@ -407,10 +407,11 @@ class DocList extends \App\Pages\Base
         $filter = Filter::getFilter("doclist");
         $filter->page = $this->doclist->getCurrentPage();
 
+        $user = System::getUser();
 
-        if( $this->_doc->meta_name == 'OfficeDoc' ){
+        if($item->meta_name == 'OfficeDoc' ){
               
-            if (false == $this->_doc->checkExe($user)) {
+            if (false == $item->checkExe($user)) {
                 return;
             }
         }            
@@ -684,7 +685,7 @@ class DocList extends \App\Pages\Base
         $doc->user_id= System::getUser()->user_id;
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->state = 0; ;
+        $doc->state = 0;
         $doc->headerdata['contract_id'] = 0;
         $doc->headerdata['_state_before_approve_'] = '';
         $doc->save();
@@ -718,8 +719,8 @@ class DocList extends \App\Pages\Base
     }
 
     public function printlabels($sender) {
-
-        $one = $this->statusform->print1->isChecked();
+        $buf=[];
+        $one = $this->statusform->print1->isChecked() ? 1:0;
         $items=[];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             if($this->_doc->meta_name=='GoodsReceipt') {
@@ -730,16 +731,16 @@ class DocList extends \App\Pages\Base
         }
 
         $user = \App\System::getUser() ;
-          
+        $ret = H::printItems($items,$one);   
+           
         if(intval($user->prtypelabel) == 0) {
         
-            $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
-
+           
             if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $htmls;
+                \App\Session::getSession()->printform =  $ret;
                 $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
-                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
+                $this->addAjaxResponse("  $('#tag').html('{$ret}') ; $('#pform').modal()");
             }
             return;
         }
@@ -747,7 +748,6 @@ class DocList extends \App\Pages\Base
         
         try {
 
-            $ret = H::printItemsEP($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
             if(intval($user->prtypelabel) == 1) {
                 if(strlen($ret)==0) {
                    $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
@@ -817,10 +817,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $filter = Filter::getFilter("doclist");
         if($usedate == true   ) {
             if($filter->from > 0) {
-                $where .= " and date(document_date) >= " . $conn->DBDate($filter->from) ;
+                $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
             }
             if($filter->to > 0) {
-                $where .= " and date(document_date) <= " . $conn->DBDate($filter->to) ;
+                $where .= " and  document_date <= " . $conn->DBDate($filter->to) ;
             }
         }    
             

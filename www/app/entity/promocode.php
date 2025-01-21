@@ -23,6 +23,8 @@ class PromoCode extends \ZCL\DB\Entity
         $this->details .= "<customer_name><![CDATA[{$this->customer_name}]]></customer_name>";
         $this->details .= "<dateto>{$this->dateto}</dateto>";
         $this->details .= "<disc>{$this->disc}</disc>";
+        $this->details .= "<discf>{$this->discf}</discf>";
+        $this->details .= "<refbonus>{$this->refbonus}</refbonus>";
         $this->details .= "<showcheck>{$this->showcheck}</showcheck>";
 
         $this->details .= "<used>{$this->used}</used>";
@@ -39,10 +41,14 @@ class PromoCode extends \ZCL\DB\Entity
         $this->customer_name = (string)($xml->customer_name[0]);
         $this->dateto = (string)($xml->dateto[0]);
         $this->disc = (string)($xml->disc[0]);
+        $this->discf = (string)($xml->discf[0]);
 
         $this->used = (string)($xml->used[0]);
         $this->showcheck = (int)($xml->showcheck[0]);
-   
+        $this->refbonus = (int)($xml->refbonus[0]);
+    
+        $this->enddate = strtotime($this->enddate);
+  
         parent::afterLoad();
     }
 
@@ -75,24 +81,32 @@ class PromoCode extends \ZCL\DB\Entity
     * @param mixed $customer_id
     */
     public static function check($code,$customer_id=0) {
+           $conn = \ZDB\DB::getConnect();
         
-           $code = PromoCode::getFirst('disabled=00 and code='.PromoCode::qstr($code)) ;
+           $code = PromoCode::getFirst('disabled=0 and code='.PromoCode::qstr($code)) ;
            if($code==null) {
-               return "Недійсний код";
+               return "Недійсний промокод";
            }
            if($code->dateto >0  && $code->dateto < time() ) {
-               return "Просрочений код";
+               return "Просрочений промокод";
            }
            if(strlen( $code->used ?? '') > 0  ) {
                if($code->type==1 || $code->type==3 ){
-                  return "Вже використаний";    
+                  return "Промокод вже використаний";    
                }
            }
            
            if($code->type==3){
                if( intval($code->customer_id) != intval($customer_id)) {
-                  return "Персональний код"; 
+                  return "Персональний промокод"; 
                }
+           }
+           if($code->type==4 && $customer_id >0 ){
+            
+               $cnt=intval($conn->GetOne("select count(*) from stats where  category=4 and  keyd= {$customer_id} and vald={$code->id}") );
+               if($cnt > 0 ){
+                  return "Промокод вже використаний";    
+               } 
            }
            
            
@@ -115,7 +129,19 @@ class PromoCode extends \ZCL\DB\Entity
         $code->used= date('Y-m-d').' '.$doc->document_number;
         $code->save() ;
         
-          
+        if($code->type==4 && $code->customer_id > 0) {
+           \App\Helper::insertstat(4,$doc->customer_id,$code->id)  ;
+           if($code->refbonus > 0){
+                $b = new  \App\Entity\CustAcc() ;
+                $b->customer_id = $code->customer_id;
+                $b->optype =  \App\Entity\CustAcc::BONUS;
+                $b->createdon = time();
+                $b->document_id = $doc->document_id;
+                $b->amount = (int)$code->refbonus;
+     
+                $b->save();            
+           }             
+        } 
       
     }
 }

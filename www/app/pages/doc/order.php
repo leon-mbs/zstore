@@ -31,7 +31,7 @@ class Order extends \App\Pages\Base
     public $_tovarlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -101,13 +101,11 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
 
-        $api = new \App\Modules\NP\Helper();
+        $this->docform->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
+        $this->docform->baycity->onChange($this, 'onBayCity');
+        $this->docform->add(new AutocompleteTextInput('baypoint'))->onText($this, 'onTextBayPoint');;
+        
       
-     
-        $areas = $api->getAreaListCache();
-        $this->docform->add(new DropDownChoice('bayarea',$areas,0))->onChange($this, 'onBayArea');
-        $this->docform->add(new DropDownChoice('baycity'))->onChange($this, 'onBayCity');
-        $this->docform->add(new DropDownChoice('baypoint'));
         $this->docform->add(new TextInput('bayhouse'));
         $this->docform->add(new TextInput('bayflat'));
   
@@ -168,11 +166,12 @@ class Order extends \App\Pages\Base
             $this->docform->deliverynp->setValue($this->_doc->headerdata['deliverynp']);
             $this->OnDeliverynp($this->docform->deliverynp);
 
-            $this->docform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
-            $this->onBayArea($this->docform->bayarea) ;
-            $this->docform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
-            $this->onBayCity($this->docform->baycity) ;
-            $this->docform->baypoint->setValue($this->_doc->headerdata['baypoint'] ?? 0);
+            
+            $this->docform->baycity->setKey($this->_doc->headerdata['baycity'] ?? '');
+            $this->docform->baypoint->setKey($this->_doc->headerdata['baypoint'] ?? '');
+            $this->docform->baycity->setText($this->_doc->headerdata['baycityname'] ?? '');
+            $this->docform->baypoint->setText($this->_doc->headerdata['baypointname'] ?? '');
+            
             $this->docform->bayhouse->setText($this->_doc->headerdata['bayhouse'] );
             $this->docform->bayflat->setText($this->_doc->headerdata['bayflat'] );
             $this->docform->store->setValue($this->_doc->headerdata['store'] );
@@ -182,7 +181,7 @@ class Order extends \App\Pages\Base
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
 
-            $this->docform->payamount->setText($this->_doc->payamount);
+            $this->docform->payamount->setText($this->_doc->headerdata['payed']);
 
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->editbonus->setText($this->_doc->headerdata['bonus']);
@@ -355,8 +354,20 @@ class Order extends \App\Pages\Base
 
         $item->desc = $this->editdetail->editdesc->getText();
 
-        if($this->_rowid == -1) {
-            $this->_tovarlist[] = $item;
+        if($this->_rowid == -1) {    //новая  позиция
+            $found=false;
+            
+            foreach ($this->_tovarlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id ) {
+                    $this->_tovarlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+        
+            if(!$found) {
+               $this->_tovarlist[] = $item;    
+            }
+            
             $this->addrowOnClick(null);
             $this->setInfo("Позиція додана") ;
             //очищаем  форму
@@ -392,6 +403,68 @@ class Order extends \App\Pages\Base
 
 
     }
+   //вставка  сканером
+    public function addcodeOnClick($sender) {
+        $common = \App\System::getOptions("common");
+
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        $code0 = $code;
+        $code = ltrim($code, '0');
+
+        if ($code == '') {
+            return;
+        }
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        if ($item == null) {
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            return;
+        }
+ 
+        if($item->useserial==1 && $common['usesnumber'] >0){
+            $this->setWarn("Товар потребує вводу серійного номеру");
+            return;
+        }
+        foreach ($this->_tovarlist as $ri => $_item) {
+            if ($_item->item_id == $item->item_id) {
+                $this->_tovarlist[$ri]->quantity += 1;
+                $this->_rownumber  = 1;
+
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->CalcPay();
+                return;
+            }
+        }
+
+        $customer_id = $this->docform->customer->getKey()  ;
+        $pt=     $this->docform->pricetype->getValue() ;
+        $price = $item->getPriceEx(array(
+           'pricetype'=>$pt,
+           'store'=>0,
+           'customer'=>$customer_id
+         ));
+
+        $item->price = $price;
+
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
+        }
+
+        $item->quantity = 1;
+
+        $this->_tovarlist[ ] = $item;
+        $this->_rownumber  = 1;
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+
+        $this->_rowid = -1;
+    }
 
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -421,21 +494,23 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['deliverynp'] = $this->docform->deliverynp->getValue();
-        $this->_doc->headerdata['bayarea'] = $this->docform->bayarea->getValue();
-        $this->_doc->headerdata['baycity'] = $this->docform->baycity->getValue();
-        $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getValue();
+
+        $this->_doc->headerdata['baycity'] = $this->docform->baycity->getKey();
+        $this->_doc->headerdata['baycityname'] = $this->docform->baycity->getText();
+        $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getKey();
+        $this->_doc->headerdata['baypointname'] = $this->docform->baypoint->getText();
+        
         $this->_doc->headerdata['bayhouse'] = $this->docform->bayhouse->getText();
         $this->_doc->headerdata['bayflat'] = $this->docform->bayflat->getText();
         $this->_doc->headerdata['npaddress'] = $this->docform->address->getText();
         $this->_doc->headerdata['npaddressfull'] ='';
-        if(strlen($this->_doc->headerdata['bayarea'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->bayarea->getValueName() );   
-        }
+
+       
         if(strlen($this->_doc->headerdata['baycity'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baycity->getValueName() );   
+           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baycity->getText() );   
         }
         if(strlen($this->_doc->headerdata['baypoint'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getValueName() );   
+           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getText() );   
         }
         if(strlen($this->_doc->headerdata['bayhouse'])>0) {
            $this->_doc->headerdata['npaddressfull']  .= (' буд '. $this->docform->bayhouse->getText() );   
@@ -459,6 +534,7 @@ class Order extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
 
         $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->headerdata['payed'] = $this->docform->payamount->getText();
 
 
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
@@ -488,8 +564,8 @@ class Order extends \App\Pages\Base
             $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
 
             if ($sender->id == 'paydoc') {
-                $this->_doc->payed = $this->docform->payed->getText();
-                $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+                $this->_doc->payed = doubleval($this->docform->payed->getText());
+                $this->_doc->headerdata['payed'] = $this->_doc->payed;
                 $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
                 if ($this->_doc->payed > $this->_doc->payamount) {
@@ -519,7 +595,7 @@ class Order extends \App\Pages\Base
             }
             if ( $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
                 if ($this->_doc->headerdata['store'] > 0) {
-                    $this->_doc->reserve($this->_doc->headerdata['store']); 
+                    $this->_doc->reserve(); 
                 }
             }
             if ($sender->id == 'topaydoc') {
@@ -550,7 +626,7 @@ class Order extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }
@@ -622,9 +698,9 @@ class Order extends \App\Pages\Base
         $this->editdetail->editprice->setText($price);
         $price = $item->getPartion();
         $this->editdetail->pricestock->setText(H::fa($price));
-        $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO({$id})");
+        $this->editdetail->tocustorder->setAttribute("onclick","addItemToCO([{$id}])");
         $this->editdetail->tocustorder->setVisible(true);
-
+     
 
     }
 
@@ -663,9 +739,9 @@ class Order extends \App\Pages\Base
             $this->docform->custinfo->setVisible(strlen($disctext) >0);
             $this->docform->cinfo->setVisible(false);
 
-
-
             $this->OnCinfo($customer_id);
+
+           
 
         }
 
@@ -746,64 +822,8 @@ class Order extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
-    public function addcodeOnClick($sender) {
-        $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
-
-        if ($code == '') {
-            return;
-        }
-
-        foreach ($this->_tovarlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0) {
-                $this->_tovarlist[$ri]->quantity += 1;
-                $this->_rownumber  = 1;
-
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
-            }
-        }
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
-        if ($item == null) {
-                $this->setWarn("Товар з кодом `{$code}` не знайдено");
-                return;
-            }
- 
-
-        $customer_id = $this->docform->customer->getKey()  ;
-        $pt=     $this->docform->pricetype->getValue() ;
-        $price = $item->getPriceEx(array(
-           'pricetype'=>$pt,
-           'store'=>0,
-           'customer'=>$customer_id
-         ));
-
-        $item->price = $price;
-
-        $item->disc = '';
-        $item->pureprice = $item->getPurePrice();
-        if($item->pureprice > $item->price) {
-            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
-        }
-
-        $item->quantity = 1;
-
-        $this->_tovarlist[ ] = $item;
-        $this->_rownumber  = 1;
-
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-        $this->calcPay();
-
-        $this->_rowid = -1;
-    }
     
+     
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
         if ($dt > 1) {
@@ -813,7 +833,7 @@ class Order extends \App\Pages\Base
         }
 
         $this->docform->deliverynp->setVisible($dt == Document::DEL_NP);
-        $this->docform->bayarea->setVisible($dt  == Document::DEL_NP ) ;
+
         $this->docform->baycity->setVisible($dt  == Document::DEL_NP ) ;
         $this->docform->baypoint->setVisible($dt == Document::DEL_NP ) ;
         $this->docform->bayhouse->setVisible($dt == Document::DEL_NP ) ;
@@ -827,12 +847,12 @@ class Order extends \App\Pages\Base
 
     public function OnDeliverynp($sender) {
       $dt = $sender->getValue() ;        
-      $this->docform->baypoint->setOptionList([]) ;   
-      $this->docform->baypoint->setValue(0) ;   
+      $this->docform->baypoint->setKey('') ;   
+      $this->docform->baypoint->setText('') ;   
 
-      $this->docform->baycity->setValue(0) ;   
-      $this->docform->baycity->setOptionList([]) ;   
-      $this->docform->bayarea->setValue(0) ;   
+      $this->docform->baycity->setKey('');   
+      $this->docform->baycity->setText('')  ;   
+
      
       $this->docform->address->setVisible($dt ==2) ;   
       $this->docform->bayhouse->setVisible($dt ==2) ;   
@@ -867,21 +887,30 @@ class Order extends \App\Pages\Base
     }
 
     private function calcPay() {
-        $total = $this->docform->total->getText();
+        $total = doubleval($this->docform->total->getText() );
 
-        $code= trim($this->docform->promocode->getText());
+        $code = trim($this->docform->promocode->getText());
         if($code != '') {
             $r = \App\Entity\PromoCode::check($code,$this->docform->customer->getKey())  ;
             if($r == ''){
                 $p = \App\Entity\PromoCode::findByCode($code);
                 $disc = doubleval($p->disc );
-                if($disc >0)  {
-                    $td = H::fa( $total * ($p->disc/100) );
+                $discf = doubleval($p->discf );
+                if($disc > 0)  {
+                    $td = H::fa( $total * ($disc/100) );
                     $this->docform->totaldisc->setText($td);
+                    $this->docform->edittotaldisc->setText($td);
+                }        
+                if($discf > 0)  {
+                    if( $total < $discf  ) {
+                        $discf = $total;
+                    }
+                    $this->docform->totaldisc->setText(H::fa($discf));
+                    $this->docform->edittotaldisc->setText(H::fa($discf));
                 }        
             }
         }
-        
+     
         
         $bonus = $this->docform->bonus->getText();
         $totaldisc = $this->docform->totaldisc->getText();
@@ -928,6 +957,7 @@ class Order extends \App\Pages\Base
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
     }
 
     public function savenewitemOnClick($sender) {
@@ -941,21 +971,12 @@ class Order extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
-        if (strlen($item->item_code) > 0) {
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('Такий артикул вже існує');
-                return;
-            }
-
-        } else {
-            if (\App\System::getOption("common", "autoarticle") == 1) {
-
-                $item->item_code = Item::getNextArticle();
-            }
-        }
-
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
+        
+   
 
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
@@ -980,22 +1001,45 @@ class Order extends \App\Pages\Base
 
     }
 
-    public function onBayArea($sender) {
-
+    public function onTextBayCity($sender) {
+        $text = $sender->getText()  ;
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getCityListCache($sender->getValue());
+        $list = $api->searchCity($text);
 
-        $this->docform->baycity->setOptionList($list);
+        if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+            foreach($d['Addresses'] as $c) {
+               $opt[$c['Ref']]=$c['Present']; 
+            }
+        }
+        
+        return $opt;
+       
     }
 
     public function onBayCity($sender) {
-        $dt =  $this->docform->deliverynp->getValue(); 
-
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue(),$dt==1);
-
-        $this->docform->baypoint->setOptionList($list);
+     
+        $this->docform->baypoint->setKey('');
+        $this->docform->baypoint->setText('');
     }
+  
+    public function onTextBayPoint($sender) {
+        $text = $sender->getText()  ;
+        $ref=  $this->docform->baycity->getKey();
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchPoints($ref,$text);
+       
+        if($list['success']!=true) return;
+        
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
+        }
+        
+        return $opt;        
+    }
+
 
     public function onSavePromo($sender) {
         $code= trim($this->docform->editpromo->getText());
@@ -1011,15 +1055,9 @@ class Order extends \App\Pages\Base
             $this->docform->promocode->setText('');
             return;
         }
-      
-        $p = \App\Entity\PromoCode::findByCode($code);
-        $disc = doubleval($p->disc );
-        if($disc >0)  {
-            $this->docform->edittotaldisc->setText($disc);
-            $this->docform->totaldisc->setText($disc);
-            $this->calcPay();
+        $this->calcPay();
         
-        }
+     
     }
     
 }

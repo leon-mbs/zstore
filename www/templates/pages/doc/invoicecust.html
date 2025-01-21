@@ -11,7 +11,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
 
                     <div class="form-group  ">
@@ -40,7 +40,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
  
                     <div class="form-group  ">
@@ -247,18 +247,22 @@
         </form>
 
 
-        <form zippy="editdetail">
-            <h4>Введення товару </h4>
+       
             <div class="row">
-                <div class="col-4">
-
+                <div class="col-12 col-md-4 col-xl-3">
+                 <form zippy="editdetail">
+                   <h4>Введення товару </h4>
 
                     <div class="form-group">
 
                         <label for="edititem">Назва </label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
-                        <a style="font-size:smaller" zippy="addnewitem">Додати новий</a>
-
+                        <div class="input-group  ">
+                        <input   placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
+                              <div class="input-group-append">
+                                 <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
+                            </div>                    
+                         </div>
+                          <a zippy="openitemsel">Вiдкрити довiдник</a>   
 
                     </div>
                     <div class="form-group">
@@ -272,7 +276,7 @@
 
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required 
                                pattern="[0-9,\.]+"
                                style="width: 100px;"/>
                     </div>
@@ -280,7 +284,7 @@
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required 
                                pattern="[0-9,\.]+"
                                style="width: 100px;">
                     </div>
@@ -291,9 +295,14 @@
                         <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary"> 
                         
                     </div>
+                   </form>
                 </div>
+                
+              <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>               
+             </div>
             </div>
-        </form>
+       
 
         <form zippy="editnewitem">
             <h3>&nbsp;Новий товар </h3>
@@ -302,7 +311,7 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input class="form-control " zippy="editnewitemname" required="required"/>
+                        <input class="form-control " zippy="editnewitemname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editnewitemcode">Код</label>
@@ -330,14 +339,12 @@
                 </div>
             </div>
         </form>
-   <script>
-        $(document).ready(function () {
- 
-            if( $('#edititem').length )         
-            {
-                $('#edititem').focus();
-            } 
-        });
-    </script>
+        <script>
+            $(document).ready(function () {
+      
+        
+         $("#edititem").focus()   
+        });  
+        </script>
     </body>
 </html>

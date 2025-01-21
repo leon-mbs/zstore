@@ -29,7 +29,7 @@ class Subscribes extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }
         $this->add(new Panel('plist'));
         $this->plist->add(new ClickLink('addnew', $this, 'onAdd'));
@@ -43,6 +43,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
         $this->editform->add(new TextInput('editurl'));
+        $this->editform->add(new TextInput('editchatid'));
 
         $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(), Subscribe::EVENT_DOCSTATE))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(), 0));
@@ -54,7 +55,11 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'OnSave');
         $this->editform->add(new ClickLink('cancel'))->onClick($this, 'OnCancel');
         $this->editform->add(new ClickLink('delete'))->onClick($this, 'OnDelete');
-
+   
+        $this->update($this->editform->editeventtype);
+        $this->update($this->editform->editrecievertype) ;    
+        $this->update($this->editform->editmsgtype) ;    
+     
         $this->Reload();
 
     }
@@ -62,49 +67,51 @@ class Subscribes extends \App\Pages\Base
     public function update($sender) {
 
 
-   
-
-        $et = $this->editform->editeventtype->getValue();
+ 
         if($sender->id=='editeventtype') {
+            $et = $sender->getValue();
             $l=Subscribe::getRecieverList($et) ;
             $this->editform->editrecievertype->setOptionList($l);
-            $this->editform->editrecievertype->setValue(array_shift($l));            
 
             if($et == Subscribe::EVENT_DOCSTATE) {
                 $this->editform->editdoctype->setVisible(true);
                 $this->editform->editstate->setVisible(true);
+
+
             }
             if($et == Subscribe::EVENT_NEWCUST) {
                 $this->editform->editdoctype->setVisible(false);
                 $this->editform->editstate->setVisible(false);
+
+
             }
-            $this->update($this->editform->editrecievertype) ;    
+       
             return;       
         }
-        $rt = $this->editform->editrecievertype->getValue();
 
         if($sender->id=='editrecievertype') {
+            $rt = $sender->getValue();
             $l=Subscribe::getMsgTypeList($rt) ;
             $this->editform->editmsgtype->setOptionList($l);
-            $this->editform->editmsgtype->setValue(array_shift($l));            
-            $this->update($this->editform->editmsgtype) ;    
-            
+        //    $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
+             
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
-            
-            
+            $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
+            $this->editform->editchatid->setVisible($rt == Subscribe::RSV_TG);
+               
+                    
             return;       
           
         }        
-        $mt = $this->editform->editmsgtype->getValue();
         
         if($sender->id=='editmsgtype') {
+            $mt = $sender->getValue();
             $this->editform->editmsgsubject->setVisible(false);
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
             
-            $this->editform->editurl->setVisible($mt == Subscribe::RSV_WH);
-            
+             
             if($mt == Subscribe::MSG_EMAIL) {
                 $this->editform->editmsgsubject->setVisible(true);
             }            
@@ -156,8 +163,12 @@ class Subscribes extends \App\Pages\Base
         $this->editform->delete->setVisible(true);
 
         $this->editform->editeventtype->setValue($this->_sub->sub_type);
+        $this->update($this->editform->editeventtype);
+         
         $this->editform->editrecievertype->setValue($this->_sub->reciever_type);
+        $this->update($this->editform->editrecievertype) ;    
         $this->editform->editmsgtype->setValue($this->_sub->msg_type);
+        $this->update($this->editform->editmsgtype);        
         $this->editform->edituser->setValue($this->_sub->user_id);
         $this->editform->editdoctype->setValue($this->_sub->doctype);
         $this->editform->editstate->setValue($this->_sub->state);
@@ -165,15 +176,16 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgtext->setText($this->_sub->msgtext);
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
         $this->editform->editurl->setText($this->_sub->url);
+        $this->editform->editchatid->setText($this->_sub->chat_id);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
         $this->editform->editattach->setCheCked($this->_sub->attach);
         $this->editform->edithtml->setCheCked($this->_sub->html);
 
-        $this->update($this->editform->editeventtype);
+
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
         
-        $this->update( $this->editform->editeventtype) ;
+       
     }
 
     public function OnSave($sender) {
@@ -195,6 +207,7 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
         $this->_sub->url = trim($this->editform->editurl->getText());
+        $this->_sub->chat_id = trim($this->editform->editchatid->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
         $this->_sub->html = $this->editform->edithtml->isCheCked() ? 1 : 0;
 

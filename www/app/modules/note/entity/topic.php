@@ -9,28 +9,57 @@ namespace App\Modules\Note\Entity;
  */
 class Topic extends \ZCL\DB\Entity
 {
+    public $accusers = [];
+    
     protected function init() {
         $this->topic_id = 0;
-        $this->acctype = 0;
+        $this->ispublic = 0;
+ 
+        $this->accusers=[] ;
     }
 
     protected function beforeSave() {
         parent::beforeSave();
-        //упаковываем  данные в detail
+        
+        /*
         $this->content = "<content>";
-
-        $this->content .= "<detail><![CDATA[{$this->detail}]]></detail>";
+        $this->detail = base64_encode($this->detail) ;
+        $this->content .= "<detail>{$this->detail}</detail>";
+        $this->content .= "<isbasa64>1</isbasa64>";
+        $this->content .= "<updatedon>{$this->updatedon}</updatedon>";
         $this->content .= "</content>";
-
-        return true;
+        */
+        
+        $content=[]  ;
+        $content['detail']    = $this->detail ;
+        $content['updatedon'] = $this->updatedon ;
+        $content['accusers'] = $this->accusers  ;
+      
+        $this->content = serialize($content) ;
+        
     }
 
     protected function afterLoad() {
-        //распаковываем  данные из detail
-        $xml = @simplexml_load_string($this->content);
+        
+        if(strpos($this->content,'<content>') ===0  ) {
+            $xml = @simplexml_load_string($this->content);
 
-        $this->detail = (string)($xml->detail[0]);
-
+            $this->detail = (string)($xml->detail[0]);
+            $this->isbasa64 = (int)($xml->isbasa64[0]);
+            if($this->isbasa64==1) {
+                $this->detail = base64_decode($this->detail) ;
+            }
+            $this->updatedon = (int)($xml->updatedon[0]);       
+            $this->accusers =  [];
+       }  else  {
+            $content = unserialize($this->content) ;
+            $this->updatedon = $content['updatedon'] ;
+            $this->detail = $content['detail'] ;
+            $this->accusers = $content['accusers'] ??[];
+     
+        }
+     
+        
         parent::afterLoad();
     }
 
@@ -42,7 +71,7 @@ class Topic extends \ZCL\DB\Entity
     public static function findByNode($node_id) {
 
         $user = \App\System::getUser();
-        $w = "(user_id={$user->user_id} or acctype > 0  ) and ";
+        $w = "(user_id={$user->user_id} or ispublic=1  ) and ";
         if ($user->rolename == 'admins') {
             $w = '';
         }
@@ -67,12 +96,13 @@ class Topic extends \ZCL\DB\Entity
 
     /**
      * добавить  к  узлу
-     *
+     * 
      * @param mixed $node_id
      */
-    public function addToNode($node_id) {
+    public function addToNode($node_id,$islink=false) {
         $conn = \ZCL\DB\DB::getConnect();
-        $conn->Execute("insert into note_topicnode(topic_id,node_id)values({$this->topic_id},{$node_id})");
+        $conn->Execute("delete from note_topicnode where topic_id={$this->topic_id} and node_id = {$node_id} ");
+        $conn->Execute("insert into note_topicnode(topic_id,node_id,islink)values({$this->topic_id},{$node_id}," . ($islink ? 1:0  ). ")");
     }
 
     /**
@@ -128,15 +158,10 @@ class Topic extends \ZCL\DB\Entity
      *
      */
     public function getTags() {
-        $tl = array();
+     
         $conn = \ZCL\DB\DB::getConnect();
-        $rc = $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
-        foreach ($rc as $k => $v) {
-            if (strlen($v)) {
-                $tl[$k] = $v;
-            }
-        }
-        return $tl;
+        return $conn->GetCol("select distinct tagvalue from note_tags where topic_id=" . $this->topic_id);
+  
     }
 
     /**

@@ -30,7 +30,7 @@ class Compare extends Base
     public function plistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new \Zippy\html\Image('pim'))->setUrl('/loadshopimage.php?id='.$item->image_id);
+        $row->add(new \Zippy\Html\Image('pim'))->setUrl( $item->getImageUrl(true));
         $row->add(new Label("pname"))->setText($item->itemname) ;
         $row->add(new Label("pprice"))->setText(\App\Helper::fa($item->getPriceFinal()));
         $row->add(new ClickLink("pdel", $this, "onDel")) ;

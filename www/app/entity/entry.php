@@ -24,7 +24,7 @@ class Entry extends \ZCL\DB\Entity
     /**
      *
      *
-     * @param mixed $document Ссылка  на  документ
+     * @param mixed $document_id Ссылка  на  документ
      * @param mixed $amount Сумма.
      * @param mixed $quantity количество
      */
@@ -32,7 +32,7 @@ class Entry extends \ZCL\DB\Entity
         parent::__construct();
 
         $this->document_id = $document_id;
-        // $this->amount = $amount;
+        $this->amount = $amount;
 
         $this->quantity = $quantity;
         $this->tag = 0;
@@ -70,7 +70,6 @@ class Entry extends \ZCL\DB\Entity
      * неиспользуемые значения  заполняются  нулем
      *
      * @param mixed $date дата на  конец дня
-     * @param mixed $acc синтетичкеский счет
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
@@ -79,7 +78,7 @@ class Entry extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
-            $where = $where . "   date(document_date) <= " . $conn->DBDate($date);
+            $where = $where . "   document_date  <= " . $conn->DBDate($date);
         }
 
         if ($emp > 0) {
@@ -102,7 +101,6 @@ class Entry extends \ZCL\DB\Entity
      * неиспользуемые значения  заполняются  нулем
      *
      * @param mixed $date дата на  конец дня
-     * @param mixed $acc синтетичкеский счет
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
@@ -111,7 +109,7 @@ class Entry extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
-            $where = $where . " and  date(document_date) <= " . $conn->DBDate($date);
+            $where = $where . " and   document_date <= " . $conn->DBDate($date);
         }
 
         if ($emp > 0) {

@@ -43,14 +43,16 @@ class DocList extends \App\Pages\Base
             
             $ret['clist'][] = array('key'=>$c->customer_id,'value'=>$c->customer_name);
         }
-        $ret['firmid']  =  0;
-        $ret['firms']  =  [];
-        foreach(\App\Entity\Firm::find('disabled <> 1') as $f) {
-           
-            $ret['firms'][] = array('key'=>$f->firm_id,'value'=>$f->firm_name);
-            if($ret['firmid']==0) {
-                $ret['firmid']  = $f->firm_id;
-            }//первую
+        $ret['posid']  =  0;
+        $ret['poses']  =  [];
+        foreach(\App\Entity\Pos::find('') as $p) {
+            if($p->usefisc != 1)  {
+                continue;
+            }
+            $ret['poses'][] = array('key'=>$p->pos_id,'value'=>$p->pos_name);
+            if($ret['posid']==0) {
+                $ret['posid']  = $p->pos_id;
+            }//первый
         }
 
 
@@ -60,8 +62,8 @@ class DocList extends \App\Pages\Base
 
     public function loaddocs($arg, $post=null) {
         //  $user = \App\System::getUser() ;
-
-        $sql = " (firm_id={$arg[2]} or coalesce(firm_id,0)=0) and  meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        $p = \App\Entity\Pos::load($arg[2]);
+        $sql = " (firm_id={$p->firm_id} or coalesce(firm_id,0)=0) and  meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         } else {
@@ -98,14 +100,16 @@ class DocList extends \App\Pages\Base
     }
 
     public function check($arg, $post=null) {
-        $firm = \App\Entity\Firm::load($arg[0])  ;
+        $p = \App\Entity\Pos::load($arg[0]);
+
+        $firm = \App\Entity\Firm::load($p->firm_id)  ;
         if(strlen($firm->vdoc)==0) {
-            return "Не задано токен Вчасно";
+            return "Не задано токен Вчасно в довiднику  компанiй";
         }
         if(strlen($firm->tin)==0) {
             return "Компанiя повинна мати ЄДРПОУ";
         }
-        if($arg[1]==true && strlen($firm->ppokeyid)==0 ) {
+        if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
             return "Не заданий ключ для КЕП";
         }
       
@@ -129,12 +133,12 @@ class DocList extends \App\Pages\Base
             $dompdf->render();
             $pdf = $dompdf->output();
 
-            $firm = \App\Entity\Firm::load($arg[1])  ;
+            $pos = \App\Entity\Pos::load($arg[1])  ;
             
             //sign
             if($arg[2] == true) {
                  
-                $ret = \App\Modules\PPO\PPOHelper::send($pdf, "doc", $firm, true) ;
+                $ret = \App\Modules\PPO\PPOHelper::send($pdf, "doc", $pos, true) ;
                 if($ret['success'] != true) {
                     return $name." ".$ret['data'];
                 }
@@ -144,6 +148,7 @@ class DocList extends \App\Pages\Base
             }
 
             //send
+            $firm = \App\Entity\Firm::load($doc->firm_id)  ;
 
             $c = \App\Entity\Customer::load($doc->customer_id) ;
 
@@ -156,7 +161,7 @@ class DocList extends \App\Pages\Base
             $na[]=  str_replace(' ','', $doc->document_number) ;
             
             
-            $filename = implode('_',$na) .'.pdf'; ;
+            $filename = implode('_',$na) .'.pdf';
         //    $filename= "2475406556_3235608644_20170213_Рахунок_РН-026.pdf";
             
             list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm->vdoc  )  ;
@@ -170,7 +175,7 @@ class DocList extends \App\Pages\Base
 
             return $name." ok";
         } catch(\Exception $e) {
-            H::log($name .' '. $e->getMessage()) ;
+            H::logerror($name .' '. $e->getMessage()) ;
             return $name ." ".$e->getMessage();
 
         }

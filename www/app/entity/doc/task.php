@@ -30,13 +30,19 @@ class Task extends Document
             if ($ser->hours == "") {
                 $ser->hours = 0;
             }
+
+            if (strlen( $ser->quantity ??'' )==0 ) {
+                $ser->quantity = 1;
+            }
+
+            
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
-                              "cost"         => H::fa($ser->cost * $ser->quantity),
+                              "cost"         => H::fa(doubleval($ser->cost) * doubleval($ser->quantity) ),
                               "category"     => $ser->category,
-                              "hours"        => $ser->hours * $ser->quantity
+                              "hours"        => doubleval($ser->hours) *doubleval( $ser->quantity)
             );
         }
 
@@ -46,7 +52,7 @@ class Task extends Document
 
             $detail2[] = array(
                 "eq_name" => $eq->eq_name,
-                "code"    => $eq->code
+                "invnumber"    => $eq->invnumber
             );
         }
         $detail3 = array();
@@ -75,7 +81,7 @@ class Task extends Document
                         "document_date"   => H::fd($this->document_date),
                         "document_number" => $this->document_number,
                         "notes"           => nl2br($this->notes),
-                        "baseddoc"        => strlen($this->headerdata["parent_number"]) > 0 ? $this->headerdata["parent_number"] : false,
+                        "baseddoc"        => strlen($this->headerdata["parent_number"]??'') > 0 ? $this->headerdata["parent_number"] : false,
                         "cust"            => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "_detail"         => $detail,
                         "_detailprod"     => $detailprod,

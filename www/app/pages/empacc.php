@@ -41,10 +41,10 @@ class EmpAcc extends \App\Pages\Base
 
         $dt = new \App\DateTime();
         $from = $dt->subMonth(1)->startOfMonth()->getTimestamp();
-        $from = date(\DateTime::ISO8601, $from);
+        $from = date(\DateTimeInterface::ISO8601, $from);
 
 
-        $to = date(\DateTime::ISO8601, time());
+        $to = date(\DateTimeInterface::ISO8601, time());
 
         $emp_id = \App\System::getUser()->employee_id ;
 

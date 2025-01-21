@@ -62,7 +62,7 @@ class Helper
     
  
 
-    public function __construct() {
+    public function __construct($throwErrors = false) {
 
 
         $modules = \App\System::getOptions("modules");
@@ -83,7 +83,7 @@ class Helper
      *
      * @param string $key NovaPoshta API key
      *
-     * @return NovaPoshtaApi2
+
      */
     public function setKey($key)
     {
@@ -129,7 +129,7 @@ class Helper
      *
      * @param string $language
      *
-     * @return NovaPoshtaApi2
+
      */
     public function setLanguage($language)
     {
@@ -152,7 +152,7 @@ class Helper
      *
      * @param string $format Format of returned data by methods (json, xml, array)
      *
-     * @return NovaPoshtaApi2
+
      */
     public function setFormat($format)
     {
@@ -230,6 +230,8 @@ class Helper
             ? self::API_URI.'/xml/'
             : self::API_URI.'/json/';
 
+     //   $url = "https://api-cdn.novaposhta.ua/api-warehouses/api2/generated-cache/warehouses/warehouses.json";
+
         $data = array(
             'apiKey' => $this->key,
             'modelName' => $model,
@@ -253,6 +255,19 @@ class Helper
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
                 $result = curl_exec($ch);
+                
+                if (curl_errno($ch) > 0) {
+                    $msg = "sign server error: ".curl_error($ch);
+                    $msg = str_replace("'", "\"", $msg) ;
+                    $result = array('success' => false, 'errors' => $msg);
+                }                
+                $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                if ($status_code !== 200) {
+              
+       
+                    $result = array('success' => false, 'errors' => "Код  ".$status_code);
+         
+                }                
                 curl_close($ch);
 
         } else {
@@ -1148,132 +1163,19 @@ class Helper
          */
     }
 
-    public function getAreaListCache() {
-        $areas = @file_get_contents(_ROOT . "upload/arealist.dat");
-        $areas = @unserialize($areas);
-        if (is_array($areas)) {
-            return $areas;
-        }
-
-        return $this->getAreaList();
+   
+    public function searchCity($text)
+    {
+        return $this->request('AddressGeneral', 'searchSettlements', array(
+            'CityName' => $text, 'Page' => 1,'Limit' => 150
+        ));
     }
-
-    public function getCityListCache($arearef) {
-        $cities = @file_get_contents(_ROOT . "upload/citylist.dat");
-        $cities = @unserialize($cities);
-        if (is_array($cities) == false) {
-            
-            $a=$this->getAreaList() ;
-            return $this->getCityList($a[$arearef]  );
-        }
-        $ret = array();
-        foreach ($cities as $c) {
-            if ($c['Area'] == $arearef) {
-                $ret[$c['Ref']] = $c['Description'];
-            }
-        }
-        return $ret;
+    public function searchPoints($ref,$text="")
+    {
+        return $this->request('Address', 'getWarehouses', array(
+            'SettlementRef' => $ref, 'FindByString' => $text, 'Page' => 1,'Limit' => 150
+        ));
     }
-
-    public function getPointListCache($cityref,$pm=false) {
-        $points = @file_get_contents(_ROOT . "upload/pointlist.dat");
-        $points = @unserialize($points);
-        if (is_array($points) == false) {
-            $points = $this->getPointList($cityref);;
-        }
-        $ret = array();
-        foreach ($points as $r=>$p) {
-            
-            //из кеша
-            if ( is_array($p) && $p['City'] == $cityref) {
-                
-                $ispm = strpos($p['Description'],'Поштомат') !== false;
-                if($pm===$ispm) {
-                    $ret[$p['Ref']] = $p['Description'];                    
-                }
-                
-
-            }
-            // из  API
-            if ( !is_array($p) ) {
-                
-                $ispm = strpos($p,'Поштомат') !== false;
-                if($pm===$ispm) {
-                    $ret[$r] = $p;                    
-                }
-                
-
-            }
-        }
-        return $ret;
-    }
-    
-    //обновление  кеща  списков
-    public function updatetCache() {
-        
-        @unlink(_ROOT . "upload/arealist.dat");
-        @unlink(_ROOT . "upload/citylist.dat");
-        @unlink(_ROOT . "upload/pointlist.dat");
-
-        @mkdir(_ROOT . "upload") ;
-
-        $ret=[]  ;
-
-        $areas = array();
-        $tmplist = $this->getAreas();
-        if($tmplist['success']==false) {
-            if(count($tmplist['errors'] ??[])>0) {
-                $this->setError(array_pop($tmplist['errors'])) ;
-                $ret['error']=array_pop($tmplist['errors']);
-                return $ret;                  
-            }
-            if(count($tmplist['warnings']??[])>0) {
-                $ret['warn']=array_pop($tmplist['warnings']);
-
-            }
-
-        }
-        foreach ($tmplist['data'] as $a) {
-            $areas[$a['Ref']] = trim($a['Description']);
-        }
-
-        $d = serialize($areas);
-
-        file_put_contents(_ROOT . "upload/arealist.dat", $d);
-        unset($d);
-    
-        $cities = array();
-
-        $tmplist = $this->getCities(0);
-
-        foreach ($tmplist['data'] as $a) {
-            $cities[] = array('Ref' => $a['Ref'], 'Area' => $a['Area'], 'Description' => trim($a['Description']).' ('.trim($a['DescriptionRu']) .')'  );
-
-        }
-
-        $d = serialize($cities);
-
-        file_put_contents(_ROOT . "upload/citylist.dat", $d);
-        unset($tmplist);
-        unset($cities);
-        unset($d);
-        gc_collect_cycles() ;
-
-        $wlist = array();
-        $tmplist = $this->getWarehouses('');
-
-        foreach ($tmplist['data'] as $a) {
-            $wlist[] = array('Ref' => $a['Ref'], 'City' => $a['CityRef'], 'Description' => trim($a['Description']) );
-        }
-        unset($tmplist) ;
-        gc_collect_cycles() ;
-
-        $d = serialize($wlist);
-        file_put_contents(_ROOT . "upload/pointlist.dat", $d);
-        unset($wlist) ;
-        unset($d);    
-        
-        return $ret;
-        
-    }
+   
+ 
 }

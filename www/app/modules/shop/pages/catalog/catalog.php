@@ -218,7 +218,7 @@ class Catalog extends Base
         $item = $row->getDataItem();
         $options = \App\System::getOptions('shop');
 
-        $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue(  $item->getImageUrl(true,true));
         $row->add(new BookmarkableLink("scatname", $item->getSEF()))->setValue($item->itemname);
         $price = $item->getPurePrice($options['defpricetype']);
         $price = \App\Helper::fa($price);
@@ -269,7 +269,7 @@ class Catalog extends Base
 
     public function rOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("rimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rimage", $item->getSEF()))->setValue(  $item->getImageUrl(true,true));
         $row->add(new BookmarkableLink("rname", $item->getSEF()))->setValue($item->itemname);
     }
 

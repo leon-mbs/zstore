@@ -10,11 +10,12 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION= "6.11.1";
-    public const REQUIRED_DB= "6.11.0";
+    public const CURR_VERSION = "6.13.0";
+    public const PREV_VERSION = "6.12.2";
+    public const REQUIRED_DB  = "6.13.0";
 
-    private static $_options = array();   //  для кеширования
-    private static $_cache   = array();   //  для кеширования
+   
+   
 
     /**
      * Возвращает  текущего  юзера
@@ -40,7 +41,7 @@ class System
 
     public static function getBranch() {
 
-        return Session::getSession()->branch_id;
+        return intval(Session::getSession()->branch_id);
     }
 
     public static function setBranch(int $branch_id) {
@@ -69,30 +70,41 @@ class System
      * Возвращает набор  параметром  по  имени набора
      *
      * @param mixed $group
-     * @param mixed $isserialise
+     * @param mixed $reload
+ 
      */
-    public static function getOptions($group, $isserialise=true) {
+    public static function getOptions($group,$reload= false ) {
 
-        if (isset(self::$_options[$group])) {
-            return self::$_options[$group];
+        $opp  = Session::getSession()->options ??[] ;
+       
+        if(isset($opp[$group]) && $reload==false  ) {
+            return $opp[$group];
         }
+       
+       
         $conn = \ZDB\DB::getConnect();
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
+        
+        if($group=='version')  {
+           return $rs; 
+        }
         if (strlen($rs) > 0) {
-            if(!$isserialise) {
-                self::$_options[$group] = $rs;
-                return $rs;
-            }  //неупакопано
+            if(strpos($rs,':')>0) {
+                $d =  @unserialize($rs);
+                $opp[$group]  = $d;
+                Session::getSession()->options = $opp;
+                return $d;
+            }   
 
             $d =    @unserialize(@base64_decode($rs));
-            if(!is_array($d)) {
-                $d =  @unserialize($rs); //для  совместивости
-            }
-            self::$_options[$group] = $d;
+            $opp[$group]  = $d;
+            Session::getSession()->options = $opp;
+            return $d;
+            
         }
 
-        return self::$_options[$group] ?? [];
+        
     }
 
     /**
@@ -115,12 +127,13 @@ class System
      * @param mixed $options
      */
     public static function setOptions($group, $options) {
-        self::$_options[$group] = $options;
+     
         $options = serialize($options);
         $options = base64_encode($options) ;
         $conn = \ZDB\DB::getConnect();
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
+        Session::getSession()->options = [];
     }
     /**
     * установить отьедный параметр
@@ -136,18 +149,8 @@ class System
 
         self::setOptions($group, $options) ;
     }
-    public static function setCache($key, $data) {
-        self::$_cache[$key] = $data;
-    }
 
-    public static function getCache($key) {
-
-        if (isset(self::$_cache[$key])) {
-            return self::$_cache[$key];
-        }
-        return null;
-    }
-
+   
     public static function setSuccessMsg($msg) {
         Session::getSession()->smsg = $msg;
     }
@@ -155,7 +158,6 @@ class System
     public static function getSuccesMsg() {
         return Session::getSession()->smsg;
     }
-
 
     public static function setErrorMsg($msg, $toppage=false) {
         if($toppage) {
@@ -168,6 +170,7 @@ class System
     public static function getErrorMsg() {
         return Session::getSession()->emsg;
     }
+
     public static function getErrorMsgTopPage() {
         return Session::getSession()->emsgtp;
     }
@@ -180,27 +183,136 @@ class System
         return Session::getSession()->wmsg;
     }
 
-    public static function setInfoMsg($msg) {
-        Session::getSession()->imsg = $msg;
+    public static function setInfoMsg($msg, $toppage=false) {
+
+        if($toppage) {
+            Session::getSession()->imsgtp = $msg;
+        } else {
+            Session::getSession()->imsg = $msg;
+        }
     }
 
+    public static function getInfoMsgTopPage() {
+        return Session::getSession()->imsgtp;
+    }
+   
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
+
     public static function clean() {
-        self::$_cache = [] ;
+        
 
     }
-
 
     public static function useCron() {
         return  \App\Helper::getKeyVal('cron') ?? false;
     }
-    public static function useEmail() {
-        $o=  self::getOption('common', 'noemail') ?? false;
-        return !$o;
+  
+  /**
+  * проверка  на  входязий IP
+  * 
+  */
+    public static function checkIP() {
+        $options=self::getOptions('common') ;
+        if($options['checkip']  != 1) return;
+        if($_SERVER['REMOTE_ADDR']=='127.0.0.1')  return;
+        
+        $list = explode("\n",$options['iplist'] ) ;
+        foreach($list as $ip) {
+            if(trim($ip)=== $_SERVER['REMOTE_ADDR']) {
+                return;
+            }
+        }
 
+        http_response_code(403) ;
+        die;
     }
 
+    
+    /**
+    * проверка  обновлений  и ряда  параметров  настроек
+    * вызывается  раз в  неделю
+    */
+    public static function checkUpdate() {
+        $options = System::getOptions("common");       
+        if(($options['noupdate'] ??0)==1) {
+           return;  
+        }
+        $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
+        if(strtotime('-7 day') < $lastcheck ) {
+           return;
+        }
+     
+        \App\Helper::setKeyVal('lastchecksystem',time()) ;
+       
+        $user = System::getUser() ;
+        if ($user->userlogin == "admin") {
+                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = $user->user_id;
+                    $n->message = "Змініть у профілі пароль за замовчуванням " ;
+                    $n->sender_id = \App\Entity\Notify::SYSTEM;
 
+                    $n->save();                 
+                          
+                }
+                if(System::useCron() == false){
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = $user->user_id;
+                    $n->message = "Планувальник вимкнено. Деякі  фонові завдання  не  будуть виконуватись " ;
+                    $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                    $n->save();                    
+                }
+        }
+         
+        if($user->rolename=='admins'   ){
+          
+            if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id;
+                $n->message = "Є непрочитані системні повідомлення " ;
+                $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                $n->save();                 
+            }          
+          
+             
+            $b=0;
+            $data = System::checkVersion() ;
+
+            if(is_array($data)){
+               $b= version_compare($data['version'] , System::CURR_VERSION);
+            }               
+                 
+            if( $b==1 ){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id;
+                $n->message = "Доступна  нова  версія <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальнішк</a>" ;
+                $n->sender_id = \App\Entity\Notify::SYSTEM;
+
+                $n->save();              
+            }                                                     
+        }        
+    }
+    /**
+    * проверка   версии
+    * 
+    */
+    public static function checkVersion() {
+        $phpv =   phpversion()  ;
+        $phpv = substr(str_replace('.','',$phpv),0,2) ;
+       
+        $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
+    
+        $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
+        $data = @json_decode($v, true);
+        if(!is_array($data)) {
+            $v = @file_get_contents("https://zippy.com.ua/version.json");
+            $data = @json_decode($v, true);
+        }   
+        
+        return $data;     
+    }
 }

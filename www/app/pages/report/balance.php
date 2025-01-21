@@ -22,10 +22,14 @@ class Balance extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('Balance')) {
             return;
         }
-
+        $dt = new \App\DateTime();
+      
+        $dt = $dt->startOfMonth()->getTimestamp();
+  
     
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
-
+        $this->filter->add(new Date('dt', $dt));
+  
       
 
         $this->add(new Panel('detail'))->setVisible(false);
@@ -47,9 +51,11 @@ class Balance extends \App\Pages\Base
     }
 
     private function generateReport() {
-        
+        $dt = $this->filter->dt->getDate();
+         
         $conn= \ZDB\DB::getConnect() ;
-
+        $dbdt = $conn->DBDate($dt);
+        
         $brdoc = "";
         $brf = "";
         $brst = "";
@@ -63,33 +69,29 @@ class Balance extends \App\Pages\Base
             $brdoc = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
 
-        
+        $stview ="SELECT  SUM( (SELECT COALESCE(SUM(quantity), 0)  FROM entrylist_view
+          WHERE entrylist_view.stock_id = store_stock_view.stock_id and  document_date < {$dbdt} ) * partion)  from store_stock_view ";
 
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst} item_type=   ".Item::TYPE_MAT;
+        $sql = $stview. " where {$brst} item_type=   ".Item::TYPE_MAT;
         $amat = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  (item_type=   ".Item::TYPE_PROD ."  or  item_type=   ".Item::TYPE_HALFPROD .")";
+        $sql = $stview. " where {$brst}  (item_type=   ".Item::TYPE_PROD ."  or  item_type=   ".Item::TYPE_HALFPROD .")";
         $aprod = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  item_type=   ".Item::TYPE_MBP;
+        $sql = $stview. " where {$brst}  item_type=   ".Item::TYPE_MBP;
         $ambp = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  item_type=   ".Item::TYPE_TOVAR;
+        $sql = $stview. " where {$brst}  item_type=   ".Item::TYPE_TOVAR;
         $aitem = doubleval($conn->GetOne($sql)) ;
-        $sql = " SELECT  SUM( qty * partion)  from store_stock_view
-                 where {$brst}  coalesce(item_type,0)=0  ";
+        $sql = $stview. " where {$brst}  coalesce(item_type,0)=0  ";
         $aother = doubleval($conn->GetOne($sql)) ;
  
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where date(paydate) < {$dbdt} and paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
         $anal = doubleval($conn->GetOne($sql)) ;
 
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where date(paydate) < {$dbdt} and paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
         $abnal = doubleval($conn->GetOne($sql)) ;
 
         $aemp=0;
-        $pbemp=0;
-        $sql = "select coalesce(sum(amount),0) as am  from empacc where 1=1  {$bemp} group by emp_id ";
+        $pemp=0;
+        $sql = "select coalesce(sum(amount),0) as am  from empacc_view where date(createdon) <  {$dbdt}  {$bemp} group by emp_id ";
 
         foreach($conn->GetCol($sql) as $r ) {
            if($r >0) {
@@ -101,47 +103,33 @@ class Balance extends \App\Pages\Base
             
         }
         
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view($dt)  ;
           
+        //к оплате
+        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        $credit = H::fa($sum);
         
-        $sql = "SELECT COALESCE( SUM(   a.b_passive ) ,0) AS d   FROM ({$cust_acc_view}) a   ";
-        $pb = doubleval($conn->GetOne($sql)) ;
-        $sql = "SELECT COALESCE( SUM(   a.s_passive ) ,0) AS d   FROM ({$cust_acc_view}) a    ";
-        $ps = doubleval($conn->GetOne($sql)) ;
-        $sql = "SELECT COALESCE( SUM(   a.b_active ) ,0) AS d   FROM ({$cust_acc_view}) a      ";
-        $ab = doubleval($conn->GetOne($sql)) ;
-        $sql = "SELECT COALESCE( SUM(   a.s_active ) ,0) AS d   FROM ({$cust_acc_view}) a      ";
-        $as = doubleval($conn->GetOne($sql)) ;
+        //ожидается  оплата
+        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
+        $sum = doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
+        $sum += doubleval($conn->GetOne($sql));
+        $debet = H::fa($sum);
+
+      
+        $sql = "SELECT COALESCE( SUM(  amount     ) ,0)    FROM  eqentry_view where date(document_date) <  {$dbdt} and eq_id in (select eq_id from  equipments where  disabled<> 1  )    ";
+        $aeq = doubleval($conn->GetOne($sql));
+    
         
-        if($pb== $ab) {
-          $pb=0;  
-          $ab=0;  
-        }
-        if($pb > $ab) {
-          $pb=$pb - $ab;  
-          $ab=0;  
-        }
-        if($pb < $ab) {
-          $ab=$ab - $pb;  
-          $pb=0;  
-        }
-        if($ps== $as) {
-          $ps=0;  
-          $as=0;  
-        }
-        if($ps > $as) {
-          $ps=$ps - $as;  
-          $as=0;  
-        }
-        if($ps < $as) {
-          $as=$as - $ps;  
-          $ps=0;  
-        }
-        
-        $aeq=0;
-        foreach(\App\Entity\Equipment::find(" 1=1  {$bemp} ") as $eq){
-            $aeq += doubleval($eq->balance);
-        } ;
+        $prodrest=0;
+   
+        $sql = "SELECT COALESCE( SUM(  outprice  ) ,0)  from entrylist where tag=   ". \App\Entity\Entry::TAG_TOPROD;
+        $prodrest += doubleval($conn->GetOne($sql));
+        $sql = "SELECT COALESCE( SUM(  outprice  ) ,0)  from entrylist where tag=   ". \App\Entity\Entry::TAG_FROMPROD;
+        $prodrest -= doubleval($conn->GetOne($sql));
         
  
         $amat = H::fa($amat);
@@ -153,19 +141,17 @@ class Balance extends \App\Pages\Base
         $abnal = H::fa($abnal);
         $aemp = H::fa($aemp);
         $pemp = H::fa($pemp);
-        $pb = H::fa($pb);
-        $ps = H::fa($ps);
-        $ab = H::fa($ab);
-        $as = H::fa($as);
+ 
         $aeq = H::fa($aeq);
+        $prodrest = H::fa($prodrest);
         
-        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+ $ab + $as;
-        $ptotal = H::fa( doubleval($pemp) + doubleval($pb) + doubleval($ps) );
+        $atotal = $amat + $aprod + $ambp + $aitem +$aother + $anal + $abnal + $aemp+$aeq+$prodrest+  doubleval($debet);
+        $ptotal = H::fa( doubleval($pemp) +   doubleval($credit) );
         $bal = $atotal - $ptotal ;
 
 
         $header = array(
-            'datefrom' => \App\Helper::fd(time()),
+            'datefrom' => \App\Helper::fd($dt) ,
             'amat'      => $amat != 0 ? $amat : false,
             'aprod'     => $aprod !=0 ? $aprod : false,
             'ambp'      => $ambp !=0 ? $ambp : false,
@@ -175,11 +161,10 @@ class Balance extends \App\Pages\Base
             'abnal'     => $abnal !=0 ? $abnal : false,
             'aemp'      => $aemp !=0 ? $aemp : false,
             'pemp'      => $pemp !=0 ? $pemp : false,
-            'pb'      => $pb !=0 ? $pb : false,
-            'ps'      => $ps !=0 ? $ps : false,
-            'ab'      => $ab !=0 ? $ab : false,
-            'as'      => $as !=0 ? $as : false,
+            'debet'      => $debet >0 ? $debet : false,
+            'credit'      => $credit >0 ? $credit : false,
             'aeq'      => $aeq !=0 ? $aeq : false,
+            'aprodrest'      => $prodrest !=0 ? $prodrest : false,
 
             'atotal'    => H::fa($atotal) ,
             'ptotal'    => H::fa($ptotal) ,

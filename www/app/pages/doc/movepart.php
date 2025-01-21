@@ -28,11 +28,11 @@ class MovePart extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
      /**
     * @param mixed $docid     редактирование
-    * @param mixed $basedocid  создание на  основании
+    * @param mixed $tostock  создание на  основании
     */
    public function __construct($docid = 0, $tostock = 0) {
         parent::__construct();
@@ -130,7 +130,7 @@ class MovePart extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }

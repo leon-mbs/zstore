@@ -32,7 +32,7 @@ class OrderFood extends \App\Pages\Base
 
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     private $_prevcust = 0;   // преыдущий контрагент
 
@@ -316,7 +316,7 @@ class OrderFood extends \App\Pages\Base
             $this->_doc->payed = 0;
             $this->_doc->payamount = 0;
         }
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->headerdata['payed'] = doubleval($this->docform->payed->getText());
 
 
         if ($this->checkForm() == false) {
@@ -353,8 +353,6 @@ class OrderFood extends \App\Pages\Base
         }
 
         $pos = \App\Entity\Pos::load($this->_doc->headerdata['pos']);
-
-
 
         $isEdited = $this->_doc->document_id > 0;
         if ($isEdited == false) {
@@ -416,7 +414,7 @@ class OrderFood extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }
@@ -656,8 +654,8 @@ class OrderFood extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->discount->setVisible(false);
-        $this->_discount = 0;
+     //   $this->docform->discount->setVisible(false);
+       // $this->_discount = 0;
     }
 
     public function cancelcustOnClick($sender) {

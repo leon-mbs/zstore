@@ -21,7 +21,7 @@
                        <div class="  row no-gutters"> 
                         <label class="col-auto mt-2" for="searchnumber">№ </label>
                         <div class="col-auto">
-                           <input placeholder="Пошук..." class="form-control  " type="search" zippy="searchnumber"
+                           <input autofocus="on" placeholder="Пошук..." class="form-control  " type="search" zippy="searchnumber"
                                autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
                          </div>
                        </div>
@@ -122,7 +122,7 @@
                 </div>
                 <a zippy="csv">Експорт в Excel</a>
                 <table class="table   table-sm  table-hover   ">
-                    <tr>
+                  <thead>  <tr>
                         <th></th>
 
                          <th class="text-nowrap  "><a zippy="sortdoc">Тип документа</a></th>
@@ -145,7 +145,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                    </tr>
+                    </tr>  </thead>
                     <tbody>
                         <tr zippy="doclist">
                             <td>
@@ -240,12 +240,12 @@
                         <table>
                             <tr>
                                 <td align="center" id="tag"></td>
-                            <tr>
+                            </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
                                                       class="btn btn-success btn-sm">Друк</a></td>
-                            <tr>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -280,8 +280,7 @@
             </div>         
    
         <script>
-            $('#searchnumber').focus();
-
+            
 
             function onSearch( ) {
 

@@ -38,13 +38,13 @@ class TopicNode extends \ZCL\DB\Entity
         if ($user->rolename == 'admins') {
             $n = '';
         }
-        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or acctype>0  )  and ";
+        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or ispublic=1  )  and ";
         if ($user->rolename == 'admins') {
             $t = '';
         }
 
 
-        $sql = "  select * from note_topicnodeview   where   {$n}  {$t}    (1=1   ";
+        $sql = "  select * from note_topicnodeview   where islink <> 1 and  {$n}  {$t}    (1=1   ";
 
         foreach ($arr as $t) {
 
@@ -75,12 +75,12 @@ class TopicNode extends \ZCL\DB\Entity
         if ($user->rolename == 'admins') {
             $n = '';
         }
-        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or acctype>0  )  and ";
+        $t = " note_topicnodeview.topic_id in  ( select topic_id from  note_topics where  user_id={$user->user_id} or ispublic=1  )  and ";
         if ($user->rolename == 'admins') {
             $t = '';
         }
 
-        $sql = "  select * from note_topicnodeview   where  {$n}  {$t}  topic_id in (select topic_id from note_tags where tagvalue  = " . Topic::qstr($tag) . " )  ";
+        $sql = "  select * from note_topicnodeview   where islink <> 1 and  {$n}  {$t}  topic_id in (select topic_id from note_tags where tagvalue  = " . Topic::qstr($tag) . " )  ";
 
         $list = TopicNode::findBySql($sql);
 
@@ -90,7 +90,7 @@ class TopicNode extends \ZCL\DB\Entity
     // поиск избранных
     public static function searchFav() {
 
-        $sql = "  select * from note_topicnodeview   where topic_id in (select  topic_id from note_fav where user_id = " . \App\System::getUser()->user_id . ") ";
+        $sql = "  select * from note_topicnodeview   where  islink <> 1 and   topic_id in (select  topic_id from note_fav where user_id = " . \App\System::getUser()->user_id . ") ";
 
         $list = TopicNode::findBySql($sql);
 

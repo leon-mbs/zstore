@@ -12,11 +12,11 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                     <div class="form-group">
                         <label for="order">Замовлення</label>
-                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
+                        <input readonly  class="form-control-plaintext" type="text" zippy="order">
 
                         <small zippy="notesfromorder"></small>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="col-12 col-md-4  col-xl-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
@@ -128,11 +128,11 @@
 
                     <div class="form-group">
                         <label data-label="sent_date" for="sent_date">Орієнтовна дата відправки</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="sent_date"  required >
                     </div>
                     <div class="form-group">
                         <label data-label="delivery_date" for="delivery_date">Орієнтовна дата доставки</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="delivery_date"  required >
                     </div>
 
                 </div>
@@ -141,7 +141,7 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"  type="text" zippy="barcode"
+                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"    type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                        {{#usemobilescanner}}  
@@ -160,13 +160,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-                            <th>Дата</th>
-                            {{/usesnumberdate}}
+                           <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                        
 
 
                             <th class="text-right">Кіл.</th>
@@ -180,13 +175,8 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            {{/usesnumber}}
-
-                           {{#usesnumberdate}}
-                            <td zippy="sdate"></td>
-                            {{/usesnumberdate}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                        
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -203,14 +193,10 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            {{#usesnumber}}
+                         
 
                             <td></td>
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-
-                            <td></td>
-                            {{/usesnumberdate}}
+                         
 
 
                             <td class="text-right"></td>
@@ -249,7 +235,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input    placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
+                        <input     placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
                         <br>Наявність: <span zippy="qtystock"></span>
 
                     </div>
@@ -263,14 +249,14 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
@@ -299,7 +285,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -416,8 +402,7 @@
                                             <label class="col-sm-5 col-form-label">Камера</label>
                                             <div class="col-sm-7">
 
-                                                <select name="input-stream_constraints" id="deviceSelection"
-                                                        class="form-control">
+                                                <select name="input-stream_constraints" id="deviceSelection"     class="form-control">
                                                 </select>
                                             </div>
                                         </div>
@@ -459,10 +444,7 @@
         <script>
             $(document).ready(function () {
 
-               if( $('#edittovar').length )         
-               {
-                   $('#edittovar').focus();
-               }      
+                   
 
                 var val = sessionStorage.getItem('decoder_readers');
                 if (val != null) {
@@ -472,7 +454,8 @@
                 if (val != null) {
                     $('#stream_constraints').val(val);
                 }
-
+                  $("#edittovar").focus()    
+ 
 
             });
 

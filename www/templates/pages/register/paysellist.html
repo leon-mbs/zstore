@@ -7,7 +7,8 @@
         <div class="row">
             <div class="col-12   col-md-10 col-md-8 " zippy="clist">
                 <h3>Розрахунки з постачальниками </h3>
-                <div class="navbar nav">
+             <small>В списку тільки ті контрагенти у яких кредитовий або дебетовий борг</small>
+            <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -79,7 +80,9 @@
                         <th>Документ</th>
                         <th>Номер</th>
                         <th>Дата</th>
-
+                           {{#usebranch}}
+                        <th>Фiлiя</th>
+                           {{/usebranch}}
                          <th class="text-right">Сума</th>
                        
 
@@ -94,7 +97,11 @@
                         <td zippy="name"></td>
                         <td zippy="number"></td>
                         <td zippy="date"></td>
+                          {{#usebranch}}
+                       <td zippy="branch_name"></td>
+                           {{/usebranch}}
 
+                     
                         <td zippy="sum" class="text-right"></td>
 
 
@@ -173,10 +180,14 @@
                         <th  >Документ</th>
                         <th  >Номер</th>
                         <th  >Дата</th>
-                        <th  class="text-right">Прибуток</th>
+                  
+                         {{#usebranch}}
+                        <th>Фiлiя</th>
+                       {{/usebranch}}  
+                      <th  class="text-right">Прибуток</th>
                         <th  class="text-right">Видаток</th>
-                        <th  class="text-right">Кред. борг</th>
                         <th  class="text-right">Деб. борг</th>
+                        <th  class="text-right">Кред. борг</th>
 
 
 
@@ -191,7 +202,10 @@
                       <td zippy="dname"></td>
                       <td zippy="dnumber"></td>
                       <td zippy="ddate" ></td>
-     
+                        {{#usebranch}}
+                       <td zippy="dbranch_name"></td>
+                           {{/usebranch}}
+
                       <td zippy="in" class="text-right"></td>
                       <td zippy="out" class="text-right"></td>
                       <td zippy="bd" class="text-right"></td>
@@ -200,7 +214,7 @@
                     
                     </tr>                    
                 </table>
-                 
+                <div zippy="pagd"></div>    
             </div>
             
    <div class="col-12 col-lg-10 col-xl-8 ">    <a id="dankor"></a>

@@ -41,6 +41,7 @@
 
                                 <th></th>
                                 <th></th>
+                                <th></th>
                             </tr>
                             <tr zippy="categorylist">
                                 {{#useimages}}
@@ -62,6 +63,7 @@
                                  </td> 
                                 <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
                                 <td> <a zippy="prices" title="Змiнити цiни">-<i class="fa fa-coins"></i>+ </a>   </td>
+                                <td> <a zippy="cfields" title="Кастоинi поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
                                 <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
                                     &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -81,7 +83,7 @@
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="editcat_name">Назва</label>
-                            <input autofocus="on" required="required" class="form-control" zippy="editcat_name"/>
+                            <input autofocus="on"    required  class="form-control" zippy="editcat_name"/>
                         </div>
                        <div class="form-group">
                             <label for="editcat_desc">Примiтка</label>
@@ -91,8 +93,9 @@
                         <div class="form-group">
                             <label for="editparent">Батькiвська</label>
                             <select   class="form-control" zippy="editparent">
-                                <option value=0>Не вказано</option>
+                                <option value="0">Не вказано</option>
                             </select>
+                            <small>Категорiя  не повинна мати ТМЦ</small>
                         </div>
                         {{/usecattree}}
                         <div class="form-group  ">
@@ -158,7 +161,7 @@
                         </div>                     
                     <div class="form-group  ">
                          <label   for="editprice">Змiнити на  суму або процент</label>
-                             <input required="required" style="width: 100px"   class="form-control" zippy="chprice"/>
+                             <input  required  style="width: 100px"   class="form-control" zippy="chprice"/>
 
                              <small class="form-text text-muted">Наприклад  5, -2, 3%, -0.5%. </small>
 
@@ -189,7 +192,33 @@
            </div>
         </div>
 
-         
+      <div class="row">
+            <div class="col-12  col-md-7  col-xl-5">
+                  
+                 <form  zippy="cfform">
+                    <h5 zippy="catprname2"></h5>  
+                    <b class="mt-2">Кастомні поля для ТМЦ  </b>                    
+                    <br><a  zippy="addnewcf"><b>Додати</b></a>
+
+                       <table class="ctable mt-2">
+                        <tr zippy="cflist">
+                            <td>Код </td>
+                            <td> <input pattern="[a-zA-Z0-9]+"   required="on" class="form-control" style="width:100px;" zippy="cfcode"  ></td>
+                            <td>Назва </td>
+                            <td><input required="on" class="form-control" style="width:250px;" zippy="cfname"  > </td>
+                            <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
+                         </tr>    
+                      </table>                       
+                        <div class="form-group mt-2">
+                                <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
+                                <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                
+                      </div>
+ 
+                 </form>
+           </div>
+        </div>
+        
         
         <script>
 $(document).ready(function () {

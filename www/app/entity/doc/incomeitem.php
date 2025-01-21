@@ -28,22 +28,13 @@ class IncomeItem extends Document
 
 
         }
-        if ($this->headerdata['mtype'] > 0) {
-            $io = new \App\Entity\IOState();
-            $io->document_id = $this->document_id;
-            $io->amount = $amount;
-            $io->iotype = $this->headerdata['mtype'];
-
-            $io->save();
-        }
+ 
         
         
         if ($this->headerdata['examount'] > 0) {
          
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], $this->notes);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
+            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], $this->notes);
+         
             \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
         }

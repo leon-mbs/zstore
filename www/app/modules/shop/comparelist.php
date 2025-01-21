@@ -12,7 +12,7 @@ class CompareList  // implements \Zippy\Interfaces\DataSource
     public static function getCompareList() {
 
         $comparelist = System::getSession()->comparelist;
-        if (!isset($comparelist)) {
+        if (!($comparelist instanceof CompareList)) {
             $comparelist = new CompareList();
             System::getSession()->comparelist = $comparelist;
         }

@@ -1,14 +1,13 @@
-<html>
+<html  lang="uk">
  
 
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
         <title>{{appname}}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noindex">     
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
         <link rel="stylesheet" href="/assets/css/adminlte.css">
         <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
@@ -52,17 +51,17 @@
                     <form zippy="loginform">
                         <div class="form-group  ">
                             <label for="userlogin">Логін</label>
-                            <input zippy="userlogin" required="required" class="form-control"  >
+                            <input autofocus="on"  zippy="userlogin"  required  class="form-control"  >
                            
                         </div>
                         <div class="form-group  ">
                           <label for="userpassword">Пароль</label>
-                          <input zippy="userpassword" required="required" type="password" class="form-control"     >
+                          <input zippy="userpassword"  required  type="password" class="form-control"     >
                          
                         </div>
                         {{#capcha}}
                         <div class="input-group mb-3">
-                            <input zippy="capchacode" required="required" class="form-control mr-4"
+                            <input zippy="capchacode"  required  class="form-control mr-4"
                                    placeholder="Введiть код">
                             <div class="input-group-append">
                                 <img zippy="capcha" style="cursor:pointer" title="Оновити..."/>
@@ -85,8 +84,9 @@
                             </div>
                             <!-- /.col -->
                         </div>
+                       
                     </form>
-               
+                            
 
                 </div>
                 <!-- /.login-card-body -->
@@ -95,7 +95,7 @@
         <div class="row justify-content-center">
             <div class="w-100"></div>
             <div class="col-12 " style="margin-top:200px;">
-                Zippy-склад © <a href="http://zippy.com.ua/">zippy.com.ua</a>
+                Zippy CRM © <a href="https://zippy.com.ua/">zippy.com.ua</a>
             </div>
         </div>
 
@@ -105,6 +105,8 @@
          fetch('/crontab.php')  
      
      {{/cron}} 
+    
+    
     
     </script>
     

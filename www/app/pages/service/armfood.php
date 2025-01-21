@@ -35,7 +35,7 @@ class ARMFood extends \App\Pages\Base
     private $_worktype = 0;
     private $_pos;
     private $_store;
-    public $_pt       = -1;
+    public  $_pt       = -1;
 
 
     private $_doc;
@@ -255,7 +255,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->setVisible(false);
 
         $this->_doc = \App\Entity\Doc\Document::create('OrderFood');
-
+        $this->_doc->headerdata['delivery'] = 0;
 
         $this->_itemlist = array();
 
@@ -340,7 +340,7 @@ class ARMFood extends \App\Pages\Base
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
          
-        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') "  );        
+        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') "  );        
         
 
     }
@@ -412,12 +412,14 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('bredit', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brclose', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brrefuse', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('brrunner', $this, 'OnPrintRunner',true)) ;
 
         $row->brpay->setVisible(false);
         $row->brprint->setVisible(false);
         $row->brclose->setVisible(false);
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
+        $row->brrunner->setVisible(false);
 
 
         $haspayment = $doc->hasPayments() ;
@@ -444,6 +446,10 @@ class ARMFood extends \App\Pages\Base
             $row->brprint->setVisible(true);
         }
         
+        if ( $doc->state>4   ) {
+           $row->brrunner->setVisible(true);
+        }
+        
         
         if ($inprod) {
             $row->brclose->setVisible(false);
@@ -462,6 +468,7 @@ class ARMFood extends \App\Pages\Base
             $row->brrefuse->setVisible(false);
             $row->bredit->setVisible(false);
             $row->brprint->setVisible(false);
+            $row->brrunner->setVisible(false);
         }
      
         if ($doc->state == Document::STATE_WP   ) {
@@ -487,7 +494,7 @@ class ARMFood extends \App\Pages\Base
 
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
-        $where = " (state not in(9) or content like '%<passfisc>1</passfisc>%' ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
+        $where = " (state not in(9) or content like '%<passfisc>1</passfisc>%' ) and  document_date  >= " . $conn->DBDate(strtotime('-1 week'))    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -516,7 +523,7 @@ class ARMFood extends \App\Pages\Base
         $cat = $row->getDataItem();
         $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
-        $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
+        $row->catbtn->add(new Image('catimage',   $cat->getImageUrl()));
     }
 
     
@@ -563,7 +570,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
-        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+        $row->prodbtn->add(new Image('prodimage', $prod->getImageUrl()));
     }
 
     //выбрана  группа
@@ -574,7 +581,7 @@ class ARMFood extends \App\Pages\Base
             $this->_catlist = $catlist;
             $this->docpanel->catpan->catlist->Reload();
         } else {
-            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $cat->cat_id);
+            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4,5 )  and cat_id=' . $cat->cat_id);
             $this->docpanel->catpan->setVisible(false);
             $this->docpanel->prodpan->setVisible(true);
             $this->docpanel->prodpan->prodlist->Reload();
@@ -951,10 +958,18 @@ class ARMFood extends \App\Pages\Base
             if($r == ''){
                 $p = \App\Entity\PromoCode::findByCode($code);
                 $disc = doubleval($p->disc );
+                $discf = doubleval($p->discf );
+                 
                 if($disc >0)  {
                     $td = H::fa( $amount * ($p->disc/100) );
                     $this->docpanel->listsform->totaldisc->setText($td);
-                }        
+                }  
+                if($discf > 0) {
+                    if( $amount < $discf  ) {
+                        $discf = $amount;
+                    }
+                    $this->docpanel->listsform->totaldisc->setText($discf);                       
+                }      
             }
         }         
         
@@ -1035,7 +1050,8 @@ class ARMFood extends \App\Pages\Base
        
         $this->toprod()  ;
 
-        $this->onNewOrder();
+       // $this->onOrderList();
+        $this->onOrderList(null);
     }
 
     private function toprod() {
@@ -1175,6 +1191,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc = $this->_doc->cast();
 
             $this->_doc->payamount = $this->docpanel->payform->pfforpay->getText();
+
             $this->_doc->payed = doubleval($this->docpanel->payform->pfpayed->getText());
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->_doc->payed;
@@ -1269,11 +1286,14 @@ class ARMFood extends \App\Pages\Base
            
             
             if ($this->_doc->payamount <= $this->_doc->payed) {
-              if( $this->docpanel->payform->passfisc->isChecked()) {
-                    $this->_doc->headerdata["passfisc"]  = 1;
-                } else {
-                    $this->_doc->headerdata["passfisc"]  = 0;
-                    if($this->_pos->usefisc == 1){
+              
+                    
+                if($this->_pos->usefisc == 1){
+                    if( $this->docpanel->payform->passfisc->isChecked()) {
+                        $this->_doc->headerdata["passfisc"]  = 1;
+                    } else {     
+                        $this->_doc->headerdata["passfisc"]  = 0;
+                        
                         if( $this->_tvars['checkbox'] == true) {
 
                             $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
@@ -1302,7 +1322,7 @@ class ARMFood extends \App\Pages\Base
 
                             }         
                         }
-                        if ( $this->_tvars['ppo'] == true) {
+                        if( $this->_tvars['ppo'] == true) {
                             $this->_doc->headerdata["fiscalnumberpos"]  =  $this->_pos->fiscalnumber;
 
 
@@ -1328,16 +1348,13 @@ class ARMFood extends \App\Pages\Base
                                 }
                             }
                         }
-                        $this->_doc->save();
+                       
                     }
                 }
-                
+                $this->_doc->save();     
 
             }
-
-
-
-
+ 
             $conn->CommitTrans();
 
         } catch(\Throwable $ee) {
@@ -1405,7 +1422,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['pos'] = $this->_pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->_pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store;
-        $this->_doc->headerdata['pricetype'] = $this->_pt;
+        $this->_doc->headerdata['pricetype'] = $this->_pricetype;
 
         $this->_doc->firm_id = $this->_pos->firm_id;
         $this->_doc->username = System::getUser()->username;
@@ -1427,6 +1444,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->amount = $this->docpanel->listsform->totalamount->getText();
         $this->_doc->payamount = $this->_doc->amount;
+
 
         $this->_doc->save();
 
@@ -1614,6 +1632,7 @@ class ARMFood extends \App\Pages\Base
 
     }
     
+
     public function OnPrintBill($sender) {
 
 
@@ -1641,6 +1660,61 @@ class ARMFood extends \App\Pages\Base
         }
 
     }
+  
+    public function OnPrintRunner($sender) {
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+
+        $doc = $sender->getOwner()->getDataItem();
+        $header = [];
+        
+        $header['document_number']    =  $doc->document_number   ;
+        $header['time']    =  H::ft($doc->headerdata['time']) ;
+        $header['table']   =  $doc->headerdata['table'] ;
+        $header['notes']   =  $doc->notes ;
+        $header['detail']  =  [];
+        foreach ($doc->unpackDetails('detaildata') as $item) {
+            if( intval( $item->foodstate) > 0)  {
+                return;
+            }
+            $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
+
+            $header['detail'] [] = array(
+                "itemname" => $name,
+                "qty"   => H::fqty($item->quantity)
+                
+            );
+        }        
+        if(intval($user->prtype) == 0) {
+  
+            $report = new \App\Report('runner.tpl');
+            $html =  $report->generate($header);                  
+
+            $this->addAjaxResponse("  $('#rtag').html('{$html}') ; $('#prform').modal()");
+            return;
+        }
+       
+        try {
+            $buf=[];
+            if(intval($user->prtype) == 1) {
+                
+                $report = new \App\Report('runner_ps.tpl');
+            
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+           
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPS('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }       
+    }  
     
     //фискализация
     public function OnOpenShift($sender) {
@@ -1825,7 +1899,13 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна закрита");
+            $sc = \App\System::getSession()->shiftclose;
+            if(strlen($sc)>0) {
+               \App\System::getSession()->shiftclose="";
+               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
+            } else {
+               $this->setSuccess("Зміна закрита");    
+            }
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
@@ -1929,7 +2009,7 @@ class ARMFood extends \App\Pages\Base
     }
     
 
-     public function chechPromo($args, $post=null) {
+     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
             return json_encode([], JSON_UNESCAPED_UNICODE);             
@@ -1946,9 +2026,20 @@ class ARMFood extends \App\Pages\Base
 
         $p = \App\Entity\PromoCode::findByCode($code);
         $disc = doubleval($p->disc );
+        $discf = doubleval($p->discf );
         if($disc >0)  {
             $td = H::fa( $total * ($p->disc/100) );
             $ret=array('disc'=>$td) ;
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+             
+        }        
+        
+        if($discf >0)  {
+          
+            if($total < $discf)  {
+               $discf =  $total;
+            }
+            $ret=array('disc'=>$discf) ;
             return json_encode($ret, JSON_UNESCAPED_UNICODE);
              
         }        

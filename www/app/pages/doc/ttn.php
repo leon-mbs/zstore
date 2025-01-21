@@ -33,7 +33,7 @@ class TTN extends \App\Pages\Base
     public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     private $_orderid   = 0;
     private $_changedpos  = false;
 
@@ -46,8 +46,7 @@ class TTN extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
-
+     
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -184,32 +183,20 @@ class TTN extends \App\Pages\Base
                         $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
-                        $this->_doc->headerdata['bayarea'] = $basedoc->headerdata['bayarea'];
+              
                         $this->_doc->headerdata['baycity'] = $basedoc->headerdata['baycity'];
+                        $this->_doc->headerdata['baycityname'] = $basedoc->headerdata['baycityname'];
                         $this->_doc->headerdata['baypoint'] = $basedoc->headerdata['baypoint'];
+                        $this->_doc->headerdata['baypointname'] = $basedoc->headerdata['baypointname'];
  
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        //проверяем  что уже есть отправка
-                        $list = $order->getChildren('TTN');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
+                        if($order->getNotSendedItem() == 0){
+                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
-                        $list = $order->getChildren('GoodsIssue');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
-                        }
+                
                         $this->docform->total->setText($order->amount);
-
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
@@ -629,7 +616,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->total->getText();
 
         if($this->_doc->headerdata['nostore']==1)  {
-            $this->_doc->payamount = 0;
+           // $this->_doc->payamount = 0;
         }
         
         $isEdited = $this->_doc->document_id > 0;
@@ -729,7 +716,7 @@ class TTN extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }

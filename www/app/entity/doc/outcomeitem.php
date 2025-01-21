@@ -31,14 +31,7 @@ class OutcomeItem extends Document
                 $sc->setStock($st->stock_id);
                 $sc->save();
 
-                if ($this->headerdata['mtype'] > 0) {
-                    $io = new \App\Entity\IOState();
-                    $io->document_id = $this->document_id;
-                    $io->amount = 0 - $st->quantity * $st->partion;
-                    $io->iotype = $this->headerdata['mtype'];
-
-                    $io->save();
-                }
+           
 
 
             }
@@ -52,18 +45,20 @@ class OutcomeItem extends Document
         $i = 1;
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $name = $item->itemname;
-
+           
             $detail[] = array("no"        => $i++,
-                              "item_name" => $name,
+                              "item_name" => $item->itemname,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
-                              "quantity"  => H::fqty($item->quantity));
+                              "quantity"  => H::fqty($item->quantity),
+                              "sum"  => H::fa($item->sum));
         }
 
         $header = array(
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
+            'amount'            => H::fa($this->amount),
             "from"            => $this->headerdata["storename"],
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number

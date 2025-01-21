@@ -31,7 +31,7 @@ class OrderList extends \App\Pages\Base
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+
      * @return DocList
      */
     public function __construct() {
@@ -324,17 +324,17 @@ class OrderList extends \App\Pages\Base
             return;
         }
 
-        
+        if ($sender->id == "bscan") {
+            $this->openedit();
+            return;
+        }
+      
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
         try {
 
-              if ($sender->id == "bscan") {
-                $this->openedit();
-                return;
-            }
-
+ 
             if ($sender->id == "binp") {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
@@ -521,19 +521,13 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->resform->setVisible(false);
         }
 
-        if (count($list) > 0 && $common['numberttn'] <> 1) {
-            $this->statuspan->statusform->bttn->setVisible(false);
-        }
+       
         $list = $this->_doc->getChildren('GoodsIssue');
 
         if(count($list)>0) {
             $this->statuspan->resform->setVisible(false);
         }
-
-        if (count($list) > 0 && $common['numberttn'] <> 1) {
-            $this->statuspan->statusform->bgi->setVisible(false);
-        }
-
+    
     
         if ($this->_doc->hasPayments()) {
             $this->statuspan->statusform->bpos->setVisible(false);
@@ -559,7 +553,7 @@ class OrderList extends \App\Pages\Base
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
-        $conn= \ZDB\db::getConnect() ;
+        $conn= \ZDB\DB::getConnect() ;
 
         $stl = array() ;
         foreach($conn->Execute("select store_id,storename from stores") as $row) {
@@ -571,7 +565,7 @@ class OrderList extends \App\Pages\Base
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
 
             $ait['citemsstore']  =  array();
-            $ait['toco']  =  "addItemToCO({$it->item_id})";
+            $ait['toco']  =  "addItemToCO([{$it->item_id}])";
 
             foreach($stl as $k=>$v) {
                 $qty = $it->getQuantity($k);
@@ -592,7 +586,7 @@ class OrderList extends \App\Pages\Base
             }
          
             $ait['ciprod']  =  array();
-         
+            $prod=[];
 
             $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
             if($itpr instanceof \App\Entity\Item)  {
@@ -628,6 +622,27 @@ class OrderList extends \App\Pages\Base
             $this->_tvars['isciprod']=count($ait['ciprod'])>0;
 
             $this->_tvars['citems'][]=$ait;
+            
+            $sitems=[];
+            
+            $corders= Document::find("meta_name='OrderCust' and state in(5,7) ")  ;
+            
+            foreach($corders as $o) {
+               foreach($this->_doc->unpackDetails('detaildata') as $it) {
+                  foreach($o->unpackDetails('detaildata') as $cit) {
+                       if($it->item_id==$cit->item_id) {
+                           $r=[] ;
+                           $r['dnum']  = $o->document_number;
+                           $r['dd']  = $o->headerdata['delivery_date'] >0 ? H::fd($o->headerdata['delivery_date']) :'';
+                           $r['dc']  = $o->customer_name;
+                           $sitems[$o->document_id] = $r;
+                           break;
+                       }
+                  }
+               }
+           }
+            $this->_tvars['sitems']= array_values($sitems);
+            $this->_tvars['issitems']= count($sitems) >0;
 
 
         }
@@ -936,7 +951,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $where = "     meta_name  = 'Order'  ";
+        $where = "     meta_name  = 'Order'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date ";
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {

@@ -1,6 +1,12 @@
 <html>
     <body>
         <div class="row ">
+        
+            <div class="col-12 offset-md-1">
+                 {{#blogs}}
+                   <a  href="/blog/{{blogid}}">{{blogtitle}}</a>  &nbsp; &nbsp;     
+                 {{/blogs}}           
+               </div> 
             <div class="col-12">
                 <ol class="breadcrumb" zippy="breadcrumb">
                 </ol>
@@ -12,11 +18,12 @@
 
 
             <div class="col-12  ">
-
+               
+                 
                 <div class="row" zippy="subcatlistp">
 
 
-                    <div zippy="subcatlist" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 subcatlist mb-4" zippy="subcatlist">
+                    <div zippy="subcatlist" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 subcatlist mb-4"  >
                         <div class="card h-100">
                             {{^nouseimages}}
                             <a zippy="scatimg"><img class="card-img-top"/></a>

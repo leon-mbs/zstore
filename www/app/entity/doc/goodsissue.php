@@ -77,7 +77,7 @@ class GoodsIssue extends Document
                         "notes"           => nl2br($this->notes),
 
                         "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
-                        "payed"      => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payed"      => $this->headerdata["payed"] > 0 ? H::fa($this->headerdata["payed"]) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
         );
@@ -140,7 +140,8 @@ class GoodsIssue extends Document
 
 
         $parts = array();
-        $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
+      //  $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
+        $dd =    doubleval($this->headerdata['totaldisc'])   ;
         $k = 1;   //учитываем  скидку
         if ($dd > 0 && $this->amount > 0) {
             $k = ($this->amount - $dd) / $this->amount;
@@ -172,9 +173,9 @@ class GoodsIssue extends Document
                         }
                          //учитываем  отходы
                         if ($itemp->lost > 0) {
-                            $k = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $k;
-                            $lost = $k - 1;
+                            $kl = 1 / (1 - $itemp->lost / 100);
+                            $itemp->quantity = $itemp->quantity * $kl;
+                            $lost = $kl - 1;
                         }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -237,13 +238,11 @@ class GoodsIssue extends Document
 
 
 
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
+ 
         \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
 
-
+        $this->DoBalans() ;
 
 
         return true;
@@ -343,5 +342,36 @@ class GoodsIssue extends Document
 
 
     }
-
+    /**
+    * @override
+    */
+    public function DoBalans() {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
+  
+        //тмц
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$this->payamount;
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+        
+       //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where    paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }        
+    }
+    
 }

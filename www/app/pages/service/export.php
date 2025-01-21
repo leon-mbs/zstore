@@ -41,7 +41,7 @@ class Export extends \App\Pages\Base
         $form->brand->setDataList(Item::getManufacturers());
          
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
-        $form->add(new DropDownChoice("item_type", Item::getTypes(), H::getDefStore()));
+        $form->add(new DropDownChoice("item_type", Item::getTypes(), 0));
         $form->add(new CheckBox("itemxml"));
 
         $form->onSubmit($this, "onExport");
@@ -182,9 +182,11 @@ class Export extends \App\Pages\Base
         }
 
         $root="<root>";
-        $qty=0;
+        
         $i = 1;
         foreach (Item::findYield($sql, "itemname asc") as $item) {
+            $qty=0;
+            $sum=0;
             $i++;
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->shortname;
@@ -248,7 +250,7 @@ class Export extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "meta_name='{$dt}' and date(document_date) >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  date(document_date) <= " . $conn->DBDate($sender->dto->getDate());
+        $sql = "meta_name='{$dt}' and   document_date  >= " . $conn->DBDate($sender->dfrom->getDate()) . " and  document_date <= " . $conn->DBDate($sender->dto->getDate());
         $this->_docs = Document::find($sql);
         $this->dformlist->doclist->Reload();
     }

@@ -93,11 +93,12 @@ class Main extends Base
         //минимальное количество
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
-            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
-            join items  i  on t.item_id = i.item_id
+            $sql = "select coalesce(t.qty,0) as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+           items  i 
+          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
+               on t.item_id = i.item_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
+            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -182,7 +183,7 @@ class Main extends Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              iotype >= 50    {$brpay}
+              iotype >= 50 and  iotype < 80    {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
              GROUP BY  iotype order  by  iotype  
@@ -289,8 +290,8 @@ class Main extends Base
         $this->_tvars['ts'] = json_encode($ts);
 
         //инфоблоки
-        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order')  
-         {$br}   and d.state in (7,21)      ";
+        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order','ServiceAct')  
+         {$br}   and d.state in (7,8,21,16)      ";
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
@@ -298,25 +299,26 @@ class Main extends Base
  //       $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
    //              where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
 
-        $sql = " SELECT coalesce( SUM( qty * partion),0)  from store_stock where  item_id in (select item_id from items where  disabled<>1) ";
+        $sql = " SELECT coalesce( SUM( qty * partion),0)  from store_stock where {$cstr} item_id in (select item_id from items where  disabled<>1) ";
+        
                  
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
         
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
         
         //к оплате
         $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
         $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-        $this->_tvars['bidebet'] = H::fa($sum);
+        $this->_tvars['bicredit'] = H::fa($sum);
 
         //ожидается  оплата
         $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
         $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-        $this->_tvars['bicredit'] = H::fa($sum);
+        $this->_tvars['bidebet'] = H::fa($sum);
 
 
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
@@ -352,7 +354,7 @@ class Main extends Base
         
         $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
         
-        $row->add(new Label('wmq_cust', $d->customer_name ?? ''));
+        $row->add(new Label('wmq_cust', $d->customer_name ?? '-'));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }

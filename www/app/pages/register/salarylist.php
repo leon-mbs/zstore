@@ -7,7 +7,7 @@ use App\Entity\Doc\Document;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\Pager;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
@@ -24,11 +24,7 @@ class SalaryList extends \App\Pages\Base
 {
     private $_doc = null;
 
-    /**
-     *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
-     * @return DocList
-     */
+ 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('SalaryList')) {
@@ -41,7 +37,7 @@ class SalaryList extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new SalListDataSource($this), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
@@ -63,7 +59,8 @@ class SalaryList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $row->add(new ClickLink('document_number'))->onClick($this, 'showOnClick');
+        $row->document_number->setValue( $doc->document_number);
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
@@ -81,8 +78,10 @@ class SalaryList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == @$this->_doc->document_id) {
-            $row->setAttribute('class', 'table-success');
+        if ($this->_doc != null) {
+            if ($doc->document_id == $this->_doc->document_id) {
+                $row->setAttribute('class', 'table-success');
+            }
         }
 
     }

@@ -276,14 +276,14 @@ class ABC extends \App\Pages\Base
             $_detail[$i]['percsum'] = $_detail[$i]['perc'] + $val;
             if ($_detail[$i]['percsum'] <= 80) {
                 $_detail[$i]['group'] = 'A';
-                $_detail[$i]['color'] = '#AAFFAA';
+                $_detail[$i]['color'] = 'text-success';
             } else {
                 if ($_detail[$i]['percsum'] <= 95) {
                     $_detail[$i]['group'] = 'B';
-                    $_detail[$i]['color'] = 'CCCCFF';
+                    $_detail[$i]['color'] = 'text-info';
                 } else {
                     $_detail[$i]['group'] = 'C';
-                    $_detail[$i]['color'] = 'yellow';
+                    $_detail[$i]['color'] = 'text-warning';
                 }
             }
             $val = $_detail[$i]['percsum'];

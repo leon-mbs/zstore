@@ -15,11 +15,11 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" v-model="doc.document_number" required="required"> 
+                        <input class="form-control" type="text" v-model="doc.document_number"  required > 
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="date" v-model="doc.document_date" required="required">
+                        <input class="form-control" type="date" v-model="doc.document_date"  required >
                     </div>
 
 
@@ -31,7 +31,7 @@
                     </div>
 
                 </div>
-                <div class="col-12 col-md-4 col-xl-3">
+                <div id="formd" class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
                         <label for="year">Рiк</label>
                         <select v-on:change="hch()" class="form-control" v-model="doc.year">
@@ -46,7 +46,7 @@
                     </div>
                     <div class="form-group  ">
                         <label for="daysmon">Кiл. роб. днiв </label>
-                        <input v-on:change="hch()" style="width:100px;"  type="number" required="required"  class="form-control" v-model="doc.daysmon">
+                        <input v-on:change="hch()" style="width:100px;"  type="number"  required   class="form-control" v-model="doc.daysmon">
                         <small>Кiлькiсть робочих днiв в  мiсяцi</small>
                     </div>
  
@@ -104,7 +104,7 @@
                    {{emp.emp_name}}  
                  </td>
                  <td class="text-right" v-for=" v in stlist  ">
-                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp[v.salcode]" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
+                    <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp._baseval" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
                     <!--
                     <i v-if="v.salcode == '_c'+opt.codebaseincom" class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"                                   :title="emp.info"></i>
                     -->
@@ -112,7 +112,7 @@
 
                     
                  </td>
-                 <td class="text-right"><a href="javascript:return false" v-on:click="del(emp )"><i class="fa fa-trash"></i></a></td>
+                 <td class="text-right"><a   v-on:click.prevent="del(emp )"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 
                 
@@ -219,7 +219,7 @@
                     year:this.doc.year,
                     month:this.doc.month
                     
-             }
+                }
                 
                 
              callPageMethod('loaddata',[ ], JSON.stringify(data),(data)=> 
@@ -231,6 +231,12 @@
                        this.emps = data.emps 
                        
                        if(data.newdoc || this.hchanged ) {
+                           for(var e of this.emps) {
+                          
+                               this.calcempinit(e)
+                           }                   
+                           
+                           
                             this.recalc()
                        }
                         
@@ -244,28 +250,27 @@
                  
              },
              
+         
              recalc:  function ( ){
-             
-
                        
                    for(var e of this.emps) {
-                       this.calcbaseemp(e)
+                  
                        this.calcemp(e)
                    }                   
 
              
              }  ,            
             
-             calcbaseemp:  function (emp){
                  
-                {{{calcbases}}}
-                
-        
-                
-             }  ,            
-            
-             calcemp:  function (emp){
-                
+             //однократно при загрузке
+             calcempinit:  function (emp){   
+               
+                 {{{calcsinit}}} 
+                 
+             } ,
+          
+             calcemp:  function (emp){   
+               
                 {{{calcs}}}
                  
              } ,
@@ -315,7 +320,9 @@
                        this.years   = data.years 
                        this.monthes = data.monthes 
                        this.doc = data.doc 
-                       
+                       if(this.doc.document_id >0) {
+                           $('#formd').hide()
+                       }
                         
                         
                   });

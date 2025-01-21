@@ -28,7 +28,7 @@ class MoveItem extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -53,6 +53,8 @@ class MoveItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -71,6 +73,7 @@ class MoveItem extends \App\Pages\Base
         $this->editsnitem->add(new TextArea('editsn'));
         $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
         $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
        
@@ -212,7 +215,7 @@ class MoveItem extends \App\Pages\Base
             $this->_itemlist[$this->_rowid] = $item;
         }
 
-
+        $this->wselitem->setVisible(false);
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -230,6 +233,7 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setText('');
 
         $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
         
         $this->editsnitem->setVisible(false);        
     }
@@ -242,9 +246,9 @@ class MoveItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
+        $this->_doc->headerdata['tostore'] =  intval( $this->docform->tostore->getValue());
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -295,7 +299,7 @@ class MoveItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -325,13 +329,17 @@ class MoveItem extends \App\Pages\Base
         }
 
 
-        if (($this->docform->store->getValue() > 0) == false) {
+        if ( $this->_doc->headerdata['store'] == 0) {
             $this->setError("Не обрано склад");
         }
-        if (($this->docform->tostore->getValue() > 0) == false) {
+        if ( $this->_doc->headerdata['tostore'] == 0) {
             $this->setError("Не обрано склад");
         }
-
+        if ( $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
+            $this->setError("Той самий склад");
+        }
+    
+      
 
         return !$this->isError();
     }
@@ -474,6 +482,17 @@ class MoveItem extends \App\Pages\Base
 
     }    
 
- 
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
+    }
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edititem);
+    } 
     
 }

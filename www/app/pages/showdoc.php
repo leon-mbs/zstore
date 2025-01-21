@@ -56,10 +56,16 @@ class ShowDoc extends \Zippy\Html\WebPage
             }
             if ($type == "xls") {
 
-           //    $file = tempnam(sys_get_temp_dir(), "".time());
-
-        //    file_put_contents($file, $html);
-
+                $custom = $doc->customExportExcel();
+                if($custom != '') {
+                   header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header("Content-Disposition: attachment;Filename={$filename}.xlsx");
+                    echo $custom;
+                    header('Content-Length: ' . strlen($custom));
+                    die;
+               
+                }
+                
                 $reader =  new \PhpOffice\PhpSpreadsheet\Reader\Html()  ;
                 $spreadsheet = $reader->loadFromString($html);
 
@@ -88,6 +94,18 @@ class ShowDoc extends \Zippy\Html\WebPage
                 echo $xml['content'];
             }
             if ($type == "pdf") {
+                $custom = $doc->customExportPDF();
+                if($custom != '') {
+                   header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                   header("Content-type: application/pdf");
+                   header("Content-Disposition: attachment;Filename={$filename}.xlsx");
+                    echo $custom;
+                    header('Content-Length: ' . strlen($custom));
+                    die;
+               
+                }
+            
+              
                 header("Content-type: application/pdf");
                 header("Content-Disposition: attachment;Filename={$filename}.pdf");
                 header("Content-Transfer-Encoding: binary");

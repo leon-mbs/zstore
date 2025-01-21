@@ -61,7 +61,7 @@ class Main extends Base
                 $ids[] = $a->item_id;
             }
 
-            $sql=   " item_id in (" . implode(',', $ids) . ") and  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
+            $sql=   " cat_id >0 and item_id in (" . implode(',', $ids) . ") and  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' " ;
 
             $newlist = Product::find($sql, '', 6);
 
@@ -76,18 +76,23 @@ class Main extends Base
         $this->newlistp->add(new DataView('newlist', new ArrayDataSource($this, "_newlist"), $this, 'OnNewRow'))->Reload();
         $this->newlistp->setVisible(count($this->_newlist)>0) ;
         //        $this->newlistp->add(new DataView("newlist", new EntityDataSource("\\App\\Modules\\Shop\\Entity\\Product", "  {$cat} disabled <> 1 and detail  not  like '%<noshop>1</noshop>%' ", "item_id desc", 6), $this, 'OnNewRow'))->Reload();
+        
+        $this->_tvars['blogs']  = [];
+        foreach(\App\Modules\Shop\Entity\Article::findYield('isactive=1','createdon desc',2) as $art)  { 
+           $this->_tvars['blogs'][]  = [ 'blogtitle'=>$art->title, 'blogid'=>$art->id ] ;
+        }       
     }
 
     public function OnCatRow($datarow) {
         $g = $datarow->getDataItem();
         $link = $g->hasChild() > 0 ? "/scat/" . $g->cat_id : "/pcat/" . $g->cat_id;
-        $datarow->add(new BookmarkableLink("scatimg", $link))->setValue("/loadshopimage.php?id=" . $g->image_id);
+        $datarow->add(new BookmarkableLink("scatimg", $link))->setValue(  $g->getImageUrl(true));
         $datarow->add(new BookmarkableLink("scatname", $link))->setValue($g->cat_name);
     }
 
     public function OnNewRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("nimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("nimage", $item->getSEF()))->setValue(  $item->getImageUrl(true,true));
         $row->add(new BookmarkableLink("nname", $item->getSEF()))->setValue($item->itemname);
     }
 

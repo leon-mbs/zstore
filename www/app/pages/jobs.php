@@ -19,6 +19,9 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 
+/**
+* мои  задания
+*/
 class Jobs extends \App\Pages\Base
 {
     public $_event;
@@ -106,6 +109,7 @@ class Jobs extends \App\Pages\Base
             $row->stwait->setVisible(false);
             $row->sttoday->setVisible(false);
             $row->stpast->setVisible(false);
+            $row->done->setVisible(false);
         }
 
 

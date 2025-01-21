@@ -22,7 +22,6 @@ class Message extends \ZCL\DB\Entity
     public const TYPE_EMP = 9;
 
 
-
     protected function init() {
         $this->user_id = 0;
         $this->item_id = 0;
@@ -37,8 +36,8 @@ class Message extends \ZCL\DB\Entity
      * возвращает список сообщений
      *
      * @param mixed $type
-     * @param mixed $item_d
-     * @param mixed $sort
+     * @param mixed $item_id
+  
      */
     public static function getMessages($type, $item_id) {
         return \App\Entity\Message::find("item_type ={$type} and item_id={$item_id}", "message_id ");

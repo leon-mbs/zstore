@@ -8,6 +8,7 @@ use App\Entity\Employee;
 use App\Entity\MoneyFund;
 use App\Entity\SalType;
 use App\Entity\EmpAcc;
+use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
 
@@ -49,90 +50,74 @@ class CalcSalary extends \App\Pages\Base
         }
 
 
-        if ($this->_doc->document_id == 0) {
+          if ($this->_doc->document_id == 0) {
 
-            foreach ($this->_list as $emp) {
-                foreach ($this->_stlist as $st) {
-                    $c   = "_c".$st->salcode ;
-                    $emp->{$c} = 0;
+                foreach ($this->_list as $emp) {
+                    foreach ($this->_stlist as $st) {
+                        $c   = "_c".$st->salcode ;
+                        $emp->{$c} = 0;
+                    }
                 }
-            }
-
-
-
-            if (($opt['codeadvance'] ??0) > 0) { //аванс
-
-                $rows = EmpAcc::getAmountByType(EmpAcc::ADVANCE,  $this->_doc->headerdata['year'], $this->_doc->headerdata['month'] );
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codeadvance'];
-                    $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
-                }
-            }
-
-            if (($opt['codebonus'] ??0) > 0) { 
-
-                $rows = EmpAcc::getAmountByType(EmpAcc::BONUS );
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codebonus'];
-                    $this->_list[$row['emp_id']]->{$c} =  H::fa($row['am']);
-                }
-            }
-
-            if (($opt['codefine'] ??0) > 0) { 
-
-                $rows = EmpAcc::getAmountByType(EmpAcc::FINE );
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codefine'];
-                    $this->_list[$row['emp_id']]->{$c} = 0 - H::fa($row['am']);
-                }
-            }
-
-
-        }
-
-
+      
+          }
 
         $calcvar ='';
         //переменные  из настроек
-        $calcvar .= "var daysmon = this.doc.daysmon \n"  ;
+        $calcvar .= "var daysmon = fa(this.doc.daysmon) \n"  ;
         $calcvar .= "var invalid = emp.invalid   \n" ;
-        $calcvar .= "var salarytype = emp.salarytype   \n" ;
-        $calcvar .= "var sellvalue = emp.sellvalue   \n" ;
-        $calcvar .= "var salarym = emp.salarym   \n" ;
-        $calcvar .= "var salaryh = emp.salaryh   \n" ;
-        $calcvar .= "var hours = emp.hours   \n" ;
-        $calcvar .= "var days = emp.days   \n" ;
-
+        $calcvar .= "var salarytype = fa(emp.salarytype)   \n" ;
+        $calcvar .= "var sellvalue = fa(emp.sellvalue)   \n" ;
+        $calcvar .= "var salarym = fa(emp.salarym)   \n" ;
+        $calcvar .= "var salaryh = fa(emp.salaryh)   \n" ;
+        $calcvar .= "var hours = fa(emp.hours)   \n" ;
+        $calcvar .= "var tasksum = fa(emp.tasksum)   \n" ;
+        $calcvar .= "var days = fa(emp.days)   \n" ;
+        $calcvar .= "var hours_week = fa(emp.hours_week)   \n" ;
+        $calcvar .= "var hours_over = fa(emp.hours_over)   \n" ;
+        $calcvar .= "var days_week = fa(emp.days_week)   \n" ;
+        $calcvar .= "var days_vac = fa(emp.days_vac)   \n" ;
+        $calcvar .= "var days_sick = fa(emp.days_sick)   \n" ;
+        $calcvar .= "var days_bt = fa(emp.days_bt)   \n" ;
+     
+     
+       
         // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st) {
-            $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
-
+         
             $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
 
         }
 
+        $calcinit = $calcvar;
+        $calcinit .= "\n\n";
+        $calcinit .= $opt['calcbase'];  //формулы начислений
+        $calcinit .= "\n\n";
+        $calcinit .= "emp._baseval=v".$opt['codebaseincom'];
+        $calcinit .= "\n\n";
+        
+  
         $calc = $calcvar;
         $calc .= "\n\n";
-        $calc .= $opt['calc'];  //формулы
+        $calc .= ("v".$opt['codebaseincom']."=emp._baseval" ) ;
         $calc .= "\n\n";
+        $calc .= $opt['calc'];  //формулы удержаний
+        $calc .= "\n\n";
+  
 
-        $calcbase = $calcvar;
-        $calcbase .= "\n\n";
-        $calcbase .= $opt['calcbase'];  //формулы
-        $calcbase .= "\n\n";
-
+   
         // из  переменных в строку  сотрудника
 
         foreach($this->_stlist as $st) {
 
+   
             $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
-            $calcbase .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
-
+            $calcinit .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
+      
         }
 
         $this->_tvars['calcs'] = $calc;
-        $this->_tvars['calcbases'] = $calcbase;
-
+        $this->_tvars['calcsinit'] = $calcinit;
+    
 
 
     }
@@ -179,9 +164,11 @@ class CalcSalary extends \App\Pages\Base
             foreach ($this->_stlist as $st) {
                 $c   = "_c".$st->salcode ;
                 $emp->{$c} = $e->{$c};
-            }
-
-
+              
+            }          
+             
+            $emp->_baseval = $e->_baseval;
+          
             $this->_list[]= $emp;
         }
 
@@ -210,7 +197,7 @@ class CalcSalary extends \App\Pages\Base
             if ($isEdited == false) {
                 $this->_doc->document_id = 0;
             }
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return json_encode(['error'=>$ee->getMessage()], JSON_UNESCAPED_UNICODE);
 
@@ -229,6 +216,42 @@ class CalcSalary extends \App\Pages\Base
         $post = json_decode($post) ;
         $conn = \ZDB\DB::getConnect();
 
+        if ($this->_doc->document_id == 0) {
+         
+
+
+            if (($opt['codeadvance'] ??0) > 0) { //аванс
+
+                $rows = EmpAcc::getAmountByType(EmpAcc::ADVANCE,  $post->year,  $post->month );
+                foreach ($rows as $row) {
+                    $c = '_c' . $opt['codeadvance'];
+                    $this->_list[$row['emp_id']]->{$c} =   H::fa($row['am']);
+                }
+            }
+
+            if (($opt['codebonus'] ??0) > 0) { 
+
+                $rows = EmpAcc::getAmountByType(EmpAcc::BONUS,  $post->year,  $post->month );
+                foreach ($rows as $row) {
+                    $c = '_c' . $opt['codebonus'];
+                    $this->_list[$row['emp_id']]->{$c} =  H::fa($row['am']);
+                }
+            }
+
+            if (($opt['codefine'] ??0) > 0) { 
+
+                $rows = EmpAcc::getAmountByType(EmpAcc::FINE,  $post->year,  $post->month );
+                foreach ($rows as $row) {
+                    $c = '_c' . $opt['codefine'];
+                    $this->_list[$row['emp_id']]->{$c} =   H::fa($row['am']);
+                }
+            }
+
+
+        }
+        
+        $etasklist = []; 
+        
         $from =''.$post->year .'-'. $post->month .'-01' ;
         $from =  strtotime($from);
         $to =   strtotime('+1 month', $from) - 1 ;
@@ -243,6 +266,45 @@ class CalcSalary extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
+       //по нарядам
+       $where = "   meta_name='Task'   
+              AND   document_date  >= " . $conn->DBDate($from) . "
+              AND   document_date  <= " . $conn->DBDate($to) . "
+                
+        and state= " . Document::STATE_CLOSED;      
+        if (strlen($brids) > 0) {
+            $where = " and branch_id in ({$brids}) ";
+        }     
+        
+       foreach (Document::findYield($where) as $doc) {
+
+            $emplist = $doc->unpackDetails('emplist');
+            if (count($emplist) == 0) {
+                continue;
+            }        
+            $total = 0;
+        
+            foreach ($doc->unpackDetails('detaildata') as $service) {
+                $ser = \App\Entity\Service::load($service->service_id);
+
+                $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
+              
+            }    
+    
+            foreach ($emplist as $emp) {
+
+               if(!isset($etasklist[$emp->employee_id])){
+                  $etasklist[$emp->employee_id]=0;  
+               }
+                
+
+                $etasklist[$emp->employee_id] += round($total * $emp->ktu);
+              
+            }        
+            
+                  
+       }  
+        //по  продажам
         $sqlitem = "
                   select   sum(0-e.quantity*e.outprice) as summa 
                       from entrylist_view  e
@@ -289,25 +351,67 @@ class CalcSalary extends \App\Pages\Base
                 $sql= $sqlservice ." and d.user_id=" .$u->user_id;
                 $e['sellvalue'] = $e['sellvalue'] + intval($conn->GetOne($sql)) ;
             }
+            if($emp->sellvalue > 0) {
+               $e['sellvalue'] = doubleval($emp->sellvalue)  ;
+            }
 
-
-            $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
+            
+          
+             $e['hours'] =0;
+             $e['hours_week'] =0;
+             $e['hours_over'] =0;
+             $e['days'] =0;
+             $e['days_week'] =0;
+             $e['days_vac'] =0;
+             $e['days_sick'] =0;
+             $e['days_bt'] =0;
+            
+            $sql="select sum(tm) as tm, count(distinct dd) as dd,t_type   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm,t_type from timesheet where    emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t  group by t_type ";
           
 
-            $t = $conn->GetRow($sql);
-            $e['hours']  = intval($t['tm']/3600);
-            $e['days']   = doubleval($t['dd']);
+            $rs = $conn->Execute($sql);
+            foreach($rs as $row) {
+               if($row['t_type']==TimeItem::TIME_WORK ) {
+                  $e['hours']  += intval($row['tm']/3600);
+                  $e['days']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_WN  ) {
+                  $e['hours_week']  += intval($row['tm']/3600);
+                  $e['days_week']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_OVER  ) {
+                  $e['hours_over']  += intval($row['tm']/3600);
+       
+               }
+               if($row['t_type']==TimeItem::TINE_HL  ) {
+                  $e['days_vac']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_ILL  ) {
+                  $e['days_sick']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_BT  ) {
+                  $e['days_bt']   += doubleval($row['dd']); 
+               }
+            }
+            
+            $e['tasksum'] = 0  ;
+            if(isset($etasklist[$e['id']])){
+               $e['tasksum']  =   $etasklist[$e['id']] ?? 0; 
+
+            }        
 
             $e['invalid'] = $emp->invalid == 1  ;
             $e['salarytype'] = $emp->ztype ;
             $e['salarym'] = $emp->zmon  ;
             $e['salaryh'] = $emp->zhour  ;
-
+            
+         
 
             foreach($this->_stlist as $st) {
                 $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
             }
-
+            $e['_baseval'] = $emp->_baseval  ??0 ;
+    
             $ret['emps'][] = $e;
         }
 
@@ -338,6 +442,7 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
         $ret['doc']['document_number']   =   $this->_doc->document_number ;
         $ret['doc']['notes']   =   $this->_doc->notes ;
+        $ret['doc']['document_id']   =   $this->_doc->document_id ;
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;

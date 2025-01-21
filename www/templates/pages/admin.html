@@ -1,0 +1,98 @@
+<html>
+  <head>
+     <title>  Адміністрування  </title>
+ 
+</head>
+<body>
+   <h3>Адміністрування</h3>
+     
+ <div class="row">
+        
+    <div class="col-12 col-lg-4 col-xl-3  "   >
+            <form zippy="optionsform"> 
+             <div class="form-group">
+                <h5>Налаштування</h5>  
+             </div>
+                 <div class="form-check">
+                    <input zippy="noupdate" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="noupdate">Не перевiряти оновлення</label>
+                 <br><small>   Якщо кастомна  версiя i є ризик  затерти змiни  </small>
+                  </div> 
+               <div class="form-check">
+                    <input zippy="capcha" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="capcha">Капча на формi логiну</label>
+                  </div> 
+              
+               <div class="form-check mt-4">
+                    <input zippy="checkip" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="checkip">Перевiряти вхiднi запити</label>
+                     <br><small>Перевiряти вхiднi запити для скриптiв  та  API  на  вiдповiднiсть  IP адреси списку  нижче    </small>
+               </div> 
+               <div class="form-group">
+                   <label for="email">IP адреси</label>
+                   <textarea style="height:100px" class="form-control"   zippy="iplist"> </textarea>
+                   <small>По однiй на  строку</small>
+               </div>
+             
+             <div class="form-group"> 
+        
+             <input zippy="save" type="submit" value="Зберегти" class="btn btn-info  ">
+            </div>  
+            
+        </form>    
+     </div>  
+    <div class="col-12 col-lg-4 col-xl-3  "   >
+       
+         <form zippy="sendform" >
+              <div class="form-group">
+                <h5>Перевірка відправки пошти</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="email">Email</label>
+                   <input class="form-control" type="text" zippy="email">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendemail" type="submit" value="Відправити" class="btn   btn-primary  ">
+                 
+               </div>
+               {{#issms}}
+             <div class="form-group">
+                <h5>Перевірка відправки SMS</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="phone">Телефон</label>
+                   <input class="form-control" type="text" zippy="phone">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendphone" type="submit" value="Відправити" class="btn   btn-primary  ">
+                 
+               </div>
+              {{/issms}}               
+             {{#isbot}}
+             <div class="form-group">
+                <h5>Перевірка відправки в  телеграм</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="chat_id">Chat ID</label>
+                   <input class="form-control" type="text" zippy="chat_id">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendbot" type="submit" value="Відправити" class="btn   btn-primary  ">
+                 
+               </div>
+              {{/isbot}}               
+         </form>
+         
+  </div>       
+   
+</div>        
+      <script>
+        function check_sendemail(ele){
+            document.getElementById('dialogwait').showModal()
+          
+            return true;
+       
+        }       
+      </script>
+</body>
+</html>

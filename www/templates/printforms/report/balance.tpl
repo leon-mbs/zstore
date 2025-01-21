@@ -5,7 +5,7 @@
             Управлiнський  баланс
         </td>
     </tr>
-    <tr>
+  
     <tr>
 
         <td align="center" colspan="2">
@@ -62,18 +62,12 @@
         <td align="right">  {{abnal}}   </td>
     </tr>
     {{/abnal}}                     
-    {{#as}}
-    <tr>
-        <td >  Дебетовий борг (постачальники)        </td>
-        <td align="right">    {{as}}               </td>
+    {{#debet}}
+    <tr>  
+        <td >Борг  контрагентiв       </td>
+        <td align="right">     {{debet}}              </td>
     </tr>
-    {{/as}}
-    {{#ab}} 
-    <tr>
-        <td >  Дебетовий борг (покупцi)        </td>
-        <td align="right">       {{ab}}            </td>
-    </tr>
-    {{/ab}}
+    {{/debet}} 
     {{#aemp}}                 
     <tr>
         <td >  Спiвробiтники (виданi  аванси тощо)        </td>
@@ -87,6 +81,13 @@
     </tr>
     {{/aeq}}                 
     
+    {{#aprodrest}}                 
+    <tr>
+        <td >  Незавершене виробництво       </td>
+        <td align="right">        {{aprodrest}}             </td>
+    </tr>
+    {{/aprodrest}}                 
+    
     
      <tr style="font-weight: bolder;">
         <td align="right">Всього:</td>
@@ -96,18 +97,13 @@
    <tr>
         <td colspan="2">     <b>Пасиви</b>        </td>    </tr>
 
-    {{#ps}}
+    {{#credit}}
     <tr>  
-        <td >  Кредитовий  борг (постачальники)        </td>
-        <td align="right">     {{ps}}              </td>
+        <td >  Борг  контрагентам       </td>
+        <td align="right">     {{credit}}              </td>
     </tr>
-    {{/ps}} 
-    {{#pb}} 
-    <tr>
-        <td >  Кредитовий  борг (покупцi)        </td>
-        <td align="right">      {{pb}}               </td>
-    </tr>
-    {{/pb}} 
+    {{/credit}} 
+ 
     {{#pemp}}                 
     <tr>
         <td >  Спiвробiтники (зарплата до видачi тощо)        </td>

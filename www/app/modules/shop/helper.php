@@ -54,7 +54,7 @@ class Helper
     public static function getAttributeValuesByProduct($product, $all = true) {
         $list = array();
         $conn = DB::getConnect();
-        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id=  " . $product->item_id;
+        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes_view a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id={$product->item_id} order  by a.ordern ";
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
@@ -130,7 +130,8 @@ class Helper
             //  2 => "Число"  ,
                      3 => "Перелік",
                      4 => "Набір",
-                     5 => "Строка"
+                     5 => "Строка",
+                     6 => "Кастомне"
         );
     }
 

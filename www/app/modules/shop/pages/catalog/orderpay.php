@@ -70,11 +70,8 @@ class OrderPay extends Base
     public function onPayed($args, $post) {
         $order= Document::load($this->orderid) ;
 
-        $payed = \App\Entity\Pay::addPayment($order->document_id, $order->document_date, $order->payed, $order->headerdata['payment'], 'WayForPay');
-        if ($payed > 0) {
-            $order->payed = $payed;
-
-        }
+        $order->payed = \App\Entity\Pay::addPayment($order->document_id, $order->document_date, $order->payed, $order->headerdata['payment'], 'WayForPay');
+     
         \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
         $order->save();
 
@@ -86,10 +83,8 @@ class OrderPay extends Base
         if($args[0]=='success') {
             $shop = System::getOptions("shop");
 
-            $payed =  Pay::addPayment($this->order->document_id, time(), $this->order->payamount, $shop['mf_id'], 'LiqPay ID:'.$args[1]);
-            if ($payed > 0) {
-                $this->order->payed = $payed;
-            }
+             $this->order->payed =  Pay::addPayment($this->order->document_id, time(), $this->order->payamount, $shop['mf_id'], 'LiqPay ID:'.$args[1]);
+         
             \App\Entity\IOState::addIOState($this->order->document_id, $this->order->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
             $this->order->save();
             $this->order->updateStatus(Document::STATE_PAYED)   ;
@@ -101,11 +96,11 @@ class OrderPay extends Base
         $shop = System::getOptions("shop");
 
 
-        $private_key = $shop['lqpriv']; //'sandbox_JOBg3ngEMQcBSjknmoSQgfYT2KC3N0Dmau17XKV2';
+        $private_key = $shop['lqpriv']; 
 
         $data = array(
                   'version'=> 3,
-                  'public_key'=> $shop['lqpublic'], //'sandbox_i2218966209',
+                  'public_key'=> $shop['lqpublic'], 
                   'action'=> 'pay',
                   'amount'=> H::fa($this->order->payamount),
                   'currency'=> 'UAH',

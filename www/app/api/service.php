@@ -16,6 +16,7 @@ class service extends JsonRPC
             $c = array(
                 'service_id'   => $ser->service_id,
                 'service_name' => $ser->service_name ,
+                'price'        => $ser->price,
                 'category' => $ser->category
           
             );

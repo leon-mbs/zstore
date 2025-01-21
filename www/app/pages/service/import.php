@@ -51,6 +51,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
         $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
         $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
+        $form->add(new DropDownChoice("colminqty", $cols,$sc['colminqty'] ?? 0));
 
         $pt = \App\Entity\Item::getPriceTypeList();
 
@@ -125,6 +126,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colphone", $cols));
         $form->add(new DropDownChoice("colemail", $cols));
         $form->add(new DropDownChoice("colcity", $cols));
+        $form->add(new DropDownChoice("coledrpou", $cols));
         $form->add(new DropDownChoice("coladdress", $cols));
         $form->add(new \Zippy\Html\Form\File("cfilename"));
 
@@ -192,11 +194,6 @@ class Import extends \App\Pages\Base
         $colbarcode = $this->iform->colbarcode->getValue();
         $colcat = $this->iform->colcat->getValue();
         $colqty = $this->iform->colqty->getValue();
-        $colprice1 = $this->iform->colprice1->getValue();
-        $colprice2 = $this->iform->colprice2->getValue();
-        $colprice3 = $this->iform->colprice3->getValue();
-        $colprice4 = $this->iform->colprice4->getValue();
-        $colprice5 = $this->iform->colprice5->getValue();
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colcell = $this->iform->colcell->getValue();
@@ -205,6 +202,12 @@ class Import extends \App\Pages\Base
         $colimage = $this->iform->colimage->getValue();
         $colshortname = $this->iform->colshortname->getValue();
         $colwar = $this->iform->colwar->getValue();
+        $colprice1 = $this->iform->colprice1->getValue();
+        $colprice2 = $this->iform->colprice2->getValue();
+        $colprice3 = $this->iform->colprice3->getValue();
+        $colprice4 = $this->iform->colprice4->getValue();
+        $colprice5 = $this->iform->colprice5->getValue();
+        $colminqty = $this->iform->colminqty->getValue();
 
 
         if ($t == 1 && $colqty === '0') {
@@ -223,8 +226,8 @@ class Import extends \App\Pages\Base
         $save['colname']=$colname;
         $save['colcode']=$colcode;
         $save['colbarcode']=$colbarcode;
+        $save['colcat']=$colcat;
         $save['colqty']=$colqty;
-        $save['colprice']=$colcat;
         $save['colprice1']=$colprice1;
         $save['colprice2']=$colprice2;
         $save['colprice3']=$colprice3;
@@ -237,8 +240,15 @@ class Import extends \App\Pages\Base
         $save['coldesc']=$coldesc;
         $save['colimage']=$colimage;
         $save['colshortname']=$colshortname;
+        $save['colminqty']=$colminqty;
         $save['colwar']=$colwar;
   
+        $letters=[];
+        foreach($save as $s){
+            if($s != '0') {
+               $letters[]=$s; 
+            }
+        }
   
             
         H::setKeyVal('importcols',serialize($save)) ;
@@ -254,13 +264,14 @@ class Import extends \App\Pages\Base
         for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
 
             $row = array();
-            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+         //   for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+            foreach ($letters as $iCol) {
                 $oCell = $oCells->get($iCol . $iRow);
                 if ($oCell) {
                     $row[$iCol] = $oCell->getValue();
-                }
+                }   
             }
-            $data[$iRow] = $row;
+            $data[$iRow] = $row; 
         }
 
         unset($oSpreadsheet);
@@ -278,21 +289,21 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname],
-                    'colcode'    => $row[$colcode],
-                    'colbarcode' => $row[$colbarcode],
-                    'colcat'      => $row[$colcat],
-                    'colqty'     => $row[$colqty],
-                    'colmsr'     => $row[$colmsr],
-                    'colinprice' => $row[$colinprice],
-                    'colprice1'  => $row[$colprice1],
-                    'colprice2'  => $row[$colprice2],
-                    'colprice3'  => $row[$colprice3],
-                    'colprice4'  => $row[$colprice4],
-                    'colprice5'  => $row[$colprice5],
-                    'colbrand'   => $row[$colbrand],
-                    'colcell'    => $row[$colcell],
-                    'coldesc'    => $row[$coldesc]
+                    'colname'    => $row[$colname] ?? '',
+                    'colcode'    => $row[$colcode] ?? '',
+                    'colbarcode' => $row[$colbarcode] ?? '',
+                    'colcat'     => $row[$colcat] ?? '',
+                    'colqty'     => $row[$colqty] ?? '',
+                    'colmsr'     => $row[$colmsr] ?? '',
+                    'colinprice' => $row[$colinprice] ?? '',
+                    'colprice1'  => $row[$colprice1] ?? '',
+                    'colprice2'  => $row[$colprice2] ?? '',
+                    'colprice3'  => $row[$colprice3] ?? '',
+                    'colprice4'  => $row[$colprice4] ?? '',
+                    'colprice5'  => $row[$colprice5] ?? '',
+                    'colbrand'   => $row[$colbrand] ?? '',
+                    'colcell'    => $row[$colcell] ?? '',
+                    'coldesc'    => $row[$coldesc] ?? ''
                 );
             }
             return;
@@ -302,26 +313,29 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $price1 = str_replace(',', '.', trim($row[$colprice1]));
-            $price2 = str_replace(',', '.', trim($row[$colprice2]));
-            $price3 = str_replace(',', '.', trim($row[$colprice3]));
-            $price4 = str_replace(',', '.', trim($row[$colprice4]));
-            $price5 = str_replace(',', '.', trim($row[$colprice5]));
+            $price1 = str_replace(',', '.', trim($row[$colprice1] ?? ''));
+            $price2 = str_replace(',', '.', trim($row[$colprice2] ?? ''));
+            $price3 = str_replace(',', '.', trim($row[$colprice3] ?? ''));
+            $price4 = str_replace(',', '.', trim($row[$colprice4] ?? ''));
+            $price5 = str_replace(',', '.', trim($row[$colprice5] ?? ''));
             
-            $itemcode = trim($row[$colcode]);
-            $brand = trim($row[$colbrand]);
-            $itemname = trim($row[$colname]);
-            $itembarcode = trim($row[$colbarcode]);
-            $cell = trim($row[$colcell]);
-            $msr = trim($row[$colmsr]);
-            $desc = trim($row[$coldesc]);
-            $catname = trim($row[$colcat]);
-            $image = trim($row[$colimage]);
+            $itemcode = trim($row[$colcode] ?? '');
+            $brand = trim($row[$colbrand] ?? '');
+            $itemname = trim($row[$colname] ?? '');
+            $itembarcode = trim($row[$colbarcode] ?? '');
+            $cell = trim($row[$colcell] ?? '');
+            $msr = trim($row[$colmsr] ?? '');
+            $desc = trim($row[$coldesc] ?? '');
+            $catname = trim($row[$colcat] ?? '');
+            $image = trim($row[$colimage] ?? '');
             $warranty = trim($row[$colwar]);
-            $shortname = trim($row[$colshortname]);
-            $inprice = str_replace(',', '.', trim($row[$colinprice]));
-            $qty = str_replace(',', '.', trim($row[$colqty]));
+            $shortname = trim($row[$colshortname] ?? '');
+            $minqty = trim($row[$colminqty] ?? '');
+            $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
+            $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
+               
+            
             $cat_id = 0;
 
             if (strlen($catname) > 0) {
@@ -360,28 +374,27 @@ class Import extends \App\Pages\Base
                 }
                 $item = new Item();
             }
+            if($colname !='0')    $item->itemname = $itemname;
+            if($colcode !='0')    $item->item_code = $itemcode;
+            if($colbarcode !='0') $item->bar_code = $itembarcode;
+            if($colmsr !='0')         $item->msr = $msr;
+            if($colcell !='0')        $item->cell = $cell;
+            if($colbrand   !='0')       $item->manufacturer = $brand;
+            if($coldesc !='0')        $item->description = $desc;
+            if($colshortname !='0')   $item->shortname = $shortname;
+            if($colwar !='0')    $item->warranty = $warranty;
 
-            $item->itemname = $itemname;
-            $item->item_code = $itemcode;
-            $item->bar_code = $itembarcode;
-            $item->msr = $msr;
-            $item->cell = $cell;
-            $item->manufacturer = $brand;
-            $item->description =$desc;
-            $item->shortname = $shortname;
-            $item->warranty = $warranty;
-            $item->price1 = doubleval($price1);
-            $item->price2 = doubleval($price2);
-            $item->price3 = doubleval($price3);
-            $item->price4 = doubleval($price4);
-            $item->price5 = doubleval($price5);
+            
+            if ($colprice1 !='0') $item->price1 = doubleval($price1) ;
+            if ($colprice2 !='0') $item->price2 = doubleval($price2) ;
+            if ($colprice3 !='0') $item->price3 = doubleval($price3) ;
+            if ($colprice4 !='0') $item->price4 = doubleval($price4) ;
+            if ($colprice5 !='0') $item->price5 = doubleval($price5) ;
 
-            if ($inprice > 0) {
-                $item->price = $inprice;
-            }
-            if ($qty > 0) {
-                $item->quantity = $qty;
-            }
+            $item->price = $inprice >0 ? $inprice :0 ;
+            $item->quantity = $qty >0 ? $qty :0 ;
+            $item->minqty =  $minqty >0 ? $minqty :0;
+ 
 
             if ($cat_id > 0) {
                 $item->cat_id = $cat_id;
@@ -391,60 +404,21 @@ class Import extends \App\Pages\Base
             }
 
             $item->amount = doubleval($item->quantity) * doubleval($item->price);
-
-            $item->noprice = $this->iform->noshowprice->isChecked() ? 1 : 0;
-            $item->noshop = $this->iform->noshowshop->isChecked() ? 1 : 0;
-
+            if($this->iform->noshowprice->isChecked()) $item->noprice  = 1;
+            if($this->iform->noshowshop->isChecked()) $item->noshop  = 1;
+      
             $item->save();
             $cnt++;
             if ($item->quantity > 0) {
                 $newitems[] = $item; //для склада
             }
 
-
-            // $image="http://local.zstore/assets/images/logo.png";
-
+       
+             
             if (strlen($image) > 0) {
-                $file = file_get_contents($image) ;
-                if(strlen($file)==0) {
-                    continue;
-                }
-                $tmp = tempnam(sys_get_temp_dir(), "import") ;
-                file_put_contents($tmp, $file) ;
+                $item->saveImage($image);
 
-                $imagedata = getimagesize($tmp);
-                if ($imagedata== false) {
-                    continue;
-
-                }
-                $image = new \App\Entity\Image();
-                $image->content = file_get_contents($tmp);
-                $image->mime = $imagedata['mime'];
-
-                if ($imagedata[0] != $imagedata[1]) {
-                    $thumb = new \App\Thumb($tmp);
-                    if ($imagedata[0] > $imagedata[1]) {
-                        $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
-                    }
-                    if ($imagedata[0] < $imagedata[1]) {
-                        $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
-                    }
-
-
-                    $image->content = $thumb->getImageAsString();
-                    $thumb->resize(512, 512);
-                    $image->thumb = $thumb->getImageAsString();
-                    $thumb->resize(128, 128);
-
-                    $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
-                }
-        
-
-                $image->save();
-                $item->image_id = $image->image_id;
                 $item->save();
-
-
 
             }
 
@@ -466,8 +440,9 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = 0;
-            $doc->payed = 0;
+            $doc->payamount = $amount;
+          
+            $doc->headerdata['payed'] = 0;
             $doc->notes = 'Импорт с Excel';
             $doc->headerdata['store'] = $store;
 
@@ -492,6 +467,7 @@ class Import extends \App\Pages\Base
         $colphone = $this->cform->colphone->getValue();
         $colemail = $this->cform->colemail->getValue();
         $colcity = $this->cform->colcity->getValue();
+        $coledrpou = $this->cform->coledrpou->getValue();
         $coladdress = $this->cform->coladdress->getValue();
 
         if ($colcname === '0') {
@@ -534,11 +510,12 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list2'][] = array(
-                    'colname'    => $row[$colcname],
-                    'colphone'   => $row[$colphone],
-                    'colemail'   => $row[$colemail],
-                    'colcity'    => $row[$colcity],
-                    'coladdress' => $row[$coladdress]
+                    'colname'    => $row[$colcname] ?? '',
+                    'colphone'   => $row[$colphone] ?? '',
+                    'colemail'   => $row[$colemail] ?? '',
+                    'coledrpou'   => $row[$coledrpou] ?? '',
+                    'colcity'    => $row[$colcity] ?? '',
+                    'coladdress' => $row[$coladdress]  ?? ''
                 );
             }
             return;
@@ -549,8 +526,8 @@ class Import extends \App\Pages\Base
         foreach ($data as $row) {
 
             $c = null;
-            $name = $row[$colcname];
-            $phone = $row[$colphone];
+            $name = $row[$colcname] ?? '';
+            $phone = $row[$colphone] ?? '';
 
             if (strlen(trim($name)) == 0) {
                 continue;
@@ -566,16 +543,19 @@ class Import extends \App\Pages\Base
                 $c->type = $t;
                 $c->customer_name = $name;
 
-                if (strlen($row[$colphone]) > 0) {
+                if (strlen($row[$colphone] ?? '') > 0) {
                     $c->phone = $row[$colphone];
                 }
-                if (strlen($row[$colemail]) > 0) {
+                if (strlen($row[$colemail] ?? '') > 0) {
                     $c->email = $row[$colemail];
                 }
-                if (strlen($row[$colcity]) > 0) {
+                if (strlen($row[$coledrpou] ?? '') > 0) {
+                    $c->edrpou = $row[$coledrpou];
+                }
+                if (strlen($row[$colcity] ?? '') > 0) {
                     $c->city = $row[$colcity];
                 }
-                if (strlen($row[$coladdress]) > 0) {
+                if (strlen($row[$coladdress] ?? '') > 0) {
                     $c->address = $row[$coladdress];
                 }
 
@@ -666,13 +646,13 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname],
-                    'colcode'    => $row[$colcode],
-                    'colbarcode' => $row[$colbarcode],
-                    'colqty'     => $row[$colqty],
-                    'colbrand'   => $row[$colbrand],
-                    'colmsr'     => $row[$colmsr],
-                    'colprice'   => $row[$colprice]
+                    'colname'    => $row[$colname] ?? '',
+                    'colcode'    => $row[$colcode] ?? '',
+                    'colbarcode' => $row[$colbarcode] ?? '',
+                    'colqty'     => $row[$colqty] ?? '',
+                    'colbrand'   => $row[$colbrand] ?? '',
+                    'colmsr'     => $row[$colmsr] ?? '',
+                    'colprice'   => $row[$colprice]  ?? ''
                 );
             }
             return;
@@ -684,8 +664,8 @@ class Import extends \App\Pages\Base
 
 
             $item = null;
-            $itemname = trim($row[$colname]);
-            $itemcode = trim($row[$colcode]);
+            $itemname = trim($row[$colname] ?? '');
+            $itemcode = trim($row[$colcode] ?? '');
             if (strlen($itemname) > 0) {
 
                 if (strlen($itemname) > 0) {
@@ -696,25 +676,16 @@ class Import extends \App\Pages\Base
                 }
 
 
-                $price = doubleval( str_replace(',', '.', trim($row[$colprice])) );
-                $qty = doubleval(str_replace(',', '.', trim($row[$colqty])) );
+                $price = doubleval( str_replace(',', '.', trim($row[$colprice] ?? '')) );
+                $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')) );
 
                 if ($item == null) {
                     $item = new Item();
                     $item->itemname = $itemname;
-                    if (strlen($row[$colcode]) > 0) {
-                        $item->item_code = trim($row[$colcode]);
-                    }
-                    if (strlen($row[$colmsr]) > 0) {
-                        $item->msr = trim($row[$colmsr]);
-                    }
-                    if (strlen($row[$coldesc]) > 0) {
-                        $item->description = trim($row[$coldesc]);
-                    }
-                    if (strlen($row[$colbrand]) > 0) {
-                        $item->manufacturer = trim($row[$colbrand]);
-                    }
-
+                    $item->item_code = trim($row[$colcode] ?? ''  );
+                    $item->msr = trim($row[$colmsr]  ?? '');
+                    $item->description = trim($row[$coldesc]  ?? '');
+                    $item->manufacturer = trim($row[$colbrand]  ?? '');
 
                     $item->save();
                 }
@@ -742,8 +713,10 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = 0;
-            $doc->payed = 0;
+            $doc->payamount = $amount;
+            $doc->headerdata['payamount'] = $amount;
+
+            $doc->headerdata['payed'] = 0;
             $doc->notes = 'Імпорт з Excel';
             $doc->headerdata['store'] = $store;
             $doc->customer_id = $c;
@@ -819,11 +792,11 @@ class Import extends \App\Pages\Base
             foreach ($data as $row) {
 
                 $this->_tvars['list'][] = array(
-                    'colname'    => $row[$colname],
-                    'colcode'    => $row[$colcode],
+                    'colname'    => $row[$colname] ?? '',
+                    'colcode'    => $row[$colcode] ?? '',
 
-                    'colqty'     => $row[$colqty],
-                    'colprice'   => $row[$colprice]
+                    'colqty'     => $row[$colqty] ?? '',
+                    'colprice'   => $row[$colprice]  ?? ''
                 );
             }
             return;
@@ -835,8 +808,8 @@ class Import extends \App\Pages\Base
 
 
             $item = null;
-            $itemname = trim($row[$colname]);
-            $itemcode = trim($row[$colcode]);
+            $itemname = trim($row[$colname] ?? '');
+            $itemcode = trim($row[$colcode] ?? '');
 
             if (strlen($itemname) > 0) {
 
@@ -849,8 +822,8 @@ class Import extends \App\Pages\Base
                 }
 
 
-                $price = str_replace(',', '.', trim($row[$colprice]));
-                $qty = str_replace(',', '.', trim($row[$colqty]));
+                $price = str_replace(',', '.', trim($row[$colprice] ?? ''));
+                $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
                 if ($item == null) {
                     $this->setError("Не знайдоно товар {$itemname} {$itemcode}");
@@ -880,8 +853,9 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = 0;
-            $doc->payed = 0;
+            $doc->payamount = $doc->amount;
+      
+            $doc->headerdata['payed'] = 0;
             $doc->notes = 'Імпорт з Excel';
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->zform->zcust->getText();

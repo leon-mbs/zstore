@@ -217,7 +217,7 @@ class Items extends \App\Pages\Base
             if($sku[$code]>0) {
                 $list[] = array('sku'     => $sku[$code],
 
-                                 'quantity_in_stock' =>$elist[$code]
+                                 'quantity_in_stock' =>$qty
 
                 );
             }

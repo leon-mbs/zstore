@@ -15,7 +15,7 @@
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-check">
                          <input zippy="advance" type="checkbox" class="form-check-input">
@@ -84,15 +84,17 @@
 
              <table class="table table-sm">
                    <tr>
-                      <th></th>
+                    <th style="width:20px"><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style=";cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i></th>
                       <th>П I Б</th>
                                   
                       <th  >Сума</th>
                     
                    </tr>
                   <tr zippy="elist">
-                      <td style="width:20px" >
-                       <input tabindex="-1"  type="checkbox" zippy="emp_ch">
+                      <td   >
+                       <input tabindex="-1" class="seldel" type="checkbox" zippy="emp_ch">
                       </td>
                       <td zippy="emp_name"></td>
                                 

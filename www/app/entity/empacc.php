@@ -26,7 +26,7 @@ class EmpAcc extends \ZCL\DB\Entity
 
     protected function init() {
         $this->ea_id = 0;
-        $this->createdon = time();
+   //     $this->createdon = time();
     }
 
     protected function afterLoad() {
@@ -34,11 +34,19 @@ class EmpAcc extends \ZCL\DB\Entity
     }
 
     //к выплате
-    public static function getForPay() {
+    public static function getForPay($y='', $m='') {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc  where  optype < 100 group by  emp_id   ";
-
-        return $conn->Execute($sql);
+        if($y=='') {
+           $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype < 100 group by  emp_id   ";
+        } else {
+           $dt = new \App\DateTime(strtotime($y . '-' . $m . '-01'));
+           $to = $dt->endOfMonth()->getTimestamp();
+           $from = $dt->startOfMonth()->getTimestamp();
+           $sql = "select coalesce(sum(amount),0) as am,emp_id from  empacc_view  where  optype < 100  and createdon >=" . $conn->DBDate($from) . " and createdon <=" . $conn->DBDate($to) . " group by  emp_id   ";
+         
+        }
+      
+        return  $conn->Execute($sql) ;
     }
 
     public static function getAmountByType( $t, $y='', $m='') {
@@ -46,7 +54,7 @@ class EmpAcc extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $ret=[];
         if($y=='') {
-            $sql = "select coalesce(  ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = {$t}   group by  emp_id   ";
+            $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = {$t}   group by  emp_id   ";
             
         }
         else {
@@ -58,7 +66,7 @@ class EmpAcc extends \ZCL\DB\Entity
         }
         
         foreach($conn->Execute($sql) as $r) {
-           $ret[]= $r;
+           $ret[]=  $r ;
         }
         return  $ret ;
     }

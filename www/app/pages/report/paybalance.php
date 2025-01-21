@@ -73,12 +73,14 @@ class PayBalance extends \App\Pages\Base
 
 
         $brpay = "";
+        $brpayd = "";
         $brst = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $brst = " and   store_id in( select store_id from  stores where  branch_id in ({$brids})  ) ";
 
             $brpay = " and  document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
+            $brpayd = " and  d.document_id in(select  document_id from  documents where branch_id in ({$brids}) )";
         }
 
 
@@ -95,14 +97,14 @@ class PayBalance extends \App\Pages\Base
               GROUP BY  iotype order  by  iotype  
                          
         ";
-
+        
         $rs = $conn->Execute($sql);
         $tin = 0;
         foreach ($rs as $row) {
             $detailitem = array();
 
             $detailitem["in"]   = H::fa($row['am']);
-            $detailitem["type"] = $pl[$row['iotype'] ] ;
+            $detailitem["type"] = $pl[$row['iotype'] ] ??0;
             $detailitem["docdet"] = false ;
             if($det) {
 
@@ -110,7 +112,7 @@ class PayBalance extends \App\Pages\Base
                  SELECT  meta_desc,coalesce(sum(i.amount),0) as detam  
                      FROM iostate i join documents_view d on i.document_id=d.document_id
                      WHERE    
-                      iotype = {$row['iotype']}
+                      iotype = {$row['iotype']}    {$brpayd}
                       AND d.document_date  >= " . $conn->DBDate($from) . "
                       AND  d.document_date  <= " . $conn->DBDate($to) . "
                       GROUP BY  meta_desc order  by  meta_desc  
@@ -153,7 +155,7 @@ class PayBalance extends \App\Pages\Base
                      SELECT  meta_desc,coalesce(sum(i.amount),0) as detam  
                          FROM iostate i join documents_view d on i.document_id=d.document_id
                          WHERE    
-                          iotype = {$row['iotype']}
+                          iotype = {$row['iotype']}    {$brpayd}
                           AND d.document_date  >= " . $conn->DBDate($from) . "
                           AND  d.document_date  <= " . $conn->DBDate($to) . "
                           GROUP BY  meta_desc order  by  meta_desc  
@@ -177,9 +179,9 @@ class PayBalance extends \App\Pages\Base
 
         $detail3=[];
         $sql = " 
-         SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
+         SELECT   iotype,coalesce(abs(sum(amount)),0) as am   FROM iostate_view 
              WHERE   
-              iotype in (30,31,90,81)     {$brpay}
+              iotype in (30,31,80,81)     {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
               GROUP BY  iotype    
@@ -190,7 +192,7 @@ class PayBalance extends \App\Pages\Base
         
         foreach ($rs as $row) {
             $detailitem = array();
-            $detailitem["out"]   = H::fa(0-$row['am']);
+            $detailitem["out"]   = H::fa($row['am']);
             $detailitem["type"] = $pl[$row['iotype'] ] ;
             
             
@@ -209,6 +211,68 @@ class PayBalance extends \App\Pages\Base
             'total'    => H::fa($total)
         );
 
+        
+        
+        $sql = " 
+         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM iostate_view 
+             WHERE   
+              iotype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
+             
+                         
+        ";
+
+        $OPOUT = $conn->GetOne($sql); // переменные расходы
+
+        $sql = " 
+         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM iostate_view 
+             WHERE   
+              iotype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
+              AND document_date  >= " . $conn->DBDate($from) . "
+              AND  document_date  <= " . $conn->DBDate($to) . "
+             
+                         
+        ";
+
+        $OPIN = $conn->GetOne($sql); // операционный доход
+
+        $header['tu'] = H::fa($OPIN - $OPOUT);    //проход
+        $header['tvc'] = H::fa($OPOUT);   //переменные затраты
+        $header['OP'] = H::fa($tout - $OPOUT);  //операционные расходы
+        $header['PR'] = H::fa($header['tu'] - $header['OP']);  // прибыль
+
+        $inv = 0;
+
+        foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {
+           // if ($oc->getBalance($to) > 0) {
+             //todo   $inv += $oc->getBalance($to);
+          //  }
+        }
+        $sql = " 
+         SELECT   coalesce(  sum(partion*qty),0)     FROM store_stock_view 
+             WHERE qty <> 0    {$brst}  and item_id in (select item_id from items where disabled<>1 ) {$brst}
+              
+                         
+        ";
+
+        $amount = $conn->GetOne($sql); //ТМЦ  на складах       
+
+        if ($amount > 0) {
+            $inv += $amount;
+        }
+
+        $header['isinv'] = false;
+        if ($inv > 0) {
+            $header['isinv'] = true;
+            $header['inv'] = H::fa($inv);
+            $header['ROI'] = round((($header['tu'] - $header['OP']) / $inv) * 100);
+        }
+
+       $header['isfin'] = $header['PR'] > 0;
+        
+        
+        
  
         $report = new \App\Report('report/paybalance.tpl');
 

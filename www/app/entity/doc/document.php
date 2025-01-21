@@ -86,7 +86,7 @@ class Document extends \ZCL\DB\Entity
         $this->detaildata = array();
         $this->headerdata['_state_before_approve_'] = '';
         $this->headerdata['contract_id'] = 0;
-        $this->headerdata['timeentry'] = 0; // для проаводок
+        $this->headerdata['timeentry'] = 0; // если  проводки нужны не на дату документа
         $this->headerdata['time'] = time();  //  для чеков
         
     }
@@ -100,9 +100,13 @@ class Document extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-        $this->document_date = strtotime($this->document_date);
-        $this->lastupdate = strtotime($this->lastupdate ?? '');
-
+        if(is_integer($this->document_date)==false && strlen($this->document_date) >0 ) {
+            $this->document_date = @strtotime($this->document_date);
+        }
+        if(is_integer($this->lastupdate)==false && strlen($this->lastupdate) >0 ) {
+            $this->lastupdate = @strtotime($this->lastupdate);
+        }
+       
         $this->unpackData();
     }
 
@@ -149,8 +153,7 @@ class Document extends \ZCL\DB\Entity
 
             $value= str_replace('<![CDATA[', '', $value) ;
             $value= str_replace(']]>', '', $value) ;
-
-            $value = $value ?? '';
+ 
 
             if (is_numeric($value) || strlen($value) == 0) {
 
@@ -188,7 +191,7 @@ class Document extends \ZCL\DB\Entity
         $xml = @simplexml_load_string($xml) ;
         if($xml==false) {
 
-            $logger->error("Документ " . $this->document_id . " Невірний  контент");
+            $logger->error("Документ " . $this->document_number . " Невірний  контент");
             return;
         }
 
@@ -287,6 +290,14 @@ class Document extends \ZCL\DB\Entity
     public function DoStore() {
 
     }
+  
+    /**
+    * обновляет баланс  контрагента
+    * 
+    */
+    public function DoBalans() {
+
+    }
 
     /**
      * Отмена  документа
@@ -312,6 +323,8 @@ class Document extends \ZCL\DB\Entity
             
             //лицевые счета  контрагентов
             $conn->Execute("delete from custacc where document_id=" . $this->document_id);
+            
+            $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
 
  
     }
@@ -606,14 +619,14 @@ class Document extends \ZCL\DB\Entity
      *
      */
     public function checkUniqueNumber() {
-        $this->document_number = trim($this->document_number);
+        $document_number = trim($this->document_number);
         
         $branch = "";
         if ($this->branch_id > 0) {
             $branch = " and branch_id=" . $this->branch_id;
         }
         //  $doc = Document::getFirst("meta_id={$this->meta_id}  and  document_number = '{$this->document_number}' {$branch}");
-        $doc = Document::getFirst(" document_number = '{$this->document_number}' {$branch}");
+        $doc = Document::getFirst(" meta_id={$this->meta_id} and  document_number = '{$document_number}' {$branch}");
         if ($doc instanceof Document) {
             if ($this->document_id != $doc->document_id) {
                 return false;
@@ -624,7 +637,6 @@ class Document extends \ZCL\DB\Entity
 
     public function nextNumber($branch_id = 0) {
         $doc = $this->cast();
-
         $conn = \ZDB\DB::getConnect();
         $branch = "";
         if ($this->branch_id > 0) {
@@ -635,19 +647,23 @@ class Document extends \ZCL\DB\Entity
         }
         
         $last=0;
-        $sql = "select document_number from  documents  where   meta_id='{$this->meta_id}'   {$branch}  "; //todo  order  by  document_id desc  limit 0,1000
-        $list = $conn->GetCol($sql);
-        if (count($list) == 0) {
+        $letters='';
+        $sql = "select document_number from  documents  where   meta_id={$this->meta_id}   {$branch}   order  by  document_id desc  "; 
+        $lastdoc= $conn->GetOne($sql) ;
+        if(strlen($lastdoc ??'')==0) {
             $letters = preg_replace('/[0-9]/', '', $doc->getNumberTemplate());
-        } else {
-           foreach($list as $n) {
-               $digits = preg_replace('/[^0-9]/', '', $n);
-               if($digits > $last) {
-                  $last = round($digits) ; //максимальная цифра
-                  $letters = preg_replace('/[0-9]/', '', $n);
-               }
+        }    else {
+            $letters = preg_replace('/[0-9]/', '', $lastdoc);
+        }
+        $sql = "select document_number from  documents  where document_number like ". $conn->qstr( $letters.'%') ." and   meta_id={$this->meta_id}   {$branch}   order  by  document_id desc  "; 
+      
+        foreach($conn->Execute($sql) as $row) {
+           $digits = intval( preg_replace('/[^0-9]/', '', $row['document_number']) );
+           if($digits > $last) {
+              $last =  $digits ; //максимальная цифра
            }
-        } 
+        }
+        
         $last++;
         $d=5;
         if( strlen( ''.$last) >$d){ //если не  влазит
@@ -787,7 +803,7 @@ class Document extends \ZCL\DB\Entity
     /**
      *  проверка  был ли документ в  таких состояниях
      *
-     * @param mixed $states
+     * @param array $states
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
@@ -808,6 +824,10 @@ class Document extends \ZCL\DB\Entity
         return '';
     }
 
+    /**
+    * возвращает  условия для  ограничений  доступа...
+    * 
+    */
     public static function getConstraint() {
         $c = \App\ACL::getBranchConstraint();
         $user = System::getUser();
@@ -966,9 +986,7 @@ class Document extends \ZCL\DB\Entity
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
         }
-
-
-        // @unlink($f);
+ 
     }
 
     /**
@@ -1023,9 +1041,13 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
-        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
-
+        try{
+           $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+           $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
+        } catch (\Throwable $e) {
+          \App\Helper::logerror("barcode: ".$e->getMessage()) ;
+           return '';
+        }
         return $img;
     }
 
@@ -1060,8 +1082,7 @@ class Document extends \ZCL\DB\Entity
     /**
     * put your comment there...
     *
-    * @param mixed $text
-    * @return mixed
+      * @return mixed
     */
     public function getQRPay() {
 
@@ -1181,9 +1202,9 @@ class Document extends \ZCL\DB\Entity
     public function getBonus($add=true) {
         $conn = \ZDB\DB::getConnect();
         if($add) {
-            $sql = "select coalesce(sum(bonus),0) as bonus from paylist where bonus > 0 and document_id =" . $this->document_id;
+            $sql = "select coalesce(sum(amount),0) as bonus from custacc where optype=1 and amount > 0 and document_id =" . $this->document_id;
         } else {
-            $sql = "select coalesce(sum(0-bonus),0) as bonus from paylist where bonus < 0 and document_id =" . $this->document_id;
+            $sql = "select coalesce(sum(0-amount),0) as bonus from custacc where optype=1 and  amount < 0 and document_id =" . $this->document_id;
         }
 
         return $conn->GetOne($sql);
@@ -1193,4 +1214,34 @@ class Document extends \ZCL\DB\Entity
     protected function beforeDelete() { 
         $this->Cancel();
     }
+ 
+     /**
+     * актуальное  значение оплат
+     * 
+     */
+    public function getPayed() { 
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where paytype < 1000  and  document_id=" . $this->document_id;
+        $payed = doubleval($conn->GetOne($sql));
+        return $payed;
+    }    
+    
+   /**
+   * кастомный  экспорт в  ексель вместо автоматического  преобразования  с HTML
+   * возвращает  готовый файл
+   * реализация производится  в  соответствующемклассе-наследнике
+   */
+   public function customExportExcel() { 
+       return '';
+   }   
+   /**
+   * кастомный  экспорт в  pdf вместо автоматического  преобразования  с HTML
+   * возвращает  готовый файл
+   * реализация производится  в  соответствующемклассе-наследнике
+   */
+   public function customExportPDF() { 
+       return ''; 
+   }   
+    
 }

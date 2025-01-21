@@ -29,7 +29,7 @@ class ReturnIssue extends \App\Pages\Base
     public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -90,11 +90,9 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
+
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
 
             $this->docform->total->setText(H::fa($this->_doc->amount));
             $this->docform->payamount->setText(H::fa($this->_doc->payamount));
@@ -206,6 +204,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->edittovar->setKey(0);
+        $this->editdetail->edittovar->setText('');
         $this->docform->setVisible(false);
         $this->_rowid = -1;
     }
@@ -296,8 +296,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['discount'] = $this->docform->discount->getText();
 
@@ -427,7 +427,7 @@ class ReturnIssue extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }
@@ -451,7 +451,11 @@ class ReturnIssue extends \App\Pages\Base
 
         if($this->_basedocid >0) {
             $parent = Document::load($this->_basedocid) ;
-            $k = 1 - ($parent->amount - $total) / $parent->amount;
+            $k=1;
+            if($parent->amount >0) {
+                $k = 1 - ($parent->amount - $total) / $parent->amount;               
+            }
+
             $parentbonus = intval($parent->getBonus(false));   //списано
             if($parentbonus >0) {
                $retbonus = intval($parentbonus * $k) ;// доля
@@ -554,7 +558,6 @@ class ReturnIssue extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
 
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);

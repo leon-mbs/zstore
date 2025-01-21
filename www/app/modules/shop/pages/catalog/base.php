@@ -10,7 +10,7 @@ use Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
-    public function __construct($params = null) {
+    public function __construct( ) {
 
         \Zippy\Html\WebPage::__construct();
         global $_config;
@@ -56,11 +56,11 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
-        $this->_tvars["usepayment"] = $shop["paysystem"] > 0 ;
-        $this->_tvars["wp"] = $shop["paysystem"] == 1;
-        $this->_tvars["lp"] = $shop["paysystem"] == 2;
-        $this->_tvars["qr"] = ($shop["paysystem"] == 3 || $shop["addqr"] ==1) ;
-        $this->_tvars["np"] = $modules['np'] == 1;
+        $this->_tvars["usepayment"] =  ($shop["paysystem"]??0) > 0 ;
+        $this->_tvars["wp"] = ($shop["paysystem"]??0) == 1;
+        $this->_tvars["lp"] = ($shop["paysystem"]??0) == 2;
+        $this->_tvars["qr"] = (($shop["paysystem"]??0) == 3 || ($shop["addqr"]??0) ==1) ;
+        $this->_tvars["np"] = ($modules['np']??0) == 1;
 
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');
@@ -78,7 +78,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["nouseimages"] =  $this->op['nouseimages'] ==1;
         $this->_tvars["isfood"] = $this->op['ordertype'] == 2;
         $this->_tvars["logo"] = false;
-        if(strlen($this->op['logo'])>0) {
+        if(strlen($this->op['logo']??'')>0) {
             $this->_tvars["logo"] = $this->op['logo'];
         }
 
@@ -96,16 +96,23 @@ class Base extends \Zippy\Html\WebPage
         if(!is_array($shop["pages"])) {
             $shop["pages"] =  array();
         }
+       
         $this->_tvars['pages'] =array();
         foreach($shop["pages"] as $p) {
             $link = _BASEURL .trim($p->link, "/");
 
             $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);
         }
-
+        $this->_tvars['isblog']  = intval(\App\Modules\Shop\Entity\Article::findCnt('isactive=1') ) > 0 ;
         if(strlen($_COOKIE['zippy_shop'] ?? '')==0) {
             \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP, 0, 0) ;
             setcookie("zippy_shop", "visited", time() + 60 * 60 * 24);
+
+        }
+
+        if(strlen($_COOKIE['zippy_shop_unique'] ?? '')==0) {
+            \App\Helper::insertstat(\App\Helper::STAT_NEW_SHOP, 0, 0) ;
+            setcookie("zippy_shop_unique", "visited", 0);
 
         }
 

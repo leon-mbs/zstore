@@ -27,7 +27,7 @@ class OutcomeItem extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -39,20 +39,19 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
         $bid = \App\System::getBranch();
-
+        $this->docform->add(new Label('amount'));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
-        if ($this->_tvars["usebranch"]) {
+        if ($this->_tvars["usebranch"] ) {
             $rs = $conn->Execute("select  s.store_id,s.storename,b.branch_id ,b.branch_name from stores s join branches b on s.branch_id = b.branch_id where b.disabled <>  1 and b.branch_id <> {$bid}  order  by branch_name, storename");
             foreach ($rs as $it) {
                 $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
             }
         }
 
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(4)));
-
+      
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
 
         $this->docform->add(new TextInput('notes'));
@@ -79,10 +78,12 @@ class OutcomeItem extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
+            if($this->_doc->state== Document::STATE_NEW) {
+                $this->_doc->document_date = time() ;               
+            }
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
-            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -97,6 +98,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        $this->total();
     }
 
     public function detailOnRow($row) {
@@ -108,10 +110,13 @@ class OutcomeItem extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('sum', H::fa($item->sum)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
+        $this->_doc->amount += $item->sum;
     }
 
     public function deleteOnClick($sender) {
@@ -122,7 +127,7 @@ class OutcomeItem extends \App\Pages\Base
         $rowid =  array_search($item, $this->_itemlist, true);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-        $this->docform->detail->Reload();
+        $this->total();
     }
 
     public function addrowOnClick($sender) {
@@ -170,6 +175,8 @@ class OutcomeItem extends \App\Pages\Base
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
+        $item->sum = H::fa($item->quantity * $item->getPartion());
+        
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Потрібна партія виробника");
             return;
@@ -194,7 +201,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->detail->Reload();
+        $this->total();
 
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
@@ -219,7 +226,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
+
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
@@ -261,7 +268,7 @@ class OutcomeItem extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 $tostore = $this->docform->tostore->getValue();
-                if ($sender->id == 'execdoc' && $tostore > 0) {
+                if ($sender->id == 'execdoc' && $tostore > 0) {    //создание  прихода
                     $ch = $this->_doc->getChildren('IncomeItem');
                     if (count($ch) > 0) {
                         $this->setWarn('Вже є прибутковий документ ');
@@ -284,12 +291,13 @@ class OutcomeItem extends \App\Pages\Base
                         $admin  =\App\Entity\User::getByLogin('admin') ;
                         $indoc->user_id = $admin->user_id;
 
-                        $indoc->notes = "Підстава {$this->_doc->document_number}, склад " . $this->_doc->headerdata['storename'];
+                        $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
-                            $indoc->notes = "Підстава {$this->_doc->document_number}, склад {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
+                            $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
+                        
                         $items = array();
 
                         foreach ($this->_itemlist as $it) {
@@ -313,6 +321,11 @@ class OutcomeItem extends \App\Pages\Base
                         if ($indoc->document_id > 0) {
                             $this->setSuccess("Створено документ " . $indoc->document_number);
                         }
+                        
+                        $this->_doc->notes = "Створено {$indoc->document_number}, на склад " . $indoc->headerdata['storename'];
+          
+                        $this->_doc->save();
+                        
                     }
                 }
             } else {
@@ -330,7 +343,7 @@ class OutcomeItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -438,7 +451,13 @@ class OutcomeItem extends \App\Pages\Base
         if ($s instanceof Stock) {
             $item->price = $s->partion;
         }
-        $this->docform->detail->Reload();
+        $this->total();
     }
 
+    
+    private function total(){
+        $this->_doc->amount=0;
+        $this->docform->detail->Reload();
+        $this->docform->amount->setText(H::fa( $this->_doc->amount)) ;
+    }
 }

@@ -16,6 +16,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\File;
 
 //POS терминалы
 class PosList extends \App\Pages\Base
@@ -28,7 +29,7 @@ class PosList extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
@@ -57,16 +58,42 @@ class PosList extends \App\Pages\Base
 
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->posdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        
+        $this->add(new Form('keyform'))->setVisible(false);
+        $this->keyform->add(new SubmitButton('send'))->onClick($this, 'onSend')  ;
+        $this->keyform->add(new Button('cancelppo'))->onClick($this, 'cancelOnClick');
+        $this->keyform->add(new Button('delppo'))->onClick($this, 'delOnClick');
+        $this->keyform->add(new TextInput('password'));
+
+       
+        $this->keyform->add(new CheckBox('outher'));
+        $this->keyform->add(new CheckBox('loadsert'));
+      
+        $this->keyform->add(new File('keyfile'));
+        $this->keyform->add(new File('certfile'));
+        
+        
+        $modules = System::getOptions('modules');
+
+        $this->_tvars["loadkey"] = ($modules['ppo'] == 1 || $modules['vdoc'] == 1 ) ;
+        
     }
 
     public function poslistOnRow($row) {
         $item = $row->getDataItem();
 
+        $row->add(new Label('pos_id', $item->pos_id));
         $row->add(new Label('pos_name', $item->pos_name));
         $row->add(new Label('branch_name', $this->_blist[$item->branch_id]??''));
         $row->add(new Label('comment', $item->comment));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
+        $row->add(new Label('ppoowner', $item->ppoowner));
+        $row->add(new Label('ppokeyid', $item->ppokeyid));
+
+        $row->add(new ClickLink('ppo'))->onClick($this, 'ppoOnClick');
+        
     }
 
     public function deleteOnClick($sender) {
@@ -112,6 +139,8 @@ class PosList extends \App\Pages\Base
         $this->posdetail->clean();
         $b = \App\System::getBranch();
         $this->posdetail->editbranch->setValue($b > 0 ? $b : 0);
+        $this->posdetail->editfiscalnumber->setText("1");
+        
         $this->_pos = new Pos();
     }
 
@@ -168,6 +197,163 @@ class PosList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->postable->setVisible(true);
         $this->posdetail->setVisible(false);
+        $this->keyform->setVisible(false);
     }
 
+    //PPO
+    public function ppoOnClick($sender) {
+
+        $this->_pos = $sender->owner->getDataItem();
+        $this->keyform->setVisible(true);
+        $this->postable->setVisible(false);
+        $this->keyform->password->setText('') ;
+       
+        $this->keyform->delppo->setVisible(strlen($this->_pos->ppoowner)>0) ;
+
+        
+    }
+    public function delOnClick($sender) {
+
+        $this->_pos->ppoowner =  ''  ;
+        $this->_pos->ppocert = ''  ;
+        $this->_pos->ppokey =  ''  ;
+        $this->_pos->ppokeyid =  ''  ;
+        $this->_pos->save();
+        $this->postable->setVisible(true);
+        $this->posdetail->setVisible(false);
+        $this->keyform->setVisible(false);
+        $this->postable->poslist->Reload();
+
+    }
+
+ 
+    public function onSend($sender) {
+        $keydata= '';
+        $certdata= '';
+      
+        $outher  = $this->keyform->outher->isChecked() ;
+        $loadsert  = $this->keyform->loadsert->isChecked() ;
+        $password = $this->keyform->password->getText() ;
+        $keyfile = $this->keyform->keyfile->getFile() ;
+        $certfile = $this->keyform->certfile->getFile() ;
+
+        $isjks = strpos($keyfile['name'], '.jks') >0;
+     
+        $keydata =  @file_get_contents($keyfile['tmp_name']);
+        $certdata =  !empty($certfile['tmp_name']) ? @file_get_contents($certfile['tmp_name']) : '';
+
+        if(  strlen($keydata)==0) {
+            $this->setError('Не вказано ключ') ;
+            return;
+        }
+        if(strlen($password)==0  ) {
+            $this->setError('Не вказано пароль') ;
+            return;
+        }
+        if(strlen($certdata)==0 && $isjks == false && $loadsert == false) {
+            $this->setError('Не вказано сертифiкат') ;
+            return;
+        }
+
+        
+      
+    
+
+        try {
+
+            if($outher) {
+                $req  = [];
+                $req['key']  = base64_encode($keydata);
+                $req['cert']  =  base64_encode($certdata);
+                $req['pass']  = $password;
+                $req['isjks']  = $isjks;
+                $req['loadsert']  = $loadsert;
+                $post = json_encode($req, JSON_UNESCAPED_UNICODE) ;
+                file_put_contents("z:/post",$post) ;
+                //  $url = "http://local.zstorevue/loadkey.php";
+                $url = "https://key.zippy.com.ua/loadkey.php";
+                $ch = curl_init();
+
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                                 "Accept: application/json",
+                                "Content-Type: application/json"
+                ));
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                $result = curl_exec($ch);
+                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE)  ;
+                if (curl_errno($ch) > 0) {
+                    //$msg = curl_error($ch);
+
+                }
+                curl_close($ch) ;
+
+
+
+                $res = json_decode($result) ;
+
+                if(strlen($res->error) > 0) {
+                    $this->setErrorTopPage($res->error) ;
+                    return;
+                }
+                $cert=  unserialize(base64_decode($res->cert))  ;
+                $key  = unserialize(base64_decode($res->key)) ;
+
+            } else {
+
+                if($isjks) {
+                    list($key, $cert)= \PPOLib\KeyStore::loadjks($keydata, $password) ;
+                } else
+                if($loadsert) {
+                   $ret   = \PPOLib\PPO::fetchCert($keydata, $password) ;
+                   $key = $ret['key'] ;
+                   $cert = $ret['cert'] ;
+                } else {
+                    $cert =  \PPOLib\Cert::load($certdata) ;
+                    $key =   \PPOLib\KeyStore::load($keydata, $password, $cert) ;
+
+                }
+
+                if($key==null) {
+                    $this->setErrorTopPage('Invalid  key') ;
+                    return;
+                }
+
+            }
+
+            $this->_pos->ppoowner =  $cert->getOwnerName()   ;
+            $this->_pos->ppokeyid =  $cert->getKeyId()   ;
+            $this->_pos->ppocert = base64_encode(serialize($cert))  ;
+            $this->_pos->ppokey =  base64_encode(serialize($key))  ;
+
+
+        } catch(\Exception $ee) {
+            $msg = $ee->getMessage() ;
+            $this->setErrorTopPage($msg) ;
+            H::logerror($msg) ;
+            return;
+
+        }
+
+    
+
+ 
+        $this->_pos->ppoisjks =  $isjks ? 1 : 0   ;
+        $this->_pos->save();
+
+        $this->setSuccess("Ключ завантажений") ;
+
+        
+        $this->postable->setVisible(true);
+        $this->posdetail->setVisible(false);
+        $this->keyform->setVisible(false);
+        $this->postable->poslist->Reload();
+        
+
+    }    
+    
 }

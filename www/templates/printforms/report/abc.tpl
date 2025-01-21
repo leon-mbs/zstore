@@ -14,10 +14,10 @@
     {{#_detail}}
     <tr>
 
-        <td   style="background-color: {{color}} ;">{{name}}</td>
-        <td   style="background-color: {{color}} ;" align="right">{{value}} </td>
-        <td   style="background-color: {{color}} ;" align="right">{{perc}} </td>
-        <td   style="background-color: {{color}} ;">{{group}}</td>
+        <td    >{{name}}</td>
+        <td   class="{{color}}" align="right">{{value}} </td>
+        <td   class="{{color}}" align="right">{{perc}} </td>
+        <td   class="{{color}}">{{group}}</td>
 
     </tr>
     {{/_detail}}

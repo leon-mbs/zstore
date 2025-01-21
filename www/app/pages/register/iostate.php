@@ -8,7 +8,7 @@ use App\Entity\Pay;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
-use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\Pager;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
@@ -45,7 +45,7 @@ class IOState extends \App\Pages\Base
 
         $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -69,16 +69,11 @@ class IOState extends \App\Pages\Base
         $doc = $row->getDataItem();
 
         $row->add(new Label('number', $doc->document_number));
-
         $row->add(new Label('date', H::fd($doc->document_date)));
-
-
+        $row->add(new Label('amount', H::fa($doc->amount)));
         $row->add(new Label('username', $doc->username));
-
         $row->add(new Label('iotype', $this->_ptlist[$doc->iotype] ??''));
-
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-
 
     }
 
@@ -103,28 +98,24 @@ class IOState extends \App\Pages\Base
         $data = array();
 
         $header['A1'] = "Дата";
-        $header['B1'] = "Счет";
-        $header['C1'] = "Приход";
-        $header['D1'] = "Расход";
-        $header['E1'] = "Документ";
-        $header['F1'] = "Создал";
-        $header['G1'] = "Контрагент";
-        $header['H1'] = "Примечание";
+        $header['B1'] = "Документ";
+        $header['C1'] = "Сума";
+        $header['D1'] = "Автор";
+        $header['E1'] = "Тип прибутку/видатку";
+      
 
         $i = 1;
         foreach ($list as $doc) {
             $i++;
-            $data['A' . $i] = H::fd($doc->paydate);
-            $data['B' . $i] = $doc->mf_name;
-            $data['C' . $i] = ($doc->amount > 0 ? H::fa($doc->amount) : "");
-            $data['D' . $i] = ($doc->amount < 0 ? H::fa(0 - $doc->amount) : "");
-            $data['E' . $i] = $doc->document_number;
-            $data['F' . $i] = $doc->username;
-            $data['G' . $i] = $doc->customer_name;
-            $data['H' . $i] = $doc->notes;
+            $data['A' . $i] = H::fd($doc->document_date);
+            $data['B' . $i] = $doc->document_number;
+            $data['C' . $i] = H::fa($doc->amount) ;
+            $data['D' . $i] = $doc->username;
+            $data['E' . $i] = $this->_ptlist[$doc->iotype] ??'';
+
         }
 
-        H::exportExcel($data, $header, 'paylist.xlsx');
+        H::exportExcel($data, $header, 'iostate.xlsx');
     }
 
 }
@@ -185,7 +176,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  i.*,d.username,d.meta_id,d.document_number,d.document_date  from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by  id desc   ";
+        $sql = "select  i.*,d.username,d.meta_id,d.document_number,d.document_date,i.amount  from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by  id desc   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
          

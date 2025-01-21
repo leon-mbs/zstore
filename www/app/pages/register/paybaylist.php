@@ -16,6 +16,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\DataList\Paginator;
 
 /**
  * журнал расчет с покупателями
@@ -61,6 +62,8 @@ class PayBayList extends \App\Pages\Base
         $this->dlist->add(new Label("cnamed"));
         $this->dlist->add(new ClickLink("backd", $this, "onBack"));
         $this->dlist->add(new DataView('blist', new ArrayDataSource($this, '_blist'), $this, 'blistOnRow'));
+        $this->dlist->add(new Paginator('pagd', $this->dlist->blist));
+        $this->dlist->blist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -75,7 +78,7 @@ class PayBayList extends \App\Pages\Base
         $this->paypan->payform->add(new Date('pdate', time()));
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-
+    
 
         $this->updateCust();
 
@@ -104,7 +107,7 @@ class PayBayList extends \App\Pages\Base
             $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
         }
 
-        $cust_acc_view = \App\Entity\Customer::get_acc_view()  ;
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
  
 
    $sql = "SELECT  c.customer_name,  c.customer_id,c.phone,
@@ -160,15 +163,15 @@ GROUP BY c.customer_name,
         $row->add(new RedirectLink('customer_name', "\\App\\Pages\\Reference\\CustomerList", array($cust->customer_id)))->setValue($cust->customer_name);
         $row->add(new Label('phone', $cust->phone));
         $diff = $cust->act - $cust->pas;   
-        $row->add(new Label('amountd', $diff >0 ? H::fa($diff) : ''));
-        $row->add(new Label('amountc', $diff <0 ? H::fa(0-$diff) : ''));
+        $row->add(new Label('amountc', $diff >0 ? H::fa($diff) : ''));
+        $row->add(new Label('amountd', $diff <0 ? H::fa(0-$diff) : ''));
 
  
         $row->add(new ClickLink('showdet', $this, 'showdetOnClick'));
         $row->add(new ClickLink('createpay', $this, 'topayOnClick'));
 
-        $this->_totamountd += ($diff>0 ? $diff : 0);
-        $this->_totamountc += ($diff<0 ? 0-$diff : 0);
+        $this->_totamountc += ($diff>0 ? $diff : 0);
+        $this->_totamountd += ($diff<0 ? 0-$diff : 0);
 
     }
 
@@ -178,12 +181,12 @@ GROUP BY c.customer_name,
         $this->_cust = $sender->getOwner()->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
         $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
-        if($this->_cust->pas >  $this->_cust->act) {
+        if($this->_cust->pas <  $this->_cust->act) {
           $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
         }   else {
           $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
+          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
         }
         $this->updateDocs();
 
@@ -217,6 +220,7 @@ GROUP BY c.customer_name,
 
         $row->add(new Label('name', $doc->meta_desc));
         $row->add(new Label('number', $doc->document_number));
+        $row->add(new Label('branch_name', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
 
         $row->add(new Label('sum', H::fa($doc->payamount  - $doc->payed)));
@@ -379,7 +383,13 @@ GROUP BY c.customer_name,
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }
-
+        if ($payed > 0) {
+            $this->_doc->payed = $payed;
+        }
+  
+        $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
+        $doc->DoBalans();
+        
         $this->setSuccess('Оплата додана');
 
         //$this->updateDocs();
@@ -428,11 +438,13 @@ GROUP BY c.customer_name,
 
     public function updateDetDocs() {
 
+        $conn = \ZDB\DB::getConnect();
 
+ 
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
-            $br = " {$c} and ";
+            $br = " and {$c}  ";
         }
 
         $this->_blist = array();
@@ -440,34 +452,44 @@ GROUP BY c.customer_name,
 
         $bal=0;
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id} and    state NOT IN (0, 1, 2, 3, 15, 8, 17) ", "  document_date asc,document_id asc", -1, -1) as $id=>$d) {
-           
-              $ch = Customer::balans($d,Customer::TYPE_BAYER);
-                
-              if($ch===true) {
-                   continue;
-              }          
-          
-            
-                $r = new  \App\DataItem() ;
-                $r->document_id = $d->document_id;
-                $r->meta_desc = $d->meta_desc;
-                $r->document_number = $d->document_number;
-                $r->document_date = $d->document_date;
-                $r->b_active = $ch['active'];
-                $r->b_passive = $ch['passive'];
+          $sql =  "select 
+             SUM(CASE WHEN cv.amount > 0  THEN cv.amount ELSE 0 END) AS passive,
+             SUM(CASE WHEN cv.amount < 0  THEN 0 - cv.amount ELSE 0 END) AS active,
+            cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
 
-                $diff = $ch['active'] - $ch['passive'];
+             FROM custacc_view cv
+             JOIN documents_view dv 
+             ON cv.document_id = dv.document_id 
+             WHERE  cv.customer_id={$this->_cust->customer_id} 
+            {$br} AND optype IN (2)    
+            GROUP BY cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
+              HAVING  active <> passive
+            ORDER  BY  cv.document_id ";
+     
+        foreach ( $conn->Execute($sql) as $d) {
+                
+                $diff = $d['active'] - $d['passive'];
                 if($diff==0) {
                     continue;
-                }
+                }    
+                $r = new  \App\DataItem() ;
+                $r->document_id = $d['document_id'];
+                $r->meta_desc = $d['meta_desc'];
+                $r->document_number = $d['document_number'];
+                $r->branch_name = $d['branch_name'];
+                $r->document_date =  strtotime( $d['createdon'] );
+                $r->b_active = $d['active'];
+                $r->b_passive = $d['passive'];
+
+       
+       
                 $bal +=  $diff;
 
                 $r->bal =  $bal;
 
                 $this->_blist[] = $r;
                 if($bal==0) {
-                    $this->_blist = array();
+                    $this->_blist = [];
                 }
 
            
@@ -485,6 +507,7 @@ GROUP BY c.customer_name,
 
         $row->add(new Label('dname', $doc->meta_desc));
         $row->add(new Label('dnumber', $doc->document_number));
+        $row->add(new Label('dbranch_name', $doc->branch_name));
         $row->add(new Label('ddate', H::fd($doc->document_date)));
 
         $row->add(new Label('in', $doc->b_passive > 0 ? H::fa($doc->b_passive) : ""));

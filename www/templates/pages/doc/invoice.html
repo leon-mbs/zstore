@@ -62,11 +62,11 @@
                 <div class="col-12 col-md-3">
                    <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                    <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="store">Зі складу</label>
@@ -99,7 +99,7 @@
                 <div class="col-10 col-lg-8">
                       {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on" type="text" zippy="barcode"
+                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"   type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
           
@@ -200,7 +200,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input   placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
+                        <input    placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
 
                         Наявність: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
@@ -210,13 +210,13 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required 
                                pattern="[0-9,\.]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"  pattern="[0-9,\.]+"   style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required   pattern="[0-9,\.]+"   style="width: 100px;">
                     </div>
 
 
@@ -243,13 +243,13 @@
                     </div>
                     <div class="form-group">
                         <label for="editserquantity">Кiлькiсть</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserquantity" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserquantity"  required 
                                pattern="[0-9,\.]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editserprice">Цiна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserprice" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserprice"  required 
                                pattern="[0-9,\.]+"                               style="width: 100px;">
 
                     </div>
@@ -272,7 +272,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input autofocus="on" class="form-control " zippy="editcustname" required="required"/>
+                        <input autofocus="on"   class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editcustphone">Телефон</label>
@@ -291,11 +291,7 @@
         <script>
          $(document).ready(function () {
  
-            if( $('#edittovar').length )         
-            {
-                $('#edittovar').focus();
-            } 
-     
+          
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return
@@ -318,7 +314,8 @@
                     
             })
                  
-     
+                $("#edittovar").focus()    
+ 
                  
                  
           });   

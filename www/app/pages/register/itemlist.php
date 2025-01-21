@@ -103,6 +103,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('brand', $item->manufacturer));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('cell', $item->cell));
 
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
@@ -111,8 +112,6 @@ class ItemList extends \App\Pages\Base
         $inprice="";
         if($this->_tvars['noshowpartion'] != true) {
           $inprice = $item->getPartion($store);  
-            
-          ;
         }
         $row->add(new Label('inprice', H::fa($inprice)));
         $pt = $this->filter->searchprice->getValue();
@@ -142,8 +141,8 @@ class ItemList extends \App\Pages\Base
             $row->setAttribute('class', 'text-warning');
         }
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl());
+        $row->imagelistitem->setAttribute('href', $item->getImageUrl());
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
@@ -258,24 +257,24 @@ class ItemList extends \App\Pages\Base
 
  
         if ($this->_item->price1 > 0) {
-            $p = $this->_item->getPrice('price1', 0, $stock->partion);
+            $p = $this->_item->getPrice('price1', $store);
 
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price1'] ,'i_price'=>$p); 
         }
         if ($this->_item->price2 > 0) {
-            $p = $this->_item->getPrice('price2', 0, $stock->partion);
+            $p = $this->_item->getPrice('price2', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price2'],'i_price'=>$p); 
         }
         if ($this->_item->price3 > 0) {
-            $p = $this->_item->getPrice('price3', 0, $stock->partion);
+            $p = $this->_item->getPrice('price3', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price3'],'i_price'=>$p); 
         }
         if ($this->_item->price4 > 0) {
-            $p = $this->_item->getPrice('price4', 0, $stock->partion);
+            $p = $this->_item->getPrice('price4', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price4'],'i_price'=>$p); 
         }
         if ($this->_item->price5 > 0) {
-            $p = $this->_item->getPrice('price5', 0, $stock->partion);
+            $p = $this->_item->getPrice('price5', $store);
             $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price5'],'i_price'=>$p); 
         }
       
@@ -326,10 +325,10 @@ class ItemList extends \App\Pages\Base
             $interval = date_diff($d1,$d2);
 
             if($interval->days >30)  {
-                $conn=\ZDB\db::getConnect()  ;
+                $conn=\ZDB\DB::getConnect()  ;
                 $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
                 $sell =   $conn->GetOne($sql)  ;
-                $sell =  number_format($sell/$interval->days*30, 1, '.', '');  ;
+                $sell =  number_format($sell/$interval->days*30, 1, '.', '');
                 $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в мiс.";
                 
                 
@@ -476,28 +475,38 @@ class ItemList extends \App\Pages\Base
         if (count($items) == 0) {
             return;
         }
-        if(intval(\App\System::getUser()->prtypelabel) == 0) {
+        
+        $user= \App\System::getUser() ;
+        $ret = H::printItems($items);   
+        
+        if(intval($user->prtypelabel) == 0) {
 
-            $htmls = H::printItems($items);
-
+         
             if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $htmls;
+                \App\Session::getSession()->printform =  $ret;
 
                 $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
-                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+                $this->addAjaxResponse("  $('#tag').html('{$ret}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
 
             }
             return;
         }
 
         try {
-
-            $xml = H::printItemsEP($items);
-            $buf = \App\Printer::xml2comm($xml);
-            $b = json_encode($buf) ;
-
-            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
+            $buf=[];
+           
+            if(intval($user->prtypelabel) == 1) {
+               $buf = \App\Printer::xml2comm($ret);
+                        
+             }
+          
+            if(intval($user->prtypelabel) == 2) {
+               $buf = \App\Printer::arr2comm($ret);
+                         
+             }
+             $b = json_encode($buf) ;   
+             $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;
             $message = str_replace(";", "`", $message)  ;
@@ -578,8 +587,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($text) > 0) {
 
             if ($p == false) {
+                $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
                 $text = Item::qstr('%' . $text . '%');
-                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
+                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text}  or detail like {$det}  )  ";
             } else {
                 $text = Item::qstr($text);
                 $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";

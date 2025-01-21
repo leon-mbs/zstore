@@ -85,8 +85,8 @@ class Dashboard extends \App\Pages\Base
         $this->_tvars['ord'] = json_encode($ord);
 
         $sql = " content  LIKE '%<shoporder>1</shoporder>%' "  ;
-        $sql .= " and date(document_date) <= " . $conn->DBDAte(time());
-        $sql .= " and date(document_date) > " . $conn->DBDAte(strtotime("- 30 day", time()));
+        $sql .= " and  (document_date) <= " . $conn->DBDAte(time());
+        $sql .= " and  (document_date) > " . $conn->DBDAte(strtotime("- 30 day", time()));
         
         $items = array();
         $cats = array();
@@ -133,8 +133,37 @@ class Dashboard extends \App\Pages\Base
                 break;
             }
         }
+        $to = new \App\DateTime() ;
+        $from = new \App\DateTime() ;
+        $from = $from->subMonth(1) ;
+        $to = $conn->DBDate($to->getTimestamp()) ;
+        $from = $conn->DBDate($from->getTimestamp()) ;
+        
+        $sql   = "select count(*) from stats where date(dt)>={$from} and  date(dt)<={$to} and category=".\App\Helper::STAT_NEW_SHOP;
+        $this->_tvars['vnewv'] = $conn->GetOne($sql);
 
+        $sql   = "select count(*) from stats where date(dt)>={$from} and  date(dt)<={$to} and category=".\App\Helper::STAT_ORDER_SHOP;
+        $this->_tvars['vorders'] = $conn->GetOne($sql);
 
+        $sql   = "select count(*) from stats where date(dt)>={$from} and  date(dt)<={$to} and category=".\App\Helper::STAT_CARD_SHOP;
+        $this->_tvars['vcart'] = $conn->GetOne($sql);
+        
+        
+        $sql   = "  state in (9,10,20) and   
+                  content  LIKE '%<shoporder>1</shoporder>%'   
+                   and  (document_date) <= {$to}  and  (document_date) > {$from} " ;
+        
+        $docs = \App\Entity\Doc\Document::find($sql);   
+      
+        $this->_tvars['vdoneorders'] = count($docs);
+        $items=[];
+        foreach($docs as $d) {
+          foreach($d->unpackDetails('detaildata')  as $i) {
+             $items[$i->item_id] = $i->item_id;
+          }
+        }
+      
+        $this->_tvars['vbayed'] = count(array_keys($items));
     }
 
 

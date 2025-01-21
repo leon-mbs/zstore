@@ -35,6 +35,14 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<cbkey>{$this->cbkey}</cbkey>";
         $this->details .= "<cbpin>{$this->cbpin}</cbpin>";
         $this->details .= "<autoshift>{$this->autoshift}</autoshift>";
+        $this->details .= "<ppoowner><![CDATA[{$this->ppoowner}]]></ppoowner>";
+        $this->details .= "<ppocert><![CDATA[{$this->ppocert}]]></ppocert>";
+        $this->details .= "<ppokey><![CDATA[{$this->ppokey}]]></ppokey>";
+        $this->details .= "<ppopassword>{$this->ppopassword}</ppopassword>";
+       
+        $this->details .= "<ppokeyid>{$this->ppokeyid}</ppokeyid>";
+        $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
+        
         $this->details .= "</details>";
 
         return true;
@@ -61,6 +69,15 @@ class Pos extends \ZCL\DB\Entity
         if (strlen(''.$this->fiscdocnumber ) == 0) {
             $this->fiscdocnumber = 1;
         }
+        
+        $this->ppoowner = (string)($xml->ppoowner[0]);
+        $this->ppokey = (string)($xml->ppokey[0]);
+        $this->ppocert = (string)($xml->ppocert[0]);
+        $this->ppopassword = (string)($xml->ppopassword[0]);
+        $this->ppoisjks = (int)($xml->ppoisjks[0]);
+        $this->ppokeyid = (string)($xml->ppokeyid[0]);
+        $this->iban = (string)($xml->iban[0]);
+        
         parent::afterLoad();
     }
 
@@ -76,7 +93,7 @@ class Pos extends \ZCL\DB\Entity
             return "Термiнал вже використаний в чеках";
         }
 
-        $st = \App\Modules\PPO\PPOHelper::rroState($this->fiscalnumber, \App\Entity\Firm::load($this->firm_id)) ;
+        $st = \App\Modules\PPO\PPOHelper::rroState($this->fiscalnumber, $this) ;
         if($st['ShiftState'] ==1) {
             return "Вiдкрита змiна";
         }

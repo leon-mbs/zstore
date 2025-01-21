@@ -89,7 +89,7 @@ class DocList extends \App\Pages\Base
         $fndoc =  $this->filter->doc->getText();
      
         if(strlen($fndoc)>0) {
-            $ndoc = Document::qstr($fndoc)  ;;
+            $ndoc = Document::qstr($fndoc)  ;
             $fn = Document::qstr( '%'. $fndoc . '%')      ;
             
             $where .=  " and (document_number={$ndoc} or content like {$fn} ) ";

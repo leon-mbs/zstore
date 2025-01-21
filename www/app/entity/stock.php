@@ -24,8 +24,8 @@ class Stock extends \ZCL\DB\Entity
     /**
      * Метод  для   получения  имени  ТМЦ  с  ценой для выпадающих списков
      *
-     * @param mixed $criteria
-     * @return []
+     * @param mixed $store
+ 
      * @static
      */
     public static function findArrayAC($store, $partname = "") {
@@ -39,15 +39,22 @@ class Stock extends \ZCL\DB\Entity
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
 
-        $entitylist = self::find($criteria, "sdate asc");
+        $entitylist = self::find($criteria, " sdate asc");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
+            $name = $value->itemname;
+            
+            if (strlen($value->item_code) > 0) {
+                $name .= ', ' . $value->item_code ;
+            }
             if (strlen($value->snumber) > 0) {
-                $value->itemname .= ' (' . $value->snumber . ',' . \App\Helper::fd($value->sdate) . ')';
+                $name .= ', С/Н ' . $value->snumber . ' ' . \App\Helper::fd($value->sdate) ;
             }
              
-            $list[$key] = $value->itemname;
+            $name .= ', ц. ' . \App\Helper::fa($value->partion) ;
+            $name .= ', к. ' . \App\Helper::fqty($value->qty) ;
+            $list[$key] = $name;
         }
 
         return $list;
@@ -57,9 +64,11 @@ class Stock extends \ZCL\DB\Entity
      * Возвращает запись  со  склада по  цене (партии  для  оптового)  товара.
      *
      * @param mixed $store_id Склад
-     * @param mixed $tovar_id Товар
+     * @param mixed $item_id Товар
      * @param mixed $price Цена
-     * @param mixed $create Создать  если  не   существует
+     * @param mixed $snumber 
+     * @param mixed $sdate  
+     * @param mixed $create  Создать  если  не   существует
      * @param mixed $customer_id Поставщик
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0) {
@@ -109,7 +118,7 @@ class Stock extends \ZCL\DB\Entity
             $stock = Stock::load($stock_id);
             if ($date > 0) {
                 $conn = \ZDB\DB::getConnect();
-                $where = "   stock_id = {$stock_id} and date(document_date) <= " . $conn->DBDate($date);
+                $where = "   stock_id = {$stock_id} and  document_date  <= " . $conn->DBDate($date);
                 $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
                 return $conn->GetOne($sql);
             } else {

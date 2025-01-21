@@ -34,7 +34,7 @@ class Options extends \App\Pages\Base
         if (System::getUser()->rolename != 'admins') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратори');
             App::RedirectError();
-            return false;
+            return  ;
         }
 
         $this->add(new Form('common'))->onSubmit($this, 'saveCommonOnClick');
@@ -54,11 +54,9 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usebranch'));
         $this->common->add(new CheckBox('showactiveusers'));
         $this->common->add(new CheckBox('showchat'));
-        $this->common->add(new CheckBox('noemail'));
 
 
-        $this->common->add(new CheckBox('capcha'));
-
+      
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
         $this->common->add(new TextInput('ts_end'));
@@ -80,14 +78,13 @@ class Options extends \App\Pages\Base
 
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
         $this->common->showchat->setChecked($common['showchat']);
-        $this->common->noemail->setChecked($common['noemail']);
+
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->sell2->setChecked($common['sell2']);
         $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
 
         $this->common->usebranch->setChecked($common['usebranch']);
-        $this->common->capcha->setChecked($common['capcha']);
-
+       
         $this->common->ts_break->setText($common['ts_break'] == null ? '60' : $common['ts_break']);
         $this->common->ts_start->setText($common['ts_start'] == null ? '09:00' : $common['ts_start']);
         $this->common->ts_end->setText($common['ts_end'] == null ? '18:00' : $common['ts_end']);
@@ -122,12 +119,8 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('noallowfiz'));
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
-        $this->business->add(new CheckBox('autoarticle'));
 
-        $this->business->add(new CheckBox('useimages'));
-        $this->business->add(new CheckBox('numberttn'));
-        $this->business->add(new CheckBox('usecattree'));
-        $this->business->add(new CheckBox('nocheckarticle'));
+   
         $this->business->add(new CheckBox('spreaddelivery'));
         $this->business->add(new CheckBox('baydelivery'));
 
@@ -150,23 +143,24 @@ class Options extends \App\Pages\Base
         $this->business->noallowfiz->setChecked($common['noallowfiz']);
         $this->business->useval->setChecked($common['useval']);
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
-        $this->business->autoarticle->setChecked($common['autoarticle']);
+
         $this->business->usesnumber->setValue($common['usesnumber']??0);
-        $this->business->useimages->setChecked($common['useimages']);
-        $this->business->numberttn->setChecked($common['numberttn']);
-        $this->business->usecattree->setChecked($common['usecattree']);
+
+
+
         $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
         $this->business->baydelivery->setChecked($common['baydelivery']);
 
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
-        $this->business->actualdate->setDate($common['actualdate'] ??  strtotime('2023-01-01'));
+        $this->business->actualdate->setDate($common['actualdate'] ??  strtotime( date('Y'). '-01-01') );
 
 
 
         //валюты
 
         $this->add(new Form('valform'));
+        $this->valform->add(new SubmitLink('loadrate', $this, 'onValCource'));
         $this->valform->add(new SubmitLink('valadd', $this, 'onValAdd'));
         $this->valform->add(new SubmitButton('saveval'))->onClick($this, 'saveValOnClick');
 
@@ -314,7 +308,7 @@ class Options extends \App\Pages\Base
 
         $this->salesourcesform->add(new DataView('salesourceslist', new ArrayDataSource(new Bind($this, '_salesourceslist')), $this, 'salesourceListOnRow'));
 
-        $this->_salesourceslist = $common['salesources'];
+        $this->_salesourceslist = $common['salesources'] ??'';
         if (is_array($this->_salesourceslist) == false) {
             $this->_salesourceslist = array();
         }
@@ -334,6 +328,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
         $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
         $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
+
 //    
         
         $fisctype=0;
@@ -370,10 +365,9 @@ class Options extends \App\Pages\Base
 
         $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
         $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
-        $common['noemail'] = $this->common->noemail->isChecked() ? 1 : 0;
-        $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
-        $common['capcha'] = $this->common->capcha->isChecked() ? 1 : 0;
 
+        $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
+       
         System::setOptions("common", $common);
 
 
@@ -407,15 +401,12 @@ class Options extends \App\Pages\Base
         $common['checkslogan'] = trim($this->business->checkslogan->getText());
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
-        $common['autoarticle'] = $this->business->autoarticle->isChecked() ? 1 : 0;
+
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
-        $common['useimages'] = $this->business->useimages->isChecked() ? 1 : 0;
-        $common['nocheckarticle'] = $this->business->nocheckarticle->isChecked() ? 1 : 0;
+        
         $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
         $common['baydelivery'] = $this->business->baydelivery->isChecked() ? 1 : 0;
 
-        $common['numberttn'] = $this->business->numberttn->isChecked() ? 1 : 0;
-        $common['usecattree'] = $this->business->usecattree->isChecked() ? 1 : 0;
 
 
         System::setOptions("common", $common);
@@ -583,10 +574,7 @@ class Options extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('Занадто великий розмір зображення');
-                return;
-            }
+          
 
             $name = basename($file["name"]);
             move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
@@ -645,11 +633,34 @@ class Options extends \App\Pages\Base
 
     }
 
+    public function onValCource($sender) {
+        $xml=@simplexml_load_string(file_get_contents("https://bank.gov.ua/NBU_Exchange/exchange?date=".date("d.m.Y")  ) ) ;
+        if($xml==false) return;
+        $vl = $this->_vallist;
+        $this->_vallist=[];
+        foreach($xml->children() as $row){
+            $code=(string)$row->CurrencyCodeL[0];
+            $amount=doubleval($row->Amount[0]);
+            $unit=doubleval($row->Units[0]);
+            $rate=   @number_format($amount/$unit, 3, '.', '')  ;
+            foreach($vl as $v){
+               if($v->code == $code ) {
+                  $v->rate  = $rate;
+               }
+               $this->_vallist[$v->id]=$v;
+            }
+        }
+        
+        $this->valform->vallist->Reload();
+        $this->goAnkor('valform') ;
+        
+    }
     public function onValDel($sender) {
         $val = $sender->getOwner()->getDataItem() ;
         $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
 
         $this->valform->vallist->Reload();
+        $this->goAnkor('valform') ;
 
     }
     public function onValAdd($sender) {
@@ -662,7 +673,7 @@ class Options extends \App\Pages\Base
 
         $this->_vallist[$val->id] = $val;
         $this->valform->vallist->Reload();
-
+        $this->goAnkor('valform') ;
     }
 
     public function saveValOnClick($sender) {
@@ -684,6 +695,7 @@ class Options extends \App\Pages\Base
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
         $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
         $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
+
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
 

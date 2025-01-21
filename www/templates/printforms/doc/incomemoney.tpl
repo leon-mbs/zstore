@@ -18,7 +18,7 @@
     </tr>
     <tr>
         <td colspan="4">
-            <b>Тип доходу:</b> {{type}}
+              {{totalstr}}   
         </td>
     </tr>
 

@@ -57,7 +57,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new File('editfile'));
         $this->docform->add(new TextInput('bonus'))->setVisible(false);
-        $this->docform->add(new TextInput('custbonus'))->setVisible(false);
+
         $this->docform->add(new TextInput('fine'))->setVisible(false);
         $this->docform->add(new CheckBox('editaccess'));
         $this->docform->add(new Date('document_date', time()));
@@ -85,6 +85,7 @@ class OfficeDoc extends \App\Pages\Base
         $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name");
         $this->docform->add(new DropDownChoice("emp", $emplist, 0))->onChange($this, 'onEmp');
 
+      
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
@@ -134,7 +135,7 @@ class OfficeDoc extends \App\Pages\Base
             $this->docform->edittitle->setText($this->_doc->notes);
             $this->docform->bonus->setText($this->_doc->headerdata['bonus']);
             $this->docform->fine->setText($this->_doc->headerdata['fine']);
-            $this->docform->custbonus->setText($this->_doc->headerdata['custbonus']);
+
 
             $customer_id = $this->_doc->headerdata['customer'] ?? 0;
             if ($customer_id > 0) {
@@ -153,6 +154,7 @@ class OfficeDoc extends \App\Pages\Base
             $this->docform->doccontent->setText($d['data'] ?? '');
             $this->docform->user->setValue($this->_doc->user_id);
 
+
         } else {
             if ($copyid > 0) {
                 $cdoc = Document::load($copyid)->cast();
@@ -160,8 +162,9 @@ class OfficeDoc extends \App\Pages\Base
                 $d = $cdoc->unpackDetails('detaildata');
                 $this->docform->doccontent->setText($d['data'] ?? '');
                 $this->docform->user->setValue($user);
+                $this->docform->document_number->setText($this->_doc->nextNumber());
                 $this->_doc = Document::create('OfficeDoc');
-
+                
 
             } else {
                 $this->_doc = Document::create('OfficeDoc');
@@ -211,7 +214,9 @@ class OfficeDoc extends \App\Pages\Base
         $this->_doc->packDetails('detaildata', array('data' => $data));
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
-        $this->_doc->headerdata['custbonus'] = $this->docform->custbonus->getText();
+
+
+
 
         $customer_id = $this->docform->customer->getKey();
         if ($customer_id > 0) {
@@ -315,7 +320,7 @@ class OfficeDoc extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
 
         }
@@ -338,7 +343,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->cinfo->setVisible(true);
         $this->docform->cinfo->setAttribute('onclick', "customerInfo({$customer_id});");
 
-   //todo     $this->docform->custbonus->setVisible($customer_id > 0);
+
 
     }
 

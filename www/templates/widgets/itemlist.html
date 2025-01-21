@@ -27,7 +27,7 @@
                                 <label for="wissearchmanufacturer">Бренд </label>
                                 <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
                                 <datalist id="wissearchmanlist">
-                                      <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" >
+                                      <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" ></option>
             
                                 </datalist>
                                    <div class="form-check  mr-sm-2">

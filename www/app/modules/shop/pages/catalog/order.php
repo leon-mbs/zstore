@@ -10,6 +10,7 @@ use App\System;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Image;
@@ -22,17 +23,23 @@ use App\Modules\Shop\Entity\Product;
 class Order extends Base
 {
     public $sum = 0;
+    public $disc = 0;
     public $orderid = 0;
     public $basketlist;
 
     public function __construct() {
         parent::__construct();
+        
+        $this->sum=0;
+        $this->disc=0;
+        
         $this->basketlist = Basket::getBasket()->list;
         $form = $this->add(new Form('listform'));
         $form->onSubmit($this, 'OnUpdate');
 
         $form->add(new \Zippy\Html\DataList\DataView('pitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, 'basketlist')), $this, 'OnAddRow'))->Reload();
         $form->add(new Label('summa', new \Zippy\Binding\PropertyBinding($this, 'sum')));
+        $form->add(new Label('disc', new \Zippy\Binding\PropertyBinding($this, 'disc')));
         $this->OnUpdate($this);
 
 
@@ -63,18 +70,14 @@ class Order extends Base
             $form->phone->setText($c->phone) ;
             $form->email->setText($c->email)  ;
             $form->address->setText($c->address)  ;
-            $form->firstname->setText($c->firstname)  ;
+            $form->firstname->setText( strlen( $c->firstname ??'') >0 ? $c->firstname : $c->customer_name )  ;
             $form->lastname->setText($c->lastname)  ;
         }
 
-        $api = new \App\Modules\NP\Helper();
+        $form->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
+        $form->baycity->onChange($this, 'onBayCity');
+        $form->add(new AutocompleteTextInput('baypoint'))->onText($this, 'onTextBayPoint');;
       
-     
-        $areas = $api->getAreaListCache();
-        $form->add(new DropDownChoice('bayarea',$areas,0))->onChange($this, 'onBayArea');
-        $form->add(new DropDownChoice('baycity'))->onChange($this, 'onBayCity');
-        $form->add(new DropDownChoice('baypoint'));
-   
         $this->OnDelivery($form->delivery);
 
 
@@ -90,7 +93,6 @@ class Order extends Base
             $this->orderform->address->setVisible(true);
         }
         
-        $this->orderform->bayarea->setVisible($dt  == Document::DEL_NP ) ;
         $this->orderform->baycity->setVisible($dt  == Document::DEL_NP ) ;
         $this->orderform->baypoint->setVisible($dt == Document::DEL_NP ) ;
         
@@ -115,7 +117,19 @@ class Order extends Base
 
 
         }
+        $this->disc =0;
+        $cid = System::getCustomer() ;
+        if($cid > 0) {
+            $c =  Customer::load($cid);
+            $d= $c->getDiscount();
 
+            if (doubleval($d) > 0) {
+                $this->disc = \App\Helper::fa(  $this->sum * ($d/100) );
+                $this->sum  =  $this->sum -  $this->disc;         
+            }              
+        }
+   
+        $this->listform->disc->setVisible($this->disc >0);
 
         $basket = Basket::getBasket();
         $basket->list = $this->basketlist   ;
@@ -237,8 +251,11 @@ class Order extends Base
                 'ship_address'  => $address,
                 'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
+                'totaldisc'     => $this->disc,
                 'total'         => $amount
             );
+             
+            
             $order->packDetails('detaildata', $itlist);
 
             $cid = System::getCustomer() ;
@@ -270,33 +287,34 @@ class Order extends Base
             $order->headerdata['contact'] = trim($firstname.' '.$lastname) . ', ' . $phone;
             $order->headerdata['salesource'] = $shop['salesource'];
             $order->headerdata['shoporder'] = 1;
-            if($modules['defmf']>0) {
-              $neworder->headerdata['payment'] = $modules['defmf'];
+            if($shop['defmf']>0) {
+                $order->headerdata['payment'] = $shop['defmf'];
             }
 
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
-            $order->payamount = $amount;
+            $order->payamount = $amount - $this->disc;
+
          //   $order->branch_id = $shop["defbranch"] ?? 0;
             $order->firm_id = $shop["firm"];
-
+            $order->user_id = intval($shop["defuser"]??0) ;
             if($order->user_id==0) {
                 $user = \App\Entity\User::getByLogin('admin') ;
                 $order->user_id = $user->user_id;
             }
 
-            $order->headerdata['bayarea'] = $this->orderform->bayarea->getValue();
-            $order->headerdata['baycity'] = $this->orderform->baycity->getValue();
-            $order->headerdata['baypoint'] = $this->orderform->baypoint->getValue();
-            $order->headerdata['npaddress'] ='';
-            if(strlen($order->headerdata['bayarea'])>1) {
-               $order->headerdata['npaddress']  .= (' '. $this->orderform->bayarea->getValueName() );   
-            }
+
+           $order->headerdata['baycity'] = $this->orderform->baycity->getKey();
+           $order->headerdata['baycityname'] = $this->orderform->baycity->getText();
+           $order->headerdata['baypoint'] = $this->orderform->baypoint->getKey();
+           $order->headerdata['baypointname'] = $this->orderform->baypoint->getText();
+           $order->headerdata['npaddressfull'] ='';
+        
             if(strlen($order->headerdata['baycity'])>1) {
-               $order->headerdata['npaddress']  .= (' '. $this->orderform->baycity->getValueName() );   
+               $order->headerdata['npaddressfull']  .= (' '. $this->orderform->baycity->getText() );   
             }
             if(strlen($order->headerdata['baypoint'])>1) {
-               $order->headerdata['npaddress']  .= (' '. $this->orderform->baypoint->getValueName() );   
+               $order->headerdata['npaddressfull']  .= (' '. $this->orderform->baypoint->getText() );   
             }
               
             
@@ -381,24 +399,48 @@ class Order extends Base
         $datarow->add(new Label('price', $item->price));
         $datarow->add(new TextInput('quantity', new \Zippy\Binding\PropertyBinding($item, 'quantity'))) ;
         $datarow->add(new \Zippy\Html\Link\ClickLink('delete', $this, 'OnDelete'));
-        $datarow->add(new Image('photo', "/loadshopimage.php?id={$item->image_id}&t=t"));
+        $datarow->add(new Image('photo',$item->image_url));
     }
 
-
-    public function onBayArea($sender) {
-
+    public function onTextBayCity($sender) {
+        $text = $sender->getText()  ;
         $api = new \App\Modules\NP\Helper();
-        $list = $api->getCityListCache($sender->getValue());
+        $list = $api->searchCity($text);
 
-        $this->orderform->baycity->setOptionList($list);
+        if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+            foreach($d['Addresses'] as $c) {
+               $opt[$c['Ref']]=$c['Present']; 
+            }
+        }
+        
+        return $opt;
+       
     }
 
     public function onBayCity($sender) {
-
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue());
-
-        $this->orderform->baypoint->setOptionList($list);
+     
+        $this->orderform->baypoint->setKey('');
+        $this->orderform->baypoint->setText('');
     }
+  
+    public function onTextBayPoint($sender) {
+        $text = $sender->getText()  ;
+        $ref=  $this->orderform->baycity->getKey();
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchPoints($ref,$text);
+       
+        if($list['success']!=true) return;
+        
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
+        }
+        
+        return $opt;        
+    }
+
+
 
 }

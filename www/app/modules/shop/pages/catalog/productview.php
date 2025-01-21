@@ -48,10 +48,10 @@ class ProductView extends Base
         // $this->_description = $product->getDescription();
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'));
-//        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}");
-        $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
-        $this->product_image->add( new  \Zippy\Html\Image('product_imageimg'))->setUrl("/loadshopimage.php?id={$product->image_id}");
+        $this->product_image->setAttribute('href', $product->getImageUrl(true));
+
+        $this->product_image->add( new  \Zippy\Html\Image('product_imageimg'))->setUrl($product->getImageUrl(true));
         
         $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('productcode', $product->item_code));
@@ -114,7 +114,11 @@ class ProductView extends Base
         $imglist = array();
 
         foreach ($product->getImages(true) as $id) {
-            $imglist[] = \App\Entity\Image::load($id);
+            $img = \App\Entity\Image::load($id);
+            if($img != null) {
+               $imglist[] = \App\Entity\Image::load($id);    
+            }
+            
         }
         $this->add(new DataView('imagelist', new ArrayDataSource($imglist), $this, 'imglistOnRow'))->Reload();
         $this->_tvars['islistimage'] = count($imglist) > 1;
@@ -323,7 +327,7 @@ class ProductView extends Base
 
     public function reclistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue( $item->getImageUrl(true,true) );
         $row->add(new BookmarkableLink("rcname", $item->getSEF()))->setValue($item->itemname);
 
     }

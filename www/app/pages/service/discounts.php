@@ -192,16 +192,15 @@ class Discounts extends \App\Pages\Base
         $this->ptab->listpan->add(new ClickLink('pcodeadd'))->onClick($this,"onAddPromo");
 
         $this->ptab->listpan->add(new DataView('plist', new PromoDataSource($this), $this, 'promolistOnRow'));
-        $this->ptab->listpan->plist->setPageSize(H::getPG());
-        $this->ptab->listpan->add(new \Zippy\Html\DataList\Pager('ppag', $this->ptab->listpan->plist));
-     //   $this->ptab->listpan->plist->Reload();
-        
+  
         $this->ptab->add(new Panel('formpan'))->setVisible(false) ;
         $this->ptab->formpan->add(new Form('pform'))->onSubmit($this,"savePCode") ;
         $this->ptab->formpan->pform->add(new ClickLink('cancelpadd'))->onClick($this,"cancelPCode") ;
         $this->ptab->formpan->pform->add(new TextInput('peditcode'));
         $this->ptab->formpan->pform->add(new Date('peditdate'));
         $this->ptab->formpan->pform->add(new TextInput('peditdisc'));
+        $this->ptab->formpan->pform->add(new TextInput('peditdiscf'));
+        $this->ptab->formpan->pform->add(new TextInput('peditbonus'))->setVisible(false);
 
         $this->ptab->formpan->pform->add(new AutocompleteTextInput('peditcust'))->onText($this, 'OnAutoCustomer');
         $this->ptab->formpan->pform->peditcust->setVisible(false);
@@ -218,7 +217,10 @@ class Discounts extends \App\Pages\Base
         $form->add(new  TextInput("ebonussell", $disc["bonussell"] ??''));
         $form->add(new  TextInput("efineret", $disc["fineret"]??''));
  
-      
+        $this->add(new Form('formaddbc'))->onSubmit($this, 'onAddBonus');
+        $this->formaddbc->add(new  TextInput("amountbc",''));
+        $this->formaddbc->add(new AutocompleteTextInput('custbc'))->onText($this, 'OnAutoCustomer');
+          
     }
 
 
@@ -371,6 +373,40 @@ class Discounts extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
+ 
+   public function onAddBonus($sender) {
+        
+        $am=intval($sender->amountbc->getText() );
+        $cid=intval($sender->custbc->getKey() );
+        $sender->amountbc->setText('') ;
+        $sender->custbc->setText('') ;
+        $sender->custbc->setKey(0) ;
+         
+        if($am != 0  && $cid >0) {
+             
+            $cb = new \App\Entity\CustAcc();
+
+            $cb->customer_id = $cid;
+          //  $cb->document_id = $this->document_id;
+            $cb->amount =    $am;
+            $cb->optype = \App\Entity\CustAcc::BONUS;
+            $cb->createdon = time();
+            $cb->save();
+            
+            $this->OnPL(null);
+            if($am > 0) {
+                $am = "+". $am;
+            }
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::SYSTEM;
+
+            $n->message = "Користувач ".System::getUser()->username." змінив ({$am}) бонуси контрагента  " .$sender->custbc->getText()  ;
+            $n->save();            
+            
+            
+        }
+    }
+ 
      
      //список  бонусоы ц контрагентов
     public function OnPL($sender) {
@@ -384,8 +420,8 @@ class Discounts extends \App\Pages\Base
         if(strlen($t) > 0)  {
             $where .= "   customer_name like   " . Customer::qstr( '%'.$t.'%' ) .' and ' ;
         }        
-        $on = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where} paytype=1001 and  bonus>0 " );
-        $off = $conn->GetOne( "select sum(bonus) from paylist_view  where {$where}  paytype=1001 and  bonus<0 " );
+        $on =  $conn->GetOne( "select sum(amount) from custacc_view  where {$where} optype=1  and  amount>0 " );
+        $off = $conn->GetOne( "select sum(amount) from custacc_view  where {$where}  optype=1  and  amount<0 " );
         $this->otab->sumbonuses->setText($on +$off ); 
 
     }   
@@ -471,6 +507,7 @@ class Discounts extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
+
     public function OnIsearchKey($sender) {
         $key = $sender->getKey();
         $it = Item::load($key) ;
@@ -478,6 +515,7 @@ class Discounts extends \App\Pages\Base
         $this->itab->ifilter->isearchdisc->setText($pureprice) ;
 
     }
+
     public function OnIAdd($sender) {
         $k =  $this->itab->ifilter->isearchkey->getKey();
         $i = Item::load($k);
@@ -514,6 +552,7 @@ class Discounts extends \App\Pages\Base
         $this->itab->iofilter->isearchoprice1->setText($pureprice) ;
         $this->itab->iofilter->isearchoprice2->setText($pureprice) ;
     }
+
     public function OnIOAdd($sender) {
         $k = $this->itab->iofilter->isearchokey->getKey();
         $i = Item::load($k);
@@ -677,10 +716,20 @@ class Discounts extends \App\Pages\Base
         if($p->type==1) $type="Одноразовий";
         if($p->type==2) $type="Багаторазовий";
         if($p->type==3) $type="Персональний";
+        if($p->type==4) $type="Реферальний";
 
         $row->add(new  Label("ptype", $type));
-        $row->add(new  Label("pdisc", $p->disc));
+        $disc = $p->disc.'%';
+        
+        if($p->type==4) {
+           $disc = $p->disc . " (бонус {$p->refbonus})"  ;     
+        }
 
+        if($p->discf>0) {
+           $disc = $p->discf;
+        }
+
+        $row->add(new  Label("pdisc", $disc));
         $row->add(new  Label("pused", $p->used));
         $row->add(new  Label("pcust", $p->customer_name));
         if($p->type==2){                                                                            
@@ -692,10 +741,10 @@ class Discounts extends \App\Pages\Base
            
         }    
         
-        $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
+        $row->add(new  Label("pdateto", $p->enddate > 0 ? H::fd($p->enddate) :''));
         $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
         
-        if($p->dateto > 0 && $p->dateto < time()) {
+        if($p->enddate > 0 && $p->enddate < time()) {
            $p->disabled = 1;
         }
         $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
@@ -718,7 +767,6 @@ class Discounts extends \App\Pages\Base
 
     }
    
-   
     public function onAddPromo($sender) {
         $code=PromoCode::generate() ;
         $this->ptab->formpan->pform->clean();        
@@ -732,18 +780,22 @@ class Discounts extends \App\Pages\Base
         $this->ptab->listpan->setVisible(false);
  
     }
+
     public function cancelPCode($sender) {
         $this->ptab->formpan->setVisible(false);
         $this->ptab->listpan->setVisible(true);
  
     }
+
     public function onPType($sender) {
         $t=$sender->getValue();
-        $this->ptab->formpan->pform->peditcust->setVisible($t==3);
+        $this->ptab->formpan->pform->peditcust->setVisible($t>2);
         $this->ptab->formpan->pform->peditcheck->setVisible($t==2);
+        $this->ptab->formpan->pform->peditbonus->setVisible($t==4);
 
  
     }
+
     public function savePCode($sender) {
         
         $pc = new PromoCode() ;
@@ -753,12 +805,21 @@ class Discounts extends \App\Pages\Base
             $this->setError('Не вказано тип') ;
             return;
         }
-        $pc->disc = $sender->peditdisc->getText();
-        $pc->dateto = $sender->peditdate->getDate();
-        if($pc->dateto >0 && $pc->dateto < time()) {
+        $pc->disc = doubleval($sender->peditdisc->getText() );
+        $pc->discf = doubleval($sender->peditdiscf->getText() );
+        $pc->refbonus = intval( $sender->peditbonus->getText() );
+        $pc->enddate = $sender->peditdate->getDate();
+        if($pc->enddate >0 && $pc->enddate < time()) {
            $this->setError('Неправильна дата') ;
            return; 
-
+        }
+        if($pc->disc == 0 && $pc->discf  == 0) {
+           $this->setError('Не задана  знижка ') ;
+           return; 
+        }
+        if($pc->disc >0 && $pc->discf > 0) {
+           $this->setError('Вводиться або  процент або  сума') ;
+           return; 
         }
 
   
@@ -788,7 +849,8 @@ class Discounts extends \App\Pages\Base
         System::setOptions("discount", $disc);
         $this->setSuccess('Збережено');
     }
-
+  
+ 
 }
 
 class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
@@ -875,9 +937,8 @@ class BonusListCustomerDataSource implements \Zippy\Interfaces\DataSource
 
         $t = trim($this->page->otab->blfilter->blsearch->getText());
 
-     //   $where = "status = 0 and detail not like '%<type>2</type>%' and detail not like '%<isholding>1</isholding>%'     ";
-
-        $where = " status = 0  and customer_id in ( select customer_id from paylist_view  where paytype=1001 ) ";
+  
+        $where = " status = 0  and customer_id in ( select customer_id  from custacc   where optype=1 group by customer_id having sum(amount)  <>0 ) ";
         if(strlen($t) > 0)  {
             $where .= " and customer_name like   " . Customer::qstr( '%'.$t.'%' );
         }
@@ -1008,11 +1069,11 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "1=1 ";
+        $where = "";
 
         $text = trim($this->page->ptab->listpan->pfilter->psearchkey->getText());
         if(strlen($text)>0) {
-            $where = $where . " and code = ".$conn->qstr($text);
+            $where = " code = ".$conn->qstr($text);
         }
         
         return $where;
@@ -1023,7 +1084,19 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return PromoCode::find($this->getWhere(), " disabled, id desc ", $count, $start);
+         $where =$this->getWhere() ;
+         if($where != "") {
+            return PromoCode::find($where, "   id desc ", $count, $start);
+         }
+ 
+     
+        $list = [];
+              
+        foreach(PromoCode::findYield("disabled=0  and coalesce(enddate,now()) >=now()", "   id desc ", $count, $start) as $p) {
+            $list[] = $p; 
+        }
+        
+        return $list;
     }
 
     public function getItem($id) {

@@ -25,6 +25,13 @@
                         <tr>
                             <td></td>
                             <td></td>
+                            <td style="text-align: right;"><span data-label="disc">Знижка:</span></td>
+                            <td style="text-align: right;"><span zippy="disc"></span></td>
+
+                            <td></td>
+                        </tr>                        <tr>
+                            <td></td>
+                            <td></td>
                             <td style="text-align: right;"><b>Всього на суму:</b></td>
                             <td style="text-align: right;"><b><span zippy="summa"></span></b></td>
 
@@ -74,7 +81,7 @@
                      {{#usepayment}}
                     <div class="form-group  row">
                     
-                            <label class="col-5 col-form-label" for="payment" for="payment">Оплата</label>
+                            <label class="col-5 col-form-label" for="payment"  >Оплата</label>
                       
                        <div class="col-7">
                        <select class="form-control" zippy="payment">
@@ -101,30 +108,20 @@
                       </div>
                     </div>
                       {{#np}}
-                        <div class="form-group row">
-                            <label class="col-3 col-form-label" for="bayarea">Область </label>
-                            <div class="col-9">
-                            <select zippy="bayarea" class="form-control     ">
-                                <option value="0">Не обрано</option>
-                            </select>
-                          </div>
+                   <div class="form-group row">
+                        <label class="col-3 col-form-label" for="baycity">Населений пункт</label>
+                      <div class="col-9">
+                        <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   "/>
+
                         </div>
-                        <div class="form-group row">
-                            <label class="col-3 col-form-label" for="baycity">Мiсто </label>
-                            <div class="col-9">
-                            <select zippy="baycity" class="form-control select2 ">
-                                <option value="0">Не обрано</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-3 col-form-label" data-label="baypoint" for="baypoint">Вiддiлення </label>
-                            <div class="col-9">
-                            <select zippy="baypoint" class="form-control select2 ">
-                                <option value="0">Не обрано</option>
-                            </select>
-                          </div>                    
-                        </div>                    
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label" for="baypoint">Вiддiлення</label>
+                        <div class="col-9">
+                         <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   "/>
+                         <small>Для пошуку по номеру додайте перед цифрами №</small>
+                       </div>                   
+                    </div>                   
                        {{/np}}
 
                     <div class="form-group  row">
@@ -169,8 +166,8 @@
            </form> 
         
        
-        </div>
-      
+           </div>
+       </div>    
       
         
     </body>

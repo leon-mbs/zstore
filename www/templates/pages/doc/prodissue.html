@@ -12,7 +12,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="store">Зі складу</label>
@@ -31,7 +31,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="parea">Виробнича ділянка</label>
@@ -47,7 +47,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autofocus="on" autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -60,10 +60,8 @@
                             <th>Код</th>
                             <th>Од.</th>
                             <th>Ком.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                 <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                 
 
 
                             <th class="text-right">Кіл.</th>
@@ -78,10 +76,8 @@
                             <td zippy="msr"></td>
                             <td zippy="cell"></td>
 
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                           <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                      
 
                             <td zippy="quantity" class="text-right"></td>
                             <td  class="text-right text-nowrap">
@@ -117,7 +113,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
 
                         Наявність : <span zippy="qtystock"></span>
 
@@ -132,7 +128,7 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
@@ -150,15 +146,7 @@
         </form>
         {{#usescanner}}
         <script>
-            $(document).ready(function () {
-
-               if( $('#edittovar').length )         
-                {
-                    $('#edittovar').focus();
-                } else {
-                    $('#barcode').focus();  
-                }
-            });
+        
 
             function onBarCode(ele) {
 

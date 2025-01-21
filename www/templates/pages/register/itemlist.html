@@ -17,7 +17,7 @@
                     <form zippy="filter" class="row   g-2 align-items-center">
                         <div class="col-auto">
        
-                        <input autocomplete="off" placeholder="Пошук..." class="form-control mr-sm-2" type="search"                                onkeydown="onSearch()" zippy="searchkey">
+                        <input autofocus="on" autocomplete="off" placeholder="Пошук..." class="form-control mr-sm-2" type="search"     onkeydown="onSearch()" zippy="searchkey">
                        </div>
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
@@ -108,7 +108,7 @@
                         <th>Категорія</th>
                         <th>Бренд</th>
                         <th>Од.</th>
-                    
+                        <th> <i title="Комірка" class="fa fa-box"></i> </th>     
 
                         <th class="text-right  ">Кіл.</th>
    {{^noshowpartion}}                         
@@ -143,7 +143,7 @@
                         <td zippy="cat_name"></td>
                         <td zippy="brand"></td>
                         <td zippy="msr"></td>
-
+                        <td zippy="cell"></td>
 
                         <td zippy="iqty" class="text-right  "></td>
                         
@@ -250,7 +250,7 @@
                  
                      <form zippy="iformbay" class="form-inline mt-4">
                        <label>Кiл.</label> 
-                       <input required="required" style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
+                       <input  required  style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
                        <input title="Додати в заявку постачальнику"   type="submit" value="В закупку"  class="btn btn-info" >
                      </form>
                      
@@ -274,12 +274,12 @@
                         <table>
                             <tr>
                                 <td align="center" id="tag"></td>
-                            <tr>
+                            </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
                                                       class="btn btn-success  ">Друк</a></td>
-                            <tr>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -299,7 +299,7 @@
                     $(this).ekkoLightbox({'alwaysShowClose': true});
                 });
 
-                $('#searchkey').focus();
+        
 
 
             });

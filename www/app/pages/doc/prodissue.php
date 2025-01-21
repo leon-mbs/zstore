@@ -210,7 +210,7 @@ class ProdIssue extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $qty = $item->getQuantity($this->docform->store->getValue());
         $row->add(new Label('qtyon',H::fqty($qty) ));
-        $row->add(new Label('toorder','В закупку' ))->setAttribute('onclick',"addItemToCO({$item->item_id})");
+        $row->add(new Label('toorder','В закупку' ))->setAttribute('onclick',"addItemToCO([{$item->item_id}])");
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -386,7 +386,7 @@ class ProdIssue extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }

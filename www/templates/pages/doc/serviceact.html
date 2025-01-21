@@ -20,7 +20,7 @@
                         <div class="form-group  ">
                             <label for="customer">Замовник</label>
                             <div class="input-group  ">
-                            <typeahead v-model="customer_id" required="required"      ref="cust"  :onquery="oncusttext"   placeholder="Почнiть вводити ..."></typeahead>   
+                            <typeahead v-model="customer_id"  required       ref="cust"  :onquery="oncusttext"   placeholder="Почнiть вводити ..."></typeahead>   
                                  <div v-show="customer_id>0" class="input-group-append"  >
                                      <a  v-on:click.prevent="customerInfo(customer_id)" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
                                 </div>  
@@ -71,11 +71,11 @@
                     <div class="col-6 col-md-4 col-lg-3">
                        <div class="form-group">
                             <label for="document_number">Номер документа</label>
-                            <input class="form-control" type="text" v-model="document_number" name="document_number" required="required">
+                            <input class="form-control" type="text" v-model="document_number" name="document_number"  required >
                         </div>                   
                         <div class="form-group">
                             <label for="document_date"> Дата</label>
-                            <input class="form-control" type="date" v-model="document_date"  name="document_date" required="required">
+                            <input class="form-control" type="date" v-model="document_date"  name="document_date"  required >
                         </div>
                         <div class="form-group  ">
                             <label for="store">Склад  комплектуючих</label>
@@ -115,6 +115,7 @@
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
+                                <th>Од. </th>
                                 <th class="text-right">Кiл.</th>
 
                                 <th class="text-right"><i class="fa fa-gift"></i>,%</th>
@@ -129,6 +130,7 @@
                                 <td >{{service.category}}</td>
                                 <td ></td>
                                 <td >{{service.desc}}</td>
+                                <td >{{service.msr}}</td>
                                 <td  class="text-right"> {{service.quantity}}</td>
 
                                 <td   class="text-right">{{service.disc}}</td>
@@ -146,6 +148,7 @@
                                 <td   >{{item.snumber}}</td>
                                 <td   > </td>
 
+                                <td  class="text-right">{{item.msr}}</td>
                                 <td  class="text-right">{{item.quantity}}</td>
 
                                 <td  class="text-right">{{item.disc}}</td>
@@ -230,7 +233,7 @@
 
                             <div class="form-group">
                                 <label for="editprice">Вартість </label>
-                                <input class="form-control qtyprice"   v-model="editserviceprice" required="required" pattern="[0-9,\.]+"
+                                <input class="form-control qtyprice"   v-model="editserviceprice"  required  pattern="[0-9,\.]+"
                                        value="0" style="width: 100px;">
                             </div>                           
 
@@ -260,7 +263,7 @@
                                       
                             <div class="form-group">
                               <label for="edititem">Назва </label>
-                               <typeahead  v-model="item"  :onquery="onitemtext"   required="required"  ref="edititem" placeholder="Почніть вводити..."   />
+                               <typeahead  v-model="item"  :onquery="onitemtext"    required   ref="edititem" placeholder="Почніть вводити..."   />
                                 <a v-on:click.prevent="onOpenItemSel">Відкрити довідник</a>
                                <br>Наявність: <span  >{{qtystock}}</span>
                  
@@ -278,7 +281,7 @@
 
                             <div class="form-group">
                                 <label for="edititemprice">Ціна </label>
-                                <input class="form-control qtyprice" type="text" v-model="edititemprice" required="required" pattern="[0-9,\.]+"
+                                <input class="form-control qtyprice" type="text" v-model="edititemprice"  required  pattern="[0-9,\.]+"
                                        value="0" style="width: 100px;">
                             </div>                              
                               
@@ -310,7 +313,7 @@
                           <form id="newcustform" >
                                 <div class="form-group">
                                     <label for="editcustname">Назва </label>
-                                    <input v-model="ncustname" class="form-control " name="editcustname" required="required"/>
+                                    <input v-model="ncustname" class="form-control " name="editcustname"  required />
                                 </div>
                                 <div class="form-group">
                                     <label for="editphone">Телефон</label>
@@ -443,6 +446,7 @@
                       
                     this.services[this.editedindex].service_name = this.loadedservice.service_name 
                     this.services[this.editedindex].category = this.loadedservice.category 
+                    this.services[this.editedindex].msr = this.loadedservice.msr 
                     this.services[this.editedindex].desc = this.editservicedesc 
                     this.services[this.editedindex].price = fa(this.editserviceprice) 
                     this.services[this.editedindex].quantity = fqty(this.editservicequantity) 
@@ -598,6 +602,7 @@
                     data.doc.total = parseVal( this.total )
                     data.doc.totaldisc = parseVal( this.totaldisc )
                     data.doc.payamount = parseVal(this.payamount)
+                    data.doc.payed = parseVal(this.payed)
                     data.doc.bonus = parseVal(this.bonus)
 
 
@@ -768,7 +773,7 @@
          payamount:function(){
              
             var tmp = fa( parseVal(this.total) - parseVal(this.totaldisc) - parseVal(this.bonus) ) 
-            this.payed = tmp
+           
             return tmp
          } ,
           

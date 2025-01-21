@@ -11,11 +11,11 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
 
                     <div class="form-group  ">
@@ -118,7 +118,7 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autofocus="on" style="width:150px;" autocomplete="off"  type="text" zippy="barcode"  onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autofocus="on"   style="width:150px;" autocomplete="off"  type="text" zippy="barcode"  onkeydown="onBarCode()">
                         &nbsp;   &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                       {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
@@ -142,12 +142,8 @@
                             <th>Штрих код</th>
                             <th>Код пост.</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-                            <th>Дата</th>
-                            {{/usesnumberdate}}
+                            <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+ 
                             <th class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
 
@@ -162,12 +158,8 @@
                             <td zippy="bar_code"></td>
                             <td zippy="custcode"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-                            <td zippy="sdate"></td>
-                            {{/usesnumberdate}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+  
                             <td class="text-right" zippy="quantity"></td>
 
                             <td zippy="price" class="text-right"></td>
@@ -179,27 +171,27 @@
                             </td>
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            <td colspan="{{colspan}}" class="text-right">На суму:</td>
+                            <td colspan="9" class="text-right">На суму:</td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
                         {{^prepaid}}
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="nds" colspan="{{colspan}}" class="text-right">ПДВ:</td>
+                            <td data-label="nds" colspan="9" class="text-right">ПДВ:</td>
                             <td zippy="nds" class="text-right"></td>
                             <td data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td data-label="disc" colspan="{{colspan}}" class="text-right">Знижка:</td>
+                            <td data-label="disc" colspan="9" class="text-right">Знижка:</td>
                             <td zippy="disc" class="text-right"></td>
                             <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                        {{/prepaid}}
                           <tr style="font-weight: bolder;">
-                            <td data-label="delivery" colspan="{{colspan}}" class="text-right">Доставка:</td>
+                            <td data-label="delivery" colspan="9" class="text-right">Доставка:</td>
                             <td zippy="delivery" class="text-right"></td>
                             <td data-label="delivery"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
                         </tr>
@@ -207,21 +199,21 @@
  
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="payamount" colspan="{{colspan}}" class="text-right">Всього:</td>
+                            <td data-label="payamount" colspan="9" class="text-right">Всього:</td>
                             <td zippy="payamount" class="text-right"></td>
                             <td data-label="payamount"><a href="javascript:void(0);" data-toggle="modal"
                                                           data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan="{{colspan}}" class="text-right">Передплата:</td>
+                            <td data-label="prepaid" colspan="9" class="text-right">Передплата:</td>
                             <td   class="text-right">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}
 
                         <tr style="font-weight: bolder;">
-                            <td data-label="payed" colspan="{{colspan}}" class="text-right">Внесено оплату:</td>
+                            <td data-label="payed" colspan="9" class="text-right">Внесено оплату:</td>
                             <td zippy="payed" class="text-right"></td>
                             <td data-label="payed"><a href="javascript:void(0);" data-toggle="modal"
                                                       data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
@@ -386,7 +378,7 @@
                         
                         
                         <div class="input-group  ">
-                        <input  placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
+                        <input   placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
                               <div class="input-group-append">
                                  <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
                             </div>                    
@@ -429,7 +421,7 @@
                     <div class="form-group row">
                         <label class="col-6 col-form-label" for="editquantity">Кількість</label>
                          <div class="col-6">
-                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
                          </div>
                     </div>
 
@@ -437,7 +429,7 @@
                     <div class="form-group row">
                         <label class="col-6 col-form-label" for="editprice">Ціна </label>
                          <div class="col-6">
-                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
                          </div>
                     </div>
                     <div class="form-group row">
@@ -498,7 +490,7 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input autofocus="on" class="form-control " zippy="editnewitemname" required="required"/>
+                        <input autofocus="on"   class="form-control " zippy="editnewitemname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editnewitemcode">Код</label>
@@ -550,7 +542,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input autofocus="on" class="form-control " zippy="editcustname" required="required"/>
+                        <input autofocus="on"   class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -714,7 +706,7 @@
 
                     <div class="form-group">
                         <label for="editsnitemname">Назва </label>
-                        <input  autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
+                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname"  required />
                          <small>В довіднику номенклатури тре вказати що даний ТМЦ обліковується  за  серійним номером</small>
                        
                     </div>
@@ -726,7 +718,7 @@
           
                      <div class="form-group">
                         <label for="editsnprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
                     </div>
                     
                     <div class="form-group">
@@ -744,10 +736,7 @@
             $(document).ready(function () {
       
       
-                if( $('#edititem').length )         
-                {
-                    $('#edititem').focus();
-                } 
+               $("#edititem").focus()      
     
 
                 var val = sessionStorage.getItem('decoder_readers');
@@ -759,7 +748,8 @@
                     $('#stream_constraints').val(val);
                 }
 
-
+                
+ 
             });
 
             function onBarCode(ele) {

@@ -201,6 +201,29 @@
                      {{/citems}} 
                   </table>
                 </details>
+                  {{#issitems}} 
+                  </div>
+                  <div class="col-12 col-md-10  col-xl-8">
+          
+                  
+                <details>
+                  <summary> Товари в  закупцi</summary>
+               <table class="table table-sm">
+                     <tr>
+                     <th>Заявка</th>
+                     <th>Постачальник</th>
+                     <th >Поставка</th>
+                     </tr>
+                       {{#sitems}} 
+                     <tr>
+                     <td> {{dnum}}</td>
+                     <td>{{dc}} </td>
+                     <td  >{{dd}} </td>
+                     </tr> 
+                      {{/sitems}} 
+                       </table> 
+                </details>
+                 {{/issitems}} 
             </div>
              <div class="col-12 col-xl-10 mt-2">      
                 <div class="navbar nav">
@@ -231,7 +254,7 @@
               
                      
                      <form zippy="resform" class="form-inline mt-1">
-                        <label data-label="bres";>Резервувати товари </label>
+                        <label data-label="bres">Резервувати товари </label>
                         <select class="form-control mr-2"  zippy="store"></select>
                          
                         <button zippy="bres" class="btn btn-info  ">OK                 </button>
@@ -252,7 +275,7 @@
                        {{/usebranch}}
                   
                         <label for="usmove">користувач </label>
-                        <select class="form-control mr-2" zippy="usmove" class="form-control mr-2 ">
+                        <select class="form-control mr-2" zippy="usmove"  >
 
                         </select>
                         <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
@@ -275,7 +298,7 @@
                  <form zippy="editform"  >
                      {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autofocus="on" style="width:150px;" autocomplete="off"  type="text" zippy="editbarcode"  onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autofocus="on"   style="width:150px;" autocomplete="off"  type="text" zippy="editbarcode"  onkeydown="onBarCode()">
                         &nbsp;   &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                 
                     
@@ -289,11 +312,11 @@
                                     class="fa fa-check-double "></i>                   
                    </th><th colspan="4"></th></tr>
                    <tr  zippy="edititemlist">
-                      <td style="width:20px"><input zippy="checkscan" class="seldel mt-1" type="checkbox"><td>
-                      <td zippy="editlistname"><td>
-                      <td zippy="editlistcode"><td>
-                      <td zippy="editlistbarcode"><td>
-                      <td class="text-right" zippy="editlistqty"><td>
+                      <td style="width:20px"><input zippy="checkscan" class="seldel mt-1" type="checkbox"></td>
+                      <td zippy="editlistname"></td>
+                      <td zippy="editlistcode"></td>
+                      <td zippy="editlistbarcode"></td>
+                      <td class="text-right" zippy="editlistqty"></td>
                    </tr> 
                  </table>         
                  <div class="form-group">
@@ -333,11 +356,11 @@
                                 <summary>Перелiк товарiв</summary>
                                 <table class="ctable" style="font-size:smaller">
                                     <tr v-for="item in cchatitemlist">
-                                        <td>{{item.itemname}} <td>
-                                        <td>{{item.item_code}} <td>
-                                        <td align="right">{{item.quantity}} <td>
-                                        <td align="right">{{item.price}} <td>
-                                        <td  >  <td>
+                                        <td>{{item.itemname}} </td>
+                                        <td>{{item.item_code}} </td>
+                                        <td align="right">{{item.quantity}} </td>
+                                        <td align="right">{{item.price}} </td>
+                                        <td  >  </td>
                                     </tr>
                                 </table>
                                 </details> 
@@ -404,6 +427,7 @@
                     </div>
                 </div>
             
+               </div> 
          </div> 
        </div>
   {|={{ }}=|}  

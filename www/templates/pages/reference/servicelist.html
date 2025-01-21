@@ -31,17 +31,19 @@
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Назва</th>
-                            <th> </th>    
+                            <th>Од. </th>    
+                            <th  ></th>
                             <th class="text-right">Вартість</th>
                             <th class="text-right">Розцiнки</th>
                             <th class="text-right">Години</th>
-
+                            
                             <th></th>
                             <th></th>
                         </tr>
                         <tr zippy="servicelist">
                             <td zippy="service_name"></td>
-                            <td class="text-right"><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
+                            <td zippy="msr"></td>
+                            <td  ><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
                             <td class="text-right" zippy="price"></td>
                             <td class="text-right" zippy="cost"></td>
                             <td class="text-right" zippy="hours"></td>
@@ -68,33 +70,43 @@
             </div>
         </div>
         <div class="row">
-            <form class="col-6 col-md-4" zippy="servicedetail">
-                <div class="form-group">
-                    <label for="editservice_name">Назва</label>
-                    <input autofocus="on" required="required" class="form-control" zippy="editservice_name"/>
+            <form class="  col-md-6  col-xl-4 " zippy="servicedetail">
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editservice_name">Назва</label>
+                   <div class="col-7"> 
+                    <input autofocus="on"    required  class="form-control" zippy="editservice_name"/>
+                  </div>
                 </div>
-                <div class="form-group">
-                    <label for="editcat">Категорiя</label>
-                    <input   class="form-control" zippy="editcat"/>
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editcat">Категорiя</label>
+                   <div class="col-7"> 
+                     <input   class="form-control" zippy="editcat"/>
+                    </div>
                 </div>
-                <div class="form-group  ">
-                    <label for="editprice">Вартість</label>
-                    <div class="form-group">
+                <div class="form-group row ">
+                    <label class="col-5 col-form-label" for="editprice">Вартість</label>
+                    <div class="col-7">
                         <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
-                <div class="form-group  ">
-                    <label for="editcost">Розцiнки</label>
-                    <div class="form-group">
+                <div class="form-group  row">
+                    <label class="col-5 col-form-label" for="editcost">Розцiнки</label>
+                    <div class="col-7">
                         <input zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
-                <div class="form-group  ">
-                    <label for="edithours">Нормо-години</label>
-                    <div class="form-group">
+                <div class="form-group  row">
+                    <label class="col-5 col-form-label" for="edithours">Нормо-години</label>
+                    <div class="col-7">
                         <input zippy="edithours" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editmsr">Од. виміру</label>
+                    <div class="col-7">
+                        <input class="form-control" style="width: 100px" zippy="editmsr"/>
+                    </div>
+                </div>                 
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не використовується</label>
@@ -116,7 +128,7 @@
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
 
                     <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required 
                            pattern="[0-9,\.]+" style="width:60px">
                     <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
                 </form>

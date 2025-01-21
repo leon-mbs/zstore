@@ -12,7 +12,7 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
 
                     <div class="form-group  ">
@@ -40,11 +40,11 @@
                 <div class="col-12 col-md-4  col-xl-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group">
                         <label for="order">Замовлення</label>
-                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
+                        <input readonly  class="form-control-plaintext" type="text" zippy="order">
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
@@ -75,7 +75,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus="on"  type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -88,10 +88,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                             <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                        
 
 
                             <th class="text-right">Кіл.</th>
@@ -105,10 +103,8 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                       
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -123,10 +119,9 @@
                             <td zippy="service"></td>
                             <td></td>
                             <td></td>
-                            {{#usesnumber}}
+                     
                             <td></td>
-                            <td></td>
-                            {{/usesnumber}}
+                          
 
 
                             <td zippy="serquantity" class="text-right"></td>
@@ -139,24 +134,16 @@
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
 
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right">На суму:</td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right">На суму:</td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right">На суму:</td>
+                            
 
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
 
                         <tr style="font-weight: bolder;">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="totaldisc">Знижка:</span></td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="totaldisc">Знижка:</span></td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right"><span data-label="totaldisc">Знижка:</span></td>
+
 
 
                             <td zippy="totaldisc" class="text-right"></td>
@@ -164,36 +151,24 @@
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="payamount">Всього:</span></td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="payamount">Всього:</span></td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right"><span data-label="payamount">Всього:</span></td>
+
 
                             <td zippy="payamount" class="text-right"></td>
                             <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                        <tr style="font-weight: bolder;">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="prepaid">Передплата:</span></td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="prepaid">Передплата:</span></td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right"><span data-label="prepaid">Передплата:</span></td>
+
 
                             <td zippy="prepaid" class="text-right"></td>
                             <td><a data-label="prepaid" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalprepaid"><i class="fa fa-edit"></i></a></td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
+
 
                             <td zippy="payed" class="text-right"></td>
                             <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal"
@@ -201,12 +176,8 @@
                         </tr>
 
                         <tr style="font-weight: bolder;">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right"><span data-label="exchange">Решта:</span></td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right"><span data-label="exchange">Решта:</span></td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right"><span data-label="exchange">Решта:</span></td>
+
 
                             <td zippy="exchange" class="text-right"></td>
                             <td></td>
@@ -340,14 +311,14 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.\s]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.\s]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.\s]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required  pattern="[0-9,\.\s]+"
                                style="width: 70px;">
 
                     </div>
@@ -377,14 +348,14 @@
 
                     <div class="form-group">
                         <label for="editserquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editserquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editserquantity"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editserprice">Вартість </label>
-                        <input class="form-control qtyprice" type="text" zippy="editserprice" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editserprice"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
@@ -407,7 +378,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -427,10 +398,7 @@
 
         {{#usescanner}}
         <script>
-            $(document).ready(function () {
-
-                $('#barcode').focus();
-            });
+           
 
             function onBarCode(ele) {
 

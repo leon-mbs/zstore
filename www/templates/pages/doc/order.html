@@ -12,7 +12,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="customer">Покупець</label>
@@ -52,7 +52,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
@@ -80,7 +80,7 @@
 
 
                          <div style="width:150px" class="input-group  ">
-                             <input  readonly="readonly" zippy="promocode" class="form-control">
+                             <input  readonly  zippy="promocode" class="form-control">
                              <div class="input-group-append">
                                  <a data-toggle="modal" data-label="promocode" data-target="#modalpromo" href="javascript:void(0);" title="Ввести промо" class="btn btn-success"   >+</a>
                             </div>                    
@@ -109,24 +109,18 @@
                                 <option value="2">За адресою</option>
                             </select>
                         </div>                     
-                        <div class="form-group">
-                            <label for="bayarea">Область  </label>
-                            <select zippy="bayarea" class="form-control     ">
-                                <option value="0">Не обрано</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="baycity">Мiсто  </label>
-                            <select zippy="baycity" class="form-control select2 ">
-                                <option value="0">Не обрано</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label data-label="baypoint" for="baypoint">Вiддiлення  </label>
-                            <select zippy="baypoint" class="form-control select2 ">
-                                <option value="0">Не обрано</option>
-                            </select>
-                        </div>                    
+                       <div class="form-group">
+                        <label for="baycity">Населений пункт</label>
+
+                        <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   "/>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="baypoint">Вiддiлення</label>
+
+                        <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   "/>
+                         <small>Для пошуку по номеру додайте перед цифрами №</small>
+                    </div>                    
                        {{/np}}
                     <div class="form-group  ">
                         <label data-label="address" for="address">Адреса</label>
@@ -142,7 +136,7 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                <input placeholder="Штрих код" style="width:150px;" autofocus="on" autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
+                <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
                                          <a zippy="addcode" class="btn btn-info btn-sm">+</a>
                      &nbsp; &nbsp; 
                     <a zippy="addrow" class="btn btn-info  ">Додати товар</a>
@@ -345,7 +339,7 @@
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
                         <div class="input-group  ">
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                        <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                               <div class="input-group-append">
                                  <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
                             </div>                    
@@ -362,12 +356,12 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"                               pattern="[0-9,\.\s]+" style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required                                pattern="[0-9,\.\s]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"                               pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
 
                     </div>
 
@@ -401,7 +395,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editcustphone">Телефон</label>
@@ -427,7 +421,7 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input class="form-control " zippy="editnewitemname" required="required"/>
+                        <input class="form-control " zippy="editnewitemname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editnewitemcode">Код</label>
@@ -463,10 +457,7 @@
    <script>
             $(document).ready(function () {
     
-                if( $('#edittovar').length )         
-                {
-                    $('#edittovar').focus();
-                }  
+                
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return
@@ -487,7 +478,9 @@
                       });
                     
             })
-                 
+              
+          $("#edittovar").focus()    
+                  
           });   
           
           

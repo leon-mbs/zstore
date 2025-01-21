@@ -15,7 +15,7 @@
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
 
                     <div class="form-group  ">
@@ -24,12 +24,7 @@
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="mtype">Тип прибутку</label>
-                        <select class="form-control" zippy="mtype">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
+               
 
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
@@ -67,7 +62,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих код &nbsp;<input  autofocus="on" autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input  autofocus="on"   autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -79,10 +74,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                             <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                        
                             <th width="40" class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
 
@@ -93,10 +86,8 @@
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                          
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
                             <td zippy="amount" class="text-right"></td>
@@ -107,12 +98,8 @@
 
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            {{^usesnumber}}
-                            <td colspan="5" class="text-right">Всього:</td>
-                            {{/usesnumber}}
-                            {{#usesnumber}}
-                            <td colspan="7" class="text-right">Всього:</td>
-                            {{/usesnumber}}
+                            <td colspan="6" class="text-right">Всього:</td>
+                          
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
@@ -141,34 +128,41 @@
 
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input  class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
-
+                    <input   class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
+                    <a   zippy="addnewitem">Додати новий</a>
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партія постачальника</label>
+                         {{^usesnumberitem}}
+                        <label for="editsnumber">Серія (партія) виробника </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серійний номер </label>
+                         {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"                           />
-                    <a   zippy="addnewitem">Додати новий</a>
+                    
 
                 </div>
+                   {{#usesnumberdate}}
                 <div class="form-group">
                     <label for="editsdate">Придатний до </label>
                     <input class="form-control " zippy="editsdate"/>
 
                 </div>
+                   {{/usesnumberdate}}
                 {{/usesnumber}}
                 <div class="form-group">
                     <label for="editquantity">Кількість</label>
 
                     <input style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
-                           required="required" pattern="[0-9,\.]+"/>
+                            required  pattern="[0-9,\.]+"/>
 
                 </div>
                 <div class="form-group">
                     <label for="editprice">Ціна </label>
-                    <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"
+                    <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required 
                            pattern="[0-9,\.]+"
                            style="width: 100px;">
                 </div>
@@ -192,10 +186,10 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input class="form-control " zippy="editnewitemname" required="required"/>
+                        <input class="form-control " zippy="editnewitemname"  required />
                     </div>
                     <div class="form-group">
-                        <label for="editnewitemcode">Код</label>
+                        <label for="editnewitemcode">Артикул</label>
                         <input class="form-control" type="text" zippy="editnewitemcode"/>
                     </div>
                     <div class="form-group">
@@ -231,13 +225,10 @@
  
 
         $(document).ready(function () {
-
-            if( $('#edititem').length )         
-            {
-                $('#edititem').focus();
-            } 
-
-        });
+      
+        
+         $("#edititem").focus()   
+        }); 
 
  
         function onBarCode(ele) {

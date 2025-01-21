@@ -37,7 +37,7 @@ class ARMPos extends \App\Pages\Base
     public $_paytype    = 0;
     private $pos;
     private $_doc        = null;
-    private $_rowid      = 0;
+    private $_rowid      = -1;
     private $_pt         = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
@@ -243,7 +243,9 @@ class ARMPos extends \App\Pages\Base
         if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
            $this->onModeOn($this->docpanel->navbar->tosimple); 
         }
-        
+        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
+        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
+          
     }
 
     public function onModeOn($sender) {
@@ -367,9 +369,10 @@ class ARMPos extends \App\Pages\Base
         $this->_doc = \App\Entity\Doc\Document::create('POSCheck');
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->headerdata['time'] = time();
+        $this->_doc->document_date = time();
+        $this->_doc->document_number = $this->_doc->nextNumber();
         
-        $this->docpanel->form3->document_number->setText($this->_doc->nextNumber());
-
+      
 
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
@@ -400,6 +403,9 @@ class ARMPos extends \App\Pages\Base
         if($this->_docid >0) { //загрузка  чека
             
             $doc = Document::load($this->_docid);
+            if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+               $doc->document_date=time();                
+            }            
             $this->loadDoc($doc);
            
             $this->_docid = 0;
@@ -449,14 +455,14 @@ class ARMPos extends \App\Pages\Base
             $this->_paytype=1;
         }
 
-        if($this->_paytype==0 && $payamount > 0) {
+        if(($this->_paytype==0 || $this->_paytype=='') && $payamount > 0) {
             $this->setError('Не вказаний тип оплати');
             return;
 
         }
-        if(strlen($this->_doc->document_number) > 0) {
-            $this->docpanel->form3->document_number->setText($this->_doc->document_number);
-        }
+
+        $this->docpanel->form3->document_number->setText($this->_doc->document_number);
+        $this->docpanel->form3->document_date->setDate($this->_doc->document_date);
 
 
         $this->docpanel->form3->paytypeh->setText($this->_paytype);
@@ -562,9 +568,9 @@ class ARMPos extends \App\Pages\Base
     }
 
     public function addcodeOnClick($sender) {
-        $code = trim($this->docpanel->form2->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+        $barcode = trim($this->docpanel->form2->barcode->getText());
+        $code0 = $barcode;
+        $code = ltrim($barcode, '0');
 
         $store = $this->form1->store->getValue();
         $this->docpanel->form2->barcode->setText('');
@@ -576,6 +582,20 @@ class ARMPos extends \App\Pages\Base
         $code_ = Item::qstr($code);
         $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
       
+        // проверка  на  стикер
+        if ($item == null) {
+       
+            $item = Item::unpackStBC($barcode);
+            if($item instanceof Item) {
+                $item->pureprice = $item->getPurePrice();
+                $this->_itemlist[ ] = $item;
+
+                $this->docpanel->form2->detail->Reload();
+                $this->calcTotal();  
+                return;           
+            }
+        }  
+          
         if ($item == null) {
             $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
@@ -828,7 +848,7 @@ class ARMPos extends \App\Pages\Base
         $ser = Service::load($id);
 
         $ser->quantity = doubleval( $this->docpanel->editserdetail->editserquantity->getText());
-        if ($item->quantity == 0) {
+        if ($ser->quantity == 0) {
             $this->setError("Не введена  кількість");
             return;
         }
@@ -941,10 +961,18 @@ class ARMPos extends \App\Pages\Base
             if($r == ''){
                 $p = \App\Entity\PromoCode::findByCode($code);
                 $disc = doubleval($p->disc );
+                $discf = doubleval($p->discf );
+                  
                 if($disc >0)  {
                     $td = H::fa( $total * ($p->disc/100) );
                     $this->docpanel->form2->totaldisc->setText($td);
                 }        
+                if($discf > 0) {
+                    if( $total < $discf  ) {
+                        $discf = $total;
+                    }
+                    $this->docpanel->form2->totaldisc->setText($discf);
+                }      
             }
         }        
         
@@ -984,7 +1012,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->editdetail->editserial->setText($serial);
         }
 
-
+    
 
     }
 
@@ -1064,12 +1092,12 @@ class ARMPos extends \App\Pages\Base
             }
             $this->docpanel->form2->custinfo->setText($disctext);
             $this->docpanel->form2->custinfo->setVisible(strlen($disctext) >0);
-
+      
         }
         $this->docpanel->form2->addcust->setVisible(false) ;
         $this->docpanel->form2->cinfo->setVisible(true) ;
         $this->docpanel->form2->cinfo->setAttribute('onclick', "customerInfo({$customer_id});") ;
-
+      
 
     }
 
@@ -1180,7 +1208,6 @@ class ARMPos extends \App\Pages\Base
         $doc = Document::getFirst(" document_id <> {$this->_doc->document_id}  and   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
             $this->_doc->document_number = $this->_doc->nextNumber();
-            $this->docpanel->form3->document_number->setText($this->_doc->document_number);
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
@@ -1213,7 +1240,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
 
-        if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
+        if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed && $this->_doc->customer_id == 0) {
             $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
             return;
         }
@@ -1314,7 +1341,7 @@ class ARMPos extends \App\Pages\Base
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
-                    $this->_doc->headerdata["passfisc"]  = 0;;
+                    $this->_doc->headerdata["passfisc"]  = 0;
                     if($this->_tvars['checkbox'] == true) {
 
                         $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
@@ -1372,15 +1399,12 @@ class ARMPos extends \App\Pages\Base
                         }
 
                     }
-                    $this->_doc->save();                    
+                                     
                 }
-                
+                $this->_doc->save();       
                 
             }
-                        
-
-
-
+  
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;
@@ -1494,7 +1518,7 @@ class ARMPos extends \App\Pages\Base
             }
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
             
-            
+            //задача  для  автозакрытия
             if($this->pos->autoshift >0){
                 $task = new  \App\Entity\CronTask()  ;
                 $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
@@ -1598,7 +1622,15 @@ class ARMPos extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $this->setSuccess("Зміна закрита");
+            
+            $sc = \App\System::getSession()->shiftclose;
+            if(strlen($sc)>0) {
+               \App\System::getSession()->shiftclose="";
+               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
+            } else {
+               $this->setSuccess("Зміна закрита");    
+            }
+            
             if ($ret['doclocnumber'] > 0) {
                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->pos->save();
@@ -1610,6 +1642,7 @@ class ARMPos extends \App\Pages\Base
         return true;
     }
 
+    //строка  списка чеков
     public function onDocRow($row) {
         $doc = $row->getDataItem();
         $row->add(new ClickLink('rownumber', $this, 'OnDocViewClick'))->setValue($doc->document_number);
@@ -1637,11 +1670,11 @@ class ARMPos extends \App\Pages\Base
         foreach($tlist as $prod) {
             $t .="<tr> " ;
             $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fqty($prod->quantity) ."</td>" ;
             $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
             $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
 
-            $t .="</tr> " ;
+            $t .="</tr> " ;                                                
         }
         $tlist=  $doc->unpackDetails('services')  ;
 
@@ -1658,7 +1691,7 @@ class ARMPos extends \App\Pages\Base
         $t .="</table> " ;
 
         $row->rtlist->setText($t, true);
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
 
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
@@ -1672,7 +1705,7 @@ class ARMPos extends \App\Pages\Base
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
 
-        $where = "meta_name='PosCheck' and date(document_date) >= " . $conn->DBDate(strtotime('-1 month'))    ;
+        $where = "meta_name='PosCheck' and  document_date  >= " . $conn->DBDate(strtotime('-1 month'))    ;
 
 
         if ($sender instanceof Form) {
@@ -1788,6 +1821,9 @@ class ARMPos extends \App\Pages\Base
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);
+        if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+           $doc->document_date=time();                
+        }
         $this->loadDoc($doc);
     }
 
@@ -1887,7 +1923,7 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-    public function chechPromo($args, $post=null) {
+    public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
             return json_encode([], JSON_UNESCAPED_UNICODE);             
@@ -1905,7 +1941,15 @@ class ARMPos extends \App\Pages\Base
             return json_encode($ret, JSON_UNESCAPED_UNICODE);
              
         }        
-        
+        if($disc >0)  {
+          
+            if($total < $disc)  {
+               $disc =  $total;
+            }
+            $ret=array('disc'=>$disc) ;
+            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+             
+        }        
         return json_encode([], JSON_UNESCAPED_UNICODE);             
        
 

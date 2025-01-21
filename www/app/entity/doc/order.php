@@ -47,10 +47,10 @@ class Order extends \App\Entity\Doc\Document
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
-        $da=  trim($this->headerdata["npaddressfull"] ) ;
+        $da=  trim($this->headerdata["npaddressfull"] ??'') ;
         
         if(strlen($da)==0) {
-           $da=  trim($this->headerdata["ship_address"] ) ;
+           $da=  trim($this->headerdata["ship_address"] ??'') ;
         }
         
         $header = array('date'            => H::fd($this->document_date),
@@ -61,7 +61,7 @@ class Order extends \App\Entity\Doc\Document
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
-                        "outnumber"       => $this->headerdata["outnumber"],
+                        "outnumber"       => $this->headerdata["outnumber"]??'',
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
                         "document_number" => $this->document_number,
                          "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
@@ -74,9 +74,9 @@ class Order extends \App\Entity\Doc\Document
                         "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
-        );
+        );                                                                               
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
 
@@ -96,7 +96,7 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        if($this->payed==0) {
+        if($this->payed == 0) {
             $list['Invoice'] = self::getDesc('Invoice');
         }
       //  $list['POSCheck'] = self::getDesc('POSCheck');
@@ -157,7 +157,7 @@ class Order extends \App\Entity\Doc\Document
         return $html;
     }
 
-    //резеорвирование товаров
+    //резервирование товаров
     public function reserve() {
 
         $this->unreserve();
@@ -195,6 +195,7 @@ class Order extends \App\Entity\Doc\Document
                             $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                             $sc->setStock($st->stock_id);
                             $sc->tag=Entry::TAG_TOPROD;
+                            $sc->createdon=time();
 
                             $sc->save();
                         }
@@ -212,6 +213,7 @@ class Order extends \App\Entity\Doc\Document
                 $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
                 $sc->tag=Entry::TAG_FROMPROD;
+                $sc->createdon=time();
 
                 $sc->save();
             }
@@ -230,12 +232,13 @@ class Order extends \App\Entity\Doc\Document
                 $sc = new \App\Entity\Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 //  $sc->setOutPrice($item->price  );
-                $sc->tag = \App\Entity\Entry::TAG_RESERV;
+                $sc->tag = Entry::TAG_RESERV;
+                $sc->createdon=time();
+                
                 $sc->save();
 
             }
         }
-
     }
     //отмена  резерва
     public function unreserve() {
@@ -261,17 +264,71 @@ class Order extends \App\Entity\Doc\Document
 
             if(strlen($this->headerdata['promocode']) > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
-            };
+            }
 
             if($this->payed >0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-                if ($payed > 0) {
-                    $this->payed = $payed;
-                }
+                $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
+              
                 \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
             }
+            $this->DoBalans() ;
 
         }
     }
+    
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
+
+              
+       //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+             
+    }
+    /**
+    * список  неотправленных позиций
+    * 
+    */
+    public function getNotSendedItem() {
+         $notsendqty=[]; 
+         $sendqty=[]; 
+         $notsend=0;
+         $docs= Document::find("state >=5 and meta_name  in ('GoodsIssue','TTN') and parent_id=". $this->document_id);   
+         foreach($docs as $d)  {
+             foreach($d->unpackDetails('detaildata') as $item){
+                if(!isset($sendqty[$item->item_id]) ) {
+                    $sendqty[$item->item_id]=0; 
+                }  
+                $sendqty[$item->item_id] += $item->quantity;
+             }
+         }
+         foreach($this->unpackDetails('detaildata') as $item){
+            if(($sendqty[$item->item_id] ?? 0) ==0)  {
+                $notsend=$item->quantity;
+            }   else {
+                $notsend=$item->quantity - $sendqty[$item->item_id];  
+            }
+            if($notsend > 0) {
+                $notsendqty[$item->item_id] = $notsend;
+            }
+            
+         }        
+     
+         return $notsendqty;
+    }    
 }

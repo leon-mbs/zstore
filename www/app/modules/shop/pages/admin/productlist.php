@@ -88,6 +88,7 @@ class ProductList extends \App\Pages\Base
         $editform->add(new DataView('attrlist', new ArrayDataSource(new PB($this, 'attrlist')), $this, 'attrlistOnRow'));
 
         $editform->add(new ClickLink('bcancel'))->onClick($this, 'bcancelOnClick');
+        $editform->add(new ClickLink('updatecust'))->onClick($this, 'bucOnClick');
 
         $editform->onSubmit($this, 'onSubmitForm');
 
@@ -140,7 +141,7 @@ class ProductList extends \App\Pages\Base
         $row->add(new Label("lprice", \App\Helper::fa($item->getPriceFinal())));
 
         $row->add(new Label("lcnt", \App\Helper::fqty($item->getQuantity())));
-        $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadshopimage.php?id=' . $item->image_id . '&t=t');
+        $row->add(new \Zippy\Html\Image("lphoto"))->setUrl( $item->getImageUrl(true,true) );
     }
 
     //редактирование
@@ -158,6 +159,8 @@ class ProductList extends \App\Pages\Base
 
         $this->attrlist = $this->_item->getAttrList();
         $this->editpanel->editform->attrlist->Reload();
+        
+        $this->editpanel->editform->updatecust->setVisible(count($this->group->cflist ?? [])>0);
     }
 
     public function onSubmitForm($sender) {
@@ -215,7 +218,7 @@ class ProductList extends \App\Pages\Base
         $file = $sender->photo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
         
-            if (filesize($file["tmp_name"])  > pow(2,20)) {
+            if (filesize($file["tmp_name"])  > 1024*1024) {
 
                     $this->setError('Розмір файлу більше 1M');
                     return;
@@ -265,7 +268,7 @@ class ProductList extends \App\Pages\Base
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
+        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl( $image->getImageUrl(true,true) );
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
 
@@ -286,6 +289,21 @@ class ProductList extends \App\Pages\Base
         }
         $this->editimagepanel->imagelist->Reload();
     }
+    
+    public function bucOnClick($sender) {
+       $kf = $this->_item->getcf()  ;
+       
+       foreach($kf as $custom){
+         foreach($this->attrlist as $attr){
+             if($custom->code==$attr->valueslist && $attr->attributetype==6 ) {
+                 $attr->value= $custom->val;
+             }
+         }
+       }
+       $this->editpanel->editform->attrlist->Reload();
+             
+    }
+    
 
 }
 
@@ -418,6 +436,11 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
             $ret .= "<input   name=\"{$this->id}\" type=\"text\"      class=\"form-control\" value=\"{$this->productattribute->value}\"  ";
         }
 
+        if ($this->productattribute->attributetype ==6) {
+
+            $ret .= "<input   name=\"{$this->id}\" type=\"text\"      class=\"form-control\" value=\"{$this->productattribute->value}\"  ";
+        }
+
         $ret .= "</td>";
         return $ret;
     }
@@ -425,7 +448,7 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
     //Вынимаем данные формы  после  сабмита
     public function getRequestData() {
 
-        if ($this->productattribute->attributetype == 2 || $this->productattribute->attributetype == 5) {
+        if ($this->productattribute->attributetype == 2 || $this->productattribute->attributetype == 5|| $this->productattribute->attributetype == 6) {
             $this->productattribute->attributevalue = $_POST[$this->id];
         }
         if ($this->productattribute->attributetype == 1) {
@@ -455,5 +478,5 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
     public function clean() {
       //  $this->value = array();
     }
-
+ 
 }

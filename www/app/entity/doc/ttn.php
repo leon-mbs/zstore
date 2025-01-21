@@ -79,7 +79,7 @@ class TTN extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
-        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
 
         $report = new \App\Report('doc/ttn.tpl');
 
@@ -123,7 +123,7 @@ class TTN extends Document
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }
@@ -194,9 +194,9 @@ class TTN extends Document
                         }
                          //учитываем  отходы
                         if ($itemp->lost > 0) {
-                            $k = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $k;
-                            $lost = $k - 1;
+                            $kl = 1 / (1 - $itemp->lost / 100);
+                            $itemp->quantity = $itemp->quantity * $kl;
+                            $lost = $kl - 1;
                         }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -253,43 +253,29 @@ class TTN extends Document
                 $sc->save();
             }
         }
+        $this->DoBalans() ;
 
         return true;
     }
 
     public function onState($state, $oldstate) {
 
-        if ($state == Document::STATE_INSHIPMENT) {
-       
+        if ($state == Document::STATE_DELIVERED) {
+                                          
             //расходы на  доставку
             if ($this->headerdata['ship_amount'] > 0 && $this->headerdata['payseller'] == 1) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF());
-                if ($payed > 0) {
-                    $this->payed = $payed;
-                }
+               // $this->payed = $payed;
+               // $this->DoBalans() ;
+            }
+            
+            if ($this->headerdata['ship_amount'] > 0  ) {
+               
                 \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['ship_amount'], \App\Entity\IOState::TYPE_SALE_OUTCOME);
 
             }
         }
-        $common = \App\System::getOptions("common");
-
-        if ($this->parent_id > 0) {
-            $order = Document::load($this->parent_id);
-
-            $list = $order->getChildren('TTN');
-
-            if (count($list) == 1 && $common['numberttn'] <> 1) {   //только  эта  ТТН
-                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS)) {
-                    $order->updateStatus(Document::STATE_DELIVERED);
-                }
-                if ($state == Document::STATE_INSHIPMENT && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP)) {
-                    $order->updateStatus(Document::STATE_INSHIPMENT);
-                }
-                if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
-                    $order->updateStatus(Document::STATE_READYTOSHIP);
-                }
-            }
-        }
+        
     }
 
     public function getRelationBased() {
@@ -308,6 +294,27 @@ class TTN extends Document
         return array(self::EX_EXCEL, self::EX_PDF);
     }
 
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
+          if(($this->customer_id??0) == 0) {
+              return;
+          }
+       
+           //тмц
+            if($this->amount >0) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$this->amount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+             
+    }
 
 }

@@ -69,9 +69,14 @@ class PredSell extends \App\Pages\Base
         if (strlen($brand)>0) {
             $br = " and i.manufacturer= ".$conn->qstr($brand);
         }
-
+        $cs='';
+        $c = \App\ACL::getBranchIDsConstraint();
+        if($c != '') {
+           $cs = " and store_id in ( select store_id from stores where  branch_id in ({$c}) ) "; 
+           $c = " and d.branch_id in ({$c}) "; 
+        }
         $onstore = [];
-        $sql = "select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1) group  by item_id";
+        $sql = "select sum(qty) as q,item_id from store_stock where  item_id in (select item_id from items where  disabled <> 1)  {$cs} group  by item_id";
         foreach ($conn->Execute($sql) as $r) {
             if ($r['q'] > 0) {
                 $onstore[$r['item_id']] = $r['q'];
@@ -99,11 +104,16 @@ class PredSell extends \App\Pages\Base
 
             }
         }
-
+     
 
         $m1 = $conn->DBDate(strtotime('-1 month'));
         $m2 = $conn->DBDate(strtotime('-2 month'));
-
+    
+        $cati="";
+        if($cat > 0) {
+           $cati = " and i.cat_id=".$cat; 
+        }
+    
 
         $sql = "select i.item_id,i.itemname,i.item_code, 
         sum( case when d.document_date < now() and d.document_date >= {$m1} then 0-e.quantity else 0 end ) as m1,
@@ -112,8 +122,8 @@ class PredSell extends \App\Pages\Base
         join items i on e.item_id = i.item_id 
         join documents_view d on e.document_id = d.document_id 
         where  i.disabled <> 1 and d.meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ReturnIssue') 
-        and i.cat_id={$cat} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
-        and {$tp}   {$br}
+        {$cati} and i.item_id in(select item_id from entrylist_view ee where ee.quantity <0 and  ee.document_date < {$m2} ) 
+        and {$tp}   {$br} {$c}  
         group  by i.item_id,i.itemname,i.item_code 
         order  by i.itemname 
         ";
@@ -128,17 +138,17 @@ class PredSell extends \App\Pages\Base
             if ($rqty > 0) {
                 $r['qty'] = H::fqty($rqty);
 
-                if ($onstore[$r['item_id']] > 0) {
+                if (($onstore[$r['item_id']]??0 ) > 0) {
                     $r['onstore'] = H::fqty($onstore[$r['item_id']]);
                     $rqty = $rqty - $onstore[$r['item_id']];  //на  складе
                 }
-                if ($inorder[$r['item_id']] > 0) {
+                if (($inorder[$r['item_id']] ??0 )> 0) {
                     $rqty = $rqty - $inorder[$r['item_id']];  //заказано
                 }
 
                 $r['tobay'] = $rqty;
 
-                if ($minqty[$r['item_id']] > 0) {
+                if (($minqty[$r['item_id']] ??0 ) > 0) {
                     $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']];  //плюс  минимальное  оличество
                 }
                 if ($r['tobay'] > 0) {

@@ -59,13 +59,16 @@
 
                         </select>
                     </div>
+
+                      
+                    
                     <div class="form-group">
                         <label for="editrecievertype">Отримувач</label>
                         <select   class="form-control" zippy="editrecievertype">
 
                         </select>
                     </div>           
-
+ 
                     <div class="form-group">
                         <label data-label="edituser" for="edituser">Користувач</label>
                         <select   class="form-control" zippy="edituser">
@@ -99,6 +102,14 @@
                          <small data-label="editurl">Запит вiдправляється методом POST</small>
 
                     </div>
+                    <div class="form-group">
+                        <label data-label="editchatid" for="editchatid">Chat ID</label>
+                        <input    class="form-control" zippy="editchatid">
+
+
+                    </div>
+                    
+              
                     <div class="form-group">
                         <label for="editmsgtext">Текст повiдомлення</label>
                         <textarea style="height:150px"   class="form-control" zippy="editmsgtext">
@@ -134,7 +145,7 @@
             <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Опис тегiв</h5>
+                        <h5 class="modal-title">Опис тегiв шаблонізатора</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -142,11 +153,14 @@
                     <div class="modal-body">
                         Теги використовуються для підстановки даних з контексту (наприклад, документа).
                         Для системних повідомлень та e-mail в розмітці можна використовувати HTML.
-                        <a href="https://core.telegram.org/bots/api#html-style">Доступні теги</a> для відправки через Телеграм.
+                        <a href="https://core.telegram.org/bots/api#html-style">Доступні HTML теги</a> для відправки через Телеграм.
                         <br>
-                        Допускаються наступні теги для документу :
+                        <br>Для реалізації логіки в шаблоні використовується синтаксис шаблонізатора  Mustache
+                        <br>
+                        Допускаються наступні змінні шаблонізатора для документу :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
+                            <tr><td><small><b>{customer_name}</b></small> </td><td><small>Телефон контрагента</small></td></tr>
                             <tr><td><small><b>{document_id}</b></small></td><td><small>ID документа</small></td></tr>
                             <tr><td><small><b>{document_number}</b></small></td><td><small>Номер документа</small></td></tr>
                             <tr><td><small><b>{doc_dn}</b></small></td><td><small>Номер документа (тiльки цифри)</small></td></tr>
@@ -172,7 +186,7 @@
                             <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
                           
                         </table>
-                        Допускаються наступні теги для контрагента :
+                        Допускаються наступні змінні для контрагента :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_id}</b></small></td><td><small>ID контрагента</small></td></tr>
@@ -188,7 +202,7 @@
                         <br>
                         <br>
                         Для виведення списків, наприклад, позицій документа, потрібно додати інформацію мiж тегами
-                        {#list}  та  {/list>}  
+                        {#list}  та  {/list&gt;}  
                         <br>  Всередині рядка списку допускаються наступні теги:
 
                         <table  >
@@ -203,16 +217,16 @@
                         </table>
                         Наприклад:<br>
                         <p class="text-bold">
-                            Привiт {customer_name}&lt;br> <br> 
+                            Привiт {customer_name}&lt;br&gt; <br> 
                             Ми впарили тобi наступне <br>
-                            &lt;table>  <br>
-                            &lt;tr> &lt;th>Товар&lt;/th> &lt;th align="right" >Кiл. &lt;/th> &lt;/tr><br>
+                            &lt;table&gt;  <br>
+                            &lt;tr&gt; &lt;th&gt;Товар&lt;/th&gt; &lt;th align="right" &gt;Кiл. &lt;/th&gt; &lt;/tr&gt;<br>
                             {#list} <br>
-                            &lt;tr> &lt;td>{item_name} &lt;/td> &lt;td align="right" >{qty} &lt;/td>&lt;/tr> <br>
+                            &lt;tr&gt; &lt;td&gt;{item_name} &lt;/td&gt; &lt;td align="right" &gt;{qty} &lt;/td&gt;&lt;/tr&gt; <br>
                             {/list} <br>
-                            &lt;/table>&lt;br>   <br> 
-                            До сплати {forpay} чистоганом &lt;br><br> 
-                            Прайси за &lt;a href="http://price.com/">посиланням&lt;/a>&lt;br><br> 
+                            &lt;/table&gt;&lt;br&gt;   <br> 
+                            До сплати {forpay} чистоганом &lt;br&gt;<br> 
+                            Прайси за &lt;a href="https://price.com/"&gt;посиланням&lt;/a&gt;&lt;br&gt;<br>
                             Пока, лошара
                         </p>
 

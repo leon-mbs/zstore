@@ -116,24 +116,29 @@
                         <div class="form-group row ">
                             <label  class="col-8 col-form-label" for="colcat">Категорiя</label>
                             <div class="col-4">
-                                <select style="width:100px;" zippy="colcat" class="form-control  ">
-                            </select>   </div> 
+                                <select style="width:100px;" zippy="colcat" class="form-control  ">                            </select>  
+                           </div> 
                         </div>
                         <div class="form-group  row">
                             <label  class="col-8 col-form-label" for="colbrand">Бренд</label>
                             <div class="col-4">
-                                <select style="width:100px;" zippy="colbrand" class="form-control  ">
-                                </select>  
+                                <select style="width:100px;" zippy="colbrand" class="form-control  ">                                </select>  
                            </div> 
                         </div>
-                      <div class="form-group  row">
+                         <div class="form-group  row">
                             <label  class="col-8 col-form-label" for="colimage">Фото (URL)</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colimage" class="form-control  ">
                                 </select>  
                            </div> 
                         </div>
-                      
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label"  data-label="colminqty" for="colminqty">Мін. кіл.</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colminqty" class="form-control  ">
+                            </select>  
+                            </div> 
+                        </div>          
                    <div class="form-group  row">
                             <label  class="col-8 col-form-label" data-label="colqty" for="colqty">Кількість</label>
                             <div class="col-4">
@@ -144,9 +149,13 @@
                             <label class="col-8 col-form-label"  data-label="colinprice" for="colinprice">Облікова ціна</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colinprice" class="form-control  ">
-                            </select>  </div> 
+                            </select>  
+                            </div> 
                         </div>
-                  
+                         
+                                          
+                         
+                 
                     </div>
 
                     <div class="col-4">
@@ -225,6 +234,7 @@
                                 <th>Од.</th>
                                 <th class="text-right">Кіл.</th>
                                 <th class="text-right">Обл. ціна</th>
+                                <th class="text-right">Мін. кіл.</th>
                                 <th class="text-right">Вiдп. ціна1</th>
                                 <th class="text-right">Вiдп. ціна2</th>
                                 <th class="text-right">Вiдп. ціна3</th>
@@ -236,11 +246,12 @@
                             <tr>
                                 <td>{{colname}}</td>
                                 <td>{{colcode}}</td>
-                                <td>{{colgr}}</td>
+                                <td>{{colcat}}</td>
                                 <td>{{colbrand}}</td>
                                 <td>{{colmsr}}</td>
                                 <td class="text-right">{{colqty}}</td>
                                 <td class="text-right">{{colinprice}}</td>
+                                <td class="text-right">{{colminqty}}</td>
                                 <td class="text-right">{{colprice1}}</td>
                                 <td class="text-right">{{colprice2}}</td>
                                 <td class="text-right">{{colprice3}}</td>
@@ -369,9 +380,9 @@
                                 <th>Найменування</th>
                                 <th>Код</th>
                                 <th>Штрих код</th>
-
-                                <th>Од.</th>
                                 <th>Бренд</th>
+                                <th>Од.</th>
+                               
                                 <th class="text-right">Кіл.</th>
                                 <th class="text-right">Цiна</th>
 
@@ -469,6 +480,12 @@
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="coledrpou">ЄДРПОУ</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="coledrpou" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                         <div class="form-group  row">
                             <label class="col-8 col-form-label" for="colcity">Місто</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="colcity" class="form-control  ">
@@ -492,6 +509,7 @@
                         <table class="table table-sm">
                             <tr>
                                 <th>Найменування</th>
+                                <th>ЄДРПОУ</th>
                                 <th>Тел.</th>
                                 <th>E-mail</th>
                                 <th>Місто</th>
@@ -501,11 +519,12 @@
                             {{#list2}}
                             <tr>
                                 <td>{{colname}}</td>
+                                <td>{{coledrpou}}</td>
                                 <td>{{colphone}}</td>
                                 <td>{{colemail}}</td>
                                 <td>{{colcity}}</td>
                                 <td>{{coladdress}}</td>
-
+                              </tr>
                                 {{/list2}}
                         </table>
                     </div>

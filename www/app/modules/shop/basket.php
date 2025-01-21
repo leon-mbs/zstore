@@ -13,7 +13,7 @@ class Basket implements \Zippy\Interfaces\DataSource
     public static function getBasket() {
 
         $basket = System::getSession()->productbasket;
-        if($basket==null) {
+        if (!( $basket instanceof Basket)) {
             $basket = new Basket();
 
             $cl = json_decode($_COOKIE['shop_cart'] ??"", true);
@@ -37,11 +37,11 @@ class Basket implements \Zippy\Interfaces\DataSource
     public function addProduct($product) {
 
         $p = new \App\DataItem();
-        $p->price  = $product->getPriceFinal();
+        $p->price  =   $product->getPriceFinal();
         $p->quantity  = $product->quantity;
         $p->itemname  = $product->itemname;
         $p->item_id   = $product->item_id;
-        $p->image_id   = $product->image_id;
+        $p->image_url   = $product->getImageUrl();
 
         if (isset($this->list[$p->item_id])) {
             $this->list[$p->item_id]->quantity++;
@@ -49,6 +49,7 @@ class Basket implements \Zippy\Interfaces\DataSource
             $this->list[$p->item_id] = $p;
         }
         $this->sendCookie();
+        \App\Helper::insertstat(\App\Helper::STAT_CARD_SHOP, 0, 0) ;
 
     }
 

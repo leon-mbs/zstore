@@ -25,7 +25,7 @@ class MenuList extends \App\Pages\Base
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             App::RedirectError();
-            return false;
+            return  ;
         }
 
 
@@ -38,6 +38,11 @@ class MenuList extends \App\Pages\Base
         $this->listpan->filter->add(new CheckBox('frep'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('freg'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('fser'))->setChecked(true);
+     
+        $conn = \ZDB\DB::getConnect()  ;
+        $gr=$conn->GetCol(" select distinct  menugroup from metadata where coalesce(menugroup,'') <>'' order  by menugroup ") ;
+     
+        $this->listpan->filter->add(new DropDownChoice('fgr',$gr,'all'));
 
         $this->listpan->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpan->add(new DataView('metarow', $this->metadatads, $this, 'metarowOnRow'))->Reload();
@@ -57,7 +62,7 @@ class MenuList extends \App\Pages\Base
 
     public function filterOnSubmit($sender) {
 
-        $where = "1<>1 ";
+        $where = "(1<>1 ";
         if ($this->listpan->filter->fdoc->isChecked()) {
             $where .= " or meta_type = 1";
         }
@@ -70,11 +75,19 @@ class MenuList extends \App\Pages\Base
         if ($this->listpan->filter->fref->isChecked()) {
             $where .= " or meta_type = 4";
         }
+        
         if ($this->listpan->filter->fser->isChecked()) {
             $where .= " or meta_type = 5";
         }
-
-
+        
+        $where .= " ) ";
+        
+        $rg=$this->listpan->filter->fgr->getValue()  ;
+        if($rg != 'all')  {
+             $rgn=$this->listpan->filter->fgr->getValueName()  ;
+             $where .= " and menugroup = '{$rgn}' ";
+           
+        }
         $this->metadatads->setWhere($where);
 
         $this->listpan->metarow->Reload();

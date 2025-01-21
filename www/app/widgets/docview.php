@@ -56,8 +56,6 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
-
     public function loaddata($arg, $post) {
         $docid =  $arg[0] ;
 
@@ -71,11 +69,16 @@ class DocView extends \Zippy\Html\PageFragment
         }
         $doc = $doc->cast();
 
+        $exportlist = $doc->supportedExport();
 
         $html = $doc->generateReport();
 
-        $htmlpos = $doc->generatePosReport();
+        $htmlpos ='' ;
 
+        if(in_array(Document::EX_POS, $exportlist))  {
+            $htmlpos = $doc->generatePosReport();
+        }
+        
         $ret = array();
         $ret['usemobileprinter']=   $user->usemobileprinter ==1  ;
         $ret['showpartion']=   $user->noshowpartion  ==0  ;
@@ -86,8 +89,7 @@ class DocView extends \Zippy\Html\PageFragment
 
         $ret['exports']=  array() ;
 
-        $exportlist = $doc->supportedExport();
-
+ 
         $ret['exports']['word']  =  in_array(Document::EX_WORD, $exportlist) ;
         $ret['exports']['excel'] =  in_array(Document::EX_EXCEL, $exportlist) ;
         $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;
@@ -153,14 +155,16 @@ class DocView extends \Zippy\Html\PageFragment
 
 
         $ret['pdoc_id'] = 0;
-        $ret['pdoc_name'] = 0;
-        $p = Document::load($doc->parent_id);
-        if($p instanceof Document) {
-            $ret['pdoc_id'] = $doc->parent_id;
-            $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number;
-
+        $ret['pdoc_name'] = '';
+        if($doc->parent_id >0){
+            $p = Document::load($doc->parent_id);
+            if($p instanceof Document) {
+                if ( \App\ACL::checkShowDoc($p)) {
+                   $ret['pdoc_id'] = $doc->parent_id;
+                   $ret['pdoc_name'] = $p->meta_desc . ' ' . $p->document_number. ' ' . $p->getStateName($p->state);
+                }
+            }
         }
-
         $ret['reldocs'] = array();
 
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
@@ -177,7 +181,14 @@ class DocView extends \Zippy\Html\PageFragment
 
         $docs = array();
         foreach($doc->getChildren() as $d) {
-            $docs[]=array('id'=>$d->document_id,'name'=>$d->meta_desc . ' ' . $d->document_number,'candel'=>($user->user_id == $d->user_id || $user->rolename  =='admins'));
+            
+            if(\App\ACL::checkShowDoc($d) ==false) return;
+            
+            $docs[]=array('id'=>$d->document_id,
+                          'name'=>$d->meta_desc . ' ' . $d->document_number,
+                          'status'=>$d->getStateName($d->state),
+                          'candel'=>($user->user_id == $d->user_id || $user->rolename  =='admins')
+                          );
         }
 
 
@@ -205,7 +216,6 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
     public function getDocs($args, $post) {
 
         $q = $args[0];
@@ -218,7 +228,6 @@ class DocView extends \Zippy\Html\PageFragment
         return json_encode($data, JSON_UNESCAPED_UNICODE);
 
     }
-
 
     public function loadmessages($arg, $post) {
         $user = \App\System::getUser() ;
@@ -241,12 +250,14 @@ class DocView extends \Zippy\Html\PageFragment
         return json_encode($msglist, JSON_UNESCAPED_UNICODE);
 
     }
+
     public function delmsg($arg, $post) {
 
 
         \App\Entity\Message::delete($arg[0]);
 
     }
+
     public function addmsg($arg, $post) {
         if(strlen($post['msgtext'])==0) {
             return;
@@ -264,10 +275,21 @@ class DocView extends \Zippy\Html\PageFragment
         $msg->save();
 
         $conn = \ZDB\DB::getConnect();
-        $ids = $conn->GetCol("select distinct  user_id from  docstatelog where document_id = {$arg[0]} and  user_id <> {$user->user_id} ") ;
+        $ids = $conn->GetCol("select distinct  user_id from  docstatelog where document_id = {$arg[0]}   ") ;
 
+        
+        foreach(\App\Entity\Message::find("item_id = {$arg[0]} and  item_type = ".\App\Entity\Message::TYPE_DOC) as $msg){
+           
+           if(!in_array($msg->user_id,$ids)) {
+              $ids[]= $msg->user_id;
+           }
+        }
+        
+        
         foreach ($ids as $id) {
 
+            if($user->user_id==$id) continue;
+            
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
             $n->message = "<b>Новий коментар до документа:</b> {$doc->meta_desc} {$doc->document_number}  ";
@@ -279,7 +301,6 @@ class DocView extends \Zippy\Html\PageFragment
 
 
     }
-
 
     public function loadfiles($arg, $post) {
         $user = \App\System::getUser() ;
@@ -314,7 +335,6 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
     public function delfile($arg, $post) {
 
         H::deleteFile($arg[0]);
@@ -325,6 +345,7 @@ class DocView extends \Zippy\Html\PageFragment
         }
 
     }
+
     public function addfile($arg, $post) {
 
 
@@ -367,7 +388,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     }
 
-
+    /*
     public function onMail($arg, $post) {
         try {
             $doc = Document::Load($arg[0])->cast();
@@ -386,6 +407,6 @@ class DocView extends \Zippy\Html\PageFragment
         }
 
     }
-
+    */
 
 }

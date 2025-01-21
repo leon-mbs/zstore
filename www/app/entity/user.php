@@ -22,6 +22,7 @@ class User extends \ZCL\DB\Entity
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
+        $this->usebotfornotify = 0;
         $this->prturn = 0;
 
         $this->usemobileprinter = 0;
@@ -69,9 +70,10 @@ class User extends \ZCL\DB\Entity
         }
 
 
-        $this->canevent = $acl['canevent'];
-        $this->noshowpartion = $acl['noshowpartion'];
-        $this->showotherstores = $acl['showotherstores'];
+        $this->custtype = $acl['custtype']??0;
+        $this->canevent = $acl['canevent']??0;
+        $this->noshowpartion = $acl['noshowpartion']??0;
+        $this->showotherstores = $acl['showotherstores']??0;
 
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
@@ -102,9 +104,10 @@ class User extends \ZCL\DB\Entity
         $this->viber = $options['viber']?? '';
 
         $this->darkmode = $options['darkmode']?? 0;
-        $this->emailnotify = $options['emailnotify']?? 0;
+
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = $options['usemobileprinter']?? 0;
+        $this->usebotfornotify = $options['usebotfornotify']?? 0;
 
         $this->prtype = $options['prtype'] ?? 0;
         $this->pwsym = $options['pwsym']?? 0;
@@ -119,6 +122,7 @@ class User extends \ZCL\DB\Entity
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
+        $this->scaleserver = $options['scaleserver']?? '';
 
         parent::afterLoad();
     }
@@ -147,8 +151,9 @@ class User extends \ZCL\DB\Entity
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['usebotfornotify'] = $this->usebotfornotify;
         $options['darkmode'] = $this->darkmode;
-        $options['emailnotify'] = $this->emailnotify;
+
         $options['usemobileprinter'] = $this->usemobileprinter;
 
         $options['pserver'] = $this->pserver;
@@ -166,6 +171,7 @@ class User extends \ZCL\DB\Entity
         $options['viber'] = $this->viber;
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
+        $options['scaleserver'] = $this->scaleserver   ;
 
         $this->options = serialize($options);
 
@@ -181,7 +187,7 @@ class User extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : '';
+        return ($cnt > 0) ? "Не можна  видаляти користувача з документами" : '';
     }
 
     /**
@@ -247,7 +253,7 @@ class User extends \ZCL\DB\Entity
         $users = array();
 
         foreach (User::find('disabled <> 1', 'username') as $u) {
-            if ($u->userrole == 'admins' || $branch_id == 0) {
+            if ($u->rolename == 'admins' || $branch_id == 0) {
                 $users[$u->user_id] = $u->username;
                 continue;
             }

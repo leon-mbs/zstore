@@ -22,6 +22,7 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
+                              "msr"         => $ser->msr,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
@@ -31,6 +32,7 @@ class ServiceAct extends Document
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->itemname,
                               "desc"         => $ser->item_code . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
+                              "msr"         => $ser->msr . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
                               "qty"          => H::fqty($ser->quantity),
                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
@@ -54,7 +56,7 @@ class ServiceAct extends Document
                         "devdesc"           => $this->headerdata["devdesc"],
                         "notes"           => $this->notes,
                         "document_number" => $this->document_number,
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "total"           => H::fa($this->amount)
         );
@@ -103,6 +105,10 @@ class ServiceAct extends Document
         }
 
 
+        if ($state == self::STATE_WP) {
+            $this->DoBalans() ;      
+        }
+        
         if ($state == self::STATE_FINISHED) {
 
           //  $this->DoStore() ;
@@ -129,11 +135,10 @@ class ServiceAct extends Document
     }
 
     public function DoPayment() {
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
+    
         \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+        $this->DoBalans() ;
 
     }
 
@@ -225,7 +230,7 @@ class ServiceAct extends Document
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
         $wp = 'style="width:40mm"';
-        if (strlen($printer['pwidth']) > 0) {
+        if (strlen($printer['pwidth']??'') > 0) {
             $wp = 'style="width:' . $printer['pwidth'] . '"';
         }
 
@@ -236,7 +241,7 @@ class ServiceAct extends Document
                         "address"         => $firm['address'],
                         "phone"           => $firm['phone'],
                         "notes"           => nl2br($this->notes),
-                        "customer_name"   => $this->headerdata['customer_name'],
+                        "customer_name"   => $this->customer_name,
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
                         "device"          => $this->headerdata["device"],
                         "serial"          => $this->headerdata["devsn"],
@@ -309,6 +314,38 @@ class ServiceAct extends Document
         $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
+    }
+
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+
+          if(($this->customer_id??0) == 0) {
+              return;
+          }
+                  
+
+           if($this->payamount >0) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$this->payamount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+           //платежи       
+            foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = $p['amount'];
+                $b->createdon = strtotime($p['paydate']);
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            } 
     }
 
 }

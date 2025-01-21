@@ -1,6 +1,6 @@
 body {
     font-family: "Segoe UI","Roboto", "Helvetica Neue"; 
-    background-color: #FaFaFa;
+     
 }
       
 .brand-logo {
@@ -62,6 +62,12 @@ body {
 .dark-mode input[type=text] {
    color: #FFF;
    background-color: rgb(52,58,64);
+}
+
+.dark-mode  pre  {
+   color:#fff; 
+ 
+     
 }
 
 .icon20 {

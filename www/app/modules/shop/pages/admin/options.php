@@ -31,12 +31,14 @@ class Options extends \App\Pages\Base
             return;
         }
 
+        $shop = System::getOptions("shop");
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
 
         $this->shop->add(new DropDownChoice('shopordertype', array(), 0));
 
 
+        $this->shop->add(new DropDownChoice('shopdefuser', \App\Entity\User::findArray('username','disabled<>1','username')));
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
         $this->shop->add(new TextInput('email'));
@@ -55,7 +57,7 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name", "disabled <>1"), "0"));
-        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
+        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), 0 ));
 
 
 
@@ -71,44 +73,48 @@ class Options extends \App\Pages\Base
 
 
 
-        $shop = System::getOptions("shop");
-        if (!is_array($shop)) {
+         if (!is_array($shop)) {
             $shop = array();
         }
         $this->_pages =    $shop['pages'];
         if (!is_array($this->_pages)) {
             $this->_pages = array();
         }
+        if (intval($shop['defuser'] ??0) ==0) {
+            $admin=\App\Entity\User::getByLogin('admin') ;
+            $shop['defuser']   = $admin->user_id;
+        }
 
+        $this->shop->shopdefuser->setValue($shop['defuser']);
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
-        $this->shop->defmf->setValue($shop['defmf']);
+        $this->shop->defmf->setValue($shop['defmf']??0);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->salesource->setValue($shop['salesource']);
-        $this->shop->firm->setValue($shop['firm']);
+        $this->shop->firm->setValue($shop['firm']??0);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
-        $this->shop->noshowempty->setChecked($shop['noshowempty']);
+        $this->shop->noshowempty->setChecked($shop['noshowempty']??false);
 
 
-        $this->shop->usefeedback->setChecked($shop['usefeedback']);
-        $this->shop->usemainpage->setChecked($shop['usemainpage']);
-        $this->shop->nouseimages->setChecked($shop['nouseimages']);
+        $this->shop->usefeedback->setChecked($shop['usefeedback']??false);
+        $this->shop->usemainpage->setChecked($shop['usemainpage']??false);
+        $this->shop->nouseimages->setChecked($shop['nouseimages']??false);
         $this->shop->shopname->setText($shop['shopname']);
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
         $this->shop->pagesize->setText($shop['pagesize'] ?? 25);
 
-        $this->pay->paysystem->setValue($shop['paysystem']);
-        $this->pay->mf->setValue($shop['mf_id']);
-        $this->pay->lqpublic->setText($shop['lqpublic']);
-        $this->pay->lqpriv->setText($shop['lqpriv']);
-        $this->pay->wpsecret->setText($shop['wpsecret']);
-        $this->pay->wpmacc->setText($shop['wpmacc']);
-        $this->pay->wpsite->setText($shop['wpsite']);
-        $this->pay->addqr->setChecked($shop['addqr']);
+        $this->pay->paysystem->setValue($shop['paysystem']??0);
+        $this->pay->mf->setValue($shop['mf_id']??0);
+        $this->pay->lqpublic->setText($shop['lqpublic']??false);
+        $this->pay->lqpriv->setText($shop['lqpriv']??'');
+        $this->pay->wpsecret->setText($shop['wpsecret']??'');
+        $this->pay->wpmacc->setText($shop['wpmacc']??'');
+        $this->pay->wpsite->setText($shop['wpsite']??'');
+        $this->pay->addqr->setChecked($shop['addqr']??'');
         $this->onPaySystem(null);
 
 
@@ -158,6 +164,7 @@ class Options extends \App\Pages\Base
         }
 
 
+        $shop['defuser'] = $this->shop->shopdefuser->getValue();
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
@@ -192,10 +199,7 @@ class Options extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('Занадто великий розмір зображення');
-                return;
-            }
+         
 
             $name = basename($file["name"]);
             move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);

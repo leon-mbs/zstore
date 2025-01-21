@@ -1,15 +1,14 @@
 <?php
 
-error_reporting(E_ALL & ~E_WARNING & ~E_STRICT & ~ E_NOTICE & ~E_DEPRECATED);
-
+error_reporting(E_ALL & ~E_WARNING   & ~E_NOTICE & ~E_DEPRECATED);
 
 
 $http = 'http';
-if (isset($_SERVER['HTTPS']) &&  strtolower($_SERVER['HTTPS']) !== 'off') {
+if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
     $http = 'https';
 } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
     $http = 'https';
-} elseif(443 == intval($_SERVER['SERVER_PORT'])) {
+} elseif (443 == intval($_SERVER['SERVER_PORT'])) {
     $http = 'https';
 }
 
@@ -17,64 +16,56 @@ define('_BASEURL', $http . "://" . $_SERVER["HTTP_HOST"] . '/');
 
 define('_ROOT', __DIR__ . '/');
 
-//define('UPLOAD_USERS', 'uploads/users/');
 
+//чтение  конфигурации
+if (file_exists(_ROOT . 'config/config.php')) {
+    require_once _ROOT . 'config/config.php';
 
-date_default_timezone_set('Europe/Kiev');
+}  
 
+if (!is_array($_config)) {
+    die("Invalid config file");
+}
+
+date_default_timezone_set($_config['common']['timezone'] ?? 'Europe/Kiev');
 
 
 require_once _ROOT . 'vendor/autoload.php';
 include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 
-//чтение  конфигурации
-if(file_exists(_ROOT . 'config/config.php')) {
-    require_once _ROOT . 'config/config.php';
-
-} else {   // для  совместимости
-    $_config = parse_ini_file(_ROOT . 'config/config.ini', true);
-}
-
-
-
-if(!is_array($_config)) {
-    die("Invalid config file") ;
-}
 
 // логгер
 $logger = new \Monolog\Logger("main");
 
 $level = $_config['common']['loglevel'];
-//$output = "%datetime% > %level_name% > %message% %context% %extra%\n";
+
 $output = "%datetime%  %level_name% : %message% \n";
-$formatter = new \Monolog\Formatter\LineFormatter($output);
-$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 10, $level);
-$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 10, \Monolog\Logger::ERROR);
+$formatter = new \Monolog\Formatter\LineFormatter($output, "Y-m-d H:i:s");
+$h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/app.log", 5, $level);
+$h2 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/error.log", 5, \Monolog\Logger::ERROR);
 $h1->setFormatter($formatter);
 $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
 $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
 
-if(!file_exists(_ROOT . "logs")) {
+if (!file_exists(_ROOT . "logs")) {
     mkdir(_ROOT . "logs");
 }
-if(!file_exists(_ROOT . "upload")) {
+if (!file_exists(_ROOT . "upload")) {
     mkdir(_ROOT . "upload");
 }
 
 
- 
 //Параметры   соединения  с  БД
 \ZDB\DB::config($_config['db']['host'], $_config['db']['name'], $_config['db']['user'], $_config['db']['pass']);
-
 
 
 //проверяем соединение
 try {
     $conn = \ZDB\DB::getConnect();
-} catch (Throwable $e) {
-    echo 'Ошибка  соединения с  БД. Подробности  в логе.';
+} catch(Throwable $e) {
+    echo 'Помилка з`єднання з БД. Деталi в папцi logs';
 
     $logger->error($e);
     die;
@@ -109,20 +100,20 @@ if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
 
 }
 
-if(!function_exists('apache_request_headers')) {
+if (!function_exists('apache_request_headers')) {
 
     function apache_request_headers() {
         $arh = array();
         $rx_http = '/\AHTTP_/';
-        foreach($_SERVER as $key => $val) {
-            if(preg_match($rx_http, $key)) {
+        foreach ($_SERVER as $key => $val) {
+            if (preg_match($rx_http, $key)) {
                 $arh_key = preg_replace($rx_http, '', $key);
                 $rx_matches = array();
                 // do some nasty string manipulations to restore the original letter case
                 // this should work in most cases
                 $rx_matches = explode('_', $arh_key);
-                if(count($rx_matches) > 0 and strlen($arh_key) > 2) {
-                    foreach($rx_matches as $ak_key => $ak_val) {
+                if (count($rx_matches) > 0 and strlen($arh_key) > 2) {
+                    foreach ($rx_matches as $ak_key => $ak_val) {
                         $rx_matches[$ak_key] = ucfirst($ak_val);
                     }
                     $arh_key = implode('-', $rx_matches);
@@ -130,6 +121,6 @@ if(!function_exists('apache_request_headers')) {
                 $arh[$arh_key] = $val;
             }
         }
-        return($arh);
+        return ($arh);
     }
 }

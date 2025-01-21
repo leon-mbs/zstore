@@ -50,17 +50,17 @@
                 <form class="col-6 col-md-6 col-xl-4" zippy="editform">
                     <div class="form-group">
                         <label for="editstname">Найменування</label>
-                        <input autofocus="on" required="required" class="form-control" zippy="editstname"/>
+                        <input autofocus="on"    required  class="form-control" zippy="editstname"/>
                     </div>
                     <div class="form-group">
                         <label for="editshortname">Скорочене позначення</label>
-                        <input maxlength="10"  style="width:200px;" required="required" class="form-control" zippy="editshortname"/>
+                        <input maxlength="10"  style="width:200px;"  required  class="form-control" zippy="editshortname"/>
                         <small>До 10 символів. Використовується для заголовків таблиць у документах та звітах</small>
                     </div>
                     <div class="form-group">
                         <label for="editcode">Код                        </label>
-                        <input style="width:75px;" pattern="[0-9]{3}" required="required" class="form-control" zippy="editcode"/>
-                        <small>Тризначний код більше 100 для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.
+                        <input style="width:75px;" pattern="[0-9]{3}"  required  class="form-control" zippy="editcode"/>
+                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.
                          </small>
                     </div>
 
@@ -86,13 +86,15 @@
          
          <form zippy="calcform"  >
              <div class="form-group">
-                <label for="calcbase">Розрахунок  нарахування</label>             
-                <textarea style="height:400px;width:300px" class="form-control" zippy="calcbase" ></textarea>
+                <label for="calcbase">Розрахунок основної зарплати</label>             
+                <textarea style="height:100px;width:300px" class="form-control" zippy="calcbase" ></textarea>
+                <span>Виконується однократно для заповнення поля  редагування</span>
              </div> 
              <div class="form-group">
-                <label for="calc">Розрахунок утримань </label>
+                <label for="calc">Розрахунок нарахувань та утримань </label>
                 <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
-             </div> 
+                <span>Виконується після редагування основної зарплати</span>
+           </div> 
              <div class="form-group">
                     
                      <a zippy="savecalc"    class="btn btn-success  ">Зберегти</a>&nbsp;&nbsp;
@@ -111,8 +113,15 @@
        <b>salarym</b> - оклад    <br>
        <b>salaryh</b> - погодинна  сума    <br>
        <b>sellvalue</b> - виручка   по продажних документах співробітника <br>
-       <b>hours</b> - години з облiку часу <br>
-       <b>days</b> - днi з облiку часу <br>
+       <b>tasksum</b> - сума  по нарядах <br>
+       <b>hours</b> - робочi години з облiку часу <br>
+       <b>days</b> - робочi днi з облiку часу <br>
+       <b>hours_over</b> - переробка <br>
+       <b>hours_week</b> - години в вихiднi <br>
+       <b>days_week</b> - днi в вихiднi <br>
+       <b>days_vac</b> - днi вiдпустки <br>
+       <b>days_sick</b> - лiкарнянi днi <br>
+       <b>days_bt</b> - днi в вiдрядженнi <br>
 
      
       
@@ -127,6 +136,9 @@
                <br>Наприклад v900 = v200 + v300
               <br>При необхідності список нарахувань та утримань може мати не грошові поля, наприклад, кількість днів відпустки
               або лікарняного для розрахунку на підставі зарплати та кількості днiв у місяці.
+               <br> Для форматування  сум (наприклад  після  операцій ділення)  можна використати  функцію  fa()  наприклад = v105=fa(v105) . 
+               Кількість нулів після  коми буде відповідати загальним налаштуванням.
+                 
               <br>Також можуть використовуватися деякі системні змінні, такі як кількість днів у
               місяці, кількість дітей, особа з інвалідністю, сумісник тощо.
               
@@ -135,7 +147,8 @@
               
               <br>Формули зберігаються як налаштування, тобто може бути заданий алгоритм для будь якого
               типу бізнесу та/або будь якого законодавства будь якої країни.
-              
+               <br>  Розрахунок  може не  працювати  зза  помилки  в  формулах, наприклад  неіснуюча змінна  або  який  спецсимвол.
+               помилки скрипта   можна побачити  в  devtools (для  хрома  F12-&gt;console)
              </p>
          </details>        
        </div>
@@ -153,28 +166,29 @@
                 <select  class="form-control" zippy="optbaseincom" >
                    <option value="0">Не вибрано</option>
                 </select>
-                <span>Якщо встановлено, показуєтся  як  поле ручного вводу </span>
+                <small>Показуєтся  як  поле ручного вводу </small>
+               <br> <small> <i class="fa fa-exclamation-triangle"></i> Інші поля тільки на  основі  формул  </small>
              </div> 
              <div class="form-group">
                 <label for="optbonus">Бонуси та премії</label>
                 <select  class="form-control" zippy="optbonus" >
                    <option value="0">Не вибрано</option>
                 </select>
-                <span>Сума нарахувань на  особовому  рахунку </span>
+                <small>Сума нарахувань на  особовому  рахунку (на підставі офісних документів) </small>
              </div> 
              <div class="form-group">
-                <label for="optfine">Штрафи тп  виразування</label>
+                <label for="optfine">Штрафи тп  вирахування</label>
                 <select  class="form-control" zippy="optfine" >
                    <option value="0">Не вибрано</option>
                 </select>
-                <span>Сума вирахувань на особовому  рахуну </span>
+                <small>Сума вирахувань на особовому  рахунку (на підставі офісних документів) </small>
              </div> 
              <div class="form-group">
                 <label for="optadvance">Видані аванси</label>
                 <select  class="form-control" zippy="optadvance" >
                    <option value="0">Не вибрано</option>
                 </select>
-                <span>Заповнюється виданими авансами за вказаний місяць</span>
+                <small>Заповнюється виданими авансами за вказаний місяць</small>
              </div> 
      
       
@@ -183,7 +197,7 @@
                 <select  class="form-control" zippy="optresult" >
                 
                 </select>
-                <span>Обов'язкове поле, значення якого заноситься до балансу особового рахунку співробітника. </span>
+                <small>Обов'язкове поле, значення якого заноситься до балансу особового рахунку співробітника. </small>
                 
              </div> 
      

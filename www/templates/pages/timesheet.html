@@ -2,8 +2,7 @@
  <head>
         <title>  Табель облiку робочого часу  </title>
 
-    </head>
-    <head>
+ 
         <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
 
         <script language="javascript" src="/assets/js/moment/moment.min.js"></script>
@@ -119,25 +118,25 @@
                     
                     <div class="form-group">
                         <label for="editdate">Дата</label>
-                        <input v-model="editdate" required="required" class="form-control"  type="date" />
+                        <input v-model="editdate"  required  class="form-control"  type="date" />
                     </div>
                     <div class="form-group row">
                          
                        <div class="col-auto pt-1"> <label for="editfrom">З</label> </div>
-                       <div class="col-auto"> <input v-model="editfrom" required="required"  class="form-control"  type="time" /></div>
+                       <div class="col-auto"> <input v-model="editfrom"  required   class="form-control"  type="time" /></div>
                        <div class="col-auto pt-1"> <label for="editto">По</label></div>
-                       <div class="col-auto"> <input  v-model="editto" required="required" type="time" class="form-control" /></div>
+                       <div class="col-auto"> <input  v-model="editto"  required  type="time" class="form-control" /></div>
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>
-                        <select v-model="edittype"  class="form-control">
+                        <select v-on:change="ontype()" v-model="edittype"  class="form-control">
                             <option value="0">Не обрано</option>
                             <option v-for="t in types" :value="t.key">{{t.value}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="editbreak">Перерва, хв.</label>
-                        <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
+                        <input   v-model="editbreak"  required  style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="editnote">Примiтка</label>
@@ -269,6 +268,19 @@ var calendar
                   this.editto = this.end;
                   this.editbreak = this.break;
                   $('#editmodal').modal('show')   
+
+               } ,    
+               ontype:function(){
+                
+                  this.edited = 0;
+                  if(this.edittype == 1 || this.edittype == 3 ){
+                     this.editbreak = this.break;    
+                  }   else {
+                     this.editbreak=0  
+                  }
+                   
+                 
+                
 
                } ,    
                save:function(i){

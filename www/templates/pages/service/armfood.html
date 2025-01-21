@@ -18,24 +18,16 @@
         </div>
 
 
-
-        {{={| |}=}}                 
-        <div id="vapp" class="row"  >
-            <div v-show="itemlist.length > 0" class="col-12 col-md-8 col-xl-6 mb-2"> 
-                 <h5 class="mr-2">Готових позицiй <span  class="badge badge-success badge-pill" > {{itemlist.length}}</span>                </h5>
+        <div style="display:none" id="ireadyp" class="row"  >
+            <div   class="col-12 col-md-8 col-xl-6 mb-2"> 
+                 <b class="mr-2">Готових позицiй <span id="ireadyc"  class="badge badge-success badge-pill" > </span>                </b>
                   
-             <table   class="table table-sm">
-                <tr v-for="item, index in itemlist">
-                    <td>{{item.ordern}}</td>
-                    <td>{{item.name}}</td> 
-                    <td>{{item.table}}</td> 
-
-                </tr>    
+             <table id="ireadyt" class="ctable"   >
             </table>
            
            </div>
         </div>
-        {|={{ }}=|}    
+
 
         <form zippy="setupform">
             <h3>АРМ касира</h3>
@@ -169,7 +161,7 @@
                            <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
                             {{#usescanner}}
-                             <input placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
+                             <input autofocus="on" placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
 
                             {{/usescanner}}
 
@@ -419,7 +411,7 @@
                             <div class="form-group  row ">
                                 <label class="col-7 col-form-label"  for="pfforpay" >До сплати</label>
                                  <div class="col-5">
-                                <input zippy="pfforpay" readonly="readonly" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
+                                <input zippy="pfforpay" readonly  style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
                                 </div>
 
                             </div>
@@ -430,14 +422,14 @@
                             <div class="form-group  row ">
                                 <label class="col-7 col-form-label" for="pfpayed"  >Внесено оплату</label>
                                 <div class="col-5">
-                                <input autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
+                                <input autofocus="on" autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
                                 </div>
                             </div>
                             <div class="form-group  row ">
 
                                 <label class="col-7 col-form-label" for="pfrest"  >Решта   </label>
                                   <div class="col-5">
-                                <input readonly="readonly" zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
+                                <input readonly   zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
                                  </div>
                             </div>
                             <div class="form-group row">
@@ -582,6 +574,7 @@
   
 
                         <td zippy="docnotes"></td>
+                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Бiгунок</a></td>
                         <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Рахунок</a></td>
                         <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
@@ -622,7 +615,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Ім'я </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -642,11 +635,29 @@
             </div>
         </form>
 
-
+  <div id="prform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="rtag"></td>
+                            </tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#rtag').printThis();$('#prform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>      
 
         <script>
             $(document).ready(function () {
-                $('#pfpayed').focus();
+
         
 
                 $("#pfpayed").on('input',function () {
@@ -717,7 +728,7 @@
                      
                    
                      
-                      callPM('chechPromo',[promodode], null,(data)=> 
+                      callPM('checkPromo',[promodode], null,(data)=> 
                       {
                          if(checkPMAnswer(data))   {
 
@@ -729,38 +740,30 @@
                           
                       });             
                 });     
-          var vapp = new Vue({
-              el: '#vapp',
-           
-              data() {
-                  return  {
-                     itemlist:[]  
-                     
-                   }   
-              }  ,
-              methods: {
+             
           
-               
-               updateReadyItems(){
-                    
-                  callPageMethod('getProdItems',[this.forbar],null,(data)=> 
+       function updateReadyItems() {
+        
+          callPageMethod('getProdItems',[],null,(data)=> 
                   {
                            
-                      this.itemlist= JSON.parse(data)  
+                     var itemlist= JSON.parse(data)  
+                     if(itemlist.length >0) {
+                         $("#ireadyp").show()
+                         $("#ireadyc").text(itemlist.length)
+                         var row="";
+             
+                        for (const e  of itemlist) {
+                            row = row + "<tr><td>"+e.ordern+"</td><td>"+e.name+"</td><td>"+e.table+"</td></tr>";
+                        }  
+                        $("#ireadyt").html(row)          
+                         
+                     }   else {
+                         $("#ireadyp").hide()
+                     }
                       
                   
                   });
-                    
-              }           
-            } ,     
-           mounted: function  (){ 
-             this.updateReadyItems() ;  
-           }     
-       
-        })             
-          
-      function updateReadyItems() {
-          vapp.updateReadyItems() ;
        }        
                     
         </script>
@@ -769,7 +772,7 @@
         <script>
 
 
-            $('#barcode').focus();
+          
 
 
             function onBarCode(ele) {
@@ -782,7 +785,7 @@
             
             
            
-           
+    
                 
         </script>  
 

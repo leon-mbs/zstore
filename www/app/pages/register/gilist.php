@@ -32,7 +32,7 @@ class GIList extends \App\Pages\Base
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+     * @param mixed $doc Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
     public function __construct($doc = 0) {
@@ -85,14 +85,18 @@ class GIList extends \App\Pages\Base
 
         $npform->onSubmit($this, "npOnSubmit");
         $npform->add(new ClickLink("npcancel", $this, "npOnCancel"));
-        $npform->add(new DropDownChoice('selarea'))->onChange($this, 'onSelArea');
-        $npform->add(new DropDownChoice('selcity'))->onChange($this, 'onSelCity');
-        $npform->add(new DropDownChoice('selpoint'));
+
         $npform->add(new TextInput('seltel'));
 
-        $npform->add(new DropDownChoice('bayarea'))->onChange($this, 'onBayArea');
-        $npform->add(new DropDownChoice('baycity'))->onChange($this, 'onBayCity');
-        $npform->add(new DropDownChoice('baypoint'));
+        $npform->add(new AutocompleteTextInput('selcity'))->onText($this, 'onTextSelCity');
+        $npform->selcity->onChange($this, 'onSelCity');
+        $npform->add(new AutocompleteTextInput('selpoint'))->onText($this, 'onTextSelPoint');;
+        
+        $npform->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
+        $npform->baycity->onChange($this, 'onBayCity');
+        $npform->add(new AutocompleteTextInput('baypoint'))->onText($this, 'onTextBayPoint');;
+        
+    
         $npform->add(new TextInput('baylastname'));
         $npform->add(new TextInput('bayfirstname'));
         $npform->add(new TextInput('baymiddlename'));
@@ -169,10 +173,14 @@ class GIList extends \App\Pages\Base
 
             }
             if($doc->meta_name=='GoodsIssue') {
-                if($doc->payamount == $doc->headerdata['prepaid'])  {
+                if($doc->payamount == ($doc->headerdata['prepaid']??0 ) )  {
                    $row->ispay->setVisible(false);    
                 }
             }
+            if($doc->state==9) {
+               $row->ispay->setVisible(false);    
+            }            
+            
         }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -406,10 +414,17 @@ class GIList extends \App\Pages\Base
 
         $api = new \App\Modules\NP\Helper();
 
-        $areas = $api->getAreaListCache();
+ 
         //   $st = $api->getServiceTypes() ;
         //   $ct = $api->getTypesOfCounterparties() ;
         $pf = $api->getPaymentForms();
+        if($pf['success'] == false) {
+            $error = array_pop($pf['errors'] );
+            $this->setError($error) ;
+            
+            return;
+                     
+        }
         // $ct = $api->getCargoTypes()  ;
         $tp = $api->getTypesOfPayers();
 
@@ -427,7 +442,7 @@ class GIList extends \App\Pages\Base
         $bmlist['NonCash'] = 'Безготiвка';
         $bmlist['Control'] = 'Контроль доставки';
         $this->nppan->npform->nppmback->setOptionList($bmlist);
-        $this->nppan->npform->nppmback->setValue('Cash');
+        $this->nppan->npform->nppmback->setValue('0');
         //кто оплачивает
         $stlist = array();
         foreach ($tp['data'] as $r) {
@@ -442,21 +457,7 @@ class GIList extends \App\Pages\Base
         }
         
      
-        
-        
-        $this->nppan->npform->bayarea->setOptionList($areas);
-        $this->nppan->npform->selarea->setOptionList($areas);
-
-        $this->nppan->npform->selarea->setValue($modules['nparearef']);
-
-        if (strlen($modules['nparearef']) > 0) {
-            $this->onSelArea($this->nppan->npform->selarea);
-            $this->nppan->npform->selcity->setValue($modules['npcityref']);
-        }
-        if (strlen($modules['npcityref']) > 0) {
-            $this->onSelCity($this->nppan->npform->selcity);
-            $this->nppan->npform->selpoint->setValue($modules['nppointref']);
-        }
+   
         $order = Document::load($this->_doc->parent_id);
      
         if($order != null && $order->meta_name == 'Order'){
@@ -465,17 +466,23 @@ class GIList extends \App\Pages\Base
            $this->nppan->npform->bayhouse->setText($order->headerdata['bayhouse']);    
            $this->nppan->npform->bayflat->setText($order->headerdata['bayflat']);    
            $this->nppan->npform->bayaddr->setText($order->headerdata['ship_address']);    
-           
+           $this->nppan->npform->baycity->setKey($order->headerdata['baycity'] ?? '');
+           $this->nppan->npform->baypoint->setKey($order->headerdata['baypoint'] ?? '');
+           $this->nppan->npform->baycity->setText($order->headerdata['baycityname'] ?? '');
+           $this->nppan->npform->baypoint->setText($order->headerdata['baypointname'] ?? '');
+            
         }
      
-        $this->nppan->npform->bayarea->setValue($this->_doc->headerdata['bayarea'] ?? 0);
-        $this->onBayArea($this->nppan->npform->bayarea) ;
-        $this->nppan->npform->baycity->setValue($this->_doc->headerdata['baycity'] ?? 0);
-        $this->onBayCity($this->nppan->npform->baycity) ;
-        $this->nppan->npform->baypoint->setValue($this->_doc->headerdata['baypoint'] ?? 0);
-        
+      
         
         $this->nppan->npform->seltel->setText($modules['nptel']);
+        $this->nppan->npform->selcity->setKey($modules['npcityref']);
+        $this->nppan->npform->selcity->setText($modules['npcity']);
+        $this->nppan->npform->selpoint->setKey($modules['nppointref']);
+        $this->nppan->npform->selpoint->setText($modules['nppoint']);
+        
+        
+        
         $this->nppan->npform->npdesc->setText($this->_doc->notes);
 
         $list = $this->_doc->unpackDetails('detaildata');
@@ -531,19 +538,33 @@ class GIList extends \App\Pages\Base
         $c = \App\Entity\Customer::load($this->_doc->customer_id);
         $cust = $c->customer_name;
         $tel = '';
-        if (strlen($this->_doc->headerdata["phone"]) > 0) {
-            $cust = $cust . ', ' . $this->_doc->headerdata["phone"];
-            $tel = $this->_doc->headerdata["phone"];
+        if (strlen($this->_doc->headerdata["phone"]??'') > 0) {
+            $cust = $cust . ', ' . $this->_doc->headerdata["phone"]??'';
+            $tel = $this->_doc->headerdata["phone"]??'';
         } else {
-            $cust = $cust . ', ' . $cust->phone;
-            $tel = $cust->phone;
+            $tel = $c->phone??'';
+            $cust = $cust . ', ' . $c->phone;
+            
         }
 
+        
+      
+        if(  strlen($this->nppan->npform->baycity->getKey()) <2 ){
+              
+                if(strlen ($c->npcityref??'')>0)  {
+                   $this->nppan->npform->baycity->setKey($c->npcityref) ;
+                   $this->nppan->npform->baycity->setText( $c->npcityname) ;
+                   $this->nppan->npform->baypoint->setKey($c->nppointref) ;
+                   $this->nppan->npform->baypoint->setText($c->nppointname) ;
+                }
+        }          
+        
+        
         $this->nppan->npform->baytel->setText($tel);
         $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
-        $this->nppan->npform->bayfirstname->setText($name[1]);
-        $this->nppan->npform->baymiddlename->setText($name[2]);
+        $this->nppan->npform->bayfirstname->setText($name[1]??'');
+        $this->nppan->npform->baymiddlename->setText($name[2]??'');
 
         $this->nppan->npform->npttncust->setText($cust);
         $this->nppan->npform->npttaddress->setText($this->_doc->headerdata["ship_address"]);
@@ -563,39 +584,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->npgab->setOptionList($gablist);
     }
 
-    public function onSelArea($sender) {
-
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getCityListCache($sender->getValue());
-
-        $this->nppan->npform->selcity->setOptionList($list);
-    }
-
-    public function onSelCity($sender) {
  
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue() );
-
-        $this->nppan->npform->selpoint->setOptionList($list);
-    }
-
-    public function onBayArea($sender) {
-
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getCityListCache($sender->getValue());
-
-        $this->nppan->npform->baycity->setOptionList($list);
-    }
-
-
-    public function onBayCity($sender) {
-        $dt = $this->nppan->npform->deltype->getValue(); 
-
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->getPointListCache($sender->getValue(),$dt==1);
-
-        $this->nppan->npform->baypoint->setOptionList($list);
-    }
+  
 
     public function npOnCancel($sender) {
         $this->statuspan->setVisible(false);
@@ -626,12 +616,11 @@ class GIList extends \App\Pages\Base
       
       $dt=$sender->getValue();  
         
-      $this->nppan->npform->baypoint->setOptionList([]) ;   
-      $this->nppan->npform->baypoint->setValue(0) ;   
-    //  $this->nppan->npform->baypoint->setVisible($dt <2) ;   
-      $this->nppan->npform->baycity->setValue(0) ;   
-      $this->nppan->npform->baycity->setOptionList([]) ;   
-      $this->nppan->npform->bayarea->setValue(0) ;   
+ //     $this->nppan->npform->baypoint->setKey('') ;   
+  //    $this->nppan->npform->baypoint->setText('') ;   
+  //    $this->nppan->npform->baycity->setKey('') ;   
+   //   $this->nppan->npform->baycity->setText('') ;   
+
 
       $this->nppan->npform->npgab->setVisible($dt ==1) ;   
       $this->nppan->npform->npgw->setVisible($dt ==1) ;   
@@ -643,7 +632,90 @@ class GIList extends \App\Pages\Base
       
       
       
-    }   
+    }  
+    
+    public function onTextSelCity($sender) {
+        $text = $sender->getText()  ;
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchCity($text);
+
+        if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+            foreach($d['Addresses'] as $c) {
+               $opt[$c['Ref']]=$c['Present']; 
+            }
+        }
+        
+        return $opt;
+       
+    }
+
+    public function onSelCity($sender) {
+     
+        $this->nppan->npform->selpoint->setKey('');
+        $this->nppan->npform->selpoint->setText('');
+    }
+ 
+  
+    public function onTextSelPoint($sender) {
+        $text = $sender->getText()  ;
+        $ref=  $this->nppan->npform->selcity->getKey();
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchPoints($ref,$text);
+       
+        if($list['success']!=true) return;
+        
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
+        }
+        
+        return $opt;        
+    }
+    
+    public function onTextBayCity($sender) {
+        $text = $sender->getText()  ;
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchCity($text);
+
+        if($list['success']!=true) return;
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+            foreach($d['Addresses'] as $c) {
+               $opt[$c['Ref']]=$c['Present']; 
+            }
+        }
+        
+        return $opt;
+       
+    }
+
+    public function onBayCity($sender) {
+     
+        $this->nppan->npform->baypoint->setKey('');
+        $this->nppan->npform->baypoint->setText('');
+    }
+ 
+  
+    public function onTextBayPoint($sender) {
+        $text = $sender->getText()  ;
+        $ref=  $this->nppan->npform->baycity->getKey();
+        $api = new \App\Modules\NP\Helper();
+        $list = $api->searchPoints($ref,$text);
+       
+        if($list['success']!=true) return;
+        
+        $opt=[];  
+        foreach($list['data'] as $d ) {
+           $opt[$d['WarehouseIndex']]=$d['Description']; 
+        }
+        
+        return $opt;        
+    }
+    
+    
+     
     public function npOnSubmit($sender) {
         $params = array();
         $dt = $this->nppan->npform->deltype->getValue();  //0-отделение 1-поштомат 2-по адресу
@@ -656,14 +728,15 @@ class GIList extends \App\Pages\Base
         $params['SeatsAmount'] = $this->nppan->npform->npplaces->getText();
         $params['Description'] = trim($this->nppan->npform->npdesc->getText());
         $params['CargoType'] = 'Cargo';
-
+     
         $params['Weight'] = $this->nppan->npform->npw->getText();
         if ($params['SeatsAmount'] > 1) {
             $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
         }
      
         if($dt==1) {
-            
+            $params['CargoType'] = 'Parcel';
+     
             $params['OptionsSeat'] =[] ;
             $params['OptionsSeat'][] =array(
                             'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
@@ -672,7 +745,7 @@ class GIList extends \App\Pages\Base
                             'weight' => $params['Weight']  
                            
                           );
-        
+                
         }
         
         $moneyback = $this->nppan->npform->npback->getText();
@@ -680,6 +753,10 @@ class GIList extends \App\Pages\Base
         if ($moneyback > 0) {   //если  введена  обратная сумма
             $back = $this->nppan->npform->nppmback->getValue();
 
+            if ($back == '0') {
+                $this->setError('Не вказано тип оплати зворотньої доставки'); 
+                return;
+            }
             if ($back == 'Control') {
                 $params['AfterpaymentOnGoodsCost'] = $moneyback;
             } else {
@@ -720,30 +797,32 @@ class GIList extends \App\Pages\Base
         $recipient = array();
 
         try {
-
+       
 
             $result = $api->model('Counterparty')->getCounterparties("Sender");
             if ($result['success'] == false) {
-                $errors = implode(',', $result['errors']);
-                $this->setError($errors);
+                $error = array_pop($result['errors'] );
+                $this->setError($error) ;
+            
                 return;
             }
 
             $resultc = $api->model('Counterparty')->getCounterpartyContactPersons($result['data'][0]['Ref']);
             if ($resultc['success'] == false) {
-                $errors = implode(',', $result['errors']);
-                $this->setError($errors);
+                $error = array_pop($result['errors'] );
+                $this->setError($error) ;
                 return;
             }
 
 
             $sender['Sender'] = $result['data'][0]['Ref'];
             $sender['SendersPhone'] = $this->nppan->npform->seltel->getText();
-            $sender['CitySender'] = $this->nppan->npform->selcity->getValue();
+            $sender['CitySender'] = $this->nppan->npform->selcity->getKey();
             $sender['SenderType'] = $result['data'][0]['CounterpartyType'];
             $sender['ContactSender'] = $resultc['data'][0]['Ref'];
-            $sender['SenderAddress'] = $this->nppan->npform->selpoint->getValue();
-
+          //  $sender['SenderAddress'] = $this->nppan->npform->selpoint->getKey();
+            $sender['SenderWarehouseIndex'] = $this->nppan->npform->selpoint->getKey();
+     
             $recipient['FirstName'] = $this->nppan->npform->bayfirstname->getText();
             $recipient['MiddleName'] = $this->nppan->npform->baymiddlename->getText();
             $recipient['LastName'] = $this->nppan->npform->baylastname->getText();
@@ -755,8 +834,8 @@ class GIList extends \App\Pages\Base
             $result = $api->model('Counterparty')->save($recipient);
 
             if ($result['success'] == false) {
-                $errors = implode(',', $result['errors']);
-                $this->setError($errors);
+                $error = array_pop($result['errors'] );
+                $this->setError($error) ;
                 return;
             }
 
@@ -764,13 +843,14 @@ class GIList extends \App\Pages\Base
             $recipient['RecipientType'] = $result['data'][0]['CounterpartyType'];
               $recipient['Recipient'] = $result['data'][0]['Ref'];
               $recipient['ContactRecipient'] = $result['data'][0]['ContactPerson']['data'][0]['Ref'];
-              $recipient['CityRecipient'] = $this->nppan->npform->baycity->getValue();
-              $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getValue();
+              $recipient['CityRecipient'] = $this->nppan->npform->baycity->getKey();
+            //   $recipient['RecipientAddress'] = $this->nppan->npform->baypoint->getKey();
+              $recipient['RecipientWarehouseIndex'] = $this->nppan->npform->baypoint->getKey();
     
             if($dt==2) {
-              $recipient['RecipientCityName'] = $this->nppan->npform->baycity->getValueName();
+              $recipient['RecipientCityName'] = $this->nppan->npform->baycity->getText();
   //            $recipient['RecipientAreaRegions'] = $this->nppan->npform->bayarea->getValue();
-              $recipient['RecipientArea'] = $this->nppan->npform->bayarea->getValueName();
+            //  $recipient['RecipientArea'] = $this->nppan->npform->bayarea->getValueName();
               $recipient['RecipientAddressName'] = $this->nppan->npform->bayaddr->getText();
               $recipient['RecipientHouse'] = $this->nppan->npform->bayhouse->getText();
               $recipient['RecipientFlat'] = $this->nppan->npform->bayflat->getText();
@@ -781,6 +861,7 @@ class GIList extends \App\Pages\Base
             $paramsInternetDocument = array_merge($sender, $recipient, $params);
 
             $result = $api->model('InternetDocument')->save($paramsInternetDocument);
+            
         } catch(\Throwable $e) {
             $this->setError($e->getMessage());
             return;
@@ -788,7 +869,9 @@ class GIList extends \App\Pages\Base
         if ($result['success'] == true) {
 
             $this->_doc->headerdata['delivery_date'] = strtotime($result['data'][0]['EstimatedDeliveryDate']);
-            $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
+            if($params['PayerType']=='Sender') {
+                $this->_doc->headerdata['ship_amount'] = $result['data'][0]['CostOnSite'];
+            }
             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
             $this->_doc->save();
@@ -802,13 +885,26 @@ class GIList extends \App\Pages\Base
                 }
             }
 
+            if($this->_doc->customer_id > 0){
+                $c = \App\Entity\Customer::load($this->_doc->customer_id);
+                $c->npcityref   =  $this->nppan->npform->baycity->getKey() ;
+                $c->npcityname  =  $this->nppan->npform->baycity->getText() ;
+                $c->nppointref  =  $this->nppan->npform->baypoint->getKey() ;
+                $c->nppointname =  $this->nppan->npform->baypoint->getText() ;
+                $c->save();
+            }
+            
 
             $this->statuspan->setVisible(false);
             $this->listpan->setVisible(true);
             $this->nppan->setVisible(false);
         } else {
-            $errors = implode(',', $result['errors']);
-            $this->setError($errors);
+            $error =" ". implode(";", $result['errors'] );
+            if(strpos($error,'OptionsSeat')>0) {
+                $error= "Не вказано габарити для поштомата або невідповідний тип доставки";
+            }
+            
+            $this->setError($error) ;
         }
     }
 
@@ -827,10 +923,14 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $user = System::getUser();
-
+        $common = System::getOptions("common");
+        $actualdate = $common['actualdate'] ??  strtotime('2023-01-01') ;
+        
         $conn = \ZDB\DB::getConnect();
 
-        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' ) ";
+        $actualdate =   $conn->DBDate($actualdate  );
+        
+        $where = "   meta_name  in('GoodsIssue', 'Invoice','POSCheck','ReturnIssue' ,'Warranty','TTN' )  and document_date >= ".$actualdate;
 
         $salesource = $this->page->listpan->filter->salesource->getValue();
         if ($salesource > 0) {

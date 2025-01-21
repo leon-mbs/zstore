@@ -90,7 +90,7 @@ class GoodsReceipt extends Document
         if ($this->amount == 0) {
             // return;
         }
-        $rate= doubleval($this->headerdata["rate"]);
+        $rate= doubleval($this->headerdata["rate"]??0);
 
         if ($rate == 0 || $rate == 1) {
             $rate =1;
@@ -113,7 +113,7 @@ class GoodsReceipt extends Document
         $total = $total * $rate;
 
 
-        $k = $this->amount >0 ? $total / $this->amount : 1;
+        $k = $this->amount > 0 ? $total / $this->amount : 1;
 
 
         //аналитика
@@ -146,16 +146,16 @@ class GoodsReceipt extends Document
             }
         }
 
-        $payed = $this->headerdata['payed'];
+        $payed = doubleval($this->headerdata['payed']??0);
 
         $payed = H::fa( $payed * $rate);
         $this->payamount = H::fa($this->headerdata['payamount'] * $rate);
+        $this->amount = H::fa($this->amount * $rate);
 
 
-        $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
-        if ($payed > 0) {
-            $this->payed = $payed;
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+      
+        $this->DoBalans() ;
 
         if($this->headerdata['delivery'] > 0) {
            if($this->headerdata['spreaddelivery']== 0) { //если  не  распределяем на  цену
@@ -172,6 +172,8 @@ class GoodsReceipt extends Document
                 $pay->notes = 'Доставка';
                 $pay->user_id = \App\System::getUser()->user_id;
                 $pay->save();
+                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+                
            }
            
             
@@ -181,7 +183,7 @@ class GoodsReceipt extends Document
         }
 
         
-        if(H::getKeyValBool('CI_optupdate')==true) {
+        if(($common['ci_update'] ?? 0 )==1) {
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;
@@ -192,7 +194,7 @@ class GoodsReceipt extends Document
                  $ci->customer_id = $this->customer_id;
                  $ci->price = $item->price;
                  $ci->quantity = 0;
-                 $ci->cust_code = $item->custcode;
+                 $ci->cust_code = $item->custcode??'';
                  $ci->comment = $this->document_number;
                  $ci->updatedon = time();
                  
@@ -220,6 +222,37 @@ class GoodsReceipt extends Document
 
         return $list;
     }
-
+    /**
+    * @override
+    */
+    public function DoBalans() {
+        $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+   
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
+   
+        //тмц
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $this->payamount;
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+        //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+        
+    }
 }     
 

@@ -111,7 +111,7 @@ class ChatBot
                 return;
             }
 
-            if ($c->passw != $s[2]) {
+            if (($c->passw ??'') != $s[2]) {
                 $this->sendMessage($chat_id, "Login fail") ;
                 return;
             }
@@ -159,7 +159,7 @@ class ChatBot
 
 
             } else {
-                H::log($ret['description']) ;
+                H::logerror($ret['description']) ;
             }
 
         }

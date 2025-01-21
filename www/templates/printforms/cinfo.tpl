@@ -1,6 +1,7 @@
  <table class="table  table-sm">
-   <tr><td>Назва</td><td>{{name}}</td></tr>
+   <tr><th colspan="2">{{name}}</th></tr>
    <tr><td>Тел.</td><td>{{phone}}</td></tr>
+   <tr><td>ЄДРПОУ</td><td>{{edrpou}}</td></tr>
    {{#smscode}} 
    <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Відправити</a>   
    <br><small> Відправка коду на телефон для перевірки номеру   </small>
@@ -8,8 +9,14 @@
   {{/smscode}}
    
    {{#email}}
-     <tr><td>E-mail</td><td>{{email}}</td></tr>
+     <tr><td>E-mail</td><td>{{{email}}}</td></tr>
    {{/email}}  
+   {{#viber}}
+     <tr><td>Viber</td><td>{{{viber}}}</td></tr>
+   {{/viber}}  
+   {{#telega}}
+     <tr><td>Телеграм</td><td>{{{telega}}}</td></tr>
+   {{/telega}}  
    {{#address}}   
      <tr><td>Адреса</td><td>{{address}}</td></tr>
    {{/address}}   
@@ -32,7 +39,7 @@
    
    {{#last}}
      <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
-     <tr><td colspan="2"> Останні товари: <td></tr>
+     <tr><td colspan="2"> Останні товари: </td></tr>
      <tr><td colspan="2"> 
          <table      style="font-size:smaller">
             {{#goods}}
@@ -40,7 +47,7 @@
             {{/goods}}
          
          </table>
-       <td></tr>
+       </td></tr>
       
       
      

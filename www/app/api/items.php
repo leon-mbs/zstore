@@ -74,6 +74,7 @@ class items extends JsonRPC
             $plist = array();
 
             $it = array(
+               
                 'item_code'    => $item->item_code,
                 'bar_code'     => $item->bar_code,
                 'itemname'     => $item->itemname,
@@ -85,10 +86,10 @@ class items extends JsonRPC
                 'cat_id'       => $item->cat_id
             );
 
-            $it = array_merge($it, $item->getData());
+           // $it = array_merge($it, $item->getData());
 
-            unset($it['detail']);
-            unset($it['disabled']);
+           // unset($it['detail']);
+           // unset($it['disabled']);
 
 
             if (strlen($item->price1) > 0) {
@@ -106,12 +107,12 @@ class items extends JsonRPC
             if (strlen($item->price5) > 0) {
                 $it['price5'] = $item->price5;
             }
-
+         
             $list[] = $it;
         }
 
 
-        return $list;
+         return $list;
     }
 
     //  количества на  складе
@@ -221,30 +222,6 @@ class items extends JsonRPC
         return array('item_code' => $item->item_code);
     }
 
-
-    //  список  работ и услуг
-    public function servicelist($args) {
-
-        $list = array();
-        $w = 'disabled<> 1 ';
-
-
-        foreach (\App\Entity\Service::find($w, 'service_name') as $item) {
-            $plist = array();
-
-            $it = array(
-                'service_name' => $item->service_name,
-                'price'        => $item->price,
-                'category'     => $item->category,
-                'service_id'   => $item->service_id
-            );
-
-
-            $list[] = $it;
-        }
-
-
-        return $list;
-    }
-
+ 
+  
 }

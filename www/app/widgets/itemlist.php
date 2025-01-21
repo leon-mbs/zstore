@@ -9,7 +9,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 
 /**
- * Виджет для подбора  товаров
+ * Виджет для подбора  товаров   для страниц  на  vue
  */
 class ItemList extends \Zippy\Html\PageFragment
 {
@@ -47,13 +47,18 @@ class ItemList extends \Zippy\Html\PageFragment
         if($post->wissearchonstore ==true) {
             $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
         }
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+           $where .= " and  item_id in (select item_id from store_stock where  store_id in (select store_id from stores where {$br} ))  "; 
+        }
 
 
         if(strlen($post->searchkey) > 0) {
+            $det = Item::qstr('%' . "<cflist>%{$post->searchkey}%</cflist>" . '%');
             $_sk= Item::qstr($post->searchkey);
             $_skn= Item::qstr('%'.$post->searchkey.'%');
 
-            $where = $where. " and ( itemname  like {$_skn}  or item_code= {$_sk} or bar_code= {$_sk}  ) " ;
+            $where = $where. " and ( itemname  like {$_skn}  or item_code= {$_sk} or bar_code= {$_sk}  or detail like {$det}  ) " ;
         }
 
         if($post->searchcat > 0) {

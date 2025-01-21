@@ -32,7 +32,7 @@ class GoodsIssue extends \App\Pages\Base
     public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     private $_rownumber = 1;
     private $_orderid   = 0;
 
@@ -47,13 +47,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = 7; 
-        if($common['usesnumber'] >0) {
-            $this->_tvars["colspan"] = 8;
-        }
-        if($common['usesnumber'] ==2) {
-            $this->_tvars["colspan"] = 9;
-        }
+  
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -139,18 +133,16 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->total->setText(H::fa($this->_doc->amount));
-            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
+            $this->docform->payamount->setText($this->_doc->payamount);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
 
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
+      
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
@@ -198,22 +190,8 @@ class GoodsIssue extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        //проверяем  что уже есть отправка
-                        $list = $order->getChildren('TTN');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
-                        }
-                        $list = $order->getChildren('GoodsIssue');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
+                        if($order->getNotSendedItem() == 0){
+                           $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
 
                         $this->docform->total->setText(H::fa($order->amount));
@@ -261,16 +239,26 @@ class GoodsIssue extends \App\Pages\Base
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
-                        $this->docform->total->setText($invoice->amount);
+
                         $this->docform->firm->setValue($basedoc->firm_id);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
-                        $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
+                    
 
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        
+                        $this->_itemlist = [];
+                        foreach($basedoc->unpackDetails('detaildata') as $k=>$v) {
+                            
+                           if($v instanceof \App\Entity\Service) {
+                               $this->setError('Послуги не  можуть додаватись до накладної') ;
+                               return;
+                           }
+                           $this->_itemlist[$k] =$v;
+                        }
+                 
+                        
                         $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
-
+                        $this->docform->total->setText($invoice->amount);
 
 
                         $this->docform->total->setText($basedoc->amount);
@@ -312,7 +300,7 @@ class GoodsIssue extends \App\Pages\Base
                         //$this->calcTotal();
                         //$this->calcPay();
                         $this->docform->total->setText($basedoc->amount);
-
+                        $this->calcPay();
 
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
@@ -409,7 +397,10 @@ class GoodsIssue extends \App\Pages\Base
         $this->_rowid = -1;
     }
 
+    //вставка  сканером
     public function addcodeOnClick($sender) {
+     //   $common = \App\System::getOptions("common");
+        
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $code0 = $code;
@@ -418,9 +409,17 @@ class GoodsIssue extends \App\Pages\Base
         if ($code == '') {
             return;
         }
+        $store_id = $this->docform->store->getValue();
+        if ($store_id == 0) {
+            $this->setError('Не обрано склад');
+            return;
+        }
+
+        $code_ = Item::qstr($code);
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0) {
+            if ($_item->item_id == $item->item_id ) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->_rownumber  = 1;
 
@@ -432,34 +431,39 @@ class GoodsIssue extends \App\Pages\Base
         }
 
 
-        $store_id = $this->docform->store->getValue();
-        if ($store_id == 0) {
-            $this->setError('Не обрано склад');
-            return;
-        }
-
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
-
-        if ($item == null) {      //ищес оп серийномк
+ 
+        if ($item == null) {      //ищем по серийному
 
             $st = Stock::find("store_id={$store_id} and  snumber=" . $code_);
             if(count($st)==1) {
                 $st = array_pop($st) ;
                 $item = Item::load($st->item_id);
 
-            }
-            if ($item == null) {
-                $this->setWarn("Товар з кодом `{$code}` не знайдено");
-                return;
-            } else {
+            }    
+            if ($item != null) {  
                 $item->snumber =   $code;
-
-
             }
         }
+      // проверка  на  стикер
+        if ($item == null) {
+       
+            $item = Item::unpackStBC($code);
+            if($item instanceof Item) {
+                $item->pureprice = $item->getPurePrice();
+                $this->_itemlist[ ] = $item;
+                $this->_rownumber  = 1;
 
-
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->calcPay();
+                return; 
+            }          
+        } 
+        if ($item == null) {  
+                $this->setWarn("Товар з кодом `{$code}` не знайдено");
+                return;
+        }  
+        
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
@@ -606,11 +610,21 @@ class GoodsIssue extends \App\Pages\Base
                 
             }
         }
- 
-
-
+  
         if($this->_rowid == -1) {
-            $this->_itemlist[] = $item;
+            $found=false;
+  
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id && $_item->snumber == $item->snumber) {
+                    $this->_itemlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+            if(!$found) {
+               $this->_itemlist[] = $item;    
+            }
+            
+            
             $this->addrowOnClick(null);
             $this->setInfo("Позиція додана") ;
             //очищаем  форму
@@ -677,14 +691,11 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->_doc->payamount = $this->docform->payamount->getText();
-
-        $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
 
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
-
-
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
 
         if ($this->checkForm() == false) {
@@ -718,16 +729,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
-                if (!$isEdited) {
-                    $this->_doc->updateStatus(Document::STATE_NEW);
-                }
-
-
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'])) {
-                    $this->_doc->updateStatus(Document::STATE_WP);
-                }
-                if ($this->_doc->parent_id > 0) {   //закрываем заказ
+       
+               if ($this->_doc->parent_id > 0) {   //закрываем заказ
                     $order = Document::load($this->_doc->parent_id)->cast();
 
                     if($this->_changedpos) {
@@ -748,12 +751,22 @@ class GoodsIssue extends \App\Pages\Base
                             }
                         }
                         
-                        
-                        
                         $order->unreserve();
                     }
                 }
-            } else {
+       
+       
+                if (!$isEdited) {
+                    $this->_doc->updateStatus(Document::STATE_NEW);
+                }
+
+
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'])) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
+                }
+                
+             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -778,7 +791,7 @@ class GoodsIssue extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }
@@ -930,6 +943,7 @@ class GoodsIssue extends \App\Pages\Base
         $price = $item->getPartion($store_id);
         $this->editdetail->pricestock->setText(H::fa($price));
 
+       
 
     }
 
@@ -960,10 +974,10 @@ class GoodsIssue extends \App\Pages\Base
             if (doubleval($d) > 0) {
                 $disctext = "Постійна знижка {$d}%";
             } else {
-                $bonus = $cust->getBonus();
-                if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
-                }
+             //   $bonus = $cust->getBonus();
+             //   if ($bonus > 0) {
+              //      $disctext = "Нараховано бонусів {$bonus} ";
+              //  }
             }
             $this->docform->custinfo->setText($disctext);
             $this->docform->custinfo->setVisible(strlen($disctext) >0);
@@ -971,7 +985,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->OnCustomerFirm(null);
-
+       
 
     }
 

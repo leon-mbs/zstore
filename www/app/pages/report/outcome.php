@@ -54,6 +54,7 @@ class Outcome extends \App\Pages\Base
         $types[10] = "За складами";
         $types[11] = "За джерелами";
         $types[12] = "За брендами" ;
+        $types[13] = "За постачальниками" ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
@@ -122,7 +123,7 @@ class Outcome extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-        $disc=0;
+       
         $brand="";
         $u = "";
 
@@ -167,28 +168,30 @@ class Outcome extends \App\Pages\Base
                where e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1 or e.tag = -4 )   {$cat}   {$cust}  
                and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','ServiceAct' )
                {$br}  {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.itemname,i.item_code
                order  by i.itemname
         ";
         }
+
         if ($type == 2) {  //по покупателям
             $empty = "Фіз. особа";
             $sql = "
           select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id, count(d.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e
 
-        left  join customers  c on c.customer_id = e.customer_id
+         left  join customers  c on c.customer_id = e.customer_id
          join documents_view  d on d.document_id = e.document_id
            where  e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4)     
-             and d.meta_name in ('GoodsIssue',    'POSCheck','ReturnIssue','TTN','OrderFood' )         AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              {$br} {$u}   AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+             and d.meta_name in ('GoodsIssue',  'ServiceAct' ,  'POSCheck','ReturnIssue','TTN','OrderFood' )         AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              {$br} {$u}   AND  (e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.customer_name,c.customer_id
           order  by c.customer_name
         ";
         }
+
         if ($type == 3) {   //по датам
             $sql = "
           select e.document_date as dt  , count(e.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
@@ -198,8 +201,8 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
               and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood')           
-               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+               {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.document_date
   order  by e.document_date
         ";
@@ -214,12 +217,12 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where e.service_id >0  and e.quantity <>0      {$cust}  
               and d.meta_name in (  'ServiceAct' ,'POSCheck' )
-               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+               {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.service_name
                order  by s.service_name      ";
         }
-
+     
         if ($type == 5 && strlen($cat) == 0) {    //по категориях
             $sql = "
             select  i.cat_name as itemname,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
@@ -228,19 +231,18 @@ class Outcome extends \App\Pages\Base
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4 ) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue', 'ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by    i.cat_name
                order  by i.cat_name
         ";
         }
 
-
         if ($type == 8) {  //по холдингам
             $sql = '';
-            $rs = array();
+         // $rs = array();
 
             $hlist = \App\Entity\Customer::getHoldList();
             foreach ($hlist as $id => $name) {
@@ -260,8 +262,8 @@ class Outcome extends \App\Pages\Base
                  join documents_view  d on d.document_id = e.document_id
                    where e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                      and d.meta_name in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )    
-                      {$br} {$u}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-                      AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                      {$br} {$u}  AND  (e.document_date) >= " . $conn->DBDate($from) . "
+                      AND  (e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
                 ";
 
@@ -273,7 +275,6 @@ class Outcome extends \App\Pages\Base
             }
         }
 
-
         if ($type == 9) {    //по компаниям
             $sql = "
             select  d.firm_name as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
@@ -282,14 +283,15 @@ class Outcome extends \App\Pages\Base
              
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  d.firm_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by    d.firm_name
                order  by d.firm_name
         ";
         }
+ 
         if ($type == 10) {    //по складах
             $sql = "
             select  sr.storename as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
@@ -301,10 +303,10 @@ class Outcome extends \App\Pages\Base
                 
              join documents_view d on d.document_id = e.document_id
                where   e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by  sr.storename
                order  by sr.storename
         ";
@@ -322,10 +324,10 @@ class Outcome extends \App\Pages\Base
               
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4)   and  d.content like '%<salesource>{$salesource}</salesource>%'    
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
                 {$br} {$u}
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by   i.itemname
                 order by   i.itemname
                
@@ -348,17 +350,42 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                and  manufacturer = {$man}       
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )
                 {$br} {$u}
                 
-              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+              AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
               
                group  by i.itemname 
                order  by i.itemname 
         ";
         }
 
+        if ($type == 13) {  //по поставщикам
+
+            $sql = "
+             SELECT t.customer_name as itemname,   sum(0-t.quantity*t.partion) as summa, sum((t.outprice-t.partion )*(0-t.quantity)) AS navar 
+                FROM (
+                 SELECT   e.outprice,  e.partion,e.quantity , 
+
+                (SELECT  c0.customer_name FROM entrylist_view e0 
+                JOIN customers c0 ON e0.customer_id=c0.customer_id  
+                WHERE  e0.quantity >0 AND e0.tag=-2  AND  e0.item_id=e.item_id  AND c0.detail not like '%<isholding>1</isholding>%'  
+                ORDER BY e0.entry_id DESC LIMIT 0,1) AS customer_name
+                from entrylist_view  e 
+                join documents_view  d on d.document_id = e.document_id
+                WHERE e.partion  is  not null and  (  e.tag = -1  or e.tag = -4)     
+                AND  (e.document_date) >= " . $conn->DBDate($from) . "
+                {$br} {$u}   AND  (e.document_date) <= " . $conn->DBDate($to) . "
+                ORDER BY e.entry_id DESC
+                )  t WHERE  t.customer_name IS NOT NULL
+                GROUP BY t.customer_name
+                order BY t.customer_name
+                ";
+        
+               
+        
+        }
 
         $totsum = 0;
         $totsumself = 0;
@@ -369,25 +396,20 @@ class Outcome extends \App\Pages\Base
             $rs = $conn->Execute($sql);
             foreach ($rs as $row) {
 
-                // $summa = $row['summa'];
-                //  if ($row['navar'] != 0) {
-                //      $row['summa'] += $row['navar'];
-                //  }
-                if ($type == 3 && $row['summa']==0) {
-                    continue;                    
-                }
+           
 
-                $det = array(
-                    "code"      => $row['item_code'],
+              $det = array(
+                    "code"      => $row['item_code']??'',
                     "name"      => $row['itemname'],
                     "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
                     "qty"       => H::fqty($row['qty']),
                     "navar"     => H::fa($row['navar']),
                     "navarsign" => $row['navar'] > 0,
-                    "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa']  ), 1, '.', '') : "",
+                    "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa'] + $row['navar'] ), 1, '.', '') : "",
                     "summa"     => H::fa($row['summa'] + $row['navar']),
                     "docs"     => intval($row['docs'])
                 );
+
 
                 
                 $detail[] = $det;
@@ -397,8 +419,8 @@ class Outcome extends \App\Pages\Base
                 $totsum += ($row['summa'] + $row['navar']);
             }
         }
-        if( $totsum >0) {
-           $totnavarproc = 100*$totnavar/$totsumself ;
+        if( $totsumself > 0) {
+           $totnavarproc = 100*$totnavar/($totsumself + $totnavar);
         }
         
         $header = array('datefrom' => \App\Helper::fd($from),
@@ -410,9 +432,8 @@ class Outcome extends \App\Pages\Base
         $header['totnavarproc'] = $totnavarproc > 0 ?  number_format($totnavarproc, 1, '.', '') : "";
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
-        $header['disc'] = H::fa($disc);
-        $header['isdisc'] = $disc > 0;
-        $header['totall'] = H::fa($totsum - $disc);
+ 
+        $header['totall'] = H::fa($totsum );
 
         $header['noshowpartion'] = $this->_tvars['noshowpartion'] ;
 
@@ -424,12 +445,14 @@ class Outcome extends \App\Pages\Base
         $header['_type6'] = false;
         $header['_type7'] = false;
         $header['_type8'] = false;
+        $header['_type9'] = false;
+        $header['_type12'] = false;
+        $header['_type13'] = false;
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;
         }
-        if ($type == 2 || $type == 8) {
-
+        if ($type == 2 || $type == 8  ) {
             $header['_type2'] = true;
         }
         if ($type == 3) {
@@ -452,6 +475,9 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 12) {
             $header['_type12'] = true;
+        }
+        if ($type == 13) {
+            $header['_type13'] = true;
         }
 
 

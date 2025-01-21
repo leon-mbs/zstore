@@ -15,6 +15,8 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\Link\SubmitLink;
 
 /**
  * справочник категорийтоваров
@@ -25,6 +27,7 @@ class CategoryList extends \App\Pages\Base
     private $_category;
     public $_catlist = [];
     public $_cplist = [];
+    public $_cflist = [];
 
     public function __construct() {
         parent::__construct();
@@ -97,7 +100,7 @@ class CategoryList extends \App\Pages\Base
         $this->categoryprice->add(new DropDownChoice('ptype',$ptype,1 ));
 
 
-        $this->categorydetail->add(new \Zippy\Html\Image('editimage', '/loadimage.php?id=0'));
+        $this->categorydetail->add(new \Zippy\Html\Image('editimage' ));
         $this->categorydetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->categorydetail->add(new CheckBox('editdelimage'));
         $this->categorydetail->add(new CheckBox('editnoshop'));
@@ -109,11 +112,19 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->categorydetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
+        $this->add(new Form('cfform'))->setVisible(false);        
+        $this->cfform->add(new SubmitButton('savec'))->onClick($this, 'savecf');
+        $this->cfform->add(new Button('cancelc'))->onClick($this, 'cancelOnClick');
+        $this->cfform->add(new DataView('cflist', new ArrayDataSource(new Bind($this, '_cflist')), $this, 'cfOnRow'));
+        $this->cfform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
+        $this->cfform->add(new Label('catprname2')) ;          
+        
+        
         $this->Reload();
     }
 
     public function Reload() {
-        $this->_catlist = Category::find('', 'cat_name', -1, -1, "item_cat.*,    coalesce((  select     count(*)   from     items i   where     (i.cat_id = item_cat.cat_id)),0) AS qty");
+        $this->_catlist = Category::find('', 'cat_name', -1, -1 );
         foreach (Category::findFullData() as $c) {
             $this->_catlist[$c->cat_id]->full_name = $c->full_name;
             $this->_catlist[$c->cat_id]->parents = $c->parents;
@@ -157,12 +168,12 @@ class CategoryList extends \App\Pages\Base
         }
 
         $row->add(new Label('p_name', $parent));
-        $row->add(new Label('qty', $item->qty))->setVisible(($item->qty ?? 0) > 0);
+        $row->add(new Label('qty', $item->itemscnt))->setVisible(($item->itemscnt ?? 0) > 0);
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?id={$item->image_id}");
-        $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl());
+        $row->imagelistitem->setAttribute('href', $item->getImageUrl());
         $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
@@ -171,7 +182,8 @@ class CategoryList extends \App\Pages\Base
         $row->add(new ClickLink("up", $this, "OnMove"))->setVisible($this->_rn>0)   ;
         $row->add(new ClickLink("down", $this, "OnMove"))->setVisible($this->_rn<count($this->_catlist)-1)   ;
         $this->_rn++;
-        $row->add(new ClickLink('prices',$this, 'pricesOnClick'))->setVisible(($item->qty ?? 0) > 0);
+        $row->add(new ClickLink('prices',$this, 'pricesOnClick'))->setVisible(($item->itemscnt ?? 0) > 0);
+        $row->add(new ClickLink('cfields',$this, 'cfieldsOnClick'))->setVisible($item->childcnt==0);
 
     }
 
@@ -225,7 +237,7 @@ class CategoryList extends \App\Pages\Base
             $this->categorydetail->editdelimage->setChecked(false);
             $this->categorydetail->editdelimage->setVisible(true);
             $this->categorydetail->editimage->setVisible(true);
-            $this->categorydetail->editimage->setUrl('/loadimage.php?id=' . $this->_category->image_id);
+            $this->categorydetail->editimage->setUrl(  $this->_category->getImageUrl());
         } else {
             $this->categorydetail->editdelimage->setVisible(false);
             $this->categorydetail->editimage->setVisible(false);
@@ -233,6 +245,8 @@ class CategoryList extends \App\Pages\Base
     }
 
     public function addOnClick($sender) {
+        $this->_category = new Category();
+ 
         $this->updateParentList($this->_category->cat_id);
         $this->categorytable->setVisible(false);
         $this->categorydetail->setVisible(true);
@@ -241,8 +255,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->editimage->setVisible(false);
         $this->categorydetail->editdelimage->setVisible(false);
         $this->updateParentList();
-        $this->_category = new Category();
-    }
+     }
 
     public function saveOnClick($sender) {
         if (false == \App\ACL::checkEditRef('CategoryList')) {
@@ -270,7 +283,7 @@ class CategoryList extends \App\Pages\Base
         //delete image
         if ($this->categorydetail->editdelimage->isChecked()) {
             if ($this->_category->image_id > 0) {
-                Category::delete($this->_category->image_id);
+                 \App\Entity\Image::delete($this->_category->image_id);
             }
             $this->_category->image_id = 0;
         }
@@ -280,7 +293,7 @@ class CategoryList extends \App\Pages\Base
         $file = $this->categorydetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             
-            if (filesize($file["tmp_name"])  > pow(2,20)) {
+            if (filesize($file["tmp_name"])  > 1024*1024) {
 
                     $this->setError('Розмір файлу більше 1M');
                     return;
@@ -293,11 +306,7 @@ class CategoryList extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-
-                $this->setError('Занадто великий розмір зображення');
-                return;
-            }
+           
 
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
@@ -330,6 +339,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorytable->setVisible(true);
         $this->categorydetail->setVisible(false);
         $this->categoryprice->setVisible(false);
+        $this->cfform->setVisible(false);
         
     }
 
@@ -493,5 +503,68 @@ class CategoryList extends \App\Pages\Base
         $row->add(new TextInput('cplnew',new \Zippy\Binding\PropertyBinding($item, 'newp')));
     }
     
+    public function cfieldsOnClick($sender) {
+        $this->_category = $sender->owner->getDataItem();
+        $this->cfform->catprname2->setText($this->_category->cat_name);        
+
+        $this->_category = Category::load($this->_category->cat_id);
+        $this->_cflist = [];
+        $i=0;
+        foreach($this->_category->cflist as $k=>$v){
+            $ls = new \App\DataItem();
+            $ls->code = $k;
+            $ls->name = $v;
+            $ls->id = $i++;
+            $this->_cflist[$ls->id] = $ls;          
+                
+        }
+      
+      
+                 
+        $this->cfform->cflist->Reload();        
+
+        $this->cfform->setVisible(true);       
+        $this->categorytable->setVisible(false);       
+
+    }
+  
+    public function OnAddCF($sender) {
+        $ls = new \App\DataItem();
+        $ls->code = '';
+        $ls->name = '';
+        $ls->id = time();
+        $this->_cflist[$ls->id] = $ls;
+        $this->cfform->cflist->Reload();
+    }    
+    
+    public function cfOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new TextInput('cfcode', new Bind($item, 'code')));
+        $row->add(new TextInput('cfname', new Bind($item, 'name')));
+        $row->add(new ClickLink('delcf', $this, 'onDelCF'));
+        
+    }  
    
+    public function onDelCF($sender) {
+        $item = $sender->getOwner()->getDataItem();
+
+        $this->_cflist = array_diff_key($this->_cflist, array($item->id => $this->_cflist[$item->id]));
+
+        $this->cfform->cflist->Reload();
+      
+        
+    }    
+ 
+    public function savecf($sender) {
+        $cflist=[]; 
+        foreach($this->_cflist  as $v){
+            $cflist[$v->code]=$v->name;
+        }   
+        $this->_category->cflist=$cflist; 
+        $this->_category->save();
+        $this->categorytable->setVisible(true);
+        $this->cfform->setVisible(false);
+        $this->Reload( );
+        
+    }    
 }

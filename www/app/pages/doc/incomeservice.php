@@ -33,7 +33,7 @@ class IncomeService extends \App\Pages\Base
 {
     public $_servicelist = array();
     private $_doc;
-    private $_rowid       = 0;
+    private $_rowid       = -1;
     private $_basedocid   = 0;
 
     public $_itemlist     = array();
@@ -124,13 +124,10 @@ class IncomeService extends \App\Pages\Base
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+     
 
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
 
             $this->docform->paydisc->setText($this->_doc->headerdata['paydisc']);
             $this->docform->editpaydisc->setText($this->_doc->headerdata['paydisc']);
@@ -205,6 +202,7 @@ class IncomeService extends \App\Pages\Base
         $service = $sender->getOwner()->getDataItem();
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+        $this->setpanel->setVisible(false);
 
         $this->_rowid =  array_search($service, $this->_servicelist, true);
         
@@ -241,6 +239,7 @@ class IncomeService extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
+        $this->setpanel->setVisible(false);
         $this->_rowid = -1;
 
         $this->editdetail->editdesc->setText('');
@@ -272,6 +271,7 @@ class IncomeService extends \App\Pages\Base
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->setpanel->setVisible(true);
         $this->docform->detail->Reload();
         $this->calcTotal();
         $this->calcPay();
@@ -285,6 +285,7 @@ class IncomeService extends \App\Pages\Base
     public function cancelrowOnClick($sender) {
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
+        $this->setpanel->setVisible(true);
     }
 
     public function savedocOnClick($sender) {
@@ -318,9 +319,10 @@ class IncomeService extends \App\Pages\Base
 
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->payed = $this->docform->payed->getText();
 
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
+        
         if ($this->checkForm() == false) {
             return;
         }
@@ -367,6 +369,7 @@ class IncomeService extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }

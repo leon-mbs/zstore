@@ -60,7 +60,7 @@
   
   <div class="tab-pane  " id="tdocs">
               <div class="row">
-              <div class="col-12 col-md-4 col-xl-3">
+              <div class="col-12 col-md-6 col-xl-4">
               <table class="table table-sm"   >
                 <tr>
                     <td colspan="2" v-show="docdata.pdoc_id>0">
@@ -69,6 +69,7 @@
                 </tr>
                 <tr v-for="item   in  reldocs" >
                     <td><a v-on:click="opendoc(item.id)"  href="javascript:void(0)">{{item.name}}</a></td>
+                    <td> {{item.status}} </td>
                     <td><a v-show="item.candel"   v-on:click="delchilddoc(item.id)" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
                 </tr>
             </table>
@@ -76,7 +77,7 @@
             <form onsubmit="return  false"     >
 
                 <label for="addrel">Додати дочiрнiй документ:</label>
-                <div class="form-group">
+                <div style="width:200px" class="form-group">
                     <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почнiть вводити номер..."></typeahead>   
 
                 </div>

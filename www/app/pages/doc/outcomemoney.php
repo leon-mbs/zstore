@@ -58,12 +58,15 @@ class OutcomeMoney extends \App\Pages\Base
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
             $this->docform->detail->setValue($this->_doc->headerdata['detail']);
 
-
-            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            if($this->_doc->headerdata['detail']==1 || $this->_doc->headerdata['detail']==2 ) {
+               $this->docform->customer->setKey($this->_doc->customer_id);
+               $this->docform->customer->setText($this->_doc->customer_name);
+            }
+            if($this->_doc->headerdata['detail']==3) {
+               $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            }
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
             $this->docform->notes->setText($this->_doc->notes);
@@ -111,9 +114,8 @@ class OutcomeMoney extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->payed = $this->_doc->amount;
-        $this->_doc->headerdata['payed'] = $this->_doc->amount;
-        $this->_doc->payment = 0;
+        $this->_doc->payed = 0;
+        $this->_doc->payamount = $this->_doc->amount;
         if ($this->checkForm() == false) {
             return;
         }
@@ -144,7 +146,7 @@ class OutcomeMoney extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }

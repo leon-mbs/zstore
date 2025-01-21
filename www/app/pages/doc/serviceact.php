@@ -151,10 +151,11 @@ class ServiceAct extends \App\Pages\Base
                'desc'=>$ser->desc ,
                'price'=>H::fa($ser->price) ,
                'disc'=>$ser->disc ,
+               'msr'=>$ser->msr ,
                'pureprice'=>$ser->pureprice ,
 
                'quantity'=>H::fqty($ser->quantity) ,
-               'amount'=>H::fa($ser->quantity * $ser->price)
+               'amount'=>H::fa(doubleval($ser->quantity) * doubleval($ser->price))
 
             );
         }
@@ -168,6 +169,7 @@ class ServiceAct extends \App\Pages\Base
                'item_code'=>$item->item_code ,
                'price'=>H::fa($item->price) ,
                'disc'=>$item->disc ,
+               'msr'=>$item->msr ,
                'snumber'=>$item->snumber ,
                'pureprice'=>$item->pureprice ,
 
@@ -210,7 +212,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['device'] = $post->doc->device;
         $this->_doc->headerdata['gar'] = $post->doc->gar;
         $this->_doc->headerdata['contract_id'] = $post->doc->contract_id;
-        $this->_doc->headerdata['payment'] = $post->doc->payment;
+        $this->_doc->headerdata['payment'] = $post->doc->payment??0;
         $this->_doc->headerdata['totaldisc'] = $post->doc->totaldisc;
         $this->_doc->headerdata['bonus'] = $post->doc->bonus;
 
@@ -296,7 +298,7 @@ class ServiceAct extends \App\Pages\Base
             if ($isEdited == false) {
                 $this->_doc->document_id = 0;
             }
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_name);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return json_encode(['error'=>$ee->getMessage()], JSON_UNESCAPED_UNICODE);
 

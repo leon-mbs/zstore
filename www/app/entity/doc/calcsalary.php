@@ -17,9 +17,13 @@ class CalcSalary extends Document
     public function Execute() {
         $opt = System::getOptions("salary");
 
-        $code  = "_c" . $opt['coderesult'];
-        $bonus = "_c" . $opt['codebonus'];
-        $fine  = "_c" . $opt['codefine'];
+        $code     = "_c" . $opt['coderesult'];
+        $bonus    = "_c" . $opt['codebonus'];
+        $fine     = "_c" . $opt['codefine'];
+        $advance  = "_c" . $opt['codeadvance'];
+   
+        $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
+        $to = $dt->endOfMonth()->getTimestamp();
 
 
         foreach ($this->unpackDetails('detaildata') as $emp) {
@@ -30,8 +34,21 @@ class CalcSalary extends Document
             $eacc->document_id = $this->document_id;
             $eacc->optype = EmpAcc::SALARY;
             $eacc->amount = $am;
-            $eacc->save();
+            $eacc->createdon = $to;
             
+            $eacc->save();
+           
+            $am = $emp->{$advance};
+            if($am > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::ADVANCE;
+                $eacc->amount =  $am;
+                $eacc->createdon = $to;
+                $eacc->save();
+         
+            }
             $am = $emp->{$bonus};
             if($am > 0) {
                 $eacc = new  EmpAcc();
@@ -39,6 +56,7 @@ class CalcSalary extends Document
                 $eacc->document_id = $this->document_id;
                 $eacc->optype = EmpAcc::BONUS;
                 $eacc->amount = 0-$am;
+                $eacc->createdon = $to;
                 $eacc->save();
          
             }
@@ -50,10 +68,11 @@ class CalcSalary extends Document
                 $eacc->document_id = $this->document_id;
                 $eacc->optype = EmpAcc::FINE;
                 $eacc->amount = $am;
+                $eacc->createdon = $to;
                 $eacc->save();
           
             }
-            
+             
         }
 
         return true;

@@ -22,21 +22,21 @@ class PPOHelper
      *
      * @param mixed $data
      * @param mixed $type cmd (команда) или  doc (документ)
-     * @param mixed $firm компания
-     * @param mixed $onlysign только  наложть  подпись
+     * @param \App\Entity\Pos $pos pos терминал
+     * @param mixed $onlysign только  наложить  подпись
      */
-    public static function send($data, $type, \App\Entity\Firm $firm, $onlysign = false) {
+    public static function send($data, $type, \App\Entity\Pos $pos, $onlysign = false) {
 
         try {
 
-            $pposigntype = $firm->pposigntype;
-            $serhost = $firm->ppohost;
-            $serport = $firm->ppoport;
-            $usessl = $firm->ppousessl;
-            $password = $firm->ppopassword;
-            $keydata = $firm->ppokey;
-            $certdata = $firm->ppocert;
-            $isjks = $firm->ppoisjks;
+            $pposigntype = $pos->pposigntype;
+            $serhost = $pos->ppohost;
+            $serport = $pos->ppoport;
+            $usessl = $pos->ppousessl;
+            $password = $pos->ppopassword;
+            $keydata = $pos->ppokey;
+            $certdata = $pos->ppocert;
+            $isjks = $pos->ppoisjks;
 
             if ($pposigntype == 1 || $pposigntype == 2) {     //server
 
@@ -107,8 +107,8 @@ class PPOHelper
                 $signed = base64_decode($ret->data);
             } else {
 
-                $key = @unserialize(@base64_decode($firm->ppokey));
-                $cert = @unserialize(@base64_decode($firm->ppocert));
+                $key = @unserialize(@base64_decode($pos->ppokey));
+                $cert = @unserialize(@base64_decode($pos->ppocert));
 
                 if ($key == null || $cert == null) {
                     $msg = "Не завантажений ключ або сертифікат";
@@ -260,14 +260,13 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-        
+          
         if($firm== null){
-            return array('success' => false, 'data' => 'Не вказана  компаiя в POS термiналi');
+            return array('success' => false, 'data' => 'Не вказана  компанiя в POS термiналi');
         }
         
         
-        return self::send($xml, 'doc', $firm);
+        return self::send($xml, 'doc', $pos);
     }
 
     /**
@@ -349,7 +348,8 @@ class PPOHelper
             $n++;
         }
 
-
+       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Поаернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
+    
         //возврат
 
         $n = 1;
@@ -388,9 +388,8 @@ class PPOHelper
         $xml = $report->generate($header);
         $_xml = $xml;
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-
-        $ret =  self::send($xml, 'doc', $firm);
+     
+        $ret =  self::send($xml, 'doc', $pos);
         if($ret['success']==true) {
             $r = new ZRecord();
             $r->createdon = time();
@@ -412,7 +411,7 @@ class PPOHelper
      * отправка  чека
      *
      * @param mixed $doc
-     * @param mixed $delayfisc  отложить  фискализацию
+
      */
     public static function check($doc ) {
         $common = \App\System::getOptions('common');
@@ -439,7 +438,8 @@ class PPOHelper
         $header['posnumber'] = $pos->fiscalnumber;
         $header['username'] = self::getCashier($doc);
         $header['guid'] = \App\Util::guid();
-
+        $header['amount'] = 0;
+ 
 
      //   $header['comment'] = strlen($common["checkslogan"] ??'') >0 ? $common["checkslogan"]  :  false;
         $header['comment'] = false;
@@ -488,15 +488,12 @@ class PPOHelper
         
         $sum=0;
         foreach($header['details'] as $p ) {
-           $sum += ($p['price'] * $p['qty'] );
+           $sum += doubleval( number_format($p['price'] * $p['qty'] , 2, '.', ''));
          
         }        
         
-      foreach($header['services'] as $p ) {
-           $sum += $p['cost'] ;
-         
-        }        
-        
+          
+       
          // к  оплате
         $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
         // оплачено
@@ -652,12 +649,12 @@ class PPOHelper
         $report = new \App\Report('check.xml');
 
         $xml = $report->generate($header);
-   //     H::log($xml);
+     
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-        $ret = self::send($xml, 'doc', $firm);
+      
+        $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
-
+            
             self::insertStat($pos->pos_id, 1, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $doc->headerdata["fiscdts"] = "&date=".date('Ymd')."&time={$header['time']}&sum={$header['amount']}";
@@ -725,9 +722,8 @@ class PPOHelper
         $xml = $report->generate($header);
 
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-
-        $ret = self::send($xml, 'doc', $firm);
+     
+        $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
 
 
@@ -771,7 +767,14 @@ class PPOHelper
         $amount1 = 0;
         $amount2 = 0;
         $amount3 = 0;
+         //общая  скидка
+        $discsum =    $doc->amount  -  $doc->payamount  ;
 
+         $disc=1;
+        if($discsum >0 ) {
+           $disc = 1 - ($discsum/$doc->amount);
+     
+        }
 
         if ($mf->beznal == 1) {
             $header['formname'] = self::FORM_CARD;
@@ -791,6 +794,8 @@ class PPOHelper
         $n = 1;
         $header['amount'] = 0;
         foreach ($doc->unpackDetails('detaildata') as $item) {
+            $item->price = round($item->price * $disc *100)/100 ;
+             
             $header['details'][] = array(
                 'num'   => "ROWNUM=\"{$n}\"",
                 'name'  => $item->itemname,
@@ -799,7 +804,7 @@ class PPOHelper
                 'cost'  => number_format($item->quantity * $item->price, 2, '.', '')
             );
             $n++;
-            $header['amount'] = $header['amount'] + $item->quantity * $item->price;
+            $header['amount'] = $header['amount'] + doubleval( number_format($item->quantity * $item->price, 2, '.', '') );
         }
 
 
@@ -808,11 +813,11 @@ class PPOHelper
         $report = new \App\Report('checkback.xml');
 
         $xml = $report->generate($header);
-
+      
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
-        $firm = \App\Entity\Firm::load($pos->firm_id);
 
-        $ret = self::send($xml, 'doc', $firm);
+
+        $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
 
 
@@ -896,8 +901,7 @@ class PPOHelper
             return;
         }
         //$branch = \App\Entity\Branch::load($pos->firm_id);
-        $company = \App\Entity\Firm::load($pos->firm_id);
-
+    
         //"2022-05-01T00:00:00+03:00"
 
         $dt = new  \App\DateTime() ;
@@ -907,7 +911,7 @@ class PPOHelper
 
         $to = date('c');
 
-        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $company);
+        $res = PPOHelper::send(json_encode(array('Command' => 'Shifts', 'NumFiscal' => $pos->fiscalnumber, 'From' => $from, 'To' => $to)), 'cmd', $pos);
 
         if($res['success']==false) {
             \App\System::setErrorMsg($res['data']);
@@ -920,7 +924,7 @@ class PPOHelper
                 if(strlen($sh->CloseName)==0) {
 
 
-                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fiscalnumber, 'ShiftId' => $sh->ShiftId)), 'cmd', $company);
+                    $res = PPOHelper::send(json_encode(array('Command' => 'Documents', 'NumFiscal' => $pos->fiscalnumber, 'ShiftId' => $sh->ShiftId)), 'cmd', $pos);
 
 
                     if($res['success']==false) {
@@ -976,7 +980,7 @@ class PPOHelper
             if(in_array($d, $floc)==false) {
 
 
-                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fiscalnumber, 'NumFiscal' =>  $d )), 'cmd', $company);
+                $res = PPOHelper::send(json_encode(array('Command' => 'Check', 'RegistrarNumFiscal' => $pos->fiscalnumber, 'NumFiscal' =>  $d )), 'cmd', $pos);
 
                 if($res['success']==false) {
                     continue;
@@ -1028,10 +1032,10 @@ class PPOHelper
     /**
     * состояние фискального сервера
     *
-    * @param mixed $firm
+    * @param mixed $pos
     */
-    public static function checkServer($firm) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $firm);
+    public static function checkServer($pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
@@ -1048,10 +1052,10 @@ class PPOHelper
     * состояние  регистратора
     *
     * @param mixed $fiscnumber
-    * @param mixed $firm
+    * @param mixed $pos
     */
-    public static function rroState($fiscnumber, $firm) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+    public static function rroState($fiscnumber, $pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
@@ -1064,10 +1068,10 @@ class PPOHelper
     * получение итоговых  данных по смене  для  z отчета
     *
     * @param mixed $fiscnumber
-    * @param mixed $firm
+    * @param mixed $pos
     */
-    public static function shiftTotal($fiscnumber, $firm) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $firm);
+    public static function shiftTotal($fiscnumber, $pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
@@ -1099,14 +1103,13 @@ class PPOHelper
   /**
     * состояние сессии
     *
-    * @param mixed $firm
+    * @param mixed $pos
     */
     public static function checkSession($pos) {
        
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-     
+       
       
-        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $firm);
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }

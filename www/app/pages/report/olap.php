@@ -173,7 +173,7 @@ class OLAP extends \App\Pages\Base
         $m = \App\Util::getMonth()  ;
 
         foreach($cols as $d) {
-            \App\Helper::log("select distinct {$d} from ({$sql} ) t order  by {$d} ");
+        
             $res = $conn->Execute("select distinct {$d} from ({$sql} ) t order  by {$d} ");
 
             foreach($res as $row) {

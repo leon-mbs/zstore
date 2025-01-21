@@ -44,7 +44,7 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Виконаний', 'shipped' => 'Доставлений', 'canceled' => 'Скасований'), 'completed'));
+        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Виконаний', 'shipped' => 'Доставлений', 'cancelled' => 'Скасований'), 'completed'));
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
           
     }
@@ -131,9 +131,11 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
                 $neworder->headerdata['phone'] = strlen($wcorder->billing->phone ??'') > 0 ? $wcorder->billing->phone :  ($wcorder->billing->phone ??'')   ;
+                $neworder->headerdata['email'] = $wcorder->billing->email;
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
+
                 if($modules['wcmf']>0) {
                   $neworder->headerdata['payment'] = $modules['wcmf'];
                 }
@@ -142,13 +144,12 @@ class Orders extends \App\Pages\Base
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
                 $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
-                if (strlen($wcorder->billing->email) > 0) {
-                    $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
-                }
+                $neworder->notes .= " Адреса доставки:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= " Адреса платіжна:" . $wcorder->billing->city . ' ' . $wcorder->billing->address_1 . ";";
+   
                 if (strlen($wcorder->billing->phone) > 0) {
                     $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
                 }
-                $neworder->notes .= " Адреса:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
                 $neworder->notes .= " Комментар:" . $wcorder->customer_note . ";";
 
                 $this->_neworders[$wcorder->id] = $neworder;
@@ -191,7 +192,7 @@ class Orders extends \App\Pages\Base
                   }
                 
                 if ($cust != null) {
-                    $neworder->customer_id = $cust->customer_id;
+                    $shoporder->customer_id = $cust->customer_id  ;
                 }                
                 
             }
@@ -216,7 +217,7 @@ class Orders extends \App\Pages\Base
 
     public function onRefresh($sender) {
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%'   and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 

@@ -37,8 +37,8 @@ class ProdProc extends \ZCL\DB\Entity
         if($diff<0) {
             $diff=0;
         }
-        $proc->startdateplan = $this->startdateplan + $diff;
-        $proc->enddateplan = $this->enddateplan + $diff;
+        $proc->startdateplan = intval($this->startdateplan) + $diff;
+        $proc->enddateplan = intval($this->enddateplan) + $diff;
 
         $proc->procname = $this->procname . "_copy";
         $proc->pp_id = 0;

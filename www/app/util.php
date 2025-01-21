@@ -76,7 +76,7 @@ class Util
     /**
      * Вставляет пробелы  между символами строки
      *
-     * @param mixed $data
+     * @param mixed $string
      */
     public static function addSpaces($string) {
         $_data = "";
@@ -126,7 +126,7 @@ class Util
 
     public static function money2str_ua($number) {
 
-        return money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
+        return mb_ucfirst( money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT) );
     }
 
     /**
@@ -240,6 +240,9 @@ class Util
         
         return $lines;
     }
+    
+ 
+    
 }
 
 
@@ -248,82 +251,7 @@ define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
 define('M2S_KOPS_SHORT', 0x04);    // shorten copecks
 
-function money2str_rugr($money, $options = 0) {
-
-    $money = preg_replace('/[\,\-\=]/', '.', $money);
-
-    $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
-        'восемь', "девять", 'десять', 'одиннадцать', 'двенадцать', 'тринадцать',
-        'четырнадцать', "пятнадцать", 'шестнадцать', 'семнадцать', 'восемьнадцать',
-        "девятнадцать", 'двадцать', 30  => 'тридцать', 40 => 'сорок', 50 => "пятьдесят",
-                                    60  => 'шестдесят', 70 => 'семьдесят', 80 => 'восемьдесят', 90 => "девяносто",
-                                    100 => 'сто', 200 => 'двести', 300 => 'триста', 400 => 'четыреста',
-                                    500 => "пятьсот", 600 => 'шестьсот', 700 => 'семьсот', 800 => 'восемьсот',
-                                    900 => "девятьсот");
-
-    $numbers_f = array('', 'одна', 'две');
-
-    $units_ru = array(
-        (($options & M2S_KOPS_SHORT) ? array('коп.', 'коп.', 'коп.') : array('копейка', 'копейки', 'копеек')),
-        array('гривна', 'гривны', 'гривен'),
-        array('тысяча', 'тысячи', 'тысяч'),
-        array('миллион', 'миллиона', 'миллионов')
-    );
-
-    $ret = '';
-
-    // enumerating digit groups from left to right, from trillions to copecks
-    // $i == 0 means we deal with copecks, $i == 1 for roubles,
-    // $i == 2 for thousands etc.
-    for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
-        $dig =0;
-        // each group contais 3 digits, except copecks, containing of 2 digits
-        $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
-            dec_digits_group($money, -1, 2);
-
-        // process the group if not empty
-        if ($grp != 0) {
-
-            // digital copecks
-            if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
-                $ret .= sprintf('%02d', $grp) . ' ';
-                $dig = $grp;
-
-                // the main case
-            } else {
-                for ($j = 2; $j >= 0; $j--) {
-                    $dig = dec_digits_group($grp, $j);
-                    if ($dig != 0) {
-
-                        // 10 to 19 is a special case
-                        if ($j == 1 && $dig == 1) {
-                            $dig = dec_digits_group($grp, 0, 2);
-                            $ret .= $numbers_m[$dig] . ' ';
-                            break;
-                        } // thousands and copecks are Feminine gender in Russian
-                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2)) {
-                            $ret .= $numbers_f[$dig] . ' ';
-                        } // the main case
-                        else {
-                            $ret .= $numbers_m[(int)($dig * pow(10, $j))] . ' ';
-                        }
-                    }
-                }
-            }
-            $ret .= $units_ru[$i][sk_plural_form($dig)] . ' ';
-        } // roubles should be named in case of empty roubles group too
-        elseif ($i == 1 && $ret != '') {
-            $ret .= $units_ru[1][2] . ' ';
-        } // mandatory copecks
-        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
-            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
-                ' ' . $units_ru[0][2];
-        }
-    }
-
-    return trim($ret);
-}
-
+ 
 function money2str_ru($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -633,9 +561,9 @@ function money2str_ua($money, $options = 0) {
 function dec_digits_group($number, $power, $digits = 1) {
 
     if (function_exists('gmp_init') && $power >0) {
-        return   gmp_intval(gmp_mod(gmp_div((int)$number, gmp_pow(10, (int) $power * $digits)), gmp_pow(10, (int)$digits)));
+        return   gmp_intval(gmp_mod(gmp_div(intval($number), gmp_pow(10, intval($power) * intval($digits))), gmp_pow(10, (int)$digits)));
     }
-    return    intval(($number/pow(10, $power * $digits)) % pow(10, $digits)) ;
+    return    intval((intval($number)/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
 
     // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }

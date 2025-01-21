@@ -10,7 +10,7 @@
     <tr>
         <td></td>
         <td>Фіскальний номер</td>
-        <td colspan="5">{{fiscalnumber}}<</td>
+        <td colspan="5">{{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}    
    <tr>

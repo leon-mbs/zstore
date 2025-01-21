@@ -96,7 +96,7 @@ class Items extends \App\Pages\Base
                     }
                     
                     $parents[]=$p['parent'] ;
-                };
+                }
       
                 foreach($pages as $i=>$name){
                     if(in_array($i,$parents)==false)  {
@@ -170,11 +170,7 @@ class Items extends \App\Pages\Base
 
             $this->exportform->newitemlist->Reload();
             $this->exportform->ecat->setValue(0);
-        } else {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
-        }
+        }  
     }
 
     public function itemOnRow($row) {
@@ -269,8 +265,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
             
-            $price = $item->getPrice($modules['hrpricetype']);
-       
+            $qty = $item->getQuantity();    
           
             $body['products'][]=array(
                 'article'=>$item->item_code,
@@ -416,16 +411,16 @@ class Items extends \App\Pages\Base
                     $item->price1 = H::fa($product['price']);
                 }
                 if ($modules['hrpricetype'] == 'price2') {
-                    $item->price2 = H::fa($product['price']);;
+                    $item->price2 = H::fa($product['price']);
                 }
                 if ($modules['hrpricetype'] == 'price3') {
-                    $item->price3 = H::fa($product['price']);;
+                    $item->price3 = H::fa($product['price']);
                 }
                 if ($modules['hrpricetype'] == 'price4') {
-                    $item->price4 = H::fa($product['price']);;
+                    $item->price4 = H::fa($product['price']);
                 }
                 if ($modules['hrcpricetype'] == 'price5') {
-                    $item->price5 = H::fa($product['price']);;
+                    $item->price5 = H::fa($product['price']);
                 }
                 $item->manufacturer = $product['brand']['value']['ua'] ?? '';
                 if($item->manufacturer =='') {

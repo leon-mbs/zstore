@@ -26,7 +26,7 @@ class OrderCustList extends \App\Pages\Base
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+
      * @return DocList
      */
     public function __construct() {
@@ -56,6 +56,8 @@ class OrderCustList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bcan'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bdeldate'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new \Zippy\Html\Form\Date('deldate'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -74,9 +76,18 @@ class OrderCustList extends \App\Pages\Base
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
-
+        $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
         $row->add(new Label('date', H::fd($doc->document_date)));
+        $delivery ="";
+        if($doc->headerdata['delivery_date'] >0) {
+              $delivery =  H::fd($doc->headerdata['delivery_date']);
+        }
+      
+        $row->add(new Label('delivery', $delivery));
+        if($doc->headerdata['delivery_date'] >0 && $doc->headerdata['delivery_date'] < time() && $doc->state== Document::STATE_INPROCESS  ) {
+              $row->delivery->setAttribute('class','text-danger');
+        }
+        
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('amount', H::fa($doc->amount)));
@@ -103,7 +114,7 @@ class OrderCustList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-        //  $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
+
         //проверяем  что есть ТТН
         $d = $this->_doc->getChildren('GoodsReceipt');
         $ttn = count($d) > 0;
@@ -145,6 +156,15 @@ class OrderCustList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);
         }
+        if ($sender->id == "bdeldate") {
+            $dd=$this->statuspan->statusform->deldate->getDate();
+            if($dd >0) {
+               $this->_doc->headerdata['delivery_date'] = $dd ;
+               $this->_doc->save();
+               $this->statuspan->setVisible(false);
+                
+            }
+        }
 
         $this->doclist->Reload(false);
         $this->statuspan->statusform->setVisible(false);
@@ -152,12 +172,18 @@ class OrderCustList extends \App\Pages\Base
     }
 
     public function updateStatusButtons() {
-
-        $this->statuspan->statusform->bclose->setVisible(true);
-
         $state = $this->_doc->state;
 
-        // $payed = $this->_doc->payamount >= $this->_doc->amount; //оплачен
+        $this->statuspan->statusform->deldate->setVisible($state==7);
+        $this->statuspan->statusform->deldate->setText("");
+        if($this->_doc->headerdata['delivery_date']>0) {
+            $this->statuspan->statusform->deldate->setDate($this->_doc->headerdata['delivery_date']);            
+        }
+        
+        $this->statuspan->statusform->bclose->setVisible(true);
+
+  
+
         //доставлен
         $sent = $this->_doc->checkStates(array(Document::STATE_DELIVERED)) > 0;
 

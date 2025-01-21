@@ -50,12 +50,14 @@ class Item extends \ZCL\DB\Entity
         $this->zarp = (string)($xml->zarp[0]);
         $this->thumb = (string)($xml->thumb[0]);
 
+        $this->isweight = (int)$xml->isweight[0];
         $this->noprice = (int)$xml->noprice[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->autooutcome = (int)$xml->autooutcome[0];
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+        $this->imageurl = (string)$xml->imageurl[0];
 
         $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
@@ -71,6 +73,7 @@ class Item extends \ZCL\DB\Entity
         $this->url = (string)$xml->url[0];
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
+        $this->cflist = (string)$xml->cflist[0];
         $reclist = (string)$xml->reclist[0];
 
         if(strlen($reclist) >0) {
@@ -114,6 +117,13 @@ class Item extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
+        
+        $this->itemname = str_replace("'","`",$this->itemname) ;
+        $this->itemname = str_replace("\"","`",$this->itemname) ;
+        $this->shortname = str_replace("'","`",$this->shortname) ;
+        $this->shortname = str_replace("\"","`",$this->shortname) ;
+         
+        
         $fid = \App\System::getBranch();
         if ($fid > 0) {
             $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
@@ -126,6 +136,7 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
+        $this->detail .= "<isweight>{$this->isweight}</isweight>";
         $this->detail .= "<noprice>{$this->noprice}</noprice>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
@@ -163,6 +174,8 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<url>{$this->url}</url>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
+        $this->detail .= "<cflist>{$this->cflist}</cflist>";
+        $this->detail .= "<imageurl>{$this->imageurl}</imageurl>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -565,7 +578,6 @@ class Item extends \ZCL\DB\Entity
     /**
      * возвращает количество на складах
      *
-     * @param mixed $item_id
      * @param mixed $store_id
      * @param mixed $snumber партия проиводителя
      */
@@ -599,7 +611,6 @@ class Item extends \ZCL\DB\Entity
     /**
      * возвращает сумму на складах
      *
-     * @param mixed $item_id
      * @param mixed $store_id
      */
     public function getAmount($store_id = 0) {
@@ -686,8 +697,7 @@ class Item extends \ZCL\DB\Entity
     /**
      * Метод  для   получения  имени  ТМЦ   для выпадающих списков
      *
-     * @param mixed $criteria
-     * @return []
+     * @param mixed $partname
      * @static
      */
     public static function findArrayAC($partname, $store = 0, $cat = 0) {
@@ -728,26 +738,64 @@ class Item extends \ZCL\DB\Entity
      *
      */
     public static function getNextArticle() {
+        
+        if (\App\System::getOption("common", "autoarticle") != 1) {
+            return "";    //не генерим
+        }        
+        $options = \App\System::getOptions('common');
+            
         $conn = \ZDB\DB::getConnect();
-
-        $sql = "  select coalesce(max(item_id),0)   from  items ";
-        $id = $conn->GetOne($sql);
-        if($id>0) {
-            $last = Item::load($id);
-
-            if(strpos($last->item_code, "ID") == 0) {
-                $a =  str_replace("ID", "", $last->item_code);
-                $a = intval($a) ;
-                if($a >0) {
-                    $id = $a;
-                }
-
-            }
+        $letters = $options['articleprefix'] ?? "ID";
+        $like= $letters=="" ?"" : " like '{$letters}%'" ;
+        $last=0;
+        $sql = "select item_code from  items where  item_code {$like}   order  by  item_id desc   ";  
+ 
+        foreach($conn->Execute($sql) as $row) {
+           $digits = intval( preg_replace('/[^0-9]/', '', $row['item_code']) );
+           if($digits > $last) {
+              $last =  $digits ; //максимальная цифра
+           }
+        }
+        
+        $last++;
+          
+      //  $l =  gmp_init($last, 10);
+     //   $l=   gmp_add( $l , (gmp_init(1))) ;
+      //  $last = gmp_strval($l, 10);
+        
+        $d=5;
+        if( strlen( ''.$last) >$d){ //если не  влазит
+           $d =  strlen( ''.$last); 
+        }
+        if(strlen($letters) >0){
+           $next = "".$letters . sprintf("%0{$d}d", $last);
+        } else {
+           $next = "".$last;
         }
 
-        return "ID" . sprintf("%05d", ++$id);
+        return $next;
     }
 
+    /**
+    * проверка  уникальности артикула
+    * возвращает true если  уникальный
+    */
+    public   function checkUniqueArticle( ) {
+        if (\App\System::getOption("common", "nocheckarticle") == 1) {
+            return true; //не проверяем
+        }        
+        if (strlen($this->item_code) ==0 ) {
+            return true;
+        }
+        $code = Item::qstr($this->item_code);
+        $cnt = Item::findCnt("item_id <> {$this->item_id} and  item_code={$code} ");
+        if ($cnt > 0) {
+            return false;
+        }
+
+        return true;             
+    }    
+    
     /**
      * список производителей
      *
@@ -792,7 +840,7 @@ class Item extends \ZCL\DB\Entity
     public function getProdprice() {
         $price = 0;
         if ($this->zarp > 0) {
-            $price += $this->zarp;
+            $price += doubleval($this->zarp);
         }
         $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
 
@@ -814,7 +862,7 @@ class Item extends \ZCL\DB\Entity
             $price = $this->getPartion(0);
         }
         if($price==0) {
-            \App\System::setWarnMsg("Для {$item->itemname} не  вирахувано собївартїсть") ;
+            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собївартїсть") ;
         }
         return $price;
     }
@@ -823,4 +871,177 @@ class Item extends \ZCL\DB\Entity
     public function getID() {
         return $this->item_id;
     }
+
+     /**
+     * упаковка  штрих кода для  стикера 
+     * 
+     * @param mixed $price
+     * @param mixed $qty
+     * @param mixed $item_id
+     */
+     public static function packStBC($price,$qty,$item_id) {
+   
+        $price=doubleval(\App\Helper::fa($price));
+        $qty=doubleval(\App\Helper::fqty($qty));
+          
+        $barcode = "".$price.'-'.$qty. '-' . $item_id;  
+        
+        return $barcode;
+     }
+    
+    /**
+    * раcпаковка штрих кода стикера
+    * 
+    * @param mixed $barcode
+    */
+     public static function unpackStBC($barcode) {
+ 
+        
+        $s=explode('-',$barcode) ;
+        
+        $item= Item::load(trim($s[2]));
+        if($item != null)  {
+                
+                $item->price = \App\Helper::fa($s[0]);
+                $item->quantity =\App\Helper::fqty($s[1]);
+               
+        }   
+        return $item;            
+     }
+     
+     /**
+     * сохранить значения  кастомных  полей
+     * 
+     * @param mixed $cf     код=>значение
+     */
+     public function savecf($cf){
+         if(!is_array($cf)) {
+             $cf=[];
+         }
+        $this->cflist  = serialize($cf);
+     }
+     /**
+     * вернуть  значения кастомных  полей
+     * 
+     */
+     public function getcf(){
+        $cfv = []  ;
+        if(strlen($this->cflist)>0) {
+          $cfv=unserialize($this->cflist)   ;   
+        }
+        $options = \App\System::getOptions('common');
+        $cflist = $options['cflist'] ?? [];
+        $i=1;
+        $cat = Category::load($this->cat_id);
+        if($cat != null)   {
+            foreach($cat->cflist as $k=>$v){
+                $ls = new \App\DataItem();
+                $ls->code = $k;
+                $ls->name = $v;
+               
+              $cflist[$i++] = $ls;          
+                    
+            }
+        }
+        $i=1;
+        $ret=[];
+        foreach($cflist as $cf=>$f) {
+
+                  $it = new \App\DataItem()  ;
+                  $it->id= $i++;
+                  $it->code= $f->code;
+                  $it->name= $f->name;
+                  $it->val='';
+                  foreach($cfv as $cv=>$v) {
+                    if($f->code==$cv)  {    
+                       $it->val= $v;
+                    }
+                  }
+                  $ret[$it->code]=$it;
+             
+         
+        }  
+       
+        return $ret;
+     }
+   
+     /**
+     * возвращает ссылку  на  изображение
+     * 
+     * @param mixed $shop  для  онлайн каталога (не проверяется  доступ)
+     * @param mixed $t предпросмотр (thumbmil) если  есть
+     * @return mixed
+     */
+     public function getImageUrl($shop=false,$t=false){ 
+        
+        if ($this->image_id > 0){
+           if($shop) {
+               return "/loadshopimage.php?id=".$this->image_id . ($t ? '&t=t' : '');    
+           }   else {
+               return "/loadimage.php?id=".$this->image_id;           
+           }
+           
+        }   
+        if (strlen($this->imageurl)>0){
+           return $this->imageurl;
+        }   
+        return;    
+     } 
+     
+    /**
+    * аплоад  в БД изображения  по  url
+    * 
+    * @param mixed $url
+    * @param mixed $dothumb
+    */
+    public   function saveImage($url,$dothumb=true) {
+        $file = file_get_contents($url) ;
+        if(strlen($file)==0) {
+           return 0  ;
+        }
+        $tmp = tempnam(sys_get_temp_dir(), "import") ;
+        file_put_contents($tmp, $file) ;
+        if (filesize($tmp) > 1024*1024) {
+             
+             return 0;
+        }
+            
+        $imagedata = getimagesize($tmp);
+        if ($imagedata== false) {
+            return 0  ;
+
+        }
+        $image = new \App\Entity\Image();
+        $image->content = file_get_contents($tmp);
+        $image->mime = $imagedata['mime'];
+
+        if ($imagedata[0] != $imagedata[1]) {
+            $thumb = new \App\Thumb($tmp);
+            if ($imagedata[0] > $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+            }
+            if ($imagedata[0] < $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+            }
+
+
+            $image->content = $thumb->getImageAsString();
+  
+            $thumb->resize(512, 512);
+            if($dothumb) {
+               $image->thumb = $thumb->getImageAsString();
+               $thumb->resize(128, 128);
+               $this->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());               
+            }   
+
+           
+        }
+
+
+        $image->save(); 
+        $this->image_id=$image->image_id ;
+        return $image->image_id;       
+    }
+     
+     
 }

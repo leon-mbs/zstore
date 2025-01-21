@@ -23,18 +23,7 @@
 
                     </div>
                 </form>  <br>
-                <h5>Оновлення довiдникiв  НП</h5>
-                <small>Мiста та  вiддiлення кешуються для бiльш швидкого оновлення списків вибору.</small>
-                <small> Оновлення буде автоматичним якщо активовано  <a href="/index.php?p=App/Pages/CronTab">планувальник</a>  </small>
-
-                <form zippy="formcache"> 
-                    <input type="submit" onclick=" $('#loader').show()" value="Оновити" class="btn   btn-primary  "/>
-
-                           <div style="display:none"  id="loader" class="spinner-border spinner-border-sm " role="status">
-                                  <span class="sr-only">Завантаження...</span>
-                              </div>
- 
-                </form>
+         
                 <br>
                 <h5>Данi вiдправника за замовчуванням</h5>
 
@@ -46,25 +35,20 @@
                         <input zippy="tel" class="form-control   "/>
 
                     </div>
-                    <div class="form-group">
-                        <label for="area">Область</label>
+                     <div class="form-group">
+                        <label for="city">Населений пункт</label>
 
-                        <select zippy="area" class="form-control   ">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="city">Мiсто</label>
-                        <select zippy="city" class="form-control select2 ">
-                            <option value="0">Не обрано</option>
-                        </select>
+                        <input placeholder="Почніть вводити..." zippy="city" class="form-control   "/>
+
                     </div>
                     <div class="form-group">
                         <label for="point">Вiддiлення</label>
-                        <select zippy="point" class="form-control select2  ">
-                            <option value="0">Не обрано</option>
-                        </select>
+
+                        <input placeholder="Почніть вводити..." zippy="point" class="form-control   "/>
+                         <small>Для пошуку по номеру додайте перед цифрами №</small>
                     </div>
+                  
+             
 
                     <div class="form-group">
                         <input type="submit" value="Зберегти" class="btn   btn-primary  "/>
@@ -79,12 +63,12 @@
               В: <input zippy="gh" required="required"  class="form-control" style="width:75px"  type="number">  
               Д: <input zippy="gd" required="required"  class="form-control" style="width:75px"  type="number">  
               <input class="btn btn-success" type="submit" value="+"> 
-           </form
+           </form>
            <table class="ctable">
               <tr zippy="gablist">
                  <td zippy="gabname"></td>
                  <td> <a zippy="delgab"> <i class="fa fa-trash"></i></a></td>
-              <tr>
+              </tr>
            </table>
   
         </div>
