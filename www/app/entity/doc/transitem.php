@@ -24,21 +24,16 @@ class TransItem extends Document
         $sc->setStock($fi->stock_id);
 
         $sc->save();
+        $sum = doubleval($this->headerdata["fromquantity"] * $fi->partion) ;
         if ($this->headerdata['toitem'] > 0) {
             $ti = Item::load($this->headerdata['toitem']);
-            $price = H::fqty($this->amount / $this->headerdata["toquantity"]);
+            $price = H::fa($sum / $this->headerdata["toquantity"]);
             $stockto = Stock::getStock($this->headerdata['tostore'], $ti->item_id, $price, "", "", true);
             $sc = new Entry($this->document_id, $this->headerdata["toquantity"] * $price, $this->headerdata["toquantity"]);
             $sc->setStock($stockto->stock_id);
             $sc->save();
         }
-        if ($this->headerdata['tostock'] > 0) {  // перемещение партии
-            $stockto = Stock::load($this->headerdata['tostock']);
-            $sc = new Entry($this->document_id, $this->headerdata["toquantity"] * $stockto->partion, $this->headerdata["toquantity"]);
-            $sc->setStock($stockto->stock_id);
-            $sc->save();
-        }
-
+  
 
         return true;
     }
@@ -50,7 +45,7 @@ class TransItem extends Document
         $fi = Item::load($si->item_id);
         $ti = Item::load($this->headerdata['toitem']);
 
-        if ($this->headerdata['tostock'] > 0) {    // перемещение партии
+        if (($this->headerdata['tostock'] ??0)> 0) {    // перемещение партии
             $ts = Stock::load($this->headerdata['tostock']);
             $ti = Item::load($ts->item_id);
         }

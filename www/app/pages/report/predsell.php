@@ -138,17 +138,17 @@ class PredSell extends \App\Pages\Base
             if ($rqty > 0) {
                 $r['qty'] = H::fqty($rqty);
 
-                if ($onstore[$r['item_id']] > 0) {
+                if (($onstore[$r['item_id']]??0 ) > 0) {
                     $r['onstore'] = H::fqty($onstore[$r['item_id']]);
                     $rqty = $rqty - $onstore[$r['item_id']];  //на  складе
                 }
-                if ($inorder[$r['item_id']] > 0) {
+                if (($inorder[$r['item_id']] ??0 )> 0) {
                     $rqty = $rqty - $inorder[$r['item_id']];  //заказано
                 }
 
                 $r['tobay'] = $rqty;
 
-                if ($minqty[$r['item_id']] > 0) {
+                if (($minqty[$r['item_id']] ??0 ) > 0) {
                     $r['tobay'] = $r['tobay'] + $minqty[$r['item_id']];  //плюс  минимальное  оличество
                 }
                 if ($r['tobay'] > 0) {
