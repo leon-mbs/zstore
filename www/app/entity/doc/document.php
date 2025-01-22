@@ -1247,17 +1247,18 @@ class Document extends \ZCL\DB\Entity
     /**
     * открыт на  редактирование
     * 
+    * @param mixed $document_id
     */
-    public static function checkout($id ) {
-        if(intval($id)==0)  return;
+    public static function checkout($document_id ) {
+        if(intval($document_id)==0)  return;
         
         $cat =Helper::STAT_DOC_ISEDITED;
         $conn = \ZDB\DB::getConnect();
-        $dt = $conn->DBTimeStamp(strtotime('-2 day'));
+        $dt = $conn->DBTimeStamp(strtotime('-2 hour'));
         $conn->Execute("delete from stats where  category ={$cat} and dt < {$dt} ");
       
       
-        $user_id= intval($conn->GetOne("select vald from stats where  category ={$cat} and keyd = {$id} limit 0,1  ") );
+        $user_id= intval($conn->GetOne("select vald from stats where  category ={$cat} and keyd = {$document_id} limit 0,1  ") );
         if($user_id > 0) {
             $user= \App\Entity\User::load($user_id) ;
             \App\System::setWarnMsg("Документ  редагується  користувачем  ".$user->username)  ;
@@ -1266,7 +1267,7 @@ class Document extends \ZCL\DB\Entity
        
         $user_id = \App\System::getUser()->user_id;
         $dt = $conn->DBTimeStamp(time());
-        $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$id},{$user_id},{$dt})");
+        $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$document_id},{$user_id},{$dt})");
 
 
     }
@@ -1274,14 +1275,15 @@ class Document extends \ZCL\DB\Entity
     /**
     * закончил редактирование
     * 
+    * @param mixed $document_id
     */
-    public static function checkin($id ) {
-        if(intval($id)==0)  return;
+    public static function checkin($document_id ) {
+        if(intval($document_id)==0)  return;
     
         $cat =Helper::STAT_DOC_ISEDITED;
         $user_id = \App\System::getUser()->user_id;
         $conn = \ZDB\DB::getConnect();
-        $conn->Execute("delete from stats where  category ={$cat} and keyd = {$id} and vald = {$user_id} ");
+        $conn->Execute("delete from stats where  category ={$cat} and keyd = {$document_id} and vald = {$user_id} ");
       
  
     }

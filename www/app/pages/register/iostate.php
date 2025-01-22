@@ -153,7 +153,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
-            $where .= " and " . $c;
+            $where .= " and d." . $c;
         }
 
         if ($user->rolename != 'admins') {
