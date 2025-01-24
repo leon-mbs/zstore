@@ -253,7 +253,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
-
+        App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
     public function onPSTypelabel($sender) {
@@ -317,7 +317,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
-
+        App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
 }

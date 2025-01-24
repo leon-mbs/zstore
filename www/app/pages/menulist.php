@@ -52,7 +52,7 @@ class MenuList extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('meta_id'));
         $this->editpan->editform->add(new TextInput('edit_description'));
         $this->editpan->editform->add(new TextInput('edit_meta_name'));
-        $this->editpan->editform->add(new TextInput('edit_menugroup'));
+        $this->editpan->editform->add(new TextInput('edit_menugroup'))->setDataList($gr);
 
         $this->editpan->editform->add(new CheckBox('edit_disabled'));
 
