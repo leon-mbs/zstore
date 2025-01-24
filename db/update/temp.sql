@@ -12,12 +12,12 @@ ADD UNIQUE INDEX acc_code (acc_code);
 CREATE VIEW acc_plan_view
 AS
 SELECT
-  `ap`.`acc_code` AS `acc_code`,
-  `ap`.`acc_name` AS `acc_name`,
-  `ap`.`iszab` AS `iszab`,
-  `ap`.`iscustom` AS `iscustom`,
-  CONCAT(`ap`.`acc_code`, ' ', `ap`.`acc_name`) AS `acc_fullname`
-FROM `acc_plan` `ap`;
+  ap.acc_code AS acc_code,
+  ap.acc_name AS acc_name,
+  ap.iszab AS iszab,
+  ap.iscustom AS iscustom,
+  CONCAT(ap.acc_code, ' ', ap.acc_name) AS acc_fullname
+FROM acc_plan ap;
 
 
 CREATE TABLE acc_entry (
@@ -40,12 +40,12 @@ ADD INDEX document_id (document_id);
 CREATE VIEW acc_plan_view
 AS
 SELECT
-  `ap`.`acc_code` AS `acc_code`,
-  `ap`.`acc_name` AS `acc_name`,
-  `ap`.`iszab` AS `iszab`,
-  `ap`.`iscustom` AS `iscustom`,
-  CONCAT(`ap`.`acc_code`, ' ', `ap`.`acc_name`) AS `acc_fullname`
-FROM `acc_plan` `ap`;
+  ap.acc_code AS acc_code,
+  ap.acc_name AS acc_name,
+  ap.iszab AS iszab,
+  ap.iscustom AS iscustom,
+  CONCAT(ap.acc_code, ' ', ap.acc_name) AS acc_fullname
+FROM acc_plan ap;
 
  
 INSERT INTO acc_plan (acc_code, acc_name, iszab,iscustom) VALUES('20', 'Виробничі запаси', 0,0);
