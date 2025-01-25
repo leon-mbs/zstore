@@ -76,7 +76,9 @@ class System
     public static function getOptions($group,$reload= false ) {
 
         $opp  = Session::getSession()->options ??[] ;
-       
+        if(!is_array($opp))  {
+            $opp=[];
+        }       
         if(isset($opp[$group]) && $reload==false  ) {
             return $opp[$group];
         }
