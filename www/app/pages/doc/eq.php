@@ -154,7 +154,7 @@ class EQ extends \App\Pages\Base
         $this->_doc->headerdata = [];
         $this->_doc->headerdata['optype'] = $this->docform->optype->getValue();
         $this->_doc->headerdata['optypename'] = $this->docform->optype->getValueName();
-          
+            
         $this->_doc->headerdata['eq_id'] = $eq_id;
         $this->_doc->headerdata['eq_name'] = $this->docform->eq->getText();
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
@@ -294,17 +294,14 @@ class EQ extends \App\Pages\Base
            $st=  \App\Entity\Stock::load($sender->getKey());
            $this->docform->amount->setText(H::fa($st->partion));
         }
-        if($op==8) {
-           $st=  \App\Entity\Stock::load($sender->getKey());
-           $this->docform->amount->setText(H::fa($st->partion));
-        }
+      
    
     }
     public function onEQSelect($sender) {
         
         $op = $this->docform->optype->getValue();
      
-        if($op==9) {
+        if($op>6) {
            $eq=  Equipment::load($sender->getKey());
            $this->docform->amount->setText(H::fa($eq->getBalance()));
         }
@@ -317,7 +314,7 @@ class EQ extends \App\Pages\Base
         if($op==3) {
            return   \App\Entity\Stock::findArrayAC($store_id,$text) ;
         }
-        if($op==8) {
+        if($op==9) {
             return \App\Entity\Item::findArrayAC($text, $store_id);            
         }
         
