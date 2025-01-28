@@ -16,7 +16,7 @@ class Helper
     public const STAT_PROMO = 4;     //промо код
     public const STAT_NEW_SHOP = 5;     //уникальнных  посетителей
     public const STAT_CARD_SHOP = 6;     //позиций в  корзине
-
+    public const STAT_DOC_ISEDITED = 7;     //редактируется документ
 
     private static $meta = array(); //кеширует метаданные
 

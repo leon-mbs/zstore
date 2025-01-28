@@ -163,6 +163,8 @@ class GoodsReceipt extends \App\Pages\Base
 
  
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
+            Document::checkout( $docid) ;
+            
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -791,7 +793,8 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             }
 
-
+            Document::checkin(  $this->_doc->document_id  ) ;
+ 
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;
@@ -944,6 +947,8 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function backtolistOnClick($sender) {
+        Document::checkin(  $this->_doc->document_id ??0) ;
+        
         App::RedirectBack();
     }
 

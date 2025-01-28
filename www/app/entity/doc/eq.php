@@ -47,7 +47,7 @@ class EQ extends Document
 
            $stock = \App\Entity\Stock::load($this->headerdata['item_id'] );
 
-           $sc = new \App\Entity\Entry($this->document_id, $stock->partion, 1);
+           $sc = new \App\Entity\Entry($this->document_id, $stock->partion, -1);
            $sc->setStock($stock->stock_id);
  
            $sc->save();          
@@ -89,9 +89,16 @@ class EQ extends Document
        
        }
        if($optype==9 )  {
-           $entry->optype= EqEntry::OP_OUTCOME;
+           $entry->optype = EqEntry::OP_OUTCOME;
            $entry->amount = 0-$eq->getBalance() ;
            IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_OUTEQ) ;
+           
+           $stock = \App\Entity\Stock::getStock($this->headerdata['store_id'], $this->headerdata['item_id'], 0-$entry->amount);
+
+           $sc = new \App\Entity\Entry($this->document_id, $stock->partion, 1);
+           $sc->setStock($stock->stock_id);
+ 
+           $sc->save();            
        }
        
        $entry->save();
