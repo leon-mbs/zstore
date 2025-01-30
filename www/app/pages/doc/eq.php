@@ -46,7 +46,7 @@ class EQ extends \App\Pages\Base
         
         $this->docform->add(new DropDownChoice('optype',$ops,0 ))->onChange($this,'onType');
 
-        $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),H::getDefStore() ));
+        $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),H::getDefStore() ))->onChange($this,"onStore");
         $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
         $this->docform->add(new DropDownChoice('parea',\App\Entity\ProdArea::findArray('pa_name','disabled<>1','pa_name'),0 ));
         $this->docform->add(new TextInput('amount'));
@@ -326,6 +326,10 @@ class EQ extends \App\Pages\Base
     } 
     public function oneqItem($sender) {
         return \App\Entity\Equipment::getList(trim($sender->getText() )   );
+    } 
+    public function onStore($sender) {
+           $this->docform->item->setKey(0);
+           $this->docform->item->setText('');
     } 
        
 }
