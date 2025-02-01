@@ -15,8 +15,14 @@ class Doclink extends \Zippy\Html\WebPage
             die;
 
         }
-        $hash = Document::qstr('%'.$hash.'%') ;
-        $doc = Document::getFirst("content like ".$hash) ;
+        
+        $conn= \ZDB\db::getConnect()  ;
+        
+        $hash = $conn->qstr('%'.$hash.'%') ;
+        
+        $id = intval( $conn->GetOne(" select document_id from documents where content like ".$hash) );
+        
+        $doc = Document::load($id) ;
         if ($doc == null) {
             header("HTTP/1.0 404 Not Found");
             die;

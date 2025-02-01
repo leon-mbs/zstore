@@ -400,7 +400,7 @@ class Subscribe extends \ZCL\DB\Entity
        // $header['botname'] = $common['tbname'] ??'';
         $header['device'] = $doc->headerdata['device'] ??'';
         $header['ttnnp'] = $doc->headerdata['ship_number'] ??'';
-        if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
+        if (strlen($doc->headerdata['device']??'') > 0 && strlen($doc->headerdata['devsn']??'') > 0) {
             $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
         }
 
