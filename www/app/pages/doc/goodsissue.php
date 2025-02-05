@@ -738,21 +738,7 @@ class GoodsIssue extends \App\Pages\Base
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
 
-                    if( $order->meta_name =='Order') {
-                        
-
-                        if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
-                            $order->updateStatus(Document::STATE_INSHIPMENT);
-                        }                            
-                        
-                        if($this->_doc->payamount >0 ) {  //если  платим  в  накладной
-                            if ($order->state == Document::STATE_INSHIPMENT) {
-                                $order->updateStatus(Document::STATE_CLOSED);
-                            }
-                        }
-                        
-                        $order->unreserve();
-                    }
+                    
                 }
        
        
