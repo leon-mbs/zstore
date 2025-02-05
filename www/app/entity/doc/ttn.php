@@ -260,6 +260,28 @@ class TTN extends Document
 
     public function onState($state, $oldstate) {
 
+        
+        if ($state == Document::STATE_INSHIPMENT || $state == Document::STATE_READYTOSHIP ) {
+              
+            if($this->parent_id > 0) {
+                 $order = Document::load($this->parent_id);
+                 $order = $order->cast() ;
+                
+                 if($order->meta_name == 'Order' && $order->state > 0) {
+
+                     if( count( $order->getNotSendedItem() ) >0 ) return;
+                                
+                    
+                     if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
+                        $order->updateStatus(Document::STATE_INSHIPMENT);
+                     }                            
+                           
+                     $order->unreserve();                    
+                }   
+            }  
+        }
+                
+        
         if ($state == Document::STATE_DELIVERED) {
                                           
             //расходы на  доставку
@@ -274,8 +296,26 @@ class TTN extends Document
                 \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['ship_amount'], \App\Entity\IOState::TYPE_SALE_OUTCOME);
 
             }
+            
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id);
+                $order = $order->cast() ;
+                
+                if($order->meta_name == 'Order' && $order->state > 0) {
+
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+                    
+                    if( $order->payamount > 0 && $order->payamount == $order->payed)  {
+                        $order->updateStatus(Document::STATE_CLOSED);
+                    }
+                    $order->unreserve();       
+                     
+                }
+            }            
+            
         }
         
+      
     }
 
     public function getRelationBased() {

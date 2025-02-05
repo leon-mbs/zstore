@@ -633,7 +633,7 @@ class DocList extends \App\Pages\Base
             if ($sender->id == "bstatus") {
                 $newst =   $this->statusform->mstates->getValue() ;
                 if($newst >0  && $newst != $this->_doc->state) {
-                    $this->_doc->updateStatus($newst, true);
+                    $this->_doc->updateStatus($newst );
                 }
 
 

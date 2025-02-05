@@ -657,16 +657,7 @@ class TTN extends \App\Pages\Base
 
                     }
                     
-                    if( $basedoc->meta_name =='Order') {
-                        
-
-                        if($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP) {
-                            $basedoc->updateStatus(Document::STATE_INSHIPMENT);
-                        }                            
-                    
-                        
-                        $basedoc->unreserve();
-                    }                    
+                                   
                     
                 }  
  

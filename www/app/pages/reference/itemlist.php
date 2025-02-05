@@ -562,9 +562,9 @@ class ItemList extends \App\Pages\Base
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
             
-            if (filesize($file["tmp_name"])  > 1024*1024) {
+            if (filesize($file["tmp_name"])  > 1024*1024*4) {
 
-                    $this->setError('Розмір файлу більше 1M');
+                    $this->setError('Розмір файлу більше 4M');
                     return;
             }
            

@@ -328,20 +328,29 @@ class GoodsIssue extends Document
         if($state == Document::STATE_EXECUTED) {
 
             if($this->parent_id > 0) {
-                $order = Document::load($this->parent_id);
-                if($order->meta_name == 'Order') {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'Order' && $order->state > 0) {
 
                     if($order->payamount == 0 || ($order->payamount > 0 && $order->payamount == $order->payed)) {
-                        $this->updateStatus(Document::STATE_DELIVERED) ;
+                        
+              
+                        if($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP) {
+                            $order->updateStatus(Document::STATE_DELIVERED);
+                        }                            
+                    }    
+                    if($this->payamount > 0 ) {  //если  платим  в  накладной
+                        if ($order->state == Document::STATE_DELIVERED) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                        }
                     }
+                    
+                    $order->unreserve();
+
                 }
             }
-
-
         }
-
-
     }
+    
     /**
     * @override
     */
