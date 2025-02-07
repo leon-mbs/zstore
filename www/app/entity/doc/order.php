@@ -62,7 +62,7 @@ class Order extends \App\Entity\Doc\Document
                         "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
                         "outnumber"       => $this->headerdata["outnumber"]??'',
-                        "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
+                        "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
                         "document_number" => $this->document_number,
                          "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
                          "firm_name" => $firm['firm_name'],
@@ -77,7 +77,7 @@ class Order extends \App\Entity\Doc\Document
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );                                                                               
-        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
 
 
 
@@ -131,7 +131,7 @@ class Order extends \App\Entity\Doc\Document
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }

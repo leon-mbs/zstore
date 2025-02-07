@@ -276,7 +276,7 @@ class TTN extends Document
                         $order->updateStatus(Document::STATE_INSHIPMENT);
                      }                            
                            
-                     $order->unreserve();                    
+                                       
                 }   
             }  
         }
@@ -308,7 +308,7 @@ class TTN extends Document
                     if( $order->payamount > 0 && $order->payamount == $order->payed)  {
                         $order->updateStatus(Document::STATE_CLOSED);
                     }
-                    $order->unreserve();       
+                        
                      
                 }
             }            

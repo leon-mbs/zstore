@@ -89,6 +89,17 @@ class EqList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('eq_name', $item->eq_name));
         $row->add(new Label('invnumber', $item->invnumber));
+        
+        $pa_name='';
+        
+        $eq= \App\Entity\EqEntry::getFirst('optype=5 and eq_id='.$item->eq_id,'id desc') ;
+        
+        if($eq != null) {
+            $d = \App\Entity\Doc\Document::load($eq->document_id)  ;
+            $pa_name = $d->headerdata['pa_name'] ??'';
+        }
+        
+        $row->add(new Label('pa_name', $pa_name));
         $row->add(new Label('notes', $item->description));
       
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
@@ -214,13 +225,13 @@ class EqList extends \App\Pages\Base
            if($doc->customer_id >0 ) {
               $det = $det. ' '. $doc->customer_name;  
            }
-           if($doc->headerdata['pa_id'] > 0 ) {
+           if( ( $doc->headerdata['pa_id'] ??0) > 0 ) {
               $det = $det. ' '. $doc->headerdata['pa_name'];  
            }
-           if($doc->headerdata['emp_id'] > 0 ) {
+           if( ($doc->headerdata['emp_id'] ??0) > 0 ) {
               $det = $det. ' '. $doc->headerdata['emp_name'];  
            }
-           if($doc->headerdata['item_id'] > 0 ) {
+           if( ( $doc->headerdata['item_id'] ??0) > 0 ) {
               $det = $det. ' '. $doc->headerdata['item_name'];  
            }
             

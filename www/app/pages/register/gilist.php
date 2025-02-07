@@ -363,7 +363,7 @@ class GIList extends \App\Pages\Base
 
 
         $this->statuspan->setVisible(true);
-        $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);
+        $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']??'');
         $this->statuspan->docview->setDoc($this->_doc);
 
         $this->listpan->doclist->Reload(false);

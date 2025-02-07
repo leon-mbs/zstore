@@ -333,8 +333,9 @@ class GoodsIssue extends Document
 
                     if($order->payamount == 0 || ($order->payamount > 0 && $order->payamount == $order->payed)) {
                         
-              
-                        if($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP) {
+                        if( count( $order->getNotSendedItem() ) >0 ) return;
+                
+                        if($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
                             $order->updateStatus(Document::STATE_DELIVERED);
                         }                            
                     }    
@@ -344,7 +345,7 @@ class GoodsIssue extends Document
                         }
                     }
                     
-                    $order->unreserve();
+                
 
                 }
             }
