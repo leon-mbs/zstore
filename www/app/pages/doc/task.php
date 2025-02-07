@@ -96,8 +96,8 @@ class Task extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->document_time->setDateTime($this->_doc->headerdata['start']);
-            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-
+            $this->docform->parea->setValue($this->_doc->headerdata['pa_id']);
+                                                                            
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
             $this->_eqlist = $this->_doc->unpackDetails('eqlist');
             $this->_emplist = $this->_doc->unpackDetails('emplist');
@@ -316,8 +316,8 @@ class Task extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
-        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();

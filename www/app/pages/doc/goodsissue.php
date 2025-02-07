@@ -737,8 +737,9 @@ class GoodsIssue extends \App\Pages\Base
                         $msg= "В документі {$this->_doc->document_number}, створеному на підставі {$order->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ " ;
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
-
-                    
+                    if($order->meta_name == 'Order') {
+                        $order->unreserve();     
+                    }  
                 }
        
        
@@ -833,7 +834,7 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $this->docform->payamount->setText(H::fa($total));
-        $prepaid = doubleval($this->_doc->headerdata['prepaid']) ;
+        $prepaid = doubleval($this->_doc->headerdata['prepaid']??0) ;
         if ($prepaid > 0) {
             //  $disc =0;
 

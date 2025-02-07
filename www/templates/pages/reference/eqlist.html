@@ -35,19 +35,7 @@
                 </div>
                 <a zippy="addnew" class="btn btn-primary  ">Додати</a>
                 <table class="table table-bordered  table-sm  ">
-                    <tr>
-                        <th>Найменування</th>
-                        {{#usebranch}}
-                        <th>Філія</th>
-                        {{/usebranch}}
-                        <th>Інв. номер</th>
-                      
-
-
-                        <th   ></th>
-                        <th   ></th>
-                        <th   ></th>
-                    </tr>
+           
                     <tr zippy="eqlist">
                         <td zippy="eq_name"></td>
                         {{#usebranch}}
@@ -55,6 +43,7 @@
                         {{/usebranch}}
                      
                         <td zippy="invnumber"></td>
+                        <td zippy="pa_name"></td>
                         <td ><small zippy="notes"></small></td>
                         <td  >
                              <a zippy="view" title="Перегляд операцій"><i class="fa fa-cog"></i></a>

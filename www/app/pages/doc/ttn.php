@@ -656,7 +656,9 @@ class TTN extends \App\Pages\Base
                         }
 
                     }
-                    
+                    if($basedoc->meta_name == 'Order') {
+                        $basedoc->unreserve();     
+                    }            
                                    
                     
                 }  

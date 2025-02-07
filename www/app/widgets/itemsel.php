@@ -191,7 +191,7 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
         $where = "disabled <> 1";
               
         if($this->page->witempan->wisfilter->wissearchonstore->isChecked()) {
-            $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
+            $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
         }
 
         $br = \App\ACL::getBranchConstraint();
