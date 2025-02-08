@@ -50,7 +50,7 @@ class Order extends \App\Entity\Doc\Document
         $da=  trim($this->headerdata["npaddressfull"] ??'') ;
         
         if(strlen($da)==0) {
-           $da=  trim($this->headerdata["ship_address"] ??'') ;
+           $da =  trim($this->headerdata["ship_address"] ??'') ;
         }
         
         $header = array('date'            => H::fd($this->document_date),

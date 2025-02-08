@@ -424,6 +424,13 @@ class ARMPos extends \App\Pages\Base
                 $this->_serlist =  $bd->unpackDetails('detaildata');
             }
             if($bd->meta_name=='Order') {
+                if($bd->getHD('paytype',0) != 3){
+                    $this->setWarn('В азмовленні не повинно бути оплати.  ') ;
+                    App::Redirect("\\App\\Pages\\Register\\OrderList");
+                    return; 
+                }
+          
+                
                 $this->_itemlist = $bd->unpackDetails('detaildata');
             }
 

@@ -331,19 +331,18 @@ class GoodsIssue extends Document
                 $order = Document::load($this->parent_id)->cast();
                 if($order->meta_name == 'Order' && $order->state > 4) {
 
-                    if($order->payamount == 0 || ($order->payamount > 0 && $order->payamount == $order->payed)) {
-                        
-                        if( count( $order->getNotSendedItem() ) >0 ) return;
-                
-                        if($order->state == Document::STATE_INSHIPMENT || 
-                            $order->state == Document::STATE_INPROCESS ||  
-                            $order->state == Document::STATE_FINISHED ||  
-                            $order->state == Document::STATE_READYTOSHIP) {
-                                
-                            $order->updateStatus(Document::STATE_DELIVERED);
-                        }                            
-                    }    
-                    if($this->payamount > 0 ) {  //если  платим  в  накладной
+                          
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+            
+                    if($order->state == Document::STATE_INSHIPMENT || 
+                        $order->state == Document::STATE_INPROCESS ||  
+                        $order->state == Document::STATE_FINISHED ||  
+                        $order->state == Document::STATE_READYTOSHIP) {
+                            
+                        $order->updateStatus(Document::STATE_DELIVERED);
+                    }                            
+              
+                    if($this->payed  >= $this->payanount  ) {  //если  оплачено  
                         if ($order->state == Document::STATE_DELIVERED) {
                             $order->updateStatus(Document::STATE_CLOSED);
                         }

@@ -187,6 +187,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = 'price1';
             $neworder->headerdata['salesource'] = $modules['ocsalesource'];
+            $neworder->headerdata['paytype'] = 2;  //постоплата
 
             $neworder->notes = "OC номер: {$shoporder->order_id};";
 

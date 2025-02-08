@@ -175,6 +175,11 @@ class GoodsIssue extends \App\Pages\Base
 
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
+                        if($basedoc->getHD('paytype',0) != 3){
+                            $this->setWarn('В азмовленні не повинно бути оплати.  ') ;
+                            App::Redirect("\\App\\Pages\\Register\\OrderList");
+                            return; 
+                        }         
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);

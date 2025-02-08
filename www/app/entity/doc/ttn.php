@@ -305,7 +305,7 @@ class TTN extends Document
 
                     if( count( $order->getNotSendedItem() ) >0 ) return;
                     
-                    if( $order->payamount > 0 && $order->payamount == $order->payed)  {
+                    if( $order->payed >= $order->payanount   )  {
                         $order->updateStatus(Document::STATE_CLOSED);
                     }
                         
