@@ -71,13 +71,17 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
 
-        $this->docform->add(new TextInput('payed', 0));
+        $this->docform->add(new TextInput('editpayed'));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new Label('payed', 0));
+         
         $this->docform->add(new Label('payamount', 0));
 
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
-        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'],0  ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
@@ -93,9 +97,8 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('topaydoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('paydoc'))->onClick($this, 'savedocOnClick');
 
+     
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
@@ -110,6 +113,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('bayflat'));
   
         $this->OnDelivery($this->docform->delivery);
+        $this->OnPayType($this->docform->paytype);
 
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -163,6 +167,8 @@ class Order extends \App\Pages\Base
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
             $this->OnDelivery($this->docform->delivery);
+            $this->docform->paytype->setValue($this->_doc->headerdata['paytype']);
+            $this->OnPayType($this->docform->paytype);
             $this->docform->deliverynp->setValue($this->_doc->headerdata['deliverynp']);
             $this->OnDeliverynp($this->docform->deliverynp);
 
@@ -188,10 +194,13 @@ class Order extends \App\Pages\Base
 
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->edittotaldisc->setText($this->_doc->headerdata['totaldisc']);
-
+          
+     
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
+            $this->docform->payed->setText($this->_doc->payed);
+            $this->docform->editpayed->setText($this->_doc->payed);
 
 
             $this->docform->payed->setText(H::fa($this->_doc->payed));
@@ -240,6 +249,8 @@ class Order extends \App\Pages\Base
                         $this->docform->payamount->setText($basedoc->payamount);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->OnDelivery($this->docform->delivery);
+                        $this->docform->delivery->setValue($basedoc->headerdata['paytype']??0);
+                        $this->OnPayType($this->docform->paytype);
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
 
@@ -541,7 +552,10 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
 
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
-
+     
+        $this->_doc->headerdata['paytype'] = $this->docform->paytype->getValue() ;
+        $this->_doc->headerdata['paytypename'] = $this->docform->paytype->getValueName() ;
+ 
 
         if ($this->checkForm() == false) {
             return;
@@ -563,52 +577,53 @@ class Order extends \App\Pages\Base
             $this->_doc->headerdata['store'] = $this->docform->store->getValue() ;
             $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
 
-            if ($sender->id == 'paydoc') {
+            
+            if ($this->_doc->headerdata['paytype'] == 1) {
                 $this->_doc->payed = doubleval($this->docform->payed->getText());
                 $this->_doc->headerdata['payed'] = $this->_doc->payed;
-                $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+                $this->_doc->headerdata['payment'] = intval( $this->docform->payment->getValue() );
 
                 if ($this->_doc->payed > $this->_doc->payamount) {
                     $this->setError('Внесена сума більше необхідної');
                     return;
                 }
+                if ($this->_doc->headerdata['payment']==0) {
+                    $this->setError('Не вказана  каса');
+                    return;
+                }
                 if ($this->_doc->payed == 0) {
                     return;
                 }
-                if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-                    $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
-                    return;
+              
+                if ($this->_doc->headerdata['store'] > 0) {
+                    $this->_doc->reserve(); 
                 }
-
-
+                if ($this->_doc->payed < $this->_doc->payamount) {
+                    $this->setHD('waitpay',1);
+                }
+  
             }
 
+ 
+            
             $this->_doc->save();
 
             if ($sender->id == 'savedoc') {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
-
-            if ($sender->id == 'execdoc' || $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
+                                         
+            if ($sender->id == 'execdoc'  ) {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
-            if ( $sender->id == 'paydoc' || $sender->id == 'topaydoc') {
-                if ($this->_doc->headerdata['store'] > 0) {
-                    $this->_doc->reserve(); 
-                }
+         
+            if ($this->_doc->headerdata['paytype'] == 1) {
+               $this->setHD('waitpay',1); 
+               $this->_doc->updateStatus(Document::STATE_WP);
             }
-            if ($sender->id == 'topaydoc') {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
-
-
 
             $conn->CommitTrans();
-            if ($sender->id == 'execdoc') {
-                // App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
-            }
-
+          
 
             if (false == \App\ACL::checkShowReg('OrderList', false)) {
                 App::RedirectHome() ;
@@ -675,9 +690,11 @@ class Order extends \App\Pages\Base
             $this->setError("Не задано контрагента");
         }
 
+       if ($this->_doc->headerdata['paytype'] == 0) {
+            $this->setError("Не задано тип оплати");
+       }
 
-
-        return !$this->isError();
+       return !$this->isError();
     }
 
     public function backtolistOnClick($sender) {
@@ -824,6 +841,11 @@ class Order extends \App\Pages\Base
     }
     
      
+    public function OnPayType($sender) {
+         $this->docform->payed->setVisible($sender->getValue()==1);
+         $this->docform->payment->setVisible($sender->getValue()==1);
+    }
+    
     public function OnDelivery($sender) {
         $dt = $sender->getValue() ;
         if ($dt > 1) {
@@ -874,6 +896,11 @@ class Order extends \App\Pages\Base
     public function onBonus() {
         $this->docform->bonus->setText($this->docform->editbonus->getText());
         $this->calcPay();
+        $this->goAnkor("tankor");
+    }
+    public function onPayed() {
+        $this->docform->payed->setText($this->docform->editpayed->getText());
+     
         $this->goAnkor("tankor");
     }
 

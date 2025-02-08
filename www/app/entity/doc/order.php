@@ -58,6 +58,7 @@ class Order extends \App\Entity\Doc\Document
                         "customer_name"   => $this->customer_name,
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
+                        "paytypename"        => $this->headerdata["paytypename"],
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
@@ -141,7 +142,7 @@ class Order extends \App\Entity\Doc\Document
                         "firm_name"       => $firm["firm_name"],
                         "phone"           => $firm["phone"],
                         "delivery"        => $this->headerdata["delivery_name"],
-                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "style"           => $style,
                         "total"           => H::fa($this->amount)

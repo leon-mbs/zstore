@@ -94,16 +94,7 @@ class OrderList extends \App\Pages\Base
 
         $this->listpanel->doclist->Reload();
 
-
-        $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
-        $this->payform->add(new TextInput('pamount'));
-        $this->payform->add(new TextInput('pcomment'));
-        $this->payform->add(new CheckBox('closeorder'));
-        $this->payform->add(new Date('pdate', time()));
-        $this->payform->setVisible(false);
-
+  
         $this->add(new Panel("editpanel"))->setVisible(false);
         $this->editpanel->add(new Label("editdn"));
         $this->editpanel->add(new Label("editchat"));
@@ -121,8 +112,7 @@ class OrderList extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
-        $this->payform->setVisible(false);
-
+      
         $this->listpanel->doclist->Reload();
 
     }
@@ -536,8 +526,7 @@ class OrderList extends \App\Pages\Base
 
     //просмотр
     public function showOnClick($sender) {
-        $this->payform->setVisible(false);
-
+     
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
@@ -724,7 +713,7 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
         $this->statuspan->setVisible(false);
-        $this->payform->setVisible(false);
+      
         $this->_doc = Document::load($this->_doc->document_id);
         $this->editpanel->editchat->setAttribute('onclick', "opencchat({$this->_doc->document_id})");
 

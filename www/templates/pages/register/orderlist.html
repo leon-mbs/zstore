@@ -97,40 +97,7 @@
 
         </div>
 
-        <div class="row">
-            <div class="col-12 col-xl-10">
-                <div class="navbar nav">
-                    <form zippy="payform" class="form-inline ">
-                        <label>До сплати</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
-                               class="form-control mr-2">
-                        <label for="payment">рахунок</label>
-                        <select class="form-control mr-2" zippy="payment">
-
-                        </select>
-                        {{#fiscal}}
-                        <label for="pos">POS</label>
-                        <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не обрано</option>
-
-                        </select>
-                        {{/fiscal}}
-                        <label>дата</label>
-                        <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
-
-                        <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
-
-                        <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
-                        <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
-
-
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-
+      
 
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">

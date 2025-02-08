@@ -216,7 +216,7 @@ class EqList extends \App\Pages\Base
         }
         $total = 0;
         
-        foreach(EqEntry::find($where,"document_date,id") as $ee )  {
+        foreach(EqEntry::findYield($where,"document_date,id") as $ee )  {
          
            $det = ""; 
            
