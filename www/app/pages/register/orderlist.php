@@ -956,7 +956,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and  state =1 ";
         }
         if ($status == 2) {
-            $where .= " and  state =21 ";
+            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%')";
         }
 
 

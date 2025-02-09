@@ -724,7 +724,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['itemname'] = $item->itemname;
 
             $ret['price'] = $item->getPriceEx(array(
-                 'pricetype'=>$p['pt'],
+                 'pricetype'=>$p['pt']??0,
                  'store'=>$p['store'] ,
                  'customer'=>$p['customer']
 

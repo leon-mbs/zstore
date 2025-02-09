@@ -294,9 +294,10 @@ class POSCheck extends Document
             $parent = Document::load($this->parent_id);
             if ($parent->meta_name == 'ServiceAct' ) {
                 if($parent->state == Document::STATE_WP )  {
-                   $parent->updateStatus(Document::STATE_PAYED); 
+               //    $parent->updateStatus(Document::STATE_PAYED); 
                 }
-                
+            //    $parent->setHD('waitpay',0); 
+             //   $parent->save();             
                 
                 return true; //проводки выполняются  в  сервисе
             }

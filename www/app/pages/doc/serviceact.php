@@ -53,56 +53,31 @@ class ServiceAct extends \App\Pages\Base
             $this->_doc->document_date = time();
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid)->cast();
-                $this->_doc->document_date = time();
+           
                 $this->_doc->customer_id = $basedoc->customer_id;
                 $this->_doc->firm_id = $basedoc->firm_id;
                 $this->_doc->customer_id = $basedoc->customer_id;
+                $this->_basedocid = $basedocid;
+                
+            
+                if ($basedoc->meta_name == 'ServiceAct') {
 
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'ServiceAct') {
-
-                        $this->_doc->headerdata['detaildata'] = $basedoc->headerdata['detaildata'];
-                        $this->_doc->headerdata['detail2data'] = $basedoc->headerdata['detail2data'];
-
-
-                    }
+                    $this->_doc->headerdata['detaildata'] = $basedoc->headerdata['detaildata'];
+                    $this->_doc->headerdata['detail2data'] = $basedoc->headerdata['detail2data'];
                 }
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
+             
+                      
+                if ($basedoc->meta_name == 'Task') {
                     $list =[];
-                    if ($basedoc->meta_name == 'Task') {
-                        $i=0;
-                        foreach($basedoc->unpackDetails('detaildata') as $v) {
-                            if($v->service_id>0) {
-                                $list[++$i] = $v ;
-                            }
+                    $i=0;
+                    foreach($basedoc->unpackDetails('detaildata') as $v) {
+                        if($v->service_id>0) {
+                            $list[++$i] = $v ;
                         }
-                        $this->_doc->packDetails('detaildata', $list);
                     }
+                    $this->_doc->packDetails('detaildata', $list);
                 }
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'Invoice') {
-                        $i=0;
-                        $list=[];
-                        foreach($basedoc->unpackDetails('detaildata') as $v) {
-                            if($v->service_id>0) {
-                                $list[++$i] = $v ;
-                            }
-                        }
-                        $this->_doc->packDetails('detaildata', $list);
-                        $i=0;
-                        $list=[];
-                        foreach($basedoc->unpackDetails('detaildata') as $v) {
-                            if($v->item_id>0) {
-                                $list[++$i] = $v ;
-                            }
-                        }
-                        $this->_doc->packDetails('detail2data', $list);
-
-                    }
-                }
+             
             }
         }
     }
@@ -129,6 +104,8 @@ class ServiceAct extends \App\Pages\Base
         $ret['doc']['customer_id']   =   $this->_doc->customer_id ?? 0;
         $ret['doc']['customer_name']   =   $this->_doc->customer_name ;
         $ret['doc']['store']   =   $this->_doc->headerdata['store'] ?? 0;
+        $ret['doc']['payment']   =   $this->_doc->headerdata['payment'] ?? 0;
+        $ret['doc']['paytype']   =   $this->_doc->headerdata['paytype'] ?? 0;
         $ret['doc']['contract_id']   =   $this->_doc->headerdata['contract_id'] ?? 0;
         $ret['doc']['device']   =   $this->_doc->headerdata['device'] ?? '';
         $ret['doc']['devsn']   =   $this->_doc->headerdata['devsn'] ?? '';
@@ -207,6 +184,8 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->payed = $post->doc->payed;
         $this->_doc->headerdata['payed'] = $post->doc->payed;
         $this->_doc->headerdata['store'] = $post->doc->store;
+        $this->_doc->headerdata['paytype'] = $post->doc->paytype;
+        $this->_doc->headerdata['payment'] = $post->doc->payment;
         $this->_doc->headerdata['devsn'] = $post->doc->devsn;
         $this->_doc->headerdata['devdesc'] = $post->doc->devdesc;
         $this->_doc->headerdata['device'] = $post->doc->device;
@@ -275,13 +254,17 @@ class ServiceAct extends \App\Pages\Base
                 }
 
 
-                if ($post->op == 'execdoc' || $post->op == 'paydoc') {
+                if ($post->op == 'execdoc'  ) {
                     
                     $this->_doc->headerdata['timeentry'] = time();
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
                 }
-                if (  $post->op == 'paydoc') {
-                     $this->_doc->updateStatus(Document::STATE_WP);
+              
+                if ($this->_doc->headerdata['paytype'] == 2) {
+                    $this->_doc->setHD('waitpay',1); 
+                }
+                if ($this->_doc->headerdata['paytype'] == 1  UU $this->_doc->payed < $this->_doc->payamount) {
+                    $this->_doc->setHD('waitpay',1); 
                 }
 
 
