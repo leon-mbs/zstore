@@ -24,7 +24,7 @@ class Menu extends \Zippy\Html\WebPage
         $this->_tvars['timepn']  = $options['timepn'] ;
         $this->_tvars['timesa']  = $options['timesa'] ;
         $this->_tvars['timesu']  = $options['timesu'] ;
-        $this->_tvars['logo']  = $options['logo'] ;
+        $this->_tvars['logo']  = $options['logo'] ??'';
         $this->_tvars['secondm']  = $options['foodmenu2'] > 0;
 
         $this->_tvars['bmname']  = $options['foodbasemenu'] > 0 ? $options['foodbasemenuname']  : 'Основне меню' ;

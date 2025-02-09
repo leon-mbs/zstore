@@ -622,7 +622,7 @@ class OrderList extends \App\Pages\Base
                        if($it->item_id==$cit->item_id) {
                            $r=[] ;
                            $r['dnum']  = $o->document_number;
-                           $r['dd']  = $o->headerdata['delivery_date'] >0 ? H::fd($o->headerdata['delivery_date']) :'';
+                           $r['dd']  = ($o->headerdata['delivery_date'] ?? 0) >0 ? H::fd($o->headerdata['delivery_date']) :'';
                            $r['dc']  = $o->customer_name;
                            $sitems[$o->document_id] = $r;
                            break;

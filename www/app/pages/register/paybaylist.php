@@ -130,7 +130,7 @@ GROUP BY c.customer_name,
  
         $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
+             WHERE  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
@@ -263,15 +263,15 @@ GROUP BY c.customer_name,
     public function stOnClick($sender) {
         
        $item = $sender->getOwner()->getDataItem(); 
-       $doc = Document::load($item->document_id);
+       $this->_doc = Document::load($item->document_id);
        if(strpos($sender->id,'stpayed')===0) {
-           $doc->updateStatus(Document::STATE_PAYED,true);  
+          $this->markPayed()  ;
        }      
        if(strpos($sender->id,'stdone')===0) {
-           $doc->updateStatus(Document::STATE_FINISHED,true);  
+           $this->_doc->updateStatus(Document::STATE_FINISHED,true);  
        }      
        if(strpos($sender->id,'stclosed')===0) {
-           $doc->updateStatus(Document::STATE_CLOSED,true);  
+           $this->_doc->updateStatus(Document::STATE_CLOSED,true);  
        }      
      
         
@@ -399,27 +399,16 @@ GROUP BY c.customer_name,
 
 
     private function markPayed() {
+        $this->_doc = Document::load($this->_doc->document_id);
+
         if($this->_doc->state == Document::STATE_WP) {
-            $this->_doc = Document::load($this->_doc->document_id);
-            if($this->_doc->meta_name=='Order' || $this->_doc->meta_name=='Invoice') {
-                $this->_doc->updateStatus(Document::STATE_PAYED);
-                return;
-            }
-            if($this->_doc->meta_name=='ServiceAct') {
-                $this->_doc->updateStatus(Document::STATE_FINISHED, true);
-
-                return;
-            }
-            //предыдущий статус
-            $states = $this->_doc->getLogList();
-
-            $prev = intval($states[count($states)-2]->docstate)        ;
-            if($prev  < 5) {
-                $prev = Document::STATE_EXECUTED  ;
-            }
-            $this->_doc->updateStatus($prev, true);
-
+            
+            $this->_doc->updateStatus(Document::STATE_PAYED);            
         }
+        if($this->_doc->meta_name=='Order' ||  $this->_doc->meta_name=='ServiceAct' ) {
+           $this->_doc->setHD('waitpay',0); 
+           $this->_doc->save();  
+        }         
 
     }
 

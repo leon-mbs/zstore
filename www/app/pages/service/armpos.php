@@ -425,7 +425,7 @@ class ARMPos extends \App\Pages\Base
             }
             if($bd->meta_name=='Order') {
                 if($bd->getHD('paytype',0) != 3){
-                    $this->setWarn('В азмовленні не повинно бути оплати.  ') ;
+                    $this->setWarn('В азмовленні не повинно бути оплати якщо оплата  чеком  ') ;
                     App::Redirect("\\App\\Pages\\Register\\OrderList");
                     return; 
                 }

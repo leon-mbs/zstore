@@ -594,18 +594,18 @@ class Order extends \App\Pages\Base
                 if ($this->_doc->payed == 0) {
                     return;
                 }
-              
-                if ($this->_doc->headerdata['store'] > 0) {
-                    $this->_doc->reserve(); 
-                }
+         
                 if ($this->_doc->payed < $this->_doc->payamount) {
-                    $this->setHD('waitpay',1);
+                    $this->_doc->setHD('waitpay',1);
                 }
   
             }
 
- 
+            if ($this->_doc->headerdata['paytype'] == 2) {
+                $this->_doc->setHD('waitpay',1); 
+            }   
             
+                     
             $this->_doc->save();
 
             if ($sender->id == 'savedoc') {
@@ -615,12 +615,10 @@ class Order extends \App\Pages\Base
                                          
             if ($sender->id == 'execdoc'  ) {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                  
             }
          
-            if ($this->_doc->headerdata['paytype'] == 1) {
-               $this->setHD('waitpay',1); 
-               $this->_doc->updateStatus(Document::STATE_WP);
-            }
+            
 
             $conn->CommitTrans();
           

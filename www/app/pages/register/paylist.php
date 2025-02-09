@@ -142,6 +142,10 @@ class PayList extends \App\Pages\Base
         $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
 
+        if($doc->meta_name=='IncomeMoney' || $doc->meta_name=='OutcomeMoney' ) {
+           $row->del->setVisible(false);
+        }
+        
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
 
@@ -193,7 +197,10 @@ class PayList extends \App\Pages\Base
        
             $doc = \App\Entity\Doc\Document::load($pl->document_id)->cast();
             $doc->DoBalans();
-      
+            if($doc->payed < $doc->payamount) {
+               $doc->setHD('waitpay',1); 
+               $doc->save();
+            }
             $conn->CommitTrans();
 
 
@@ -516,7 +523,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         }
         
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  p.*,d.customer_name,d.meta_id,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by   " . $order;
+        $sql = "select  p.*,d.customer_name,d.meta_id,d.meta_name,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by   " . $order;
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
         
