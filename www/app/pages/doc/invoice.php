@@ -149,9 +149,10 @@ class Invoice extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->nextNumber());
 
             if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid);
+                    $basedoc = Document::load($basedocid)->cast();
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                     /*
                     if ($basedoc->meta_name == 'Order') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -163,14 +164,14 @@ class Invoice extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                        $order = $basedoc->cast();
-
-                        $this->docform->total->setText($order->amount);
+                        
+                        $this->docform->total->setText($basedoc->amount);
 
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
+                    */
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -184,9 +185,9 @@ class Invoice extends \App\Pages\Base
 
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                        $order = $basedoc->cast();
+                       
 
-                        $this->docform->total->setText($order->amount);
+                        $this->docform->total->setText($basedoc->amount);
 
                         $this->calcPay();
 
@@ -206,14 +207,13 @@ class Invoice extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                        $order = $basedoc->cast();
-
-                        $this->docform->total->setText($order->amount);
+                     
+                        $this->docform->total->setText($basedoc->amount);
 
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                    }
+                    }  
                 }
             }
         }

@@ -58,6 +58,7 @@ class SerList extends \App\Pages\Base
         $this->statuspan->add(new Form('statusform'));
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binvoice'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bwarranty'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
 
@@ -148,9 +149,7 @@ class SerList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
-        $list = $this->_doc->getChildren('POSCheck');
-        $pos = count($list) > 0;
-
+     
 
         $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
@@ -164,10 +163,18 @@ class SerList extends \App\Pages\Base
             return;
         }
         if ($sender->id == "bpos") {
-            if ($pos) {
+            if (count($this->_doc->getChildren('POSCheck')) > 0) {
                 $this->setWarn('Вже існує документ Чек');
             }
             App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
+            return;
+
+        }
+        if ($sender->id == "binvoice") {
+            if (count($this->_doc->getChildren('Invoice')) > 0) {
+                $this->setWarn('Вже існує документ Рахунок');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
 
         }
@@ -220,6 +227,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bwarranty->setVisible(true);
 
             $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -232,7 +240,6 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(true);
-            $this->statuspan->statusform->bpos->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
             $this->statuspan->statusform->bfin->setVisible(true);
@@ -244,7 +251,6 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(true);
-            $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -262,7 +268,7 @@ class SerList extends \App\Pages\Base
         }
 
         //к  оплате
-        if ($state == Document::STATE_WP) {
+        if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0( != 3) {
 
             if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
                 $this->statuspan->statusform->btopay->setVisible(true);
@@ -271,20 +277,27 @@ class SerList extends \App\Pages\Base
 
         }
         //закрыт
+      if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0) == 3) {
+
+                $this->statuspan->statusform->bpos->setVisible(true);
+                $this->statuspan->statusform->binvoice->setVisible(true);
+            
+
+        }
+        //закрыт
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);
 
             $this->statuspan->statusform->bwarranty->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
         
-        if ($this->_doc->hasPayments()) {
-            $this->statuspan->statusform->bpos->setVisible(false);
-        }
+        
         
     }
 

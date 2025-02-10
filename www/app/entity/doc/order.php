@@ -97,9 +97,8 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        if($this->payed == 0) {
-            $list['Invoice'] = self::getDesc('Invoice');
-        }
+        //   $list['Invoice'] = self::getDesc('Invoice');
+
       //  $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');

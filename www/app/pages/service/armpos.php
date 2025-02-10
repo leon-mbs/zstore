@@ -420,12 +420,17 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form2->customer->setKey($bd->customer_id);
             $this->docpanel->form2->customer->setText($bd->customer_name);
             if($bd->meta_name=='ServiceAct') {
+                if($bd->getHD('paytype',0) != 3){
+                    $this->setWarn('В Акті не повинно бути оплати якщо оплата  чеком  ') ;
+                    App::Redirect("\\App\\Pages\\Register\\SerList");
+                    return; 
+                }                
                 $this->_itemlist = $bd->unpackDetails('detail2data');
                 $this->_serlist =  $bd->unpackDetails('detaildata');
             }
             if($bd->meta_name=='Order') {
                 if($bd->getHD('paytype',0) != 3){
-                    $this->setWarn('В азмовленні не повинно бути оплати якщо оплата  чеком  ') ;
+                    $this->setWarn('В Замовленні не повинно бути оплати якщо оплата  чеком  ') ;
                     App::Redirect("\\App\\Pages\\Register\\OrderList");
                     return; 
                 }
