@@ -130,7 +130,16 @@ class SerList extends \App\Pages\Base
         if ($doc->document_id == ($this->_doc->document_id ??0)) {
             $row->setAttribute('class', 'table-success');
         }
-
+         
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
+ 
+        if($doc->getHD('waitpay')==1){
+            $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
+            $row->ispay->setAttribute('title','До сплати');            
+        }   else {
+            $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
+            $row->ispay->setAttribute('title','Оплачено');            
+        }
     }
 
     public function statusOnSubmit($sender) {

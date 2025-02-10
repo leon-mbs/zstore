@@ -145,6 +145,15 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
 
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
+        
+        if($doc->getHD('waitpay')==1){
+            $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
+            $row->ispay->setAttribute('title','До сплати');            
+        }   else {
+            $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
+            $row->ispay->setAttribute('title','Оплачено');            
+        }
         $row->add(new Label('isreserved'))->setVisible($doc->hasStore());
 
         $stname = Document::getStateName($doc->state);
@@ -474,7 +483,7 @@ class OrderList extends \App\Pages\Base
 
         if ($state == Document::STATE_WP) {
 
-            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
+            if($this->_doc->getHD('waitpay')==1) {
                 $this->statuspan->statusform->btopay->setVisible(true);
                 $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
             }
