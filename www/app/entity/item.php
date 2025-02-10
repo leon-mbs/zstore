@@ -243,7 +243,7 @@ class Item extends \ZCL\DB\Entity
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-        if (strlen($common[$_price_]) == 0) {
+        if (strlen($common[$_price_]??'') == 0) {
             return 0;
         }
 

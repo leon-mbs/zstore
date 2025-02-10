@@ -221,13 +221,14 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->statusform->btopay->setVisible(false);
 
+        $this->statuspan->statusform->bpos->setVisible(false);
+        $this->statuspan->statusform->binvoice->setVisible(false);
+
         //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
             $this->statuspan->statusform->bwarranty->setVisible(true);
 
-            $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -268,7 +269,7 @@ class SerList extends \App\Pages\Base
         }
 
         //к  оплате
-        if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0( != 3) {
+        if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0) != 3) {
 
             if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
                 $this->statuspan->statusform->btopay->setVisible(true);

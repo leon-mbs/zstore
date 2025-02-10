@@ -678,14 +678,14 @@ class Base extends \Zippy\Html\WebPage
 
     public function vonTextCust($args, $post=null) {
 
-        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]));
+        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]??null));
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
     public function vonTextItem($args, $post=null) {
 
-        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1], $args[2]));
+        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1]??null, $args[2]??null));
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }

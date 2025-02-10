@@ -648,10 +648,11 @@
                     data.doc.paytype = this.paytype
                     data.doc.payment = this.payment
                     data.doc.devsn = this.devsn
-                    data.doc.devsn = this.devsn
+
                     data.doc.devdesc = this.devdesc
                     data.doc.device = this.device
                     data.doc.gar = this.gar
+                    data.doc.store = this.store
           
             
                     if(this.store == 0 && this.items.length > 0 ) {
@@ -869,6 +870,7 @@
                        this.devdesc = data.doc.devdesc;  
                        this.total = data.doc.amount;  
                        this.payment = data.doc.payment;  
+                       this.paytype = data.doc.paytype;  
                        this.bonus = data.doc.bonus;  
                        this.totaldisc = data.doc.totaldisc;  
                        this.payamount = data.doc.payamount;  

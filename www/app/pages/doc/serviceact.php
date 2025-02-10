@@ -114,7 +114,6 @@ class ServiceAct extends \App\Pages\Base
         $ret['doc']['amount']   = H::fa($this->_doc->amount);
         $ret['doc']['payamount']   = H::fa($this->_doc->payamount);
         $ret['doc']['paydisc']   = H::fa($this->_doc->headerdata['paydisc']??0);
-        $ret['doc']['payment']   = H::fa($this->_doc->headerdata['payment']??0);
         $ret['doc']['payed']   = H::fa($this->_doc->headerdata['payed']??0);
         $ret['doc']['totaldisc']   = H::fa($this->_doc->headerdata['totaldisc']??0);
         $ret['doc']['bonus']   = H::fa($this->_doc->headerdata['bonus']??0);
@@ -183,13 +182,13 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->payamount = $post->doc->payamount;
         $this->_doc->payed = $post->doc->payed;
         $this->_doc->headerdata['payed'] = $post->doc->payed;
-        $this->_doc->headerdata['store'] = $post->doc->store;
+        $this->_doc->headerdata['store'] = $post->doc->store??0;
         $this->_doc->headerdata['paytype'] = $post->doc->paytype;
         $this->_doc->headerdata['payment'] = $post->doc->payment;
-        $this->_doc->headerdata['devsn'] = $post->doc->devsn;
-        $this->_doc->headerdata['devdesc'] = $post->doc->devdesc;
-        $this->_doc->headerdata['device'] = $post->doc->device;
-        $this->_doc->headerdata['gar'] = $post->doc->gar;
+        $this->_doc->headerdata['devsn'] = $post->doc->devsn??'';
+        $this->_doc->headerdata['devdesc'] = $post->doc->devdesc??'';
+        $this->_doc->headerdata['device'] = $post->doc->device??'';
+        $this->_doc->headerdata['gar'] = $post->doc->gar??'';
         $this->_doc->headerdata['contract_id'] = $post->doc->contract_id;
         $this->_doc->headerdata['payment'] = $post->doc->payment??0;
         $this->_doc->headerdata['totaldisc'] = $post->doc->totaldisc;
@@ -245,7 +244,12 @@ class ServiceAct extends \App\Pages\Base
                 $this->_basedocid = 0;
             }
 
-
+            if ($this->_doc->headerdata['paytype'] == 2) {
+                $this->_doc->setHD('waitpay',1); 
+            }
+            if ($this->_doc->headerdata['paytype'] == 1 && $this->_doc->payed < $this->_doc->payamount) {
+                $this->_doc->setHD('waitpay',1); 
+            }
             $this->_doc->save();
 
             if ($post->op != 'savedoc') {
@@ -260,12 +264,7 @@ class ServiceAct extends \App\Pages\Base
                     $this->_doc->updateStatus(Document::STATE_INPROCESS);
                 }
               
-                if ($this->_doc->headerdata['paytype'] == 2) {
-                    $this->_doc->setHD('waitpay',1); 
-                }
-                if ($this->_doc->headerdata['paytype'] == 1  UU $this->_doc->payed < $this->_doc->payamount) {
-                    $this->_doc->setHD('waitpay',1); 
-                }
+       
 
 
             } else {
