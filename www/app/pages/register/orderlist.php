@@ -661,6 +661,9 @@ class OrderList extends \App\Pages\Base
 
             return;
         }
+        if($doc->hasStore()) {
+           $doc->setHD('doreserv',1);
+        }
         $doc->updateStatus(Document::STATE_CANCELED);
         $doc->payed = 0;
         $doc->save();

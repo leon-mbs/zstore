@@ -128,7 +128,7 @@ class EmployeeList extends \App\Pages\Base
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         
         $row->add(new ClickLink('contentlist'))->onClick($this, 'viewContentOnClick');
-        if ($item->employee_id == $this->_employee->employee_id) {
+        if ($item->employee_id == ($this->_employee->employee_id ??0) ) {
             $row->setAttribute('class', 'table-success');
         }      
     }

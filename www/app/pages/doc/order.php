@@ -620,6 +620,9 @@ class Order extends \App\Pages\Base
          
             
 
+            if($this->_doc->getHD('doreserv')==1) {
+               $this->_doc->reserve(); 
+            }
             $conn->CommitTrans();
           
 

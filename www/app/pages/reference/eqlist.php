@@ -277,21 +277,25 @@ class EQDS implements \Zippy\Interfaces\DataSource
         $showdis = $form->showdis->isChecked();
 
         if ($emp > 0) {
-            $where = $where . " and detail like '%<emp_id>{$emp}</emp_id>%' ";
+            $where  = $where . " and detail like '%<resemp_id>{$emp}</resemp_id>%' ";
         }
         if ($type > 0) {
-            $where = $where . " and type = ".$type;
+            $where  = $where . " and type = ".$type;
         }
         if ($showdis > 0) {
 
         } else {
-            $where = $where . " and disabled <> 1";
+            $where  = $where . " and disabled <> 1";
         }
         if (strlen($text) > 0) {
             $text = Equipment::qstr(  $text  );
             $_text = Equipment::qstr('%' . $text . '%');
             $where = $where . " and (invnumber = {$text} or eq_name like {$_text} or detail like {$_text} )  ";
         }
+        
+        
+        
+        
         return $where;
     }
 
