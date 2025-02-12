@@ -54,14 +54,22 @@ class Menu extends \Zippy\Html\WebPage
             foreach(Item::findYield($iw) as $item) {
                 
             
-                $items[]=array(
+                $it=array(
                     'itemname'=>$item->itemname ,
                     'imglink'=>$item->getImageUrl() ,
                     'desc'=> substr($item->description, 0, 200) ,
-                    'price'=>$item->getPrice() ,
+                    'price'=>$item->getPrice($options['pricetype']) ,
+                    'priceout'=>false ,
                     'customsize'=> $item->customsize 
                 );
-
+                if(strlen ($options['pricetypeout']??'')>1) {
+                    $priceout=  $item->getPrice($options['pricetypeout']); 
+                    if(doubleval($priceout) >0  && doubleval($priceout) != doubleval($it['price']) )  {
+                        $it['priceout'] = $priceout;
+                    }
+                }
+                
+                $items[]   = $it;
             }            
             
             

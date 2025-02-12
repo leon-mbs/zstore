@@ -275,6 +275,7 @@ class Options extends \App\Pages\Base
         }
         $this->add(new Form('food'))->onSubmit($this, 'onFood');
         $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(), $food['pricetype']));
+        $this->food->add(new DropDownChoice('foodpricetypeout', \App\Entity\Item::getPriceTypeList(), $food['pricetypeout']??0));
         $this->food->add(new DropDownChoice('foodworktype', array(), $food['worktype']));
         $this->food->add(new CheckBox('fooddelivery', $food['delivery']));
         $this->food->add(new CheckBox('foodtables', $food['tables']));
@@ -550,6 +551,7 @@ class Options extends \App\Pages\Base
 
         $food['worktype'] = $sender->foodworktype->getValue();
         $food['pricetype'] = $sender->foodpricetype->getValue();
+        $food['pricetypeout'] = $sender->foodpricetypeout->getValue();
         $food['delivery'] = $sender->fooddelivery->isChecked() ? 1 : 0;
         $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
 

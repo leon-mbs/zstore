@@ -23,8 +23,8 @@ class UserLogin extends \Zippy\Html\WebPage
         \App\Session::getSession()->clipboard = null;
 
         $form = new \Zippy\Html\Form\Form('loginform');
-        $form->add(new TextInput('userlogin'));
-        $form->add(new TextInput('userpassword'));
+        $form->add(new TextInput('userlog'));
+        $form->add(new TextInput('userpasswo'));
         $form->add(new TextInput('capchacode'));
 
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
@@ -49,9 +49,9 @@ class UserLogin extends \Zippy\Html\WebPage
         global $logger, $_config;
 
         $this->setError('');
-        $login = $sender->userlogin->getText();
-        $password = $sender->userpassword->getText();
-        $sender->userpassword->setText('');
+        $login = $sender->userlog->getText();
+        $password = $sender->userpasswo->getText();
+        $sender->userpasswo->setText('');
         if ($this->_tvars['capcha'] == true) {
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
@@ -112,7 +112,7 @@ class UserLogin extends \Zippy\Html\WebPage
             }
         }
 
-        $sender->userpassword->setText('');
+        $sender->userpasswo->setText('');
     }
 
     public function beforeRequest() {

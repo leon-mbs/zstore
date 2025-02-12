@@ -322,7 +322,18 @@ class Invoice extends \App\Pages\Base
         }
 
         if($this->_rowid == -1) {
-            $this->_itemlist[] = $item;
+            $found=false;
+            
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id ) {
+                    $this->_itemlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+        
+            if(!$found) {
+               $this->_itemlist[] = $item;    
+            }
         } else {
             $this->_itemlist[$this->_rowid] = $item;
         }
@@ -371,7 +382,18 @@ class Invoice extends \App\Pages\Base
         $item->price = $price;
 
         if($this->_rowid == -1) {
-            $this->_itemlist[] = $item;
+            $found=false;
+            
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->service_id == $item->service_id ) {
+                    $this->_itemlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+        
+            if(!$found) {
+               $this->_itemlist[] = $item;    
+            }
         } else {
             $this->_itemlist[$this->_rowid] = $item;
         }

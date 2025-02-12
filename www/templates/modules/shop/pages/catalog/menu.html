@@ -86,6 +86,12 @@
                             <td class="textprice" >   {{price}}  грн</td>
                             <td class="textprice"  align="right" >  {{customsize}} </td>
                           </tr>
+                          {{#priceout}}
+                       <tr>
+                            <td  colspan="2" > <small>  Ціна на винос   {{priceout}}  грн </small></td>
+
+                          </tr>
+                           {{/priceout}}
                          <tr>
                             <td  valign="top"    > <small> {{desc}} </small> </td>
                             <td  ><img class="img" src="{{imglink}}" > </td>
