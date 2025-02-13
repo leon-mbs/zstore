@@ -48,11 +48,11 @@ class Menu extends \Zippy\Html\WebPage
             return $a->order > $b->order;
         });
         foreach($cats as $cat) {
-                  $iw="disabled<>1 and cat_id=".$cat->cat_id;
+            $iw="disabled<>1 and cat_id=".$cat->cat_id;
       
-           $items = [];
+            $items = [];
             foreach(Item::findYield($iw) as $item) {
-                
+                if($item->noshop ==1)  continue;
             
                 $it=array(
                     'itemname'=>$item->itemname ,
