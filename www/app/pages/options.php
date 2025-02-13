@@ -288,7 +288,7 @@ class Options extends \App\Pages\Base
         $this->food->add(new Textinput('timesu', $food['timesu']));
         $this->food->add(new File('foodlogo'));
 
-        $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and parent_id=0")  ;
+        $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and coalesce(parent_id,0)=0",'cat_name')  ;
        
         $this->food->add(new DropDownChoice('foodbasemenu',$menu,$food['foodbasemenu']));
         $this->food->add(new DropDownChoice('foodmenu2',$menu,$food['foodmenu2']));

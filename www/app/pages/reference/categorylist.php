@@ -37,6 +37,9 @@ class CategoryList extends \App\Pages\Base
 
         $this->add(new Panel('categorytable'))->setVisible(true);
         $this->categorytable->add(new DataView('categorylist', new ArrayDataSource($this, '_catlist'), $this, 'categorylistOnRow'));
+        $this->categorytable->categorylist->setPageSize(\App\Helper::getPG());
+        $this->categorytable->add(new \Zippy\Html\DataList\Paginator('pag', $this->categorytable->categorylist));
+        
         $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('categorydetail'))->setVisible(false);
         $this->categorydetail->add(new TextInput('editcat_name'));
@@ -263,7 +266,7 @@ class CategoryList extends \App\Pages\Base
         }
 
         $pid=$this->categorydetail->editparent->getValue() ;
-        $this->_category->parent_id = $pid >0 ? $pid  :null;
+        $this->_category->parent_id = $pid >0 ? $pid  :0;
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         $this->_category->cat_desc = $this->categorydetail->editcat_desc->getText();
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;

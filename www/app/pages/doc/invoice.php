@@ -83,6 +83,7 @@ class Invoice extends \App\Pages\Base
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
@@ -96,6 +97,7 @@ class Invoice extends \App\Pages\Base
 
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         $this->add(new Form('editserdetail'))->setVisible(false);
         $this->editserdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
@@ -424,7 +426,8 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->clean();
 
         $this->editdetail->editquantity->setText("1");
-
+        $this->wselitem->setVisible(false);
+ 
     }
 
     public function savedocOnClick($sender) {
@@ -604,6 +607,22 @@ class Invoice extends \App\Pages\Base
 
     }
 
+    
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->wselitem->setPriceType($this->docform->pricetype->getValue());
+       
+
+        $this->wselitem->Reload();
+    }
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edittovar->setKey($item_id);
+        $this->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edittovar);
+    }
+    
+    
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 0, true);
     }
