@@ -3,7 +3,7 @@
         <meta charset="utf-8">
         <meta lang="ua" >
 
-        <title>Меню</title>
+        <title>{{name}} | Меню</title>
         <meta name="description" content="Меню кафе">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -39,15 +39,13 @@
         <div class="row ">
             <div class="mt-2  col-12 col-sm-6 col-md-4  col-xl-3  ">
                  <div class="row ">
-                     <div class="col-12 col-sm-6">
-                         <a href="/menu"> <img style="width:80%" src="{{logo}}"> </a> 
+                     <div class="col-auto">
+                        <h4> <a style="font-family:Georgia;text-decoration:none" href="/menu"> {{name}} </a> </h4>
                     </div>
-                     <div class="col-12 col-sm-6  text-right">
+                     <div class="col-auto  text-right pl-2">
                          <i class="fa fa-phone"></i>  {{phone}}
                     </div>
-                     <div class="col-12 text-center mb-4">
-                         <h2  style="font-family:Georgia"><a href="/menu" style="text-decoration:none" >{{name}} </a></h2>    
-                    </div>
+                    
                   
                     {{^list}}
                     <div class="col-12  text-center">
@@ -115,17 +113,36 @@
                 
                 <div class="row ">                
                     <div class="col-12  text-center mt-4">
+                         <b  >Адреса </b>   
+                    </div>
+                   <div class="col-12  text-center mt-4">
+                          {{address}}    
+                    </div>
+                    <div class="col-12  text-center mt-4">
                          <b  >Розклад роботи </b>    
                     </div>
-                    <div class="col-12 justify-content-center mb-2">
-                       <table class="table table-sm">
-                          <tr><td align="right">Пн - Пт</td><td> {{timepn}}</td></tr>
-                          <tr><td align="right">Сб</td><td> {{timesa}}</td></tr>
-                          <tr><td align="right">Вс</td><td> {{timesu}}</td></tr>
-                       </table>   
+                    <div class="col-6  text-right  ">
+                        Пн - Пт  
                     </div>
+                    <div class="col-6     ">
+                         {{timepn}}     
+                    </div>
+                    <div class="col-6  text-right  ">
+                          Сб  
+                    </div>
+                    <div class="col-6     ">
+                          {{timesa}}   
+                    </div>
+                  <div class="col-6  text-right  ">
+                          Вс  
+                    </div>
+                    <div class="col-6     ">
+                         {{timesu}}      
+                    </div>
+                    <div class="col-12   mb-2">
+                      
                     
-                </div>
+                    </div>
  
               
                 

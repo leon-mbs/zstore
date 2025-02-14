@@ -24,7 +24,7 @@ class Menu extends \Zippy\Html\WebPage
         $this->_tvars['timepn']  = $options['timepn'] ;
         $this->_tvars['timesa']  = $options['timesa'] ;
         $this->_tvars['timesu']  = $options['timesu'] ;
-        $this->_tvars['logo']  = $options['logo'] ??'';
+        $this->_tvars['address']  = $options['address'] ??'';
         $this->_tvars['secondm']  = $options['foodmenu2'] > 0;
 
         $this->_tvars['bmname']  = $options['foodbasemenu'] > 0 ? $options['foodbasemenuname']  : 'Основне меню' ;
@@ -56,7 +56,7 @@ class Menu extends \Zippy\Html\WebPage
             
                 $it=array(
                     'itemname'=>$item->itemname ,
-                    'imglink'=>$item->getImageUrl() ,
+                    'imglink'=>$item->getImageUrl(true) ,
                     'desc'=> substr($item->description, 0, 200) ,
                     'price'=>$item->getPrice($options['pricetype']) ,
                     'priceout'=>false ,

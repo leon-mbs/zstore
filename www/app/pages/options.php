@@ -282,11 +282,12 @@ class Options extends \App\Pages\Base
         $this->food->add(new CheckBox('foodpack', $food['pack']));
         $this->food->add(new CheckBox('foodmenu', $food['menu']));
         $this->food->add(new Textinput('goodname', $food['name']));
+        $this->food->add(new Textinput('goodaddress', $food['address']));
         $this->food->add(new Textinput('goodphone', $food['phone']));
         $this->food->add(new Textinput('timepn', $food['timepn']));
         $this->food->add(new Textinput('timesa', $food['timesa']));
         $this->food->add(new Textinput('timesu', $food['timesu']));
-        $this->food->add(new File('foodlogo'));
+    
 
         $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and coalesce(parent_id,0)=0",'cat_name')  ;
        
@@ -558,6 +559,7 @@ class Options extends \App\Pages\Base
         $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
         $food['menu'] = $sender->foodmenu->isChecked() ? 1 : 0;
         $food['name'] = $sender->goodname->getText() ;
+        $food['address'] = $sender->goodaddress->getText() ;
         $food['phone'] = $sender->goodphone->getText() ;
         $food['timepn'] = $sender->timepn->getText() ;
         $food['timesa'] = $sender->timesa->getText() ;
@@ -567,23 +569,7 @@ class Options extends \App\Pages\Base
         $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
         $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
 
-        $file = $sender->foodlogo->getFile();
-        if (strlen($file["tmp_name"]) > 0) {
-            $imagedata = getimagesize($file["tmp_name"]);
-
-            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат');
-                return;
-            }
-
-          
-
-            $name = basename($file["name"]);
-            move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);
-
-            $food['logo'] = "/upload/" . $name;
-        }
-
+     
         $conn = \zdb\DB::getConnect()  ;
         $conn->Execute("update  metadata set  disabled=0 where  meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood') ");
         
