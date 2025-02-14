@@ -240,8 +240,35 @@ class Document extends \ZCL\DB\Entity
        $this->detaildata[$dataname]= $list;
  
     }
+
     
-    
+    /**
+    * устанавливает значение  в шапке
+    * 
+    * @param mixed $name
+    * @param mixed $value
+    * @return mixed
+    */
+    public function setHD(string $name, $value=null)  {
+       if(strlen($name)=='')    return;
+       if($value==null) {
+          unset( $this->headerdata[$name] );    
+       }   else {
+          $this->headerdata[$name] = $value;       
+       }
+      
+    }
+ 
+    /**
+    * возвращает  значение  шапки без предупреждений в  старших версиях  PHP
+    * 
+    * @param mixed $name
+    * @param mixed $def
+    */
+    public function getHD(string $name, $def=null)  {    
+       return  $this->headerdata[$name] ?? $def ;
+    }    
+     
     /**
      * Генерация HTML  для  печатной формы
      *

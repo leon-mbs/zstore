@@ -69,35 +69,66 @@
                         </div>
                     </div>
                     <div class="col-6 col-md-4 col-lg-3">
-                       <div class="form-group">
-                            <label for="document_number">Номер документа</label>
-                            <input class="form-control" type="text" v-model="document_number" name="document_number"  required >
+                       <div class="form-group row">
+                            <label class="col-5 col-form-label" for="document_number">Номер документа</label>
+                             <div class="col-7">
+                               <input class="form-control" type="text" v-model="document_number" name="document_number"  required >
+                            </div>                   
                         </div>                   
-                        <div class="form-group">
-                            <label for="document_date"> Дата</label>
-                            <input class="form-control" type="date" v-model="document_date"  name="document_date"  required >
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="document_date"> Дата</label>
+                            <div class="col-7">
+                               <input class="form-control" type="date" v-model="document_date"  name="document_date"  required >
+                          </div>
                         </div>
-                        <div class="form-group  ">
-                            <label for="store">Склад  комплектуючих</label>
-
-                            <select class="form-control" v-model="store" name="store">
-                                <option value="0">Не обрано</option>
-                                <option v-for="store in stores"    v-bind:value="store.key">{{store.value}}</option>
-                         </select>
+                        <div class="form-group  row ">
+                            <label class="col-5 col-form-label" for="store">Склад  </label>
+                                <div class="col-7">
+                                <select class="form-control" v-model="store" name="store">
+                                    <option value="0">Не обрано</option>
+                                    <option v-for="store in stores"    v-bind:value="store.key">{{store.value}}</option>
+                                 </select>
+                                  <small> Якщо є комплектуючі</small>
+                             </div>
+                             
                         </div>
-     
-                        <div class="form-group  ">
-                            <label for="gar">Гарантійний термін</label>
+                        <div class="form-group  row ">
+                            <label class="col-5 col-form-label"  for="paytype">Тип оплати  </label>
+                                <div class="col-7">
+                                <select class="form-control" v-model="paytype"  name="paytype">
+                                    <option value="0">Не обрано</option>
+                                    <option value="1">Передплата</option>
+                                    <option value="2">Постоплата</option>
+                                    <option value="3">В  Кассовому чеку  або Рахунку</option>
 
-                            <input class="form-control" v-model="gar" name="gar">
-
+                                 </select>
+                             
+                             </div>
+                             
+                        </div>
+                        <div v-show="this.paytype==1" class="form-group  row ">
+                            <label class="col-5 col-form-label" for="payment">Каса  </label>
+                                <div class="col-7">
+                                <select class="form-control" v-model="payment"  name="payment">
+                                    <option value="0">Не обрано</option>
+                                    <option v-for="mf in mflist"    v-bind:value="mf.key">{{mf.value}}</option>
+                                 </select>
+                              </div>
+                             
+                        </div>
+                       
+                        <div class="form-group  row">
+                            <label class="col-5 col-form-label" for="gar">Гар. термін</label>
+                              <div class="col-7">
+                                <input class="form-control" v-model="gar" name="gar">
+                            </div>
                         </div>
                     
-                        <div class="form-group  ">
-                            <label for="notes">Примітка</label>
-
-                            <textarea class="form-control" v-model="notes" name="notes"  ></textarea>
-
+                        <div class="form-group  row ">
+                            <label class="col-5 col-form-label" for="notes">Примітка</label>
+                             <div class="col-7">
+                               <textarea class="form-control" v-model="notes" name="notes"  ></textarea>
+                            </div>
                         </div>
                     </div>
 
@@ -162,23 +193,28 @@
                             </tr>                 
                         
                             <tr style="font-weight: bolder;">
-                                <td colspan="7" class="text-right">На суму:</td>
+                                <td colspan="8" class="text-right">На суму:</td>
                                 <td   class="text-right">{{total}}</td>
                                 <td></td>
                             </tr>                    
                            <tr style="font-weight: bolder;">
-                                <td colspan="7" class="text-right">Знижка:</td>
+                                <td colspan="8" class="text-right">Знижка:</td>
                                 <td  class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="totaldisc" style="width:100px;" > </td>
                                 <td> </td>
                             </tr>
                            <tr v-show="this.customerinfo.bonus >0"  style="font-weight: bolder;">
-                                <td colspan="7" class="text-right"><span data-label="bonus">Бонуси:</span></td>
+                                <td colspan="8" class="text-right"><span data-label="bonus">Бонуси:</span></td>
                                 <td   class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="bonus" style="width:100px;" ></td>
                                 <td> </td>
                             </tr>                                 
                             <tr style="font-weight: bolder;">
-                                <td colspan="7" class="text-right">До сплати:</td>
+                                <td colspan="8" class="text-right">До сплати:</td>
                                 <td   class="text-right"> {{payamount}}</td>
+                                <td> </td>
+                            </tr>    
+                            <tr v-show="this.paytype==1 "  style="font-weight: bolder;">
+                                <td colspan="8" class="text-right"><span data-label="bonus">Оплата:</span></td>
+                                <td   class="text-right"><input pattern="[0-9,\.]+" class="form-control" v-model="payed" style="width:100px;" ></td>
                                 <td> </td>
                             </tr>    
                           </table>
@@ -193,7 +229,7 @@
                         <input type="button" onclick="history.back()" value="Скасувати"   class="btn btn-outline-secondary  ">
                         <input v-on:click.prevent="onbtn('savedoc')"   type="submit" value="Зберегти" class="btn btn-outline-primary  ">
                         &nbsp;<input v-on:click.prevent="onbtn('execdoc')"   type="submit" value="На виконання" class="btn btn-outline-primary  ">
-                        &nbsp;<input v-on:click.prevent="onbtn('paydoc')"   type="submit" value="До сплати" class="btn btn-outline-primary  ">
+
 
 
          
@@ -363,6 +399,8 @@
              devsn:"",
              gar:"",
              store:0,
+             paytype:0,
+             payment:0,
              contract:0,
              custlist:[] ,
              contracts:[] ,
@@ -373,6 +411,7 @@
              items:[],
              services:[],
              stores:[],
+       
              firms:[],
              mflist:[],
              ncustname:"",
@@ -606,15 +645,30 @@
                     data.doc.bonus = parseVal(this.bonus)
 
 
-                    data.doc.store = this.store
+                    data.doc.paytype = this.paytype
+                    data.doc.payment = this.payment
                     data.doc.devsn = this.devsn
+
                     data.doc.devdesc = this.devdesc
                     data.doc.device = this.device
                     data.doc.gar = this.gar
+                    data.doc.store = this.store
           
             
                     if(this.store == 0 && this.items.length > 0 ) {
                           toastr.error("Не вибраний склад") 
+                          return  
+                    }
+                    if(this.paytype == 0   ) {
+                          toastr.error("Не вибраний тип оплати") 
+                          return  
+                    }
+                    if(this.paytype == 1 && this.payment == 0 ) {
+                          toastr.error("Не вибрана каса") 
+                          return  
+                    }
+                    if(this.paytype == 1 && this.payed == 0 ) {
+                          toastr.error("Не введена оплата") 
                           return  
                     }
                     if( data.doc.customer_id == 0 ) {
@@ -816,6 +870,7 @@
                        this.devdesc = data.doc.devdesc;  
                        this.total = data.doc.amount;  
                        this.payment = data.doc.payment;  
+                       this.paytype = data.doc.paytype;  
                        this.bonus = data.doc.bonus;  
                        this.totaldisc = data.doc.totaldisc;  
                        this.payamount = data.doc.payamount;  

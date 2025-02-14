@@ -301,11 +301,11 @@ class TTN extends Document
                 $order = Document::load($this->parent_id);
                 $order = $order->cast() ;
                 
-                if($order->meta_name == 'Order' && $order->state > 0) {
+                if($order->meta_name == 'Order' && $order->state > 4) {
 
                     if( count( $order->getNotSendedItem() ) >0 ) return;
                     
-                    if( $order->payamount > 0 && $order->payamount == $order->payed)  {
+                    if( $order->payed >= $order->payanount   )  {
                         $order->updateStatus(Document::STATE_CLOSED);
                     }
                         

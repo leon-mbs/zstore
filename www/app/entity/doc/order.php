@@ -50,7 +50,7 @@ class Order extends \App\Entity\Doc\Document
         $da=  trim($this->headerdata["npaddressfull"] ??'') ;
         
         if(strlen($da)==0) {
-           $da=  trim($this->headerdata["ship_address"] ??'') ;
+           $da =  trim($this->headerdata["ship_address"] ??'') ;
         }
         
         $header = array('date'            => H::fd($this->document_date),
@@ -58,6 +58,7 @@ class Order extends \App\Entity\Doc\Document
                         "customer_name"   => $this->customer_name,
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
+                        "paytypename"        => $this->headerdata["paytypename"],
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
@@ -96,9 +97,8 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        if($this->payed == 0) {
-            $list['Invoice'] = self::getDesc('Invoice');
-        }
+        //   $list['Invoice'] = self::getDesc('Invoice');
+
       //  $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
@@ -141,7 +141,7 @@ class Order extends \App\Entity\Doc\Document
                         "firm_name"       => $firm["firm_name"],
                         "phone"           => $firm["phone"],
                         "delivery"        => $this->headerdata["delivery_name"],
-                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "style"           => $style,
                         "total"           => H::fa($this->amount)

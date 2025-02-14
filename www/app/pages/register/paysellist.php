@@ -200,7 +200,7 @@ GROUP BY c.customer_name,
         $this->_doclist = array();
 
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = 21    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
             $this->_doclist[] = $d;
 
         }

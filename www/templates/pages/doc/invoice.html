@@ -193,15 +193,16 @@
             </div>
              
         </form>
-        <form zippy="editdetail">
-            <h4>Редагування товару </h4>
+             <h4>Редагування товару </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-
+                <form zippy="editdetail">
+    
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
                         <input    placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
-
+                       <a zippy="openitemsel">Відкрити довідник</a>
+                       <br>
                         Наявність: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
                         <br>Облікова  ціна: <span zippy="pricestock"></span>
@@ -225,11 +226,16 @@
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
                         
                     </div>
-
+                   </form>
 
                 </div>
+             
+              <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+             </div>                
+            
             </div>
-        </form>
+       
         <form zippy="editserdetail">
             <h4>Редагування послуги</h4>
             <div class="row">

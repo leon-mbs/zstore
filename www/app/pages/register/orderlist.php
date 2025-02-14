@@ -94,16 +94,7 @@ class OrderList extends \App\Pages\Base
 
         $this->listpanel->doclist->Reload();
 
-
-        $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
-        $this->payform->add(new TextInput('pamount'));
-        $this->payform->add(new TextInput('pcomment'));
-        $this->payform->add(new CheckBox('closeorder'));
-        $this->payform->add(new Date('pdate', time()));
-        $this->payform->setVisible(false);
-
+  
         $this->add(new Panel("editpanel"))->setVisible(false);
         $this->editpanel->add(new Label("editdn"));
         $this->editpanel->add(new Label("editchat"));
@@ -121,8 +112,7 @@ class OrderList extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
-        $this->payform->setVisible(false);
-
+      
         $this->listpanel->doclist->Reload();
 
     }
@@ -155,6 +145,15 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
 
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
+        
+        if($doc->getHD('waitpay')==1){
+            $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
+            $row->ispay->setAttribute('title','До сплати');            
+        }   else {
+            $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
+            $row->ispay->setAttribute('title','Оплачено');            
+        }
         $row->add(new Label('isreserved'))->setVisible($doc->hasStore());
 
         $stname = Document::getStateName($doc->state);
@@ -484,7 +483,7 @@ class OrderList extends \App\Pages\Base
 
         if ($state == Document::STATE_WP) {
 
-            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
+            if($this->_doc->getHD('waitpay')==1) {
                 $this->statuspan->statusform->btopay->setVisible(true);
                 $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
             }
@@ -536,8 +535,7 @@ class OrderList extends \App\Pages\Base
 
     //просмотр
     public function showOnClick($sender) {
-        $this->payform->setVisible(false);
-
+     
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
@@ -633,7 +631,7 @@ class OrderList extends \App\Pages\Base
                        if($it->item_id==$cit->item_id) {
                            $r=[] ;
                            $r['dnum']  = $o->document_number;
-                           $r['dd']  = $o->headerdata['delivery_date'] >0 ? H::fd($o->headerdata['delivery_date']) :'';
+                           $r['dd']  = ($o->headerdata['delivery_date'] ?? 0) >0 ? H::fd($o->headerdata['delivery_date']) :'';
                            $r['dc']  = $o->customer_name;
                            $sitems[$o->document_id] = $r;
                            break;
@@ -662,6 +660,9 @@ class OrderList extends \App\Pages\Base
             $this->setError($cc);
 
             return;
+        }
+        if($doc->hasStore()) {
+           $doc->setHD('doreserv',1);
         }
         $doc->updateStatus(Document::STATE_CANCELED);
         $doc->payed = 0;
@@ -724,7 +725,7 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
         $this->statuspan->setVisible(false);
-        $this->payform->setVisible(false);
+      
         $this->_doc = Document::load($this->_doc->document_id);
         $this->editpanel->editchat->setAttribute('onclick', "opencchat({$this->_doc->document_id})");
 
@@ -967,7 +968,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and  state =1 ";
         }
         if ($status == 2) {
-            $where .= " and  state =21 ";
+            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%')";
         }
 
 

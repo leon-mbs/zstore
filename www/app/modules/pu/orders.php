@@ -123,6 +123,7 @@ class Orders extends \App\Pages\Base
             if($modules['pumf']>0) {
               $neworder->headerdata['payment'] = $modules['pumf'];
             }
+            $neworder->headerdata['paytype'] = 2;  //постоплата
 
             $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
 

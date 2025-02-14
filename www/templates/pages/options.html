@@ -538,8 +538,8 @@
      <div class="card">
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
-
-                        <form zippy="food" enctype="multipart/form-data">
+                       <br><small>За замовчанням  пункти меню CRM  неактивнi до першого <br>натискання кнопки Зберегти</small>
+                        <form zippy="food"  >
 
                             <div class="form-check">
                                 <label for="foodworktype">Тип закладу</label> <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -558,6 +558,13 @@
                                 <label for="foodpricetype">Тип цiн</label>
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
+                            </div>
+                           <div class="form-group  ">
+                                <label for="foodpricetypeout">Тип цiн на  винос</label>
+                                <select class="form-control" zippy="foodpricetypeout">
+                                 <option value="0">Не  вказано</option>
+                                </select>
+                                <small>Якщо вiдрiзняються  вiд основної</small>
                             </div>
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
@@ -584,14 +591,18 @@
 
                              <div class="form-check mt-4">
                                 <input zippy="foodmenu" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodmenu">Сторiнка меню.</label>
-                                <br><small>Доступ до сторiнки меню за адресою &lt;адреса  сайту&gt;/menu. Детальнiше <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>
-                                <br> Параметри нижче в  основному  для  сторiнки меню
+                                <label class="form-check-label" for="foodmenu">Сторiнка меню кафе</label>
+                                <br><small>Доступ до сторiнки меню  за посиланням &lt;адреса  сайту&gt;/menu. <br>Детальнiше <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
+                                 Параметри нижче в  основному  для  сторiнки меню
                                 </small>
                             </div>
                             <div class="form-group">
                                 <label for="goodname">Назва закладу</label>
                                 <input class="form-control" type="text" zippy="goodname">
+                            </div>                            
+                            <div class="form-group">
+                                <label for="goodaddress">Адреса  </label>
+                                <input class="form-control" type="text" zippy="goodaddress">
                             </div>                            
                             <div class="form-group">
                                 <label for="goodphone">Телефон</label>
@@ -632,7 +643,7 @@
 
                             <div class="form-group">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
-                                <br><small>За замовчанням  пункти меню неактивнi до першого натискання кнопки Зберегти</small>
+                               
                             </div>
                         </form>
                     </div>

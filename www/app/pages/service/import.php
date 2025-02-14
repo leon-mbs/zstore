@@ -61,11 +61,11 @@ class Import extends \App\Pages\Base
         $form->add(new Label('pricename4', $pt['price4'] ??''));
         $form->add(new Label('pricename5', $pt['price5'] ??''));
 
-        $form->add(new DropDownChoice("colprice1", $cols,$sc['colprice1'] ?? 0))->setVisible(strlen($pt['price1'])>0);
-        $form->add(new DropDownChoice("colprice2", $cols,$sc['colprice2'] ?? 0))->setVisible(strlen($pt['price2'])>0);
-        $form->add(new DropDownChoice("colprice3", $cols,$sc['colprice3'] ?? 0))->setVisible(strlen($pt['price3'])>0);
-        $form->add(new DropDownChoice("colprice4", $cols,$sc['colprice4'] ?? 0))->setVisible(strlen($pt['price4'])>0);
-        $form->add(new DropDownChoice("colprice5", $cols,$sc['colprice5'] ?? 0))->setVisible(strlen($pt['price5'])>0);
+        $form->add(new DropDownChoice("colprice1", $cols,$sc['colprice1'] ?? 0))->setVisible(strlen($pt['price1'] ??'')>0);
+        $form->add(new DropDownChoice("colprice2", $cols,$sc['colprice2'] ?? 0))->setVisible(strlen($pt['price2'] ??'')>0);
+        $form->add(new DropDownChoice("colprice3", $cols,$sc['colprice3'] ?? 0))->setVisible(strlen($pt['price3'] ??'')>0);
+        $form->add(new DropDownChoice("colprice4", $cols,$sc['colprice4'] ?? 0))->setVisible(strlen($pt['price4'] ??'')>0);
+        $form->add(new DropDownChoice("colprice5", $cols,$sc['colprice5'] ?? 0))->setVisible(strlen($pt['price5'] ??'')>0);
 
 
 

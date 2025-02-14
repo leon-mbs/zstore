@@ -24,7 +24,7 @@ class Menu extends \Zippy\Html\WebPage
         $this->_tvars['timepn']  = $options['timepn'] ;
         $this->_tvars['timesa']  = $options['timesa'] ;
         $this->_tvars['timesu']  = $options['timesu'] ;
-        $this->_tvars['logo']  = $options['logo'] ;
+        $this->_tvars['address']  = $options['address'] ??'';
         $this->_tvars['secondm']  = $options['foodmenu2'] > 0;
 
         $this->_tvars['bmname']  = $options['foodbasemenu'] > 0 ? $options['foodbasemenuname']  : 'Основне меню' ;
@@ -48,20 +48,28 @@ class Menu extends \Zippy\Html\WebPage
             return $a->order > $b->order;
         });
         foreach($cats as $cat) {
-                  $iw="disabled<>1 and cat_id=".$cat->cat_id;
+            $iw="disabled<>1 and cat_id=".$cat->cat_id;
       
-           $items = [];
+            $items = [];
             foreach(Item::findYield($iw) as $item) {
-                
+                if($item->noshop ==1)  continue;
             
-                $items[]=array(
+                $it=array(
                     'itemname'=>$item->itemname ,
-                    'imglink'=>$item->getImageUrl() ,
+                    'imglink'=>$item->getImageUrl(true) ,
                     'desc'=> substr($item->description, 0, 200) ,
-                    'price'=>$item->getPrice() ,
+                    'price'=>$item->getPrice($options['pricetype']) ,
+                    'priceout'=>false ,
                     'customsize'=> $item->customsize 
                 );
-
+                if(strlen ($options['pricetypeout']??'')>1) {
+                    $priceout=  $item->getPrice($options['pricetypeout']); 
+                    if(doubleval($priceout) >0  && doubleval($priceout) != doubleval($it['price']) )  {
+                        $it['priceout'] = $priceout;
+                    }
+                }
+                
+                $items[]   = $it;
             }            
             
             

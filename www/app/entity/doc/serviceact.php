@@ -308,7 +308,7 @@ class ServiceAct extends Document
         $list = array();
         $list['Task'] = self::getDesc('Task');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
-//        $list['Invoice'] = self::getDesc('Invoice');
+        $list['Invoice'] = self::getDesc('Invoice');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
         $list['Warranty'] = self::getDesc('Warranty');
         $list['POSCheck'] = self::getDesc('POSCheck');

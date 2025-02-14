@@ -17,6 +17,12 @@
     </tr>
     <tr>
         <td></td>
+        <td> Тип оплати</td>
+        <td colspan="8">{{paytypename}}</td>
+        
+    </tr>
+   <tr>
+        <td></td>
         <td> Доставка</td>
         <td>{{delivery}}</td>
         <td colspan="7">Адреса: {{ship_address}}</td>

@@ -133,6 +133,8 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $hrorder['order_id'];
             $neworder->headerdata['hrorderback'] = 0;
             $neworder->headerdata['salesource'] = $modules['hrsalesource'];
+            $neworder->headerdata['paytype'] = 2;  //постоплата
+ 
             if($modules['hrmf']>0) {
               $neworder->headerdata['payment'] = $modules['hrmf'];
             }
