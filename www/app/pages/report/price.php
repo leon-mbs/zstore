@@ -37,11 +37,11 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('showimage'));
 
         $catlist = array();
-        foreach (Category::getList( ) as $k => $v) {
-            if($v->noprice==1) {
+        foreach (Category::findYield("cat_id in (select cat_id from items where disabled <>1 )", "cat_name") as $c) {
+            if($c->noprice==1) {
                 continue;
             }
-            $catlist[$k] = $v;
+            $catlist[$c->cat_id] = $c->cat_name;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
         $this->filter->add(new TextInput('searchbrand'));

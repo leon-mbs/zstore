@@ -9,7 +9,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
-        <link rel="stylesheet" href="/assets/css/bootstrap.css">
+        <link rel="stylesheet" href="/assets/css/adminlte.css">
       
      
         <script src="/assets/fontawesome/js/all.js" ></script>
@@ -18,7 +18,7 @@
         
        
     </head>
-    <body>
+    <body class="dark-mode">
     <style>
     
       .textcat {
@@ -26,13 +26,27 @@
       }
       .textprice {
           font-size:18px;
-          color:red;
+          color:yellow;
           font-weight: bolder;
+      }  
+      .textval {
+          font-size:18px;
+     
+         
       }
-      .img {
+    .dark-mode .fa {
+       color: white;
+    }
+    .dark-mode .fas {
+       color: white;
+    }
+
+    .dark-mode a {
+       color: #ccf;      
+    }   
+   .img {
          width:128px;
-      }
-    
+      }    
     </style>
     
       <div class="container-fluid ">
@@ -40,20 +54,20 @@
             <div class="mt-2  col-12 col-sm-6 col-md-4  col-xl-3  ">
                  <div class="row ">
                      <div class="col-auto">
-                        <h4> <a style="font-family:Georgia;text-decoration:none" href="/menu"> {{name}} </a> </h4>
+                        <h4> <a style="color: white;font-family:Georgia;text-decoration:none" href="/menu"> {{name}} </a> </h4>
                     </div>
                      <div class="col-auto  text-right pl-2">
-                         <i class="fa fa-phone"></i>  {{phone}}
+                         <i class="fa fa-phone text-success"></i>  {{phone}}
                     </div>
                     
                   
                     {{^list}}
                     <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-outline-secondary w-50" href="/menu/1"> {{bmname}} </a> </h4>    
+                         <h4  > <a class="btn btn-secondary w-50" href="/menu/1"> {{bmname}} </a> </h4>    
                     </div>
                       {{#secondm}}
                     <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-outline-secondary  w-50" href="/menu/2"> {{smname}} </a> </h4>    
+                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/2"> {{smname}} </a> </h4>    
                     </div>
                       {{/secondm}}                    
                     {{/list}}  
@@ -81,15 +95,11 @@
                             <td colspan="2" ><br><br><b> {{itemname}}</b></td>
                           </tr>
                           <tr>
-                            <td class="textprice" >   {{price}}  грн</td>
-                            <td class="textprice"  align="right" >  {{customsize}} </td>
+                            <td  >  <span class="textprice"> {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (на винос  {{priceout}}  грн )      {{/priceout}}  </td>
+                            <td class="textval"  align="right" >  {{customsize}} </td>
                           </tr>
-                          {{#priceout}}
-                       <tr>
-                            <td  colspan="2" > <small>  Ціна на винос   {{priceout}}  грн </small></td>
-
-                          </tr>
-                           {{/priceout}}
+                      
+                        
                          <tr>
                             <td  valign="top"    > <small> {{desc}} </small> </td>
                             <td  ><img class="img" src="{{imglink}}" > </td>
