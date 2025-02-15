@@ -213,8 +213,10 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->docpanel->editserdetail->add(new TextInput('editserprice'));
 
-        $this->docpanel->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
-        $this->docpanel->editserdetail->editser->onChange($this, 'OnChangeSer', true);
+
+        $this->docpanel->editserdetail->add(new DropDownChoice('editser', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeSer', true);
+           
+
 
         $this->docpanel->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
         $this->docpanel->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
@@ -615,8 +617,8 @@ class ARMPos extends \App\Pages\Base
     public function sereditOnClick($sender) {
         $ser = $sender->owner->getDataItem();
         $this->docpanel->editserdetail->setVisible(true);
-        $this->docpanel->editserdetail->editser->setKey($ser->service_id);
-        $this->docpanel->editserdetail->editser->setText($ser->service_name);
+        $this->docpanel->editserdetail->editser->setValue($ser->service_id);
+
         $this->docpanel->editserdetail->editserquantity->setText($ser->quantity);
         $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
@@ -755,7 +757,7 @@ class ARMPos extends \App\Pages\Base
 
     public function saveserOnClick($sender) {
 
-        $id = $this->docpanel->editserdetail->editser->getKey();
+        $id = $this->docpanel->editserdetail->editser->getValue();
         if ($id == 0) {
             $this->setError("Не обрано послугу або роботу");
             return;
@@ -792,8 +794,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->detailser->Reload();
 
         //очищаем  форму
-        $this->docpanel->editserdetail->editser->setKey(0);
-        $this->docpanel->editserdetail->editser->setText('');
+        $this->docpanel->editserdetail->editser->setValue(0);
+
         $this->docpanel->editserdetail->editserquantity->setText("1");
         $this->docpanel->editserdetail->editserprice->setText("");
         $this->calcTotal();
@@ -938,12 +940,7 @@ class ARMPos extends \App\Pages\Base
         return Item::findArrayAC($text);
     }
 
-    public function OnAutoSer($sender) {
-
-        $text = trim($sender->getText());
-        $text = Service::qstr('%' . $text . '%');
-        return Service::findArray('service_name', "disabled <> 1 and service_name like {$text}");
-    }
+  
 
     public function OnChangeSer($sender) {
         $id = $sender->getKey();
