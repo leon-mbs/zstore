@@ -825,7 +825,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
                 $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
             }
             if($filter->to > 0) {
-                $where .= " and  document_date <= " . $conn->DBDate($filter->to) ;
+                $where .= " and  document_date <= " . $conn->DBTimeStamp($filter->to+3600*24-1) ;
             }
         }    
             

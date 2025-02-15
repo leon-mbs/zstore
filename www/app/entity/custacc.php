@@ -107,7 +107,7 @@ class CustAcc extends \ZCL\DB\Entity
 
 
         //сдачу в  бонусы
-        if($doc->headerdata['exch2b'] > 0 && $doc->headerdata['exchange']>0) {
+        if($doc->getHD('exch2b') > 0 && $doc->getHD('exchange')  ) {
             if($doc->headerdata['exch2b'] > $doc->headerdata['exchange']) {
                 $doc->headerdata['exch2b'] = $doc->headerdata['exchange']  ;
             }
