@@ -189,7 +189,7 @@ class Order extends \App\Pages\Base
             $this->docform->store->setValue($this->_doc->headerdata['store'] );
             
             
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment'] ??0);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
 
@@ -610,7 +610,7 @@ class Order extends \App\Pages\Base
             if ($this->_doc->headerdata['paytype'] == 2) {
                 $this->_doc->setHD('waitpay',1); 
             }   
-            
+           
                      
             $this->_doc->save();
 
@@ -621,12 +621,12 @@ class Order extends \App\Pages\Base
                                          
             if ($sender->id == 'execdoc'  ) {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                  
+               
             }
          
             
 
-            if($this->_doc->getHD('doreserv')==1) {
+            if($this->_doc->getHD('doreserv')==1  || ($sender->id == 'execdoc'  && $this->_doc->headerdata['store'] >0) ) {
                $this->_doc->reserve(); 
             }
             $conn->CommitTrans();
