@@ -120,11 +120,10 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $puorder['id'];
             $neworder->headerdata['puorderback'] = 0;
             $neworder->headerdata['salesource'] = $modules['pusalesource'];
-            if($modules['pumf']>0) {
-              $neworder->headerdata['payment'] = $modules['pumf'];
-            }
-            $neworder->headerdata['paytype'] = 2;  //постоплата
-
+            $neworder->headerdata['paytype'] = $defpaytype;  //постоплата
+            $neworder->headerdata['payment'] = $defmf;   
+            $neworder->headerdata['store'] = $defstore;   
+ 
             $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
 
             $neworder->amount = H::fa($puorder['price']);
@@ -170,6 +169,9 @@ class Orders extends \App\Pages\Base
 
     public function onImport($sender) {
         $modules = System::getOptions("modules");
+        $defpaytype=intval($modules['pupaytype']);
+        $defstore=intval($modules['pustore']);
+        $defmf=intval($modules['pumf']);
 
         foreach ($this->_neworders as $shoporder) {
             $shoporder->document_number = $shoporder->nextNumber();
@@ -203,9 +205,7 @@ class Orders extends \App\Pages\Base
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
-            if($modules['pusetpayamount']==1) {
-                $shoporder->updateStatus(Document::STATE_WP);
-            }
+     
 
 
         }

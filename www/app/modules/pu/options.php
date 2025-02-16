@@ -32,9 +32,16 @@ class Options extends \App\Pages\Base
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['pupricetype']));
         $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['pumf']??0));
+        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['pustore']??0));
+      
+        $pt=[];
+        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[2] = 'Постооплата';
+        $pt[3] = 'Оплата в Чеку або ВН';
+        
+        $form->add(new DropDownChoice('defpaytype',$pt, $modules['згpaytype']??0));
 
 
-        $form->add(new CheckBox('setpayamount', $modules['pusetpayamount']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['pusalesource']));
         $form->add(new CheckBox('ssl', $modules['pussl']));
 
@@ -47,15 +54,26 @@ class Options extends \App\Pages\Base
     public function saveOnClick($sender) {
 
         $apitoken = $this->cform->apitoken->getText();
-        $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
-
+      
         $pricetype = $this->cform->defpricetype->getValue();
-        $defmf = $this->cform->defmf->getValue();
+        $mf = $this->cform->defmf->getValue();
+        $store = $this->cform->defstore->getValue();
+        $paytype = intval($this->cform->defpaytype->getValue() );
         $salesource = $this->cform->salesource->getValue();
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
         if (strlen($pricetype) < 2) {
             $this->setError('Не вказано тип ціни');
+            return;
+        }
+        if ( $paytype==0) {
+
+            $this->setError('Не вказано тип оплати');
+            return;
+        }
+        if ( $paytype==1 && $mf==0) {
+
+            $this->setError('Не вказано касу');
             return;
         }
 
@@ -66,10 +84,13 @@ class Options extends \App\Pages\Base
         // $modules['pusite'] = "http://my.prom.ua/";
         $modules['puapitoken'] = $apitoken;
 
+        $modules['pupaytype'] = $paytype;
+        $modules['pumf'] = $mf;
+        $modules['pustore'] = $store;
         $modules['pupricetype'] = $pricetype;
-        $modules['pumf'] = $defmf;
+        $modules['pustoreшв'] = $store;
+        $modules['pupricetype'] = $pricetype;
         $modules['pusalesource'] = $salesource;
-        $modules['pusetpayamount'] = $setpayamount;
         $modules['puinsertcust'] = $insertcust;
         $modules['pussl'] = $this->cform->ssl->isChecked() ? 1 : 0;
 
