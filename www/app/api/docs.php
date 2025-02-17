@@ -235,7 +235,8 @@ class docs extends JsonRPC
      
         $doc = Document::create('Order');
         $doc->headerdata["outnumber"] = $args['number'];
-  
+        $doc->headerdata["paytype"] = 2;
+       
         $doc->document_number = $doc->nextNumber();
         
 

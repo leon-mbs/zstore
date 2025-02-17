@@ -50,36 +50,45 @@
 
                     </div>
                    <div class="form-group   ">
-                        <label for="defmf">Каса за замовчанням</label>
+                        <label for="defpaytype">Тип оплати </label>
+
+                        <select class="form-control" zippy="defpaytype">
+                            <option value="0">Не вказано</option>
+
+                        </select>
+                        
+
+                    </div>
+                   
+                    <div class="form-group   ">
+                        <label for="defmf">Каса </label>
 
                         <select class="form-control" zippy="defmf">
                             <option value="0">Не вказана</option>
 
                         </select>
-                        <small class="form-text text-muted">Якщо оплата  не  на  стороні IM </small>
+                        <small class="form-text text-muted">Обов`язуова  якщо тип оплати  - передплата </small>
 
                     </div>
-                    <div class="form-check">
-                        <input zippy="outcome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="outcome">Тільки списання товару</label>
-                        <small class="form-text text-muted"> Замість замовлення створювати і автоматично проводити ТТН. 
-                        Використовується, якщо замовлення обробляються на стороні IМ.</small>
-                        <br>
+                    <div class="form-group   ">
+                        <label for="defstore">Склад</label>
+
+                        <select class="form-control" zippy="defstore">
+                            <option value="0">Не вказаний</option>
+
+                        </select>
+                        <small class="form-text text-muted">Для  автоматичного резервування товару  </small>
+
                     </div>
+                
                     <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="insertcust">Iмпортувати контрангентiв </label>
                         <small class="form-text text-muted">Iмпортувати клiентiв з IМ в довiдник контрагентiв.</small>
                         <br>
                     </div>
-
-                    <div class="form-check">
-                        <input zippy="setpayamount" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="setpayamount">Ставити статус  До сплати  </label>
-                        
-                        <br>
-                    </div>
-                        
+              
+                            
                     <div class="form-group">
                         <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
                             

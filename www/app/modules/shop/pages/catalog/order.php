@@ -248,9 +248,11 @@ class Order extends Base
                 'email'         => $email,
                 'deltime'       => $time,
                 'phone'         => $phone,
+                'store'         => $store_id,
                 'ship_address'  => $address,
                 'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
+                'paytype'       => 2,
                 'totaldisc'     => $this->disc,
                 'total'         => $amount
             );
@@ -330,14 +332,7 @@ class Order extends Base
             if ($shop['ordertype'] == 1) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
             } else {
-
-                if($payment == 1) {
-                    $order->updateStatus(Document::STATE_WP);
-                } else {
-                    $order->updateStatus(Document::STATE_INPROCESS);
-                }
-
-
+                $order->updateStatus(Document::STATE_INPROCESS);
             }
 
 

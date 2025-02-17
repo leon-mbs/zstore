@@ -39,7 +39,10 @@ class Order extends \App\Pages\Base
     */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
+       
+        $common = \App\System::getOptions("common");
 
+  
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -52,7 +55,7 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'))->setVisible(false);
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(),H::getDefMF()));
         $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
 
         $this->docform->add(new TextInput('editbonus'));
@@ -79,8 +82,11 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
-
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'],0  ))->onChange($this, 'OnPayType');
+        $paytype=0;
+        if(intval($common['paytypeout']) == 1) {
+           $paytype=1;  
+        }
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $paytype ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
@@ -183,7 +189,7 @@ class Order extends \App\Pages\Base
             $this->docform->store->setValue($this->_doc->headerdata['store'] );
             
             
-            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->payment->setValue($this->_doc->headerdata['payment'] ??0);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->total->setText($this->_doc->amount);
 
@@ -604,7 +610,7 @@ class Order extends \App\Pages\Base
             if ($this->_doc->headerdata['paytype'] == 2) {
                 $this->_doc->setHD('waitpay',1); 
             }   
-            
+           
                      
             $this->_doc->save();
 
@@ -615,12 +621,12 @@ class Order extends \App\Pages\Base
                                          
             if ($sender->id == 'execdoc'  ) {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                  
+               
             }
          
             
 
-            if($this->_doc->getHD('doreserv')==1) {
+            if($this->_doc->getHD('doreserv')==1  || ($sender->id == 'execdoc'  && $this->_doc->headerdata['store'] >0) ) {
                $this->_doc->reserve(); 
             }
             $conn->CommitTrans();

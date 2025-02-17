@@ -54,6 +54,9 @@ class Orders extends \App\Pages\Base
 
     public function filterOnSubmit($sender) {
         $modules = System::getOptions("modules");
+        $defpaytype=intval($modules['hrpaytype']);
+        $defstore=intval($modules['hrstore']);
+        $defmf=intval($modules['hrmf']);
 
         $st = $this->filter->status->getValue();
          
@@ -133,11 +136,11 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $hrorder['order_id'];
             $neworder->headerdata['hrorderback'] = 0;
             $neworder->headerdata['salesource'] = $modules['hrsalesource'];
-            $neworder->headerdata['paytype'] = 2;  //постоплата
+            $neworder->headerdata['paytype'] = $defpaytype;  //постоплата
+            $neworder->headerdata['payment'] = $defmf;   
+            $neworder->headerdata['store'] = $defstore;   
  
-            if($modules['hrmf']>0) {
-              $neworder->headerdata['payment'] = $modules['hrmf'];
-            }
+           
             $neworder->headerdata['hrclient'] = $hrorder['delivery_name'] ;
 
             $neworder->amount = H::fa($amount);

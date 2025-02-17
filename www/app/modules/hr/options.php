@@ -34,6 +34,14 @@ class Options extends \App\Pages\Base
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['hrpricetype']));
         $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['hrmf']??0));
+        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['hrstore']??0));
+      
+        $pt=[];
+        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[2] = 'Постоплата';
+        $pt[3] = 'Оплата в Чеку або ВН';
+        
+        $form->add(new DropDownChoice('defpaytype',$pt, $modules['hrpaytype']??0));
 
 
 
@@ -53,7 +61,9 @@ class Options extends \App\Pages\Base
         $password = $this->cform->password->getText();
       
         $pricetype = $this->cform->defpricetype->getValue();
-        $defmf = $this->cform->defmf->getValue();
+        $mf = $this->cform->defmf->getValue();
+        $store = $this->cform->defstore->getValue();
+        $paytype = intval($this->cform->defpaytype->getValue() );
         $salesource = $this->cform->salesource->getValue();
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
@@ -61,7 +71,16 @@ class Options extends \App\Pages\Base
             $this->setError('Не вказано тип ціни');
             return;
         }
+        if ( $paytype==0) {
 
+            $this->setError('Не вказано тип оплати');
+            return;
+        }
+        if ( $paytype==1 && $mf==0) {
+
+            $this->setError('Не вказано касу');
+            return;
+        }
         $site = trim($site, '/');
 
         $modules = System::getOptions("modules");
@@ -70,7 +89,9 @@ class Options extends \App\Pages\Base
         $modules['hrlogin'] = $login;
         $modules['hrpassword'] = $password;
 
-        $modules['hrmf'] = $defmf;
+        $modules['hrmf'] = $mf;
+        $modules['hrstore'] = $store;
+        $modules['hrpaytype'] = $paytype;
         $modules['hrpricetype'] = $pricetype;
         $modules['hrsalesource'] = $salesource;
         $modules['hrinsertcust'] = $insertcust;
