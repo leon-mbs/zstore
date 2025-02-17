@@ -136,7 +136,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
-        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
+        $this->_tvars["horoshop"] = 0;//todo  remove $modules['horoshop'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
        
 

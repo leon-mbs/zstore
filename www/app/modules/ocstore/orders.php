@@ -48,7 +48,7 @@ class Orders extends \App\Pages\Base
         $this->add(new Form('filter2'))->onSubmit($this, 'onImport');
         $pt=[];
         $pt[1] = 'Оплата зразу (передплата)';
-        $pt[2] = 'Постооплата';
+        $pt[2] = 'Постоплата';
         $pt[3] = 'Оплата в Чеку або ВН';
         $pt[4] = 'Тiльки списати зi складу';
           

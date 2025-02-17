@@ -36,7 +36,7 @@ class Options extends \App\Pages\Base
       
         $pt=[];
         $pt[1] = 'Оплата зразу (передплата)';
-        $pt[2] = 'Постооплата';
+        $pt[2] = 'Постоплата';
         $pt[3] = 'Оплата в Чеку або ВН';
         
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['згpaytype']??0));
