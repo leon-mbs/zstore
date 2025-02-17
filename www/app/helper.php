@@ -514,6 +514,18 @@ class Helper
     }
 
     /**
+     * Возвращает тип оплаты  по  умолчанию
+     *
+     */
+    public static function getDefPayType() {
+        $user = System::getUser();
+   
+        return intval($user->defpaytype);
+      
+
+     
+    }
+   /**
      * Возвращает расчетный счет  по  умолчанию
      *
      */

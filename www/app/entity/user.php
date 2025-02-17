@@ -19,6 +19,7 @@ class User extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->defpaytype = 0;
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
@@ -98,6 +99,7 @@ class User extends \ZCL\DB\Entity
         $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
+        $this->defpaytype = (int)$options['defpaytype'];
         $this->defsalesource = $options['defsalesource'] ??0 ;
         $this->pagesize = (int)$options['pagesize'];
         $this->phone = $options['phone']?? '';
@@ -147,6 +149,7 @@ class User extends \ZCL\DB\Entity
         $options['defstore'] = $this->defstore;
         $options['deffirm'] = $this->deffirm;
 
+        $options['defpaytype'] = $this->defpaytype;
         $options['defmf'] = $this->defmf;
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;

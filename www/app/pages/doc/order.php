@@ -82,11 +82,8 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
-        $paytype=0;
-        if(intval($common['paytypeout']) == 1) {
-           $paytype=1;  
-        }
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $paytype ))->onChange($this, 'OnPayType');
+ 
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], H::getDefPayType() ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
