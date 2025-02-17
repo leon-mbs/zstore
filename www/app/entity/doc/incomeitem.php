@@ -18,7 +18,8 @@ class IncomeItem extends Document
         $conn = \ZDB\DB::getConnect();
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
-
+            $item->quantity = doubleval($item->quantity)   ;
+            $item->price = doubleval($item->price)   ;
             $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);

@@ -533,6 +533,19 @@ class OrderList extends \App\Pages\Base
         if ($this->_doc->hasPayments()) {
             $this->statuspan->statusform->bpos->setVisible(false);
         }
+        
+        $pt= $this->_doc->getHD('paytype');
+        
+        if ($pt ==1 ||  $pt==2) {
+            $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+        }
+        if ($pt ==3  ) {
+            $this->statuspan->statusform->bttn->setVisible(false);
+        
+        }
+        
+        
     }
 
     //просмотр

@@ -298,7 +298,11 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->setVisible(false);
         }
         
+        $pt= $this->_doc->getHD('paytype');
         
+        if ($pt ==1 ||  $pt==2) {
+            $this->statuspan->statusform->bpos->setVisible(false);
+        }        
         
     }
 
