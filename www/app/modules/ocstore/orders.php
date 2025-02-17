@@ -266,17 +266,19 @@ class Orders extends \App\Pages\Base
                $neworder->headerdata['payment'] = $modules['ocmf'];
         
             }
-        
+            if ($neworder->headerdata['paytype'] == 2) {
+                $neworder->setHD('waitpay',1); 
+            }        
             $neworder->save();
             
-            if($neworder->headerdata['store']>0) {
-                $neworder->reserve();   //если задан  склад резервируем товары
-            }            
              
             $neworder->updateStatus(Document::STATE_NEW);
   
             $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
           
+            if($neworder->headerdata['store']>0) {
+                $neworder->reserve();   //если задан  склад резервируем товары
+            }            
 
 
             $i++;

@@ -436,7 +436,7 @@ class Import extends \App\Pages\Base
             $itlist = array();
             foreach ($newitems as $item) {
                 $itlist[$item->item_id] = $item;
-                $amount = $amount + ($item->quantity * $item->price);
+                $amount = $amount + (doubleval($item->quantity) * doubleval($item->price ));
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
