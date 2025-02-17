@@ -26,6 +26,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
+use App\Application as App;
 
 /**
  * АРМ кассира

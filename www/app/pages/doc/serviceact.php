@@ -105,7 +105,7 @@ class ServiceAct extends \App\Pages\Base
         $ret['doc']['customer_name']   =   $this->_doc->customer_name ;
         $ret['doc']['store']   =   $this->_doc->headerdata['store'] ?? 0;
         $ret['doc']['payment']   =   $this->_doc->headerdata['payment'] ?? 0;
-        $ret['doc']['paytype']   =   $this->_doc->headerdata['paytype'] ?? 0;
+        $ret['doc']['paytype']   =   $this->_doc->headerdata['paytype'] ?? H::getDefPayType();
         $ret['doc']['contract_id']   =   $this->_doc->headerdata['contract_id'] ?? 0;
         $ret['doc']['device']   =   $this->_doc->headerdata['device'] ?? '';
         $ret['doc']['devsn']   =   $this->_doc->headerdata['devsn'] ?? '';
