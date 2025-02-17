@@ -259,7 +259,9 @@ class OrderList extends \App\Pages\Base
 
         }
         $this->listpanel->doclist->Reload(false);
-
+        $this->statuspan->setVisible(false);    
+        $this->_doc = null;            
+        $this->listpanel->doclist->Reload(false);
     }
 
 
