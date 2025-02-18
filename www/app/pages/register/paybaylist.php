@@ -130,7 +130,7 @@ GROUP BY c.customer_name,
  
         $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
+             WHERE  d.state > 4 and  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";

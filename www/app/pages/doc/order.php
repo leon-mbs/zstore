@@ -223,7 +223,7 @@ class Order extends \App\Pages\Base
                 $it->checked = false;
                 $this->_tovarlist[]=$it;
             }
-
+             $this->calcPay();
 
         } else {
             $this->_doc = Document::create('Order');
@@ -256,7 +256,7 @@ class Order extends \App\Pages\Base
                         $this->OnPayType($this->docform->paytype);
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
-
+                        
 
                         $this->docform->total->setText(H::fa($basedoc->amount));
 
@@ -579,13 +579,13 @@ class Order extends \App\Pages\Base
             $this->_doc->headerdata['payment'] = 0;
             $this->_doc->headerdata['store'] = $this->docform->store->getValue() ;
             $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
+            $this->_doc->headerdata['payment'] = intval( $this->docform->payment->getValue() );
 
             
             if ($this->_doc->headerdata['paytype'] == 1) {
                 $this->_doc->payed = doubleval($this->docform->payed->getText());
                 $this->_doc->headerdata['payed'] = $this->_doc->payed;
-                $this->_doc->headerdata['payment'] = intval( $this->docform->payment->getValue() );
-
+         
                 if ($this->_doc->payed > $this->_doc->payamount) {
                     $this->setError('Внесена сума більше необхідної');
                     return;
@@ -847,7 +847,7 @@ class Order extends \App\Pages\Base
      
     public function OnPayType($sender) {
          $this->docform->payed->setVisible($sender->getValue()==1);
-         $this->docform->payment->setVisible($sender->getValue()==1);
+         $this->docform->payment->setVisible($sender->getValue()!=3);
     }
     
     public function OnDelivery($sender) {

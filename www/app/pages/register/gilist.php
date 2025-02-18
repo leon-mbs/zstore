@@ -874,6 +874,7 @@ class GIList extends \App\Pages\Base
             }
             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
+            $this->_doc->headerdata['moneyback'] = $moneyback;
             $this->_doc->save();
             $this->setSuccess("Створено декларацію номер " . $this->_doc->headerdata['ship_number']);
 

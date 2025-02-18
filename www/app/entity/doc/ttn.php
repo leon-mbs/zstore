@@ -291,7 +291,7 @@ class TTN extends Document
                // $this->DoBalans() ;
             }
             
-            if ($this->headerdata['ship_amount'] > 0  ) {
+            if ($this->headerdata['ship_amount'] > 0  ) {   //расходы на  доставку
                
                 \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['ship_amount'], \App\Entity\IOState::TYPE_SALE_OUTCOME);
 
@@ -305,7 +305,28 @@ class TTN extends Document
 
                     if( count( $order->getNotSendedItem() ) >0 ) return;
                     
-                    if( $order->payed >= $order->payanount   )  {
+                    
+                    if($this->headerdata['moneyback'] >0  ) { //обратная  доставка  денег
+                         $mf = intval($order->headerdata['payment'] );
+                         if($mf==0)  {
+                            $mf = \App\Helper::getDefMF()  ;
+                         }
+                       
+                         if($order->state == Document::STATE_WP  || ($order->getHD('paytype')==2 && $order->getHD('waitpay')==1  )  )    {
+                             $order->payed = \App\Entity\Pay::addPayment($order->document_id, $this->document_date, $this->headerdata['moneyback'], $mf);
+                             $order->setHD('waitpay',0) ;
+                             $order->save();
+                             $order->DoBalans() ;
+                             if( $order->payed >= $order->payamount   )  {
+                                $order->updateStatus(Document::STATE_PAYED);
+                             }
+                         }
+                         
+                         
+                    }
+                    
+                    
+                    if( $order->payed >= $order->payamount   )  {
                         $order->updateStatus(Document::STATE_CLOSED);
                     }
                         
