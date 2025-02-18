@@ -30,6 +30,7 @@ class Inventory extends \App\Pages\Base
     private $_doc;
     private $_rowid    = -1;
     private $_qint     = false;
+    private $_showqty     = false;
 
     /**
     * @param mixed $docid     редактирование
@@ -40,6 +41,7 @@ class Inventory extends \App\Pages\Base
         $qtydigits = \App\System::getOption("common",'qtydigits');
         
         $this->_qint = intval($qtydigits)==0;
+        $this->_showqty =  \App\System::getUser()->rolename=='admins' ;
         
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -113,9 +115,9 @@ class Inventory extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
-        //  $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('quantity', $this->_showqty ? H::fqty($item->quantity) : '-' ));
         $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this, "onText", true);
-
+      
         if($this->_qint) {
            $row->qfact->setAttribute('type', 'number');            
         }
@@ -183,13 +185,14 @@ class Inventory extends \App\Pages\Base
 
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_id==$item->item_id && $it->snumber==$item->snumber) {
-                $this->setError("ТМЦ  уже  в  списку") ;
+                $this->setError("ТМЦ  вже  в  списку") ;
                 return;
             }
         }
         $this->_itemlist[] = $item;
 
-
+        $this->setInfo("На облiку {$item->quantity} по  факту {$item->qfact}");
+  
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -393,7 +396,7 @@ class Inventory extends \App\Pages\Base
         
         foreach (Item::findYield($w, 'itemname') as $item) {
             $item->qfact = 0;
-            $item->quantity = 0;
+            $item->quantity = $item->getQuantity($store_id);
             $this->_itemlist[$item->item_id] = $item;
         }
         $this->docform->detail->Reload();
@@ -410,7 +413,8 @@ class Inventory extends \App\Pages\Base
                 $d= $this->_itemlist[$i]->qfact;
                 $qf= doubleval($d) ;
                 $this->_itemlist[$i]->qfact = $qf + 1;
-
+                $this->setInfo("На облiку {$this->_itemlist[$i]->quantity} по  факту {$this->_itemlist[$i]->qfact}");
+  
                 // Издаем звук если всё ок
                 App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
 
@@ -471,7 +475,8 @@ class Inventory extends \App\Pages\Base
         $d= $this->_itemlist[$item->item_id]->qfact;
         $qf= doubleval($d) ;
         $this->_itemlist[$item->item_id]->qfact = $qf + 1;
-
+        $this->setInfo("На облiку {$this->_itemlist[$item->item_id]->quantity} по  факту {$this->_itemlist[$item->item_id]->qfact}");
+  
 
         $this->docform->detail->Reload();
     }
