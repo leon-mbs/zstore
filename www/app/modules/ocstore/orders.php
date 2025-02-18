@@ -140,12 +140,12 @@ class Orders extends \App\Pages\Base
         if($sender->paytype->getValue() ==4) {
             $this->onOutcome( );            
         }   else{
-            $this->onOrder($pt); 
+            $this->onOrder( ); 
         }
         
     }
     public function onOrder($defpaytype ) {
-        $defpaytype = $sender->paytype->getValue() ;
+        $defpaytype = $this->filter2->paytype->getValue() ;
             
         $modules = System::getOptions("modules");
         $defstore=intval($modules['ocstoreid']);
