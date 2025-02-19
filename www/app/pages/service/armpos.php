@@ -944,7 +944,7 @@ class ARMPos extends \App\Pages\Base
   
 
     public function OnChangeSer($sender) {
-        $id = $sender->getKey();
+        $id = $sender->getValue();
         $ser = Service::load($id);
         $customer_id = $this->docpanel->form2->customer->getKey();
 
