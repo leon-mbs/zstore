@@ -342,7 +342,7 @@ class GoodsIssue extends Document
                         $order->updateStatus(Document::STATE_DELIVERED);
                     }                            
               
-                    if($this->payed  >= $this->payanount  ) {  //если  оплачено  
+                    if($this->payed  >= $this->payamount  ) {  //если  оплачено  
                         if ($order->state == Document::STATE_DELIVERED) {
                             $order->updateStatus(Document::STATE_CLOSED);
                         }

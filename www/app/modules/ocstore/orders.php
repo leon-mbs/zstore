@@ -140,12 +140,12 @@ class Orders extends \App\Pages\Base
         if($sender->paytype->getValue() ==4) {
             $this->onOutcome( );            
         }   else{
-            $this->onOrder($pt); 
+            $this->onOrder( ); 
         }
         
     }
-    public function onOrder($defpaytype ) {
-        $defpaytype = $sender->paytype->getValue() ;
+    public function onOrder(  ) {
+        $defpaytype = $this->filter2->paytype->getValue() ;
             
         $modules = System::getOptions("modules");
         $defstore=intval($modules['ocstoreid']);
@@ -209,7 +209,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['pricetype'] = 'price1';
             $neworder->headerdata['salesource'] = $modules['ocsalesource'];
             $neworder->headerdata['paytype'] = $defpaytype;  
-            $neworder->headerdata['paytypename'] = $sender->paytype->getValueName() ;  
+            $neworder->headerdata['paytypename'] = $this->filter2->paytype->getValueName() ;  
             $neworder->headerdata['payment'] = $defmf ; 
             if($neworder->headerdata['paytype']==2) {
                 $neworder->headerdata['waitpay'] =1;   //ждет оплату

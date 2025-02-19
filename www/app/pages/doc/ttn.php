@@ -188,6 +188,7 @@ class TTN extends \App\Pages\Base
                         $this->_doc->headerdata['baycityname'] = $basedoc->headerdata['baycityname'];
                         $this->_doc->headerdata['baypoint'] = $basedoc->headerdata['baypoint'];
                         $this->_doc->headerdata['baypointname'] = $basedoc->headerdata['baypointname'];
+                   //     $this->_doc->headerdata['moneyback'] = $basedoc->payamount;
  
                         $notfound = array();
                         $order = $basedoc->cast();

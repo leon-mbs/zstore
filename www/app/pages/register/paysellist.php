@@ -318,6 +318,9 @@ GROUP BY c.customer_name,
         $this->paypan->payform->pamount->setText(H::fa($amount));
         $this->paypan->payform->pcomment->setText("");
         $this->paypan->pname->setText($this->_doc->document_number);
+        if($this->_doc->getHD('payment') >0) {
+            $this->paypan->payform->payment->setValue($this->_doc->getHD('payment'));
+        }
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();

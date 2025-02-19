@@ -97,7 +97,7 @@
                             <th><a zippy="sortcode">Артикул</a></th>
 
                            <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
-                             <!--     <th width="40"  class="text-right" >Кiл. </th> -->
+                           <th width="40"  class="text-right" >Кiл. </th> 
 
                             <th width="40" class="text-center">Факт. кіл.</th>
 
@@ -112,7 +112,7 @@
 
                               <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
                         
-                            <!--    <td zippy="quantity"  class="text-right" ></td>-->
+                             <td zippy="quantity"  class="text-right" ></td> 
 
                             <td class="text-center">
                                 <input class="form-control qtyprice"   pattern="[0-9,\.]+" style="width:100px;" zippy="qfact">
@@ -345,6 +345,12 @@
                 // alert($('#barcode').val());
                 $('#addcode').click()
             }
+        }
+
+        function check_loadall(ele) {
+            document.getElementById('dialogwait').showModal()
+            return true;
+            
         }
 
 
