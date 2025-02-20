@@ -478,4 +478,37 @@ class POSCheck extends Document
         
     }
 
+    
+   protected function onState($state, $oldstate) {
+        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'Order' && $order->state > 4) {
+
+                          
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+            
+                    if($order->state == Document::STATE_INSHIPMENT || 
+                        $order->state == Document::STATE_INPROCESS ||  
+                        $order->state == Document::STATE_FINISHED ||  
+                        $order->state == Document::STATE_READYTOSHIP) {
+                            
+                        $order->updateStatus(Document::STATE_DELIVERED);
+                    }                            
+                    \App\Helper::log("order  state {$order->state} payamount {$this->payamount} payed  {$this->payed}  ");
+                    if($this->payed  >= $this->payamount  ) {  //если  оплачено  
+                        if ($order->state == Document::STATE_DELIVERED) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                        }
+                    }
+                    
+                
+
+                }
+            }
+        }
+    }
+     
+    
 }

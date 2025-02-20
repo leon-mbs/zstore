@@ -370,14 +370,24 @@ class CheckBox
         $ret["checkid"] = $response['id'];
 
 
-        $receipt = $this->GetRawReceipt($ret["checkid"]);
-        $response = json_decode($receipt, true);
 
-        $ret["fiscnumber"] = $response['fiscal_code']  ;
-        $ret["tax_url"] = $response['tax_url']  ;
+        $counter=10;
+        while (--$counter >0) {
+            sleep(1)  ;
+            $receipt = $this->GetRawReceipt($ret["checkid"]);
+            $response = json_decode($receipt, true);
 
+            $ret["fiscnumber"] = $response['fiscal_code']  ;
+            $ret["tax_url"] = $response['tax_url']  ;
+            if(strlen($ret["fiscnumber"]) >0) {
+                return $ret;  
+            }
 
-        return $ret;
+                
+        }
+  
+        throw new \Exception("Не повернено фіскальний номер");
+   
 
     }
 
@@ -497,15 +507,22 @@ class CheckBox
         $ret["checkid"] = $response['id'];
 
 
-        $receipt = $this->GetRawReceipt($ret["checkid"]);
-        $response = json_decode($receipt, true);
+        $counter=10;
+        while (--$counter >0) {
+            sleep(1)  ;
+            $receipt = $this->GetRawReceipt($ret["checkid"]);
+            $response = json_decode($receipt, true);
 
-        $ret["fiscnumber"] = $response['fiscal_code']  ;
-        $ret["tax_url"] = $response['tax_url']  ;
+            $ret["fiscnumber"] = $response['fiscal_code']  ;
+            $ret["tax_url"] = $response['tax_url']  ;
+            if(strlen($ret["fiscnumber"]) >0) {
+                return $ret;  
+            }
 
-
-        return $ret;
-
+                
+        }
+  
+        throw new \Exception("Не повернено фіскальний номер");
     }
 
 

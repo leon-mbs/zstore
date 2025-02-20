@@ -558,8 +558,8 @@ class DocList extends \App\Pages\Base
             return;
         }
         if(strlen($doc->headerdata["fiscalnumber"]??'')>0) {
-            $this->setWarn('Відмінено фіскалізований документ') ;
-
+            $this->setError('Не можна  скасовувати фіскалізований документ') ;
+            return;
         }
 
 
