@@ -356,6 +356,9 @@ class Document extends \ZCL\DB\Entity
  
     }
 
+ 
+    
+    
     /**
      * создает  экземпляр  класса  документа   в   соответсии  с  именем  типа
      *
@@ -1191,22 +1194,7 @@ class Document extends \ZCL\DB\Entity
         return $url;
     }
   
-    /**
-     * проверка  может  ли  быть  отменен
-     * Возвращает  текст ошибки если  нет
-     */
-    public function canCanceled() {
-
-        $common = \App\System::getOptions('common') ;
-        $da = $common['actualdate'] ?? 0 ;
-
-        if($da>$this->document_date) {
-            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
-        }
-
-        return "";
-    }
-
+  
     public function getID() {
         return $this->document_id;
     }

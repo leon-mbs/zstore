@@ -507,6 +507,17 @@ class DocList extends \App\Pages\Base
 
         $doc = $doc->cast();
 
+        
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$doc->document_date) {
+           $this->setError("Не можна скасовувати документ старший " .date('Y-m-d', $da));
+           return;
+            
+        }
+        
+        
         //   if (false == \App\ACL::checkEditDoc($doc, true))
         //     return;
         $user = System::getUser();
@@ -516,7 +527,7 @@ class DocList extends \App\Pages\Base
                 //свой может  отменить
             } else {
 
-                $this->setError("Немає права відміняти документ " . $doc->meta_desc);
+                $this->setError("Немає права скасовувати документ " . $doc->meta_desc);
                 return;
             }
         }

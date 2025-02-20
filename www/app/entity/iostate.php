@@ -42,7 +42,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_OUTEQ            = 66;    // списание ОС
     public const TYPE_AMOR             = 67;    // амортизация ОС
 
-    //внебалансовые расходы (для  статичтики)   
+    //внебалансовые расходы (для  статиcтики)   
     public const TYPE_LOST             = 80;     //потери при инвентаризации
     public const TYPE_TRASH            = 81;     //отходы производства
  
