@@ -17,55 +17,79 @@
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
- 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-
-                </div>
-
-                <div class="col-12 col-md-3">
-                     <div class="form-group  ">
                         <label for="store">Зі складу</label>
                         <select class="form-control" zippy="store">
                         </select>
                     </div>
-                  <div class="form-group">
-                        <label for="fromitem">Вихідний ТМЦ </label>
-                        <input class="form-control" zippy="fromitem" placeholder="Почнiть вводити...">
-
-                    </div>
-                    <div class="form-group">
-                        <label for="fromquantity">Кількість</label>
-                        <div>
-                            <input style="width:100px;" type="text" zippy="fromquantity" class="form-control qtyprice"
-                                    required  pattern="[0-9,\.]+"/>
-                        </div>
-                    </div>
-                 </div>
-               <div class="col-12 col-md-3">
-                   <div class="form-group  ">
+                     <div class="form-group  ">
                         <label for="tostore">На склад</label>
                         <select class="form-control" zippy="tostore">
                         </select>
-                    </div>  
-                    <div class="form-group">
-                        <label for="toitem">Вхідний ТМЦ</label>
-                        <input class="form-control" zippy="toitem" placeholder="Почнiть вводити...">
-
+                    </div>                      
+                    <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+                        <input class="form-control" type="text" zippy="notes">
                     </div>
-                    <div class="form-group">
-                        <label for="toquantity">Кількість</label>
-                        <div>
-                            <input style="width:100px;" type="text" zippy="toquantity" class="form-control qtyprice"
-                                    required  pattern="[0-9,\.]+"/>
-                        </div>
-                    </div>
-                                    
 
+                </div>
+
+                <div class="col-12 col-md-7 col-xl-5">
+                 <div class="form-group row">
+                   <label class="col-2 col-form-label">  Вхідний ТМЦ     </label>
+                    <div class="col-auto">
+                      <input class="form-control" zippy="fromitem" placeholder="Почнiть вводити...">
+                       </div>
+                             <label class="col-auto col-form-label ml-2">  Кіл.     </label>
+                                     
+                        <div class="col-auto">
+                            <input style="width:75px;" type="text" zippy="fromquantity" class="form-control qtyprice"
+                                       pattern="[0-9,\.]+"/>
+                        </div>                       
+                       <div class="col-auto">  <input zippy="addfrom" type="submit" value="Додати" class="btn btn-success"> </div>                         
+                 </div>
+                   <table class="table table-sm">
+                       <tr zippy="fromlist">
+                          <td zippy="fromname"></td>  
+                          <td zippy="fromcode"></td>  
+                          <td zippy="fromqty"  class="text-right"></td>  
+                          <td zippy="fromprice" class="text-right"></td>
+                          <td style="width:30px;" ><a zippy="fromdel"><i class="fa fa-trash"></i></a></td>
+                       </tr>
+                       <tr >
+                           <th colspan="3" class="text-right">На суму:</th>  <th class="text-right" zippy="fromtotal"></th>
+                           <td></td>
+                       </tr>
+                   </table>
+                  <div class="form-group row">
+                   <label class="col-2 col-form-label">  Вихідний ТМЦ     </label>
+                    <div class="col-auto">
+                      <input class="form-control" zippy="toitem" placeholder="Почнiть вводити...">
+                       </div>
+                             <label class="col-auto col-form-label ml-2">  Кіл.     </label>
+                                     
+                       <div class="col-auto">
+                            <input style="width:75px;" type="text" zippy="toquantity" class="form-control qtyprice"
+                                       pattern="[0-9,\.]+"/>
+                        </div>                       
+                          <div class="col-auto">  <input zippy="addto" type="submit" value="Додати" class="btn btn-success"> </div>                         
+             </div>
+                 
+                  <table class="table table-sm">
+                       <tr zippy="tolist">
+                           <td zippy="toname"></td>  
+                           <td zippy="tocode"></td>  
+                           <td zippy="toqty"  class="text-right"></td>  
+                           <td   ><input onblur="calcTotal()" class="form-control salsum qtyprice" pattern="[0-9,\.]+" zippy="toprice" style="width:100px;"   ></td>
+                                               
+                            <td  style="width:30px;" ><a zippy="todel"><i class="fa fa-trash"></i></a></td>
+                       </tr>
+                       <tr >
+                           <th colspan="3" class="text-right">На суму:</th>  <th class="text-right" zippy="tototal"></th>
+                            <td></td>
+                       </tr>
+                   </table>
+                    <small ><i class="fa fa-exclamation-triangle"> Суми мають бути максимально однакові. Різницч буде зарахована відповідно в  витрати/прибутки</i><small>
                 </div>
             </div>
             <div class="row">
@@ -82,7 +106,25 @@
 
     </form>
 
+        <script>
 
+            function calcTotal() {
+                var total = 0;
+
+                $('.salsum').each(function (index, value) {
+                    var a = $(this).val();
+                    a = parseVal(a);
+                    total = total + a;
+
+
+
+                });
+
+                $('#tototal').text( fa( total)  )
+            }
+            
+          
+        </script>
 </body>
 
 </html>

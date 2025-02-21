@@ -5,49 +5,58 @@
         </td>
     </tr>
     <tr>
-        <td>
-            <b> Зі складу:</b>
+        <td colspan="4">
+            <b> Зі складу:</b>  {{from}}
         </td>
-        <td>
-            {{from}}
-        </td>
+     
 
     </tr>
-    <tr>
+{{#fromlist}}
+  <tr>
         <td>
-            <b>Вихідний ТМЦ:</b>
+           {{fromname}} 
         </td>
         <td>
-            {{fromitemname}}
+          {{fromcode}}     
         </td>
-    </tr>
-    <tr>
-        <td>
-            <b> На склад:</b>
+       <td>
+          {{fromqty}}      
         </td>
         <td>
-            {{to}}
+          {{fromprice}}      
         </td>
 
-    </tr>
-   <tr>
-        <td>
-            <b>Вхідний ТМЦ:</b>
-        </td>
-        <td>
-            {{toitemname}}
-        </td>
-    </tr>
+    </tr> 
+    {{/fromlist}}   
+
     <tr>
+        <td colspan="4">
+            <b> На склад:</b>   {{to}}
+        </td>
+     
+
+    </tr>    
+ {{#tolist}}
+  <tr>
         <td>
-            <b>Сума:</b>
+           {{toname}} 
         </td>
         <td>
-            {{amount}}
+          {{tocode}}     
         </td>
-    </tr>
+       <td>
+          {{toqty}}      
+        </td>
+        <td>
+          {{toprice}}      
+        </td>
+
+    </tr> 
+    {{/tolist}}   
+
+  
     <tr>
-        <td colspan="2">{{{notes}}}</td>
+        <td colspan="4">{{{notes}}}</td>
     </tr>
 
 
