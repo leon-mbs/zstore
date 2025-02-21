@@ -1674,8 +1674,8 @@ class ARMFood extends \App\Pages\Base
         $header['notes']   =  $doc->notes ;
         $header['detail']  =  [];
         foreach ($doc->unpackDetails('detaildata') as $item) {
-            if( intval( $item->foodstate) > 0)  {
-                return;
+            if( intval( $item->foodstate) > 1)  {
+                continue;
             }
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
@@ -1690,7 +1690,17 @@ class ARMFood extends \App\Pages\Base
             $report = new \App\Report('runner.tpl');
             $html =  $report->generate($header);                  
 
-            $this->addAjaxResponse("  $('#rtag').html('{$html}') ; $('#prform').modal()");
+            
+            if($user->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $html;
+
+                $this->addAjaxResponse("   window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->addAjaxResponse("  $('#rtag').html('{$html}') ; $('#prform').modal()");
+            }            
+            
+            
+
             return;
         }
        
