@@ -38,7 +38,7 @@ class TransItem extends Document
   
         $diff = doubleval($this->_doc->headerdata['fromamount'] ) - doubleval($this->_doc->headerdata['toamount'] ); 
        
-        if($diff <0)  {
+        if($diff < 0)  {
             \App\Entity\IOState::addIOState($this->document_id, $diff, \App\Entity\IOState::TYPE_BASE_INCOME);
         }
         if($diff > 0)  {

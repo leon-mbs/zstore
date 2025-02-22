@@ -1685,6 +1685,10 @@ class ARMFood extends \App\Pages\Base
                 
             );
         }        
+        if(count($header['detail']) == 0) {
+            $this->addAjaxResponse(" toastr.warning( 'Всі позиції вже в роботі' )         ");
+            return;   
+        }
         if(intval($user->prtype) == 0) {
   
             $report = new \App\Report('runner.tpl');

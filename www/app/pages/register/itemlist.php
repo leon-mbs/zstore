@@ -7,6 +7,7 @@ use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
 use App\Entity\Entry;
+use App\Entity\Doc\Document;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -24,6 +25,8 @@ use App\Application as App;
 class ItemList extends \App\Pages\Base
 {
     public $_item;
+    public $_itemr=[];
+    public $_itemb=[];
    
 
     public function __construct() {
@@ -87,10 +90,41 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
         $this->detailpanel->add(new Form('iformbay'))->onSubmit($this,'OnToPay');
         $this->detailpanel->iformbay->add(new TextInput('iformbayqty'));
- 
-        $this->OnFilter(null);
+        
+        //в закупке
+        $where = "   meta_name='OrderCust'  and  state= " . Document::STATE_INPROCESS;
+     
+        foreach (Document::findYield($where) as $doc) {
 
+            foreach ($doc->unpackDetails('detaildata') as $item) {
+                if (!isset($this->_itemb[$item->item_id])) {
+                    $this->_itemb[$item->item_id] = 0;
+                }
+                $this->_itemb[$item->item_id] += $item->quantity;
+               
+            }
+        }
+        
+        //в резерве
+        $conn = \ZDB\DB::getConnect() ;
+
+        $sql = "SELECT  i.item_id, sum(ev.quantity) as qty  FROM entrylist_view ev 
+                 JOIN items i ON ev.item_id = i.item_id
+                 WHERE  tag = -64 
+                 GROUP  BY   i.item_id   ";
+                  
+
+        $res = $conn->Execute($sql);        
+        foreach($res as $r) {
+            if (!isset($this->_itemr[$r['item_id']])) {
+                $this->_itemr[$r['item_id']] = 0;
+            }
+            $this->_itemr[$r['item_id']] += (0- $r['qty'] );
+                 
+        }    
          
+        $this->OnFilter(null);
+          
 
     }
 
@@ -107,6 +141,9 @@ class ItemList extends \App\Pages\Base
 
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
+        $row->add(new Label('iqtyr',  ( $this->_itemr[$item->item_id] ??0) > 0 ?  H::fqty($this->_itemr[$item->item_id]) :'' )  );
+        $row->add(new Label('iqtyb',  ( $this->_itemb[$item->item_id] ??0) > 0 ?  H::fqty($this->_itemb[$item->item_id]) :'' )  );
+       
       //  $row->add(new Label('minqty', H::fqty($item->minqty)));
       
         $inprice="";

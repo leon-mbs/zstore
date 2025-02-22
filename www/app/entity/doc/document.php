@@ -356,7 +356,21 @@ class Document extends \ZCL\DB\Entity
  
     }
 
- 
+     /**
+     * проверка  может  ли  быть  отменен
+     * Возвращает  текст ошибки если  нет
+     */
+    public function canCanceled() {
+
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$this->document_date) {
+            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
+        }
+
+        return "";
+    }
     
     
     /**

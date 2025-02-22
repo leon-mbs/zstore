@@ -99,9 +99,9 @@ class User extends \ZCL\DB\Entity
         $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
-        $this->defpaytype = (int)$options['defpaytype'];
+        $this->defpaytype = $options['defpaytype']??0;
         $this->defsalesource = $options['defsalesource'] ??0 ;
-        $this->pagesize = (int)$options['pagesize'];
+        $this->pagesize = $options['pagesize'] ??0;
         $this->phone = $options['phone']?? '';
         $this->viber = $options['viber']?? '';
 
