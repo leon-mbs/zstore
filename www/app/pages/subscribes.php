@@ -44,6 +44,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new TextInput('editmsgsubject'));
         $this->editform->add(new TextInput('editurl'));
         $this->editform->add(new TextInput('editchatid'));
+        $this->editform->add(new TextInput('editemail'));
 
         $this->editform->add(new DropDownChoice('editeventtype', Subscribe::getEventList(), Subscribe::EVENT_DOCSTATE))->onChange($this, 'update');
         $this->editform->add(new DropDownChoice('editdoctype', H::getDocTypes(), 0));
@@ -66,12 +67,15 @@ class Subscribes extends \App\Pages\Base
 
     public function update($sender) {
 
-
+        $et = $sender->getValue();
+        $rt = $sender->getValue();
+        $mt = $sender->getValue();
+   
  
         if($sender->id=='editeventtype') {
-            $et = $sender->getValue();
             $l=Subscribe::getRecieverList($et) ;
             $this->editform->editrecievertype->setOptionList($l);
+            $this->editform->edituser->setVisible(false);
 
             if($et == Subscribe::EVENT_DOCSTATE) {
                 $this->editform->editdoctype->setVisible(true);
@@ -86,11 +90,18 @@ class Subscribes extends \App\Pages\Base
 
             }
        
+            if($et == Subscribe::EVENT_ENDDAY) {
+                $this->editform->editdoctype->setVisible(false);
+                $this->editform->editstate->setVisible(false);
+
+
+            }
+            $this->editform->editrecievertype->setValue(0);
+
             return;       
         }
 
         if($sender->id=='editrecievertype') {
-            $rt = $sender->getValue();
             $l=Subscribe::getMsgTypeList($rt) ;
             $this->editform->editmsgtype->setOptionList($l);
         //    $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
@@ -99,6 +110,8 @@ class Subscribes extends \App\Pages\Base
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
             $this->editform->editchatid->setVisible($rt == Subscribe::RSV_TG);
+            $this->editform->editmsgsubject->setVisible($rt == Subscribe::RSV_EMAIL);
+            $this->editform->editemail->setVisible($rt == Subscribe::RSV_EMAIL);
                
                     
             return;       
@@ -106,14 +119,19 @@ class Subscribes extends \App\Pages\Base
         }        
         
         if($sender->id=='editmsgtype') {
-            $mt = $sender->getValue();
-            $this->editform->editmsgsubject->setVisible(false);
+             $this->editform->editmsgsubject->setVisible(false);
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
+            $this->editform->editemail->setVisible(false);
             
              
             if($mt == Subscribe::MSG_EMAIL) {
+                $this->editform->editemail->setVisible(true);
                 $this->editform->editmsgsubject->setVisible(true);
+            }            
+            if($mt == Subscribe::MSG_EMAIL  ?? $rt == Subscribe::RSV_EMAIL) {
+                $this->editform->editemail->setVisible(true);
+                
             }            
             return;       
           
@@ -151,11 +169,15 @@ class Subscribes extends \App\Pages\Base
         $this->editform->delete->setVisible(false);
         $this->editform->clean();
         $this->_sub = new Subscribe();
-        $this->editform->editeventtype->setValue(Subscribe::EVENT_DOCSTATE);
-        $this->editform->editrecievertype->setValue(Subscribe::EVENT_DOCSTATE);
-        $this->update($this->editform->editeventtype);
+
+        $this->editform->editdoctype->setVisible(false);
+        $this->editform->editstate->setVisible(false);
+        $this->editform->edituser->setVisible(false);
+      
         
-        $this->update( $this->editform->editeventtype) ;        
+     
+  
+              
     }
 
     public function OnEdit($sender) {
@@ -211,6 +233,10 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
         $this->_sub->html = $this->editform->edithtml->isCheCked() ? 1 : 0;
 
+        if ($this->_sub->sub_type ==  0) {
+            $this->setError("Не вказано тип ");
+            return;
+        }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {
             $this->setError("Не вказано користувача");
             return;

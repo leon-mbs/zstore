@@ -9,6 +9,8 @@
             <div class="col-12 col-md-10 col-xl-8">
                 <div zippy="plist">
                     <h3>Підписки на події </h3>
+                    <small>Для відправки  email та  підписок  за  роскладом слід ввімкнути <a href="/index.php?p=App/Pages/CronTab">планувальник</a></small>
+                    <br>
                     <a  zippy="addnew" class="btn btn-info">Додати</a>
                     <table class="table  table-sm">
                         <tr>
@@ -43,6 +45,7 @@
                     <div class="form-group">
                         <label for="editeventtype">Тип події</label>
                         <select   class="form-control" zippy="editeventtype">
+                          <option value="0">Не обрано</option> 
 
                         </select>
                     </div>
@@ -65,7 +68,7 @@
                     <div class="form-group">
                         <label for="editrecievertype">Отримувач</label>
                         <select   class="form-control" zippy="editrecievertype">
-
+                          <option value="0">Не обрано</option> 
                         </select>
                     </div>           
  
@@ -90,12 +93,17 @@
 
                         </select>
                     </div>  
+                    
+                     <div class="form-group">
+                        <label data-label="editemail" for="editemail">Email</label>
+                        <input  type="email"  class="form-control" zippy="editemail">
+                    </div>                    
+                    
                     <div class="form-group">
                         <label data-label="editmsgsubject" for="editmsgsubject">Тема повiдомлення</label>
                         <input    class="form-control" zippy="editmsgsubject">
-
-
                     </div>
+                    
                     <div class="form-group">
                         <label data-label="editurl" for="editurl">URL</label>
                         <input type="url"   class="form-control" zippy="editurl">
