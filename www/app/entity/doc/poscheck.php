@@ -181,6 +181,7 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
+                        "payeq"           => strlen($pos->payeq ) > 0 ? $pos->payeq : false,
                         "isdocqrcode"     =>  $common['printoutqrcode']==1,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
                         "docqrcode"       => $this->getQRCodeImage(),

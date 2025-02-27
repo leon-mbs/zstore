@@ -49,6 +49,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new TextInput('editfisc'));
         $this->posdetail->add(new TextInput('editfiscalnumber'));
         $this->posdetail->add(new TextInput('editaddress'));
+        $this->posdetail->add(new TextInput('editpayeq'));
         $this->posdetail->add(new TextInput('editpointname'));
         $this->posdetail->add(new TextInput('editcbpin'));
         $this->posdetail->add(new TextInput('editcbkey'));
@@ -118,6 +119,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
         $this->posdetail->editcomp->setValue($this->_pos->firm_id);
         $this->posdetail->editaddress->setText($this->_pos->address);
+        $this->posdetail->editpayeq->setText($this->_pos->payeq);
         $this->posdetail->editpointname->setText($this->_pos->pointname);
         $this->posdetail->editvktoken->setText($this->_pos->vktoken);
         $this->posdetail->editcbkey->setText($this->_pos->cbkey);
@@ -156,6 +158,7 @@ class PosList extends \App\Pages\Base
         $this->_pos->firm_id = $this->posdetail->editcomp->getValue();
 
         $this->_pos->address = $this->posdetail->editaddress->getText();
+        $this->_pos->payeq = $this->posdetail->editpayeq->getText();
         $this->_pos->pointname = $this->posdetail->editpointname->getText();
         $this->_pos->vktoken = $this->posdetail->editvktoken->getText();
         $this->_pos->cbkey = $this->posdetail->editcbkey->getText();
