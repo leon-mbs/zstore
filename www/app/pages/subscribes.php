@@ -67,16 +67,18 @@ class Subscribes extends \App\Pages\Base
 
     public function update($sender) {
 
-        $et = $sender->getValue();
-        $rt = $sender->getValue();
-        $mt = $sender->getValue();
-   
+        $et = $this->editform->editeventtype->getValue();
+        $rt = $this->editform->editrecievertype->getValue();
+        $mt = $this->editform->editmsgtype->getValue();
+ 
  
         if($sender->id=='editeventtype') {
             $l=Subscribe::getRecieverList($et) ;
             $this->editform->editrecievertype->setOptionList($l);
-            $this->editform->edituser->setVisible(false);
+            $this->editform->editrecievertype->setValue(0);
+            
 
+     
             if($et == Subscribe::EVENT_DOCSTATE) {
                 $this->editform->editdoctype->setVisible(true);
                 $this->editform->editstate->setVisible(true);
@@ -96,16 +98,22 @@ class Subscribes extends \App\Pages\Base
 
 
             }
-            $this->editform->editrecievertype->setValue(0);
-
-            return;       
+            
+            $this->update($this->editform->editrecievertype);
+              
         }
 
         if($sender->id=='editrecievertype') {
             $l=Subscribe::getMsgTypeList($rt) ;
             $this->editform->editmsgtype->setOptionList($l);
-        //    $this->editform->editmsgtype->setValue(array_shift(array_keys($l)));            
-             
+            $this->editform->editmsgtype->setValue(0);       
+            if(count($l)==1) {
+                 foreach($l as $k=>$v  ){
+                      $this->editform->editmsgtype->setValue($k);       
+                      break;
+                 }
+            }   
+            $this->editform->edituser->setValue(0); 
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
@@ -114,26 +122,36 @@ class Subscribes extends \App\Pages\Base
             $this->editform->editemail->setVisible($rt == Subscribe::RSV_EMAIL);
                
                     
-            return;       
+                     
+            $this->update($this->editform->editmsgtype);
+     
           
         }        
         
         if($sender->id=='editmsgtype') {
-             $this->editform->editmsgsubject->setVisible(false);
+            $this->editform->editmsgsubject->setVisible(false);
             $this->editform->editattach->setVisible( false);
             $this->editform->edithtml->setVisible(false);
             $this->editform->editemail->setVisible(false);
             
              
             if($mt == Subscribe::MSG_EMAIL) {
-                $this->editform->editemail->setVisible(true);
+              
                 $this->editform->editmsgsubject->setVisible(true);
             }            
-            if($mt == Subscribe::MSG_EMAIL  ?? $rt == Subscribe::RSV_EMAIL) {
+            if($mt == Subscribe::MSG_EMAIL  && $rt == Subscribe::RSV_EMAIL) {
                 $this->editform->editemail->setVisible(true);
                 
             }            
-            return;       
+            if($mt == Subscribe::MSG_EMAIL && $et == Subscribe::EVENT_DOCSTATE ) {
+                $this->editform->editattach->setVisible(true);
+                
+            }            
+            if($mt == Subscribe::MSG_BOT  ) {
+                $this->editform->edithtml->setVisible(true);
+                
+            }            
+                 
           
         }        
 
@@ -169,14 +187,12 @@ class Subscribes extends \App\Pages\Base
         $this->editform->delete->setVisible(false);
         $this->editform->clean();
         $this->_sub = new Subscribe();
-
-        $this->editform->editdoctype->setVisible(false);
-        $this->editform->editstate->setVisible(false);
-        $this->editform->edituser->setVisible(false);
-      
+   
+        $this->editform->editeventtype->setValue(Subscribe::EVENT_DOCSTATE);
+   
+        $this->update($this->editform->editeventtype);
+            
         
-     
-  
               
     }
 
@@ -198,6 +214,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgtext->setText($this->_sub->msgtext);
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
         $this->editform->editurl->setText($this->_sub->url);
+        $this->editform->editemail->setText($this->_sub->email);
         $this->editform->editchatid->setText($this->_sub->chat_id);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
         $this->editform->editattach->setCheCked($this->_sub->attach);
@@ -229,16 +246,34 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
         $this->_sub->url = trim($this->editform->editurl->getText());
+        $this->_sub->email = trim($this->editform->editemail->getText());
         $this->_sub->chat_id = trim($this->editform->editchatid->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
         $this->_sub->html = $this->editform->edithtml->isCheCked() ? 1 : 0;
+        $this->_sub->attach = $this->editform->editattach->isCheCked() ? 1 : 0;
 
         if ($this->_sub->sub_type ==  0) {
             $this->setError("Не вказано тип ");
             return;
         }
+        if ($this->_sub->reciever_type ==  0) {
+            $this->setError("Не вказано отримувача ");
+            return;
+        }
+        if ($this->_sub->msg_type ==  0) {
+            $this->setError("Не вказано тип повiдомлення ");
+            return;
+        }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {
             $this->setError("Не вказано користувача");
+            return;
+        }
+        if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->doctype == 0) {
+            $this->setError("Не вказано тип жокументу");
+            return;
+        }
+        if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->state == 0) {
+            $this->setError("Не вказано статус жокументу");
             return;
         }
 
@@ -247,19 +282,27 @@ class Subscribes extends \App\Pages\Base
                 $this->setError("Не вказано текст повідомлення");
                 return;
             }
-            if ($this->_sub->msg_type == 0) {
-                $this->setError("Не вказано тип повідомлення");
-                return;
-            }
-        }  else {
-            $this->_sub->msg_type =0;           
-            $this->_sub->msg_typename ='';           
-        }
+          
+        }   
         
         if ($this->_sub->reciever_type == Subscribe::RSV_WH && strlen($this->_sub->url) == 0) {
             $this->setError("Не вказано URL");
             return;
         }
+        if ($this->_sub->reciever_type == Subscribe::RSV_EMAIL && strlen($this->_sub->chat_id) == 0) {
+            $this->setError("Не вказано ID телешрам чату");
+            return;
+        }
+        
+        if ($this->_sub->reciever_type == Subscribe::RSV_TG && strlen($this->_sub->email) == 0) {
+            $this->setError("Не вказано e-mail");
+            return;
+        }
+        if ($this->_sub->msg_type == Subscribe::MSG_EMAIL && strlen($this->_sub->msgsubject) == 0) {
+            $this->setError("Не вказано тему");
+            return;
+        }
+       
         
         
         $this->_sub->save();

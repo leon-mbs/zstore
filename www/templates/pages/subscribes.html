@@ -90,6 +90,7 @@
                     <div class="form-group">
                         <label for="editmsgtype">Тип повiдомлення</label>
                         <select   class="form-control" zippy="editmsgtype">
+                           <option value="0">Не обрано</option> 
 
                         </select>
                     </div>  
@@ -165,7 +166,7 @@
                         <br>
                         <br>Для реалізації логіки в шаблоні використовується синтаксис шаблонізатора  Mustache
                         <br>
-                        Допускаються наступні змінні шаблонізатора для документу :
+                        Теги шаблонізатора для документу :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Телефон контрагента</small></td></tr>
@@ -194,10 +195,19 @@
                             <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
                           
                         </table>
-                        Допускаються наступні змінні для контрагента :
+                        Теги для контрагента :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_id}</b></small></td><td><small>ID контрагента</small></td></tr>
+                        
+                        </table>
+                        
+                        Теги для підсумків дня :
+                        <table  >
+                            <tr><td><small><b>{day_nal}</b></small> </td><td><small>Готівка в  касах</small></td></tr>
+                            <tr><td><small><b>{day_beznal}</b></small></td><td><small>Безготівка на рахунках</small></td></tr>
+                            <tr><td><small><b>{day_summa}</b></small></td><td><small>Сума продаж</small></td></tr>
+                            <tr><td><small><b>{day_return}</b></small></td><td><small>Сума повернень</small></td></tr>
                         
                         </table>
                         

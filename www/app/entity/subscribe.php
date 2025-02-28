@@ -86,6 +86,7 @@ class Subscribe extends \ZCL\DB\Entity
         return true;
     }
 
+    //типы  подписок 
     public static function getEventList() {
         $list = array();
         $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
@@ -96,7 +97,10 @@ class Subscribe extends \ZCL\DB\Entity
         return $list;
     }
 
+    //типы  соотбщений по  типу получателя 
     public static function getMsgTypeList($rt=0) {
+        $rt = intval($rt);
+        if($rt==0)  return [];
 
         $sms = \App\System::getOptions('sms')  ;
 
@@ -150,7 +154,13 @@ class Subscribe extends \ZCL\DB\Entity
         return $list;
     }
 
+    
+    //типы  получателей по  типу подписок 
     public static function getRecieverList($et=0) {
+        $et = intval($et);
+        if($et==0)  return [];
+
+
         $list = array();
         if($et==self::EVENT_DOCSTATE) {
            $list[self::RSV_DOCAUTHOR] = "Автор документу";
@@ -169,13 +179,11 @@ class Subscribe extends \ZCL\DB\Entity
             $list[self::RSV_TG] = "Телеграм";
         }
         
-      
-           
-        
+         
         return $list;
     }
 
-    //изменение  состояние  документа
+    //изменение  состояния  документа
     public static function onDocumentState($doc_id, $state) {
         $doc = \App\Entity\Doc\Document::load($doc_id);
 
@@ -296,6 +304,7 @@ class Subscribe extends \ZCL\DB\Entity
  
         }
     }
+
     //конец дня (задается  в  планировщике)
     public static function onEndDay( ) {
         $list = self::find('disabled <> 1 and sub_type= ' . self::EVENT_ENDDAY);
@@ -426,9 +435,38 @@ class Subscribe extends \ZCL\DB\Entity
         $this->msgtext = str_replace('{', '{{', $this->msgtext);
         $this->msgtext = str_replace('}', '}}', $this->msgtext);
         $common = \App\System::getOptions("common");
+        $conn =   \ZDB\DB::getConnect();
 
         $header = array();
-    
+     
+
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
+        $header['day_nal']= H::fa($conn->GetOne($sql));
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
+        $header['day_beznal']= H::fa($conn->GetOne($sql));
+     $sql = "
+          select   sum(0-e.quantity*e.partion) as summa 
+              from entrylist_view  e
+
+             
+             join documents_view d on d.document_id = e.document_id
+               where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck', 'TTN','OrderCust','OrderFood')           
+              AND  e.document_date = CURDATE() ";             
+              
+        $header['day_summa']= H::fa( abs(  $conn->GetOne($sql) ) );
+   $sql = "
+          select   sum(0-e.quantity*e.partion) as summa 
+              from entrylist_view  e
+
+             
+             join documents_view d on d.document_id = e.document_id
+               where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ( 'ReturnIssue' )           
+              AND  e.document_date = CURDATE() ";             
+              
+        $header['day_return']= H::fa( abs( $conn->GetOne($sql) ));
+        
         try {
             $m = new \Mustache_Engine();
             $text = $m->render($this->msgtext, $header);
