@@ -192,7 +192,7 @@ class Subscribes extends \App\Pages\Base
    
         $this->update($this->editform->editeventtype);
             
-        
+     
               
     }
 
