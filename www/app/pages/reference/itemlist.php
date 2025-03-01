@@ -190,6 +190,7 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
         $this->optionsform->add(new CheckBox('autoarticle'));
         $this->optionsform->add(new CheckBox('nocheckarticle'));
+        $this->optionsform->add(new CheckBox('allowchange'));
         $this->optionsform->add(new CheckBox('usecattree'));
         $this->optionsform->add(new CheckBox('useimages'));
         $this->optionsform->add(new TextInput('articleprefix'));
@@ -374,6 +375,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['cflist'] = count($this->_cflistv) > 0 ;
    
     }
+
     public function addOnClick($sender) {
         $this->_copy = 0;
         $this->itemtable->setVisible(false);
@@ -425,7 +427,8 @@ class ItemList extends \App\Pages\Base
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
-   
+        $options = System::getOptions('common');
+        
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->itemname = trim($this->_item->itemname);
 
@@ -435,15 +438,18 @@ class ItemList extends \App\Pages\Base
         }
 
         $itemcode =trim($this->itemdetail->editcode->getText());
-        //проверка  на использование
-        if (strlen($this->_item->item_code) > 0 &&  $itemcode !== $this->_item->item_code ) {
-            $code = Item::qstr($this->_item->item_code);
-            $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
-            if ($cnt > 0) {
-                $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
-                return;
-            }
-        }        
+        
+        if($options['allowchange'] != 1) {
+            //проверка  на использование
+            if (strlen($this->_item->item_code) > 0 &&  $itemcode !== $this->_item->item_code ) {
+                $code = Item::qstr($this->_item->item_code);
+                $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
+                if ($cnt > 0) {
+                    $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
+                    return;
+                }
+            }        
+        }
         
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
@@ -1253,6 +1259,7 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->articleprefix->setText($options['articleprefix'] ?? "ID");
         $this->optionsform->usecattree->setChecked($options['usecattree']);
         $this->optionsform->nocheckarticle->setChecked($options['nocheckarticle']);
+        $this->optionsform->allowchange->setChecked($options['allowchange']);
         $this->optionsform->useimages->setChecked($options['useimages']);
         $this->optionsform->autoarticle->setChecked($options['autoarticle']);
         
@@ -1301,6 +1308,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars["useimages"] = $options['useimages'] == 1;        
         
         $options['nocheckarticle'] = $this->optionsform->nocheckarticle->isChecked() ? 1 : 0;
+        $options['allowchange'] = $this->optionsform->allowchange->isChecked() ? 1 : 0;
         $options['usecattree'] = $this->optionsform->usecattree->isChecked() ? 1 : 0;
         $options['autoarticle'] = $this->optionsform->autoarticle->isChecked() ? 1 : 0;
         $options['articleprefix'] = $this->optionsform->articleprefix->getText() ;
