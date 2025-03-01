@@ -16,6 +16,11 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
+use Zippy\Html\Label;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Binding\PropertyBinding as Bind;
 
 /**
  * Страница  ввода перекомплектация товаров
@@ -24,7 +29,13 @@ class TransItem extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = -1;
+    private $_rowid     = -1;
+    private $_fromtotal  = 0;
+    private $_tototal  = 0;
+  
+ 
+    public $_fromlist  =  [];
+    public $_tolist    =  [];
 
     /**
     * @param mixed $docid     редактирование
@@ -49,36 +60,148 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->docform->add(new DataView('fromlist', new  ArrayDataSource(new Bind($this, '_fromlist')), $this, 'fromlistOnRow'));
+        $this->docform->add(new DataView('tolist', new  ArrayDataSource(new Bind($this, '_tolist')), $this, 'tolistOnRow'));
+        $this->docform->add(new Label('fromtotal' ));
+        $this->docform->add(new Label('tototal' ));
+
+        $this->docform->add(new SubmitButton('addto'))->onClick($this, 'addTo');
+        $this->docform->add(new SubmitButton('addfrom'))->onClick($this, 'addFrom');
+        
+        
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
-            $this->docform->fromitem->setKey($this->_doc->headerdata['fromitem']);
-            $fi = Stock::load($this->_doc->headerdata['fromitem']);
-            $this->docform->fromitem->setText($fi->itemname . ', ' . $fi->partion);
-            $this->docform->toitem->setKey($this->_doc->headerdata['toitem']);
-            $ti = Item::load($this->_doc->headerdata['toitem']);
-            $this->docform->toitem->setText($ti->itemname);
-            $this->docform->fromquantity->setText($this->_doc->headerdata['fromquantity']);
-            $this->docform->toquantity->setText($this->_doc->headerdata['toquantity']);
+            $this->_fromlist = $this->_doc->unpackDetails('detaildata');
+            $this->_tolist = $this->_doc->unpackDetails('detaildata2');
+           
             $this->docform->notes->setText($this->_doc->notes);
         } else {
             $this->_doc = Document::create('TransItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
         }
 
-
+        
+     
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        
+        $this->Reload() ;
     }
 
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
 
+    public function Reload( ) {
+        $this->_fromtotal=0;
+        $this->_tototal=0;
+       
+        $this->docform->fromlist->Reload();
+        $this->docform->tolist->Reload();
+        
+        $this->docform->fromtotal->setText($this->_fromtotal);
+        $this->docform->tototal->setText($this->_tototal);
+             
+    }
+
+    
+    public function fromlistOnRow( $row) {
+        $it=$row->getDataItem();
+        $row->add(new Label('fromname',$it->itemname))  ;
+        $row->add(new Label('fromcode',$it->item_code))  ;
+        $row->add(new Label('fromqty', H::fqty($it->qty)))  ;
+        $row->add(new Label('fromprice', H::fa($it->partion))  ) ;
+        $row->add(new ClickLink('fromdel', $this,'deleteFrom')  ) ;
+        
+        $this->_fromtotal += (H::fa($it->partion * $it->qty ));
+    }    
+        
+    public function tolistOnRow( $row) {
+        $it=$row->getDataItem();
+        $row->add(new Label('toname',$it->itemname))  ;
+        $row->add(new Label('tocode',$it->item_code))  ;
+        $row->add(new Label('toqty', H::fqty($it->qty)) ) ;
+        $row->add(new TextInput('toprice', new  Bind($it,'price') ) )  ;
+        $row->add(new ClickLink('todel', $this,'deleteTo')  ) ;
+        
+        $this->_tototal += (H::fa($it->price * $it->qty ));
+          
+    }    
+    
+    public function addFrom( $sender) {
+        $fi=intval( $this->docform->fromitem->getKey() );
+        $fqty=doubleval( $this->docform->fromquantity->getText());
+        if ($fi == 0 ) {
+            $this->setError("  Не вибрано ТМЦ ");
+            return;
+        } 
+        $st = Stock::load($fi) ;
+        if ($fqty > $st->qty ) {
+            $this->setError(" Недостатньо ТМЦ на складі");
+            return;
+        }                  
+        if ($fqty == 0 ) {
+            $this->setError(" Не вказана  кількість ");
+            return;
+        }   
+        $st->qty= $fqty;
+         $this->_fromlist[$st->stock_id]  = $st; 
+        
+        $this->docform->fromitem->setKey(0)  ;   
+        $this->docform->fromitem->setText('')  ;   
+        $this->docform->fromquantity->setText('')  ;   
+                     
+        $this->Reload() ;      
+    }    
+  
+    public function addTo( $sender) {
+        $fi=intval( $this->docform->toitem->getKey() );
+        $fqty=doubleval( $this->docform->toquantity->getText());
+        if ($fi == 0 ) {
+            $this->setError("  Не вибрано ТМЦ ");
+            return;
+        } 
+                     
+        if ($fqty == 0 ) {
+            $this->setError(" Не вказана  кількість ");
+            return;
+        }   
+        $it = Item::load($fi) ;
+          
+        $it->qty= $fqty;
+        $it->price = 0;
+        $this->_tolist[$it->item_id]  = $it; 
+        
+        $this->docform->toitem->setKey(0)  ;   
+        $this->docform->toitem->setText('')  ;   
+        $this->docform->toquantity->setText('')  ;   
+                     
+        $this->Reload() ;       
+    }    
+    
+    public function deleteFrom( $sender) {
+        $it=$sender->getOwner()->getDataItem();
+        unset($this->_fromlist[$it->stock_id] ) ;
+      
+        $this->Reload() ;      
+      
+    }    
+    public function deleteTo( $sender) {
+      
+        $it=$sender->getOwner()->getDataItem();
+        unset($this->_tolist[$it->item_id] ) ;
+        
+      
+        $this->Reload() ;      
+     
+    }    
+    
+    
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -88,20 +211,18 @@ class TransItem extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
-        $this->_doc->headerdata['fromitem'] = $this->docform->fromitem->getKey();
-        $this->_doc->headerdata['toitem'] = $this->docform->toitem->getKey();
-        $this->_doc->headerdata['fromitemname'] = $this->docform->fromitem->getText();
-        $this->_doc->headerdata['toitemname'] = $this->docform->toitem->getText();
-        $this->_doc->headerdata['fromquantity'] = $this->docform->fromquantity->getText();
-        $this->_doc->headerdata['toquantity'] = $this->docform->toquantity->getText();
-
+        $this->_doc->headerdata['fromamount'] = $this->_fromtotal;
+        $this->_doc->headerdata['toamount'] = $this->_tototal;
+    
         if ($this->checkForm() == false) {
             return;
         }
 
-        $fi = Stock::load($this->_doc->headerdata['fromitem']);
 
-        $this->_doc->amount = H::fa($fi->partion * $this->_doc->headerdata['fromquantity']);
+        $this->_doc->packDetails('detaildata', $this->_fromlist);
+        $this->_doc->packDetails('detaildata2', $this->_tolist);
+   
+        $this->_doc->amount = H::fa($this->_tototal);
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $isEdited = $this->_doc->document_id > 0;
@@ -153,25 +274,19 @@ class TransItem extends \App\Pages\Base
                 $this->setError('Не створено унікальный номер документа');
             }
         }
-        if ($this->_doc->headerdata['fromquantity'] > 0 && $this->_doc->headerdata['toquantity'] > 0) {
-
-        } else {
-            $this->setError("Невірна кількість");
-        }
-        if ($this->_doc->headerdata['fromitem'] > 0 && $this->_doc->headerdata['toitem'] > 0) {
-
-        } else {
-            $this->setError("Не введено товар");
-        }
-        if ($this->_doc->headerdata['fromitem'] == $this->_doc->headerdata['toitem']) {
-
-            $this->setError("Однакові ТМЦ");
-        }
-        $st= Stock::load($this->_doc->headerdata['fromitem']) ;
-        if ($this->_doc->headerdata['fromquantity'] > $st->qty ) {
-
-            $this->setError("  Недостатньо ТМЦ на складі");
+        
+        if (count( $this->_fromlist)==0 || count( $this->_tolist)==0  ) {
+            $this->setError(" Не введено ТМЦ ");
         }        
+        
+        foreach($this->_tolist as $it){
+           if( doubleval($it->price)==0  ) {
+                $this->setError(" Не введена  ціна   ");
+                break;
+           }
+        }
+        
+        
         
         return !$this->isError();
     }

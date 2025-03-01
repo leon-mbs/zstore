@@ -76,6 +76,14 @@ class CronTask extends \ZCL\DB\Entity
                 \App\Helper::setKeyVal('lastcronh', time()) ;
 
             }
+       
+            //задачи в  конце дня
+            $last =   \App\Helper::getKeyVal('lastcronhed');
+            $endday = strtotime( date('Y-m-d 23:00') );
+            if($last !==  date('Ymd') && time() > $endday  ) {
+                \App\Helper::setKeyVal('lastcronhed',date('Ymd')) ;
+                \App\Entity\Subscribe::onEndDay();
+            }
 
             //задачи  раз  в  сутки
             $last =  intval(\App\Helper::getKeyVal('lastcrond'));

@@ -53,7 +53,12 @@ class Admin extends \App\Pages\Base
         $form->add(new SubmitButton('sendphone'))->onClick($this, 'sendSms');
         $form->add(new TextInput('chat_id'))  ;
         $form->add(new SubmitButton('sendbot'))->onClick($this, 'sendBot');
- 
+
+
+
+        $this->add(new Form('cdoc'))->onSubmit($this,"onCancelDoc");
+        $this->cdoc->add(new TextInput('docn'))  ;
+   
     }   
 
     
@@ -90,6 +95,8 @@ class Admin extends \App\Pages\Base
         
     }
 
+        
+        
     public function sendBot($sender) {
         $chat_id = trim( $this->sendform->chat_id->getText() );
         try{
@@ -100,6 +107,43 @@ class Admin extends \App\Pages\Base
         }
         
     }
+
+
+    public function onCancelDoc($sender) {
+        $dn = trim($this->cdoc->docn->getText() );
+        $conn = \ZDB\DB::getConnect();
+
+        $dn = $conn->qstr($dn);
+     
+        $doc =  \App\Entity\doc\Document::getFirst("document_number=".$dn);
+        if($doc==null){
+            $this->setError("Документ не знвйдено")  ;
+            return;
+        }
+        if($doc->state <5){
+            $this->setError("Документ не проведений")  ;
+            return;
+        }
+        $conn->BeginTrans();
+
+        try {
+            $doc->updateStatus( \App\Entity\doc\Document::STATE_CANCELED);
+            $doc->payed = 0;
+            $doc->save();
+            $conn->CommitTrans();
+
+        } catch(\Throwable $ee) {
+            
+            $conn->RollbackTrans();
+            \App\Helper::logerror(ee->getMessage())  ;
+            $this->setError($ee->getMessage());
+
+            return;
+        }
+        $this->setSuccess("Документ скасoвано")  ;
+         
+    }        
+
     
 }
  

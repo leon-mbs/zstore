@@ -9,8 +9,8 @@
  <div class="row">
         
     <div class="col-12 col-lg-4 col-xl-3  "   >
-            <form zippy="optionsform"> 
-             <div class="form-group">
+            <form zippy="optionsform"  class="mb-4"> 
+              <div class="form-group">
                 <h5>Налаштування</h5>  
              </div>
                  <div class="form-check">
@@ -39,7 +39,17 @@
              <input zippy="save" type="submit" value="Зберегти" class="btn btn-info  ">
             </div>  
             
-        </form>    
+        </form>   
+        
+         <h5>Скасування  документів </h5>  
+           <form zippy="cdoc" class="form-inline" >   
+            
+                   <input required="on" class="form-control" placeholder="Номер документу" zippy="docn"> 
+                   <input type="submit" value="Скасувати" class="btn   btn-primary  ">
+                   
+          </form> 
+          <small>Скасування  документів які не можна  скасувати через журнал. Наприклад  фіскалізовані чеки</small>
+          
      </div>  
     <div class="col-12 col-lg-4 col-xl-3  "   >
        

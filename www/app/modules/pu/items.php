@@ -102,6 +102,7 @@ class Items extends \App\Pages\Base
             if (in_array($item->item_code, $sku)) {
                 continue;
             } //уже  в  магазине
+            if($item->noshop ==1)  continue;
             $item->qty = $item->getQuantity();
 
             if (strlen($item->qty) == 0) {

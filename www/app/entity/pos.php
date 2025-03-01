@@ -23,6 +23,7 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->details .= "<address><![CDATA[{$this->address}]]></address>";
         $this->details .= "<pointname><![CDATA[{$this->pointname}]]></pointname>";
+        $this->details .= "<payeq><![CDATA[{$this->payeq}]]></payeq>";
 
         $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
         $this->details .= "<fiscallocnumber>{$this->fiscallocnumber}</fiscallocnumber>";
@@ -55,6 +56,7 @@ class Pos extends \ZCL\DB\Entity
         $this->comment = (string)($xml->comment[0]);
         $this->address = (string)($xml->address[0]);
         $this->pointname = (string)($xml->pointname[0]);
+        $this->payeq = (string)($xml->payeq[0]);
         $this->vktoken = (string)($xml->vktoken[0]);
         $this->cbkey = (string)($xml->cbkey[0]);
         $this->cbpin = (string)($xml->cbpin[0]);

@@ -51,8 +51,8 @@ class OrderFood extends Document
      
      
         $deliverydata = "";
-        $deliverydata = $this->headerdata["delivery_name"];
-        if ($this->headerdata["delivery"] > 1) {
+        $deliverydata = $this->headerdata["delivery_name"] ??'';
+        if (( $this->headerdata["delivery"] ??0) > 1) {
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
         $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
@@ -254,13 +254,15 @@ class OrderFood extends Document
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
         $conn->Execute("delete from iostate where iotype = 81 AND document_id=" . $this->document_id);
-
+        $lost = 0;
+        $lostq = 0;
+        $kl = 1;
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
             $required = $item->quantity - $onstore;
-
+          
 
             //оприходуем  с  производства
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
@@ -268,7 +270,7 @@ class OrderFood extends Document
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
-                        $lost = 0;
+                      
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null) {
                             continue;
@@ -283,7 +285,8 @@ class OrderFood extends Document
                         if ($itemp->lost > 0) {
                             $kl = 1 / (1 - $itemp->lost / 100);
                             $itemp->quantity = $itemp->quantity * $kl;
-                            $lost = $kl - 1;
+                            $lostq = $itemp->quantity * $kl - $itemp->quantity;
+                            $itemp->quantity = $itemp->quantity * $kl;                    
                         }
 
 
@@ -296,19 +299,13 @@ class OrderFood extends Document
 
                             $sc->save();
                             
-                             
-                            if ($lost > 0) {
-                                $io = new \App\Entity\IOState();
-                                $io->document_id = $this->document_id;
-                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                                $io->save();
-
-                            }    
+                            if ($lostq > 0) {
+                                $lost += ($lostq * $st->partion  );
+                            }        
+                            
 
                         }
-                    }
+                    }   //комплекты
                 }
 
 
@@ -324,7 +321,7 @@ class OrderFood extends Document
                 $sc->tag=Entry::TAG_FROMPROD;
 
                 $sc->save();
-            }
+            }   // оприходование
 
 
             if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
@@ -339,7 +336,13 @@ class OrderFood extends Document
                 $k =   ($this->amount - $dd)/ $this->amount;
             }
 
-
+            //учитываем  отходы
+            if ($item->lost > 0) {
+                $kl = 1 / (1 - $item->lost / 100);
+                $losfq = $item->quantity * $kl - $item->quantity;
+                $item->quantity = $item->quantity * $kl;
+               
+            }
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
@@ -350,8 +353,22 @@ class OrderFood extends Document
                 $sc->tag=Entry::TAG_SELL;
 
                 $sc->save();
+                if ($lostq > 0) {
+                    $lost += ($lostq * $st->partion  );
+                }                   
             }
         }
+        
+      if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $this->document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+            $io->save();
+
+      }          
+        
     }
 
     //есть  ли  невыданные  блюда

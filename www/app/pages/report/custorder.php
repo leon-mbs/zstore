@@ -12,7 +12,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Заказанные товары
+ * Заказанные товары (товары  в  пути)
  */
 class CustOrder extends \App\Pages\Base
 {

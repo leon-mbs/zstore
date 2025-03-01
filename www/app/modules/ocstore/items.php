@@ -100,6 +100,8 @@ class Items extends \App\Pages\Base
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
+                if($item->noshop ==1)  continue;
+                 
                 if (in_array($item->item_code, $data['articles'])) {
                     continue;
                 } //уже  в  магазине

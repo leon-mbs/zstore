@@ -16,6 +16,7 @@ class Subscribe extends \ZCL\DB\Entity
     //типы  событий
     public const EVENT_DOCSTATE = 1;
     public const EVENT_NEWCUST  = 2;
+    public const EVENT_ENDDAY   = 3;
     
     //типы сообщений
     public const MSG_NOTIFY = 1;
@@ -32,6 +33,7 @@ class Subscribe extends \ZCL\DB\Entity
     public const RSV_SYSTEM    = 5;
     public const RSV_DOCRESP   = 6;
     public const RSV_TG        = 7;
+    public const RSV_EMAIL     = 8;
 
     protected function init() {
         $this->sub_id = 0;
@@ -84,16 +86,21 @@ class Subscribe extends \ZCL\DB\Entity
         return true;
     }
 
+    //типы  подписок 
     public static function getEventList() {
         $list = array();
         $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
         $list[self::EVENT_NEWCUST]  = "Новий контрагент";
+        $list[self::EVENT_ENDDAY]   = "Кінець робочого дня";
 
 
         return $list;
     }
 
+    //типы  соотбщений по  типу получателя 
     public static function getMsgTypeList($rt=0) {
+        $rt = intval($rt);
+        if($rt==0)  return [];
 
         $sms = \App\System::getOptions('sms')  ;
 
@@ -134,12 +141,26 @@ class Subscribe extends \ZCL\DB\Entity
            unset($list[self::MSG_NOTIFY])  ;
         }
      
+        if($rt==self::RSV_EMAIL ) {
+           unset($list[self::MSG_BOT])  ;
+           unset($list[self::MSG_VIBER])  ;
+ 
+           unset($list[self::MSG_SMS])  ;
+           unset($list[self::MSG_NOTIFY])  ;
+        }
+     
     
 
         return $list;
     }
 
+    
+    //типы  получателей по  типу подписок 
     public static function getRecieverList($et=0) {
+        $et = intval($et);
+        if($et==0)  return [];
+
+
         $list = array();
         if($et==self::EVENT_DOCSTATE) {
            $list[self::RSV_DOCAUTHOR] = "Автор документу";
@@ -152,12 +173,17 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::RSV_SYSTEM] = "Системний лог";
         $list[self::RSV_USER] = "Користувач системи";
         $list[self::RSV_WH] = "Web Hook";
-        $list[self::RSV_TG] = "Телеграм";
-
+        $list[self::RSV_EMAIL] = "E-mail";
+       
+        if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
+            $list[self::RSV_TG] = "Телеграм";
+        }
+        
+         
         return $list;
     }
 
-    //изменение  состояние  документа
+    //изменение  состояния  документа
     public static function onDocumentState($doc_id, $state) {
         $doc = \App\Entity\Doc\Document::load($doc_id);
 
@@ -275,11 +301,47 @@ class Subscribe extends \ZCL\DB\Entity
             
             
             $sub->sendmsg($text,$options);
+ 
+        }
+    }
+
+    //конец дня (задается  в  планировщике)
+    public static function onEndDay( ) {
+        $list = self::find('disabled <> 1 and sub_type= ' . self::EVENT_ENDDAY);
+        foreach ($list as $sub) {
+            $options=[];
+         
+            $u=null;
+          
+            if ($sub->reciever_type == self::RSV_USER) {
+                $u = \App\Entity\User::load($sub->user_id);
+            }   
+    
+            if ($u != null) {
+                $options['phone'] = $u->phone;
+                $options['viber'] = $u->viber;
+                $options['email'] = $u->email;
+                $options['chat_id'] = $u->chat_id;
+                $options['notifyuser'] = $u->user_id;
+            }            
+//      
+            if ($sub->reciever_type == self::RSV_TG) {
+                $options['chat_id'] = $sub->chat_id;;
+            }
+            if ($sub->reciever_type == self::RSV_EMAIL) {
+                $options['email'] = $sub->email;;
+            }
+            
+            $text = $sub->getTextEndDay();
+            
+            
+            $sub->sendmsg($text,$options);
             
             
  
 
         }
+  
     }
 
     
@@ -364,6 +426,57 @@ class Subscribe extends \ZCL\DB\Entity
             return "Помилка розмітки";
         }        
     }
+ /**
+     * возвращает текст  с  учетом разметки
+     *
+     * @param mixed $c
+     */
+    private function getTextEndDay( ) {
+        $this->msgtext = str_replace('{', '{{', $this->msgtext);
+        $this->msgtext = str_replace('}', '}}', $this->msgtext);
+        $common = \App\System::getOptions("common");
+        $conn =   \ZDB\DB::getConnect();
+
+        $header = array();
+     
+
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
+        $header['day_nal']= H::fa($conn->GetOne($sql));
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
+        $header['day_beznal']= H::fa($conn->GetOne($sql));
+     $sql = "
+          select   sum(0-e.quantity*e.partion) as summa 
+              from entrylist_view  e
+
+             
+             join documents_view d on d.document_id = e.document_id
+               where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck', 'TTN','OrderCust','OrderFood')           
+              AND  e.document_date = CURDATE() ";             
+              
+        $header['day_summa']= H::fa( abs(  $conn->GetOne($sql) ) );
+   $sql = "
+          select   sum(0-e.quantity*e.partion) as summa 
+              from entrylist_view  e
+
+             
+             join documents_view d on d.document_id = e.document_id
+               where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ( 'ReturnIssue' )           
+              AND  e.document_date = CURDATE() ";             
+              
+        $header['day_return']= H::fa( abs( $conn->GetOne($sql) ));
+        
+        try {
+            $m = new \Mustache_Engine();
+            $text = $m->render($this->msgtext, $header);
+
+            return $text;
+        } catch(\Exception $e) {
+            return "Помилка розмітки";
+        }        
+    }
+   
     /**
      * возвращает текст  с  учетом разметки
      *
@@ -529,6 +642,10 @@ class Subscribe extends \ZCL\DB\Entity
         }
     }
 
+    
+    
+    
+    
     public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
 
