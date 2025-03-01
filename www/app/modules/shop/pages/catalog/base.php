@@ -56,7 +56,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
-        $this->_tvars["usepayment"] =  ($shop["paysystem"]??0) > 0 ;
+        $this->_tvars["usepayment"] = false;// ($shop["paysystem"]??0) > 0 ;
         $this->_tvars["wp"] = ($shop["paysystem"]??0) == 1;
         $this->_tvars["lp"] = ($shop["paysystem"]??0) == 2;
         $this->_tvars["qr"] = (($shop["paysystem"]??0) == 3 || ($shop["addqr"]??0) ==1) ;
