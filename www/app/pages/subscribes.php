@@ -289,12 +289,12 @@ class Subscribes extends \App\Pages\Base
             $this->setError("Не вказано URL");
             return;
         }
-        if ($this->_sub->reciever_type == Subscribe::RSV_EMAIL && strlen($this->_sub->chat_id) == 0) {
-            $this->setError("Не вказано ID телешрам чату");
+        if ($this->_sub->reciever_type == Subscribe::RSV_TG && strlen($this->_sub->chat_id) == 0) {
+            $this->setError("Не вказано ID телеграм чату");
             return;
         }
         
-        if ($this->_sub->reciever_type == Subscribe::RSV_TG && strlen($this->_sub->email) == 0) {
+        if ($this->_sub->reciever_type == Subscribe::RSV_EMAIL && strlen($this->_sub->email) == 0) {
             $this->setError("Не вказано e-mail");
             return;
         }
