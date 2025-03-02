@@ -299,7 +299,7 @@ class Options extends \App\Pages\Base
 
         $this->add(new Form('tbform'))->onSubmit($this, "onBot");
         $this->tbform->add(new TextInput('tbtoken', $common['tbtoken'] ?? ''));
-        $this->tbform->add(new TextInput('tbname', $common['tbname'] ?? ''));
+
 
 
         //источники  продаж
@@ -430,8 +430,13 @@ class Options extends \App\Pages\Base
         }
 
         $common['tbtoken'] = $sender->tbtoken->getText()  ;
-        $common['tbname'] = $sender->tbname->getText()  ;
-
+      //  $common['tbname'] = $sender->tbname->getText()  ;
+        if( strlen($common['tbtoken'] )==0 ) {
+            $this->setWarn("Не задано токен") ;
+            System::setOptions("common", $common);            
+            return;
+        }
+        
         $url= _BASEURL. 'chatbot.php' ;
 
         $bot = new \App\ChatBot($common['tbtoken']) ;

@@ -126,7 +126,7 @@ class TransItem extends \App\Pages\Base
         $row->add(new Label('toname',$it->itemname))  ;
         $row->add(new Label('tocode',$it->item_code))  ;
         $row->add(new Label('toqty', H::fqty($it->qty)) ) ;
-        $row->add(new TextInput('toprice', new  Bind($it,'price') ) )  ;
+        $row->add(new TextInput('toprice', new  Bind($it,'price') ) )->onChange($this,'onToPrice',true )  ;
         $row->add(new ClickLink('todel', $this,'deleteTo')  ) ;
         
         $this->_tototal += (H::fa($it->price * $it->qty ));
@@ -175,6 +175,13 @@ class TransItem extends \App\Pages\Base
           
         $it->qty= $fqty;
         $it->price = 0;
+        
+        if(count($this->_tolist)==0  && $it->qty >0) {  //для  одноцй позиции
+            $from = doubleval( $this->docform->fromtotal->getText() );
+            $it->price = H::fa($from/$it->qty);
+        }
+        
+        
         $this->_tolist[$it->item_id]  = $it; 
         
         $this->docform->toitem->setKey(0)  ;   
@@ -292,6 +299,15 @@ class TransItem extends \App\Pages\Base
     }
 
 
+    public function onToPrice($sender) {
+        $sum=0;        
+        foreach( $this->_tolist as $item) {
+           $sum +=  ( doubleval($item->qty)*doubleval($item->price)); 
+        }
+        $this->docform->tototal->setText($sum);
+         
+    }
+    
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
