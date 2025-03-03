@@ -39,7 +39,7 @@ class Options extends \App\Pages\Base
         $pt[2] = 'Постоплата';
         $pt[3] = 'Оплата в Чеку або ВН';
         
-        $form->add(new DropDownChoice('defpaytype',$pt, $modules['згpaytype']??0));
+        $form->add(new DropDownChoice('defpaytype',$pt, $modules['pupaytype']??0));
 
 
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['pusalesource']));

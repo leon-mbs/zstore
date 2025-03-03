@@ -139,6 +139,16 @@ class Orders extends \App\Pages\Base
             if (strlen($puorder['phone']) > 0) {
                 $neworder->notes .= " Тел:" . str_replace('+', '', $puorder['phone']). ";";
             }
+            
+            if (strlen($puorder['payment_data']['name']) > 0) {
+                $neworder->notes .= " Оплата:" . $puorder['payment_data']['type']." " . $puorder['payment_data']['status'] . "    ;";
+            }
+   
+            if (strlen($puorder['payment_option']) > 0) {
+                $neworder->notes .= " Оплата:" . $puorder['payment_option']['name'] . ";";
+            }            
+            
+            
             if (strlen($puorder['delivery_option']['name']) > 0) {
                 $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . ";";
             }
