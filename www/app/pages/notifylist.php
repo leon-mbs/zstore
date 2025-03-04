@@ -32,6 +32,10 @@ class NotifyList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new TextInput('searchtext'));
+       
+        $this->add(new Form('msgform'))->onSubmit($this, 'msgOnSubmit');
+        $this->msgform->add(new DropDownChoice('msguser',\App\Entity\User::findArray('username','disabled<>1 and user_id<>' . $user->user_id,'username'),0));
+        $this->msgform->add(new TextArea('msgtext'));
 
         $this->ds = new EntityDataSource("\\App\\Entity\\Notify", "dateshow <= now() and user_id=" . $user->user_id, " dateshow desc");
 
@@ -77,9 +81,8 @@ class NotifyList extends \App\Pages\Base
         $row->add(new Label("msg"))->setText($notify->message, true);
         $row->add(new Label("ndate", \App\Helper::fdt($notify->dateshow)));
         $row->add(new Label("newn"))->setVisible($notify->checked == 0);
-        $row->add(new Label("nanswer"))->setVisible($notify->sender_id > 0);
-        $row->nanswer->setAttribute('onclick', "openSendMsg({$notify->sender_id},'{$sender_name}')");
-
+        $row->add(new ClickLink("nanswer",$this,'onAnswer'))->setVisible($notify->sender_id > 0);
+     
 
     }
 
@@ -96,5 +99,33 @@ class NotifyList extends \App\Pages\Base
         $this->nlist->Reload();
     }
 
+    public function onAnswer($sender) {
+        $msg= $sender->getOwner()->getDataItem();   
+        
+        $this->msgform->msguser->setValue($msg->sender_id);  
+        $this->addJavaScript(" $(\"#msgtext\").focus() ",true)  ;
+    }
+    public function msgOnSubmit($sender) {
+        
+        $n = new \App\Entity\Notify();
+        $n->user_id = $sender->msguser->getValue();;
+        $n->message = trim($sender->msgtext->getText() ) ;
+        $n->sender_id = System::getUser()->user_id;
+        
+        if($n->user_id==0) {
+            $this->setError('Не вказано отримувача')  ;
+            return;
+        }
+        if(strlen($n->message)==0) {
+            $this->setError('Не введено текст')  ;
+            return;
+        }
+        
+        
+        $n->save();  
+        $this->setSUccess('Відправлено')  ;
+        $sender->msgtext->setText('')       ;     
+        $sender->msguser->setValue(0)       ;     
+    }
 
 }
