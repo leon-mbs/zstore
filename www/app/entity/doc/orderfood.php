@@ -66,7 +66,6 @@ class OrderFood extends Document
                         "deliverydata" => $deliverydata,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
 
-
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
                         "contact"   => $this->headerdata["contact"],
                         "exchange"        => H::fasell($this->headerdata["exchange"]),
@@ -90,7 +89,7 @@ class OrderFood extends Document
     public function generatePosReport($ps=false,$bill=false) {
 
         $detail = array();
-
+ 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
@@ -140,12 +139,17 @@ class OrderFood extends Document
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]??'') > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "exchange"        => H::fasell($this->headerdata["exchange"]??0),
                         "pos_name"        => $this->headerdata["pos_name"],
+                        "form1"           => $this->headerdata["paytype"]==1,
+                        "form2"           => $this->headerdata["paytype"]==2,
+                        
+                        "payeq"           => (strlen($pos->payeq ) > 0   && $this->headerdata["paytype"]==2) ? $pos->payeq : false,
+                      
                         "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
-                        "total"           => H::fasell($this->amount),
                         "payed"           => H::fasell($this->headerdata['payed']),
                         "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
+                        "trans"          => strlen($this->headerdata["trans"]) > 0 ? $this->headerdata["trans"] : false,
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
@@ -237,7 +241,7 @@ class OrderFood extends Document
 
             $disc = \App\System::getOptions("discount");
             $emp_id = \App\System::getUser()->employee_id ;
-            if($emp_id >0 && $disc["bonussell"] >0) {
+            if($emp_id >0 && ($disc["bonussell"] ??0)  >0) {
                 $b =  $this->amount * $disc["bonussell"] / 100;
                 $ua = new \App\Entity\EmpAcc();
                 $ua->optype = \App\Entity\EmpAcc::BONUS;

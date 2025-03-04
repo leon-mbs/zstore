@@ -59,7 +59,34 @@
     </tr>
 
     {{/customer_name}}
+    <tr>
+       <td colspan="3" > 
+        {{#form1}}
+          Форма оплати: готiвка
+        {{/form1}}
+        {{#form2}}
+          Форма оплати: безготiвка
+        {{/form2}}
+        {{#form3}}
+          Форма оплати: iнше
+        {{/form3}}
 
+       </td>
+    </tr>  
+  {{#payeq}}
+    <tr>
+       <td colspan="3" > 
+          Засiб оплати:  {{payeq}}
+       </td>
+    </tr> 
+  {{/payeq}}       
+   {{#trans}}
+    <tr>
+       <td colspan="3" > 
+          № транзакції:  {{trans}}
+       </td>
+    </tr> 
+  {{/trans}}   
     <tr>
         <td colspan="3">Термiнал: {{pos_name}}</td>
     </tr>
@@ -113,35 +140,9 @@
         <td align="right">{{exchange}}</td>
     </tr>
   
-    <tr>
-       <td colspan="3" > 
-        {{#form1}}
-          Форма оплати: готiвка
-        {{/form1}}
-        {{#form2}}
-          Форма оплати: безготiвка
-        {{/form2}}
-        {{#form3}}
-          Форма оплати: iнше
-        {{/form3}}
 
-       </td>
-    </tr>  
-   {{#trans}}
-    <tr>
-       <td colspan="3" > 
-          № транзакції:  {{trans}}
-       </td>
-    </tr> 
-  {{/trans}}   
   
-  {{#payeq}}
-    <tr>
-       <td colspan="3" > 
-          Засiб оплати:  {{payeq}}
-       </td>
-    </tr> 
-  {{/payeq}}   
+
   
          
    {{#addbonus}}

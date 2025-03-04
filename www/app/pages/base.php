@@ -231,6 +231,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["hideblock"] = false;
 
         //активные   пользователий
+        $options['showactiveusers'] = 0;   //todo
         if ($options['showactiveusers'] == 1) {
             $this->_tvars["showactiveusers"] = true;
             $this->_tvars["activeuserscnt"] = 0;
@@ -261,6 +262,7 @@ class Base extends \Zippy\Html\WebPage
 
         }
         //чат
+        $options['showchat'] = 0;    //todo
         if ($options['showchat'] == 1) {
             $this->_tvars["showchat"] = true;
 

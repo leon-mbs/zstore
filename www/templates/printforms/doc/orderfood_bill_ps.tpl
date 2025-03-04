@@ -35,9 +35,27 @@
 <text>Покупець: {{customer_name}}</text>    
 
     {{/customer_name}}
-<text>Термінал: {{pos_name}}</text>    
+    
+   {{#ischeck}}    
+   
+    
+        {{#form1}}
+ <text>Форма оплати: готiвка</text>        
+        {{/form1}}
+        {{#form2}}
+ <text>Форма оплати: безготiвка</text>        
+        {{/form2}}    
+         {{#payeq}}
+ <text>Засiб оплати:  </text>        
+ <text>{{payeq}}  </text>        
+          
+        {{/payeq}}   
+        {{#trans}}
+ <text>№ транзакції  {{trans}}</text>        
+          
+        {{/trans}}     
 <text>Касир: {{username}}</text>    
-
+   {{/ischeck}}
  
 
 <separator>-</separator>
