@@ -120,10 +120,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $puorder['id'];
             $neworder->headerdata['puorderback'] = 0;
             $neworder->headerdata['salesource'] = $modules['pusalesource'];
-            $neworder->headerdata['paytype'] = $defpaytype;  //постоплата
-            $neworder->headerdata['payment'] = $defmf;   
-            $neworder->headerdata['store'] = $defstore;   
- 
+        
             $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
 
             $neworder->amount = H::fa($puorder['price']);
@@ -215,7 +212,10 @@ class Orders extends \App\Pages\Base
                 }
             }
 
-
+            $shoporder->headerdata['paytype'] = $defpaytype;  //постоплата
+            $shoporder->headerdata['payment'] = $defmf;   
+            $shoporder->headerdata['store'] = $defstore;   
+ 
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
