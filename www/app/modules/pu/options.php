@@ -88,7 +88,7 @@ class Options extends \App\Pages\Base
         $modules['pumf'] = $mf;
         $modules['pustore'] = $store;
         $modules['pupricetype'] = $pricetype;
-        $modules['pustoreшв'] = $store;
+     //   $modules['pustoreid'] = $store;
         $modules['pupricetype'] = $pricetype;
         $modules['pusalesource'] = $salesource;
         $modules['puinsertcust'] = $insertcust;
