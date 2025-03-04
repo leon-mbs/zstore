@@ -1509,7 +1509,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Контрагенти', 'CustomerList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Прибуткова накладна', 'GoodsReceipt', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Видаткова накладна', 'GoodsIssue', 'Продажі', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал документiв', 'DocList', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Загальний журнал', 'DocList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Гарантійний талон', 'Warranty', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Рух по складу', 'ItemActivity', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'ABC аналіз', 'ABC', 'Аналітика', 0);

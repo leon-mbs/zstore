@@ -241,7 +241,10 @@ class POSCheck extends Document
                 $header['form3']  = true;
             }
         }
-
+        if($header['form1']  == true) {
+           $header['payeq']  = false; 
+        }
+        
         if($ps) {
             $report = new \App\Report('doc/poscheck_bill_ps.tpl');
         } else {

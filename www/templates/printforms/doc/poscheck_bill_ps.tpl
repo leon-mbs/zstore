@@ -29,6 +29,29 @@
 <text>Покупець: {{customer_name}}</text>    
 
     {{/customer_name}}
+    
+    
+    
+    
+        {{#form1}}
+ <text>Форма оплати: готiвка</text>        
+        {{/form1}}
+        {{#form2}}
+ <text>Форма оплати: безготiвка</text>        
+        {{/form2}}    
+        {{#form3}}
+ <text>Форма оплати: iнше</text>        
+        {{/form3}}    
+        {{#payeq}}
+ <text>Засiб оплати:  </text>        
+ <text>{{payeq}}  </text>        
+          
+        {{/payeq}}     
+        {{#trans}}
+ <text>№ транзакції  {{trans}}</text>        
+          
+        {{/trans}}      
+    
 <text>Термінал: {{pos_name}}</text>    
 <text>Касир: {{username}}</text>    
 
@@ -73,27 +96,8 @@
  <text>Решта: {{exchange}}</text>
  {{/exchange}} 
  
-    
-    
-        {{#form1}}
- <text>Форма оплати: готiвка</text>        
-        {{/form1}}
-        {{#form2}}
- <text>Форма оплати: безготiвка</text>        
-        {{/form2}}    
-        {{#form3}}
- <text>Форма оплати: iнше</text>        
-        {{/form3}}    
-    
-        {{#trans}}
- <text>№ транзакції  {{trans}}</text>        
-          
-        {{/trans}}  
-        {{#payeq}}
- <text>Засiб оплати:  </text>        
- <text>{{payeq}}  </text>        
-          
-        {{/payeq}}  
+
+ 
         
           
     {{#addbonus}}

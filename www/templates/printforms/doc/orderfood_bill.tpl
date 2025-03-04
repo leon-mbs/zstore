@@ -67,7 +67,32 @@
     {{/customer_name}}
 
     {{#ischeck}}
-
+      <tr>
+       <td colspan="3">
+      {{#form1}}
+          Форма оплати: готiвка
+        {{/form1}}
+        {{#form2}}
+          Форма оплати: безготiвка
+        {{/form2}}    
+    
+    </td>
+    </tr>    
+    
+   {{#payeq}}
+    <tr>
+       <td colspan="3" > 
+          Засiб оплати:  {{payeq}}
+   </td>
+    </tr> 
+  {{/payeq}}   
+   {{#trans}}
+    <tr>
+       <td colspan="3" > 
+          № транзакції:  {{trans}}
+       </td>
+    </tr> 
+  {{/trans}}    
     <tr>
         <td colspan="3">Термінал: {{pos_name}}</td>
     </tr>
