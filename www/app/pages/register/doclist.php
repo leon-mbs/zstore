@@ -348,6 +348,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
         $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' ||
                                               $this->_doc->meta_name=='IncomeItem' ||
+                                              $this->_doc->meta_name=='MoveItem' ||
                                               $this->_doc->meta_name=='Order' ||
                                               $this->_doc->meta_name=='GoodsIssue' ||
                                               $this->_doc->meta_name=='TTN' ||
