@@ -258,7 +258,8 @@ class POSCheck extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-
+        $lost = 0;
+      
         $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
         $k = 1;   //учитываем  скидку
         if ($dd > 0 && $this->amount > 0) {
@@ -314,7 +315,7 @@ class POSCheck extends Document
             $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0-$ser->quantity);
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $ser->price * $k);
+            $sc->setOutPrice( $ser->price * $k);
 
             $sc->save();
         }
@@ -344,13 +345,13 @@ class POSCheck extends Document
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
 
                         }
-                        //учитываем  отходы
+                         //учитываем  отходы
+                        $kl=0;
                         if ($itemp->lost > 0) {
                             $kl = 1 / (1 - $itemp->lost / 100);
                             $itemp->quantity = $itemp->quantity * $kl;
-                            $lost = $kl - 1;
+                                              
                         }
-
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
@@ -361,15 +362,9 @@ class POSCheck extends Document
 
                             $sc->save();
                     
-                            if ($lost > 0) {
-                                $io = new \App\Entity\IOState();
-                                $io->document_id = $this->document_id;
-                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                                $io->save();
-
-                            }    
+                            if ($kl > 0) {
+                                 $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
+                            }     
                        }
                     }
                 }
@@ -427,6 +422,14 @@ class POSCheck extends Document
             $ua->save();
 
         }
+      if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $this->document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+            $io->save();
+       }
       
         
         return true;

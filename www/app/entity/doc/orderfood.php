@@ -265,8 +265,8 @@ class OrderFood extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
-            $required = $item->quantity - $onstore;
-          
+          $required = $item->quantity - $onstore;
+         
 
             //оприходуем  с  производства
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
@@ -286,13 +286,12 @@ class OrderFood extends Document
                         }
 
                         //учитываем  отходы
+                        $kl=0;
                         if ($itemp->lost > 0) {
                             $kl = 1 / (1 - $itemp->lost / 100);
                             $itemp->quantity = $itemp->quantity * $kl;
-                            $lostq = $itemp->quantity * $kl - $itemp->quantity;
-                            $itemp->quantity = $itemp->quantity * $kl;                    
+                                              
                         }
-
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
@@ -303,10 +302,9 @@ class OrderFood extends Document
 
                             $sc->save();
                             
-                            if ($lostq > 0) {
-                                $lost += ($lostq * $st->partion  );
-                            }        
-                            
+                            if ($kl > 0) {
+                                 $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
+                            }  
 
                         }
                     }   //комплекты
@@ -341,11 +339,11 @@ class OrderFood extends Document
             }
 
             //учитываем  отходы
+           $kl=0;
             if ($item->lost > 0) {
                 $kl = 1 / (1 - $item->lost / 100);
-                $losfq = $item->quantity * $kl - $item->quantity;
                 $item->quantity = $item->quantity * $kl;
-               
+                                  
             }
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
@@ -357,8 +355,8 @@ class OrderFood extends Document
                 $sc->tag=Entry::TAG_SELL;
 
                 $sc->save();
-                if ($lostq > 0) {
-                    $lost += ($lostq * $st->partion  );
+                if ($kl > 0) {
+                     $lost += abs($st->quantity * $st->partion  ) * ($item->lost / 100);
                 }                   
             }
         }

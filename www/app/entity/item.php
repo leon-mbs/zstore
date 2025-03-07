@@ -862,6 +862,9 @@ class Item extends \ZCL\DB\Entity
             $price = $this->getPartion(0);
         }
         if($price==0) {
+            $price = $this->getLastPartion() ;
+        }
+        if($price==0) {
             \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собївартїсть") ;
         }
         return $price;
