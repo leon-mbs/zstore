@@ -230,48 +230,7 @@ class Base extends \Zippy\Html\WebPage
         //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
 
-        //активные   пользователий
-        $options['showactiveusers'] = 0;   //todo
-        if ($options['showactiveusers'] == 1) {
-            $this->_tvars["showactiveusers"] = true;
-            $this->_tvars["activeuserscnt"] = 0;
-            $this->_tvars["aulist"] = array();
-
-            $conn = \ZDB\DB::getConnect();
-            $conn->Execute("update users  set  lastactive = now() where  user_id= " . $user->user_id);
-
-
-            $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
-          
-
-            if ($this->branch_id > 0) {
-                $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
-            }
-
-
-            $users = \App\Entity\User::findArray('username', $w, 'username');
-            foreach ($users as $id => $u) {
-                if ($id == $user->user_id) {
-                    $id = null;
-                }
-                $this->_tvars["aulist"][] = array("auserid" => $id, 'ausername' => $u);
-            }
-
-
-            $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
-
-        }
-        //чат
-        $options['showchat'] = 0;    //todo
-        if ($options['showchat'] == 1) {
-            $this->_tvars["showchat"] = true;
-
-            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id'] ?? 0));
-
-            $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;
-
-        }
-
+  
   
      
     //    $duration =  Session::getSession()->duration() ;
