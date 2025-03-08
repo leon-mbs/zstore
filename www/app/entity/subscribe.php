@@ -445,7 +445,7 @@ class Subscribe extends \ZCL\DB\Entity
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
         $header['day_beznal']= H::fa($conn->GetOne($sql));
      $sql = "
-          select   sum(0-e.quantity*e.partion) as summa 
+          select   sum(0-e.quantity*e.outprice) as summa 
               from entrylist_view  e
 
              
@@ -456,7 +456,7 @@ class Subscribe extends \ZCL\DB\Entity
               
         $header['day_summa']= H::fa( abs(  $conn->GetOne($sql) ) );
    $sql = "
-          select   sum(0-e.quantity*e.partion) as summa 
+          select   sum(0-e.quantity*e.outprice) as summa 
               from entrylist_view  e
 
              

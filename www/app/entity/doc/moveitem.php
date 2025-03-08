@@ -51,6 +51,7 @@ class MoveItem extends Document
 
             $detail[] = array("no"        => $i++,
                               "item_name" => $name,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
                               "quantity"  => H::fqty($item->quantity));

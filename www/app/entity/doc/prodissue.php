@@ -56,8 +56,18 @@ class ProdIssue extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
+        $lost = 0;
+      
 
         foreach ($this->unpackDetails('detaildata') as $item) {
+            $kl=0;
+            if ($item->lost > 0) {
+                $kl = 1 / (1 - $item->lost / 100);
+                $item->quantity = $item->quantity * $kl;
+                                  
+            }
+      
+      
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
@@ -67,9 +77,19 @@ class ProdIssue extends Document
                 $sc->tag=Entry::TAG_TOPROD;
 
                 $sc->save();
+                if ($kl > 0) {
+                     $lost += abs($st->quantity * $st->partion  ) * ($item->lost / 100);
+                }                   
             }
         }
+       if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $this->document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
 
+            $io->save();
+       }
         return true;
     }
 

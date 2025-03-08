@@ -222,7 +222,7 @@ class Document extends \ZCL\DB\Entity
     public function unpackDetails($dataname) {
         
         if(is_array($this->detaildata[$dataname] ?? null)) {
-            return $this->detaildata[$dataname] ;
+            return unserialize(serialize( $this->detaildata[$dataname] ));
         }
 
         //для   совместимтсти

@@ -54,7 +54,8 @@ class ProdReceipt extends Document
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-
+        $lost = 0;
+      
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             if ($item->autooutcome == 1) {  //списание  комплектующих
@@ -67,13 +68,13 @@ class ProdReceipt extends Document
                         continue;
                     }
                     
-                    //учитываем  отходы
-                    if ($itemp->lost > 0) {
-                        $kl = 1 / (1 - $itemp->lost / 100);
-                        $itemp->quantity = $itemp->quantity * $kl;
-                        $lost = $kl - 1;
-                    }
-                    
+                       //учитываем  отходы
+                        $kl=0;
+                        if ($itemp->lost > 0) {
+                            $kl = 1 / (1 - $itemp->lost / 100);
+                            $itemp->quantity = $itemp->quantity * $kl;
+                                              
+                        }
                     $itemp->quantity = $item->quantity * $part->qty;
                     if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                         throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
@@ -88,15 +89,9 @@ class ProdReceipt extends Document
 
                         $sc->save();
                         
-                        if ($lost > 0) {
-                            $io = new \App\Entity\IOState();
-                            $io->document_id = $this->document_id;
-                            $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                            $io->save();
-
-                        }    
+                        if ($kl > 0) {
+                             $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
+                        }     
                         
                     }
                 }
@@ -113,6 +108,14 @@ class ProdReceipt extends Document
             $sc->save();
         }
 
+       if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $this->document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+            $io->save();
+       }
 
         return true;
     }

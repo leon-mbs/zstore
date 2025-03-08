@@ -172,12 +172,12 @@ class GoodsIssue extends Document
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
                         }
                          //учитываем  отходы
+                        $kl=0;
                         if ($itemp->lost > 0) {
                             $kl = 1 / (1 - $itemp->lost / 100);
                             $itemp->quantity = $itemp->quantity * $kl;
-                            $lost = $kl - 1;
+                                              
                         }
-
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -187,14 +187,8 @@ class GoodsIssue extends Document
 
                             $sc->save();
  
-                            if ($lost > 0) {
-                                $io = new \App\Entity\IOState();
-                                $io->document_id = $this->document_id;
-                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                                $io->save();
-
+                            if ($kl > 0) {
+                                 $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
                             }    
                             
                             

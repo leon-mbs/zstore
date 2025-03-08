@@ -67,6 +67,7 @@ class TransItem extends \App\Pages\Base
 
         $this->docform->add(new SubmitButton('addto'))->onClick($this, 'addTo');
         $this->docform->add(new SubmitButton('addfrom'))->onClick($this, 'addFrom');
+        $this->docform->add(new ClickLink('autoprice'))->onClick($this, 'onAutoPrice');
         
         
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
@@ -176,11 +177,11 @@ class TransItem extends \App\Pages\Base
         $it->qty= $fqty;
         $it->price = 0;
         
-        if(count($this->_tolist)==0  && $it->qty >0) {  //для  одноцй позиции
+        if(count($this->_tolist)==0  && $it->qty >0) {  //для  одной позиции
             $from = doubleval( $this->docform->fromtotal->getText() );
             $it->price = H::fa($from/$it->qty);
         }
-        
+     
         
         $this->_tolist[$it->item_id]  = $it; 
         
@@ -204,6 +205,20 @@ class TransItem extends \App\Pages\Base
         unset($this->_tolist[$it->item_id] ) ;
         
       
+        $this->Reload() ;      
+     
+    }    
+    
+   public function onAutoPrice( $sender) {
+      
+        $tmp=[];
+       
+        foreach($this->_tolist as $i=>$it)  {  
+            $it->price = $it->getLastPartion();
+            $tmp[$i]= $it;
+        }
+        $this->_tolist  = $tmp; 
+        
         $this->Reload() ;      
      
     }    
