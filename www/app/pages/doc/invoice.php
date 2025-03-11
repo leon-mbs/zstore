@@ -216,6 +216,24 @@ class Invoice extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }  
+                    if ($basedoc->meta_name == 'Order') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                        $this->OnChangeCustomer($this->docform->customer);
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
+
+                        $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
+                     
+                        $this->docform->total->setText($basedoc->amount);
+
+                        $this->calcPay();
+
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                    }  
                 }
             }
         }
@@ -364,13 +382,9 @@ class Invoice extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-
-
-
+  
         $item = Service::load($id);
-
-
-
+ 
         $item->quantity = $this->editserdetail->editserquantity->getText();
 
         $price = $this->editserdetail->editserprice->getText();
