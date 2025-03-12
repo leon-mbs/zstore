@@ -668,19 +668,7 @@ class TTN extends \App\Pages\Base
                                    
                     
                 }  
- 
-                // проверка на минус  в  количестве
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
-
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                            return;
-                        }
-                    }
-                }                  
+                          
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 
                            
