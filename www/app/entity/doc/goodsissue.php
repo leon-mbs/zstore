@@ -323,6 +323,12 @@ class GoodsIssue extends Document
 
             if($this->parent_id > 0) {
                 $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'Invoice' && $order->parent_id > 0) {
+                      $order = Document::load($order->parent_id);
+                      $order = $order->cast() ;
+                      
+                }
+                 
                 if($order->meta_name == 'Order' && $order->state > 4) {
 
                           
