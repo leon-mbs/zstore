@@ -99,6 +99,7 @@ class StoreItems extends \App\Pages\Base
             $r = array();
             $r['itemname']  =  $item->itemname;
             $r['item_code']  =  $item->item_code;
+            $r['minqty']  =  $item->minqty>0 ? H::fqty($item->minqty) : '';
 
             $flag = true;
             $r['stlist']  =  array() ;
@@ -145,7 +146,9 @@ class StoreItems extends \App\Pages\Base
         }
 
 
-        $header = array(
+        $header = array(  
+                         "date"=>H::fd(time()),
+                         "cols"=>count($storelist)+3 ,
                         "_detail"       => $detail,
                         "stores"         => \App\Util::tokv($storelist)
         );

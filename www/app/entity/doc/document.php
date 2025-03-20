@@ -45,6 +45,7 @@ class Document extends \ZCL\DB\Entity
     public const DEL_NP      = 4;    //  новая почта
     public const DEL_UP      = 5;    //  укрпочта
     public const DEL_MEEST   = 6;    //  мест
+    public const DEL_ROZ     = 7;    //  
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
@@ -970,6 +971,7 @@ class Document extends \ZCL\DB\Entity
 
         $list[self::DEL_UP] = 'Укр. пошта';
         $list[self::DEL_MEEST] = 'Meest';
+        $list[self::DEL_ROZ] = 'Rozetka';
         $list[self::DEL_SERVICE] = 'Iнша служба доставки';
 
         return $list;
