@@ -268,7 +268,7 @@ class ProductList extends \App\Pages\Base
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl( $image->getImageUrl(true,true) );
+        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl( "/loadshopimage.php?id=".$image->image_id .  '&t=t' ) ;
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
 

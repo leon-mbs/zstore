@@ -159,11 +159,12 @@ class Orders extends \App\Pages\Base
             }
             
             if (is_array($puorder['delivery_provider_data'])  ) {
-                foreach($puorder['delivery_provider_data'] as $name=>$value)  {
-                    $neworder->notes .=  ( $name.':'.$value.' ' ) ;     
+        
+                if($puorder['delivery_provider_data']['provider']=='nova_poshta'){
+                   $neworder->headerdata['delivery'] =  Document::DEL_NP ;
+                   $neworder->headerdata['npaddress'] = $puorder['delivery_address'] ;
                 }
-               
-                $neworder->notes .=  ";" ;
+                 
             }
             
             
