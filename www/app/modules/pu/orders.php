@@ -120,7 +120,7 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['outnumber'] = $puorder['id'];
             $neworder->headerdata['puorderback'] = 0;
             $neworder->headerdata['salesource'] = $modules['pusalesource'];
-        
+                 
             $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
 
             $neworder->amount = H::fa($puorder['price']);
@@ -138,25 +138,36 @@ class Orders extends \App\Pages\Base
             }
             
             if (strlen($puorder['payment_data']['name']) > 0) {
-                $neworder->notes .= " Оплата:" . $puorder['payment_data']['type']." " . $puorder['payment_data']['status'] . "    ;";
+                $neworder->notes .= " Оплата: " . $puorder['payment_data']['type']." " . $puorder['payment_data']['status'] . "    ;";
             }
    
             if ( is_array($puorder['payment_option']) &&   count($puorder['payment_option']) > 0) {
-                $neworder->notes .= " Оплата:"  ;
+                $neworder->notes .= " Оплата: "  ;
                 foreach($puorder['payment_option'] as $o) {
-                   $neworder->notes .= " Оплата:" . $puorder['payment_option']['name'] . ";";    
+                   $neworder->notes .= ($puorder['payment_option']['name'] . " ");    
                 }
-                
+               $neworder->notes .=  ";" ; 
             }            
             
             
             if (strlen($puorder['delivery_option']['name']) > 0) {
-                $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . ";";
+                $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . "  " . $puorder['delivery_option']['shipping_service'] . ";";
             }
 
             if (strlen($puorder['delivery_address']) > 0) {
                 $neworder->notes .= " Адреса:" . $puorder['delivery_address'] . ";";
             }
+            
+            if (is_array($puorder['delivery_provider_data'])  ) {
+                foreach($puorder['delivery_provider_data'] as $name=>$value)  {
+                    $neworder->notes .=  ( $name.':'.$value.' ' ) ;     
+                }
+               
+                $neworder->notes .=  ";" ;
+            }
+            
+            
+            
             if (strlen($puorder['client_notes']) > 0) {
                 $neworder->notes .= " Комментар:" . $puorder['client_notes'] . ";";
             }
