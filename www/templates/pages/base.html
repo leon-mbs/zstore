@@ -223,39 +223,8 @@
                         </form>
                     </li>
                     {{/usebranch}}
-                    {{#showactiveusers}}     
-                    <li class="nav-item dropdown">
-                        <a title="Активнi користувачi" class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="fa fa-users"></i>
-                            <span  class="badge badge-success navbar-badge">{{activeuserscnt}}</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <table class="table table-sm">
-                                {{#aulist}}
-                                <tr><td>{{ausername}}</td> 
-                                  <td>
-                                  {{#auserid}}
-                                  
-                                  <i onclick="openSendMsg({{auserid}},'{{ausername}}')" style="cursor:pointer" class="fa fa-comment-alt" title="Відправити повідомлення" ></i>
-                                  
-                                  {{/auserid}} 
-                                  </td>
-                                  </tr>
-                                {{/aulist}}
-                            </table>
-                        </div>
-                    </li>               
-                    {{/showactiveusers}}     
-                    {{#showchat}} 
-                    <li class="nav-item  ">
-                        <a class="nav-link  " href="/index.php?p=App/Pages/Chat">
-                            <i title="Загальний чат" class="fa fa-comments "></i>
-                            {{#chatcnt}}
-                            <span class="badge badge-success  navbar-badge">{{chatcnt}}</span>
-                            {{/chatcnt}}
-                        </a>
-                    </li>
-                    {{/showchat}}
+                  
+                
 
                     {{#taskcnt}} 
                     <li class="nav-item  ">
@@ -1138,38 +1107,7 @@
         </div>
         <!-- ./wrapper -->
 
-           <div id="modalsendmsg" class="modal fade  " tabindex="-1"  
-                 aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Вiдправити повiдомлення</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                             <form id="sendmsgform"  >
-                               <div class="form-group">
-                                  <label  >Отримувач</label>
-                                  <input  id="sendmsgrecname"  name="sendmsgrecname"  readonly class="form-control-plaintext"  >  
-                                  <input  id="sendmsgrecid" name="sendmsgrecid" type="hidden"     >  
-                               </div>
-                              <div class="form-group">
-                                  <label for="sendmsgtext">Повiдомлення</label>
-                                  <textarea required  class="form-control" name="sendmsgtext" id="sendmsgtext"  >  </textarea>
-                               </div>
-                             
-                             </form>
-                        </div>
-                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
-                    <button onclick="sendSendMsg()" type="submit" class="btn btn-primary">Вiдправити</button>
-                  </div>
-                    </div>
-                </div>
-            </div>
-
+       
             <div id="modalcinfo" class="modal fade  " tabindex="-1"  
                  aria-hidden="true">
                 <div class="modal-dialog  ">
@@ -1278,14 +1216,7 @@
          
                 } )
             }
-            function openSendMsg(id,name){
-                
-                
-              $('#modalsendmsg').modal('show')  
-              $('#sendmsgrecname').val(name)  
-              $('#sendmsgrecid').val(id)  
-              $('#sendmsgtext').val('')  
-            }
+            
             
              function  _getValue(id){
                   var v = Number.parseFloat($('#'+id).val()); 

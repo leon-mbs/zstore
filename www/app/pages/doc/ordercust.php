@@ -267,7 +267,7 @@ class OrderCust extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->qtystock->setText("");
-
+        $this->addJavaScript("$(\"#edititem\").focus()",true)  ;
     }
 
     public function editOnClick($sender) {

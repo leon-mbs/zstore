@@ -52,10 +52,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new CheckBox('usescanner'));
         $this->common->add(new CheckBox('usemobilescanner'));
         $this->common->add(new CheckBox('usebranch'));
-        $this->common->add(new CheckBox('showactiveusers'));
-        $this->common->add(new CheckBox('showchat'));
-
-
+      
       
         $this->common->add(new TextInput('ts_break'));
         $this->common->add(new TextInput('ts_start'));
@@ -74,10 +71,6 @@ class Options extends \App\Pages\Base
         $this->common->phonel->setValue($common['phonel']);
 
         $this->common->shopname->setText($common['shopname']);
-
-
-        $this->common->showactiveusers->setChecked($common['showactiveusers']);
-        $this->common->showchat->setChecked($common['showchat']);
 
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->sell2->setChecked($common['sell2']);
@@ -364,10 +357,7 @@ class Options extends \App\Pages\Base
         $common['sell2'] = $this->common->sell2->isChecked() ? 1 : 0;
         $common['usemobilescanner'] = $this->common->usemobilescanner->isChecked() ? 1 : 0;
 
-
-        $common['showactiveusers'] = $this->common->showactiveusers->isChecked() ? 1 : 0;
-        $common['showchat'] = $this->common->showchat->isChecked() ? 1 : 0;
-
+      
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
        
         System::setOptions("common", $common);

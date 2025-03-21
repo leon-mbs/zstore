@@ -156,6 +156,7 @@ class Orders extends \App\Pages\Base
 
             if (strlen($puorder['delivery_address']) > 0) {
                 $neworder->notes .= " Адреса:" . $puorder['delivery_address'] . ";";
+                $neworder->headerdata['ship_address']   = $puorder['delivery_address'];
             }
             
             if (is_array($puorder['delivery_provider_data'])  ) {
