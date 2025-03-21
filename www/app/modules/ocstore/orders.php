@@ -263,6 +263,9 @@ class Orders extends \App\Pages\Base
             $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
             $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+            
+            $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
+            
             if($modules['ocmf'] >0) {
                $neworder->headerdata['payment'] = $modules['ocmf'];
         

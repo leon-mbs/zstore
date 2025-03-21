@@ -864,7 +864,7 @@ class Order extends \App\Pages\Base
         $this->docform->baypoint->setVisible($dt == Document::DEL_NP ) ;
         $this->docform->bayhouse->setVisible($dt == Document::DEL_NP ) ;
         $this->docform->bayflat->setVisible($dt == Document::DEL_NP ) ;
-        if ($dt == 4) {
+        if ($dt == Document::DEL_NP) {
             $this->docform->deliverynp->setValue(0);
             $this->OnDeliverynp($this->docform->deliverynp) ;
         }
