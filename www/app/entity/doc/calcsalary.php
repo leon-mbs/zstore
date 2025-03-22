@@ -74,7 +74,7 @@ class CalcSalary extends Document
             }
              
         }
-
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata["iostate"] ??0 );
         return true;
     }
 
@@ -104,6 +104,7 @@ class CalcSalary extends Document
             'date'    => H::fd($this->document_date),
             "notes"   => nl2br($this->notes),
             "month"   => $this->headerdata["monthname"],
+            "department"   => ($this->headerdata["department"] ?? "") == "" ? false : $this->headerdata["department"],
             "year"    => $this->headerdata["year"],
             "stnames" => array(),
             "colspan" => count($stlist) + 1,

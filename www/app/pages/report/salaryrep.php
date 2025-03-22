@@ -6,6 +6,7 @@ use App\Entity\Employee;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
@@ -30,6 +31,9 @@ class SalaryRep extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), intval(date('m'))));
 
         $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
+        $dp =  Employee::getDP()  ;
+        
+        $this->filter->add(new TextInput('dep' ))->setDataList($dp['d']);
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -58,9 +62,10 @@ class SalaryRep extends \App\Pages\Base
         $yto = $this->filter->yto->getValue();
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
+        $dep = trim($this->filter->dep->getText());
+     
         $conn = \ZDB\DB::getConnect();
-
-        
+         
 
         $detail = array();
 
@@ -81,6 +86,11 @@ class SalaryRep extends \App\Pages\Base
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
+                if($dep != "" && $emp->department != $dep) {
+                     continue;
+                }
+                
+                
                 if ($emp_id > 0 && $emp->amount > 0) {
                     if ($emp->employee_id != $emp_id) {
                         continue;
@@ -118,7 +128,9 @@ class SalaryRep extends \App\Pages\Base
         }
 
         foreach (\App\Entity\Doc\Document::findYield("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to)) as $doc) {
-
+              if($dep != "" && $doc->getHD('department') != $dep) {
+                     continue;
+              }
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
                 if ($emp_id > 0 && $emp_id != $emp->employee_id) {
