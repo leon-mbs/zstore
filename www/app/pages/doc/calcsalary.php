@@ -11,6 +11,7 @@ use App\Entity\EmpAcc;
 use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
+use App\Entity\IOState;
 
 use Zippy\Html\Label;
 
@@ -136,6 +137,8 @@ class CalcSalary extends \App\Pages\Base
         $this->_doc->headerdata['daysmon'] = $post->doc->daysmon;
         $this->_doc->headerdata['year'] = $post->doc->year;
         $this->_doc->headerdata['month'] = $post->doc->month;
+        $this->_doc->headerdata['iostate'] = $post->doc->iostate;
+        $this->_doc->headerdata['department'] = $post->doc->department;
         $mlist = \App\Util::getMonth();
         $this->_doc->headerdata['monthname'] = $mlist[$post->doc->month] ;
 
@@ -330,9 +333,9 @@ class CalcSalary extends \App\Pages\Base
 
         $ret=[];
         $ret['newdoc'] = $this->_doc->document_id == 0 ;
-        $ret['emps'] = array() ;
-
-        $ret['opt'] = array() ;
+        $ret['emps'] = [] ;
+  
+        $ret['opt'] = [];
         $ret['opt']['coderesult']  =  $opt['coderesult'];
         $ret['opt']['codebaseincom']  =  $opt['codebaseincom'];
 
@@ -404,6 +407,7 @@ class CalcSalary extends \App\Pages\Base
             $e['salarytype'] = $emp->ztype ;
             $e['salarym'] = $emp->zmon  ;
             $e['salaryh'] = $emp->zhour  ;
+            $e['department'] = $emp->department  ;
             
          
 
@@ -412,9 +416,18 @@ class CalcSalary extends \App\Pages\Base
             }
             $e['_baseval'] = $emp->_baseval  ??0 ;
     
+            if(strlen($post->department ??'') >0)  {
+               if($e['department'] != $post->department )   {
+                   continue;
+               }
+            }
+    
             $ret['emps'][] = $e;
         }
 
+        
+ 
+        
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
     }
 
@@ -437,7 +450,14 @@ class CalcSalary extends \App\Pages\Base
         foreach($this->_stlist as $st) {
             $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
         }
-
+    
+        $pd = Employee::getDP() ;
+        $ret['deps'] = $pd['d'] ;
+        $ret['iostates'] = [] ; 
+        foreach(IOState::getTypeListSal()as $k=>$v) {
+            $ret['iostates'][]=['key'=>$k,'value'=>$v];
+        }    
+        
         $ret['doc'] = [] ;
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
         $ret['doc']['document_number']   =   $this->_doc->document_number ;
@@ -446,6 +466,8 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
+        $ret['doc']['iostate']   =   $this->_doc->headerdata['iostate'] ??0;
+        $ret['doc']['department']   =   $this->_doc->headerdata['department'] ??'';
 
 
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
