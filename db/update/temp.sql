@@ -37,15 +37,7 @@ ALTER TABLE acc_entry
 ADD INDEX document_id (document_id);
 
 
-CREATE VIEW acc_plan_view
-AS
-SELECT
-  ap.acc_code AS acc_code,
-  ap.acc_name AS acc_name,
-  ap.iszab AS iszab,
-  ap.iscustom AS iscustom,
-  CONCAT(ap.acc_code, ' ', ap.acc_name) AS acc_fullname
-FROM acc_plan ap;
+ 
 
  
 INSERT INTO acc_plan (acc_code, acc_name, iszab,iscustom) VALUES('20', 'Виробничі запаси', 0,0);
@@ -115,10 +107,10 @@ INSERT INTO acc_plan (acc_code, acc_name, iszab,iscustom) VALUES('МЦ', 'Мал
 
 
  
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(38, 3, 'План счетов', 'AccountList', 'Бухучет',   0 );
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(39, 3, 'Журнал проводок', 'AccountEntryList', 'Бухучет',   0 );
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(42, 2, 'Оборотно-сальдовая ведомость', 'ObSaldo', 'Бухучет',     0);
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(43, 2, 'Шахматная ведомость', 'Shahmatka', 'Бухучет',   0 );
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(44, 2, 'Движения по  счету', 'AccountActivity', 'Бухучет',     0);
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(41, 1, 'Ручная операция', 'ManualEntry', 'Прочее',   0);
-INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(45, 2, 'Финансовый отчет  малого  предприятия', 'FinancialReportSmall', 'Регламентированные',   0, 0);
+INSERT INTO metadata (  meta_type, description, meta_name, menugroup,   disabled) VALUES(38, 4, 'План рахункiв', 'AccountList', 'Бухоблiк',   0 );
+INSERT INTO metadata (  meta_type, description, meta_name, menugroup,   disabled) VALUES(39, 3, 'Журнал проводок', 'AccountEntryList', 'Бухоблiк',   0 );
+INSERT INTO metadata (  meta_type, description, meta_name, menugroup,   disabled) VALUES(42, 2, 'Оборотно-сальдова вiдомiсть', 'ObSaldo', 'Бухоблiк',     0);
+INSERT INTO metadata ( meta_type, description, meta_name, menugroup,   disabled) VALUES(43, 2, 'Шахматна вiдомiсть', 'Shahmatka', 'Бухоблiк',   0 );
+INSERT INTO metadata (  meta_type, description, meta_name, menugroup,   disabled) VALUES(44, 2, 'Рух по рахунку', 'AccountActivity', 'Бухоблiк',     0);
+INSERT INTO metadata (meta_id, meta_type, description, meta_name, menugroup,   disabled) VALUES(41, 1, 'Ручна проводка ', 'ManualEntry', 'Бухоблiк',   0);
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблiк',  , 0);
