@@ -38,7 +38,7 @@
 
                     </form>
                 </div>
-                       <a v-on:click.prevent="add"  class="btn  btn-success">Додати</a>
+                       <a v-on:click.prevent="add(today)"  class="btn  btn-success">Додати</a>
                 
                    <ul class="nav nav-tabs">
                   
@@ -259,11 +259,11 @@ var calendar
                   $('#editmodal').modal('show')   
           
                } ,    
-               add:function(){
-                
+               add:function(date){
+                  console.log(date)
                   this.edited = 0;
                   this.edittype = 1;
-                  this.editdate = this.today;
+                  this.editdate = date;
                   this.editfrom = this.start;
                   this.editto = this.end;
                   this.editbreak = this.break;
@@ -385,8 +385,8 @@ var calendar
          
         }, 
          dateClick: function(info) {
-               
-             vapp.add()
+            
+             vapp.add(  formatDate(info.date) )
              
               
          
