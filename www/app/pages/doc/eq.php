@@ -13,6 +13,7 @@ use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\AutocompleteTextInput;
+use Zippy\Html\Label;
 use App\Entity\Equipment;
 use App\Entity\EqEntry; 
 
@@ -50,6 +51,7 @@ class EQ extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
         $this->docform->add(new DropDownChoice('parea',\App\Entity\ProdArea::findArray('pa_name','disabled<>1','pa_name'),0 ));
         $this->docform->add(new TextInput('amount'));
+        $this->docform->add(new Label('tip'));
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this,'onCust');
         $this->docform->add(new AutocompleteTextInput('eq'))->onText($this,'oneqItem');
         $this->docform->eq->onChange($this,"onEQSelect");
@@ -105,6 +107,8 @@ class EQ extends \App\Pages\Base
          $this->docform->amount->setVisible(false);
          $this->docform->customer->setVisible(false);
          $this->docform->item->setVisible(false);
+         $this->docform->tip->setText("");
+         
          $op=intval($sender->getValue());
          
          if($op==1 || $op==5 || $op==6  || $op==7 ){
@@ -115,6 +119,8 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly',null);
             $this->docform->customer->setVisible(true);
+            $this->docform->tip->setText("Оплата через журнал розрахункiв з постачальниками");
+            
          }
          if($op==3){
             $this->docform->amount->setVisible(true);
@@ -130,6 +136,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly',null);
             $this->docform->customer->setVisible(true);
+            $this->docform->tip->setText("Оплата через журнал розрахункiв з покупцями");
          }
          if($op==9){
             $this->docform->amount->setVisible(true);

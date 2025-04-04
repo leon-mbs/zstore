@@ -114,7 +114,8 @@ class ZList extends \App\Pages\Base
         $this->detail->axml->setText($answer);
 
         $xml = $this->_doc->sentxml;
-
+ 
+        
         $p = strpos($xml, "?>") ;
         if($p !== false) {
             $xml = substr($xml, $p+2) ;
@@ -123,16 +124,13 @@ class ZList extends \App\Pages\Base
         $xml = new \SimpleXMLElement($xml);
 
         $header = array();
-        $wp = 'style="width:40mm"';
-        if (strlen($printer['pwidth']) > 0) {
-            $wp = 'style="width:' . $printer['pwidth'] . '"';
-        }
+     
         
         $d =  (string)$xml->ZREPHEAD->ORDERDATE[0] . (string)$xml->ZREPHEAD->ORDERTIME[0] ;
         $dl = str_split($d,2) ;
         $d= $dl[2]. $dl[3].'-'.$dl[1].'-'.$dl[0].' '. $dl[4].':'.$dl[5] ;
         
-        $header['printw']  = $wp;
+   
         $header['date']  = date('Y-m-d H:i', strtotime($d)) ;
         $header['fnpos']  =   $this->_doc->fnpos;
         $header['fndoc']  =   $this->_doc->fndoc;
