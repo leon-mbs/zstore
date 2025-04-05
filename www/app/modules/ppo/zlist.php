@@ -141,13 +141,13 @@ class ZList extends \App\Pages\Base
 
         if(isset($xml->ZREPREALIZ->PAYFORMS)) {
             foreach($xml->ZREPREALIZ->PAYFORMS->children() as $row) {
-                $header['payments'][]=array('forma'=>$row->PAYFORMNM,'amount'=>H::fa($row->SUM));
+                $header['payments'][]=array('forma'=>(string)$row$row->PAYFORMNM,'amount'=>H::fa((string)$row$row->SUM));
             }
         }
 
         if(isset($xml->v->PAYFORMS)) {
             foreach($xml->ZREPRETURN->PAYFORMS->children() as $row) {
-                $header['rpayments'][]=array('forma'=>$row->PAYFORMNM,'amount'=>H::fa($row->SUM));
+                $header['rpayments'][]=array('forma'=>(string)$row$row->PAYFORMNM,'amount'=>H::fa((string)$row$row->SUM));
             }
         }
         $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
