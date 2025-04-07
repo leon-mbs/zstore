@@ -200,9 +200,7 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'vkassa') !== false) {
             $this->editpan->editform->editvk->setChecked(true);
         }
-        if (strpos($this->role->modules, 'horoshop') !== false) {
-            $this->editpan->editform->edithr->setChecked(true);
-        }
+    
         if (strpos($this->role->modules, 'vdoc') !== false) {
             $this->editpan->editform->editvdoc->setChecked(true);
         }
@@ -347,9 +345,7 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editvk->isChecked()) {
             $modules = $modules . ',vkassa';
         }
-        if ($this->editpan->editform->edithr->isChecked()) {
-            $modules = $modules . ',horoshop';
-        }
+     
         if ($this->editpan->editform->editvdoc->isChecked()) {
             $modules = $modules . ',vdoc';
         }
