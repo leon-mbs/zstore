@@ -981,23 +981,25 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $where = "     meta_name  = 'Order'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date ";
+        $dt= $conn->DBDate(strtotime('-2 week')) ;
+        
+        $where = "     meta_name  = 'Order'   ";
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {
-            $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
+            $where .= " and   content like '%<salesource>{$salesource}</salesource>%'  ";
 
         }
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17,15) ";
+            $where .= " and  state not in (9,17,15) and {$dt}< document_date ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
         }
         if ($status == 2) {
-            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%')";
+            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%') ";
         }
 
 

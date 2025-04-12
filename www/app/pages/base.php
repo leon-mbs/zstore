@@ -25,11 +25,9 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
- 
-         
+      
         
-        $this->_tvars['curversion'] = System::CURR_VERSION ;
+      //  $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
 

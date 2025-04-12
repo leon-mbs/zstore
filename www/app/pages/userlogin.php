@@ -35,7 +35,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->setError('');
 
 
-        $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
+      //  $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
 
 
         $this->_tvars['appname'] = $common['shopname'];
