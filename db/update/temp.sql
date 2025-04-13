@@ -14,10 +14,19 @@ SELECT
   `s`.`details` AS `details`,
   `s`.`updatedon` AS `updatedon`,
   `c`.`customer_name` AS `customer_name`,
-  i.item_code 
+   i.item_code 
 FROM `custitems` `s`
   JOIN `customers` `c`
     ON `s`.`customer_id` = `c`.`customer_id`
   LEFT JOIN items i ON  s.item_id = i.item_id 
   
   WHERE c.status <> 1 
+ 
+  //ALTER TABLE prodstage  ADD  storder  int(11) DEFAULT null;
+ 
+  
+  INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Брак та вiдходи', 'ProdLost', 'Виробництво', 0);
+  
+  delete  from  options where  optname='version' ;
+  insert  into options (optname,optvalue) values('version','6.14.0''); 
+  

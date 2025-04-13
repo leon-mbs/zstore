@@ -564,14 +564,7 @@ CREATE TABLE prodstage (
   KEY pp_id (pp_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
-CREATE TABLE prodstageagenda (
-  sta_id int(11) NOT NULL AUTO_INCREMENT,
-  st_id int(11) NOT NULL,
-  startdate datetime NOT NULL,
-  enddate datetime NOT NULL,
-  PRIMARY KEY (sta_id),
-  KEY st_id (st_id)
-) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+ 
 
 CREATE TABLE crontask (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -1143,22 +1136,7 @@ FROM (((paylist pl
     ON ((pl.mf_id = m.mf_id))) ;
 
 
-CREATE
-VIEW prodstageagenda_view
-AS
-SELECT
-  a.sta_id AS sta_id,
-  a.st_id AS st_id,
-  a.startdate AS startdate,
-  a.enddate AS enddate,
-  pv.stagename AS stagename,
-  pv.state AS state,
-  (TIMESTAMPDIFF(MINUTE, a.startdate, a.enddate) / 60) AS hours,
-  pv.pa_id AS pa_id,
-  pv.pp_id AS pp_id
-FROM (prodstageagenda a
-  JOIN prodstage pv
-    ON ((a.st_id = pv.st_id))) ;    
+   
     
     
 CREATE
@@ -1170,18 +1148,7 @@ SELECT
   ps.pa_id AS pa_id,
   ps.state AS state,
   ps.stagename AS stagename,
-  COALESCE((SELECT
-      MIN(pag.startdate)
-    FROM prodstageagenda pag
-    WHERE (pag.st_id = ps.st_id)), NULL) AS startdate,
-  COALESCE((SELECT
-      MAX(pag.enddate)
-    FROM prodstageagenda pag
-    WHERE (pag.st_id = ps.st_id)), NULL) AS enddate,
-  COALESCE((SELECT
-      MAX(pag.hours)
-    FROM prodstageagenda_view pag
-    WHERE (pag.st_id = ps.st_id)), NULL) AS hours,
+ 
   ps.detail AS detail,
   pr.procname AS procname,
   pr.snumber AS snumber,

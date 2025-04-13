@@ -95,7 +95,7 @@ class Prod extends \App\Pages\Base
               join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and e.quantity  >0
                and d.meta_name in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')   and  (e.tag = 0 or e.tag = -32   ) 
- 
+              {$wparea}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.itemname,i.item_code

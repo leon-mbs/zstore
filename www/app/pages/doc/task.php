@@ -41,7 +41,7 @@ class Task extends \App\Pages\Base
     * @param mixed $basedocid  создание на  основании
     * @param mixed $date       дата  с  календаря
     */
-    public function __construct($docid = 0, $basedocid = 0, $date = null) {
+    public function __construct($docid = 0, $basedocid = 0, $date = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
