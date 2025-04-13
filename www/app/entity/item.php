@@ -788,7 +788,15 @@ class Item extends \ZCL\DB\Entity
             return true;
         }
         $code = Item::qstr($this->item_code);
-        $cnt = Item::findCnt("item_id <> {$this->item_id} and  item_code={$code} ");
+        
+        if(strlen($this->manufacturer)==0){
+            $where = "item_id <> {$this->item_id} and  item_code={$code} ";  
+        }  else {
+             $manufacturer = Item::qstr($this->manufacturer);
+
+             $where = "item_id <> {$this->item_id} and ( item_code={$code} and manufacturer= {$manufacturer} )";  
+        }
+        $cnt = Item::findCnt($where);
         if ($cnt > 0) {
             return false;
         }

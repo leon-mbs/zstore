@@ -25,11 +25,9 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
- 
-         
+      
         
-        $this->_tvars['curversion'] = System::CURR_VERSION ;
+      //  $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
 
@@ -136,7 +134,6 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
-        $this->_tvars["horoshop"] = 0;//todo  remove $modules['horoshop'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
        
 
@@ -182,9 +179,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
-        if (strpos(System::getUser()->modules ?? '', 'horoshop') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["horoshop"] = false;
-        }
+     
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
         }
@@ -199,7 +194,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
-            $this->_tvars["horoshop"] ||
+  
          
             $this->_tvars["vdoc"] ||
             $this->_tvars["np"]

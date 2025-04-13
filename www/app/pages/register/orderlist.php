@@ -516,6 +516,9 @@ class OrderList extends \App\Pages\Base
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
+        if ($state < 5) {
+            $this->statuspan->statusform->bref->setVisible(true);
+        }
 
         if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
             $this->statuspan->moveform->setVisible(true);
@@ -981,23 +984,24 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $where = "     meta_name  = 'Order'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date ";
+          
+        $where = "     meta_name  = 'Order'   ";
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {
-            $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
+            $where .= " and   content like '%<salesource>{$salesource}</salesource>%'  ";
 
         }
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17,15) ";
+            $where .= " and  state not in (9,17,15)   ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
         }
         if ($status == 2) {
-            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%')";
+            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%') ";
         }
 
 

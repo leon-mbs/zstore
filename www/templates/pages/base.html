@@ -177,7 +177,23 @@
                  }     
                          
      return ret;           
-   }          
+   }  
+   
+   
+function formatDate(date) {
+
+  var dd = date.getDate();
+  if (dd < 10) dd = '0' + dd;
+
+  var mm = date.getMonth() + 1;
+  if (mm < 10) mm = '0' + mm;
+
+  var yy = date.getFullYear() % 100;
+  if (yy < 10) yy = '0' + yy;
+
+  return  '20'+yy  + '-' + mm + '-' + dd
+}   
+           
      </script>
     </head>
     <body class="{{hidesidebar}} ">
@@ -876,40 +892,7 @@
 
                                     </li>
                                     {{/promua}}
-                                  {{#horoshop}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Обмін з Хорошоп
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                              {{#isadmins}}
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/HR/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>
-                                              {{/isadmins}}
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/HR/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/HR/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/horoshop}}                                    
+                                                              
                                     
                                 </ul>
 

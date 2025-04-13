@@ -1,12 +1,12 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="center">
+        <td colspan="7" align="center">
             Наряд № {{document_number}} вiд {{document_date}}
         </td>
     </tr>
     {{#pareaname}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             Вироб. ділянка: {{pareaname}}
         </td>
 
@@ -15,7 +15,7 @@
 
     {{#baseddoc}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             Замовлення: {{baseddoc}}
         </td>
 
@@ -24,7 +24,7 @@
 
     {{#cust}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             Замовник: {{cust}}
         </td>
 
@@ -33,7 +33,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Роботи</th>
+        <th colspan="7" style="text-align: left;">Роботи</th>
 
     </tr>
     <tr style="font-weight: bolder;">
@@ -63,7 +63,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Готова продукцiя</th>
+        <th colspan="7" style="text-align: left;">Готова продукцiя</th>
 
     </tr>
     <tr style="font-weight: bolder;">
@@ -93,13 +93,13 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Виконавці</th>
+        <th colspan="7" style="text-align: left;">Виконавці</th>
 
     </tr>
     {{#_detail3}}
     <tr>
 
-        <td colspan="4">{{emp_name}}</td>
+        <td colspan="5">{{emp_name}}</td>
        <td colspan="2">{{emp_ktu}}</td>
 
 
@@ -111,13 +111,13 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Устаткування</th>
+        <th colspan="7" style="text-align: left;">Устаткування</th>
 
     </tr>
     {{#_detail2}}
     <tr>
 
-        <td colspan="4">{{eq_name}}</td>
+        <td colspan="5">{{eq_name}}</td>
 
         <td colspan="2">{{code}}</td>
 
@@ -125,7 +125,7 @@
     {{/_detail2}}
     {{/iseq}}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
             {{{notes}}}
         </td>
 

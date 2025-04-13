@@ -113,9 +113,9 @@ class Orders extends \App\Pages\Base
             $neworder->packDetails('detaildata', $itlist);
             $neworder->headerdata['pricetype'] = 'price1';
 
-            $neworder->headerdata['cemail'] = $puorder['email'];
-            $neworder->headerdata['cname'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
-            $neworder->headerdata['cphone'] = $puorder['phone'] ;
+            $neworder->headerdata['email'] = $puorder['email'];
+            $neworder->headerdata['name'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
+            $neworder->headerdata['phone'] = $puorder['phone'] ;
             $neworder->headerdata['puorder'] = $puorder['id'];
             $neworder->headerdata['outnumber'] = $puorder['id'];
             $neworder->headerdata['puorderback'] = 0;
@@ -204,19 +204,19 @@ class Orders extends \App\Pages\Base
             }
 
             if ( $modules['puinsertcust'] == 1) {
-                $phone = \App\Util::handlePhone($shoporder->headerdata['cphone'] )  ;
+                $phone = \App\Util::handlePhone($shoporder->headerdata['phone'] )  ;
                 $cust = Customer::getByPhone($phone);
                 if ($cust == null) {
-                    $cust = Customer::getByEmail($shoporder->headerdata['cemail']);
+                    $cust = Customer::getByEmail($shoporder->headerdata['email']);
                 }   
-                if ($cust == null &&strlen($shoporder->headerdata['cname']) >0 && ( strlen($phone) >0 || strlen($shoporder->headerdata['cemail'])>0 ) ) {
+                if ($cust == null &&strlen($shoporder->headerdata['name']) >0 && ( strlen($phone) >0 || strlen($shoporder->headerdata['email'])>0 ) ) {
                     $cust = new Customer();
-                    $cust->customer_name = $shoporder->headerdata['cname'];
+                    $cust->customer_name = $shoporder->headerdata['name'];
                     $cust->phone = $phone;
 
                     $cust->type = Customer::TYPE_BAYER;
 
-                    $cust->email = $shoporder->headerdata['cemail'];
+                    $cust->email = $shoporder->headerdata['email'];
                     $cust->comment = "Клiєнт Prom UA";
                     $cust->save();
                 }        
