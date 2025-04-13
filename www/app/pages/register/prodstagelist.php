@@ -216,6 +216,14 @@ class ProdStageList extends \App\Pages\Base
         Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, 0, $this->_stage->st_id);
 
     }
+    public function taskOnClick($sender) {
+        if ($this->_stage->state == ProdStage::STATE_NEW) {
+            $this->_stage->state = ProdStage::STATE_INPROCESS;
+            $this->_stage->save();
+        }
+        Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0,0, $this->_stage->st_id);
+
+    }
   public function btnserviceOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->_stage->state = ProdStage::STATE_INPROCESS;

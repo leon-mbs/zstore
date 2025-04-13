@@ -40,8 +40,9 @@ class Task extends \App\Pages\Base
     * @param mixed $docid      редактирование
     * @param mixed $basedocid  создание на  основании
     * @param mixed $date       дата  с  календаря
+    * @param mixed $stage      производственный этап 
     */
-    public function __construct($docid = 0, $basedocid = 0, $date = 0) {
+    public function __construct($docid = 0, $basedocid = 0, $date = 0, $stage = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -129,6 +130,12 @@ class Task extends \App\Pages\Base
                     }
                 }
             }
+     
+            if ($stage > 0) {  
+            
+            }
+        
+        
         }
 
         $this->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();

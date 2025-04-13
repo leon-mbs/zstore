@@ -80,7 +80,7 @@ class EmpTask extends \App\Pages\Base
                 $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
                 $hours += (doubleval($ser->hours) * doubleval($service->quantity));
             }
-            if ($doc->headerdata['hours'] > 0) {
+            if (($doc->headerdata['hours'] ??0 ) > 0) {
                 $hours = $doc->headerdata['hours'];
             }
 
@@ -104,59 +104,10 @@ class EmpTask extends \App\Pages\Base
                 );
             }
         }
-
-
-        $elist = Employee::find("", "emp_name");
-        foreach ($elist as $emp_id => $emp) {
-            $emp->cnt = 0;
-            $emp->hours = 0;
-            $emp->amount = 0;
-        }
-
-        $detail2 = array();
-        $where = "      
-                DATE( enddate) >= " . $conn->DBDate($from) . "
-              AND DATE( enddate) <= " . $conn->DBDate($to) . "
-                
-        and state= " . ProdStage::STATE_FINISHED;
-
-        $stages = ProdStage::find($where);
-
-        foreach ($stages as $stage) {
-
-            if (count($stage->emplist) == 0) {
-                continue;
-            }
-            if($stage->salary >0) {
-
-                foreach ($stage->emplist as $emp) {
-
-
-                    $elist[$emp->employee_id]->amount += round($stage->salary * $emp->ktu);
-                    $elist[$emp->employee_id]->hours += $stage->hours;
-                    $elist[$emp->employee_id]->cnt += 1;
-                }
-
-            }
-
-
-        }
-
-        foreach ($elist as $emp_id => $emp) {
-            if ($emp->cnt > 0) {
-                $detail2[] = array(
-                    "name"   => $emp->emp_name,
-                    "cnt"    => $emp->cnt,
-                    "hours"  => $emp->hours,
-                    "amount" => round($emp->amount)
-                );
-            }
-        }
-
-
+ 
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
-                        "_detail2"  => $detail2,
+                     
                         'dateto'   => \App\Helper::fd($to)
         );
         $report = new \App\Report('report/emptask.tpl');
