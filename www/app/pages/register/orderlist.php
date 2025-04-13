@@ -516,6 +516,9 @@ class OrderList extends \App\Pages\Base
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
         }
+        if ($state < 5) {
+            $this->statuspan->statusform->bref->setVisible(true);
+        }
 
         if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
             $this->statuspan->moveform->setVisible(true);
@@ -981,8 +984,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $dt= $conn->DBDate(strtotime('-2 week')) ;
-        
+          
         $where = "     meta_name  = 'Order'   ";
 
         $salesource =$filter->salesource->getValue();
@@ -993,7 +995,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17,15) and {$dt}< document_date ";
+            $where .= " and  state not in (9,17,15)   ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
