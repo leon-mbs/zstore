@@ -1,4 +1,6 @@
-ALTER VIEW custitems_view
+DROP VIEW custitems_view;
+
+CREATE VIEW custitems_view
 AS
 SELECT
   `s`.`custitem_id` AS `custitem_id`,
@@ -20,9 +22,31 @@ FROM `custitems` `s`
     ON `s`.`customer_id` = `c`.`customer_id`
   LEFT JOIN items i ON  s.item_id = i.item_id 
   
-  WHERE c.status <> 1 
+  WHERE c.status <> 1   ;
  
-  //ALTER TABLE prodstage  ADD  storder  int(11) DEFAULT null;
+DROP VIEW prodstage_view; 
+ 
+CREATE VIEW prodstage_view
+AS
+SELECT
+  ps.st_id AS st_id,
+  ps.pp_id AS pp_id,
+  ps.pa_id AS pa_id,
+  ps.state AS state,
+  ps.stagename AS stagename,
+ 
+  ps.detail AS detail,
+  pr.procname AS procname,
+  pr.snumber AS snumber,
+  pr.state AS procstate,
+  pa.pa_name AS pa_name
+FROM ((prodstage ps
+  JOIN prodproc pr
+    ON ((pr.pp_id = ps.pp_id)))
+  JOIN parealist pa
+    ON ((pa.pa_id = ps.pa_id))) ;  
+ 
+
 CREATE TABLE  prodentry (
   id int NOT NULL AUTO_INCREMENT,
   item_id int NOT NULL,
@@ -63,9 +87,11 @@ FROM prodentry p
   LEFT JOIN parealist a
     ON p.pa_id = a.pa_id   ;
   
+  
   INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Брак та вiдходи', 'ProdLost', 'Виробництво', 0);
   INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення мiж етапами', 'ProdMove', 'Виробництво', 0);
+  отчет по  движению
   
-  delete  from  options where  optname='version' ;
-  insert  into options (optname,optvalue) values('version','6.14.0''); 
+  delete from options where  optname='version' ;
+  insert into options (optname,optvalue) values('version','6.14.0''); 
   
