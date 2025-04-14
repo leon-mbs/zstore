@@ -164,9 +164,8 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="save"   type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
-
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">  
+                    <input zippy="save"   type="submit" value="Зберегти" class="btn btn-primary  ">
                 </div>
             </div>
         </form>           
@@ -204,7 +203,7 @@
         </div>
 
         <div class="row" zippy="stagespan" >
-            <div class="col-12 col-md-10 col-xl-8">
+            <div class="col-12 col-md-8 col-xl-6">
                 <h5>Виробничі етапи </h5>
                 <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку процесів</a>  <br>
                 <a zippy="addstage"  class="btn  btn-success">Додати</a>
@@ -213,9 +212,7 @@
                        <th>Назва</th>
                        <th>Статус</th>
                        <th>Вир. дільниця</th>
-                       <th>Початок</th>
-                       <th>Кінець</th>
-                       <th>Годин</th>
+             
                        <th> </th>
                        <th> </th>
                        <th> </th>
@@ -224,9 +221,7 @@
                         <td zippy="stagename"></td>
                         <td zippy="stagestate"></td>
                         <td zippy="stageareaname"></td>
-                        <td zippy="stagestartdate"></td>
-                        <td zippy="stageenddate"></td>
-                        <td zippy="stagehours"></td>
+                 
 
                         <td><a title="Редагувати" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
                         <td><a title="Тех. карта" zippy="stagecard"><i class="fa fa-wrench"></i></a></td>
@@ -252,23 +247,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="editstagestartdateplan">Початок (план)</label>
-                        <input  required   class="form-control" zippy="editstagestartdateplan"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="editstageenddateplan">Кінець (план)</label>
-                        <input  required    class="form-control" zippy="editstageenddateplan"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editstagehours">Кіл. годин (план)</label>
-                        <input pattern="[0-9,\.]+" style="width:75px"   class="form-control qtyprice" zippy="editstagehours"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="editstagesalary">Сума по зарплаті</label>
-                        <input pattern="[0-9]+" style="width:75px"   class="form-control" zippy="editstagesalary"/>
-                    </div>
+                 
                     <div class="form-group">
                         <label for="editstagenotes">Коментар</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
@@ -276,8 +255,8 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="savestage"   type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-outline-primary  mr-2">   
+                    <input zippy="savestage"   type="submit" value="Зберегти" class="btn btn-primary  "> 
                 </div>
             </div>
         </form> 
@@ -293,8 +272,8 @@
 
                 </div>
                 <div class="col-12">
-                    <input zippy="savecard"   type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancelcard" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+                    <input zippy="cancelcard" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">   
+                    <input zippy="savecard"   type="submit" value="Зберегти" class="btn btn-primary  "> 
                 </div> 
             </div>
         </form> 

@@ -28,15 +28,11 @@ class ProdStage extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
-        $this->detail .= "<hoursplan>{$this->hoursplan}</hoursplan>";
-        $this->detail .= "<salary>{$this->salary}</salary>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<card><![CDATA[{$this->card}]]></card>";
         $emplist = base64_encode(serialize($this->emplist));
         $this->detail .= "<emplist>{$emplist}</emplist>";
-        $this->detail .= "<startdateplan>{$this->startdateplan}</startdateplan>";
-        $this->detail .= "<enddateplan>{$this->enddateplan}</enddateplan>";
-
+     
         $this->detail .= "</detail>";
 
         return true;
@@ -44,22 +40,16 @@ class ProdStage extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         //распаковываем  данные из detail
-        $this->startdate = strtotime($this->startdate);
-        $this->enddate = strtotime($this->enddate);
-
+     
 
         if (strlen($this->detail) == 0) {
             return;
         }
 
         $xml = simplexml_load_string($this->detail);
-        $this->hoursplan = doubleval($xml->hoursplan[0]);
-        $this->salary = intval($xml->salary[0]);
         $this->notes = (string)($xml->notes[0]);
         $this->card = (string)($xml->card[0]);
-        $this->startdateplan = (string)($xml->startdateplan[0]);
-        $this->enddateplan = (string)($xml->enddateplan[0]);
-
+      
         $this->emplist = @unserialize(@base64_decode((string)($xml->emplist[0])));
         if (!is_array($this->emplist)) {
             $this->emplist = array();

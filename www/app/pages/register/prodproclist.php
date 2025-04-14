@@ -83,10 +83,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->add(new Form('editstage'))->setVisible(false);
         $this->editstage->add(new TextInput('editstagename'));
-        $this->editstage->add(new TextInput('editstagehours'));
-        $this->editstage->add(new Date('editstagestartdateplan'));
-        $this->editstage->add(new Date('editstageenddateplan'));
-        $this->editstage->add(new TextInput('editstagesalary'));
+ 
 
         $this->editstage->add(new TextArea('editstagenotes'));
 
@@ -286,9 +283,6 @@ class ProdProcList extends \App\Pages\Base
 
         $row->add(new Label('stagename', $s->stagename));
         $row->add(new Label('stageareaname', $s->pa_name));
-        $row->add(new Label('stagestartdate', H::fd($s->startdateplan)));
-        $row->add(new Label('stageenddate', H::fd($s->enddateplan)));
-        $row->add(new Label('stagehours', $s->hoursplan));
         $row->add(new Label('stagestate', ProdStage::getStateName($s->state)));
 
         $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state == 0);
@@ -303,11 +297,7 @@ class ProdProcList extends \App\Pages\Base
         $this->_stage->stagename = $this->editstage->editstagename->getText();
         $this->_stage->notes = $this->editstage->editstagenotes->getText();
         $this->_stage->pa_id = $this->editstage->editstagearea->getValue();
-        $this->_stage->hoursplan = $this->editstage->editstagehours->getText();
-        $this->_stage->startdateplan = $this->editstage->editstagestartdateplan->getDate();
-        $this->_stage->enddateplan = $this->editstage->editstageenddateplan->getDate();
-        $this->_stage->salary = $this->editstage->editstagesalary->getText();
-
+  
         if ($this->_stage->pa_id == 0) {
             $this->setError("Не обрано виробничу ділянку");
             return;
@@ -338,10 +328,6 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editstage->editstagename->setText($this->_stage->stagename);
         $this->editstage->editstagenotes->setText($this->_stage->notes);
-        $this->editstage->editstagehours->setText($this->_stage->hoursplan);
-        $this->editstage->editstagestartdateplan->setDate($this->_stage->startdateplan);
-        $this->editstage->editstageenddateplan->setDate($this->_stage->enddateplan);
-        $this->editstage->editstagesalary->setText($this->_stage->salary);
         $this->editstage->editstagearea->setValue($this->_stage->pa_id);
 
 
