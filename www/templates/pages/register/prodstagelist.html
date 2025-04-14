@@ -62,13 +62,13 @@
 
                             <th></th>
                    
-                            <th></th>
+                       
                           
 
                         </tr>
                         <tr zippy="stlist">
 
-                            <td zippy="sname"></td>
+                            <td ><a zippy="sname"></a></td>
                             <td zippy="sstate"></td>
 
                           
@@ -81,10 +81,7 @@
                             <td  >
                                 <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                             </td>
-                            <td  >
-                                <a zippy="workers" title="Виконавці"><i class="fa fa-users"></i></a>
-                            </td>
-                        
+                       
                             <td  >
                                 <a zippy="card" title="Тех. карта"><i class="fa fa-wrench"></i></a>
                             </td>
@@ -106,39 +103,7 @@
 
         </div>
 
-        <div zippy="userspan"  class="row">
-            <div   class="col-12 col-md-6 col-xl-4">
-                <h5 zippy="stageh5"></h5>
-                <small>Виконавці, які беруть участь  в  данному  етапі з коефіцієнтом трудової участі 
-                для  нарахування  зарплат.          </small>
-                <form zippy="useraddform" class="form-inline ">
-
-                    <label for="adduser"> Виконавець </label>
-                    <select class="form-control mr-2" zippy="adduser">
-                        <option value="0">Не обрано</option>
-                    </select>
-                    <label for="addktu"> КТУ </label>
-                    <input pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice mr-2" zippy="addktu">
-
-                    <input type="submit" class="  btn btn-success  " value="ОК">
-
-                </form> 
-
-                <table class="table table-sm">
-                    <tr zippy="userslist">
-                        <td zippy="username" ></td>
-                        <td zippy="ktu" class="text-right"></td>
-                        <td><a zippy="deluser"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                </table>
-
-
-                <input zippy="cancelusers" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
-                <input zippy="saveusers"   type="button" value="Зберегти" class="btn btn-primary  ">
-            </div>
-
-        </div>
-
+       
 
         <div zippy="cardpan"  class="row">
             <div   class="col-12 col-md-8 col-xl-6">

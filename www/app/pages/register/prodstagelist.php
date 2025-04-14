@@ -30,7 +30,7 @@ use Zippy\Html\Link\BookmarkableLink;
 class ProdStageList extends \App\Pages\Base
 {
     private $_stage = null;
-    public $_emps  = array();
+ 
     public $_dates = array();
     public $_docs  = array();
 
@@ -62,17 +62,7 @@ class ProdStageList extends \App\Pages\Base
         $this->cardpan->add(new Label("carddata"));
         $this->cardpan->add(new ClickLink("backc", $this, "backOnClick"));
 
-        $this->add(new Panel("userspan"))->setVisible(false);
-        $this->userspan->add(new Label("stageh5"));
-        $this->userspan->add(new Form("useraddform"))->onSubmit($this, "onAddEmp");
-
-        $this->userspan->useraddform->add(new DropDownChoice('adduser', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")));
-        $this->userspan->useraddform->add(new  TextInput("addktu"));
-        $this->userspan->add(new DataView('userslist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emps')), $this, 'empOnRow'));
-
-        $this->userspan->add(new Button("saveusers"))->onClick($this, "onSaveEmp");
-        $this->userspan->add(new Button("cancelusers"))->onClick($this, "backOnClick");
-
+  
         $this->add(new Panel("statuspan"))->setVisible(false);
         $this->statuspan->add(new Label("stagenames"));
         $this->statuspan->add(new ClickLink("backs", $this, "backOnClick"));
@@ -102,7 +92,7 @@ class ProdStageList extends \App\Pages\Base
     public function stlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $st = $row->getDataItem();
 
-        $row->add(new Label('sname', $st->stagename));
+        $row->add(new ClickLink('sname', $this, 'showOnClick'))->setValue($st->stagename) ;
         $row->add(new Label('pname', $st->procname));
         $row->add(new Label('snumber', $st->snumber));
         $row->add(new Label('sstate', ProdStage::getStateName($st->state)));
@@ -114,9 +104,7 @@ class ProdStageList extends \App\Pages\Base
         $row->add(new ClickLink('card', $this, 'cardOnClick'))->setVisible(strlen($st->card) > 0);
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $row->add(new ClickLink('workers', $this, 'wOnClick'));
-   
-
+  
 
     }
 
@@ -130,74 +118,8 @@ class ProdStageList extends \App\Pages\Base
 
     }
 
-    public function wOnClick($sender) {
-        $this->userspan->setVisible(true);
-        $this->listpan->setVisible(false);
-        $this->_stage = $sender->getOwner()->getDataItem();
-        $this->_emps = $this->_stage->emplist;
-
-        $this->userspan->userslist->Reload();
-        $this->userspan->stageh5->setText($this->_stage->stagename);
-
-
-    }
-
-    public function onAddEmp($sender) {
-        $id = $sender->adduser->getValue();
-        $ktu = $sender->addktu->getText();
-
-        if ($id > 0 && $ktu > 0) {
-            $emp = \App\Entity\Employee::load($id);
-            $emp->ktu = $ktu;
-            $this->_emps[$id] = $emp;
-            $sender->clean();
-            $this->userspan->userslist->Reload();
-        }
-
-
-    }
-
-    public function empOnRow($row) {
-        $e = $row->getDataItem();
-
-        $row->add(new Label('username', $e->emp_name));
-        $row->add(new Label('ktu', $e->ktu));
-        $row->add(new ClickLink('deluser', $this, 'deluserOnClick'));
-
-    }
-
-    public function deluserOnClick($sender) {
-        $e = $sender->getOwner()->getDataItem();
-        $this->_emps = array_diff_key($this->_emps, array($e->employee_id => $this->_emps[$e->employee_id]));
-
-        $this->userspan->userslist->Reload();
-    }
-
-    public function onSaveEmp($sender) {
-
-        if (count($this->_emps) > 0) {
-            $ktu = 0;
-            foreach ($this->_emps as $emp) {
-                $ktu += doubleval($emp->ktu);
-            }
-            if ($ktu != 1) {
-                $this->setError("Сумарний КТУ повинен бути 1");
-                return;
-            }
-
-        }
-
-        $this->_stage->emplist = $this->_emps;
-        $this->_stage->save();
-        $this->userspan->setVisible(false);
-        $this->listpan->setVisible(true);
-    }
-
-
+  
  
- 
- 
-
 
     public function toprodOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
@@ -224,7 +146,8 @@ class ProdStageList extends \App\Pages\Base
         Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0,0, $this->_stage->st_id);
 
     }
-  public function btnserviceOnClick($sender) {
+   
+    public function btnserviceOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->_stage->state = ProdStage::STATE_INPROCESS;
             $this->_stage->save();
@@ -302,7 +225,7 @@ class ProdStageList extends \App\Pages\Base
 
         }
 
-        $this->_docs = \App\Entity\Doc\Document::find("state>4 and meta_name in('ProdReceipt','ProdIssue') and content like '%<st_id>{$this->_stage->st_id}</st_id>%'   ", "document_id");
+        $this->_docs = \App\Entity\Doc\Document::find("state>4 and meta_name in('ProdReceipt','ProdIssue','Task','IncomeService') and content like '%<st_id>{$this->_stage->st_id}</st_id>%'   ", "document_id");
         $this->statuspan->doclist->Reload();
 
         $this->statuspan->docview->setVisible(false);
@@ -328,7 +251,7 @@ class ProdStageList extends \App\Pages\Base
 
     public function backOnClick($sender) {
         $this->cardpan->setVisible(false);
-        $this->userspan->setVisible(false);
+     
         $this->statuspan->setVisible(false);
    
         $this->listpan->setVisible(true);
