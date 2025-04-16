@@ -394,7 +394,7 @@ class ProdReturn extends \App\Pages\Base
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
 
-        $criteria = " disabled <> 1 and  item_type <> 1 and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        $criteria = " disabled <> 1 and  item_type not in (1,4) and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
         
         return Item::findArray("itemname",$criteria,"itemname");
     }
