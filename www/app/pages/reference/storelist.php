@@ -46,7 +46,7 @@ class StoreList extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('storename', $item->storename));
-        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id]??''));
         $row->add(new Label('storedesc', $item->description));
 
 

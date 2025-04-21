@@ -55,7 +55,7 @@ class ProdReceipt extends Document
         $types = array();
         $common = \App\System::getOptions("common");
         $lost = 0;
-      
+        
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             if ($item->autooutcome == 1) {  //списание  комплектующих

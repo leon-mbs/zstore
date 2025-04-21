@@ -92,6 +92,9 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        $this->_doc->headerdata['st_id'] = $basedoc->headerdata['st_id'];
+                        $this->_doc->headerdata['pp_id'] = $basedoc->headerdata['pp_id'];
+                                   
                        //комплекты
                         foreach($basedoc->unpackDetails('prodlist') as $prod) {
                             $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);

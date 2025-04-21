@@ -57,7 +57,7 @@ class ProdProcList extends \App\Pages\Base
         $this->add(new Form('editproc'))->setVisible(false);
         $this->editproc->add(new TextInput('editname'));
         $this->editproc->add(new TextInput('editbasedoc'));
-        $this->editproc->add(new TextInput('editsnumber'));
+     
         $this->editproc->add(new Date('editstartdateplan'));
         $this->editproc->add(new Date('editenddateplan'));
         $this->editproc->add(new TextArea('editnotes'));
@@ -73,6 +73,8 @@ class ProdProcList extends \App\Pages\Base
         $this->prodspan->add(new Form('addprodform'))->onSubmit($this, 'onAddProd');
         $this->prodspan->addprodform->add(new DropDownChoice('additem', Item::findArray("itemname", "disabled<> 1 and item_type=" . Item::TYPE_PROD, "itemname"), 0));
         $this->prodspan->addprodform->add(new TextInput('addqty'));
+        $this->prodspan->addprodform->add(new TextInput('addsnumber'));
+
         $this->prodspan->add(new DataView('proditemlist', new ArrayDataSource($this, "_prodlist"), $this, 'prodlistOnRow'));
 
         $this->add(new Panel("stagespan"))->setVisible(false);
@@ -183,7 +185,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editproc->editname->setText($this->_proc->procname);
         $this->editproc->editbasedoc->setText($this->_proc->basedoc);
-        $this->editproc->editsnumber->setText($this->_proc->snumber);
+
         $this->editproc->editstartdateplan->setDate($this->_proc->startdateplan);
         $this->editproc->editenddateplan->setDate($this->_proc->enddateplan);
         $this->editproc->editnotes->setText($this->_proc->notes);
@@ -195,7 +197,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->_proc->procname = $this->editproc->editname->getText();
         $this->_proc->basedoc = $this->editproc->editbasedoc->getText();
-        $this->_proc->snumber = $this->editproc->editsnumber->getText();
+
         $this->_proc->notes = $this->editproc->editnotes->getText();
         $this->_proc->startdateplan = $this->editproc->editstartdateplan->getDate();
         $this->_proc->enddateplan = $this->editproc->editenddateplan->getDate();
@@ -224,6 +226,7 @@ class ProdProcList extends \App\Pages\Base
             return;
         }
         $item->qty = $sender->addqty->getText();
+        $item->snumber = $sender->addsnumber->getText();
         if (($item->qty > 0) == false) {
             return;
         }
@@ -238,6 +241,7 @@ class ProdProcList extends \App\Pages\Base
         $p = $row->getDataItem();
         $row->add(new Label('proditemname', $p->itemname));
         $row->add(new Label('proditemqty', $p->qty));
+        $row->add(new Label('proditemsnumber', $p->snumber));
         $row->add(new ClickLink('proditemdel'))->onClick($this, 'OnProdDel');
 
     }
@@ -420,7 +424,7 @@ class ProdProcList extends \App\Pages\Base
               from entrylist_view  e
 
               join items i on e.item_id = i.item_id
-             join documents_view d on d.document_id = e.document_id
+              join documents_view d on d.document_id = e.document_id
                where e.item_id >0   
                and d.meta_name in ('ProdIssue','ProdReceipt')
                and d.content like '%<pp_id>{$this->_proc->pp_id}</pp_id>%'  
@@ -445,14 +449,13 @@ class ProdProcList extends \App\Pages\Base
 
 
         $this->_prodlist = $this->_proc->prodlist;
-        $ids = array();
+       
 
         $this->_tvars['prodready'] = array();
         foreach ($items as $item) {
             if ($item['qty'] > 0 && $item['item_type'] == Item::TYPE_PROD) {
 
-                $ids[] = $item['item_id'];
-
+                
                 $plan = 0;
                 if ($this->_prodlist[$item['item_id']] instanceof Item) {
                     $plan = $this->_prodlist[$item['item_id']]->qty;
@@ -467,17 +470,17 @@ class ProdProcList extends \App\Pages\Base
         }
 
         foreach ($this->_prodlist as $id => $p) {
-            if (in_array($id, $ids)) {
-                continue;
-            }
+            
 
             $this->_tvars['prodready'][] = array(
                 'itemname' => $p->itemname,
+                'itemsnumber' => $p->snumber,
                 'itemplan' => $p->qty,
                 'itemfact' => H::fqty(0)
             );
         }
 
+        $this->_tvars['prodservice'] = array();
 
         $this->listpan->proclist->Reload();
         $this->goAnkor('showpan');

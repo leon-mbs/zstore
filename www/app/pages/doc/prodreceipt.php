@@ -106,7 +106,9 @@ class ProdReceipt extends \App\Pages\Base
 
                         $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-
+                        $this->_doc->headerdata['st_id'] = $basedoc->headerdata['st_id'];
+                        $this->_doc->headerdata['pp_id'] = $basedoc->headerdata['pp_id'];
+  
                         foreach ($basedoc->unpackDetails('prodlist') as $item) {
                             $item->price = $item->getProdprice();
                             $this->_itemlist[] = $item;

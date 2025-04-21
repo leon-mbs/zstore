@@ -24,7 +24,7 @@
 
                         <th>Найменування</th>
                         <th>Замовлення, договір</th>
-                        <th>Серія, партія</th>
+                      
                         <th>Статус</th>
                         <th>Початок</th>
                         <th>Кінець</th>
@@ -32,7 +32,7 @@
 
                         <th  > </th>
                         <th  > </th>
-                        <th  > </th>
+                     
                         <th  > </th>
                         <th  > </th>
                         <th  >  </th>
@@ -43,7 +43,7 @@
                     <tr zippy="proclist">
                         <td zippy="name"></td>
                         <td zippy="basedoc"></td>
-                        <td zippy="snumber"></td>
+                      
                         <td zippy="state"></td>
 
                         <td class="text-nowrap" zippy="startdate"></td>
@@ -111,19 +111,30 @@
                     <div   class="col-12 col-md-6 col-xl-4">
                         <h5>Готова продукція</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th class="text-right">План</th><th class="text-right">Факт</th></tr>
+                            <tr><th>Найменування</th><th  >Код</th>  <th>Серія, партія</th><th class="text-right">План</th><th class="text-right">Оприходувано</th></tr>
                             {{#prodready}}
-                            <tr><td >{{itemname}} </td><td class="text-right">{{itemplan}} </td><td class="text-right">  {{itemfact}}</td></tr>
+                            <tr><td >{{itemname}} </td><td >{{item_code}} </td><td >{{itemsnumber}} </td><td class="text-right">{{itemplan}} </td><td class="text-right">  {{itemfact}}</td></tr>
                             {{/prodready}}
                         </table>
-                    </div>            
-                    <div   class="col-12 col-md-6 col-xl-4">
-                        <h5>Списано матеріалів та комплектуючих</h5>
+                    </div>  
+                    <div class="w-100"></div>           
+                    <div   class="col-12 col-md-8 col-xl-6">
+                        <h5>Матеріали та комплектуючі</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th class="text-right">Кіл.</th><th class="text-right">На суму</th></tr>
+                            <tr><th>Найменування</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Списано</th><th class="text-right">Наявність</th></tr>
                             {{#prodstuff}}
-                            <tr><td >{{itemname}} </td><td class="text-right">{{itemqty}} </td><td class="text-right">  {{itemamount}}</td></tr>
+                            <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-right">{{itemqtyplan}} </td><td class="text-right">  {{itemqtyfact}}</td><td class="text-right">  {{itemqtystore}}</td></tr>
                             {{/prodstuff}}                     
+                        </table>
+                    </div>            
+                    <div class="w-100"></div>           
+                    <div   class="col-12 col-md-8 col-xl-6">
+                        <h5>Роботи</h5>
+                        <table class="table table-sm">
+                            <tr><th>Найменування</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Виконано</th>  </tr>
+                            {{#prodservice}}
+                            <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-right">{{itemqtyplan}} </td> <td class="text-right">  {{itemqtystore}}</td></tr>
+                            {{/prodservice}}                     
                         </table>
                     </div>            
 
@@ -145,10 +156,7 @@
                         <label for="editbasedoc">Замовлення, договір</label>
                         <input   class="form-control" zippy="editbasedoc"/>
                     </div>
-                    <div class="form-group">
-                        <label for="editsnumber">Серія, партія</label>
-                        <input   class="form-control" zippy="editsnumber"/>
-                    </div>
+                
                     <div class="form-group">
                         <label for="editstartdateplan">Початок (план)</label>
                         <input   class="form-control" zippy="editstartdateplan"/>
@@ -183,7 +191,11 @@
                         </select>
                         <label for="addqty">Кіл.</label>
                         <input style="width:60px"  class="form-control qtyprice mr-2" zippy="addqty" pattern="[0-9,\.]+"  />
-
+                           {{#usesnumber}}
+                        <label for="addsnumber">Серія, партія</label>
+                 
+                        <input   class="form-control  mr-2" zippy="addsnumber"/>
+                        {{/usesnumber}} 
                         <input type="submit" class="  btn btn-success  " value="+">
 
 
@@ -194,6 +206,7 @@
                     <tr zippy="proditemlist">
                         <td zippy="proditemname"></td>
                         <td class="text-right" zippy="proditemqty"></td>
+                         <td zippy="proditemsnumber"></td>
                         <td><a zippy="proditemdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
