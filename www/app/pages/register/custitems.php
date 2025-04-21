@@ -116,6 +116,7 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('brand', $item->brand));
         $row->add(new Label('store', $item->store));
         $row->add(new Label('bar_code', $item->bar_code));
+        $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('customer_name', $item->customer_name));
         $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
