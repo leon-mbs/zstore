@@ -778,29 +778,29 @@ FROM ((contracts co
     ON ((co.firm_id = f.firm_id))) ;
 
  
-CREATE
-VIEW custitems_view
+CREATE VIEW custitems_view
 AS
 SELECT
-  s.custitem_id AS custitem_id,
-  s.cust_name AS cust_name,
-  coalesce(s.item_id,0) AS item_id,
-  s.customer_id AS customer_id,
-  s.quantity AS quantity,
-  s.price AS price,
-  s.cust_code AS cust_code,
-  s.brand AS brand,
-  s.store AS store,
-  s.bar_code AS bar_code,
-  s.details AS details,
-  s.updatedon AS updatedon,
-  c.customer_name AS customer_name
-FROM   custitems s
- 
-  JOIN customers c
-    ON   s.customer_id = c.customer_id 
-WHERE c.status <> 1 
- ;
+  `s`.`custitem_id` AS `custitem_id`,
+  `s`.`cust_name` AS `cust_name`,
+  COALESCE(`s`.`item_id`, 0) AS `item_id`,
+  `s`.`customer_id` AS `customer_id`,
+  `s`.`quantity` AS `quantity`,
+  `s`.`price` AS `price`,
+  `s`.`cust_code` AS `cust_code`,
+  `s`.`brand` AS `brand`,
+  `s`.`store` AS `store`,
+  `s`.`bar_code` AS `bar_code`,
+  `s`.`details` AS `details`,
+  `s`.`updatedon` AS `updatedon`,
+  `c`.`customer_name` AS `customer_name`,
+   i.item_code 
+FROM `custitems` `s`
+  JOIN `customers` `c`
+    ON `s`.`customer_id` = `c`.`customer_id`
+  LEFT JOIN items i ON  s.item_id = i.item_id 
+  
+  WHERE c.status <> 1   ;
 
 CREATE
 VIEW customers_view
@@ -1139,8 +1139,7 @@ FROM (((paylist pl
    
     
     
-CREATE
-VIEW prodstage_view
+CREATE VIEW prodstage_view
 AS
 SELECT
   ps.st_id AS st_id,
@@ -1160,8 +1159,7 @@ FROM ((prodstage ps
   JOIN parealist pa
     ON ((pa.pa_id = ps.pa_id))) ;    
     
-CREATE
-VIEW prodproc_view
+CREATE VIEW prodproc_view
 AS
 SELECT
   p.pp_id AS pp_id,
@@ -1169,21 +1167,13 @@ SELECT
   p.basedoc AS basedoc,
   p.snumber AS snumber,
   p.state AS state,
-  COALESCE((SELECT
-      MIN(ps.startdate)
-    FROM prodstage_view ps
-    WHERE (ps.pp_id = p.pp_id)), NULL) AS startdate,
-  COALESCE((SELECT
-      MAX(ps.enddate)
-    FROM prodstage_view ps
-    WHERE (ps.pp_id = p.pp_id)), NULL) AS enddate,
+
   COALESCE((SELECT
       COUNT(0)
     FROM prodstage ps
     WHERE (ps.pp_id = p.pp_id)), NULL) AS stagecnt,
   p.detail AS detail
 FROM prodproc p ;
-
 
 
 

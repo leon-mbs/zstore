@@ -68,7 +68,7 @@ class ProdStage extends \ZCL\DB\Entity
             case ProdStage::STATE_FINISHED:
                 return "Виконаний";
             case ProdStage::STATE_STOPPED:
-                return "Припинено";
+                return "Зупинений";
 
 
             default:

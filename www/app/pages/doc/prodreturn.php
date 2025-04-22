@@ -35,7 +35,7 @@ class ProdReturn extends \App\Pages\Base
     * @param mixed $basedocid  создание на  основании
 
     */
-    public function __construct($docid = 0, $basedocid = 0 ) {
+    public function __construct($docid = 0, $basedocid = 0, $st_id = 0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -94,7 +94,15 @@ class ProdReturn extends \App\Pages\Base
                     }
                }
             }
-   
+            if ($st_id > 0) {
+                $st = \App\Entity\ProdStage::load($st_id);
+                $this->docform->parea->setValue($st->pa_id);
+                $this->_doc->headerdata['st_id'] = $st->st_id;
+                $this->_doc->headerdata['pp_id'] = $st->pp_id;
+                $this->docform->notes->setText($st->stagename);
+
+
+            } 
 
 
         }

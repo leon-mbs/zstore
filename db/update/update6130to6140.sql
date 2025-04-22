@@ -26,7 +26,7 @@ FROM `custitems` `s`
  
 DROP VIEW prodstage_view; 
  
-CREATE VIEW prodstage_view
+CREATE VIEW 
 AS
 SELECT
   ps.st_id AS st_id,
@@ -46,6 +46,25 @@ FROM ((prodstage ps
   JOIN parealist pa
     ON ((pa.pa_id = ps.pa_id))) ;  
  
+DROP VIEW prodproc_view; 
+ 
+CREATE
+VIEW prodproc_view
+AS
+SELECT
+  p.pp_id AS pp_id,
+  p.procname AS procname,
+  p.basedoc AS basedoc,
+  p.snumber AS snumber,
+  p.state AS state,
+
+  COALESCE((SELECT
+      COUNT(0)
+    FROM prodstage ps
+    WHERE (ps.pp_id = p.pp_id)), NULL) AS stagecnt,
+  p.detail AS detail
+FROM prodproc p ;
+
  
   
   INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення мiж етапами', 'ProdMove', 'Виробництво', 0);

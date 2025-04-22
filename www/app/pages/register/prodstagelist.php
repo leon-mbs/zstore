@@ -46,8 +46,7 @@ class ProdStageList extends \App\Pages\Base
         }
 
         $this->add(new Panel("listpan"));
-        $this->listpan->add(new ClickLink("opencal", $this, "opencalOnClick"));
-
+      
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->listpan->filter->add(new DropDownChoice('fproc', ProdProc::findArray('procname', 'state=' . ProdProc::STATE_INPROCESS, 'procname'), 0));
         $this->listpan->filter->add(new DropDownChoice('fparea', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
@@ -70,6 +69,7 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->add(new ClickLink("btntask", $this, "taskOnClick"));
         $this->statuspan->add(new ClickLink("btnfromprod", $this, "fromprodOnClick"));
         $this->statuspan->add(new ClickLink("btnservice", $this, "btnserviceOnClick"));
+        $this->statuspan->add(new ClickLink("btnmove", $this, "btnmoveOnClick"));
         $this->statuspan->add(new ClickLink("btnclose", $this, "closeOnClick"));
         $this->statuspan->add(new ClickLink("btnstop", $this, "stopOnClick"));
         $this->statuspan->add(new ClickLink("btnstart", $this, "startOnClick"));
@@ -94,7 +94,7 @@ class ProdStageList extends \App\Pages\Base
 
         $row->add(new ClickLink('sname', $this, 'showOnClick'))->setValue($st->stagename) ;
         $row->add(new Label('pname', $st->procname));
-        $row->add(new Label('snumber', $st->snumber));
+      
         $row->add(new Label('sstate', ProdStage::getStateName($st->state)));
 
       
@@ -155,6 +155,15 @@ class ProdStageList extends \App\Pages\Base
         Application::Redirect("\\App\\Pages\\Doc\\IncomeService", 0, 0, $this->_stage->st_id);
 
     }
+   
+    public function btnmoveOnClick($sender) {
+        if ($this->_stage->state == ProdStage::STATE_NEW) {
+            $this->_stage->state = ProdStage::STATE_INPROCESS;
+            $this->_stage->save();
+        }
+        Application::Redirect("\\App\\Pages\\Doc\\ProdMove", 0, 0, $this->_stage->st_id);
+
+    }
 
     public function closeOnClick($sender) {
         $this->_stage->state = ProdStage::STATE_FINISHED;
@@ -195,6 +204,8 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->btntoprod->setVisible(true);
         $this->statuspan->btnfromprod->setVisible(true);
         $this->statuspan->btntask->setVisible(true);
+        $this->statuspan->btnservice->setVisible(true);
+        $this->statuspan->btnmove->setVisible(true);
 
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->statuspan->btnclose->setVisible(false);
@@ -211,11 +222,13 @@ class ProdStageList extends \App\Pages\Base
             $this->statuspan->btnfromprod->setVisible(false);
             $this->statuspan->btntask->setVisible(false);
             $this->statuspan->btnservice->setVisible(false);
+            $this->statuspan->btnmove->setVisible(false);
 
         }
 
         if ($this->_stage->state == ProdStage::STATE_FINISHED) {
             $this->statuspan->btnservice->setVisible(false);
+            $this->statuspan->btnmove->setVisible(false);
             $this->statuspan->btntask->setVisible(false);
             $this->statuspan->btntoprod->setVisible(false);
             $this->statuspan->btnfromprod->setVisible(false);
