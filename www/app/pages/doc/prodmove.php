@@ -35,7 +35,7 @@ class ProdMove extends \App\Pages\Base
     * @param mixed $basedocid  создание на  основании
 
     */
-    public function __construct($docid = 0, $basedocid = 0 ) {
+    public function __construct($docid = 0, $basedocid = 0,$st_id=0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -44,7 +44,14 @@ class ProdMove extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
+        
+        $stlist = \App\Entity\ProdProc::findArray('procname','state = 1','procname' );
+                     
+        
+        $this->docform->add(new DropDownChoice('pp', $stlist, 0))->onChange($this,'onPP');
+        $this->docform->add(new DropDownChoice('psfrom', [], 0));
+        $this->docform->add(new DropDownChoice('psto', [], 0));
+
         $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -54,9 +61,7 @@ class ProdMove extends \App\Pages\Base
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
-        $this->docform->add(new TextInput('barcode'));
-        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-
+        
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
 
@@ -74,18 +79,31 @@ class ProdMove extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-
+            $this->docform->pp->setValue($this->_doc->headerdata['pp']);
+            $this->onPP($this->docform->pp)  ;            
+            $this->docform->psfrom->setValue($this->_doc->headerdata['psfrom']);
+            $this->docform->psto->setValue($this->_doc->headerdata['psto']);
+         
             $this->docform->notes->setText($this->_doc->notes);
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+          
+                 
         } else {
             $this->_doc = Document::create('ProdMove');
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
-             
             }
-   
+            
+            if ($st_id > 0) {
+                $st = \App\Entity\ProdStage::load($st_id);
+                $this->docform->pp->setValue($st->pp_id);
+                $this->onPP($this->docform->pp)  ;
+                $this->docform->psfrom->setValue($st_id);
+
+
+            }   
 
 
         }
@@ -96,6 +114,17 @@ class ProdMove extends \App\Pages\Base
         }
     }
 
+    public function onPP($sender) {
+       $stlist = [];
+       foreach( \App\Entity\ProdStage::find('state = 1 and pp_id='.$sender->getValue(),'stagename' ) as $i=>$v){
+          $stlist[$i] = $v->stagename ." {$v->pa_name}"; 
+       }
+       $this->docform->psfrom->setOptionList($stlist);
+       $this->docform->psto->setOptionList($stlist);
+                  
+                  
+    }
+    
     public function detailOnRow($row) {
         $item = $row->getDataItem();
 
@@ -219,10 +248,15 @@ class ProdMove extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
-        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+
+        $this->_doc->headerdata['pp'] = $this->docform->pp->getValue();
+        $this->_doc->headerdata['ppname'] = $this->docform->pp->getValueName();
+        $this->_doc->headerdata['psfrom'] = $this->docform->psfrom->getValue();
+        $this->_doc->headerdata['psfromname'] = $this->docform->psfrom->getValueName();
+        $this->_doc->headerdata['psto'] = $this->docform->psto->getValue();
+        $this->_doc->headerdata['pstoname'] = $this->docform->psto->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -246,19 +280,7 @@ class ProdMove extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-
-                // проверка на минус  в  количестве
-                $allowminus = \App\System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
-
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                            return;
-                        }
-                    }
-                }
+ 
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
@@ -281,72 +303,7 @@ class ProdMove extends \App\Pages\Base
         }
     }
 
-    public function addcodeOnClick($sender) {
-        $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
-
-        $this->docform->barcode->setText('');
-        if ($code == '') {
-            return;
-        }
-
-        $store_id = $this->docform->store->getValue();
-        if ($store_id == 0) {
-            $this->setError('Не обрано склад');
-            return;
-        }
-        $code0 = Item::qstr($code0);
-
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0} )");
-
-        if ($item == null) {
-            $this->setError("Товар з кодом `{$code}` не знайдено");
-            return;
-        }
-
-
-        $store_id = $this->docform->store->getValue();
-
-        $qty = $item->getQuantity($store_id);
-        if ($qty <= 0) {
-            $this->setError("Товару {$item->itemname} немає на складі");
-        }
-
-
-        if ($this->_itemlist[$item->item_id] instanceof Item) {
-            $this->_itemlist[$item->item_id]->quantity += 1;
-        } else {
-
-
-            $item->quantity = 1;
-
-            if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-
-                $serial = $item->getNearestSerie($store_id);
-
-
-                if (strlen($serial) == 0) {
-                    $this->setWarn('Потрібна партія виробника');
-                    $this->editdetail->setVisible(true);
-                    $this->docform->setVisible(false);
-
-                    $this->editdetail->edittovar->setKey($item->item_id);
-                    $this->editdetail->edittovar->setText($item->itemname);
-                    $this->editdetail->editserial->setText('');
-                    $this->editdetail->editquantity->setText('1');
-
-                    return;
-                } else {
-                    $item->snumber = $serial;
-                }
-            }
-            $this->_itemlist[$item->item_id] = $item;
-        }
-        $this->docform->detail->Reload();
-    }
-
+   
     /**
      * Валидация   формы
      *
@@ -364,10 +321,19 @@ class ProdMove extends \App\Pages\Base
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError("Не введено ТМЦ");
         }
-        if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+        if (($this->_doc->headerdata['pp'] > 0) == false) {
+            $this->setError("Не обрано процесс");
+        }
+        if (($this->_doc->headerdata['psfrom'] > 0) == false) {
+            $this->setError("Не обрано етапи");
+        }
+        if (($this->_doc->headerdata['psto'] > 0) == false) {
+            $this->setError("Не обрано етапи");
+        }
+        if ($this->_doc->headerdata['psto'] > 0  &&  $this->_doc->headerdata['psto']==$this->_doc->headerdata['psfrom'] ) {
+            $this->setError("Етапи мають бути різні");
         }
 
         return !$this->isError();
@@ -377,15 +343,12 @@ class ProdMove extends \App\Pages\Base
         App::RedirectBack();
     }
 
-
- 
-
     public function OnAutoItem($sender) {
         //$store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
 
-        $criteria = " disabled <> 1 and  item_type not in (1,4) and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        $criteria = " disabled <> 1 and  item_type   in (2,5) and  (itemname like {$like} or item_code like {$like}   )";
         
         return Item::findArray("itemname",$criteria,"itemname");
     }

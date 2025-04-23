@@ -1,52 +1,70 @@
 <html>
    <head>
-          <title> Повернення з виробництва</title>
+          <title> Переміщення між етапами</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Повернення з виробництва </h3>
-            <small>Повернення на склад  невикористаних матеріалів та  комплектуючмз </small>
+            <h3>Переміщення між етапами </h3>
+            <small>Переміщення  незаверщеного виробництва між виробничими етапами (ділянками) </small>
            
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number"  required >
-                    </div>
-                    <div class="form-group  ">
-                        <label for="store">На склад</label>
-                        <select class="form-control" zippy="store">
-                            <option value="0">Не вказано</option>
+                    </div>  
+                 
+                    
+                     <div class="form-group  ">
+                        <label for="pp">Виробничий процес</label>
+                        <select class="form-control" zippy="pp">
+                            <option value="0">Не обрано</option>
                         </select>
                     </div>
-                    <div class="form-group  ">
-                        <label for="notes">Примітка </label>
-
-                        <textarea class="form-control"   zippy="notes"></textarea>
-
-
+                     <div class="form-group  ">
+                        <label for="psfrom">З етапу</label>
+                        <select class="form-control" zippy="psfrom">
+                            <option value="0">Не обрано</option>
+                        </select>
                     </div>
+
+                     <div class="form-group  ">
+                        <label for="psto">До етапу</label>
+                        <select class="form-control" zippy="psto">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+                    
+                    
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
-                    <div class="form-group  ">
-                        <label for="parea">Виробнича ділянка</label>
-                        <select class="form-control" zippy="parea">
-                            <option value="0">Не обрано</option>
+                    {{#hideblock}}
+                   <div class="form-group  ">
+                        <label for="store">Проміжний склад</label>
+                        <select class="form-control" zippy="store">
+                            <option value="0">Не вказано</option>
                         </select>
+                         <small>Бажано створити окремий виробничий склад  </small>
+                                
                     </div>
-
+                      {{/hideblock}}
+                     <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+                        <textarea class="form-control"   zippy="notes"></textarea>
+                    </div>            
+              
 
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-10 col-xl-8">
+                <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
                         Штрих код &nbsp;<input autofocus="on" autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">

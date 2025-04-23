@@ -340,12 +340,13 @@ class ProdProcList extends \App\Pages\Base
     public function OnStageDel($sender) {
         $stage = $sender->getOwner()->getDataItem();
 
-        $conn = \ZDB\DB::getConnect();
-
+        
         //проверка на  доки
-
-        $conn->Execute("delete from prodstageagenda where  st_id=" . $stage->st_id);
-
+        $cnt = \App\Entity\doc\Document::findCnt("meta_name in ('ProdMove','IncomeService','Task','ProdReceipt','ProdIssue' ) and ( content  like '%<st_id>{$stage->st_id}</st_id>%' or content like '%<psto>{$stage->st_id}</psto>%' or content like '%<psfrom>{$stage->st_id}</psfrom>%'   )  ");
+        if($cnt >0) {
+            $this->setError('Вже  ствворено документи на  етап') ;
+            return;
+        }
         ProdStage::delete($stage->st_id);
         $this->stagespan->stagelist->Reload();
     }
@@ -486,7 +487,6 @@ class ProdProcList extends \App\Pages\Base
         $this->goAnkor('showpan');
     }
 
-
     public function onProcStatus($sender) {
 
         $stages = ProdStage::find('pp_id=' . $this->_proc->pp_id);
@@ -527,7 +527,6 @@ class ProdProcList extends \App\Pages\Base
         $this->listpan->showpan->setVisible(false);
         $this->listpan->proclist->Reload();
     }
-
 
 }
 

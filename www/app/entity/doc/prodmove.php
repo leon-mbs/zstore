@@ -41,8 +41,9 @@ class ProdMove extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "pareaname"       => $this->headerdata["pareaname"],
-                        "storename"       => $this->headerdata["storename"],
+                        "procname"       => $this->headerdata["ppname"],
+                        "fromname"       => $this->headerdata["psfromname"],
+                        "toname"       => $this->headerdata["pstoname"],
                         "document_number" => $this->document_number,
                         "notes"           => nl2br($this->notes)
         );
@@ -56,32 +57,26 @@ class ProdMove extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-
+        /*
         foreach ($this->unpackDetails('detaildata') as $item) {
             
     
-            $where = " item_id =    ". $item->item_id;
-            if($this->headerdata['store']>0) {
-                $where .= " and store_id = ".$this->headerdata['store'];
-            }
-
-
-            if (strlen($item->snumber) > 0) {
-                $where .= "  and  snumber =  " . $conn->qstr($item->snumber);
-            }
-
-
-            $st = Stock::getFirst($where , 'qty desc,stock_id desc');
-            
+            $st = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, ($item->price ??0) ? $item->price : 1 , null, null, true);
 
             $sc = new Entry($this->document_id, $item->quantity * $st->partion, $item->quantity);
             $sc->setStock($st->stock_id);
             $sc->setOutPrice($st->partion);
-            $sc->tag=Entry::TAG_TOPROD;
+            $sc->tag=Entry::TAG_MOVE;
+            $sc->save();
+        
+            $sc = new Entry($this->document_id, $item->quantity * $st->partion, 0-$item->quantity);
+            $sc->setStock($st->stock_id);
+            $sc->setOutPrice($st->partion);
+            $sc->tag=Entry::TAG_MOVE;
             $sc->save();
         
         }
-
+        */
         return true;
     }
 

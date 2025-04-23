@@ -564,10 +564,6 @@ class Options extends \App\Pages\Base
         $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
         $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
 
-     
-        $conn = \zdb\DB::getConnect()  ;
-        $conn->Execute("update  metadata set  disabled=0 where  meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood') ");
-        
         System::setOptions("food", $food);
         $this->setSuccess('Збережено');
     }

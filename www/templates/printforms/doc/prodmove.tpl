@@ -3,19 +3,20 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
-            Повернення з виробництва № {{document_number}} від {{date}} <br>
+            Переміщення між етапами № {{document_number}} від {{date}} <br>
         </td>
     </tr>
     <tr>
         <td colspan="9" valign="middle">
-            Виробнича ділянка <b>{{pareaname}}</b><br>
+            Виробничий процес <b>{{procname}}</b> 
         </td>
     </tr>
    <tr>
         <td colspan="9" valign="middle">
-            На  склад <b>{{storename}}</b><br>
+            З <b>{{fromname}}</b> в  <b>{{toname}}</b>
         </td>
     </tr>
+ 
     <tr>
         <td colspan="9" valign="middle">
             {{{notes}}}<br>
