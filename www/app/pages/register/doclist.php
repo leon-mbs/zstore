@@ -307,9 +307,10 @@ class DocList extends \App\Pages\Base
     }
 
     public function show($doc) {
-        $doc = $doc->cast();
-
-        $this->_doc = $doc;
+        $doc = Document::load($doc->document_id);;
+ 
+        $this->_doc = $doc->cast();
+ 
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
