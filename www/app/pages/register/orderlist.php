@@ -572,6 +572,8 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $this->_doc = Document::load($this->_doc->document_id); 
+          
         $this->_doc = $this->_doc->cast();
 
         $this->statuspan->setVisible(true);
