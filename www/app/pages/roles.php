@@ -71,7 +71,7 @@ class Roles extends \App\Pages\Base
 
         $this->editpan->editform->add(new CheckBox('editcb'));
         $this->editpan->editform->add(new CheckBox('editvk'));
-        $this->editpan->editform->add(new CheckBox('edithr'));
+  
         $this->editpan->editform->add(new CheckBox('editvdoc'));
 
 
