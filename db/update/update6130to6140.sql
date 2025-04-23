@@ -26,7 +26,7 @@ FROM `custitems` `s`
  
 DROP VIEW prodstage_view; 
  
-CREATE VIEW 
+CREATE VIEW  prodstage_view
 AS
 SELECT
   ps.st_id AS st_id,
@@ -34,17 +34,15 @@ SELECT
   ps.pa_id AS pa_id,
   ps.state AS state,
   ps.stagename AS stagename,
- 
   ps.detail AS detail,
   pr.procname AS procname,
-  pr.snumber AS snumber,
   pr.state AS procstate,
   pa.pa_name AS pa_name
-FROM ((prodstage ps
+FROM prodstage ps
   JOIN prodproc pr
-    ON ((pr.pp_id = ps.pp_id)))
+    ON pr.pp_id = ps.pp_id 
   JOIN parealist pa
-    ON ((pa.pa_id = ps.pa_id))) ;  
+    ON pa.pa_id = ps.pa_id ;  
  
 DROP VIEW prodproc_view; 
  
@@ -55,7 +53,7 @@ SELECT
   p.pp_id AS pp_id,
   p.procname AS procname,
   p.basedoc AS basedoc,
-  p.snumber AS snumber,
+  
   p.state AS state,
 
   COALESCE((SELECT

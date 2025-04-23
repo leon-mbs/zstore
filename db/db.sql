@@ -1150,7 +1150,7 @@ SELECT
  
   ps.detail AS detail,
   pr.procname AS procname,
-  pr.snumber AS snumber,
+ 
   pr.state AS procstate,
   pa.pa_name AS pa_name
 FROM ((prodstage ps
@@ -1165,7 +1165,7 @@ SELECT
   p.pp_id AS pp_id,
   p.procname AS procname,
   p.basedoc AS basedoc,
-  p.snumber AS snumber,
+ 
   p.state AS state,
 
   COALESCE((SELECT
