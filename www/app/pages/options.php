@@ -210,14 +210,14 @@ class Options extends \App\Pages\Base
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
 
-        $this->api->add(new TextInput('akey'));
+  
         $this->api->add(new TextInput('aexp'));
         $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
         $api = System::getOptions("api");
         if (!is_array($api)) {
             $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
         }
-        $this->api->akey->setText($api['key']);
+ 
         $this->api->aexp->setValue($api['exp']);
         $this->api->atype->setValue($api['atype']);
 
@@ -470,7 +470,7 @@ class Options extends \App\Pages\Base
     public function onApiType($sender) {
         $type = $this->api->atype->getValue();
         $this->api->aexp->setVisible($type == 1);
-        $this->api->akey->setVisible($type == 1);
+     
 
         //  $this->goAnkor('atype');
     }
@@ -478,7 +478,7 @@ class Options extends \App\Pages\Base
     public function saveApiOnClick($sender) {
         $api = array();
         $api['exp'] = $this->api->aexp->getText();
-        $api['key'] = $this->api->akey->getText();
+ 
         $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
