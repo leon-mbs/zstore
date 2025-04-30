@@ -53,11 +53,14 @@ class Admin extends \App\Pages\Base
         $form->add(new SubmitButton('sendphone'))->onClick($this, 'sendSms');
         $form->add(new TextInput('chat_id'))  ;
         $form->add(new SubmitButton('sendbot'))->onClick($this, 'sendBot');
-
+        
+        $form->add(new SubmitButton('checkdb'))->onClick($this, 'checkDB');
+        $this->add(new Label('checkdbanswer'))  ;
 
 
         $this->add(new Form('cdoc'))->onSubmit($this,"onCancelDoc");
         $this->cdoc->add(new TextInput('docn'))  ;
+
    
     }   
 
@@ -109,6 +112,8 @@ class Admin extends \App\Pages\Base
     }
 
 
+
+
     public function onCancelDoc($sender) {
         $dn = trim($this->cdoc->docn->getText() );
         $conn = \ZDB\DB::getConnect();
@@ -144,6 +149,13 @@ class Admin extends \App\Pages\Base
          
     }        
 
-    
+
+       
+    public function checkDB($sender) {
+          $answer="OK<br>";
+        
+        
+          $this->checkdbanswer->setText($answer,true);
+    }    
 }
  

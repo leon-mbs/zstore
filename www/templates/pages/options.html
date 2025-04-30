@@ -302,7 +302,12 @@
                                 <small>Переважна  послідовність  оплати  при  продажі</small>
 
                             </div>
-                         
+                          <div class="form-group">
+                                <label for="actualdate">Початок актуального перiоду</label>
+                                <input   class="form-control"   zippy="actualdate">
+                                <small>Дата, раніше якої заборонено виконувати проводки</small>
+
+                            </div> 
                            <div class="form-group  ">
                                 <label for="usesnumber">Облік ТМЦ за серіями  </label>
                                 <select class="form-control" zippy="usesnumber"> 
@@ -312,13 +317,14 @@
 
                             </div>
                             
-                            <div class="form-group">
-                                <label for="actualdate">Початок актуального перiоду</label>
-                                <input   class="form-control"   zippy="actualdate">
-                                <small>Дата, раніше якої заборонено виконувати проводки</small>
-
-                            </div>                            
-           
+                                                      
+                             <div class="form-check">
+                                <input zippy="storeemp" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="storeemp">Облік ТМЦ в  розрізі  співробітника</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Облік ТМЦ в  розрізі  склад+співробітник (матерiально-вiдповiдальна особа)"></i>
+                            </div>
+                      
   
                             <div class="form-check">
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">

@@ -14,14 +14,15 @@
                 <h5>Налаштування</h5>  
              </div>
                  <div class="form-check">
+                    <input zippy="capcha" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="capcha">Капча на формi логiну</label>
+                  </div> 
+                 <div class="form-check">
                     <input zippy="noupdate" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="noupdate">Не перевiряти оновлення</label>
                  <br><small>   Якщо кастомна  версiя i є ризик  затерти змiни  </small>
                   </div> 
-               <div class="form-check">
-                    <input zippy="capcha" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="capcha">Капча на формi логiну</label>
-                  </div> 
+           
               
                <div class="form-check mt-4">
                     <input zippy="checkip" type="checkbox" class="form-check-input">
@@ -90,7 +91,15 @@
                     <input zippy="sendbot" type="submit" value="Відправити" class="btn   btn-primary  ">
                  
                </div>
-              {{/isbot}}               
+                 {{/isbot}} 
+     <div class="form-group">
+                <h5>Перевірка правильності структури бази данних</h5>  
+             </div>               
+              <div class="form-group">
+                    <input zippy="checkdb" type="submit" value="Перевірити" class="btn   btn-primary  ">
+                 
+               </div>
+               <div zippy="checkdbanswer"></div>           
          </form>
          
   </div>       
@@ -102,6 +111,11 @@
           
             return true;
        
+        }       
+        function check_checkdb(ele){
+           
+            document.getElementById('dialogwait').showModal()
+            return true;     
         }       
       </script>
 </body>

@@ -112,6 +112,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('noallowfiz'));
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
+        $this->business->add(new CheckBox('storeemp'));
 
    
         $this->business->add(new CheckBox('spreaddelivery'));
@@ -131,6 +132,7 @@ class Options extends \App\Pages\Base
         $this->business->price4->setText($common['price4']);
         $this->business->price5->setText($common['price5']);
         $this->business->defprice->setText($common['defprice']);
+        $this->business->storeemp->setChecked($common['storeemp']);
         $this->business->allowminus->setChecked($common['allowminus']);
         $this->business->allowminusmf->setChecked($common['allowminusmf']);
         $this->business->noallowfiz->setChecked($common['noallowfiz']);
@@ -386,6 +388,7 @@ class Options extends \App\Pages\Base
         $common['defprice'] = $this->business->defprice->getText();
 
         $common['noallowfiz'] = $this->business->noallowfiz->isChecked() ? 1 : 0;
+        $common['storeemp'] = $this->business->storeemp->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
         $common['allowminusmf'] = $this->business->allowminusmf->isChecked() ? 1 : 0;
         $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;

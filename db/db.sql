@@ -145,6 +145,7 @@ CREATE TABLE store_stock (
   partion decimal(11, 2) DEFAULT NULL,
   store_id int(11) NOT NULL,
   customer_id int(11) DEFAULT NULL,
+  emp_id int(11) DEFAULT NULL,
   qty decimal(11, 3) DEFAULT '0.000',
   snumber varchar(64) DEFAULT NULL,
   sdate date DEFAULT NULL,
@@ -1277,8 +1278,7 @@ FROM ((shop_vars
   JOIN item_cat
     ON ((shop_attributes.cat_id = item_cat.cat_id))) ;
 
-CREATE
-VIEW store_stock_view
+CREATE VIEW store_stock_view
 AS
 SELECT
   st.stock_id AS stock_id,
@@ -1286,6 +1286,7 @@ SELECT
   st.partion AS partion,
   st.store_id AS store_id,
   st.customer_id AS customer_id,
+  st.emp_id AS emp_id,
   i.itemname AS itemname,
   i.item_code AS item_code,
   i.cat_id AS cat_id,
@@ -1297,13 +1298,16 @@ SELECT
   stores.storename AS storename,
   st.qty AS qty,
   st.snumber AS snumber,
-  st.sdate AS sdate
-FROM ((store_stock st
+  st.sdate AS sdate,
+  employees.emp_name AS emp_name
+FROM  store_stock st
   JOIN items_view i
-    ON (((i.item_id = st.item_id)
-    AND (i.disabled <> 1))))
+    ON  i.item_id = st.item_id  AND  i.disabled <> 1 
   JOIN stores
-    ON ((stores.store_id = st.store_id))) ;
+    ON  stores.store_id = st.store_id  AND  stores.disabled <> 1 
+  LEFT JOIN employees
+    ON  employees.employee_id  = st.emp_id ;
+    
     
 
 CREATE
