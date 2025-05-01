@@ -21,7 +21,7 @@
     </tr>
     <tr>
 
-        <td  colspan="2"> {{address}} </td>
+        <td  colspan="2"> {{{address}}} </td>
          
     </tr>
   <tr>
