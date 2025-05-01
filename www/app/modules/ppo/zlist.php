@@ -156,6 +156,10 @@ class ZList extends \App\Pages\Base
             }
         }
         $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
+        $addr = \App\Util::splitstr($header['address'],50) ;
+        
+        $header['address']  = implode('<br>',$addr) ;
+        
         $header['test']  = "1" == (string)  $xml->ZREPHEAD->TESTING;
 
         $header['inn']  = (string)  $xml->ZREPHEAD->IPN;
