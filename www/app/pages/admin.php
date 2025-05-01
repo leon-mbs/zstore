@@ -152,9 +152,72 @@ class Admin extends \App\Pages\Base
 
        
     public function checkDB($sender) {
-          $answer="OK<br>";
+          
+           $v=H::getKeyVal('db_struct');
+           if(strlen($v) ==0 ) {
+              $this->checkdbanswer->setText('Структура не  задана' );
+          
+              return; 
+           }  
+
+           $struct=unserialize(base64_decode($v)) ;
+           if(($struct['version'] ??'') !== System::REQUIRED_DB ) {
+              $this->checkdbanswer->setText('Структура не  задана' );
+          
+              return; 
+           }
         
+           $origtables= $struct['tables']  ;
         
+           $conn = \ZDB\DB::getConnect();
+           $tables=[];
+           foreach( $conn->getCol("SHOW TABLES ") as $t){
+               $tables[$t]=[];
+           }
+           foreach( array_keys( $tables) as $t){
+               foreach( $conn->Execute("SHOW COLUMNS FROM  ".$t) as $c){
+                   $tables[$t][]=$c['Field'];
+               }        
+           }
+           
+           //проверка
+           $answer="";
+        
+           foreach($origtables as $i=>$o)  {
+              if( !is_array($tables[$i] ?? null) ){
+                 $answer .= "Таблиця {$i} не знайдена<br>"; 
+              } 
+           }
+           if($answer !='' ) {
+              $this->checkdbanswer->setText($answer,true);
+          
+              return; 
+           }  
+          
+           $answer="";
+   
+           foreach($origtables as $i=>$o)  { 
+               $cc=$tables[$i] ;
+               foreach($origtables[$i] as $c)  {
+                 
+                  if( !in_array($c,$cc)  ){
+                     $answer .= "Поле {$c} в {$i} не знайдено<br>"; 
+                  } 
+               }
+           }
+           if($answer !='' ) {
+              $this->checkdbanswer->setText($answer,true);
+          
+              return; 
+           }           
+           
+           /*
+           $struct=[ 'version'=>System::REQUIRED_DB, 'tables'=>$tables]  ;
+           $db= base64_encode(serialize($struct) );
+           $sql="insert into keyval  (  keyd,vald)  values ('db_struct' ," . $conn->qstr($db) . ")" ;
+           file_put_contents("z:/db,sql",$sql) ;                  
+          */
+          $answer="Структура OK<br>";
           $this->checkdbanswer->setText($answer,true);
     }    
 }
