@@ -152,22 +152,17 @@ class Admin extends \App\Pages\Base
 
        
     public function checkDB($sender) {
-          
-           $v=H::getKeyVal('db_struct');
-           if(strlen($v) ==0 ) {
-              $this->checkdbanswer->setText('Структура не  задана' );
-          
-              return; 
+           $this->checkdbanswer->setText('');
+    
+           $ver = str_replace('.','',System::REQUIRED_DB) ;        
+           $origtables =    file_get_contents("https://zippy.com.ua/updates/{$ver}.db" ) ;  
+                            
+           if(strlen($origtables) == 0 ) {
+               $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
+               return; 
            }  
-
-           $struct=unserialize(base64_decode($v)) ;
-           if(($struct['version'] ??'') !== System::REQUIRED_DB ) {
-              $this->checkdbanswer->setText('Структура не  задана' );
-          
-              return; 
-           }
         
-           $origtables= $struct['tables']  ;
+         
         
            $conn = \ZDB\DB::getConnect();
            $tables=[];
@@ -179,24 +174,27 @@ class Admin extends \App\Pages\Base
                    $tables[$t][]=$c['Field'];
                }        
            }
-           
+         
+         
+      //     file_put_contents("z:/{$ver}.db",serialize($tables)) ;                  
+                        
+           $origtables = unserialize($origtables) ;
+      
+               
            //проверка
            $answer="";
-        
+           
            foreach($origtables as $i=>$o)  {
               if( !is_array($tables[$i] ?? null) ){
                  $answer .= "Таблиця {$i} не знайдена<br>"; 
               } 
            }
-           if($answer !='' ) {
-              $this->checkdbanswer->setText($answer,true);
+       
           
-              return; 
-           }  
-          
-           $answer="";
+       
    
            foreach($origtables as $i=>$o)  { 
+               if(!isset($tables[$i])) continue;
                $cc=$tables[$i] ;
                foreach($origtables[$i] as $c)  {
                  
@@ -211,14 +209,9 @@ class Admin extends \App\Pages\Base
               return; 
            }           
            
-           /*
-           $struct=[ 'version'=>System::REQUIRED_DB, 'tables'=>$tables]  ;
-           $db= base64_encode(serialize($struct) );
-           $sql="insert into keyval  (  keyd,vald)  values ('db_struct' ," . $conn->qstr($db) . ")" ;
-           file_put_contents("z:/db,sql",$sql) ;                  
-          */
-          $answer="Структура OK<br>";
-          $this->checkdbanswer->setText($answer,true);
+          $this->setSuccess('Структура OK')  ;
+
+
     }    
 }
  
