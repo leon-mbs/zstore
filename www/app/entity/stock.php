@@ -70,8 +70,9 @@ class Stock extends \ZCL\DB\Entity
      * @param mixed $sdate  
      * @param mixed $create  Создать  если  не   существует
      * @param mixed $customer_id Поставщик
+     * @param mixed $emp_id Сотрудник (МОЛ)
      */
-    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0) {
+    public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0,$emp_id=0) {
 
     
         $conn = \ZDB\DB::getConnect();
@@ -86,6 +87,10 @@ class Stock extends \ZCL\DB\Entity
             $where .= "  and  customer_id =  " . $customer_id;
         }
 
+        if ($emp_id > 0) {
+            $where .= "  and  emp_id =  " . $emp_id;
+        }
+
 
         $stock = self::getFirst($where . " and partion = {$price}   ", 'stock_id desc');
   
@@ -98,6 +103,7 @@ class Stock extends \ZCL\DB\Entity
             $stock->snumber = $snumber;
             $stock->sdate = $sdate;
             $stock->customer_id = $customer_id >0 ? $customer_id :null;
+            $stock->emp_id = $emp_id >0 ? $emp_id :null;
 
 
             $stock->save();
@@ -128,11 +134,14 @@ class Stock extends \ZCL\DB\Entity
     }
 
     // Подбор партий
-    public static function pickup($store_id, $item) {
+    public static function pickup($store_id, $item,$emp_id=0) {
         $res = array();
         $where = "store_id = {$store_id} and item_id = {$item->item_id} and qty > 0   ";
         if (strlen($item->snumber) > 0 && $item->useserial == 1 ) {
             $where .= " and snumber=" . Stock::qstr($item->snumber);
+        }
+        if ($emp_id > 0) {
+            $where .= "  and  emp_id =  " . $emp_id;
         }
 
         $stlist = self::find($where, ' stock_id   ');
@@ -162,6 +171,10 @@ class Stock extends \ZCL\DB\Entity
                 if (strlen($item->snumber) > 0) {
                     $where .= " and snumber = " . Stock::qstr($item->snumber);
                 }
+                if ($emp_id > 0) {
+                    $where .= "  and  emp_id =  " . $emp_id;
+                }
+                
                 $last = self::getFirst($where, ' stock_id desc ');
                 if ($last == null) {
                     $conn = \ZDB\DB::getConnect();
