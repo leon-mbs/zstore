@@ -41,7 +41,8 @@ class OutcomeItem extends \App\Pages\Base
         $bid = \App\System::getBranch();
         $this->docform->add(new Label('amount'));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+  
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
         if ($this->_tvars["usebranch"] ) {
@@ -53,7 +54,7 @@ class OutcomeItem extends \App\Pages\Base
 
       
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
-
+    
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -83,8 +84,9 @@ class OutcomeItem extends \App\Pages\Base
             }
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
-
+            $this->docform->tostore->setValue($this->_doc->headerdata['tostore']??0);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']??0);
+       
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -230,7 +232,9 @@ class OutcomeItem extends \App\Pages\Base
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
-
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+ 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -387,7 +391,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $item_id = $sender->getKey();
         $item = Item::load($item_id);
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue(),"",0,$this->docform->storeemp->getValue())));
 
 
     }
