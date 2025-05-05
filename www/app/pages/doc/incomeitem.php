@@ -50,7 +50,7 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));

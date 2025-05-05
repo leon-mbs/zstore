@@ -49,7 +49,8 @@ class GoodsReceipt extends Document
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "storeemp"             => false,
+                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
@@ -57,6 +58,10 @@ class GoodsReceipt extends Document
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
+        if ($this->headerdata["storeemp"] > 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
+        }
+
 
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
@@ -127,7 +132,7 @@ class GoodsReceipt extends Document
                 $iprice = 0;
             }
        //     $item->amount = $iprice * $item->quantity;
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0,$this->headerdata['storeemp']??0);
 
             $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);

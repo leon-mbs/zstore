@@ -71,7 +71,8 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+       
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
@@ -139,7 +140,8 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
-
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+     
       
             $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
@@ -710,6 +712,8 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
 
@@ -918,7 +922,7 @@ class GoodsIssue extends \App\Pages\Base
            'store'=>$store_id,
            'customer'=>$customer_id
          ));
-        $qty = $item->getQuantity($store_id);
+        $qty = $item->getQuantity($store_id,"",0,$this->docform->storeemp->getValue());
         $qtyex = $item->getQuantity() - $qty;
 
         $this->editdetail->qtystock->setText(H::fqty($qty));

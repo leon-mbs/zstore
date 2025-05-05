@@ -150,7 +150,7 @@ class GoodsIssue extends Document
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'],"",0,$this->headerdata['storeemp']??0)) ;
             $required = $item->quantity - $onstore;
 
 
@@ -217,7 +217,7 @@ class GoodsIssue extends Document
             }
 
             //продажа
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item,$this->headerdata['storeemp']??0);
 
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);

@@ -57,6 +57,9 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new CheckBox('comission', 0));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
+    
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+    
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
@@ -184,7 +187,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
-
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+     
  
             $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
@@ -693,6 +697,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
 
 
         $this->_doc->payamount = $this->docform->payamount->getText();
