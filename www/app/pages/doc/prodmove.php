@@ -51,7 +51,8 @@ class ProdMove extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('pp', $stlist, 0))->onChange($this,'onPP');
         $this->docform->add(new DropDownChoice('psfrom', [], 0));
         $this->docform->add(new DropDownChoice('psto', [], 0));
-
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+  
         $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -83,6 +84,7 @@ class ProdMove extends \App\Pages\Base
             $this->onPP($this->docform->pp)  ;            
             $this->docform->psfrom->setValue($this->_doc->headerdata['psfrom']);
             $this->docform->psto->setValue($this->_doc->headerdata['psto']);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
          
             $this->docform->notes->setText($this->_doc->notes);
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -257,6 +259,8 @@ class ProdMove extends \App\Pages\Base
         $this->_doc->headerdata['psfromname'] = $this->docform->psfrom->getValueName();
         $this->_doc->headerdata['psto'] = $this->docform->psto->getValue();
         $this->_doc->headerdata['pstoname'] = $this->docform->psto->getValueName();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 

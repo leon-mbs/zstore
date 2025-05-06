@@ -16,7 +16,14 @@
             З <b>{{fromname}}</b> в  <b>{{toname}}</b>
         </td>
     </tr>
+    {{#emp}}
+    <tr>
+        <td colspan="6">
+            <b>Виконавець:</b> {{emp}}
+        </td>
+    </tr>
  
+    {{/emp}}  
     <tr>
         <td colspan="9" valign="middle">
             {{{notes}}}<br>

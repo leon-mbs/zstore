@@ -44,10 +44,14 @@ class ProdMove extends Document
                         "procname"       => $this->headerdata["ppname"],
                         "fromname"       => $this->headerdata["psfromname"],
                         "toname"       => $this->headerdata["pstoname"],
-                        "document_number" => $this->document_number,
+                        "emp"             => false,
+                       "document_number" => $this->document_number,
                         "notes"           => nl2br($this->notes)
         );
-
+        if ($this->headerdata["emp"] > 0  ) {
+            $header['emp'] = $this->headerdata["empname"];
+        }
+ 
         $report = new \App\Report('doc/prodmove.tpl');
 
         $html = $report->generate($header);

@@ -253,7 +253,7 @@ class CalcSalary extends \App\Pages\Base
 
         }
         
-        $etasklist = []; 
+        
         
         $from =''.$post->year .'-'. $post->month .'-01' ;
         $from =  strtotime($from);
@@ -269,44 +269,19 @@ class CalcSalary extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
-       //по нарядам
-       $where = "   meta_name='Task'   
-              AND   document_date  >= " . $conn->DBDate($from) . "
-              AND   document_date  <= " . $conn->DBDate($to) . "
-                
-        and state= " . Document::STATE_CLOSED;      
-        if (strlen($brids) > 0) {
-            $where = " and branch_id in ({$brids}) ";
-        }     
-        
-       foreach (Document::findYield($where) as $doc) {
-
-            $emplist = $doc->unpackDetails('emplist');
-            if (count($emplist) == 0) {
-                continue;
-            }        
-            $total = 0;
-        
-            foreach ($doc->unpackDetails('detaildata') as $service) {
-                $ser = \App\Entity\Service::load($service->service_id);
-
-                $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
-              
-            }    
-    
-            foreach ($emplist as $emp) {
-
-               if(!isset($etasklist[$emp->employee_id])){
-                  $etasklist[$emp->employee_id]=0;  
-               }
-                
-
-                $etasklist[$emp->employee_id] += round($total * $emp->ktu);
-              
-            }        
-            
-                  
+       //сдельная
+       
+       $etasklist = []; 
+       $be="";
+       if (strlen($brids) > 0) {
+          $be = " and document_id in(select document_id from documents where branch_id in ({$brids}) )   ";
        }  
+       $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype in (104,105) {$be} AND DATE(createdon) >= {$from}   AND DATE(createdon) <= " .$to . "  group by  emp_id   ";
+      
+       foreach($conn->Execute($sql) as $r){
+          $etasklist[$r['emp_id']]  =  $r['am'];
+       }
+      
         //по  продажам
         $sqlitem = "
                   select   sum(0-e.quantity*e.outprice) as summa 

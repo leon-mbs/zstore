@@ -41,9 +41,12 @@ class ProdReceipt extends Document
                         "pareaname"       => $this->headerdata["pareaname"] ??'',
                         "storename"       => $this->headerdata["storename"]??'',
                         "notes"           => nl2br($this->notes),
-                        "total"           => H::fa($this->amount)
+                        "emp"             => false,
+                      "total"           => H::fa($this->amount)
         );
-
+        if ($this->headerdata["emp"] > 0  ) {
+            $header['emp'] = $this->headerdata["empname"];
+        }
         $report = new \App\Report('doc/prodreceipt.tpl');
 
         $html = $report->generate($header);

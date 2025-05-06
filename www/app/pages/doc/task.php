@@ -411,7 +411,7 @@ class Task extends \App\Pages\Base
             $this->setError('Введіть дату документа');
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
-            $this->setError("Не введено позиції");
+            $this->setError("Мають бути введені роботи та/або продукція");
         }
         if (count($this->_emplist) > 0) {
             $ktu = 0;
