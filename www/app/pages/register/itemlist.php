@@ -154,12 +154,12 @@ class ItemList extends \App\Pages\Base
       
         $inprice="";
         if($this->_tvars['noshowpartion'] != true) {
-          $inprice = $item->getPartion($store);  
+          $inprice = $item->getPartion($store,"",$emp);  
         }
         $row->add(new Label('inprice', H::fa($inprice)));
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
-            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store));
+            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store,"",0,$emp));
             
             $pr = ''; 
            
@@ -210,6 +210,7 @@ class ItemList extends \App\Pages\Base
     public function getTotalAmount() {
 
         $store = $this->filter->searchstore->getValue();
+        $emp = $this->filter->searchemp->getValue();
         $pt = $this->filter->searchprice->getValue();
 
         $src = new ItemDataSource($this) ;
@@ -218,10 +219,10 @@ class ItemList extends \App\Pages\Base
         $items = $src->getItems(-1, -1) ;
         $total = 0;
         foreach($items as $item) {
-            $qty = $item->getQuantity($store); 
+            $qty = H::fqty($item->getQuantity($store,"",0,$emp) ); 
             
             if($pt=='price') {
-                $am = $item->getAmount($store);
+                $am = H::fa( $item->getAmount($store,$emp) );
                 if( $sqty==0 && $qty >0) {
                    $total += $am;
                 }
@@ -232,7 +233,7 @@ class ItemList extends \App\Pages\Base
                    $total += $am ;
                 }
             } else {
-                $am= $qty * $item->getPrice($pt, $store);
+                $am= H::fa( $qty * $item->getPrice($pt, $store) );
                 if( $sqty==0 && $qty >0) {
                    $total += $am;
                 }

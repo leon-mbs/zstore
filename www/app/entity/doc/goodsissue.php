@@ -160,7 +160,7 @@ class GoodsIssue extends Document
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
-                        $lost = 0;
+                      
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null) {
@@ -171,13 +171,7 @@ class GoodsIssue extends Document
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
                         }
-                         //учитываем  отходы
-                        $kl=0;
-                        if ($itemp->lost > 0) {
-                            $kl = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $kl;
-                                              
-                        }
+                    
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -186,11 +180,7 @@ class GoodsIssue extends Document
                             $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
- 
-                            if ($kl > 0) {
-                                 $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
-                            }    
-                            
+                           
                             
                         }
                     }

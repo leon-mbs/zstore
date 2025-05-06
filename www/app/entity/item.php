@@ -48,6 +48,7 @@ class Item extends \ZCL\DB\Entity
         $this->rate = (string)($xml->rate[0]);
         $this->val = (string)($xml->val[0]);
         $this->zarp = (string)($xml->zarp[0]);
+        $this->costprice = (string)($xml->costprice[0]);
         $this->thumb = (string)($xml->thumb[0]);
 
         $this->isweight = (int)$xml->isweight[0];
@@ -164,6 +165,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<val>{$this->val}</val>";
         $this->detail .= "<rate>{$this->rate}</rate>";
         $this->detail .= "<zarp>{$this->zarp}</zarp>";
+        $this->detail .= "<costprice>{$this->costprice}</costprice>";
         $this->detail .= "<thumb>{$this->thumb}</thumb>";
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
@@ -527,13 +529,16 @@ class Item extends \ZCL\DB\Entity
     }
 
     //средняя  учетная  цена
-    public function getPartion($store = 0, $snumber = "") {
+    public function getPartion($store = 0, $snumber = "",$emp=0) {
         $conn = \ZDB\DB::getConnect();
 
         $sql = "  select coalesce(sum(partion*qty),0) as p,coalesce(sum(qty),0) as q from  store_stock st  where     st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . $store;
+        }
+        if ($emp > 0) {
+            $sql = $sql . " and st.emp_id=" . $emp;
         }
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
@@ -618,7 +623,7 @@ class Item extends \ZCL\DB\Entity
      *
      * @param mixed $store_id
      */
-    public function getAmount($store_id = 0) {
+    public function getAmount($store_id = 0,$emp_id=0) {
         $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
@@ -628,6 +633,9 @@ class Item extends \ZCL\DB\Entity
         $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
+        }
+        if ($emp_id > 0) {
+            $sql .= " and emp_id = " . $emp_id;
         }
         $amount = $conn->GetOne($sql);
         return $amount;
@@ -852,25 +860,29 @@ class Item extends \ZCL\DB\Entity
      */
     public function getProdprice() {
         $price = 0;
-        if ($this->zarp > 0) {
-            $price += doubleval($this->zarp);
+        if ($this->costprice > 0) {
+            $price += doubleval($this->costprice);
         }
-        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
+        else {
+            $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
 
-        if (count($ilist) > 0) {
-            foreach ($ilist as $iset) {
+            if (count($ilist) > 0) {
+                foreach ($ilist as $iset) {
 
-                if($iset->item_id > 0) {
-                    $it = \App\Entity\Item::load($iset->item_id);
-                    $pr = $it->getPartion(0);
-                    $price += ($iset->qty * $pr);
-                }
-                if($iset->service_id >0) {
-                    $price += ($iset->cost);
+                    if($iset->item_id > 0) {
+                        $it = \App\Entity\Item::load($iset->item_id);
+                        $pr = $it->getPartion(0);
+                        $price += doubleval($iset->qty * $pr);
+                    }
+                    if($iset->service_id >0) {
+                        $price += doubleval($iset->cost);
 
+                    }
                 }
             }
+            
         }
+        
         if ($price == 0) {   
             $price = $this->getPartion(0);
         }
