@@ -22,8 +22,7 @@ class EmpAcc extends \ZCL\DB\Entity
     public const  ADVANCE  = 101; // аванс
     public const  BONUS    = 102; // бонусы
     public const  FINE     = 103; // штрафы
-    public const  TASK     = 104; // оплата по нарядам
-    public const  PRICE    = 105; // сдельная оплата
+    public const  PRICE    = 104; // сдельная оплата
 
 
     protected function init() {
@@ -84,8 +83,7 @@ class EmpAcc extends \ZCL\DB\Entity
         $ret[self::ADVANCE]= 'Аванс';
         $ret[self::BONUS]= 'Бонус';
         $ret[self::FINE]= 'Штраф';
-        $ret[self::TASK]= 'Оплата по нарядам';
-        $ret[self::PRICE]= 'Сдельная оплата';
+        $ret[self::PRICE]= 'Відрядна оплата';
         return $ret;
     }    
     

@@ -58,9 +58,12 @@ class ProdReceipt extends Document
         $types = array();
         $common = \App\System::getOptions("common");
         $lost = 0;
+        $cost = 0;
         
         foreach ($this->unpackDetails('detaildata') as $item) {
-
+            if($item->zarp > 0) {
+                $cost += doubleval($item->zarp * $item->quantity) ;
+            }
             if ($item->autooutcome == 1) {  //списание  комплектующих
                 $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                 foreach ($set as $part) {
@@ -119,7 +122,18 @@ class ProdReceipt extends Document
 
             $io->save();
        }
-
+       if ($this->headerdata["emp"] > 0 && $cost > 0 ) {
+          
+                
+            if($cost > 0){
+                $ua = new \App\Entity\EmpAcc();
+                $ua->optype = \App\Entity\EmpAcc::PRICE;
+                $ua->document_id = $this->document_id;
+                $ua->emp_id = $this->headerdata["emp"];
+                $ua->amount = $cost;
+                $ua->save();      
+            }    
+        } 
         return true;
     }
 

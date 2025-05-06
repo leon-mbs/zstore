@@ -44,15 +44,30 @@ class EmpTask extends \App\Pages\Base
     }
 
     private function generateReport() {
+        $conn = \ZDB\DB::getConnect();
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
+        $brids = \App\ACL::getBranchIDsConstraint();
+ 
+       $be="";
+       if (strlen($brids) > 0) {
+          $be = " and document_id in(select document_id from documents where branch_id in ({$brids}) )   ";
+       }  
+       $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = 104 {$be} AND DATE(createdon) >= {$from}   AND DATE(createdon) <= " .$to . "  group by  emp_id   ";
+       $etasklist=[];
+       
+       foreach($conn->Execute($sql) as $r){
+          $etasklist[$r['emp_id']]  =  $r['am'];
+       }
+ 
+ 
+ 
         $elist = Employee::find("", "emp_name");
         foreach ($elist as $emp_id => $emp) {
             $emp->cnt = 0;
             $emp->hours = 0;
-            $emp->amount = 0;
+            $emp->amount = $etasklist[$emp_id] ??0;
         }
 
         $detail = array();
@@ -60,9 +75,7 @@ class EmpTask extends \App\Pages\Base
 
         $where = "   meta_name='Task'   
               AND   document_date  >= " . $conn->DBDate($from) . "
-              AND   document_date  <= " . $conn->DBDate($to) . "
-                
-        and state= " . Document::STATE_CLOSED;
+              AND   document_date  <= " . $conn->DBDate($to) . " and state= " . Document::STATE_CLOSED;
 
 
         foreach (Document::findYield($where) as $doc) {
@@ -72,23 +85,21 @@ class EmpTask extends \App\Pages\Base
             if (count($emplist) == 0) {
                 continue;
             }
-            $total = 0;
+           
             $hours = 0;
             foreach ($doc->unpackDetails('detaildata') as $service) {
-                $ser = \App\Entity\Service::load($service->service_id);
-
-                $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
-                $hours += (doubleval($ser->hours) * doubleval($service->quantity));
+            
+                $hours += (doubleval($ser->hours??0) * doubleval($service->quantity??0));
             }
             if (($doc->headerdata['hours'] ??0 ) > 0) {
                 $hours = $doc->headerdata['hours'];
             }
-
+   
 
             foreach ($emplist as $emp) {
 
 
-                $elist[$emp->employee_id]->amount += round($total * $emp->ktu);
+              //  $elist[$emp->employee_id]->amount += round($total * $emp->ktu);
                 $elist[$emp->employee_id]->hours += $hours;
                 $elist[$emp->employee_id]->cnt += 1;
             }
@@ -98,9 +109,9 @@ class EmpTask extends \App\Pages\Base
             if ($emp->cnt > 0) {
                 $detail[] = array(
                     "name"   => $emp->emp_name,
-                    "cnt"    => $emp->cnt,
-                    "hours"  => $emp->hours,
-                    "amount" => round($emp->amount)
+                    "cnt"    => $emp->cnt>0 ? $emp->cnt : '',
+                    "hours"  => $emp->hours>0 ? $emp->hours : '',
+                    "amount" => \App\Helper::fa($emp->amount)
                 );
             }
         }
