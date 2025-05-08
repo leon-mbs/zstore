@@ -40,9 +40,9 @@ class Task extends \App\Pages\Base
     * @param mixed $docid      редактирование
     * @param mixed $basedocid  создание на  основании
     * @param mixed $date       дата  с  календаря
-    * @param mixed $st_id      производственный этап 
+
     */
-    public function __construct($docid = 0, $basedocid = 0, $date = 0, $st_id = 0) {
+    public function __construct($docid = 0, $basedocid = 0, $date = 0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -130,14 +130,7 @@ class Task extends \App\Pages\Base
                     }
                 }
             }
-     
-            if ($st_id > 0) {
-                $st = \App\Entity\ProdStage::load($st_id);
-                $this->docform->parea->setValue($st->pa_id);
-                $this->_doc->headerdata['st_id'] = $st->st_id;
-                $this->_doc->headerdata['pp_id'] = $st->pp_id;
-                $this->docform->notes->setText($st->stagename);
-            }
+       
 
         
         

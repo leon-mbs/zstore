@@ -550,7 +550,7 @@ class PProcListDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return ProdProc::find($this->getWhere(), " pp_id desc  ");
+        return ProdProc::find($this->getWhere(), " state asc  ");
     }
 
     public function getItem($id) {

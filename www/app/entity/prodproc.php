@@ -17,8 +17,9 @@ class ProdProc extends \ZCL\DB\Entity
     public const STATE_NEW       = 0;
     public const STATE_INPROCESS = 1;
     public const STATE_STOPPED   = 2;
-    public const STATE_FINISHED  = 3;
-    public const STATE_CANCELED  = 4;
+    public const STATE_CANCELED  = 3;
+
+    public const STATE_FINISHED  = 5;
 
     public $prodlist = array();
 

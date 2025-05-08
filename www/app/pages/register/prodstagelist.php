@@ -66,7 +66,7 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->add(new Label("stagenames"));
         $this->statuspan->add(new ClickLink("backs", $this, "backOnClick"));
         $this->statuspan->add(new ClickLink("btntoprod", $this, "toprodOnClick"));
-        $this->statuspan->add(new ClickLink("btntask", $this, "taskOnClick"));
+
         $this->statuspan->add(new ClickLink("btnfromprod", $this, "fromprodOnClick"));
         $this->statuspan->add(new ClickLink("btnservice", $this, "btnserviceOnClick"));
         $this->statuspan->add(new ClickLink("btnmove", $this, "btnmoveOnClick"));
@@ -138,15 +138,7 @@ class ProdStageList extends \App\Pages\Base
         Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, 0, $this->_stage->st_id);
 
     }
-    public function taskOnClick($sender) {
-        if ($this->_stage->state == ProdStage::STATE_NEW) {
-            $this->_stage->state = ProdStage::STATE_INPROCESS;
-            $this->_stage->save();
-        }
-        Application::Redirect("\\App\\Pages\\Doc\\Task", 0, 0,0, $this->_stage->st_id);
-
-    }
-   
+    
     public function btnserviceOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->_stage->state = ProdStage::STATE_INPROCESS;
@@ -203,7 +195,7 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->btnstop->setVisible(true);
         $this->statuspan->btntoprod->setVisible(true);
         $this->statuspan->btnfromprod->setVisible(true);
-        $this->statuspan->btntask->setVisible(true);
+
         $this->statuspan->btnservice->setVisible(true);
         $this->statuspan->btnmove->setVisible(true);
 
@@ -220,7 +212,7 @@ class ProdStageList extends \App\Pages\Base
             $this->statuspan->btnstop->setVisible(false);
             $this->statuspan->btntoprod->setVisible(false);
             $this->statuspan->btnfromprod->setVisible(false);
-            $this->statuspan->btntask->setVisible(false);
+
             $this->statuspan->btnservice->setVisible(false);
             $this->statuspan->btnmove->setVisible(false);
 
@@ -229,7 +221,7 @@ class ProdStageList extends \App\Pages\Base
         if ($this->_stage->state == ProdStage::STATE_FINISHED) {
             $this->statuspan->btnservice->setVisible(false);
             $this->statuspan->btnmove->setVisible(false);
-            $this->statuspan->btntask->setVisible(false);
+
             $this->statuspan->btntoprod->setVisible(false);
             $this->statuspan->btnfromprod->setVisible(false);
             $this->statuspan->btnclose->setVisible(false);
@@ -312,7 +304,7 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return ProdStage::find($this->getWhere(), "");
+        return ProdStage::find($this->getWhere(), "state asc ");
     }
 
     public function getItem($id) {

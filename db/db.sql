@@ -151,10 +151,13 @@ CREATE TABLE store_stock (
   sdate date DEFAULT NULL,
   PRIMARY KEY (stock_id),
   KEY item_id (item_id),
+  KEY emp_id (emp_id),
   KEY store_id (store_id),
   CONSTRAINT store_stock_fk FOREIGN KEY (store_id) REFERENCES stores (store_id),
   CONSTRAINT store_stock_ibfk_1 FOREIGN KEY (item_id) REFERENCES items (item_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+
+
 
 
 CREATE TABLE empacc (

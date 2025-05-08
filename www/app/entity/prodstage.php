@@ -15,8 +15,9 @@ class ProdStage extends \ZCL\DB\Entity
 {
     public const STATE_NEW       = 0;
     public const STATE_INPROCESS = 1;
-    public const STATE_FINISHED  = 2;
-    public const STATE_STOPPED  = 3;
+    public const STATE_STOPPED   = 2;
+
+    public const STATE_FINISHED  = 5;
 
     protected function init() {
         $this->st_id = 0;
