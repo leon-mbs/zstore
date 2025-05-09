@@ -7,6 +7,7 @@ use App\Entity\ProdStage;
 use App\Entity\Employee;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
@@ -26,7 +27,8 @@ class EmpTask extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+  
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -48,76 +50,52 @@ class EmpTask extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
+        $emp = intval($this->filter->emp->getValue() );
+        $empname = $this->filter->emp->getValueName();
+        
         $brids = \App\ACL::getBranchIDsConstraint();
+ 
+ 
+        $fromd = $conn->DBDate($from) ;
+        $tod = $conn->DBDate($to) ;
  
        $be="";
        if (strlen($brids) > 0) {
           $be = " and document_id in(select document_id from documents where branch_id in ({$brids}) )   ";
        }  
-       $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = 104 {$be} AND DATE(createdon) >= {$from}   AND DATE(createdon) <= " .$to . "  group by  emp_id   ";
-       $etasklist=[];
+       $detail=[];
+
+ 
+           if($emp ==0) {
+            $sql = "select coalesce(   sum(amount) ,0) as am,emp_id,emp_name from  empacc_view  where  optype = 104 {$be} AND DATE(createdon) >= {$fromd}   AND DATE(createdon) <= {$tod}  group by emp_id,emp_name  order  by  emp_name   ";
        
-       foreach($conn->Execute($sql) as $r){
-          $etasklist[$r['emp_id']]  =  $r['am'];
-       }
- 
- 
- 
-        $elist = Employee::find("", "emp_name");
-        foreach ($elist as $emp_id => $emp) {
-            $emp->cnt = 0;
-            $emp->hours = 0;
-            $emp->amount = $etasklist[$emp_id] ??0;
-        }
-
-        $detail = array();
-        $conn = \ZDB\DB::getConnect();
-
-        $where = "   meta_name='Task'   
-              AND   document_date  >= " . $conn->DBDate($from) . "
-              AND   document_date  <= " . $conn->DBDate($to) . " and state= " . Document::STATE_CLOSED;
-
-
-        foreach (Document::findYield($where) as $doc) {
-
-
-            $emplist = $doc->unpackDetails('emplist');
-            if (count($emplist) == 0) {
-                continue;
-            }
-           
-            $hours = 0;
-            foreach ($doc->unpackDetails('detaildata') as $service) {
-            
-                $hours += (doubleval($ser->hours??0) * doubleval($service->quantity??0));
-            }
-            if (($doc->headerdata['hours'] ??0 ) > 0) {
-                $hours = $doc->headerdata['hours'];
-            }
-   
-
-            foreach ($emplist as $emp) {
-
-
-              //  $elist[$emp->employee_id]->amount += round($total * $emp->ktu);
-                $elist[$emp->employee_id]->hours += $hours;
-                $elist[$emp->employee_id]->cnt += 1;
+            foreach ($conn->Execute($sql) as $r) {
+                if ($r['am'] > 0) {
+                    $detail[] = array(
+                        "name"   => $r['emp_name'],
+                        "amount" => \App\Helper::fa($r['am'])
+                    );
+                }
             }
         }
-
-        foreach ($elist as $emp_id => $emp) {
-            if ($emp->cnt > 0) {
-                $detail[] = array(
-                    "name"   => $emp->emp_name,
-                    "cnt"    => $emp->cnt>0 ? $emp->cnt : '',
-                    "hours"  => $emp->hours>0 ? $emp->hours : '',
-                    "amount" => \App\Helper::fa($emp->amount)
-                );
-            }
+        else {
+            $sql = "select amount as am,createdon,document_number  from  empacc_view  where emp_id={$emp} and  amount > 0 and optype = 104 {$be} AND DATE(createdon) >= {$fromd}   AND DATE(createdon) <= {$tod}    order  by  createdon   ";
+            foreach ($conn->Execute($sql) as $r) {
+                if ($r['am'] > 0) {
+                    $detail[] = array(
+                        "document_date"   => $r['createdon'],
+                        "document_number"   => $r['document_number'],
+                        "amount" => \App\Helper::fa($r['am'])
+                    );
+                }
+            }          
         }
- 
+        
+        
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
+                        "isemp"  => $emp > 0,
+                        "emp_name"  => $empname  ,
                      
                         'dateto'   => \App\Helper::fd($to)
         );
