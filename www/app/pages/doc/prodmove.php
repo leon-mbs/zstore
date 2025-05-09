@@ -43,8 +43,7 @@ class ProdMove extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        
+         
         $stlist = \App\Entity\ProdProc::findArray('procname','state = 1','procname' );
                      
         
@@ -79,7 +78,7 @@ class ProdMove extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->store->setValue($this->_doc->headerdata['store']);
+
             $this->docform->pp->setValue($this->_doc->headerdata['pp']);
             $this->onPP($this->docform->pp)  ;            
             $this->docform->psfrom->setValue($this->_doc->headerdata['psfrom']);
@@ -187,8 +186,7 @@ class ProdMove extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-        $store_id = $this->docform->store->getValue();
-
+    
         $item = Item::load($id);
 
 
@@ -249,9 +247,6 @@ class ProdMove extends \App\Pages\Base
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
 
-
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
         $this->_doc->headerdata['pp'] = $this->docform->pp->getValue();
         $this->_doc->headerdata['ppname'] = $this->docform->pp->getValueName();
@@ -348,7 +343,7 @@ class ProdMove extends \App\Pages\Base
     }
 
     public function OnAutoItem($sender) {
-        //$store_id = $this->docform->store->getValue();
+
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
 

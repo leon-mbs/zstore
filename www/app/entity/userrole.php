@@ -76,6 +76,6 @@ class UserRole extends Entity
         $this->acl = serialize($acl);
 
         return true;
-    }
+    }    
 
 }

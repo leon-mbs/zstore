@@ -149,7 +149,7 @@
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="editname">Найменування</label>
+                        <label for="editname">Найменування <small class="text-danger">*</small></label>
                         <input  required  class="form-control" zippy="editname"/>
                     </div>
                     <div class="form-group">
@@ -169,6 +169,25 @@
                         <label for="editnotes">Примітка</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
                     </div>
+                </div>
+                <div class="col-12 col-md-3 col-xl-2">
+                
+                  <div class="form-group  ">
+                        <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
+                        <select class="form-control" zippy="editstore">
+                            <option value="0">Не вказано</option>
+                        </select>
+                         <small>Бажано створити окремий (можна віртуальний)    </small>
+                                
+                    </div>                
+                     <div class="form-group  ">
+                        <label for="editrole">Роль для робітників</label>
+                        <select class="form-control" zippy="editrole">
+                            <option value="0">Не вказано</option>
+                        </select>
+                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
+                                
+                    </div>                
                 </div>
 
                 <div class="col-12">

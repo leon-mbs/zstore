@@ -57,6 +57,8 @@ class ProdProcList extends \App\Pages\Base
         $this->add(new Form('editproc'))->setVisible(false);
         $this->editproc->add(new TextInput('editname'));
         $this->editproc->add(new TextInput('editbasedoc'));
+        $this->editproc->add(new DropDownChoice('editstore', \App\Entity\Store::getList('disabled<>1'), H::getDefStore()));
+        $this->editproc->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' ", 'rolename'),0));
      
         $this->editproc->add(new Date('editstartdateplan'));
         $this->editproc->add(new Date('editenddateplan'));
@@ -184,6 +186,8 @@ class ProdProcList extends \App\Pages\Base
         $this->_proc = $sender->getOwner()->getDataItem();
 
         $this->editproc->editname->setText($this->_proc->procname);
+        $this->editproc->editstore->setValue($this->_proc->store);
+        $this->editproc->editrole->setValue($this->_proc->role);
         $this->editproc->editbasedoc->setText($this->_proc->basedoc);
 
         $this->editproc->editstartdateplan->setDate($this->_proc->startdateplan);
@@ -196,12 +200,20 @@ class ProdProcList extends \App\Pages\Base
     public function OnSave($sender) {
 
         $this->_proc->procname = $this->editproc->editname->getText();
+        $this->_proc->store =(int) $this->editproc->editstore->getValue();
+        $this->_proc->role = (int) $this->editproc->editrole->getValue();
         $this->_proc->basedoc = $this->editproc->editbasedoc->getText();
 
         $this->_proc->notes = $this->editproc->editnotes->getText();
         $this->_proc->startdateplan = $this->editproc->editstartdateplan->getDate();
         $this->_proc->enddateplan = $this->editproc->editenddateplan->getDate();
 
+        if($this->_proc->store==0){
+            $this->setError('Не вибрано склад')  ;
+            return;
+        }
+        
+        
         $this->_proc->save();
 
         $this->listpan->setVisible(true);
