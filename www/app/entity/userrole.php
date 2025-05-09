@@ -44,7 +44,7 @@ class UserRole extends Entity
         $this->aclstate = $acl['aclstate']??'';
         $this->acldelete = $acl['acldelete']??'';
 
-        $this->widgets = $acl['widgets']??'';
+
         $this->modules = $acl['modules']??'';
         $this->smartmenu = $acl['smartmenu']??'';
 
@@ -71,8 +71,6 @@ class UserRole extends Entity
         $acl['aclstate'] = $this->aclstate;
         $acl['acldelete'] = $this->acldelete;
 
-        $acl['widgets'] = $this->widgets;
-        $acl['widgets'] = $this->widgets;
         $acl['modules'] = $this->modules;
         $acl['smartmenu'] = $this->smartmenu;
         $this->acl = serialize($acl);

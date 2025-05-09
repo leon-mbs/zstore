@@ -51,14 +51,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editcanevent'));
         $this->editpan->editform->add(new CheckBox('editshowotherstores'));
 
-        //виджеты
-        $this->editpan->editform->add(new CheckBox('editwminqty'));
-        $this->editpan->editform->add(new CheckBox('editwsdate'));
-        $this->editpan->editform->add(new CheckBox('editwrdoc'));
-        $this->editpan->editform->add(new CheckBox('editwmdoc'));
-        $this->editpan->editform->add(new CheckBox('editwinfo'));
-        $this->editpan->editform->add(new CheckBox('editwgraph'));
-
+      
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -150,25 +143,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
 
 
-        if (strpos($this->role->widgets, 'wminqty') !== false) {
-            $this->editpan->editform->editwminqty->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wsdate') !== false) {
-            $this->editpan->editform->editwsdate->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wrdoc') !== false) {
-            $this->editpan->editform->editwrdoc->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wmdoc') !== false) {
-            $this->editpan->editform->editwmdoc->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'winfo') !== false) {
-            $this->editpan->editform->editwinfo->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wgraph') !== false) {
-            $this->editpan->editform->editwgraph->setChecked(true);
-        }
-
+ 
 
         if (strpos($this->role->modules, 'ocstore') !== false) {
             $this->editpan->editform->editocstore->setChecked(true);
@@ -290,29 +265,7 @@ class Roles extends \App\Pages\Base
         $this->role->aclstate = implode(',', $sarr);
         $this->role->acldelete = implode(',', $darr);
 
-        $widgets = "";
-
-        if ($this->editpan->editform->editwminqty->isChecked()) {
-            $widgets = $widgets . ',wminqty';
-        }
-        if ($this->editpan->editform->editwsdate->isChecked()) {
-            $widgets = $widgets . ',wsdate';
-        }
-        if ($this->editpan->editform->editwrdoc->isChecked()) {
-            $widgets = $widgets . ',wrdoc';
-        }
-        if ($this->editpan->editform->editwmdoc->isChecked()) {
-            $widgets = $widgets . ',wmdoc';
-        }
-        if ($this->editpan->editform->editwinfo->isChecked()) {
-            $widgets = $widgets . ',winfo';
-        }
-        if ($this->editpan->editform->editwgraph->isChecked()) {
-            $widgets = $widgets . ',wgraph';
-        }
-
-
-        $this->role->widgets = trim($widgets, ',');
+    
 
         $modules = "";
         if ($this->editpan->editform->editshop->isChecked()) {

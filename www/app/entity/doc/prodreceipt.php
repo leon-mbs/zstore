@@ -122,17 +122,20 @@ class ProdReceipt extends Document
 
             $io->save();
        }
-       if ($this->headerdata["emp"] > 0 && $cost > 0 ) {
-          
-                
-            if($cost > 0){
-                $ua = new \App\Entity\EmpAcc();
-                $ua->optype = \App\Entity\EmpAcc::PRICE;
-                $ua->document_id = $this->document_id;
-                $ua->emp_id = $this->headerdata["emp"];
-                $ua->amount = $cost;
-                $ua->save();      
-            }    
+       if ($this->getHD('emp') > 0 && $cost > 0 ) {
+    
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::PRICE;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $this->getHD('emp');
+            $ua->amount = $cost;
+            $ua->save();      
+              
+        } 
+        if ($this->getHD('st_id') > 0 && $cost > 0 ) {
+            $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
+            
+           
         } 
         return true;
     }
