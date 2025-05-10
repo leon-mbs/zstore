@@ -33,6 +33,8 @@ class ProdProcList extends \App\Pages\Base
     public $_proc     = null;
     public $_stage    = null;
     public $_prodlist = array();
+    public $_itemlist = array();
+    public $_emplist = array();
 
 
     /**
@@ -46,7 +48,7 @@ class ProdProcList extends \App\Pages\Base
         }
 
         $this->add(new Panel("listpan"));
-
+    
         $proclist = $this->listpan->add(new DataView('proclist', new PProcListDataSource($this), $this, 'proclistOnRow'));
 
         $this->listpan->add(new Paginator('pag', $proclist));
@@ -58,8 +60,7 @@ class ProdProcList extends \App\Pages\Base
         $this->editproc->add(new TextInput('editname'));
         $this->editproc->add(new TextInput('editbasedoc'));
         $this->editproc->add(new DropDownChoice('editstore', \App\Entity\Store::getList('disabled<>1'), H::getDefStore()));
-        $this->editproc->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' ", 'rolename'),0));
-     
+       
         $this->editproc->add(new Date('editstartdateplan'));
         $this->editproc->add(new Date('editenddateplan'));
         $this->editproc->add(new TextArea('editnotes'));
@@ -109,6 +110,27 @@ class ProdProcList extends \App\Pages\Base
         $this->listpan->showpan->add(new ClickLink('btnstcancel', $this, 'onProcStatus'));
         $this->listpan->showpan->add(new ClickLink('btnstclose', $this, 'onProcStatus'));
 
+        
+        $this->add(new Panel("itemspan"))->setVisible(false);
+        $this->itemspan->add(new Label('stagename5')) ;
+        $this->itemspan->add(new Form('edititemsform')) ;
+        $this->itemspan->edititemsform->add(new DropDownChoice('edititem',[],0));
+        $this->itemspan->edititemsform->add(new TextInput('editqty'));
+        $this->itemspan->edititemsform->add(new SubmitButton('saveitem'))->onClick($this, 'saveitemOnClick');
+        $this->itemspan->add(new DataView('detailitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailitemOnRow'))->Reload();
+        $this->itemspan->add(new ClickLink('saveitems', $this, 'onSaveItems'));
+        $this->itemspan->add(new ClickLink('cancelitems', $this, 'onCanceltems'));
+
+        
+        $this->add(new Panel("empspan"))->setVisible(false);
+        $this->empspan->add(new Form('editempsform')) ;
+        $this->empspan->add(new Label('stagename6')) ;
+        $this->empspan->editempsform->add(new DropDownChoice('editemp',[],0));
+        $this->empspan->editempsform->add(new TextInput('editktu'));
+        $this->empspan->editempsform->add(new SubmitButton('saveemp'))->onClick($this, 'saveempOnClick');
+        $this->empspan->add(new DataView('detailemp', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emplist')), $this, 'detailEmpOnRow'))->Reload();
+        $this->empspan->add(new ClickLink('saveemps', $this, 'onSaveEmps'));
+        $this->empspan->add(new ClickLink('cancelemps', $this, 'onCanceEmps'));
 
         $this->listpan->proclist->Reload();
 
@@ -130,7 +152,7 @@ class ProdProcList extends \App\Pages\Base
         $row->add(new ClickLink('view'))->onClick($this, 'onView');
         $row->add(new ClickLink('stages'))->onClick($this, 'OnStages');
         $row->add(new ClickLink('copy'))->onClick($this, 'OnCopy');
-        $row->add(new ClickLink('prods'))->onClick($this, 'OnProds');
+        $row->add(new ClickLink('prods'))->onClick($this, 'OnProds');  
         $row->add(new ClickLink('delete', $this, 'deleteOnClick'))->setVisible($p->stagecnt == 0);
         $row->add(new Label('hasnotes'))->setVisible(strlen($p->notes) > 0);
         $row->hasnotes->setAttribute('title', $p->notes);
@@ -172,7 +194,7 @@ class ProdProcList extends \App\Pages\Base
 
     public function deleteOnClick($sender) {
         $proc = $sender->getOwner()->getDataItem();
-
+         
         ProdProc::delete($proc->pp_id);
 
 
@@ -187,7 +209,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editproc->editname->setText($this->_proc->procname);
         $this->editproc->editstore->setValue($this->_proc->store);
-        $this->editproc->editrole->setValue($this->_proc->role);
+        
         $this->editproc->editbasedoc->setText($this->_proc->basedoc);
 
         $this->editproc->editstartdateplan->setDate($this->_proc->startdateplan);
@@ -201,7 +223,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->_proc->procname = $this->editproc->editname->getText();
         $this->_proc->store =(int) $this->editproc->editstore->getValue();
-        $this->_proc->role = (int) $this->editproc->editrole->getValue();
+     
         $this->_proc->basedoc = $this->editproc->editbasedoc->getText();
 
         $this->_proc->notes = $this->editproc->editnotes->getText();
@@ -301,9 +323,11 @@ class ProdProcList extends \App\Pages\Base
         $row->add(new Label('stageareaname', $s->pa_name));
         $row->add(new Label('stagestate', ProdStage::getStateName($s->state)));
 
-        $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state == 0);
-        $row->add(new ClickLink('stagedel', $this, 'OnStageDel'))->setVisible($s->state == 0);
+        $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state != ProdStage::STATE_FINISHED);
+        $row->add(new ClickLink('stagedel', $this, 'OnStageDel'))->setVisible($s->state != ProdStage::STATE_FINISHED);
         $row->add(new ClickLink('stagecard', $this, 'OnCard'));
+        $row->add(new ClickLink('stageitems', $this, 'OnItems'))->setVisible($s->state != ProdStage::STATE_FINISHED );
+        $row->add(new ClickLink('stageemps', $this, 'OnEmps'))->setVisible($s->state != ProdStage::STATE_FINISHED);
 
 
     }
@@ -354,7 +378,7 @@ class ProdProcList extends \App\Pages\Base
 
         
         //проверка на  доки
-        $cnt = \App\Entity\doc\Document::findCnt("meta_name in ('ProdMove','IncomeService','Task','ProdReceipt','ProdIssue' ) and ( content  like '%<st_id>{$stage->st_id}</st_id>%' or content like '%<psto>{$stage->st_id}</psto>%' or content like '%<psfrom>{$stage->st_id}</psfrom>%'   )  ");
+        $cnt = \App\Entity\doc\Document::findCnt("meta_name in ('ProdMove','IncomeService', 'ProdReceipt','ProdIssue' ) and ( content  like '%<st_id>{$stage->st_id}</st_id>%' or content like '%<psto>{$stage->st_id}</psto>%' or content like '%<psfrom>{$stage->st_id}</psfrom>%'   )  ");
         if($cnt >0) {
             $this->setError('Вже  ствворено документи на  етап') ;
             return;
@@ -393,6 +417,42 @@ class ProdProcList extends \App\Pages\Base
 
     }
 
+
+    //сотрудники
+    public function OnEmps($sender) {
+        $this->_stage = $sender->getOwner()->getDataItem();
+    
+        $this->empspan->editempsform->clean();
+        $this->empspan->editempsform->editemp->setOptionList( \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")) ;
+        $this->empspan->editempsform->editemp->setValue(0);
+        $this->empspan->setVisible(true);
+        $this->stagespan->setVisible(false);
+        $this->empspan->stagename6->setText($this->_stage->stagename);
+        
+        $this->empspan->detailemp->Reload() ;
+        
+       
+    }
+
+    //ТМЦ
+    public function OnItems($sender) {
+        $this->_stage = $sender->getOwner()->getDataItem();
+
+        $this->itemspan->edititemsform->clean();
+        $this->itemspan->edititemsform->edititem->setOptionList(  Item::findArray("itemname", "disabled<>1 and item_type in(4,5) ", "itemname")) ;
+        $this->itemspan->edititemsform->edititem->setValue(0);
+      
+      
+         
+        $this->itemspan->setVisible(true);
+        $this->stagespan->setVisible(false);
+        $this->itemspan->stagename5->setText($this->_stage->stagename);
+        $this->itemspan->detailitem->Reload() ;
+       
+    }
+    
+    
+    
     //просмотр
     public function onView($sender) {
         $pan = $this->listpan->showpan;

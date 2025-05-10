@@ -50,7 +50,7 @@ class ProdProc extends \ZCL\DB\Entity
             $st->pp_id = $proc->pp_id;
             $st->startdateplan = $st->startdateplan + $diff;
             $st->enddateplan = $st->enddateplan + $diff;
-
+            //todo emps
             $st->save();
         }
 
@@ -67,7 +67,7 @@ class ProdProc extends \ZCL\DB\Entity
         $prodlist = base64_encode(serialize($this->prodlist));
         $this->detail .= "<prodlist>{$prodlist}</prodlist>";
         $this->detail .= "<store>{$this->store}</store>";
-        $this->detail .= "<role>{$this->role}</role>";
+
         $this->detail .= "</detail>";
 
         return true;
@@ -87,7 +87,7 @@ class ProdProc extends \ZCL\DB\Entity
         $this->startdateplan = (string)($xml->startdateplan[0]);
         $this->enddateplan = (string)($xml->enddateplan[0]);
         $this->store = (int)($xml->store[0]);
-        $this->role = (int)($xml->role[0]);
+
         $this->prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
         if (!is_array($this->prodlist)) {
             $this->prodlist = array();
