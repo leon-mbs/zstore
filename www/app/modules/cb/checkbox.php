@@ -277,7 +277,7 @@ class CheckBox
         // $check['total_payment'] = $doc->payamount*100;
         //   $check['total_rest'] = 0 ;
 
-        if($doc->headerdata['payment']  >0) {
+        if(($doc->headerdata['payment']??0)  >0) {
 
 
             $payed =  doubleval($doc->payed) ;

@@ -139,7 +139,7 @@ class VK
         $check['sum'] =  self::fa($sum); 
 
   
-        if($doc->headerdata['payment']??''  >0) {
+        if(($doc->headerdata['payment']??0)  >0) {
 
 
              
