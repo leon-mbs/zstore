@@ -31,8 +31,12 @@ class ProdStage extends \ZCL\DB\Entity
         $this->detail = "<detail>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<card><![CDATA[{$this->card}]]></card>";
+        $this->detail .= "<empids>{$this->empids}</empids>";
+ 
         $emplist = base64_encode(serialize($this->emplist));
         $this->detail .= "<emplist>{$emplist}</emplist>";
+        $itemlist = base64_encode(serialize($this->itemlist));
+        $this->detail .= "<itemlist>{$itemlist}</itemlist>";
      
         $this->detail .= "</detail>";
 
@@ -54,6 +58,10 @@ class ProdStage extends \ZCL\DB\Entity
         $this->emplist = @unserialize(@base64_decode((string)($xml->emplist[0])));
         if (!is_array($this->emplist)) {
             $this->emplist = array();
+        }
+        $this->itemlist = @unserialize(@base64_decode((string)($xml->itemlist[0])));
+        if (!is_array($this->itemlist)) {
+            $this->itemlist = array();
         }
 
         parent::afterLoad();

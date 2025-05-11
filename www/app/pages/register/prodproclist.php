@@ -60,9 +60,9 @@ class ProdProcList extends \App\Pages\Base
         $this->editproc->add(new TextInput('editname'));
         $this->editproc->add(new TextInput('editbasedoc'));
         $this->editproc->add(new DropDownChoice('editstore', \App\Entity\Store::getList('disabled<>1'), H::getDefStore()));
-       
-        $this->editproc->add(new Date('editstartdateplan'));
-        $this->editproc->add(new Date('editenddateplan'));
+        $this->editproc->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' ", 'rolename'),0));      
+        $this->editproc->add(new Date('editstartdateplan',strtotime('+1 day',time())));
+        $this->editproc->add(new Date('editenddateplan',strtotime('+3 month',time())));
         $this->editproc->add(new TextArea('editnotes'));
 
         $this->editproc->add(new SubmitButton('save'))->onClick($this, 'OnSave');
@@ -209,6 +209,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editproc->editname->setText($this->_proc->procname);
         $this->editproc->editstore->setValue($this->_proc->store);
+        $this->editproc->editrole->setValue($this->_proc->role);
         
         $this->editproc->editbasedoc->setText($this->_proc->basedoc);
 
@@ -223,7 +224,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->_proc->procname = $this->editproc->editname->getText();
         $this->_proc->store =(int) $this->editproc->editstore->getValue();
-     
+        $this->_proc->role = (int) $this->editproc->editrole->getValue();
         $this->_proc->basedoc = $this->editproc->editbasedoc->getText();
 
         $this->_proc->notes = $this->editproc->editnotes->getText();
@@ -235,7 +236,8 @@ class ProdProcList extends \App\Pages\Base
             return;
         }
         
-        
+        $this->_proc->state= $this->_proc->pp_id >0 ? ProdProc::STATE_STOPPED: ProdProc::STATE_NEW ; 
+       
         $this->_proc->save();
 
         $this->listpan->setVisible(true);
@@ -255,10 +257,16 @@ class ProdProcList extends \App\Pages\Base
 
     public function onAddProd($sender) {
 
-        $item = Item::load($sender->additem->getValue());
+        $it = Item::load($sender->additem->getValue());
         if ($item == null) {
             return;
         }
+        
+        $item = new \App\DataItem() ;
+  
+        $item->item_id = $it->item_id;
+        $item->itemname = $it->itemname;
+        $item->item_code = $it->item_code;
         $item->qty = $sender->addqty->getText();
         $item->snumber = $sender->addsnumber->getText();
         if (($item->qty > 0) == false) {
@@ -342,7 +350,7 @@ class ProdProcList extends \App\Pages\Base
             $this->setError("Не обрано виробничу ділянку");
             return;
         }
-
+        $this->_stage->state= $this->_stage->st_id >0 ? ProdStage::STATE_STOPPED: ProdStage::STATE_NEW ; 
         $this->_stage->save();
         $this->stagespan->stagelist->Reload();
         $this->editstage->setVisible(false);
@@ -421,9 +429,17 @@ class ProdProcList extends \App\Pages\Base
     //сотрудники
     public function OnEmps($sender) {
         $this->_stage = $sender->getOwner()->getDataItem();
-    
+        $this->_emplist = $this->_stage->emplist;
+        
         $this->empspan->editempsform->clean();
-        $this->empspan->editempsform->editemp->setOptionList( \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")) ;
+        
+        $r="";
+        if($this->_proc->role >0) {
+            $r=" and employee_id in ( select employee_id from users_view where disabled<>1 and role_id= {$this->_proc->role}) "; 
+        }
+        $ems=  \App\Entity\Employee::findArray("emp_name", "disabled<>1 {$r}", "emp_name") ;
+        
+        $this->empspan->editempsform->editemp->setOptionList($ems) ;
         $this->empspan->editempsform->editemp->setValue(0);
         $this->empspan->setVisible(true);
         $this->stagespan->setVisible(false);
@@ -434,15 +450,74 @@ class ProdProcList extends \App\Pages\Base
        
     }
 
+    public function saveempOnClick(  $sender) {
+        $id = $this->empspan->editempsform->editemp->getValue();
+        if ($id == 0) {
+            return;
+        }
+       // $p = \App\EntityCommonMark\Employee::load($id);
+        $emp = new \App\DataItem() ;
+        $emp->employee_id = $id;
+        $emp->emp_name = $this->empspan->editempsform->editemp->getValueName();
+        $emp->ktu = doubleval($this->empspan->editempsform->editktu->getText() );
+        
+        $this->_emplist[$emp->employee_id] = $emp;
+        $this->empspan->detailemp->Reload() ;
+
+        $this->empspan->editempsform->clean();          
+    }
+    public function onDelEmp(  $sender) {
+        $emp = $sender->getOwner()->getDataItem();
+        $this->_emplist = array_diff_key($this->_emplist, array($emp->employee_id => $this->_emplist[$emp->employee_id]));
+        $this->empspan->detailemp->Reload() ;   
+    }
+    public function onCanceEmps(  $sender) {
+        $this->empspan->setVisible(false);
+        $this->stagespan->setVisible(true);
+        
+    }
+    public function onSaveEmps(  $sender) {
+        $empids =[] ;
+        $ktu = 0;
+        foreach($this->_emplist as $emp) {
+           $ktu += $emp->ktu; 
+           $empids[] =  $emp->employee_id;       
+        } 
+        if($ktu != 1 && count($this->_emplist) >0) {
+            $this->setError('Сумма  КТУ повинна дорiвнювати 1 ') ;
+            return;
+        }
+
+        $this->_stage->empids='' ;
+        if( count($this->_emplist) > 0) {
+           $this->_stage->empids = '#'.implode('#',$empids).'#';   // для фильтра
+         
+        }
+    
+        
+        $this->_stage->emplist = $this->_emplist;
+        $this->_stage->save();
+        $this->empspan->setVisible(false);
+        $this->stagespan->setVisible(true);
+    }
+    
+    public function detailEmpOnRow(  $row) {
+
+            $emp = $row->getDataItem();
+
+            $row->add(new Label('emp_name', $emp->emp_name));
+            $row->add(new Label('empktu', $emp->ktu));
+            $row->add(new ClickLink('deleteemp', $this, 'onDelEmp')) ;
+         
+    }
     //ТМЦ
     public function OnItems($sender) {
         $this->_stage = $sender->getOwner()->getDataItem();
-
+        $this->_itemlist = $this->_stage->itemlist;
+    
         $this->itemspan->edititemsform->clean();
         $this->itemspan->edititemsform->edititem->setOptionList(  Item::findArray("itemname", "disabled<>1 and item_type in(4,5) ", "itemname")) ;
         $this->itemspan->edititemsform->edititem->setValue(0);
-      
-      
          
         $this->itemspan->setVisible(true);
         $this->stagespan->setVisible(false);
@@ -451,6 +526,55 @@ class ProdProcList extends \App\Pages\Base
        
     }
     
+    public function saveitemOnClick(  $sender) {
+        $id = $this->itemspan->edititemsform->edititem->getValue();
+        if ($id == 0) {
+            return;
+        }
+        $it= Item::load($id) ;
+        $item = new \App\DataItem() ;
+        $item->item_id = $id;
+        $item->itemname = $it->itemname;
+        $item->item_code = $it->item_code;
+        $item->quantity = H::fqty($this->itemspan->edititemsform->editqty->getText() );
+        
+        $this->_itemlist[$item->item_id] = $item;
+        $this->itemspan->detailitem->Reload() ;
+
+        $this->itemspan->edititemsform->clean();        
+    }
+    public function onDelItem(  $sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        $this->itemspan->detailitem->Reload() ;   
+        
+    }
+    public function onCanceItems(  $sender) {
+        $this->itemspan->setVisible(false);
+        $this->stagespan->setVisible(true);       
+    }
+    public function onSaveItems(  $sender) {
+    
+        
+        $this->_stage->itemlist = $this->_itemlist;
+        $this->_stage->save();   
+        $this->itemspan->setVisible(false);
+        $this->stagespan->setVisible(true);       
+       
+       
+    }
+    
+    
+    public function detailItemOnRow(  $row) {
+
+            $item = $row->getDataItem();
+
+            $row->add(new Label('itemname', $item->itemname));
+            $row->add(new Label('item_code', $item->item_code));
+            $row->add(new Label('item_qty', $item->quantity));
+            $row->add(new ClickLink('deleteitem', $this, 'onDelItem')) ;
+          
+    }
     
     
     //просмотр

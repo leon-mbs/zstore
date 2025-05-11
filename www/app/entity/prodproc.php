@@ -64,9 +64,12 @@ class ProdProc extends \ZCL\DB\Entity
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<startdateplan>{$this->startdateplan}</startdateplan>";
         $this->detail .= "<enddateplan>{$this->enddateplan}</enddateplan>";
+
         $prodlist = base64_encode(serialize($this->prodlist));
         $this->detail .= "<prodlist>{$prodlist}</prodlist>";
+  
         $this->detail .= "<store>{$this->store}</store>";
+        $this->detail .= "<role>{$this->role}</role>";
 
         $this->detail .= "</detail>";
 
@@ -87,12 +90,13 @@ class ProdProc extends \ZCL\DB\Entity
         $this->startdateplan = (string)($xml->startdateplan[0]);
         $this->enddateplan = (string)($xml->enddateplan[0]);
         $this->store = (int)($xml->store[0]);
+        $this->role = (int)($xml->role[0]);
 
         $this->prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
         if (!is_array($this->prodlist)) {
             $this->prodlist = array();
         }
-
+   
 
 
         parent::afterLoad();

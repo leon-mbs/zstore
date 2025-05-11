@@ -159,15 +159,18 @@
                 
                     <div class="form-group">
                         <label for="editstartdateplan">Початок (план)</label>
-                        <input   class="form-control" zippy="editstartdateplan"/>
+                        <input    class="form-control" zippy="editstartdateplan"/>
                     </div>
                     <div class="form-group">
                         <label for="editenddateplan">Кінець (план)</label>
-                        <input   class="form-control" zippy="editenddateplan"/>
-                    </div>
-                    
+                        <input    class="form-control" zippy="editenddateplan"/>
+                    </div>        
+                 <div class="form-group">
+                        <label for="editnotes">Примітка</label>
+                        <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
+                  </div>     
                 </div>
-                <div class="col-12 col-md-3 col-xl-2">
+                 <div class="col-12 col-md-3 col-xl-2">
                 
                   <div class="form-group  ">
                         <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
@@ -176,11 +179,16 @@
                         </select>
                          <small>Бажано створити окремий (можна віртуальний)    </small>
                                 
-                    </div>                
-                 <div class="form-group">
-                        <label for="editnotes">Примітка</label>
-                        <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
-                    </div>                    
+                     </div>                
+                <div class="form-group  ">
+                        <label for="editrole">Роль для робітників</label>
+                        <select class="form-control" zippy="editrole">
+                            <option value="0">Не вказано</option>
+                        </select>
+                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
+                                      
+                  </div>                
+                                     
                 </div>
 
                 <div class="col-12">
@@ -332,14 +340,10 @@
                     <table class="table  table-sm">
                    
                         <tr zippy="detailitem">
-                            <td zippy="prod"></td>
+                            <td zippy="itemname"></td>
                             <td zippy="item_code"></td>
-
-
-                            <td zippy="descprod"  ></td>
-                            <td zippy="quantityprod" class="text-right"></td>
-
-
+                            <td zippy="item_qty" class="text-right"></td>
+                          
                             <td class="text-right">
 
                                 <a zippy="deleteitem"><i class="fa fa-trash"></i></a>
@@ -380,10 +384,10 @@
                
                         <tr zippy="detailemp">
 
-                            <td zippy="empname"></td>
+                            <td zippy="emp_name"></td>
                             <td zippy="empktu"  ></td>
                             <td class="text-right">
-                                <a zippy="deletewmp"><i class="fa fa-trash"></i></a>
+                                <a zippy="deleteemp"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     </table>
