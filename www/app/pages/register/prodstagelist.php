@@ -77,6 +77,8 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->add(new DataView('doclist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_docs')), $this, 'onDocRow'));
         $this->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
  
+  
+ 
         $stlist->Reload();
 
   
@@ -230,6 +232,22 @@ class ProdStageList extends \App\Pages\Base
 
         }
 
+        
+        $role_id = intval( \App\System::getOption('common','prodrole') );
+        $u=\App\System::getUser() ;
+      
+        if($role_id > 0 && $role_id==$u->role_id) {
+           
+            $this->statuspan->btnservice->setVisible(false);
+            $this->statuspan->btntoprod->setVisible(false);
+
+            $this->statuspan->btnclose->setVisible(false);
+             
+            
+        }
+                
+        
+        
         $this->_docs = \App\Entity\Doc\Document::find("state>4 and meta_name in('ProdReceipt','ProdIssue','Task','IncomeService') and content like '%<st_id>{$this->_stage->st_id}</st_id>%'   ", "document_id");
         $this->statuspan->doclist->Reload();
 
@@ -284,7 +302,7 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
 
-        $where = "procstate =" . ProdProc::STATE_INPROCESS;
+        $where = "procstate = " . ProdProc::STATE_INPROCESS;
 
         $proc = $this->page->listpan->filter->fproc->getValue();
         $parea = $this->page->listpan->filter->fparea->getValue();
@@ -296,6 +314,14 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and pa_id=" . $parea;
         }
 
+        $role_id = intval( \App\System::getOption('common','prodrole') );
+        $u=\App\System::getUser() ;
+      
+        if($role_id > 0 && $role_id==$u->role_id) {
+           
+            $where .= " and detail like '%#{$u->employee_id}#%'  " ;
+        }
+        
         return $where;
     }
 

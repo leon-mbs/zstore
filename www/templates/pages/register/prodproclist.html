@@ -16,8 +16,18 @@
 
         <div class="row" zippy="listpan">
             <div class="col-12 col-md-12 col-xl-10">
-
-                <a  zippy="addnewproc" class="btn btn-info">Створити</a>
+                  <div class="row  "  >
+                    <div class="col-2  "  >
+                <a  zippy="addnewproc" class="btn btn-info">Створити</a>    
+                 
+                   </div> 
+                      <div class="col-2  "  >
+                 
+                   <a class="btn btn-outline-success mr-2"   zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
+                
+                  </div>  
+                </div>  
+                  
                 <table class="table   table-sm   ">
                     <tr>
 
@@ -77,7 +87,8 @@
                 <div zippy="pag"></div>
 
             </div>
-            <div zippy="showpan" class="col-12">
+  
+          <div zippy="showpan" class="col-12">
                 <div   class="row">
                     <div   class="col-12  ">
                         <div class="navbar nav justify-content-start">
@@ -165,10 +176,7 @@
                         <label for="editenddateplan">Кінець (план)</label>
                         <input    class="form-control" zippy="editenddateplan"/>
                     </div>        
-                 <div class="form-group">
-                        <label for="editnotes">Примітка</label>
-                        <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
-                  </div>     
+                  
                 </div>
                  <div class="col-12 col-md-3 col-xl-2">
                 
@@ -179,15 +187,12 @@
                         </select>
                          <small>Бажано створити окремий (можна віртуальний)    </small>
                                 
-                     </div>                
-                <div class="form-group  ">
-                        <label for="editrole">Роль для робітників</label>
-                        <select class="form-control" zippy="editrole">
-                            <option value="0">Не вказано</option>
-                        </select>
-                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
-                                      
-                  </div>                
+                     </div>   
+                   <div class="form-group">
+                        <label for="editnotes">Примітка</label>
+                        <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
+                  </div>                                     
+                            
                                      
                 </div>
 
@@ -394,7 +399,27 @@
                    <a zippy="cancelemps" class="btn btn-secondary mr-4" >Скасувати</a> 
                    <a zippy="saveemps" class="btn btn-primary mr-4" >Зберегти</a> 
                           
-                   </div>        
+               </div>  
+                     
+   <div class="col-12  col-md-8 col-xl-6 ">
+                <form zippy="optionsform"  >
+                 <h4>Налаштування     </h4>
+                   <div class="form-group  ">
+                        <label for="editrole">Роль для робітників</label>
+                        <select class="form-control" zippy="editrole">
+                            <option value="0">Не вказано</option>
+                        </select>
+                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
+                                      
+                  </div> 
+                 <div class="col-12">
+                    <a zippy="cancelopt"    class="btn btn-outline-primary  mr-2">Скасувати</a>   
+                    <input   type="submit" value="Зберегти" class="btn btn-primary  "> 
+                </div>               
+           
+                </form>   
+     </div>             
+        
         
         
         <script>

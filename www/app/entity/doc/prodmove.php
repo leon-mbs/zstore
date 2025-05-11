@@ -61,15 +61,32 @@ class ProdMove extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-       
+        //зарплата
+        $cost=0;
+        
+        foreach ($this->unpackDetails('detaildata') as $item) {
+            if($item->zarp > 0) {
+                $cost += doubleval($item->zarp * $item->quantity) ;
+            }
+        }   
+        
+  
+        $st = \App\Entity\ProdStage::load($this->headerdata['psfrom'])  ;
+        foreach($st->emplist as $emp){
+           $this->headerdata["emp"] = 0;
+           
+           if($cost > 0){
+                $ua = new \App\Entity\EmpAcc();
+                $ua->optype = \App\Entity\EmpAcc::PRICE;
+                $ua->document_id = $this->document_id;
+                $ua->emp_id = $emp->employee_id;
+                $ua->amount = \App\Helper::fa($cost*$emp->ktu);
+                $ua->save();      
+           }                
+        }   
+        
         if ($this->headerdata["emp"] > 0  ) {
-            $cost=0;
-            
-            foreach ($this->unpackDetails('detaildata') as $item) {
-                if($item->zarp > 0) {
-                    $cost += doubleval($item->zarp * $item->quantity) ;
-                }
-            }            
+                
             if($cost > 0){
                 $ua = new \App\Entity\EmpAcc();
                 $ua->optype = \App\Entity\EmpAcc::PRICE;
@@ -78,14 +95,15 @@ class ProdMove extends Document
                 $ua->amount = $cost;
                 $ua->save();      
             }    
-        }    
-       
-       
-        /*
+        }          
+        //проводки  по  складу
+        
+        $proc= \App\Entity\ProdProc::load($this->headerdata['pp'])  ;
+                      
         foreach ($this->unpackDetails('detaildata') as $item) {
             
     
-            $st = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, ($item->price ??0) ? $item->price : 1 , null, null, true);
+            $st = \App\Entity\Stock::getStock($proc->store, $item->item_id, ($item->price ??0) ? $item->price : 1 , null, null, true);
 
             $sc = new Entry($this->document_id, $item->quantity * $st->partion, $item->quantity);
             $sc->setStock($st->stock_id);
@@ -100,7 +118,7 @@ class ProdMove extends Document
             $sc->save();
         
         }
-        */
+    
         return true;
     }
 

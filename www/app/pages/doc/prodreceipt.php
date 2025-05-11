@@ -210,6 +210,21 @@ class ProdReceipt extends \App\Pages\Base
             return;
         }
 
+        if($this->_doc->headerdata['st_id'] >0) {
+            $st= \App\Entity\ProdStage::load($this->_doc->headerdata['st_id']);
+            
+            if( count($st->itemlist)>0) {
+               $ids= array_keys($st->itemlist) ; 
+               
+               if(!in_array($item->item_id,$ids)) {
+                    $this->setError( "ТМЦ не в перелiку  на  етапi");
+                    return;
+          
+               }
+               
+            }
+            
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();

@@ -67,8 +67,8 @@ class ProdMove extends \App\Pages\Base
 
         $this->editdetail->add(new TextInput('editserial'));
 
-        $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
-
+        $this->editdetail->add(new DropDownChoice('edititem', Item::findArray('itemname', 'disabled<>1 and  item_type in(4,5)', 'itemname')));
+     
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
@@ -102,6 +102,7 @@ class ProdMove extends \App\Pages\Base
                 $this->docform->pp->setValue($st->pp_id);
                 $this->onPP($this->docform->pp)  ;
                 $this->docform->psfrom->setValue($st_id);
+                $this->docform->emp->setVisible(false) ;
 
 
             }   
@@ -122,8 +123,7 @@ class ProdMove extends \App\Pages\Base
        }
        $this->docform->psfrom->setOptionList($stlist);
        $this->docform->psto->setOptionList($stlist);
-                  
-                  
+                    
     }
     
     public function detailOnRow($row) {
@@ -169,8 +169,8 @@ class ProdMove extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText($item->quantity);
 
-        $this->editdetail->edittovar->setKey($item->item_id);
-        $this->editdetail->edittovar->setValue($item->itemname);
+       
+        $this->editdetail->edititem->setValue($item->item_id);
         $this->editdetail->editserial->setValue($item->snumber);
 
         $this->_rowid =  array_search($item, $this->_itemlist, true);
@@ -181,12 +181,26 @@ class ProdMove extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $id = $this->editdetail->edittovar->getKey();
+        $id = $this->editdetail->edititem->getValue();
         if ($id == 0) {
             $this->setError("Не обрано товар");
             return;
         }
-    
+        
+        $st_id=$this->docform->psfrom->getValue();
+        
+        if($st_id >0) {
+            $st= \App\Entity\ProdStage::load($st_id);
+            
+            if( count($st->itemlist)>0) {
+               $ids= array_keys($st->itemlist) ; 
+               
+               if(!in_array($id,$ids)) {
+                    $this->setError( "ТМЦ не в перелiку  на  етапi");
+                    return;
+               }
+            }
+        }    
         $item = Item::load($id);
 
 
@@ -214,17 +228,14 @@ class ProdMove extends \App\Pages\Base
         } else {
             $this->_itemlist[$this->_rowid] = $item;
         }
-
-
-
+ 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
 
         //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
-
+        $this->editdetail->edititem->setValue(0);
+      
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editserial->setText("");
     }
@@ -233,8 +244,8 @@ class ProdMove extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
+        $this->editdetail->edititem->setValue(0);
+    
 
         $this->editdetail->editquantity->setText("1");
     }
@@ -256,7 +267,14 @@ class ProdMove extends \App\Pages\Base
         $this->_doc->headerdata['pstoname'] = $this->docform->psto->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
-
+     
+          
+        if($this->_doc->headerdata['psfrom'] >0) {
+            $st= \App\Entity\ProdStage::load($this->_doc->headerdata['psfrom']);
+            $this->_doc->headerdata['parea'] = $st->pa_id;
+        }     
+       
+ 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = 0;

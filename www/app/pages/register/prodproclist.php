@@ -60,7 +60,7 @@ class ProdProcList extends \App\Pages\Base
         $this->editproc->add(new TextInput('editname'));
         $this->editproc->add(new TextInput('editbasedoc'));
         $this->editproc->add(new DropDownChoice('editstore', \App\Entity\Store::getList('disabled<>1'), H::getDefStore()));
-        $this->editproc->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' ", 'rolename'),0));      
+
         $this->editproc->add(new Date('editstartdateplan',strtotime('+1 day',time())));
         $this->editproc->add(new Date('editenddateplan',strtotime('+3 month',time())));
         $this->editproc->add(new TextArea('editnotes'));
@@ -132,6 +132,16 @@ class ProdProcList extends \App\Pages\Base
         $this->empspan->add(new ClickLink('saveemps', $this, 'onSaveEmps'));
         $this->empspan->add(new ClickLink('cancelemps', $this, 'onCanceEmps'));
 
+        
+        $this->listpan->add(new ClickLink('options'))->onClick($this, 'optionsfOnClick');
+        
+        $this->add(new Form('optionsform'))->setVisible(false);        
+        $this->optionsform->onSubmit($this, 'saveopt');
+        $this->optionsform->add(new DropDownChoice('editrole', \App\Entity\UserRole::findArray('rolename', "rolename <> 'admins' ", 'rolename'),0));          
+        $this->optionsform->add(new ClickLink('cancelopt'))->onClick($this, 'cancelopt');
+        
+        
+        
         $this->listpan->proclist->Reload();
 
     }
@@ -209,8 +219,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editproc->editname->setText($this->_proc->procname);
         $this->editproc->editstore->setValue($this->_proc->store);
-        $this->editproc->editrole->setValue($this->_proc->role);
-        
+         
         $this->editproc->editbasedoc->setText($this->_proc->basedoc);
 
         $this->editproc->editstartdateplan->setDate($this->_proc->startdateplan);
@@ -224,7 +233,6 @@ class ProdProcList extends \App\Pages\Base
 
         $this->_proc->procname = $this->editproc->editname->getText();
         $this->_proc->store =(int) $this->editproc->editstore->getValue();
-        $this->_proc->role = (int) $this->editproc->editrole->getValue();
         $this->_proc->basedoc = $this->editproc->editbasedoc->getText();
 
         $this->_proc->notes = $this->editproc->editnotes->getText();
@@ -331,7 +339,7 @@ class ProdProcList extends \App\Pages\Base
         $row->add(new Label('stageareaname', $s->pa_name));
         $row->add(new Label('stagestate', ProdStage::getStateName($s->state)));
 
-        $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state != ProdStage::STATE_FINISHED);
+        $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state != ProdStage::STATE_FINISHED && $s->state != ProdStage::STATE_INPROCESS );
         $row->add(new ClickLink('stagedel', $this, 'OnStageDel'))->setVisible($s->state != ProdStage::STATE_FINISHED);
         $row->add(new ClickLink('stagecard', $this, 'OnCard'));
         $row->add(new ClickLink('stageitems', $this, 'OnItems'))->setVisible($s->state != ProdStage::STATE_FINISHED );
@@ -682,7 +690,7 @@ class ProdProcList extends \App\Pages\Base
         $this->listpan->proclist->Reload();
         $this->goAnkor('showpan');
     }
-
+ 
     public function onProcStatus($sender) {
 
         $stages = ProdStage::find('pp_id=' . $this->_proc->pp_id);
@@ -723,7 +731,38 @@ class ProdProcList extends \App\Pages\Base
         $this->listpan->showpan->setVisible(false);
         $this->listpan->proclist->Reload();
     }
-
+    
+  // настройки  
+  public function optionsfOnClick($sender) {
+        $options = System::getOptions('common');
+        
+        $this->optionsform->editrole->setValue($options['prodrole'] ?? 0);
+        
+        $this->listpan->setVisible(false);
+       
+        $this->optionsform->setVisible(true);           
+  }  
+ 
+  public function cancelopt($sender) {
+     
+        $this->listpan->setVisible(true);
+        $this->optionsform->setVisible(false);        
+     
+ }
+ 
+  public function saveopt($sender) {
+        $options = System::getOptions('common');
+         
+        $options['prodrole'] = $this->optionsform->editrole->getValue()  ;
+                                              
+     
+        System::setOptions('common', $options);        
+        
+        $this->listpan->setVisible(true);
+        $this->optionsform->setVisible(false);        
+ }  
+  
+  
 }
 
 /**
