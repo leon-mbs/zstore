@@ -46,7 +46,10 @@
                         <td zippy="pa_name"></td>
                         <td ><small zippy="notes"></small></td>
                         <td  >
-                             <a zippy="view" title="Перегляд операцій"><i class="fa fa-cog"></i></a>
+                             <a zippy="view" title="Перегляд операцій"><i class="fa fa-gavel"></i></a>
+                       </td>
+                        <td  >
+                             <a zippy="barcode" title="Друк штрих-коду інвентарного номеру"><i class="fa fa-barcode"></i></a>
                        </td>
                         <td  >
                     
@@ -156,7 +159,26 @@
            </table>
          
        </div>    
-            
+  <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="tag"></td>
+                            </tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>            
+           
    </div>         
             
         <script>               

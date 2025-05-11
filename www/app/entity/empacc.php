@@ -18,10 +18,11 @@ class EmpAcc extends \ZCL\DB\Entity
     public const  SALARY_PAY     = 4; //  выплата  зарплаты
     public const  ADVANCE_ACC    = 5; // авансовый отчет
 
- 
-    public const  ADVANCE = 101; // аванс
-    public const  BONUS   = 102; // бонусы
-    public const  FINE    = 103; // штрафы
+    //забалансовые сумы
+    public const  ADVANCE  = 101; // аванс
+    public const  BONUS    = 102; // бонусы
+    public const  FINE     = 103; // штрафы
+    public const  PRICE    = 104; // сдельная оплата
 
 
     protected function init() {
@@ -82,6 +83,7 @@ class EmpAcc extends \ZCL\DB\Entity
         $ret[self::ADVANCE]= 'Аванс';
         $ret[self::BONUS]= 'Бонус';
         $ret[self::FINE]= 'Штраф';
+        $ret[self::PRICE]= 'Відрядна оплата';
         return $ret;
     }    
     

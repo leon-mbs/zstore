@@ -10,11 +10,11 @@
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">Номер документа <small class="text-danger">*</small></label>
                         <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                     <div class="form-group">
-                        <label for="document_date"> Дата</label>
+                        <label for="document_date"> Дата <small class="text-danger">*</small></label>
                         <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
 
@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="customer">Постачальник</label>
+                        <label for="customer">Постачальник <small class="text-danger">*</small></label>
                           <div class="input-group  ">
                             <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
                               <div class="input-group-append">
@@ -57,7 +57,15 @@
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
-
+                  {{#storeemp}}
+                     <div class="form-group  ">
+                        <label for="storeemp">На спiвробiтника</label>
+                        <select class="form-control  " zippy="storeemp">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <small> Матерiально вiдповiдальна  особа</small>
+                    </div> 
+                      {{/storeemp}} 
                     <div class="form-group  ">
                         <label for="payment">Каса, рахунок</label>
                         <select class="form-control" zippy="payment">

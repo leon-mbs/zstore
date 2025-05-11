@@ -34,7 +34,10 @@ class ItemActivity extends \App\Pages\Base
 
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
         $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
+        $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
+        
+        $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+   
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
         $this->filter->item->onChange($this, "onItem");
 
@@ -87,6 +90,7 @@ class ItemActivity extends \App\Pages\Base
         $storeid = $this->filter->store->getValue();
         $itemid = $this->filter->item->getKey();
         $snumber = $this->filter->snumber->getText();
+        $emp = $this->filter->searchemp->getValue();
 
 
         $it = "1=1";
@@ -121,6 +125,7 @@ class ItemActivity extends \App\Pages\Base
               WHERE st2.item_id = t.item_id  
               
               " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
+              " . ($emp > 0 ? " AND st2.emp_id = {$emp}  " : "") . "  
               AND sc2.document_date  < t.dt   
               GROUP BY st2.item_id 
                                  
@@ -137,6 +142,7 @@ class ItemActivity extends \App\Pages\Base
             ON sc3.document_id = dc3.document_id
               WHERE st3.item_id = t.item_id  
              " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
+             " . ($emp > 0 ? " AND st3.emp_id = {$emp}  " : "") . "  
               AND sc3.document_date  < t.dt   
               GROUP BY st3.item_id 
                                  
@@ -162,6 +168,7 @@ class ItemActivity extends \App\Pages\Base
             ON sc.document_id = dc.document_id
               WHERE {$it}  
            " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
+           " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
              AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,

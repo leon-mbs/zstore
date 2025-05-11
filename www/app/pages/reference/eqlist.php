@@ -104,7 +104,8 @@ class EqList extends \App\Pages\Base
       
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
 
- 
+        $row->add(new ClickLink('barcode'))->onClick($this, 'printOnClick', true);
+     
         $row->add(new ClickLink('view'))->onClick($this, 'viewOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -186,7 +187,7 @@ class EqList extends \App\Pages\Base
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->type = $this->itemdetail->edittype->getValue()  ;
 
-        $this->_item->Save();
+        $this->_item->save();
 
         $this->itemtable->eqlist->Reload();
     }
@@ -255,6 +256,70 @@ class EqList extends \App\Pages\Base
     }
     public function createDoc($sender) {
         \App\Application::Redirect("\\App\\Pages\\Doc\\EQ",0,$this->_item->eq_id);
+    }
+  public function printOnClick($sender) {
+
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+
+        $item = $sender->getOwner()->getDataItem();
+        $header = [];
+        if(intval($user->prtypelabel) == 0) {
+            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+            $data = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($item->invnumber, $printer['barcodetype'])) . "\"";
+                                      
+            $report = new \App\Report('eq.tpl');
+            $header['src'] = $data;
+
+            $html =  $report->generate($header);                  
+
+            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            return;
+        }
+       
+        try {
+            $buf=[];
+            if(intval($user->prtypelabel) == 1) {
+                
+               $report = new \App\Report('eq_ps.tpl');
+               $header['barcode'] = $item->invnumber;
+
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+            if(intval($user->prtypelabel) == 2) {
+                $rows=[];
+              
+                $report = new \App\Report('eq_ts.tpl');
+                $header['barcode'] = $item->invnumber;
+
+                $text = $report->generate($header, false);
+                $r = explode("\n", $text);
+                foreach($r as $row) {
+                    $row = str_replace("\n", "", $row);
+                    $row = str_replace("\r", "", $row);
+                    $row = trim($row);
+                    if($row != "") {
+                       $rows[] = $row;  
+                    }
+                   
+                }           
+                
+                $buf = \App\Printer::arr2comm($rows);
+            }
+       
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
+
     }
 
 }

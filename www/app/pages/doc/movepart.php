@@ -190,6 +190,9 @@ class MovePart extends \App\Pages\Base
         if (strlen($st->snumber) > 0) {
             $str = $str . ', ' . $st->snumber;
         }
+        if (strlen($st->emp_id) > 0) {
+            $str = $str . ', ' . $st->emp_name;
+        }
         $str = $str . ', ' . H::fa($st->partion);
         $str = $str . ', ' . H::fqty($st->qty);
         return $str;

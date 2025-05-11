@@ -14,6 +14,14 @@
         </td>
 
     </tr>
+    {{#storeemp}}
+    <tr>
+        <td colspan="4">
+            <b>Спiвробiтник:</b> {{storeemp}}
+        </td>
+    </tr>
+ 
+    {{/storeemp}}     
     {{#reserved}}
   <tr>
         <td colspan="5">

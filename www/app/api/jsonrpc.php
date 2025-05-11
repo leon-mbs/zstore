@@ -71,7 +71,8 @@ abstract class JsonRPC
                 }
             }
 
-            $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+          //  $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+            $key = 'api'.\App\Helper::getSalt();
 
 
             //   $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));

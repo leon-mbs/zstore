@@ -50,6 +50,7 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));
@@ -92,6 +93,7 @@ class IncomeItem extends \App\Pages\Base
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
             $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
             $this->docform->examount->setText($this->_doc->headerdata['examount']);
             $this->docform->notes->setText($this->_doc->notes);
@@ -268,6 +270,8 @@ class IncomeItem extends \App\Pages\Base
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
         $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
         $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
 

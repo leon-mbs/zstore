@@ -43,7 +43,9 @@ class MoveItem extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+        $this->docform->add(new DropDownChoice('tostoreemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+ 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -85,6 +87,8 @@ class MoveItem extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->tostoreemp->setValue($this->_doc->headerdata['tostoreemp']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -251,6 +255,10 @@ class MoveItem extends \App\Pages\Base
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
         $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storeemp'] = intval( $this->storeemp->store->getValue() );
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+        $this->_doc->headerdata['tostoreemp'] = intval( $this->tostoreemp->store->getValue() );
+        $this->_doc->headerdata['tostoreempname'] = $this->docform->tostoreemp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -337,6 +345,9 @@ class MoveItem extends \App\Pages\Base
             $this->setError("Не обрано склад");
         }
         if ( $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
+            $this->setError("Той самий склад");
+        }
+        if ( $this->_doc->headerdata['tostoreemp'] > 0 && ($this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store'] ) && ($this->_doc->headerdata['tostoreemp'] == $this->_doc->headerdata['storeemp'] )  ) {
             $this->setError("Той самий склад");
         }
     

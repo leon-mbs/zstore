@@ -15,6 +15,14 @@
             На склад <b>{{storename}}</b><br>
         </td>
     </tr>
+    {{#emp}}
+    <tr>
+        <td colspan="6">
+            <b>Виконавець:</b> {{emp}}
+        </td>
+    </tr>
+ 
+    {{/emp}}      
     <tr>
         <td colspan="8" valign="middle">
             {{{notes}}}<br>

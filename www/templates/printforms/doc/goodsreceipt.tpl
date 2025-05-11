@@ -38,18 +38,29 @@
     <tr>
         <td></td>
 
-        <td valign="top"><b>Склад</b></td>
+        <td valign="top"><b>На склад</b></td>
         <td colspan="6">{{storename}}</td>
 
     </tr>
-    
+   {{#storeemp}}
+    <tr>
+  
+     <td></td>
+
+        <td valign="top"><b>На спiвробiтника</b></td>
+        <td colspan="6">{{storeemp}}</td>
+  
+       
+    </tr>
+ 
+    {{/storeemp}}      
     <tr>
         <td></td>
         <td><b>Підстава</b></td>
         <td colspan="6">{{basedoc}}</td>
     </tr>
     <tr>
-        <td colspan="9">{{{notes}}}</td>
+        <td colspan="8">{{{notes}}}</td>
     </tr>
     
      {{#isval}}
@@ -62,7 +73,7 @@
     </tr>
     {{/isval}}    
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
             <br> Прибуткова накладна № {{document_number}} від {{date}} <br><br>
         </td>
     </tr>

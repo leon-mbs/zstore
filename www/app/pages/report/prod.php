@@ -51,6 +51,7 @@ class Prod extends \App\Pages\Base
         $detail = array();
         $detail2 = array();
         $detail3 = array();
+        $detail4 = array();
         $sum1 = 0;
         $sum2 = 0;
         $conn = \ZDB\DB::getConnect();
@@ -95,7 +96,7 @@ class Prod extends \App\Pages\Base
               join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and e.quantity  >0
                and d.meta_name in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')   and  (e.tag = 0 or e.tag = -32   ) 
- 
+              {$wparea}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.itemname,i.item_code
@@ -113,7 +114,35 @@ class Prod extends \App\Pages\Base
             );
             $sum2 += $row['summa'];
         }
+ 
+ 
+        //перемещение
+        $sql = "
+          select i.itemname,i.item_code,sum(e.quantity) as qty, sum((partion  )*quantity) as summa
+              from entrylist_view  e
 
+              join items i on e.item_id = i.item_id
+              join documents_view d on d.document_id = e.document_id
+               where e.item_id >0  and e.quantity  >0
+               and d.meta_name in ('ProdMove')   and    e.tag = -128   
+              {$wparea}
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                group by  i.itemname,i.item_code
+               order  by i.itemname
+        ";
+
+        $rs = $conn->Execute($sql);
+
+        foreach ($rs as $row) {
+            $detail4[] = array(
+                "code"  => $row['item_code'],
+                "name"  => $row['itemname'],
+                "qty"   => H::fqty($row['qty']) 
+                 
+            );
+             
+        } 
         //готово  к производству
 
 
@@ -155,6 +184,8 @@ class Prod extends \App\Pages\Base
                         "_detail"  => $detail,
                         "_detail2" => $detail2,
                         "_detail3" => $detail3,
+                        "_detail4" => $detail4,
+                        "ismove" => count($detail4) >0,
                         'dateto'   => \App\Helper::fd($to),
                         'currdate'   => \App\Helper::fd(time()),
                         'parea'    => null,

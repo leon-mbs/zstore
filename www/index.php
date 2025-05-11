@@ -28,10 +28,10 @@ try {
         }
     }
 
-    $mainpage='\App\Pages\Main';
+    $mainpage='\App\Pages\Blank';
     $user=\App\System::getUser() ;
     if(strlen($user->mainpage)>0) {
-        $mainpage =  $user->mainpage;
+        $mainpage = $user->mainpage;
     }
 
     $app = new \App\Application();

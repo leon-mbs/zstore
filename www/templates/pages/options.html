@@ -249,12 +249,7 @@
                                 <select class="form-control" zippy="atype">
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label data-label="akey" for="akey">Ключ</label>
-                                <input zippy="akey" pattern="[a-zA-Z0-9]+" class="form-control">
-                                <small data-label="akey">Довiльне латиничне слово для шифрування
-                                    токену</small>
-                            </div>
+                      
                             <div class="form-group">
                                 <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
                                 <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
@@ -307,7 +302,12 @@
                                 <small>Переважна  послідовність  оплати  при  продажі</small>
 
                             </div>
-                         
+                          <div class="form-group">
+                                <label for="actualdate">Початок актуального перiоду</label>
+                                <input   class="form-control"   zippy="actualdate">
+                                <small>Дата, раніше якої заборонено виконувати проводки</small>
+
+                            </div> 
                            <div class="form-group  ">
                                 <label for="usesnumber">Облік ТМЦ за серіями  </label>
                                 <select class="form-control" zippy="usesnumber"> 
@@ -317,13 +317,14 @@
 
                             </div>
                             
-                            <div class="form-group">
-                                <label for="actualdate">Початок актуального перiоду</label>
-                                <input   class="form-control"   zippy="actualdate">
-                                <small>Дата, раніше якої заборонено виконувати проводки</small>
-
-                            </div>                            
-           
+                                                      
+                             <div class="form-check">
+                                <input zippy="storeemp" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="storeemp">Облік ТМЦ в  розрізі  співробітника</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Облік ТМЦ в  розрізі  склад+співробітник (матерiально-вiдповiдальна особа)"></i>
+                            </div>
+                      
   
                             <div class="form-check">
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">
@@ -533,7 +534,7 @@
      <div class="card">
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
-                       <br><small>За замовчанням  пункти меню CRM  неактивнi до першого <br>натискання кнопки Зберегти</small>
+                    
                         <form zippy="food"  >
 
                             <div class="form-check">

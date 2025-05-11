@@ -145,15 +145,19 @@ CREATE TABLE store_stock (
   partion decimal(11, 2) DEFAULT NULL,
   store_id int(11) NOT NULL,
   customer_id int(11) DEFAULT NULL,
+  emp_id int(11) DEFAULT NULL,
   qty decimal(11, 3) DEFAULT '0.000',
   snumber varchar(64) DEFAULT NULL,
   sdate date DEFAULT NULL,
   PRIMARY KEY (stock_id),
   KEY item_id (item_id),
+  KEY emp_id (emp_id),
   KEY store_id (store_id),
   CONSTRAINT store_stock_fk FOREIGN KEY (store_id) REFERENCES stores (store_id),
   CONSTRAINT store_stock_ibfk_1 FOREIGN KEY (item_id) REFERENCES items (item_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+
+
 
 
 CREATE TABLE empacc (
@@ -564,14 +568,7 @@ CREATE TABLE prodstage (
   KEY pp_id (pp_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
-CREATE TABLE prodstageagenda (
-  sta_id int(11) NOT NULL AUTO_INCREMENT,
-  st_id int(11) NOT NULL,
-  startdate datetime NOT NULL,
-  enddate datetime NOT NULL,
-  PRIMARY KEY (sta_id),
-  KEY st_id (st_id)
-) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+ 
 
 CREATE TABLE crontask (
   id int(11) NOT NULL AUTO_INCREMENT,
@@ -785,29 +782,29 @@ FROM ((contracts co
     ON ((co.firm_id = f.firm_id))) ;
 
  
-CREATE
-VIEW custitems_view
+CREATE VIEW custitems_view
 AS
 SELECT
-  s.custitem_id AS custitem_id,
-  s.cust_name AS cust_name,
-  coalesce(s.item_id,0) AS item_id,
-  s.customer_id AS customer_id,
-  s.quantity AS quantity,
-  s.price AS price,
-  s.cust_code AS cust_code,
-  s.brand AS brand,
-  s.store AS store,
-  s.bar_code AS bar_code,
-  s.details AS details,
-  s.updatedon AS updatedon,
-  c.customer_name AS customer_name
-FROM   custitems s
- 
-  JOIN customers c
-    ON   s.customer_id = c.customer_id 
-WHERE c.status <> 1 
- ;
+  `s`.`custitem_id` AS `custitem_id`,
+  `s`.`cust_name` AS `cust_name`,
+  COALESCE(`s`.`item_id`, 0) AS `item_id`,
+  `s`.`customer_id` AS `customer_id`,
+  `s`.`quantity` AS `quantity`,
+  `s`.`price` AS `price`,
+  `s`.`cust_code` AS `cust_code`,
+  `s`.`brand` AS `brand`,
+  `s`.`store` AS `store`,
+  `s`.`bar_code` AS `bar_code`,
+  `s`.`details` AS `details`,
+  `s`.`updatedon` AS `updatedon`,
+  `c`.`customer_name` AS `customer_name`,
+   i.item_code 
+FROM `custitems` `s`
+  JOIN `customers` `c`
+    ON `s`.`customer_id` = `c`.`customer_id`
+  LEFT JOIN items i ON  s.item_id = i.item_id 
+  
+  WHERE c.status <> 1   ;
 
 CREATE
 VIEW customers_view
@@ -1143,26 +1140,10 @@ FROM (((paylist pl
     ON ((pl.mf_id = m.mf_id))) ;
 
 
-CREATE
-VIEW prodstageagenda_view
-AS
-SELECT
-  a.sta_id AS sta_id,
-  a.st_id AS st_id,
-  a.startdate AS startdate,
-  a.enddate AS enddate,
-  pv.stagename AS stagename,
-  pv.state AS state,
-  (TIMESTAMPDIFF(MINUTE, a.startdate, a.enddate) / 60) AS hours,
-  pv.pa_id AS pa_id,
-  pv.pp_id AS pp_id
-FROM (prodstageagenda a
-  JOIN prodstage pv
-    ON ((a.st_id = pv.st_id))) ;    
+   
     
     
-CREATE
-VIEW prodstage_view
+CREATE VIEW prodstage_view
 AS
 SELECT
   ps.st_id AS st_id,
@@ -1170,21 +1151,10 @@ SELECT
   ps.pa_id AS pa_id,
   ps.state AS state,
   ps.stagename AS stagename,
-  COALESCE((SELECT
-      MIN(pag.startdate)
-    FROM prodstageagenda pag
-    WHERE (pag.st_id = ps.st_id)), NULL) AS startdate,
-  COALESCE((SELECT
-      MAX(pag.enddate)
-    FROM prodstageagenda pag
-    WHERE (pag.st_id = ps.st_id)), NULL) AS enddate,
-  COALESCE((SELECT
-      MAX(pag.hours)
-    FROM prodstageagenda_view pag
-    WHERE (pag.st_id = ps.st_id)), NULL) AS hours,
+ 
   ps.detail AS detail,
   pr.procname AS procname,
-  pr.snumber AS snumber,
+ 
   pr.state AS procstate,
   pa.pa_name AS pa_name
 FROM ((prodstage ps
@@ -1193,30 +1163,21 @@ FROM ((prodstage ps
   JOIN parealist pa
     ON ((pa.pa_id = ps.pa_id))) ;    
     
-CREATE
-VIEW prodproc_view
+CREATE VIEW prodproc_view
 AS
 SELECT
   p.pp_id AS pp_id,
   p.procname AS procname,
   p.basedoc AS basedoc,
-  p.snumber AS snumber,
+ 
   p.state AS state,
-  COALESCE((SELECT
-      MIN(ps.startdate)
-    FROM prodstage_view ps
-    WHERE (ps.pp_id = p.pp_id)), NULL) AS startdate,
-  COALESCE((SELECT
-      MAX(ps.enddate)
-    FROM prodstage_view ps
-    WHERE (ps.pp_id = p.pp_id)), NULL) AS enddate,
+
   COALESCE((SELECT
       COUNT(0)
     FROM prodstage ps
     WHERE (ps.pp_id = p.pp_id)), NULL) AS stagecnt,
   p.detail AS detail
 FROM prodproc p ;
-
 
 
 
@@ -1320,8 +1281,7 @@ FROM ((shop_vars
   JOIN item_cat
     ON ((shop_attributes.cat_id = item_cat.cat_id))) ;
 
-CREATE
-VIEW store_stock_view
+CREATE VIEW store_stock_view
 AS
 SELECT
   st.stock_id AS stock_id,
@@ -1329,6 +1289,7 @@ SELECT
   st.partion AS partion,
   st.store_id AS store_id,
   st.customer_id AS customer_id,
+  st.emp_id AS emp_id,
   i.itemname AS itemname,
   i.item_code AS item_code,
   i.cat_id AS cat_id,
@@ -1340,13 +1301,16 @@ SELECT
   stores.storename AS storename,
   st.qty AS qty,
   st.snumber AS snumber,
-  st.sdate AS sdate
-FROM ((store_stock st
+  st.sdate AS sdate,
+  employees.emp_name AS emp_name
+FROM  store_stock st
   JOIN items_view i
-    ON (((i.item_id = st.item_id)
-    AND (i.disabled <> 1))))
+    ON  i.item_id = st.item_id  AND  i.disabled <> 1 
   JOIN stores
-    ON ((stores.store_id = st.store_id))) ;
+    ON  stores.store_id = st.store_id  AND  stores.disabled <> 1 
+  LEFT JOIN employees
+    ON  employees.employee_id  = st.emp_id ;
+    
     
 
 CREATE
@@ -1564,11 +1528,11 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Розрахунки з постачальниками', 'PaySelList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Розрахунки з покупцями', 'PayBayList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення грошей', 'MoveMoney', 'Каса та платежі', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Продажі', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Кафе', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Прибутки та видатки', 'IOState', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Програма лояльності', 'Discounts', '', 0);
@@ -1614,7 +1578,7 @@ INSERT INTO options (optname, optvalue) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0
 INSERT INTO options (optname, optvalue) VALUES('sms', 'YToxMTp7czoxMjoic21zY2x1YnRva2VuIjtzOjA6IiI7czoxMjoic21zY2x1YmxvZ2luIjtzOjA6IiI7czoxMToic21zY2x1YnBhc3MiO3M6MDoiIjtzOjk6InNtc2NsdWJhbiI7czowOiIiO3M6MTA6InNtc2NsdWJ2YW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15dG9rZW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15ZGV2aWQiO3M6MDoiIjtzOjExOiJmbHlzbXNsb2dpbiI7czowOiIiO3M6MTA6ImZseXNtc3Bhc3MiO3M6MDoiIjtzOjg6ImZseXNtc2FuIjtzOjA6IiI7czo3OiJzbXN0eXBlIjtzOjE6IjAiO30=');
 INSERT INTO options (optname, optvalue) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
 INSERT INTO options (optname, optvalue) VALUES('salary', 'YTo3OntzOjQ6ImNhbGMiO3M6MjE2OiIgLy/QstGB0YzQvtCz0L4g0L3QsNGA0LDRhdC+0LLQsNC90L4NCiAgdjIwMCA9ICB2MTA1DQoNCiAvL9C/0L7QtNCw0YLQutC4DQp2MjIwID0gIHYyMDAgKiAwLjE4DQp2MzAwID0gIHYyMDAgKiAwLjIyDQovL9Cy0YHRjNC+0LPQviDRg9GC0YDQuNC80LDQvdC+DQp2NjAwID12MjAwICAtIHYyMjAtIHYzMDANCi8v0L3QsCDRgNGD0LrQuA0KdjkwMCA9djIwMCAgLSB2NjAwLXY4NTAiO3M6ODoiY2FsY2Jhc2UiO3M6NjE6Ii8v0L7RgdC90L7QstC90LAgINC30LDRgNC/0LvQsNGC0LANCiB2MTA1PXRhc2tzdW0rc2VsbHZhbHVlDQoiO3M6MTM6ImNvZGViYXNlaW5jb20iO3M6MzoiMTA1IjtzOjEwOiJjb2RlcmVzdWx0IjtzOjM6IjkwMCI7czoxMToiY29kZWFkdmFuY2UiO3M6MToiMCI7czo4OiJjb2RlZmluZSI7czoxOiIwIjtzOjk6ImNvZGVib251cyI7czoxOiIwIjt9');
-INSERT INTO options (optname, optvalue) VALUES('version', '6.13.0');
+INSERT INTO options (optname, optvalue) VALUES('version', '6.14.0');
 
 
 

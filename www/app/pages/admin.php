@@ -53,11 +53,14 @@ class Admin extends \App\Pages\Base
         $form->add(new SubmitButton('sendphone'))->onClick($this, 'sendSms');
         $form->add(new TextInput('chat_id'))  ;
         $form->add(new SubmitButton('sendbot'))->onClick($this, 'sendBot');
-
+        
+        $form->add(new SubmitButton('checkdb'))->onClick($this, 'checkDB');
+        $this->add(new Label('checkdbanswer'))  ;
 
 
         $this->add(new Form('cdoc'))->onSubmit($this,"onCancelDoc");
         $this->cdoc->add(new TextInput('docn'))  ;
+
    
     }   
 
@@ -109,6 +112,8 @@ class Admin extends \App\Pages\Base
     }
 
 
+
+
     public function onCancelDoc($sender) {
         $dn = trim($this->cdoc->docn->getText() );
         $conn = \ZDB\DB::getConnect();
@@ -144,6 +149,69 @@ class Admin extends \App\Pages\Base
          
     }        
 
+
+       
+    public function checkDB($sender) {
+           $this->checkdbanswer->setText('');
     
+           $ver = str_replace('.','',System::REQUIRED_DB) ;        
+           $origtables =    file_get_contents("https://zippy.com.ua/updates/{$ver}.db" ) ;  
+                            
+           if(strlen($origtables) == 0 ) {
+               $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
+               return; 
+           }  
+        
+         
+        
+           $conn = \ZDB\DB::getConnect();
+           $tables=[];
+           foreach( $conn->getCol("SHOW TABLES ") as $t){
+               $tables[$t]=[];
+           }
+           foreach( array_keys( $tables) as $t){
+               foreach( $conn->Execute("SHOW COLUMNS FROM  ".$t) as $c){
+                   $tables[$t][]=$c['Field'];
+               }        
+           }
+         
+         
+      //     file_put_contents("z:/{$ver}.db",serialize($tables)) ;                  
+                        
+           $origtables = unserialize($origtables) ;
+      
+               
+           //проверка
+           $answer="";
+           
+           foreach($origtables as $i=>$o)  {
+              if( !is_array($tables[$i] ?? null) ){
+                 $answer .= "Таблиця {$i} не знайдена<br>"; 
+              } 
+           }
+       
+          
+       
+   
+           foreach($origtables as $i=>$o)  { 
+               if(!isset($tables[$i])) continue;
+               $cc=$tables[$i] ;
+               foreach($origtables[$i] as $c)  {
+                 
+                  if( !in_array($c,$cc)  ){
+                     $answer .= "Поле {$c} в {$i} не знайдено<br>"; 
+                  } 
+               }
+           }
+           if($answer !='' ) {
+              $this->checkdbanswer->setText($answer,true);
+          
+              return; 
+           }           
+           
+          $this->setSuccess('Структура OK')  ;
+
+
+    }    
 }
  

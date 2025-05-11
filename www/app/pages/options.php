@@ -112,6 +112,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('noallowfiz'));
         $this->business->add(new CheckBox('useval'));
         $this->business->add(new CheckBox('printoutqrcode'));
+        $this->business->add(new CheckBox('storeemp'));
 
    
         $this->business->add(new CheckBox('spreaddelivery'));
@@ -131,6 +132,7 @@ class Options extends \App\Pages\Base
         $this->business->price4->setText($common['price4']);
         $this->business->price5->setText($common['price5']);
         $this->business->defprice->setText($common['defprice']);
+        $this->business->storeemp->setChecked($common['storeemp']);
         $this->business->allowminus->setChecked($common['allowminus']);
         $this->business->allowminusmf->setChecked($common['allowminusmf']);
         $this->business->noallowfiz->setChecked($common['noallowfiz']);
@@ -210,14 +212,14 @@ class Options extends \App\Pages\Base
         //API
         $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
 
-        $this->api->add(new TextInput('akey'));
+  
         $this->api->add(new TextInput('aexp'));
         $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
         $api = System::getOptions("api");
         if (!is_array($api)) {
             $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
         }
-        $this->api->akey->setText($api['key']);
+ 
         $this->api->aexp->setValue($api['exp']);
         $this->api->atype->setValue($api['atype']);
 
@@ -386,6 +388,7 @@ class Options extends \App\Pages\Base
         $common['defprice'] = $this->business->defprice->getText();
 
         $common['noallowfiz'] = $this->business->noallowfiz->isChecked() ? 1 : 0;
+        $common['storeemp'] = $this->business->storeemp->isChecked() ? 1 : 0;
         $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
         $common['allowminusmf'] = $this->business->allowminusmf->isChecked() ? 1 : 0;
         $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;
@@ -470,7 +473,7 @@ class Options extends \App\Pages\Base
     public function onApiType($sender) {
         $type = $this->api->atype->getValue();
         $this->api->aexp->setVisible($type == 1);
-        $this->api->akey->setVisible($type == 1);
+     
 
         //  $this->goAnkor('atype');
     }
@@ -478,7 +481,7 @@ class Options extends \App\Pages\Base
     public function saveApiOnClick($sender) {
         $api = array();
         $api['exp'] = $this->api->aexp->getText();
-        $api['key'] = $this->api->akey->getText();
+ 
         $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
@@ -564,10 +567,6 @@ class Options extends \App\Pages\Base
         $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
         $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
 
-     
-        $conn = \zdb\DB::getConnect()  ;
-        $conn->Execute("update  metadata set  disabled=0 where  meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood') ");
-        
         System::setOptions("food", $food);
         $this->setSuccess('Збережено');
     }

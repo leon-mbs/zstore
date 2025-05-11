@@ -41,9 +41,12 @@ class ProdReceipt extends Document
                         "pareaname"       => $this->headerdata["pareaname"] ??'',
                         "storename"       => $this->headerdata["storename"]??'',
                         "notes"           => nl2br($this->notes),
-                        "total"           => H::fa($this->amount)
+                        "emp"             => false,
+                      "total"           => H::fa($this->amount)
         );
-
+        if ($this->headerdata["emp"] > 0  ) {
+            $header['emp'] = $this->headerdata["empname"];
+        }
         $report = new \App\Report('doc/prodreceipt.tpl');
 
         $html = $report->generate($header);
@@ -55,9 +58,12 @@ class ProdReceipt extends Document
         $types = array();
         $common = \App\System::getOptions("common");
         $lost = 0;
-      
+        $cost = 0;
+        
         foreach ($this->unpackDetails('detaildata') as $item) {
-
+            if($item->zarp > 0) {
+                $cost += doubleval($item->zarp * $item->quantity) ;
+            }
             if ($item->autooutcome == 1) {  //списание  комплектующих
                 $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                 foreach ($set as $part) {
@@ -116,7 +122,21 @@ class ProdReceipt extends Document
 
             $io->save();
        }
-
+       if ($this->getHD('emp') > 0 && $cost > 0 ) {
+    
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::PRICE;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $this->getHD('emp');
+            $ua->amount = $cost;
+            $ua->save();      
+              
+        } 
+        if ($this->getHD('st_id') > 0 && $cost > 0 ) {
+            $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
+            
+           
+        } 
         return true;
     }
 

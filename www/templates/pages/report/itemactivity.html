@@ -20,7 +20,17 @@
                         <select class="form-control mr-sm-2" zippy="store"> 
                          
                         </select>
-
+                        {{#storeemp}}
+             
+                       <label class="col-auto mt-2" for="searchemp">Співробітник</label>
+                
+                        <select class="form-control mr-sm-2" zippy="searchemp">
+                            <option value="0">Не вказано</option>
+                        </select>
+        
+                       {{/storeemp}}                        
+                        
+             
                         <label for="item">ТМЦ</label>
                         <input placeholder="Почніть вводити..." class="form-control mr-sm-2" zippy="item">
                              {{#usesnumber}}

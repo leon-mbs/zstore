@@ -20,7 +20,7 @@ class IncomeItem extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
             $item->quantity = doubleval($item->quantity)   ;
             $item->price = doubleval($item->price)   ;
-            $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true);
+            $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true,0,$this->headerdata['storeemp']??0);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
             $sc->save();
@@ -84,12 +84,16 @@ class IncomeItem extends Document
             "total"           => H::fa($this->amount),
             "to"              => $this->headerdata["storename"],
             "emp"             => false,
+            "storeemp"             => false,
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
         if ($this->headerdata["emp"] > 0 && $this->headerdata['examount']) {
             $header['emp'] = $this->headerdata["empname"];
             $header['examount'] = H::fa($this->headerdata["examount"]);
+        }
+        if ($this->headerdata["storeemp"] > 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
         }
 
         $report = new \App\Report('doc/incomeitem.tpl');

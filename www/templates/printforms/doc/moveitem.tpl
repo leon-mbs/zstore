@@ -10,7 +10,22 @@
         </td>
 
     </tr>
-
+    {{#storeemp}}
+    <tr>
+        <td colspan="4">
+            <b>Зі спiвробiтника:</b> {{storeemp}}
+        </td>
+    </tr>
+ 
+    {{/storeemp}}  
+   {{#tostoreemp}}
+    <tr>
+        <td colspan="4">
+            <b>На спiвробiтника:</b> {{tostoreemp}}
+        </td>
+    </tr>
+ 
+    {{/tostoreemp}}  
      <tr>
         <td colspan="4">{{{notes}}}</td>
     </tr>

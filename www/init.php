@@ -80,7 +80,7 @@ function app_autoload($className) {
         if (file_exists($file)) {
             require_once $file;
         } else {
-            die('Неверный класс ' . $className);
+            die('Невiрний класс ' . $className);
         }
     }
 }

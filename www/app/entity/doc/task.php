@@ -98,15 +98,16 @@ class Task extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-
+       
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - $ser->cost, $ser->qty);
-            $sc->setService($ser->service_id);
+            $sc->setService($ser->service_id);                            
             // $sc->save();
+            
+           
         }
-  
-   
+         
 
         return true;
     }
@@ -136,8 +137,37 @@ class Task extends Document
                 $entry->amount = 0   ;
                 $entry->save();    
                
-            }  
+            }
+
          }
+         if ($state == Document::STATE_CLOSED ) {
+              
+            $total = 0;
+            foreach ($this->unpackDetails('detaildata') as $ser) {
+                $total += doubleval($ser->cost * $ser->qty)  ;
+            }
+                 
+             
+            foreach ($this->unpackDetails('prodlist') as $item) {
+                if($item->zarp > 0) {
+                    $total += doubleval($item->zarp*$item->quantity) ;
+                } 
+            }          
+          
+            $emplist = $this->unpackDetails('emplist');
+            foreach ($emplist as $emp) {
+
+                 $cost =   doubleval($total * $emp->ktu) ;
+                 if($cost > 0){
+                    $ua = new \App\Entity\EmpAcc();
+                    $ua->optype = \App\Entity\EmpAcc::PRICE;
+                    $ua->document_id = $this->document_id;
+                    $ua->emp_id = $emp->employee_id;
+                    $ua->amount = $cost;
+                    $ua->save();      
+                 }  
+            }          
+         }           
     }
 
 }
