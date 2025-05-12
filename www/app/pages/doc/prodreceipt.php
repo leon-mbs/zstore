@@ -129,7 +129,13 @@ class ProdReceipt extends \App\Pages\Base
                 $this->_doc->headerdata['pp_id'] = $st->pp_id;
                 $this->docform->notes->setText($st->stagename);
                 $this->docform->emp->setVisible(false);
-
+                $st= \App\Entity\ProdStage::load($st_id);
+                $i=1;
+                foreach($st->itemlist as $it){
+                    $item = Item::load($it->item_id) ;
+                    $item->quantity = $it->quantity;
+                    $this->_itemlist[$i++]=$item;
+                }
 
             }
 

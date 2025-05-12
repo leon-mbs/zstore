@@ -557,7 +557,7 @@ class ProdProcList extends \App\Pages\Base
         $this->itemspan->detailitem->Reload() ;   
         
     }
-    public function onCanceItems(  $sender) {
+    public function onCanceltems(  $sender) {
         $this->itemspan->setVisible(false);
         $this->stagespan->setVisible(true);       
     }

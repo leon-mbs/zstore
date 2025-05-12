@@ -35,6 +35,7 @@ class UserRole extends Entity
 
         $this->custtype = $acl['custtype']??0;
         $this->canevent = $acl['canevent']??0;
+        $this->dashboard = $acl['dashboard']??0;
         $this->noshowpartion = $acl['noshowpartion']??0;
         $this->showotherstores = $acl['showotherstores']??0;
         $this->aclview = $acl['aclview']??'';
@@ -62,6 +63,7 @@ class UserRole extends Entity
 
         $acl['custtype'] = $this->custtype;
         $acl['canevent'] = $this->canevent;
+        $acl['dashboard'] = $this->dashboard;
         $acl['noshowpartion'] = $this->noshowpartion;
         $acl['showotherstores'] = $this->showotherstores;
         $acl['aclview'] = $this->aclview;
