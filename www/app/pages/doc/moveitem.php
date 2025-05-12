@@ -255,9 +255,9 @@ class MoveItem extends \App\Pages\Base
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
         $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
-        $this->_doc->headerdata['storeemp'] = intval( $this->storeemp->store->getValue() );
+        $this->_doc->headerdata['storeemp'] = intval( $this->docform->storeemp->getValue() );
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
-        $this->_doc->headerdata['tostoreemp'] = intval( $this->tostoreemp->store->getValue() );
+        $this->_doc->headerdata['tostoreemp'] = intval( $this->docform->tostoreemp->getValue() );
         $this->_doc->headerdata['tostoreempname'] = $this->docform->tostoreemp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);

@@ -103,8 +103,14 @@ class ProdMove extends \App\Pages\Base
                 $this->onPP($this->docform->pp)  ;
                 $this->docform->psfrom->setValue($st_id);
                 $this->docform->emp->setVisible(false) ;
-
-
+                $st= \App\Entity\ProdStage::load($st_id);
+                $i=1;
+                foreach($st->itemlist as $it){
+                    $item = Item::load($it->item_id) ;
+                    $item->quantity = $it->quantity;
+                    $this->_itemlist[$i++]=$item;
+                }
+                
             }   
 
 
