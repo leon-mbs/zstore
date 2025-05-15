@@ -179,7 +179,7 @@ class PayBalance extends \App\Pages\Base
 
         $detail3=[];
         $sql = " 
-         SELECT   iotype,coalesce(abs(sum(amount)),0) as am   FROM iostate_view 
+         SELECT   iotype,coalesce( (sum(amount)),0) as am   FROM iostate_view 
              WHERE   
               iotype in (30,31,80,81)     {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
@@ -214,7 +214,7 @@ class PayBalance extends \App\Pages\Base
         
         
         $sql = " 
-         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM iostate_view 
+         SELECT   coalesce(sum( (amount)),0)  as am   FROM iostate_view 
              WHERE   
               iotype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
@@ -226,7 +226,7 @@ class PayBalance extends \App\Pages\Base
         $OPOUT = $conn->GetOne($sql); // переменные расходы
 
         $sql = " 
-         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM iostate_view 
+         SELECT   coalesce(  sum( (amount)),0)  as am   FROM iostate_view 
              WHERE   
               iotype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "

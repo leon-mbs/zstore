@@ -1315,7 +1315,7 @@ class Helper
 
     /**
      * проверка  новой версии
-     *
+     * @deprecated
      */
     public static function checkVer() {
 

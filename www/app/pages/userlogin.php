@@ -106,7 +106,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 return;
             } else {
 
-                $this->setError('Невірний логін');
+                $this->setError('Невірний логін або пароль');
 
                 $this->counter();
             }
