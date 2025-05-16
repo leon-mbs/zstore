@@ -408,10 +408,10 @@ GROUP BY c.customer_name,
             
             $this->_doc->updateStatus(Document::STATE_PAYED);            
         }
-        if($this->_doc->meta_name=='Order' ||  $this->_doc->meta_name=='ServiceAct' ) {
+       // if($this->_doc->meta_name=='Order' ||  $this->_doc->meta_name=='ServiceAct' ) {
            $this->_doc->setHD('waitpay',0); 
            $this->_doc->save();  
-        }         
+     //   }         
 
     }
 
