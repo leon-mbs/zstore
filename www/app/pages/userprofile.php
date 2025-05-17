@@ -251,7 +251,10 @@ class UserProfile extends \App\Pages\Base
         $this->user->pwsym = trim($this->printer->pwsym->getText());
         $this->user->pserver = trim($this->printer->pserver->getText());
         $this->user->pserver  = rtrim($this->user->pserver, "/") ;
-
+        if($this->user->prtype >0) {
+           $this->user->usemobileprinter = 0;
+           $this->profileform->usemobileprinter->setChecked(0) ;                     
+        }
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
