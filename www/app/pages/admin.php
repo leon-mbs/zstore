@@ -140,7 +140,7 @@ class Admin extends \App\Pages\Base
         } catch(\Throwable $ee) {
             
             $conn->RollbackTrans();
-            \App\Helper::logerror(ee->getMessage())  ;
+            \App\Helper::logerror($ee->getMessage())  ;
             $this->setError($ee->getMessage());
 
             return;
