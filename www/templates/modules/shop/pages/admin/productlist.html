@@ -44,7 +44,9 @@
                      
                         <table class="table table-sm">
                             <tr>
+                               {{#useimages}}
                                 <th style="width:75px;"></th>
+                                   {{/useimages}}
                                 <th>Назва</th>
                                 <th  >Код</th>
 
@@ -55,7 +57,9 @@
 
                             </tr>
                             <tr zippy="plist">
+                               {{#useimages}}
                                 <td><img style="width:75px;" zippy="lphoto">
+                                   {{/useimages}}
                                 </td>
                                 <td><a zippy="lname" title="Редагувати"></a>
 
@@ -67,7 +71,9 @@
 
                                 <td class="text-right"><span zippy="lprice"></span></td>
                                 <td class="text-right"><span zippy="lcnt"></span></td>
+                                   {{#useimages}}
                                 <td>&nbsp;<a zippy="imedit" title="Редагувати фото"><i class="fa fa-images"></i></a></td>
+                                   {{/useimages}}
 
                             </tr>
                         </table>
