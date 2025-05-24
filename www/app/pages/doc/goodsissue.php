@@ -335,6 +335,15 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcTotal();
                         $this->calcPay();
                     }
+                    
+                    
+                    $ch = $basedoc->getChildren('GoodsIssue');
+                    
+                    if(count($ch)>0) {
+                        $this->setWarn('Вже створено накладну на  підставі '.$basedoc->document_number) ;
+                    }       
+                    
+                    
                 }
             } else {
                 if(intval($common['paytypeout']) == 1) {

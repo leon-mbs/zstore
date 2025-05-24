@@ -109,6 +109,7 @@
                                 <small class="form-text text-muted">Типи цін задаються в налаштуваннях </small>
                             </div>
                         </div>
+                           {{#useimages}}
                         <div class="form-group">
                             <label for="editparent">Зображення</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control" zippy="editaddfile">
@@ -122,6 +123,7 @@
                                 <span data-label="editdelimage" for="editdelimage">Видалити зображення</span>       
                             </div> 
                         </div> 
+                           {{/useimages}}
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозi</label>

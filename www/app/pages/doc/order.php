@@ -576,7 +576,7 @@ class Order extends \App\Pages\Base
             }
             $this->_doc->payed = 0;
             $this->_doc->headerdata['payed'] = 0;
-            $this->_doc->headerdata['payment'] = 0;
+          
             $this->_doc->headerdata['store'] = $this->docform->store->getValue() ;
             $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
             $this->_doc->headerdata['payment'] = intval( $this->docform->payment->getValue() );
