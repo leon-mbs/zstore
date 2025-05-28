@@ -197,7 +197,7 @@ class TTN extends \App\Pages\Base
                             $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
                         if($order->getHD('paytype',0) == 3){
-                            $this->setWarn('В азмовленні не передбачена оплата. Створіть чек  або ВН') ;
+                            $this->setWarn('В замовленні не передбачена оплата. Створіть чек  або ВН') ;
                             App::Redirect("\\App\\Pages\\Register\\OrderList");
                             return; 
                         }

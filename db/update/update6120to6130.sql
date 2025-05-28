@@ -1,3 +1,5 @@
+SET NAMES 'utf8';
+
 ALTER TABLE documents ADD   INDEX parent_id (parent_id)   ; 
 ALTER TABLE documents ADD   INDEX document_number (document_number)   ; 
 ALTER TABLE employees ADD   INDEX login (login)   ; 

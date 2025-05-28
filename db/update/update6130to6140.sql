@@ -1,3 +1,5 @@
+SET NAMES 'utf8';
+
 ALTER TABLE store_stock ADD emp_id int(11) DEFAULT NULL;    
 
 ALTER TABLE store_stock ADD INDEX  (emp_id) ; 
