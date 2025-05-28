@@ -510,6 +510,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['payed'] = '';
         $header['credit'] = '';
         $header['payurl'] = '';
+        $header['orderno'] = '';
        // $header['botname'] = $common['tbname'] ??'';
         $header['device'] = $doc->headerdata['device'] ??'';
         $header['ttnnp'] = $doc->headerdata['ship_number'] ??'';
@@ -615,6 +616,37 @@ class Subscribe extends \ZCL\DB\Entity
             $header['payurl']   = $qr['url']  ;
         }
 
+        if($doc->meta_name == 'Order') {
+           $header['orderno'] = $doc->document_number;
+           if($doc->getHD('outnumber','') !=''){
+               $header['orderno'] = $doc->getHD('outnumber' ) ;
+           }
+        }           
+        
+        if($doc->parent_id >0)  {
+            $basedoc=\App\Entity\Doc\Document::load($doc->parent_id)->cast();
+            if($basedoc->meta_name == 'POSCheck') {
+               $header['taxurl'] = $basedoc->getFiscUrl();
+               if($basedoc->parent_id >0)   {
+                   $basebasedoc=\App\Entity\Doc\Document::load($basedoc->parent_id)->cast();
+                   if($basebasedoc->meta_name == 'Order') { //если  чек  на основании заказа
+                      $header['orderno'] = $basebasedoc->document_number;
+                      if($basebasedoc->getHD('outnumber','') !=''){
+                          $header['orderno'] = $basebasedoc->getHD('outnumber' ) ;
+                      }
+                   }   
+               }
+            }           
+            if($basedoc->meta_name == 'Order') {   //если     на основании заказа
+               $header['orderno'] = $basedoc->document_number;
+               if($basedoc->getHD('outnumber','') !=''){
+                   $header['orderno'] = $basedoc->getHD('outnumber' ) ;
+               }
+               
+            }           
+            
+        }
+        
 
 
         $table = array();
@@ -642,9 +674,7 @@ class Subscribe extends \ZCL\DB\Entity
         }
     }
 
-    
-    
-    
+     
     
     public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;

@@ -1281,6 +1281,9 @@ class ARMPos extends \App\Pages\Base
 
                         if(is_array($ret)) {
                             $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                            $this->_doc->headerdata["vkassa"] = $ret['checkid'];
+                                                 
                         } else {
                             throw new \Exception($ret);
 

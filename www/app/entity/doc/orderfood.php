@@ -162,7 +162,9 @@ class OrderFood extends Document
         if($header['inn'] != false) {
             $header['tin'] = false;
         }
-
+        if($header['form1']  == true) {
+           $header['payeq']  = false; 
+        }
         $frases = explode(PHP_EOL, $header['checkslogan']) ;
         if(count($frases) >0) {
             $i=  rand(0, count($frases) -1)  ;
