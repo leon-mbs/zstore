@@ -58,7 +58,7 @@ class Order extends \App\Entity\Doc\Document
                         "customer_name"   => $this->customer_name,
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
-                        "paytypename"        => $this->headerdata["paytypename"],
+                        "paytypename"     => $this->headerdata["paytypename"],
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
