@@ -1,7 +1,7 @@
 {
-  "description": "Складська система",
+  "description": "CRM система (склад, торгiвля, виробництво)",
   "keywords": [
-    "php","wms","erp","accounting"
+     "wms","crm","erp","accounting"
   ],
   "homepage": "https://zippy.com.ua/",
   "license": "MIT",
