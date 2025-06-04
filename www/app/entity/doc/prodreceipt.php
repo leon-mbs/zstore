@@ -133,7 +133,7 @@ class ProdReceipt extends Document
               
         } 
         if ($this->getHD('st_id') > 0 && $cost > 0 ) {
-            $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
+          //  $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
             
            
         } 

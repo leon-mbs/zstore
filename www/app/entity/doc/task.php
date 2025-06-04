@@ -144,7 +144,7 @@ class Task extends Document
               
             $total = 0;
             foreach ($this->unpackDetails('detaildata') as $ser) {
-                $total += doubleval($ser->cost * $ser->qty)  ;
+                $total += doubleval($ser->cost * $ser->quantity)  ;
             }
                  
              

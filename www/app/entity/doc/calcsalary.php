@@ -49,6 +49,7 @@ class CalcSalary extends Document
                 $eacc->save();
          
             }
+            /*
             $am = $emp->{$bonus};
             if($am > 0) {
                 $eacc = new  EmpAcc();
@@ -72,7 +73,7 @@ class CalcSalary extends Document
                 $eacc->save();
           
             }
-             
+            */ 
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata["iostate"] ??0 );
         return true;

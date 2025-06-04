@@ -276,6 +276,8 @@ class CalcSalary extends \App\Pages\Base
        if (strlen($brids) > 0) {
           $be = " and document_id in(select document_id from documents where branch_id in ({$brids}) )   ";
        }  
+       
+       
        $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = 104 {$be} AND DATE(createdon) >= {$from}   AND DATE(createdon) <= " .$to . "  group by  emp_id   ";
       
        foreach($conn->Execute($sql) as $r){
