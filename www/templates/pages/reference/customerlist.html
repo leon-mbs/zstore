@@ -222,10 +222,12 @@
 
             <div class="col-12 col-md-4 ">
                 {{^leadmode}}  
+                {{#hideblock}}
                 <div class="form-group">
                     <label for="editcity">Країна</label>
                     <input class="form-control" zippy="editcity"/>
                 </div>
+                  {{/hideblock}}
                 <div class="form-group">
                     <label for="editcountry">Місто</label>
                     <input class="form-control" zippy="editcountry"/>
