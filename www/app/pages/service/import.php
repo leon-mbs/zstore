@@ -51,6 +51,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
         $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
         $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
+        $form->add(new DropDownChoice("colnotes", $cols,$sc['colnotes'] ?? 0));
         $form->add(new DropDownChoice("colminqty", $cols,$sc['colminqty'] ?? 0));
 
         $pt = \App\Entity\Item::getPriceTypeList();
@@ -202,6 +203,7 @@ class Import extends \App\Pages\Base
         $colimage = $this->iform->colimage->getValue();
         $colshortname = $this->iform->colshortname->getValue();
         $colwar = $this->iform->colwar->getValue();
+        $colnotes = $this->iform->colnotes->getValue();
         $colprice1 = $this->iform->colprice1->getValue();
         $colprice2 = $this->iform->colprice2->getValue();
         $colprice3 = $this->iform->colprice3->getValue();
@@ -241,7 +243,7 @@ class Import extends \App\Pages\Base
         $save['colimage']=$colimage;
         $save['colshortname']=$colshortname;
         $save['colminqty']=$colminqty;
-        $save['colwar']=$colwar;
+      
   
         $letters=[];
         foreach($save as $s){
@@ -329,6 +331,7 @@ class Import extends \App\Pages\Base
             $catname = trim($row[$colcat] ?? '');
             $image = trim($row[$colimage] ?? '');
             $warranty = trim($row[$colwar]);
+            $notes = trim($row[$colnotes]);
             $shortname = trim($row[$colshortname] ?? '');
             $minqty = trim($row[$colminqty] ?? '');
             $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
@@ -383,6 +386,7 @@ class Import extends \App\Pages\Base
             if($coldesc !='0')        $item->description = $desc;
             if($colshortname !='0')   $item->shortname = $shortname;
             if($colwar !='0')    $item->warranty = $warranty;
+            if($colnotes !='0')    $item->notes = $notes;
 
             
             if ($colprice1 !='0') $item->price1 = doubleval($price1) ;
