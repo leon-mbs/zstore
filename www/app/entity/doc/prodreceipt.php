@@ -129,11 +129,23 @@ class ProdReceipt extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->getHD('emp');
             $ua->amount = $cost;
-            $ua->save();      
+            $ua->save();  
+         
+            $emp  = \App\Entity\Employee::load($ua->emp_id)  ;
+     
+            $user = \App\Entity\User::getByLogin($emp->login) ;
+                             
+            if($user != null){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id; 
+                $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
+                $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                $n->save();   
+            }                   
               
         } 
         if ($this->getHD('st_id') > 0 && $cost > 0 ) {
-            $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
+          //  $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
             
            
         } 

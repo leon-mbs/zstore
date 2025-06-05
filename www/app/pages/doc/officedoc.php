@@ -64,22 +64,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new \ZCL\BT\Tags("doctags"));
 
         $this->docform->add(new DropDownChoice("user", [], 0));
-        $u = array();
-        $mn = (int)$conn->GetOne("select meta_id from metadata where  meta_name='OfficeDoc' ");
 
-        foreach (\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
-            if ($_u->rolename == 'admins') {
-                $u[$_u->user_id] = $_u->username;
-            } else {
-
-                if (\App\ACL::checkEditDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkExeDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkChangeStateDoc($this->_doc, true, false, $_u->user_id) == true) {
-                    $u[$_u->user_id] = $_u->username;
-                }
-
-
-            }
-        }
-        $this->docform->user->setOptionList($u);
 
 
         $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name");
@@ -173,6 +158,25 @@ class OfficeDoc extends \App\Pages\Base
 
             }
         }
+        
+        
+        $u = array();
+    //    $mn = (int)$conn->GetOne("select meta_id from metadata where  meta_name='OfficeDoc' ");
+
+        foreach (\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
+            if ($_u->rolename == 'admins') {
+                $u[$_u->user_id] = $_u->username;
+            } else {
+
+                if (\App\ACL::checkEditDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkExeDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkChangeStateDoc($this->_doc, true, false, $_u->user_id) == true) {
+                    $u[$_u->user_id] = $_u->username;
+                }
+
+
+            }
+        }
+        $this->docform->user->setOptionList($u);        
+        
         if ($this->_doc->document_id > 0) {
             $this->docform->doctags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_OFFICEDCO, (int)$this->_doc->document_id));
         }
@@ -207,7 +211,7 @@ class OfficeDoc extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $data = $this->docform->doccontent->getText();
-        if (strlen($data) == 0) {
+        if (strlen($data) == 0)   {
             $this->setError('Не введено текст');
             return;
         }

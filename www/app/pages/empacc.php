@@ -83,7 +83,7 @@ class EmpAcc extends \App\Pages\Base
                 if ($emp->employee_id == $emp_id && $emp->amount > 0) {
                     $d = $doc->headerdata['year'] . $doc->headerdata['month'];
 
-                    if (!is_array($detail[$d])) {
+                    if (!is_array($detail[$d] ??null)) {
                         $detail[$d]    = array("d"=>$doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'],'v'=>0)  ;
                     }
 
@@ -154,12 +154,12 @@ class EmpAcc extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where    emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+        $sql = "select coalesce(sum(amount),0) from empacc where  optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
 
         $b = $conn->GetOne($sql);
 
 
-        $sql =    $sql = "select * from empacc_view where    emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $sql =    $sql = "select * from empacc_view where  optype < 100 and   emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
         $rc = $conn->Execute($sql);
 
         $en=\App\Entity\EmpAcc::getNames();

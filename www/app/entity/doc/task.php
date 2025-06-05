@@ -144,7 +144,7 @@ class Task extends Document
               
             $total = 0;
             foreach ($this->unpackDetails('detaildata') as $ser) {
-                $total += doubleval($ser->cost * $ser->qty)  ;
+                $total += doubleval($ser->cost * $ser->quantity)  ;
             }
                  
              
@@ -159,12 +159,27 @@ class Task extends Document
 
                  $cost =   doubleval($total * $emp->ktu) ;
                  if($cost > 0){
+                     
+                   
+                     
                     $ua = new \App\Entity\EmpAcc();
                     $ua->optype = \App\Entity\EmpAcc::PRICE;
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp->employee_id;
                     $ua->amount = $cost;
-                    $ua->save();      
+                    $ua->save();     
+         
+                    $user = \App\Entity\User::getByLogin($emp->login) ;
+                             
+                    if($user != null){
+                        $n = new \App\Entity\Notify();
+                        $n->user_id = $user->user_id; 
+                        $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
+                        $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                        $n->save();   
+                    }         
+                    
+                     
                  }  
             }          
          }           

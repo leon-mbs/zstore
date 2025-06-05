@@ -81,7 +81,20 @@ class ProdMove extends Document
                 $ua->document_id = $this->document_id;
                 $ua->emp_id = $emp->employee_id;
                 $ua->amount = \App\Helper::fa($cost*$emp->ktu);
-                $ua->save();      
+                $ua->save();   
+                
+                $emp  = \App\Entity\Employee::load($ua->emp_id)  ;
+     
+                $user = \App\Entity\User::getByLogin($emp->login) ;
+                                 
+                if($user != null){
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = $user->user_id; 
+                    $n->message = "Нараховано до сплати {$ua->amount } ({$this->document_number})"    ;
+                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                    $n->save();   
+                }                   
+                   
            }                
         }   
         
@@ -93,7 +106,20 @@ class ProdMove extends Document
                 $ua->document_id = $this->document_id;
                 $ua->emp_id = $this->headerdata["emp"];
                 $ua->amount = $cost;
-                $ua->save();      
+                $ua->save();   
+                
+                $emp  = \App\Entity\Employee::load($ua->emp_id)  ;
+     
+                $user = \App\Entity\User::getByLogin($emp->login) ;
+                                 
+                if($user != null){
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = $user->user_id; 
+                    $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
+                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                    $n->save();   
+                }                
+                   
             }    
         }          
         //проводки  по  складу

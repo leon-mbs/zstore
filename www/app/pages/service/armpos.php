@@ -1505,7 +1505,7 @@ class ARMPos extends \App\Pages\Base
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+        if ($ret['success'] == false && ($ret['doclocnumber'] ??0 ) > 0) {
             //повторяем для  нового номера
             $this->pos->fiscdocnumber = $ret['doclocnumber'];
             $this->pos->save();

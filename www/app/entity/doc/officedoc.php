@@ -12,7 +12,11 @@ use App\Helper as H;
 class OfficeDoc extends Document
 {
     public function Execute() {
-        $emp = intval($this->headerdata['employee'] ?? 0);
+        $emp_id = intval($this->headerdata['employee'] ?? 0);
+        
+        $emp  = \App\Entity\Employee::load($emp_id)  ;
+        $user = \App\Entity\User::getByLogin($emp->login) ;
+        
         $cust = intval($this->headerdata['customer'] ?? 0);
        
         $bonus = $this->headerdata['bonus'];
@@ -22,17 +26,33 @@ class OfficeDoc extends Document
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::BONUS;
             $ua->document_id = $this->document_id;
-            $ua->emp_id = $emp;
+            $ua->emp_id = $emp_id;
             $ua->amount = $bonus;
             $ua->save();
+            
+            if($user != null){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id;;;
+                $n->message = "Бонус {$bonus} ({$this->document_number})"    ;
+                $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                $n->save();   
+            }          
+            
         }
         if ($fine > 0 && $emp > 0) {
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::FINE;
             $ua->document_id = $this->document_id;
-            $ua->emp_id = $emp;
+            $ua->emp_id = $emp_id;
             $ua->amount = 0 - $fine;
             $ua->save();
+            if($user != null){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id;;;
+                $n->message = "Штраф {$fine} ({$this->document_number})"    ;
+                $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                $n->save();     
+            }          
         }
     }
 

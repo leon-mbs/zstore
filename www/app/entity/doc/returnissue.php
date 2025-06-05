@@ -104,14 +104,22 @@ class ReturnIssue extends Document
             $disc = \App\System::getOptions("discount");
             $emp_id = \App\System::getUser()->employee_id ;
             if($emp_id >0 && ($disc["fineret"]??0 )>0  && $parent->meta_name=='POSCheck') {
-                $b =  $this->amount * $disc["fineret"] / 100;
-                $ua = new \App\Entity\EmpAcc();
-                $ua->optype = \App\Entity\EmpAcc::FINE;
-                $ua->document_id = $this->document_id;
-                $ua->emp_id = $emp_id;
-                $ua->amount = 0-$b;
-                $ua->save();
+                $b = intval( $this->amount * $disc["fineret"] / 100);
+                if($b>0) {
+                    $ua = new \App\Entity\EmpAcc();
+                    $ua->optype = \App\Entity\EmpAcc::FINE;
+                    $ua->document_id = $this->document_id;
+                    $ua->emp_id = $emp_id;
+                    $ua->amount = 0-$b;
+                    $ua->save();
 
+                    $n = new \App\Entity\Notify();
+                    $n->user_id = \App\System::getUser()->user_id;;;
+                    $n->message = "Штраф { $b} ({$this->document_number})"    ;
+                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                    $n->save();                  
+                } 
+                
             }
             
         }     
