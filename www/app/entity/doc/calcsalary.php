@@ -24,18 +24,19 @@ class CalcSalary extends Document
    
         $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
         $to = $dt->endOfMonth()->getTimestamp();
-
+        if($this->document_date > $dt && $this->document_date < $to   ) {
+            $to = $this->document_date;
+        }
 
         foreach ($this->unpackDetails('detaildata') as $emp) {
             $am = $emp->{$code};
+          
             $eacc = new  EmpAcc();
-
             $eacc->emp_id = $emp->employee_id;
             $eacc->document_id = $this->document_id;
             $eacc->optype = EmpAcc::SALARY;
             $eacc->amount = $am;
             $eacc->createdon = $to;
-            
             $eacc->save();
            
             $am = $emp->{$advance};
@@ -49,7 +50,7 @@ class CalcSalary extends Document
                 $eacc->save();
          
             }
-            /*
+         
             $am = $emp->{$bonus};
             if($am > 0) {
                 $eacc = new  EmpAcc();
@@ -73,7 +74,19 @@ class CalcSalary extends Document
                 $eacc->save();
           
             }
-            */ 
+           
+           
+            if($emp->_tasksum > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::PRICE;
+                $eacc->amount = 0-$emp->_tasksum;
+                $eacc->createdon = $to;
+                $eacc->save();
+          
+            }
+             
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata["iostate"] ??0 );
         return true;

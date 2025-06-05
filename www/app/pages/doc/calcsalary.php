@@ -171,6 +171,7 @@ class CalcSalary extends \App\Pages\Base
             }          
              
             $emp->_baseval = $e->_baseval;
+            $emp->_tasksum = $e->tasksum;
           
             $this->_list[]= $emp;
         }

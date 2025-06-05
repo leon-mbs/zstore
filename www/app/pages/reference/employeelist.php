@@ -119,7 +119,7 @@ class EmployeeList extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where  optype < 100 and  emp_id = ".$item->employee_id ;
+        $sql = "select coalesce(sum(amount),0) from empacc where     emp_id = ".$item->employee_id ;
 
         $b = $conn->GetOne($sql);
 
