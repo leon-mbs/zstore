@@ -78,7 +78,7 @@ class Pos extends \ZCL\DB\Entity
         $this->ppopassword = (string)($xml->ppopassword[0]);
         $this->ppoisjks = (int)($xml->ppoisjks[0]);
         $this->ppokeyid = (string)($xml->ppokeyid[0]);
-        $this->iban = (string)($xml->iban[0]);
+  
         
         parent::afterLoad();
     }

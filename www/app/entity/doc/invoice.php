@@ -14,7 +14,8 @@ class Invoice extends \App\Entity\Doc\Document
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
-
+        $iban=$this->getIBAN();
+ 
         $i = 1;
         $detail = array();
 
@@ -54,7 +55,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
-                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
+                        "iban"      => strlen($iban) > 0 ? $iban : false,
                         "email"           => $this->headerdata["email"],
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,

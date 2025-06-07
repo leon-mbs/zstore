@@ -54,7 +54,8 @@ class GoodsIssue extends Document
 
         $printer = System::getOptions('printer');
 
-
+        $iban=$this->getIBAN();
+   
 
         $header = array('date'      => H::fd($this->document_date),
                         "_detail"   => $detail,
@@ -76,7 +77,7 @@ class GoodsIssue extends Document
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "notes"           => nl2br($this->notes),
 
-                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
+                        "iban"      => strlen($iban) > 0 ? $iban : false,
                         "payed"      => $this->headerdata["payed"] > 0 ? H::fa($this->headerdata["payed"]) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 

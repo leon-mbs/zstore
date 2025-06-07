@@ -1135,6 +1135,10 @@ class Document extends \ZCL\DB\Entity
         if(in_array($this->meta_name, ['GoodsIssue','Invoice','Order','POSCheck'])  ==  false) {
             return false;
         }
+        //оплачен
+        if( $this->payamount > 0 &&  $this->payamount >=  $this->payed  ) {
+            return false;
+        }
 
         if($this->firm_id >0) {
             $f =  \App\Entity\Firm::load($this->firm_id) ;
@@ -1146,25 +1150,31 @@ class Document extends \ZCL\DB\Entity
             return false;
         }
         $kod=strlen($f->tin) >0 ? $f->tin : $f->inn;
-        if(strlen($kod)==0 || strlen($f->iban) == 0) {
+       
+        $iban=$this->getIBAN();
+        
+        
+        
+        if(strlen($kod)==0 || strlen($iban) == 0) {
             return false;
         }
 
-
+        
+        
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
             $number  =    $this->headerdata['outnumber']  ;
         }
 
-        $payment=$this->payamount;
+        $payamount=$this->payamount;
         if(($this->headerdata['payedcard'] ??0) > 0) {
-            $payment =  $this->headerdata['payedcard'] ;
+            $payamount =  $this->headerdata['payedcard'] ;
         }
 
         $url = "BCD\n002\n1\nUCT\n\n";
         $url = $url . (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ."\n";
         $url = $url .  $f->iban."\n";
-        $url = $url .  "UAH". \App\Helper::fa($payment)."\n";
+        $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
         $url = $url .  $kod."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
@@ -1180,11 +1190,28 @@ class Document extends \ZCL\DB\Entity
 
         return array('qr'=>$img,
           'url'=>$url,
-//          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>",
+//         
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
  
+    public function getIBAN() {
+        if($this->firm_id >0) {
+            $f =  \App\Entity\Firm::load($this->firm_id) ;
+        } else {
+            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
+        }  
+        
+        $iban=$f->iban??'';  
+        
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
+        
+        if($mf != null  && strlen($mf->iban??'') >0) {
+            $iban =  $mf->iban??'';
+        }
+        
+        return $iban;
+    }
 
     /**
     *    возвращает ссылку  на чек в  налоговой
