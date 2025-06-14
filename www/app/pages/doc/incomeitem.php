@@ -388,13 +388,10 @@ class IncomeItem extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
+    
 
-        $code = Item::qstr($code);
-        $code0 = Item::qstr($code0);
+        $item = Item::findBarCode($code );
 
-        $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0}  )");
         if ($item == null) {
             $this->setError('Не знайдено ТМЦ  з таким  кодом');
             return;

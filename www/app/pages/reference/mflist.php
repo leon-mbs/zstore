@@ -46,6 +46,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextArea('editmf_description'));
         $this->mfdetail->add(new TextInput('editbank'));
         $this->mfdetail->add(new TextInput('editbankacc'));
+        $this->mfdetail->add(new TextInput('editiban'));
         $this->mfdetail->add(new TextInput('editcom'));
 
         $this->mfdetail->add(new CheckBox('editdisabled'));
@@ -98,6 +99,7 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editmf_description->setText($this->_mf->description);
         $this->mfdetail->editbank->setText($this->_mf->bank);
         $this->mfdetail->editbankacc->setText($this->_mf->bankacc);
+        $this->mfdetail->editiban->setText($this->_mf->iban);
         $this->mfdetail->editcom->setText($this->_mf->com);
         $this->mfdetail->editdisabled->setChecked($this->_mf->disabled);
         $this->mfdetail->editback->setChecked($this->_mf->back);
@@ -129,6 +131,7 @@ class MFList extends \App\Pages\Base
         $this->_mf->btranin = $this->mfdetail->editbtranin->getText();
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
+        $this->_mf->iban = $this->mfdetail->editiban->getText();
         $this->_mf->com = $this->mfdetail->editcom->getText();
         $this->_mf->disabled = $this->mfdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_mf->back = $this->mfdetail->editback->isChecked() ? 1 : 0;
@@ -157,6 +160,7 @@ class MFList extends \App\Pages\Base
         $b = $sender->isChecked();
         $this->mfdetail->editbank->setVisible($b);
         $this->mfdetail->editbankacc->setVisible($b);
+        $this->mfdetail->editiban->setVisible($b);
         $this->mfdetail->editbtran->setVisible($b);
         $this->mfdetail->editbtranin->setVisible($b);
         $this->mfdetail->editback->setVisible($b);

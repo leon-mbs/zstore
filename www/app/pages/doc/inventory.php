@@ -411,12 +411,32 @@ class Inventory extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
+        if($code=='' ){
+            return;
+        }
         $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
+      
+  
+
+        $store = $this->docform->store->getValue();
+      
+
+        $cat_id = $this->docform->category->getValue();
+      
+        $item = Item::findBarCode($code,$store,$cat_id );
+
+        if ($item == null) {
+            $this->setError("ТМЦ з кодом `{$code}` не знайдено");
+            // Издаем звук если ШК не найден
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
+            return;
+        } else {
+            // Издаем звук если всё ок
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+        }
 
         foreach($this->_itemlist as $i=> $it) {
-            if($it->item_code==$code || $it->bar_code==$code) {
+            if($it->item_id==$item->item_id  ) {
                 $d= $this->_itemlist[$i]->qfact;
                 $qf= doubleval($d) ;
                 $this->_itemlist[$i]->qfact = $qf + 1;
@@ -429,38 +449,8 @@ class Inventory extends \App\Pages\Base
                 $this->docform->detail->Reload();
                 return;
             }
-        }
-
-
-
-        $store = $this->docform->store->getValue();
-        $code_ = Item::qstr($code);
-        $code0 = Item::qstr($code0);
-
-        $cat_id = $this->docform->category->getValue();
-        $w = "item_code={$code_} or bar_code={$code_} or  item_code={$code0} or bar_code={$code0} ";
-        if ($cat_id > 0) {
-
-
-            $c = Category::load($cat_id) ;
-            $ch = $c->getChildren();
-            $ch[]=$cat_id;
-            $cats = implode(",", $ch)  ;
-
-
-            $w = $w . " and cat_id in ({$cats}) ";
-        }
-        $item = Item::getFirst($w);
-        if ($item == null) {
-            $this->setError("ТМЦ з кодом `{$code}` не знайдено");
-            // Издаем звук если ШК не найден
-            App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
-            return;
-        } else {
-            // Издаем звук если всё ок
-            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
-        }
-
+        }        
+        
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $this->editdetail->setVisible(true);

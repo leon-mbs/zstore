@@ -423,14 +423,14 @@ class Order extends \App\Pages\Base
 
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
+        
 
         if ($code == '') {
             return;
         }
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+       
+        $item = Item::findBarCode($code,$store_id);
+ 
         if ($item == null) {
             $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;

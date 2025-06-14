@@ -300,8 +300,7 @@ class ProdReturn extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+   
 
         $this->docform->barcode->setText('');
         if ($code == '') {
@@ -313,19 +312,16 @@ class ProdReturn extends \App\Pages\Base
             $this->setError('Не обрано склад');
             return;
         }
-        $code0 = Item::qstr($code0);
+   
+        $item = Item::findBarCode($code,$store_id);
 
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0} )");
 
         if ($item == null) {
             $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
-
-        $store_id = $this->docform->store->getValue();
-
+       
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
             $this->setError("Товару {$item->itemname} немає на складі");

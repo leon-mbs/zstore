@@ -53,6 +53,13 @@ class Order extends \App\Entity\Doc\Document
            $da =  trim($this->headerdata["ship_address"] ??'') ;
         }
         
+        $iban=$this->getIBAN();
+        
+        if($this->headerdata["paytype"] != 2){  //только для постоплаты
+           $iban=''; 
+        }
+        
+        
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
@@ -65,7 +72,7 @@ class Order extends \App\Entity\Doc\Document
                         "outnumber"       => $this->headerdata["outnumber"]??'',
                         "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
                         "document_number" => $this->document_number,
-                         "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
+                         "iban"      => strlen($iban) > 0 ? $iban : false,
                          "firm_name" => $firm['firm_name'],
 
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
