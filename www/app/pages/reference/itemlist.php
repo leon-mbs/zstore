@@ -122,6 +122,8 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editprice5->setVisible(false);
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
+        $this->itemdetail->add(new TextInput('editbarcode1'));
+        $this->itemdetail->add(new TextInput('editbarcode2'));
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
         $this->itemdetail->add(new TextInput('editcostprice'));
@@ -289,8 +291,9 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->editcode->setText(Item::getNextArticle());
         $this->itemdetail->editbarcode->setText('');
-        $this->itemdetail->editcode->setText(Item::getNextArticle());
- 
+        $this->itemdetail->editbarcode1->setText('');
+        $this->itemdetail->editbarcode2->setText('');
+        
 
     }
 
@@ -319,6 +322,8 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
+        $this->itemdetail->editbarcode1->setText($this->_item->bar_code1);
+        $this->itemdetail->editbarcode2->setText($this->_item->bar_code2);
         $this->itemdetail->editmsr->setText($this->_item->msr);
         $this->itemdetail->editnotes->setText($this->_item->notes);
         $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
@@ -466,6 +471,8 @@ class ItemList extends \App\Pages\Base
         $this->_item->country = trim($this->itemdetail->editcountry->getText());
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
+        $this->_item->bar_code1 = trim($this->itemdetail->editbarcode1->getText());
+        $this->_item->bar_code2 = trim($this->itemdetail->editbarcode2->getText());
         $this->_item->url = trim($this->itemdetail->editurl->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->notes = $this->itemdetail->editnotes->getText();

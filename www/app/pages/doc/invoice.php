@@ -776,23 +776,15 @@ class Invoice extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
-
         if ($code == '') {
             return;
-        }
+        }       
+        $this->docform->barcode->setText('');
+     
 
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code  || $_item->bar_code == $code0 || $_item->item_code == $code0) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
-            }
-        }
+   
+
+  
 
 
         $store_id = $this->docform->store->getValue();
@@ -801,8 +793,9 @@ class Invoice extends \App\Pages\Base
             return;
         }
 
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
+   
+        $item = Item::findBarCode($code,$store_id );
+
 
         if ($item == null) {
 
@@ -810,7 +803,15 @@ class Invoice extends \App\Pages\Base
             return;
         }
 
-
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->item_id == $item->item_id ) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docform->detail->Reload();
+                $this->calcTotal();
+                $this->CalcPay();
+                return;
+            }
+        }
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 

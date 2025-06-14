@@ -388,29 +388,29 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-
-        $code0 = ltrim($code, '0');
-
-        $this->docform->barcode->setText('');
         if ($code == '') {
             return;
         }
+       
+        $this->docform->barcode->setText('');
+   
+        
+        $item = Item::findBarCode($code);
+        
+        if($item != null) {
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id  ) {
+                    $this->_itemlist[$ri]->quantity += 1;
+                    $this->_rownumber  = 1;
 
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->_rownumber  = 1;
-
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
+                    $this->docform->detail->Reload();
+                    $this->calcTotal();
+                    $this->CalcPay();
+                    return;
+                }
             }
         }
 
-
-        $code = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code} or bar_code = {$code})");
 
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);

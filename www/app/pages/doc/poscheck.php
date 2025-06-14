@@ -732,26 +732,26 @@ class POSCheck extends \App\Pages\Base
             return;
         }
 
-        $code0 = Item::qstr($code0);
+      
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_}  or item_code = {$code0} or bar_code = {$code0}  )");
-
+        $item = Item::findBarCode($code,$store_id);
+ 
         if ($item == null) {
             $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
 
-        $store = $this->docform->store->getValue();
+       
 
-        $qty = $item->getQuantity($store);
+        $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
             $this->setError("Товару {$item->itemname} немає на складі");
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code) {
+            if ($_item->item_id == $item->item_id) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();

@@ -380,44 +380,41 @@ class TTN extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+      
 
         $this->docform->barcode->setText('');
         if ($code == '') {
             return;
         }
 
-
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-
-                return;
-            }
-        }
-
-
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
             $this->setError('Не обрано склад');
             return;
+        }        
+        $item = Item::findBarCode($code,$store_id);
+        if($item != null){
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id) {
+                    $this->_itemlist[$ri]->quantity += 1;
+                    $this->docform->detail->Reload();
+                    $this->calcTotal();
+
+                    return;
+                }
+            }
+
         }
+   
 
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
-
+      
         if ($item == null) {
 
             $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
-
-        $store_id = $this->docform->store->getValue();
-
+   
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 

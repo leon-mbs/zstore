@@ -416,13 +416,13 @@ class GoodsIssue extends \App\Pages\Base
      //   $common = \App\System::getOptions("common");
         
         $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
 
         if ($code == '') {
             return;
         }
+        
+        $this->docform->barcode->setText('');
+        
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
             $this->setError('Не обрано склад');
@@ -430,20 +430,22 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::findBarCode($code,$store_id);
+ 
+     
+        if ($item != null) { 
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id ) {
+                    $this->_itemlist[$ri]->quantity += 1;
+                    $this->_rownumber  = 1;
 
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->item_id == $item->item_id ) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->_rownumber  = 1;
-
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
+                    $this->docform->detail->Reload();
+                    $this->calcTotal();
+                    $this->CalcPay();
+                    return;
+                }
             }
         }
-
 
  
         if ($item == null) {      //ищем по серийному

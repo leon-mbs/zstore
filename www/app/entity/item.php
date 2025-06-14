@@ -75,8 +75,11 @@ class Item extends \ZCL\DB\Entity
         $this->url = (string)$xml->url[0];
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
+        $this->bar_code1 = (string)$xml->bar_code1[0];
+        $this->bar_code2 = (string)$xml->bar_code2[0];
         $this->cflist = (string)$xml->cflist[0];
         $reclist = (string)$xml->reclist[0];
+     
 
         if(strlen($reclist) >0) {
             $this->reclist = @unserialize(@base64_decode($reclist))   ;
@@ -155,6 +158,8 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+        $this->detail .= "<bar_code1><![CDATA[{$this->bar_code1}]]></bar_code1>";
+        $this->detail .= "<bar_code2><![CDATA[{$this->bar_code2}]]></bar_code2>";
         $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
@@ -746,6 +751,42 @@ class Item extends \ZCL\DB\Entity
         return $list;
     }
 
+    /**
+    * поиск  по  штрих коду
+    * 
+    * @param mixed $code
+    * @param mixed $store_id
+    * @param mixed $cat_id
+    */
+    public static function findBarCode($code, $store_id = 0,$cat_id=0) {
+            $code0 = ltrim($code, '0');
+            $codes = Item::qstr($code) ;
+            $code0s = Item::qstr($code0) ;
+            $codex= trim($codes,"'") ;
+            $code0x= trim($code0s,"'") ;
+            
+            $w='';
+            if ($cat_id > 0) {
+
+
+                $c = Category::load($cat_id) ;
+                $ch = $c->getChildren();
+                $ch[]=$cat_id;
+                $cats = implode(",", $ch)  ;
+
+
+                $w =   "  cat_id in ({$cats}) and  ";
+            }            
+            
+            
+            if($store_id > 0)  {
+                $item = Item::getFirst($w." item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}   or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%' )");
+            }   else {
+                $item = Item::getFirst($w."  item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}  or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%'   ");
+            }
+            return $item;
+    }
+      
     /**
      * генерирует новый артикул
      *
