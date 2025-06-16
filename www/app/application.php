@@ -113,7 +113,7 @@ class Application extends \Zippy\WebApplication
             "topic"      => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
-        if (strlen($pages[$arr[0]]) > 0) {
+        if (strlen($pages[$arr[0]]?? '') > 0) {
             if (strlen($arr[2] ?? '') > 0) {
                 self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
             } else {
@@ -127,7 +127,7 @@ class Application extends \Zippy\WebApplication
             }
             return;
         }
-        if (strlen($pages[$uri]) > 0) {
+        if (strlen($pages[$uri]?? '') > 0) {
             self::$app->LoadPage($pages[$uri]);
             return;
         }

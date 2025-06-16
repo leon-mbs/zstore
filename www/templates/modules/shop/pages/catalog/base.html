@@ -38,25 +38,62 @@
     </head>
     <body>
         <div class="  container-fluid">
-            <div class="content">
-                    
-                <div class="row mt-2 mb-4">
-                            <div class="col-12 col-sm-4 d-flex align-items-center">
+        
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topnavbar" aria-controls="topnavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>
+  </button>               
+         
                                 {{#logo}}
-                                <a class="container-fluid-img"  href="/"> <img src="{{logo}}"/> </a>
+                                <a class="container-fluid-img d-none  d-lg-block"  href="/"> <img src="{{logo}}"/> </a>
                                 {{/logo}}
-                                <a  class="container-fluid-img logo-text ml-2 text-dark" href="/" style="font-family: Georgia;"> {{shopname}} </a>
-                            </div>
-                            <div class="col-12 col-sm-8 d-flex align-items-center justify-content-end">
-                                <nav class="main-header navbar navbar-expand ">
-                                   <ul class="navbar-nav ml-auto">
-                               
-                                    <li class="nav-item">
+                                {{^logo}}
+                                <a  class="container-fluid-img logo-text ml-2 text-dark d-none  d-lg-block" href="/" style="font-family: Georgia;"> {{shopname}} </a>
+                                   {{/logo}}
                                    
-                                    <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
+                                 
+                         <div class="collapse navbar-collapse" id="topnavbar">
+
+                                <ul class="navbar-nav  ">
+                             <li class="nav-item active">
+                                <a class="nav-link" href="/shop">Каталог  </a>
+                              </li>  
+                              
+                                  
+                                     
+                                {{#pages}} 
+                        
+                            
+                                    <li class="nav-item   ">
+                                       <a class="nav-link" href="{{link}}" >{{title}} </a>  
+                                   </li>
+                                 {{/pages}}    
+                                 {{#isblog}} 
+                        
+                            
+                                    <li class="nav-item  ">
+                                       <a class="nav-link" href="/blog" >Блог </a>  
+                                   </li>
+                                 {{/isblog}}   
+                                    
+                                    
+                                   
+                              
+                                     
+                                 
+                                     
+                               
+                                 </ul>    
+                         
+                        </div>
+                            
+                          <ul class="navbar-nav display-inline ">
+                            <li class="nav-item">
+                                   
+                                    <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0 d-none  d-lg-block">
                                         
                                        <div class="input-group mr-3">
-                                          <input style="width:250px;" zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
+                                          <input    zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
                                           <div class="input-group-append">
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                           </div>
@@ -64,40 +101,23 @@
                                         
                                     </form>
                                    </li>
-                                     {{#phone}}
-                                    <li class="nav-item pt-2">
-                                       <i class="fa fa-phone"></i> {{phone}} &nbsp;&nbsp;
+                                          {{#phone}}
+                                    <li class="nav-item  d-none  d-lg-block ">
+                                      <a class="nav-link" href="tel:{{phone}} " >  <i class="fa fa-phone"></i>  {{phone}}  </a>
                                    </li>
                                      {{/phone}} 
-                                     
-                                {{#isblog}} 
-                        
-                            
-                                    <li class="nav-item pt-2 pl-2 pr-2 ">
-                                       <a href="/blog" >Блог </a>  
-                                   </li>
-                                 {{/isblog}}        
-                                     
-                                {{#pages}} 
-                        
-                            
-                                    <li class="nav-item pt-2 pl-2 pr-2 ">
-                                       <a href="{{link}}" >{{title}} </a>  
-                                   </li>
-                                 {{/pages}}        
-                                     
-                                     
+                               <li class="nav-item">
+                                       <a class="nav-link" title="Порівняння"  zippy="showcompare"><i class="fas fa-balance-scale "></i></a> 
+                                        
+                                   </li>   
                                   <li class="nav-item">
-                                     <a title="Корзина" class="btn btn-outline-success  mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>  Корзина     </a>  
+                                     <a class="nav-link" title="Корзина"  zippy="shopcart"><i class="fa fa-shopping-cart"></i></a>  
                                       
                                    </li>
-                                  <li class="nav-item">
-                                       <a title="Порівняння" class="btn btn-outline-success " zippy="showcompare"><i class="fas fa-balance-scale "></i>  Порівняти</a> 
-                                        
-                                   </li>
+                                 
                                    {{^islogined}}
-                                   <li class="nav-item ml-3">
-                                       <a  class="btn btn-outline-secondary  "  href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin" title="Мій кабінет"> <i class="fa fa-user"></i> </a>
+                                   <li class="nav-item ">
+                                       <a  class="nav-link   "  href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin" title="Мій кабінет"> <i class="fa fa-user"></i> </a>
                                         
                                    </li>
                                    {{/islogined}}    
@@ -121,12 +141,11 @@
                                     </ul>
                                 </li>
                                   {{/islogined}}  
-                                 </ul>    
-                                </nav>
-                            </div>
-                        </div>
+                            </ul>   
+                        </nav>
+                        
                     
-             
+              <div class="content">   
                 
                     <childpage/>
                 
@@ -138,7 +157,9 @@
                     <div class="row">
                         
                         <div  class="col-12 text-center mt-2 mb-2">
-                            <span style="color:#fff"> <a href="https://zippy.com.ua/zstore" target="_blank">Zippy CRM</a> @ 2025</span>
+                            <span style="color:#fff"> <a href="https://zippy.com.ua/" target="_blank">Zippy CRM</a> @ 2025</span>
+                             &nbsp;&nbsp;&nbsp;
+                            <span style="color:#fff"> <a href="/"  >Каталог</a> </span>
                              &nbsp;&nbsp;&nbsp;
                             <span style="color:#fff"> <a href="/index.php?p=App/Pages/Main" target="_blank">Админ панель</a> </span>
                         </div>
