@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html  lang="uk">
 
     <head>
@@ -51,9 +52,9 @@
                                    {{/logo}}
                                    
                                  
-                         <div class="collapse navbar-collapse" id="topnavbar">
+                         <div class="collapse navbar-collapse navbar-collapse-absolute bg-light" id="topnavbar">
 
-                                <ul class="navbar-nav  ">
+                                <ul class="navbar-nav  px-3 px-lg-0">
                              <li class="nav-item active">
                                 <a class="nav-link" href="/shop">Каталог  </a>
                               </li>  
@@ -86,7 +87,7 @@
                          
                         </div>
                             
-                          <ul class="navbar-nav   ">
+                          <ul class="navbar-nav display-inline flex-row mobile-gap">
                             <li class="nav-item">
                                    
                                     <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0 d-none  d-lg-block">
@@ -125,7 +126,7 @@
                                                                      
                                 <li class="nav-item dropdown  ">
                                   <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span> {{custname}} </span></a>
-                                    <ul class="dropdown-menu">                                         
+                                    <ul class="dropdown-menu dropdown-menu-right">                                         
                                         <li>
                                             <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"> Мої замовлення</a>
                                         </li>
@@ -142,8 +143,18 @@
                                   {{/islogined}}  
                             </ul>   
                         </nav>
-                        
-                    
+          <div class="nabvar nav justify-content-start  d-block  d-lg-none">                 
+       <form zippy="searchformmob" class="form-inline   ">
+                                        
+                                       <div class="input-group mr-3">
+                                          <input    zippy="searchitemmob"   class="form-control" type="search" placeholder="Почнiть вводити...">
+                                          <div class="input-group-append">
+                                            <span class="input-group-text"  ><i class="fas fa-search"></i></span>
+                                          </div>
+                                        </div> 
+                                        
+                                    </form> 
+                                    </div>              
               <div class="content">   
                 
                     <childpage/>
@@ -160,7 +171,7 @@
                              &nbsp;&nbsp;&nbsp;
                             <span style="color:#fff"> <a href="/"  >Каталог</a> </span>
                              &nbsp;&nbsp;&nbsp;
-                            <span style="color:#fff"> <a href="/index.php?p=App/Pages/Main" target="_blank">Адмiн панель</a> </span>
+                            <span style="color:#fff"> <a href="/index.php?p=App/Pages/Main" target="_blank">Админ панель</a> </span>
                         </div>
                     </div>
                 </div>
