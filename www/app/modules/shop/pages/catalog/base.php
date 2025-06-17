@@ -65,6 +65,11 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');
         $this->searchform->searchitem->onChange($this, 'onSelect');
+     
+        $this->add(new \Zippy\Html\Form\Form('searchformmob'));
+        $this->searchformmob->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitemmob'))->onText($this, 'onSearch');
+        $this->searchformmob->searchitemmob->onChange($this, 'onSelect');
+
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Catalog/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Catalog/Compare"))->setVisible(false);
 

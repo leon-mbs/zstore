@@ -28,7 +28,7 @@ class Contract extends \ZCL\DB\Entity
         //        $this->pay = (int)($xml->pay[0]);
         $this->file_id = (int)($xml->file_id[0]);
         $this->emp_id = (int)($xml->emp_id[0]);
-        $this->ctype = (int)($xml->ctype[0]);
+     
         $this->enddate = (int)($xml->enddate[0]);
 
         parent::afterLoad();
@@ -53,7 +53,7 @@ class Contract extends \ZCL\DB\Entity
         //    $this->details .= "<pay>{$this->pay}</pay>";
         $this->details .= "<file_id>{$this->file_id}</file_id>";
         $this->details .= "<emp_id>{$this->emp_id}</emp_id>";
-        $this->details .= "<ctype>{$this->ctype}</ctype>";
+       
         $this->details .= "<enddate>{$this->enddate}</enddate>";
         $this->details .= "</details>";
 

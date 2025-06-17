@@ -149,7 +149,7 @@ class ProductView extends Base
         \App\Session::getSession()->recently = $recently;
 
 
-        if(strlen($_COOKIE['viewitem_'.$product->item_id])==0) {
+        if(strlen($_COOKIE['viewitem_'.$product->item_id]??'')==0) {
             \App\Helper::insertstat(\App\Helper::STAT_VIEW_ITEM, $product->item_id, 0) ;
             setcookie('viewitem_'.$product->item_id, "viewed", time() + 60 * 60 * 24);
 

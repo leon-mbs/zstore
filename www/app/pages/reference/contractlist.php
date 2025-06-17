@@ -55,8 +55,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
         $this->contractdetail->add(new DropDownChoice('editcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
         $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
-        $this->contractdetail->add(new DropDownChoice('editctype', array(), 0));
-
+       
         $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
 
         $this->contractdetail->add(new CheckBox('editdisabled'));
@@ -139,7 +138,6 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
         $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
         $this->contractdetail->editemp->setValue($this->_contract->emp_id);
-        $this->contractdetail->editctype->setValue($this->_contract->ctype);
     }
 
     public function addOnClick($sender) {
@@ -172,11 +170,7 @@ class ContractList extends \App\Pages\Base
             $this->setError("Не обрано компанію");
             return;
         }
-        $this->_contract->ctype = $this->contractdetail->editctype->getValue();
-        if ($this->_contract->ctype == 0) {
-            $this->setError("Не обрано тип контракту");
-            return;
-        }
+    
 
 
         $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();

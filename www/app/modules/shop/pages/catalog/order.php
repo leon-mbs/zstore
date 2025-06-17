@@ -56,10 +56,10 @@ class Order extends Base
         $form->add(new \Zippy\Html\Form\Time('deltime', time() + 3600))->setVisible($this->_tvars["isfood"]);
 
 
-        $form->add(new TextInput('email',$_COOKIE['shop_email']));
-        $form->add(new TextInput('phone',$_COOKIE['shop_phone']));
-        $form->add(new TextInput('firstname',$_COOKIE['shop_fn']));
-        $form->add(new TextInput('lastname',$_COOKIE['shop_ln']));
+        $form->add(new TextInput('email',$_COOKIE['shop_email']??''));
+        $form->add(new TextInput('phone',$_COOKIE['shop_phone']??''));
+        $form->add(new TextInput('firstname',$_COOKIE['shop_fn']??''));
+        $form->add(new TextInput('lastname',$_COOKIE['shop_ln']??''));
         $form->add(new TextArea('address'))->setVisible(false);
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');

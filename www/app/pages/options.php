@@ -50,7 +50,7 @@ class Options extends \App\Pages\Base
 
         $this->common->add(new CheckBox('sell2'));
         $this->common->add(new CheckBox('usescanner'));
-        $this->common->add(new CheckBox('usemobilescanner'));
+
         $this->common->add(new CheckBox('usebranch'));
       
       
@@ -74,7 +74,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->sell2->setChecked($common['sell2']);
-        $this->common->usemobilescanner->setChecked($common['usemobilescanner']);
+
 
         $this->common->usebranch->setChecked($common['usebranch']);
        
@@ -357,7 +357,7 @@ class Options extends \App\Pages\Base
         $common['ts_end'] = $this->common->ts_end->getText();
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['sell2'] = $this->common->sell2->isChecked() ? 1 : 0;
-        $common['usemobilescanner'] = $this->common->usemobilescanner->isChecked() ? 1 : 0;
+
 
       
         $common['usebranch'] = $this->common->usebranch->isChecked() ? 1 : 0;
