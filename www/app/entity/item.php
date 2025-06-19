@@ -97,7 +97,7 @@ class Item extends \ZCL\DB\Entity
         }
 
         $id = \App\System::getBranch();
-        if ($id > 0 && is_array($this->brprice[$id])) {
+        if ($id > 0 && is_array($this->brprice[$id]??null)) {
             $this->price1 = $this->brprice[$id]['price1'];
             $this->price2 = $this->brprice[$id]['price2'];
             $this->price3 = $this->brprice[$id]['price3'];
