@@ -56,10 +56,11 @@
                      <div class="col-auto">
                         <h4> <a style="color: white;font-family:Georgia;text-decoration:none" href="/menu"> {{name}} </a> </h4>
                     </div>
-                     <div class="col-auto  text-right pl-2">
-                         <i class="fa fa-phone text-success"></i>  {{phone}}
+                    {{#phone}}
+                     <div class="col-auto  text-right pl-4">
+                       <a href="tel:{{phone}}">  <i class="fa fa-phone text-success"></i>  {{phone}} </a>
                     </div>
-                    
+                     {{/phone}}
                   
                     {{^list}}
                     <div class="col-12  text-center">
@@ -102,7 +103,7 @@
                             <td colspan="2" ><br><br><b> {{itemname}}</b></td>
                           </tr>
                           <tr>
-                            <td  >  <span class="textprice"> {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на  винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
+                            <td  >  <span class="textprice"> {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
                             <td class="textval"  align="right" >  {{customsize}} </td>
                           </tr>
                       

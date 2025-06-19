@@ -47,6 +47,7 @@ class ProdIssue extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
         $this->docform->add(new TextArea('notes'));
 
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -75,6 +76,7 @@ class ProdIssue extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
@@ -336,6 +338,8 @@ class ProdIssue extends \App\Pages\Base
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 

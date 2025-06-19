@@ -191,7 +191,7 @@ class OfficeDoc extends Document
 
 
         $d = $this->unpackDetails('accessdata');
-        if (!is_array($d['apprlist'])) {
+        if (!is_array($d['apprlist']??null)) {
             return [[], []];
         }
         if (count($d['apprlist']) == 0) {
