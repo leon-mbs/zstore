@@ -1173,6 +1173,10 @@ class Helper
 
 
             $printqty = intval($item->printqty);
+            if($printqty == 5) { //не печатать
+               continue;
+            }
+
             if($printqty == 0) {
                 $printqty = 1;
             }
