@@ -42,6 +42,8 @@ class IOState extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
+        $this->filter->add(new Date('from',strtotime('-1 month')));
+        $this->filter->add(new Date('to'));
 
         $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
 
@@ -138,6 +140,16 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
         $where = "  1=1 ";
+        $from = $this->page->filter->from->getDate();
+        $to = $this->page->filter->to->getDate();
+
+        if ($from > 0) {
+            $where .= " and  d.document_date >= " . $conn->DBDate($from);
+        }
+        if ($to > 0) {
+            $where .= " and  d.document_date <= " . $conn->DBDate($to);
+        }
+
 
         $author = $this->page->filter->fuser->getValue();
         $type = $this->page->filter->ftype->getValue();

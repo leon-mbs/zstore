@@ -44,8 +44,12 @@ class ProdIssue extends Document
                         "pareaname"       => $this->headerdata["pareaname"],
                         "storename"       => $this->headerdata["storename"],
                         "document_number" => $this->document_number,
+                        "emp"             => false,
                         "notes"           => nl2br($this->notes)
         );
+        if ($this->headerdata["emp"] > 0  ) {
+            $header['emp'] = $this->headerdata["empname"];
+        }
 
         $report = new \App\Report('doc/prodissue.tpl');
 

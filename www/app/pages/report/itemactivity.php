@@ -13,6 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
@@ -28,7 +29,7 @@ class ItemActivity extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter'));
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
 
@@ -40,7 +41,8 @@ class ItemActivity extends \App\Pages\Base
    
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
         $this->filter->item->onChange($this, "onItem");
-
+        $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');
+   
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -81,8 +83,7 @@ class ItemActivity extends \App\Pages\Base
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $this->detail->preview->setText($html, true);
 
-        // $this->addJavaScript("loadRep()",true) ;
-
+       
     }
 
     private function generateReport() {
