@@ -15,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -80,6 +81,14 @@ class IncomeItem extends \App\Pages\Base
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
 
+        $this->add(new Form('editsnitem'))->setVisible(false);
+        $this->editsnitem->add(new AutocompleteTextInput('editsnitemname'))->onText($this, 'OnAutocompleteItem');
+        $this->editsnitem->editsnitemname->onChange($this, 'OnChangeItem', true);
+        $this->editsnitem->add(new TextInput('editsnprice'));
+        $this->editsnitem->add(new TextArea('editsn'));
+        $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
+        $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
+       $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
 
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
@@ -249,7 +258,8 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
-
+     $this->editsnitem->setVisible(false);
+    
         $this->editdetail->editquantity->setText("1");
     }
 
@@ -384,7 +394,86 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
- 
+    public function onOpensn($sender) {
+        $this->docform->setVisible(false) ;
+        $this->editsnitem->setVisible(true) ;
+        $this->editsnitem->editsnitemname->setKey(0);
+        $this->editsnitem->editsnitemname->setText('');
+
+        $this->editsnitem->editsn->setText("");
+        $this->editsnitem->editsnprice->setText("");
+
+    } 
+    
+   public function savesnOnClick($sender) {
+        $common = \App\System::getOptions("common");
+
+        $id = $this->editsnitem->editsnitemname->getKey();
+        $name = trim($this->editsnitem->editsnitemname->getText());
+        if ($id == 0) {
+            $this->setError("Не обрано товар");
+            return;
+        }
+        
+        $price = doubleVal($this->editsnitem->editsnprice->getText());
+        if ($price == 0) {
+
+            $this->setError("Не вказана ціна");
+            return;
+        }
+        $sns =  $this->editsnitem->editsn->getText();
+
+        $list = [];
+        foreach(explode("\n", $sns) as $s) {
+            $s = trim($s);
+            if(strlen($s) > 0) {
+                $list[] = $s;
+            }
+        }
+        if (count($list) == 0) {
+
+            $this->setError("Не вказані серійні номери");
+            return;
+        }
+        
+        
+        if($common['usesnumber'] == 3 ){
+            
+            $temp_array = array_unique($list);
+            if(sizeof($temp_array) < sizeof($list)) {
+                $this->setError("Cерійний номер має бути унікальним для виробу");    
+                return;
+            }           
+            
+        }        
+        
+        
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+
+        foreach($list as $s) {
+            ++$next;
+            $item = Item::load($id);
+
+            $item->quantity = 1;
+            $item->price = $price;
+            $item->snumber = trim($s);
+            $item->rowid = $next;
+            $this->_itemlist[$next] = $item;
+
+        }
+
+
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+      
+
+        $this->editsnitem->setVisible(false);
+        $this->docform->setVisible(true);
+
+
+    }
+     
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');

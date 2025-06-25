@@ -76,6 +76,9 @@
                     </div>
                     {{/usescanner}}
                     <a zippy="addrow" class="btn btn-info  ">Додати товар</a>
+                           {{#usesnumberitem}}
+                       &nbsp;&nbsp;  <a zippy="opensn"  >Ввод за  серійними номерами</a>
+                    {{/usesnumberitem}}     
                     <table class="table table-sm">
                         <tr>
                             <th>Назва</th>
@@ -125,7 +128,37 @@
             </div>
 
 
+          <form zippy="editsnitem">
+            <h3>&nbsp;Ввод за  серійними номерами</h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
 
+                    <div class="form-group">
+                        <label for="editsnitemname">Назва </label>
+                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname"  required />
+                         <small>В довіднику номенклатури треба вказати що даний ТМЦ обліковується  за  серійним номером</small>
+                       
+                    </div>
+                    <div class="form-group">
+                        <label for="editsn">Серійні номери</label>
+                        <textarea style="height:400px;" class="form-control" type="text" zippy="editsn"> </textarea>
+                        <small>По номеру в  рядку</small>
+                    </div>
+          
+                     <div class="form-group">
+                        <label for="editsnprice">Ціна </label>
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-outline-secondary mr-2">
+                        <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        
+                    </div>
+                </div>
+            </div>
+        </form>        
+    
 
     </form>
     <form zippy="editdetail">
