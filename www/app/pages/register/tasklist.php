@@ -248,7 +248,7 @@ class TaskList extends \App\Pages\Base
         }
 
         if ($this->filterform->filterassignedto->getValue() > 0) {
-            $sql = $sql . " and  content  like '%<employee_id>" . $this->filterform->filterassignedto->getValue() . "</employee_id>%' ";
+            $sql = $sql . " and  content  like '%#" . $this->filterform->filterassignedto->getValue() . "#%' ";
         }
         if ($this->filterform->filterpa->getValue() > 0) {
             $sql = $sql . " and  content  like '%<parea>" . $this->filterform->filterpa->getValue() . "</parea>%' ";

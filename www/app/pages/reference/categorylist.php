@@ -294,7 +294,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->save();
 
         $file = $this->categorydetail->editaddfile->getFile();
-        if (strlen($file["tmp_name"]) > 0) {
+        if (strlen($file["tmp_name"]??'') > 0) {
             
             if (filesize($file["tmp_name"])  > 1024*1024) {
 

@@ -552,7 +552,7 @@ class Invoice extends \App\Pages\Base
         $total = $this->docform->total->getText();
         $totaldisc = $this->docform->totaldisc->getText();
 
-        if($totaldisc) {
+        if($totaldisc>0) {
             $total = $total - $totaldisc;
         }
 

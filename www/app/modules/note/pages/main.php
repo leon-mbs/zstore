@@ -109,9 +109,11 @@ class Main extends \App\Pages\Base
             $node = Node::Load($args[2]);
             $topic = Topic::load($args[1]);
 
-            if ($topic->ispublic ==1 && $node->ispublic != 1) {
-                return "Не можна додавати публічний топік до приватного вузла";
+            if ($topic->ispublic == 1 && $node->ispublic == 0) {
+                return "Не можна додавати публічний топік у приватний вузол" ;
             }
+      
+            
             $tn = TopicNode::getFirst("topic_id={$args[1]} and node_id={$args[3]}") ;
             if($tn==null) return;
             $topic->removeFromNode($args[3]);
@@ -124,8 +126,8 @@ class Main extends \App\Pages\Base
             if($args[2]==$args[3]) {
                 return;
             }
-            if ($topic->ispublic ==1 && $node->ispublic != 1) {
-                return "Не можна додавати публічний топік до приватного вузла";
+            if ($topic->ispublic == 1 && $node->ispublic == 0) {
+                return "Не можна додавати публічний топік у приватний вузол" ;
             }
             $topic->addToNode($node->node_id,true);
   
@@ -188,8 +190,8 @@ class Main extends \App\Pages\Base
 
 
         $node = Node::load($args[1]);
-        if ($topic->ispublic == 0 && $node->ispublic != 1) {
-            return "Не можна додавати приватний топік у публічний вузол" ;
+        if ($topic->ispublic == 1 && $node->ispublic == 0) {
+            return "Не можна додавати публічний топік у приватний вузол" ;
         }
         $topic->updatedon = time();
 

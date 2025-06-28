@@ -149,7 +149,9 @@ class Users extends \App\Pages\Base
             $this->setError("Введіть пароль");
             return;
         }
-
+        if($this->user->disabled ==1) {
+           $this->user->userpass =''; 
+        }
         $barr = array();
         foreach ($this->editpan->editform->brow->getDataRows() as $row) {
             $item = $row->getDataItem();

@@ -14,3 +14,5 @@ SELECT
     FROM `users`
     WHERE (`users`.`role_id` = `roles`.`role_id`)) AS `cnt`
 FROM `roles`;
+
+ALTER TABLE saltypes ADD isedited  tinyint(1)   DEFAULT 0;

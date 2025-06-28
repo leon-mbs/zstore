@@ -340,7 +340,12 @@ class Task extends \App\Pages\Base
         $this->_doc->packDetails('eqlist', $this->_eqlist);
         $this->_doc->packDetails('emplist', $this->_emplist);
         $this->_doc->packDetails('prodlist', $this->_prodlist);
-
+        //для поиска
+        $this->_doc->headerdata['searchemp'] ='';
+        foreach($this->_emplist as $e){
+           $this->_doc->headerdata['searchemp'] .= "#{$e->employee_id}#" ;
+        }
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
