@@ -28,21 +28,21 @@ class ServiceAct extends Document
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
-        foreach ($this->unpackDetails('detail2data') as $ser) {
+        foreach ($this->unpackDetails('detail2data') as $item) {
             $detail[] = array("no"           => $i++,
-                              "service_name" => $ser->itemname,
-                              "desc"         => $ser->item_code . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
-                              "msr"         => $ser->msr . ( strlen($ser->snumber) >0 ? ' с/н: '. $ser->snumber :'') ,
-                              "qty"          => H::fqty($ser->quantity),
-                              "price"        => H::fa($ser->price),
-                              "amount"       => H::fa($ser->price * $ser->quantity)
+                              "service_name" => $item->itemname,
+                              "desc"         => $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'') ,
+                              "msr"         => $item->msr  ,
+                              "qty"          => H::fqty($item->quantity),
+                              "price"        => H::fa($item->price),
+                              "amount"       => H::fa($item->price * $item->quantity)
             );
         }
         $totalstr =  \App\Util::money2str_ua($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "customer_name"   => $this->customer_name,
+                        "customer_name"   => $this->headerdata['customer_name'],
                         "firm_name"       => $firm['firm_name'],
                         "gar"             => $this->headerdata['gar'],
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
@@ -66,7 +66,10 @@ class ServiceAct extends Document
         }
         if($this->customer_id > 0) {
             $c = \App\Entity\Customer::load($this->customer_id) ;
-            if(strlen($c->phone)>0) {
+            if(strlen(   $this->headerdata['phone'])>0) {
+                $header['customer_name']  =   $header['customer_name'] .', '. $this->headerdata['phone'];
+            }
+            else if(strlen($c->phone)>0) {
                 $header['customer_name']  =   $header['customer_name'] .', '. $c->phone ;
             }
 
