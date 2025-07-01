@@ -49,7 +49,7 @@ class ProdStageList extends \App\Pages\Base
       
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->listpan->filter->add(new DropDownChoice('fproc', ProdProc::findArray('procname', 'state=' . ProdProc::STATE_INPROCESS, 'procname'), 0));
-        $this->listpan->filter->add(new DropDownChoice('fparea', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
+        $this->listpan->filter->add(new DropDownChoice('fparea', \App\Entity\ProdArea::findArray('pa_name', "disabled<>1","pa_name"), 0));
 
         $stlist = $this->listpan->add(new DataView('stlist', new ProcStageDataSource($this), $this, 'stlistOnRow'));
 

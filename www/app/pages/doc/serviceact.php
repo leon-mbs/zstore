@@ -57,7 +57,7 @@ class ServiceAct extends \App\Pages\Base
        
         $this->docform->add(new TextArea('notes'));
 
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], H::getDefPayType() ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], 2 ))->onChange($this, 'OnPayType');
   
     
         $this->docform->add(new TextInput('phone'));
@@ -580,6 +580,11 @@ class ServiceAct extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        foreach ($this->_serlist as $ser) {
+            $ser->amount = H::fa($ser->price * $ser->quantity);
+
+            $total = $total + $ser->amount;
+        }
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);

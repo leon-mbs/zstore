@@ -41,7 +41,7 @@ class common extends JsonRPC
 
     //список  производственных участвков
     public function parealist() {
-        $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
+        $list = \App\Entity\ProdArea::findArray('pa_name', "disabled<>1","pa_name");
 
         return $list;
     }

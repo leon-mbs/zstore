@@ -24,8 +24,9 @@ class Prod extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
-
+        $this->filter->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", "disabled<>1","pa_name"), 0));
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+ 
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -47,6 +48,7 @@ class Prod extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
         $parea = $this->filter->parea->getValue();
+        $emp = $this->filter->emp->getValue();
 
         $detail = array();
         $detail2 = array();
@@ -60,6 +62,10 @@ class Prod extends \App\Pages\Base
         if ($parea > 0) {
             $wparea = " and content like '%<parea>{$parea}</parea>%' ";
         }
+        $wemp = "";
+        if ($emp > 0) {
+            $wemp = " and content like '%<emp>{$emp}</emp>%' ";
+        }
         //списано
         $sql = "
           select i.itemname,i.item_code,0-sum(e.quantity) as qty, 0-sum((partion )*quantity) as summa
@@ -69,7 +75,7 @@ class Prod extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and e.quantity < 0
                and d.meta_name in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')  and  (e.tag = 0 or e.tag = -16   ) 
-               {$wparea}
+               {$wparea} {$wemp}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.itemname,i.item_code
@@ -96,7 +102,7 @@ class Prod extends \App\Pages\Base
               join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and e.quantity  >0
                and d.meta_name in ('TTN','GoodsIssue','ProdIssue','ProdReceipt','POSCheck','OrderFood')   and  (e.tag = 0 or e.tag = -32   ) 
-              {$wparea}
+              {$wparea}    {$wemp}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                 group by  i.itemname,i.item_code
