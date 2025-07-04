@@ -803,7 +803,7 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    //для vue
+   
     public function vgetPriceByQty($args, $post) {
         $post = json_decode($post) ;
 

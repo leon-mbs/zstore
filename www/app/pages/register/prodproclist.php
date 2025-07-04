@@ -92,7 +92,7 @@ class ProdProcList extends \App\Pages\Base
 
         $this->editstage->add(new TextArea('editstagenotes'));
 
-        $this->editstage->add(new DropDownChoice('editstagearea', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name')));
+        $this->editstage->add(new DropDownChoice('editstagearea', \App\Entity\ProdArea::findArray('pa_name', "disabled<>1","pa_name")));
         $this->editstage->add(new SubmitButton('savestage'))->onClick($this, 'OnSaveStage');
         $this->editstage->add(new Button('cancelstage'))->onClick($this, 'onCanceStage');
 

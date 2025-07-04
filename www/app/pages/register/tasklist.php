@@ -53,7 +53,7 @@ class TaskList extends \App\Pages\Base
         $this->add(new Form('filterform'))->onSubmit($this, 'OnFilter');
 
         $this->filterform->add(new DropDownChoice('filterassignedto', Employee::findArray('emp_name', '', 'emp_name'), 0));
-        $this->filterform->add(new DropDownChoice('filterpa', ProdArea::findArray('pa_name', '', 'pa_name'), 0));
+        $this->filterform->add(new DropDownChoice('filterpa', ProdArea::findArray('pa_name', "disabled<>1","pa_name"), 0));
 
         $this->filterform->add(new CheckBox('filterfinished'));
         $this->filterform->add(new ClickLink('eraser'))->onClick($this, 'eraseFilter');

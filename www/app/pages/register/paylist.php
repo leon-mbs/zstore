@@ -142,9 +142,9 @@ class PayList extends \App\Pages\Base
         $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
 
-        if($doc->meta_name=='IncomeMoney' || $doc->meta_name=='OutcomeMoney' ) {
+     //   if($doc->meta_name=='IncomeMoney' || $doc->meta_name=='OutcomeMoney' ) {
            $row->del->setVisible(false);
-        }
+    //    }
         
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 

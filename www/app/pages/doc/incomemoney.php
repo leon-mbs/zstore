@@ -216,13 +216,22 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->emp->setVisible(false);
         $this->docform->customer->setVisible(false);
         $this->docform->contract->setVisible(false);
+        $this->docform->mtype->setVisible(false);        
         if ($sender->getValue() == 1 || $sender->getValue() == 2) {
             $this->docform->contract->setVisible(true);
             $this->docform->customer->setVisible(true);
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_INCOME) ;            
         }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
         }
+       
+        if ($sender->getValue() == 0 || $sender->getValue() == 3 ) {
+            $this->docform->mtype->setVisible(true);
+            $this->docform->mtype->setValue(0) ;            
+        }
+         
+        
     }
 
 }
