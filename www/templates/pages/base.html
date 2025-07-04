@@ -1120,13 +1120,22 @@
        */
                    
        function check_execdoc(ele){
-            
+           if($('#docform').length){
+              if( checkFormInput('docform') ==false) {
+                  return false;
+              }
+           }
            document.getElementById('dialogwait').showModal()
             return true;
        
         }
         function check_savedoc(ele){
-            document.getElementById('dialogwait').showModal()
+           if($('#docform').length){
+              if( checkFormInput('docform') ==false) {
+                  return false;
+              }
+           }
+           document.getElementById('dialogwait').showModal()
           
             return true;
        
