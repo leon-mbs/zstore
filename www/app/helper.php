@@ -687,8 +687,12 @@ class Helper
      * @return mixed
      */
     public static function fasell($am) {
-
-        $ret = self::fa($am);
+        $common = \App\System::getOptions("common");
+        $ret = self::fa($am); 
+        if ($common['sellcheck'] !=1   ) { 
+            return $ret;
+        }
+        
 
         $ret = doubleval($ret);
         $ret = number_format($ret, 2, '.', '');

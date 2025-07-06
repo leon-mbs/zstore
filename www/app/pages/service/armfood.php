@@ -1562,24 +1562,36 @@ class ARMFood extends \App\Pages\Base
 
     public function getMessages($args, $post) {
 
+        $tables=[];
         $cntorder = 0;
         $cntprod = 0;
         $mlist = \App\Entity\Notify::find("checked <> 1 and user_id=" . \App\Entity\Notify::ARMFOOD);
-        foreach ($mlist as $n) {
+        foreach ($mlist as $n) {             
             $msg = @unserialize($n->message);
+            if(($msg['document_id'] ??0) >0) {
+                $doc = Document::load(intval($msg['document_id']));
 
-            $doc = Document::load(intval($msg['document_id']));
-
-            if ($doc->state == Document::STATE_NEW) {
-                $cntorder++;
+                if ($doc->state == Document::STATE_NEW) {
+                    $cntorder++;
+                } 
+            }
+            if(($msg['tableno'] ??0) >0) {
+                $tables[] = $msg['tableno'];
             }
         }
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOOD);
 
 
-
-        return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);
+        if($cntorder>0) {
+           return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);    
+        }
+        if(count($tables) > 0 ) {
+           $msg = implode(', ',$tables)  ;
+             
+           return json_encode(array( 'tableno' => $msg), JSON_UNESCAPED_UNICODE);    
+        }
+        
     }
 
     public function getProdItems($args, $post=null) {
@@ -1681,6 +1693,7 @@ class ARMFood extends \App\Pages\Base
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
             $header['detail'] [] = array(
+                "myself" => $item->myself ?' З собою':'',
                 "itemname" => $name,
                 "qty"   => H::fqty($item->quantity)
                 

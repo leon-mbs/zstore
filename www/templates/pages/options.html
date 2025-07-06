@@ -49,6 +49,12 @@
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Формувати продажу без копiйок якщо в налаштуваннях  заданi копiйки "></i>
                             </div>                            
+                             <div class="form-check">
+                                <input zippy="sellcheck" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="sellcheck">Копiйки в  чеку </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Друкувати двi цифри пiсля  коми в чеках незалежно вiд налаштувань "></i>
+                            </div>                            
                            
                             <div class="form-group  ">
                                 <label for="dateformat">Формат дати</label>
@@ -260,7 +266,42 @@
                               
                 
             </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
+            <div class="col-12  col-md-5 col-xl-4  "            >
+
+                {{#useval}}
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Курси валют </h4>  
+                        <form zippy="valform">
+                          <a zippy="valadd">Додати</a>
+              
+                          <table class="table table-sm">
+                             <tr><th>Код</th><th>Назва</th><th>Курс</th><th></th>
+                             <tr zippy="vallist">
+                             <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required >  </td>
+                             <td><input zippy="valname"   class="form-control"  required >  </td>
+                             <td><input zippy="valrate" pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice"  required >  </td>
+                             <td><a  zippy="valdel"><i class="fa fa-trash"></i></a></td>
+                            </tr>  
+                            
+                            </table>                           
+                            <div class="form-check">
+                                <input zippy="valprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="valprice">Враховувати курсову рiзницю
+                                    при продажу </label>
+
+                            </div>
+
+                            <div class="form-group">
+                               <a zippy="loadrate">Загрузити курс НБУ</a>
+                            </div>
+                          <div class="form-group">
+                                <button zippy="saveval" class="btn btn-success" type="submit">Зберегти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {{/useval}}            
               <div class="card">
                 <div class="card-body">
                    <h4>Налаштування бізнес-процесів</h4>
@@ -399,41 +440,7 @@
               </div>
             
             
-
-                {{#useval}}
-                <div class="card">
-                    <div class="card-body">
-                        <h4>Курси валют </h4>  
-                        <form zippy="valform">
-                          <a zippy="valadd">Додати</a>
               
-                          <table class="table table-sm">
-                             <tr><th>Код</th><th>Назва</th><th>Курс</th><th></th>
-                             <tr zippy="vallist">
-                             <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required >  </td>
-                             <td><input zippy="valname"   class="form-control"  required >  </td>
-                             <td><input zippy="valrate" pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice"  required >  </td>
-                             <td><a  zippy="valdel"><i class="fa fa-trash"></i></a></td>
-                            </tr>  
-                            
-                            </table>                           
-                            <div class="form-check">
-                                <input zippy="valprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="valprice">Враховувати курсову рiзницю
-                                    при продажу </label>
-
-                            </div>
-
-                            <div class="form-group">
-                               <a zippy="loadrate">Загрузити курс НБУ</a>
-                            </div>
-                          <div class="form-group">
-                                <button zippy="saveval" class="btn btn-success" type="submit">Зберегти</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                {{/useval}}
 
                 <div class="card">
                     <div class="card-body">
@@ -582,9 +589,12 @@
 
                              <div class="form-check mt-4">
                                 <input zippy="foodmenu" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodmenu">Сторiнка меню кафе</label>
-                                <br><small>Доступ до сторiнки меню  за посиланням &lt;адреса  сайту&gt;/menu. <br>Детальнiше <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
-                                 Параметри нижче в  основному  для  сторiнки меню
+                                <label class="form-check-label" for="foodmenu"><b>Сторiнка меню кафе </b></label>
+                                 
+                                <small>
+                                
+                                <br> Параметри нижче в  основному  для  сторiнки меню
+                                <br>Детальнiше про доступ до сторiнки меню<a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
                                 </small>
                             </div>
                             <div class="form-group">
