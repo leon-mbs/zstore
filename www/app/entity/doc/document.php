@@ -1139,7 +1139,7 @@ class Document extends \ZCL\DB\Entity
         if( $this->payamount > 0 &&  $this->payamount <=  $this->payed  ) {
             return false;
         }
-
+        $f=null;
         if($this->firm_id >0) {
             $f =  \App\Entity\Firm::load($this->firm_id) ;
         } else {
@@ -1158,7 +1158,7 @@ class Document extends \ZCL\DB\Entity
             return false;
         }
 
-        
+       
         
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
@@ -1170,8 +1170,20 @@ class Document extends \ZCL\DB\Entity
             $payamount =  $this->headerdata['payedcard'] ;
         }
 
+        $payee= (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ;
+        
+        /*
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
+        
+        if($mf != null  && strlen($mf->tin??'') >0) {
+            $kod =  $mf->tin??'';
+        }       
+        if($mf != null  && strlen($mf->payname??'') >0) {
+            $payee =  $mf->payname??'';
+        }       
+        */
         $url = "BCD\n002\n1\nUCT\n\n";
-        $url = $url . (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ."\n";
+        $url = $url .  $payee ."\n";
         $url = $url .  $iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
         $url = $url .  $kod."\n\n\n";
