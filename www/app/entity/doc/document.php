@@ -1136,7 +1136,7 @@ class Document extends \ZCL\DB\Entity
             return false;
         }
         //оплачен
-        if( $this->payamount > 0 &&  $this->payamount >=  $this->payed  ) {
+        if( $this->payamount > 0 &&  $this->payamount <=  $this->payed  ) {
             return false;
         }
 
@@ -1152,8 +1152,7 @@ class Document extends \ZCL\DB\Entity
         $kod=strlen($f->tin) >0 ? $f->tin : $f->inn;
        
         $iban=$this->getIBAN();
-        
-        
+         
         
         if(strlen($kod)==0 || strlen($iban) == 0) {
             return false;
@@ -1173,7 +1172,7 @@ class Document extends \ZCL\DB\Entity
 
         $url = "BCD\n002\n1\nUCT\n\n";
         $url = $url . (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ."\n";
-        $url = $url .  $f->iban."\n";
+        $url = $url .  $iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
         $url = $url .  $kod."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";

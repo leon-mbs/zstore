@@ -487,11 +487,11 @@ class Helper
         if($user->deffirm > 0) {
             return $user->deffirm;
         }
-        $st = \App\Entity\Firm::getList();
+        $first = \App\Entity\Firm::getFirst( "disabled <> 1", "firm_id");;
 
-        if(count($st) > 0) {
-            $keys = array_keys($st);
-            return $keys[count($keys) - 1];
+        if($first != null) {
+          
+            return $first->firm_id;
         }
         return 0;
     }

@@ -939,12 +939,18 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->setError("Якщо валюта має бути вказана оплата");
                 return;
             }
-
+            if ($this->_doc->headerdata['comission']==1  ) {
+                $this->setError("Не можна валюту і комісію ");
+            }
+            if ($this->_doc->getHD('nds',0) >0  ) {
+                $this->setError("Не можна валюту і ПДВ ");
+            }
+            if ($this->_doc->getHD('delivery',0) >0  ) {
+                $this->setError("Не можна валюту і доставку ");
+            }
         } 
         
-        if ($this->_doc->headerdata['comission']==1 && $this->_doc->headerdata['val'] != "0") {
-            $this->setError("Не можна валюту і комісію ");
-        }
+     
         if ($this->_doc->headerdata['comission']==1 && ($this->_doc->payed - doubleval($this->_doc->headerdata['delivery']) ) > 0) {
             $this->setError("Оплата не  вноситься якщо Комісія ");
         }
