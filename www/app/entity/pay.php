@@ -68,7 +68,7 @@ class Pay extends \ZCL\DB\Entity
         if($options['allowminusmf'] !=1 && $amount < 0) {
             $b = \App\Entity\MoneyFund::Balance() ;
 
-            if($b[$mf_id] < abs($amount)) {
+            if(( $b[$mf_id] ??0) < abs($amount)) {
                 throw new \Exception('Сума  на рахунку недостатня  для  оплати')  ;
             }
         }

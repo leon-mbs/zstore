@@ -20,7 +20,9 @@ use Zippy\Html\Link\ClickLink;
 
 class Update extends \App\Pages\Base
 {
-    
+     private $_baseurl="https://zippy.com.ua/updates/";
+     private $_sql=[];
+     
      public function __construct() {
         global $_config; 
         parent::__construct();
@@ -40,6 +42,8 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatevendor',$this,'OnVendorUpdate')) ;
       
  
+        $this->_sql['6.13.0']='update6130to6140.sql';
+ 
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversiondb'] =   System::getOptions('version',true );
@@ -57,9 +61,9 @@ class Update extends \App\Pages\Base
         
  
         $this->_tvars['showdb']  = false   ;
-
+        $this->_tvars['tooold']  = false;  
         $this->_tvars['show']  = false   ; 
- 
+    
         $data = System::checkVersion() ;
        
     
@@ -83,7 +87,8 @@ class Update extends \App\Pages\Base
         } else {
            $this->_tvars['actual']  = false   ;
            $this->_tvars['show']  = true   ;
-            
+           $this->_tvars['tooold']  = true;  
+              
         } 
         
         $ca = explode('.', $c) ;
@@ -91,31 +96,35 @@ class Update extends \App\Pages\Base
         $na[0]   = intval($na[0]);      
         $na[1]   = intval($na[1]);      
         $na[2]   = intval($na[2]);      
-        
-        $this->_tvars['tooold']  = false;  
-        if(version_compare($data['fordb'] , $this->_tvars['curversiondb']) ==1) {
-           $this->_tvars['tooold']  = true   ;//пропущено несколько
-        }        
-
+        $ca[0]   = intval($ca[0]);      
+        $ca[1]   = intval($ca[1]);      
+        $ca[2]   = intval($ca[2]);      
+                
+        $va="{$na[0]}.{$na[1]}.{$na[2]}";
+     
           
-        $this->_tvars['newver']  = $data['version']   ;
+        $this->_tvars['newver']  = $n  ;
         $this->_tvars['notes']  = $data['notes']   ;
-        $this->_tvars['archive']  = $data['archive'] .$t   ;
-        $this->_tvars['github']  = $data['github']    ;
+        $this->_tvars['github']  = 'https://github.com/leon-mbs/zstore/releases/tag/' . $va   ;
      
         $this->_tvars['list']  = []   ;
         foreach($data['changelog'] as $item )  {
            $this->_tvars['list'][] = array('item'=>$item)  ;
         }
+            
+        if($na[1] !=$ca[1])  {
+             $va="{$na[0]}.{$na[1]}.0"; //если сменилась  средняя  цифра делаем сначала полное  обновление
+        }
+        $this->_tvars['archive']  = $this->_baseurl . "update-{$va}.zip"   ;
         
-        $this->_tvars['showdb']  = false;
-        
+          
         //обновление  БД
-        if ($data['fordb'] ===  $this->_tvars['curversiondb']   ) {
-
+        if($this->_tvars['curversiondb'] != $requireddb){
+          $this->_tvars['tooold']  = true;  
+           
           $this->_tvars['showdb']  = true   ;
-          $sqlurl= $data['sql'] ;
-          $this->_tvars['sqlurl']  = $sqlurl .$t ;
+          
+          $this->_tvars['sqlurl']  = $this->_baseurl . $this->_sql[$this->_tvars['curversiondb']] ;
           $this->_tvars['sql']  =  file_get_contents($this->_tvars['sqlurl'])   ;
              
         }  
@@ -128,11 +137,13 @@ class Update extends \App\Pages\Base
              $this->_tvars['rollback']  = true;
                
          }     
-         if($this->_tvars['tooold'] == true) {
+         
+         if($this->_tvars['show'] == true) {
              $this->_tvars['rollback']  = false;
              $this->_tvars['reinstall']  = false;
-         }     
-         if($this->_tvars['show'] == true) {
+         } 
+         if($this->_tvars['showdb'] == true) {
+             $this->_tvars['show']  = false;
              $this->_tvars['rollback']  = false;
              $this->_tvars['reinstall']  = false;
          } 

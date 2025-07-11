@@ -9,6 +9,9 @@
                 <div id="newordersalert" style="display:none;"  class="alert alert-info  ml-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
+                 <div id="tablenoalert" style="display:none;"  class="alert alert-danger  ml-4"  >
+                    <span id="tablenomsg"></span>
+                </div>   
               
 
             </div>
@@ -185,7 +188,7 @@
                                     <th >Стан </th>
                                     
                                     <th class="text-center">
-                                    {{#pack}} <i title="Із собою" class="fa fa-bag-shopping"></i>    {{/pack}}
+                                    {{#pack}} <i title="З собою" class="fa fa-bag-shopping"></i>    {{/pack}}
                                       </th>
                                    
 
@@ -694,6 +697,11 @@
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
                         $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
+                        beep()
+                    }
+                    if (answer.tableno > 0) {
+                        $('#tablenoalert').show();
+                        $('#tablenomsg').text('Виклик зi столу ' + answer.tableno);
                         beep()
                     }
                   

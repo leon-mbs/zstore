@@ -7,17 +7,34 @@ use App\Entity\Item;
 
 class Menu extends \Zippy\Html\WebPage
 {
-    public function __construct($pm=0) {
+    public function __construct($pm=0,$tn=0) {
         parent::__construct();
 
         $options = \App\System::getOptions('food');
 
+        
+        
         if($options['menu'] != 1) {
             http_response_code(404);
             die;
         }
+        $this->_tvars['alert']   = false ;     
+  
+        if($pm=='tableno')  {
+            $pm=0;
+            $this->_tvars['alert']   = true ; 
+            
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::ARMFOOD;
+            $n->dateshow = time();
 
+            $n->message = serialize(array('tableno' => $tn));
 
+            $n->save();                 
+        
+        }
+
+ 
         $this->_tvars['list']   = $pm >0 ;
         $this->_tvars['phone']   = $options['phone'] ;
         $this->_tvars['name']    = $options['name'] ;

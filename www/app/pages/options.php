@@ -49,6 +49,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('shopname'));
 
         $this->common->add(new CheckBox('sell2'));
+        $this->common->add(new CheckBox('sellcheck'));
         $this->common->add(new CheckBox('usescanner'));
 
         $this->common->add(new CheckBox('usebranch'));
@@ -74,6 +75,7 @@ class Options extends \App\Pages\Base
 
         $this->common->usescanner->setChecked($common['usescanner']);
         $this->common->sell2->setChecked($common['sell2']);
+        $this->common->sellcheck->setChecked($common['sellcheck']);
 
 
         $this->common->usebranch->setChecked($common['usebranch']);
@@ -357,6 +359,7 @@ class Options extends \App\Pages\Base
         $common['ts_end'] = $this->common->ts_end->getText();
         $common['usescanner'] = $this->common->usescanner->isChecked() ? 1 : 0;
         $common['sell2'] = $this->common->sell2->isChecked() ? 1 : 0;
+        $common['sellcheck'] = $this->common->sellcheck->isChecked() ? 1 : 0;
 
 
       

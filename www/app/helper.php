@@ -487,11 +487,11 @@ class Helper
         if($user->deffirm > 0) {
             return $user->deffirm;
         }
-        $st = \App\Entity\Firm::getList();
+        $first = \App\Entity\Firm::getFirst( "disabled <> 1", "firm_id");;
 
-        if(count($st) > 0) {
-            $keys = array_keys($st);
-            return $keys[count($keys) - 1];
+        if($first != null) {
+          
+            return $first->firm_id;
         }
         return 0;
     }
@@ -687,8 +687,12 @@ class Helper
      * @return mixed
      */
     public static function fasell($am) {
-
-        $ret = self::fa($am);
+        $common = \App\System::getOptions("common");
+        $ret = self::fa($am); 
+        if ($common['sellcheck'] !=1   ) { 
+            return $ret;
+        }
+        
 
         $ret = doubleval($ret);
         $ret = number_format($ret, 2, '.', '');
