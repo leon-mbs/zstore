@@ -354,13 +354,13 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
-
-
+        
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
+           
+            \App\Entity\IOState::addIOState($this->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
             $amount = 0 - $amount;
-            $type = \App\Entity\IOState::TYPE_BASE_INCOME;
+   
         } else {
             $options=\App\System::getOptions('common')  ;
             if($options['allowminusmf'] !=1) {
@@ -372,14 +372,15 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
-
+            \App\Entity\IOState::addIOState($this->_doc->document_id,  0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         }
 
 
  
         $payed = Pay::addPayment($this->_doc->document_id, $pdate, 0-$amount, $form->payment->getValue(), $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, $type);
-      //todo доходы расходы
+
+   
+     
             
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;

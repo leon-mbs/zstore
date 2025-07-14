@@ -360,8 +360,7 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        $type = \App\Entity\IOState::TYPE_BASE_INCOME;
-
+     
         if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
 
             $options=\App\System::getOptions('common')  ;
@@ -374,15 +373,19 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
+             \App\Entity\IOState::addIOState($this->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true);
             $amount = 0 - $amount;
-            $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
   
+  
+        }  else {
+            \App\Entity\IOState::addIOState($this->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME );
+             
         }
 
  
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
-       //todo доходы расходы
+ 
+ 
             
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
