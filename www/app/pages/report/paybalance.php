@@ -223,7 +223,7 @@ class PayBalance extends \App\Pages\Base
                          
         ";
 
-        $OPOUT = $conn->GetOne($sql); // переменные расходы
+        $OPOUT = 0-$conn->GetOne($sql); // переменные расходы
 
         $sql = " 
          SELECT   coalesce(  sum( (amount)),0)  as am   FROM iostate_view 
