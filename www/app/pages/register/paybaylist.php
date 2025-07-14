@@ -382,7 +382,8 @@ GROUP BY c.customer_name,
  
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
         \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
-
+       //todo доходы расходы
+            
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }

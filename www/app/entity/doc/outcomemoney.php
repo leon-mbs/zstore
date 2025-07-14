@@ -15,7 +15,8 @@ class OutcomeMoney extends Document
 
 
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
-   
+        //todo доходы расходы
+            
         \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
 
       $this->DoBalans() ;

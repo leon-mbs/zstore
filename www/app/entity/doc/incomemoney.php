@@ -18,7 +18,8 @@ class IncomeMoney extends Document
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->notes);
    
 
-
+      //todo доходы расходы
+            
         \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
 
          $this->DoBalans() ;

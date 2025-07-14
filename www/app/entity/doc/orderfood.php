@@ -238,7 +238,7 @@ class OrderFood extends Document
           
             $this->DoBalans() ;
 
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
           //бонус  сотруднику
 
             $disc = \App\System::getOptions("discount");

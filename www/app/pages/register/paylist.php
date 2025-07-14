@@ -141,6 +141,7 @@ class PayList extends \App\Pages\Base
         $user = \App\System::getUser();
         $row->add(new BookmarkableLink('del'))->setVisible($user->rolename == 'admins');
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
+        
 
      //   if($doc->meta_name=='IncomeMoney' || $doc->meta_name=='OutcomeMoney' ) {
            $row->del->setVisible(false);
@@ -201,6 +202,10 @@ class PayList extends \App\Pages\Base
                $doc->setHD('waitpay',1); 
                $doc->save();
             }
+            
+            //todo доходы расходы
+            
+            
             $conn->CommitTrans();
 
 

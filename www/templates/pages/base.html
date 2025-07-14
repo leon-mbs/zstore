@@ -796,6 +796,16 @@
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;Налаштування меню</p>
                                                 </a>
                                             </li>
+                                            
+                                                                         
+                                              <li class="nav-item">
+                                                    <a href="/index.php?p=App/Pages/Admin" class="nav-link">
+                                                        <i class="fa    nav-icon"></i>
+                                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;Адмiнiстратор</p>
+                                                    </a>
+                                              </li>
+                                               
+                                            
                                         </ul>
 
                                     </li>
@@ -857,7 +867,7 @@
                                             <p>&nbsp;&nbsp;Системний лог</p>
                                         </a>
                                     </li>
-                                  {{#isadmin}}    
+                                     {{#isadmin}}   
                                     {{^noupdate}}                              
                                    <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Update" class="nav-link">
@@ -865,14 +875,10 @@
                                             <p>&nbsp;&nbsp;Оновлення</p>
                                         </a>
                                     </li>
-                                      {{/noupdate}}                              
-                                 <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Admin" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Адмiнiстрування</p>
-                                        </a>
-                                    </li>
-                                     {{/isadmin}} 
+                                      {{/noupdate}}     
+                                      
+                                     {{/isadmin}}  
+                                
                                 </ul>
 
                             </li>
