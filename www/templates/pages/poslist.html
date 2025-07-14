@@ -83,7 +83,7 @@
                             {{/usebranch}}
 
                             <div class="form-group">
-                                <label for="editpointname"> Ім'я торгової точки</label>
+                                <label for="editpointname"> Назва торгової точки</label>
                                 <input class="form-control" zippy="editpointname"/>
                                 <small>Використовується в чеках та фiскалiзацiї</small>
 
@@ -108,43 +108,46 @@
                                 <textarea class="form-control" zippy="editcomment">
                                 </textarea>
                             </div>
-                            <div class="form-group">
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-seconadry  ">
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                            </div>
+                           
                         </div>
                          <div class="col-6 col-md-4 col-xl-3">
                             
                             {{#fiscal}}
-                            <div class="form-group">
+                            
                                 <div class="form-check">
                                     <input zippy="editusefisc" type="checkbox" class="form-check-input">
                                     <label class="form-check-label text-bold" for="editusefisc">Використовувати
                                         фiскалізацiю</label>
                                     <br><small>Чеки з цього термiналу будуть вiдправлятись в ДПI</small>
-                                </div>
+                                 
                             </div>
                             {{/fiscal}}
                             
                             {{#ppo}}
-                           <div class="form-group">
+                           
                                 <div class="form-check">
                                     <input zippy="edittesting" type="checkbox" class="form-check-input">
                                     <label class="form-check-label text-bold" for="edittesting">Тестовий режим</label>
-                                    <br><small>Чеки будуть вiдправлятись в ФСУ, але не фiскалiзуватимуться</small>
+                                    <br><small>Чеки будуть вiдправлятись в ДПI, але не фiскалiзуватимуться</small>
+                                </div>
+                           
+                            <div class="form-group row">
+                                <label class="col-6 col-form-label"  for="editfisc">Фiскальний номер</label>
+                                 <div class="col-6 col">
+                                   <input class="form-control" zippy="editfisc"/>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="editfisc">Фiскальний номер</label>
-                                <input class="form-control" zippy="editfisc"/>
+                            <div class="form-group row">
+                                <label class="col-6 col-form-label" for="editposinner"> Локальний номер</label>
+                                 <div class="col-6 col">
+                                    <input class="form-control" zippy="editposinner"/>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="editposinner"> Локальний номер</label>
-                                <input class="form-control" zippy="editposinner"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="editfiscalnumber"> Наступний фiскальний номер документа</label>
-                                <input class="form-control" zippy="editfiscalnumber"/>
+                            <div class="form-group row">
+                                <label class="col-6 col-form-label" for="editfiscalnumber"> Наступний ФС документа</label>
+                                 <div class="col-6 col">
+                                     <input class="form-control" zippy="editfiscalnumber"/>
+                                </div>
                             </div>
                             {{/ppo}}
                             {{#checkbox}}
@@ -182,8 +185,12 @@
                             {{/fiscal}}                            
                    
                          </div>
-                    </div>
-
+                    
+                 <div class="col-12">
+                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary mr-4 ">
+                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  "> 
+                            </div>
+                </div>                            
                 </form>
               
                 

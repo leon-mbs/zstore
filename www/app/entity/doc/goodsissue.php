@@ -54,7 +54,7 @@ class GoodsIssue extends Document
 
         $printer = System::getOptions('printer');
 
-        $iban=$this->getIBAN();
+        $iban=$mf->iban??'';
    
 
         $header = array('date'      => H::fd($this->document_date),

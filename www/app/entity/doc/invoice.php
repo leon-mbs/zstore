@@ -14,7 +14,7 @@ class Invoice extends \App\Entity\Doc\Document
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
-        $iban=$this->getIBAN();
+        $iban=$mf->iban??'';
  
         $i = 1;
         $detail = array();

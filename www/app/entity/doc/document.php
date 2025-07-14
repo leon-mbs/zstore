@@ -1139,21 +1139,21 @@ class Document extends \ZCL\DB\Entity
         if( $this->payamount > 0 &&  $this->payamount <=  $this->payed  ) {
             return false;
         }
-        $f=null;
-        if($this->firm_id >0) {
-            $f =  \App\Entity\Firm::load($this->firm_id) ;
-        } else {
-            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
-        }
-
-        if($f == null) {
+ 
+        $f = \App\Helper::getFirmData();
+    
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
+        
+      
+        if($mf == null) {
             return false;
         }
-        $kod=strlen($f->tin) >0 ? $f->tin : $f->inn;
+        $kod=strlen($mf->tin) >0 ? $mf->tin : $f['tin'] ;
        
-        $iban=$this->getIBAN();
-         
-        
+        if(strlen($kod)==0 ){
+            $kod = $f['inn'] ??'';
+        }
+        $iban = $mf->iban??'';
         if(strlen($kod)==0 || strlen($iban) == 0) {
             return false;
         }
@@ -1170,7 +1170,7 @@ class Document extends \ZCL\DB\Entity
             $payamount =  $this->headerdata['payedcard'] ;
         }
 
-        $payee= (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ;
+        $payee= (strlen($mf->payname) > 0 ? $mf->payname : $f['firm_name']) ;
         
         /*
         $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
@@ -1206,23 +1206,7 @@ class Document extends \ZCL\DB\Entity
         );
     }
  
-    public function getIBAN() {
-        if($this->firm_id >0) {
-            $f =  \App\Entity\Firm::load($this->firm_id) ;
-        } else {
-            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
-        }  
-        
-        $iban=$f->iban??'';  
-        
-        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
-        
-        if($mf != null  && strlen($mf->iban??'') >0) {
-            $iban =  $mf->iban??'';
-        }
-        
-        return $iban;
-    }
+   
 
     /**
     *    возвращает ссылку  на чек в  налоговой

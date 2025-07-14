@@ -47,7 +47,9 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->add(new TextInput('editbank'));
         $this->mfdetail->add(new TextInput('editbankacc'));
         $this->mfdetail->add(new TextInput('editiban'));
+        $this->mfdetail->add(new TextInput('editpayname'));
         $this->mfdetail->add(new TextInput('editcom'));
+        $this->mfdetail->add(new TextInput('edittin'));
 
         $this->mfdetail->add(new CheckBox('editdisabled'));
 
@@ -100,7 +102,9 @@ class MFList extends \App\Pages\Base
         $this->mfdetail->editbank->setText($this->_mf->bank);
         $this->mfdetail->editbankacc->setText($this->_mf->bankacc);
         $this->mfdetail->editiban->setText($this->_mf->iban);
+        $this->mfdetail->editpayname->setText($this->_mf->payname);
         $this->mfdetail->editcom->setText($this->_mf->com);
+        $this->mfdetail->edittin->setText($this->_mf->tin);
         $this->mfdetail->editdisabled->setChecked($this->_mf->disabled);
         $this->mfdetail->editback->setChecked($this->_mf->back);
     }
@@ -132,7 +136,9 @@ class MFList extends \App\Pages\Base
         $this->_mf->bank = $this->mfdetail->editbank->getText();
         $this->_mf->bankacc = $this->mfdetail->editbankacc->getText();
         $this->_mf->iban = $this->mfdetail->editiban->getText();
+        $this->_mf->payname = $this->mfdetail->editpayname->getText();
         $this->_mf->com = $this->mfdetail->editcom->getText();
+        $this->_mf->tin = $this->mfdetail->edittin->getText();
         $this->_mf->disabled = $this->mfdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_mf->back = $this->mfdetail->editback->isChecked() ? 1 : 0;
 

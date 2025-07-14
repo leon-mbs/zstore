@@ -52,8 +52,13 @@ class Order extends \App\Entity\Doc\Document
         if(strlen($da)==0) {
            $da =  trim($this->headerdata["ship_address"] ??'') ;
         }
+        $iban=''; 
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
         
-        $iban=$this->getIBAN();
+        if($mf != null  ) {
+            $iban = $mf->iban??'';
+        }        
+       
         
         if($this->headerdata["paytype"] != 2){  //только для постоплаты
            $iban=''; 
