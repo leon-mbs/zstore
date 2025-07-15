@@ -100,21 +100,37 @@
                             <input class="form-control" type="text" zippy="editpayname">
                             <small> Якщо відрізняється від назви фірми</small>
                     </div>                    
-                  <div class="form-group">
-                            <label for="edittin" data-label="editpayname">ЄДРПОУ</label>
-                            <input class="form-control" type="text" zippy="edittin">
+                    <div class="form-group">
+                            <label for="editaddress" data-label="editpayname">Адреса</label>
+                            <input class="form-control" type="text" zippy="editaddress">
+                            <small> Якщо відрізняється від назви фірми</small>
+                    </div>                    
+                    <div class="form-group row">
+                            <label class="col-6 col-form-label" for="edittin" data-label="editpayname">ЄДРПОУ</label>
+                            <div class="col-6">
+                                <input class="form-control" type="text" zippy="edittin">
+                            </div>
                             <small> Якщо відрізняється від ЄДРПОУ фірми</small>
+                                        
+                    </div>                    
+                   <div class="form-group row">
+                            <label class="col-6 col-form-label" for="editinn" data-label="editpayname">IПН</label>
+                            <div class="col-6">
+                                <input class="form-control" type="text" zippy="editinn">
+                            </div>
+                            <small> Якщо відрізняється від ЄДРПОУ фірми</small>
+                                        
                     </div>                    
                     <div class="form-group row">
                         <label class="col-8 col-form-label" for="editbtran" data-label="editbtran">Процент банку, видаток</label>
-                        <div class="4">
+                        <div class="col-4">
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtran"/>
                          </div>
                         <small  data-label="editbtran">Процент, який банк бере за перевод суми з рахунку. </small>
                     </div>
                     <div class="form-group row">
                         <label class="col-8 col-form-label" for="editbtranin" data-label="editbtranin">Процент банку, прибуток</label>
-                        <div class="4">
+                        <div class="col-4">
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtranin"/>
                         </div>
                         <small data-label="editbtranin">Процент, який банк бере за переказ суми на рахунок </small>

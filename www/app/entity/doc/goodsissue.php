@@ -55,6 +55,10 @@ class GoodsIssue extends Document
         $printer = System::getOptions('printer');
 
         $iban=$mf->iban??'';
+        if(strlen($mf->payname ??'') > 0) $firm['firm_name']   = $mf->payname;
+        if(strlen($mf->address ??'') > 0) $firm['address']   = $mf->address;
+        if(strlen($mf->tin ??'') > 0) $firm['fedrpou']   = $mf->tin;
+        if(strlen($mf->inn ??'') > 0) $firm['finn']   = $mf->inn;
    
 
         $header = array('date'      => H::fd($this->document_date),
