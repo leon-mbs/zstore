@@ -59,19 +59,24 @@ class ARMPos extends \App\Pages\Base
         
         $this->_docid = $docid;
         $this->_basedocid = $basedocid;
+        $ss='';
+        if($basedocid >0) {
+            $bd= Document::load($basedocid)->cast();
+            $ss = $bd->getHD('salesource','') ;
+        }
         
         $filter = \App\Filter::getFilter("armpos");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
-            $filter->salesource = H::getDefSaleSource();
+            $filter->salesource =  strlen($ss) > 0 ? $ss : H::getDefSaleSource();
             $filter->mfnal = H::getDefSaleSource();
             $filter->mfbeznal = H::getDefSaleSource();
 
 
         }
-
+        
         //обшие настройки
         $this->add(new Form('form1'));
         $plist = \App\Entity\Pos::findArray('pos_name', '');

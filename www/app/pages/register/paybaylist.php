@@ -373,12 +373,12 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
-             \App\Entity\IOState::addIOState($this->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true);
+             \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true);
             $amount = 0 - $amount;
   
   
         }  else {
-            \App\Entity\IOState::addIOState($this->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME );
+            \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME );
              
         }
 

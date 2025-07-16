@@ -358,7 +358,7 @@ GROUP BY c.customer_name,
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
            
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
             $amount = 0 - $amount;
    
         } else {
