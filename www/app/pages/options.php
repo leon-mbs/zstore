@@ -290,6 +290,8 @@ class Options extends \App\Pages\Base
        
         $this->food->add(new DropDownChoice('foodbasemenu',$menu,$food['foodbasemenu']));
         $this->food->add(new DropDownChoice('foodmenu2',$menu,$food['foodmenu2']));
+        $this->food->add(new DropDownChoice('foodmenu3',$menu,$food['foodmenu3']));
+        $this->food->add(new DropDownChoice('foodmenu4',$menu,$food['foodmenu4']));
 
 
         //телеграм бот
@@ -568,7 +570,11 @@ class Options extends \App\Pages\Base
         $food['foodbasemenu'] = $sender->foodbasemenu->getValue() ;
         $food['foodbasemenuname'] = $sender->foodbasemenu->getValueName() ;
         $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
+        $food['foodmenu3'] = $sender->foodmenu3->getValue() ;
+        $food['foodmenu4'] = $sender->foodmenu4->getValue() ;
         $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
+        $food['foodmenuname3'] = $sender->foodmenu3->getValueName() ;
+        $food['foodmenuname4'] = $sender->foodmenu4->getValueName() ;
 
         System::setOptions("food", $food);
         $this->setSuccess('Збережено');

@@ -265,6 +265,7 @@ GROUP BY c.customer_name,
        
        if(strpos($sender->id,'stpayed')===0) {
            $doc->updateStatus(Document::STATE_PAYED,true);  
+           
        }      
        if(strpos($sender->id,'stdone')===0) {
            $doc->updateStatus(Document::STATE_FINISHED,true);  

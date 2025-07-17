@@ -350,14 +350,17 @@ class OrderList extends \App\Pages\Base
             }
 
             if ($sender->id == "bref") {
+                $this->_doc->setHD('waitpay',0) ;
                 $this->_doc->updateStatus(Document::STATE_FAIL);
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();     
 
                 $this->setWarn('Замовлення анульовано');
             }
 
             if ($sender->id == "bclose") {
 
-
+  
 
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
@@ -367,9 +370,10 @@ class OrderList extends \App\Pages\Base
                     $this->setWarn('Замовлення закрито без доставки');
                 }
 
-
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
- 
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();     
+
             }
             $conn->CommitTrans();
 
