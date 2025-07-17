@@ -43,15 +43,29 @@ class Menu extends \Zippy\Html\WebPage
         $this->_tvars['timesu']  = $options['timesu'] ;
         $this->_tvars['address']  = $options['address'] ??'';
         $this->_tvars['secondm']  = $options['foodmenu2'] > 0;
+        $this->_tvars['secondm3']  = $options['foodmenu3'] > 0;
+        $this->_tvars['secondm4']  = $options['foodmenu4'] > 0;
 
         $this->_tvars['bmname']  = $options['foodbasemenu'] > 0 ? $options['foodbasemenuname']  : 'Основне меню' ;
         $this->_tvars['smname']= $options['foodmenuname']  ;  
+        $this->_tvars['smname3']= $options['foodmenuname3']  ;  
+        $this->_tvars['smname4']= $options['foodmenuname4']  ;  
  
         $pcat= $options['foodbasemenu']  ?? 0;
      
         if($options['foodmenu2'] > 0 && $pm==2 )   {
 
             $pcat= $options['foodmenu2']   ;
+        
+        }
+        if($options['foodmenu3'] > 0 && $pm==3 )   {
+
+            $pcat= $options['foodmenu3']   ;
+        
+        }
+        if($options['foodmenu4'] > 0 && $pm==4 )   {
+
+            $pcat= $options['foodmenu4']   ;
         
         }
  

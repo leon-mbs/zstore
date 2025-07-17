@@ -272,6 +272,8 @@ GROUP BY c.customer_name,
        }      
        if(strpos($sender->id,'stclosed')===0) {
            $this->_doc->updateStatus(Document::STATE_CLOSED,true);  
+           $this->_doc->setHD('waitpay',0); 
+           $this->_doc->save();            
        }      
      
         
