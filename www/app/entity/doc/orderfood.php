@@ -40,7 +40,7 @@ class OrderFood extends Document
 
         $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
         if(strlen($pos->pointname) >0) {
            $shopname=$pos->pointname ;   
@@ -104,7 +104,7 @@ class OrderFood extends Document
 
         $common = \App\System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $shopname='';
         $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
         if(strlen($pos->pointname) >0) {

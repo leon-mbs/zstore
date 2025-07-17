@@ -781,10 +781,7 @@ class Base extends \Zippy\Html\WebPage
             $stores = \App\Entity\Store::getList() ;
             $ret['stores'] =  \App\Util::tokv($stores) ;
         }
-        if($post->firms ?? null) {
-            $firms = \App\Entity\Firm::getList() ;
-            $ret['firms'] =  \App\Util::tokv($firms) ;
-        }
+      
         if($post->mfs ?? null) {
             $mfs = \App\Entity\MoneyFund::getList() ;
             $ret['mfs'] =  \App\Util::tokv($mfs) ;

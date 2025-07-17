@@ -47,7 +47,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
         $this->listpan->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові', 2 => 'Відправлені', 5 => 'Готові до відправки', 3 => 'Всі'), 0));
-        $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->listpan->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -952,10 +952,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and state = " . Document::STATE_READYTOSHIP;
         }
 
-        $comp = $this->page->listpan->filter->searchcomp->getValue();
-        if ($comp > 0) {
-            $where = $where . " and firm_id = " . $comp;
-        }
+      
         $cust = $this->page->listpan->filter->searchcust->getKey();
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;

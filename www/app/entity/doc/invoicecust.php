@@ -11,7 +11,7 @@ use App\Helper as H;
 class InvoiceCust extends Document
 {
     public function generateReport() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $i = 1;
 
@@ -32,8 +32,7 @@ class InvoiceCust extends Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
-                        "firm_name"       => $firm['firm_name'],
-                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        
                          "isval"           => strlen($this->headerdata['val']) > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),

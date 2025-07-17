@@ -49,7 +49,7 @@ class GoodsIssue extends Document
 
         $totalstr =  \App\Util::money2str_ua($this->payamount);
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');
@@ -268,7 +268,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');

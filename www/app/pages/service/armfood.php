@@ -1428,7 +1428,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->firm_id = $this->_pos->firm_id;
         $this->_doc->username = System::getUser()->username;
 
-        $firm = H::getFirmData($this->_doc->firm_id);
+        $firm = H::getFirmData( );
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];

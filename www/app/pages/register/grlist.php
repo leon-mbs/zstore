@@ -42,7 +42,7 @@ class GRList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
         $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті',   1 => 'Не сплачені', 2 => 'Всі'), 0));
-        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
 
@@ -259,10 +259,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 
         }
 
-        $comp = $this->page->filter->searchcomp->getValue();
-        if ($comp > 0) {
-            $where = $where . " and firm_id = " . $comp;
-        }
+      
         $cust = $this->page->filter->searchcust->getKey();
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;

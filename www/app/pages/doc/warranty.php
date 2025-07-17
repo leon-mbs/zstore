@@ -231,9 +231,7 @@ class Warranty extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata["customer_name"] = $this->docform->customer->getText();
 
-        $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
-        $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
-
+        
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();

@@ -12,7 +12,7 @@ class Invoice extends \App\Entity\Doc\Document
 {
     public function generateReport() {
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
         $iban=$mf->iban??'';
         
@@ -146,7 +146,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getEmailBody() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
         $header = array();
         $header['customer_name'] = $this->customer_name;

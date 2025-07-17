@@ -34,7 +34,7 @@ class Pos extends \ZCL\DB\Entity
 
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
         $this->details .= "<testing>{$this->testing}</testing>";
-        $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
+
         $this->details .= "<vktoken>{$this->vktoken}</vktoken>";
         $this->details .= "<cbkey>{$this->cbkey}</cbkey>";
         $this->details .= "<cbpin>{$this->cbpin}</cbpin>";
@@ -69,7 +69,7 @@ class Pos extends \ZCL\DB\Entity
         $this->firmname = (string)($xml->firmname[0]);
         $this->tin = (string)($xml->tin[0]);
         $this->ipn = (string)($xml->ipn[0]);
-        $this->firm_id = (int)($xml->firm_id[0]);
+
         $this->autoshift = (int)($xml->autoshift[0]);
 
         $this->testing = (int)($xml->testing[0]);

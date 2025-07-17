@@ -45,7 +45,7 @@ class Order extends \App\Entity\Doc\Document
             $allbonus = $c->getBonus();
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
         $da=  trim($this->headerdata["npaddressfull"] ??'') ;
         
@@ -140,7 +140,7 @@ class Order extends \App\Entity\Doc\Document
             );
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
         if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {

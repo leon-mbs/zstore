@@ -298,7 +298,7 @@ class Order extends Base
             $order->payamount = $amount - $this->disc;
 
          //   $order->branch_id = $shop["defbranch"] ?? 0;
-            $order->firm_id = $shop["firm"];
+          
             $order->user_id = intval($shop["defuser"]??0) ;
             if($order->user_id==0) {
                 $user = \App\Entity\User::getByLogin('admin') ;

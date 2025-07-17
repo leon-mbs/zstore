@@ -750,27 +750,11 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($firm_id = 0, $branch_id = 0) {
+    public static function getFirmData(  $branch_id = 0) {
         
          
         $data = System::getOptions("firm");
-        if (count($data)==0) {
-            if($firm_id > 0) {
-                $firm = \App\Entity\Firm::load($firm_id);
-                if($firm == null) {
-                    $firm = \App\Entity\Firm::load(self::getDefFirm());
-                }
-                if($firm != null) {
-                    $data = $firm->getData();
-                }
-            } else {
-                $firm = \App\Entity\Firm::load(self::getDefFirm());
-                if($firm != null) {
-                    $data = $firm->getData();
-                }
-            }           
-        }
-       
+ 
 
         if($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
