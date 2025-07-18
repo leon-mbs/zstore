@@ -49,7 +49,6 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new TextArea('notes'));
@@ -142,8 +141,7 @@ class Invoice extends \App\Pages\Base
 
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
-            $this->docform->firm->setValue($this->_doc->firm_id);
-
+         
             $this->OnChangeCustomer($this->docform->customer);
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
         } else {
@@ -470,8 +468,7 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-
+      
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
@@ -751,9 +748,8 @@ class Invoice extends \App\Pages\Base
 
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+     
+        $ar = \App\Entity\Contract::getList($c );
 
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {

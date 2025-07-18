@@ -79,7 +79,6 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
@@ -161,8 +160,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->_orderid = $this->_doc->headerdata['order_id'];
 
 
-            $this->docform->firm->setValue($this->_doc->firm_id);
-            $this->OnChangeCustomer($this->docform->customer);
+             $this->OnChangeCustomer($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
@@ -245,8 +243,7 @@ class GoodsIssue extends \App\Pages\Base
                         $invoice = $basedoc->cast();
 
 
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                        
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
                     
 
@@ -291,7 +288,6 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
 
-                        $this->docform->firm->setValue($basedoc->firm_id);
                         $this->OnCustomerFirm(null);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
@@ -702,10 +698,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
-
+    
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
@@ -1061,9 +1054,8 @@ class GoodsIssue extends \App\Pages\Base
 
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+      
+        $ar = \App\Entity\Contract::getList($c );
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {
             $this->docform->contract->setVisible(true);

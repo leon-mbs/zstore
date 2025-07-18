@@ -407,7 +407,11 @@ class Document extends \ZCL\DB\Entity
         $hash = md5(''.rand(1, 1000000), false);
         $hash = base64_encode(substr($hash, 0, 24));
         $doc->headerdata['hash'] = strtolower($hash)  ;
-
+    
+        $firm=Helper::getFirmData()  ;
+     
+        $doc->headerdata["firm_name"]  =  $firm['firmname']  ;
+         
         return $doc;
     }
 
@@ -1108,7 +1112,7 @@ class Document extends \ZCL\DB\Entity
             return '';
         }
         $url =$this->getFiscUrl();
-        // $firm = \App\Entity\Firm::load($this->firm_id);
+        
         if($text) {
             if(strlen($url)==0) {
                 return false;
@@ -1140,25 +1144,22 @@ class Document extends \ZCL\DB\Entity
             return false;
         }
  
-        $f = \App\Helper::getFirmData();
-    
+   
         $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
         
       
         if($mf == null) {
             return false;
         }
-        $kod=strlen($mf->tin) >0 ? $mf->tin : $f['tin'] ;
-       
-        if(strlen($kod)==0 ){
-            $kod = $f['inn'] ??'';
-        }
+ 
+        $payee= $mf->payname ??'' ;
+        $kod= $mf->code ??'' ;   
         $iban = $mf->iban??'';
-        if(strlen($kod)==0 || strlen($iban) == 0) {
+        if(strlen($kod)==0 || strlen($iban) == 0|| strlen($payee) == 0) {
             return false;
         }
 
-       
+         
         
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
@@ -1170,18 +1171,10 @@ class Document extends \ZCL\DB\Entity
             $payamount =  $this->headerdata['payedcard'] ;
         }
 
-        $payee= (strlen($mf->payname) > 0 ? $mf->payname : $f['firm_name']) ;
+    
+ 
         
-        /*
-        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
-        
-        if($mf != null  && strlen($mf->tin??'') >0) {
-            $kod =  $mf->tin??'';
-        }       
-        if($mf != null  && strlen($mf->payname??'') >0) {
-            $payee =  $mf->payname??'';
-        }       
-        */
+ 
         $url = "BCD\n002\n1\nUCT\n\n";
         $url = $url .  $payee ."\n";
         $url = $url .  $iban."\n";

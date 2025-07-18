@@ -95,9 +95,7 @@ class Invoice extends \App\Entity\Doc\Document
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['inn']) > 0) {
-            $header["finn"] = $firm['inn'];
-        }
+     
 
 
         if ($this->headerdata["contract_id"] > 0) {

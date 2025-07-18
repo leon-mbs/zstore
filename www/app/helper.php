@@ -478,23 +478,7 @@ class Helper
         $logger->error($msg);
     }
 
-    /**
-     * Возвращает компанию  по  умолчанию
-     *
-     */
-    public static function getDefFirm() {
-        $user = System::getUser();
-        if($user->deffirm > 0) {
-            return $user->deffirm;
-        }
-        $first = \App\Entity\Firm::getFirst( "disabled <> 1", "firm_id");;
-
-        if($first != null) {
-          
-            return $first->firm_id;
-        }
-        return 0;
-    }
+ 
 
     /**
      * Возвращает склад  по  умолчанию
@@ -767,6 +751,11 @@ class Helper
             }
         }
 
+        $user = System::getUser() ;
+        if(strlen($user->payname ??'')>0)   $data['firm_name']  = $user->payname;
+        if(strlen($user->address ??'')>0)   $data['address']  = $user->address;
+        if(strlen($user->tin ??'')>0)   $data['tin']  = $user->tin;
+         
         return $data;
     }
 

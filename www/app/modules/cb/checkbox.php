@@ -633,8 +633,7 @@ class CheckBox
         
         
         $pos = \App\Entity\Pos::load($posid);
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-     
+       
        
         $cb = new CheckBox($pos->cbkey, $pos->cbpin) ;
         

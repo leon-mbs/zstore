@@ -58,7 +58,7 @@ class Warranty extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
-
+  
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -72,6 +72,7 @@ class Warranty extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('Warranty');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+            
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -80,22 +81,22 @@ class Warranty extends \App\Pages\Base
 
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->_doc->customer_id= $basedoc->customer_id;
-                        $this->_doc->firm_id= $basedoc->firm_id;
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        
+                         
                     }
 
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->_doc->customer_id= $basedoc->customer_id;
-                        $this->_doc->firm_id= $basedoc->firm_id;
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                         
                     }
                     if ($basedoc->meta_name == 'ServiceAct') {
                         $this->_doc->customer_id= $basedoc->customer_id;
-                        $this->_doc->firm_id= $basedoc->firm_id;
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
                         $this->_itemlist = $basedoc->unpackDetails('detail2data');
                     }
 

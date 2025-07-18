@@ -5,7 +5,7 @@ namespace App\Pages\Register;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
-use App\Entity\Firm;
+ 
 use App\Entity\Customer;
 use App\System;
 use Zippy\Html\DataList\DataView;

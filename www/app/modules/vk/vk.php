@@ -489,8 +489,7 @@ class VK
         
         
         $pos = \App\Entity\Pos::load($posid);
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-     
+       
        
         $vk = new VK($pos->vktoken) ;
         

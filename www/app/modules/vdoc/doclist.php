@@ -102,11 +102,11 @@ class DocList extends \App\Pages\Base
     public function check($arg, $post=null) {
         $p = \App\Entity\Pos::load($arg[0]);
 
-        $firm = \App\Entity\Firm::load($p->firm_id)  ;
-        if(strlen($firm->vdoc)==0) {
+        $firm = \App\Helper::getFirmData()   ;
+        if(strlen($firm['vdoc'])==0) {
             return "Не задано токен Вчасно в довiднику  компанiй";
         }
-        if(strlen($firm->tin)==0) {
+        if(strlen($firm['tin'])==0) {
             return "Компанiя повинна мати ЄДРПОУ";
         }
         if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
@@ -148,13 +148,13 @@ class DocList extends \App\Pages\Base
             }
 
             //send
-            $firm = \App\Entity\Firm::load($doc->firm_id)  ;
+            $firm = \App\Helper::getFirmData()  ;
 
             $c = \App\Entity\Customer::load($doc->customer_id) ;
 
            
             $na=[];
-            $na[]= $firm->tin  ;
+            $na[]= $firm['tin']  ;
             $na[]= $c->edrpou ;
             $na[]=  date('Ymd', $doc->document_date) ;
             $na[]=  str_replace(' ','', $doc->meta_desc) ;

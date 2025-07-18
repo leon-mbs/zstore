@@ -68,8 +68,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()));
-
+         
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
@@ -155,7 +154,7 @@ class TTN extends \App\Pages\Base
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
 
-            $this->docform->firm->setValue($this->_doc->firm_id);
+          
             $this->OnChangeCustomer($this->docform->customer);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -169,7 +168,8 @@ class TTN extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
 
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
@@ -238,13 +238,13 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
                         $this->docform->total->setText($invoice->amount);
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                        
 
                         $this->OnChangeCustomer($this->docform->customer);
 
@@ -277,9 +277,9 @@ class TTN extends \App\Pages\Base
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
+                      
                         $this->OnChangeCustomer($this->docform->customer);
                         $k = 1;      //учитываем  скидку
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
@@ -306,14 +306,14 @@ class TTN extends \App\Pages\Base
                             $this->docform->customer->setText($basedoc->headerdata['customer_name']);
                         }
 
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->nostore->setChecked(true);
 
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                       
                         $this->OnChangeCustomer($this->docform->customer);
                         $k = 1;      //учитываем  скидку
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
@@ -582,10 +582,7 @@ class TTN extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
 
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
+       
 
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['order'] = $this->docform->order->getText();

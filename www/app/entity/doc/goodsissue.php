@@ -114,10 +114,7 @@ class GoodsIssue extends Document
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['inn']) > 0) {
-            $header["finn"] = $firm['inn'];
-        }
-
+  
 
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
