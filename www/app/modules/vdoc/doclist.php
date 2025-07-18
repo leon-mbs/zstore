@@ -63,7 +63,7 @@ class DocList extends \App\Pages\Base
     public function loaddocs($arg, $post=null) {
         //  $user = \App\System::getUser() ;
         $p = \App\Entity\Pos::load($arg[2]);
-        $sql = " (firm_id={$p->firm_id} or coalesce(firm_id,0)=0) and  meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        $sql = "    meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         } else {

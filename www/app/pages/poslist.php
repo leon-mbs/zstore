@@ -181,10 +181,7 @@ class PosList extends \App\Pages\Base
             $this->setError("Не введено назву");
             return;
         }
-        if ($this->_pos->firm_id == 0) {
-            $this->setError("Не обрано компанію");
-            return;
-        }
+     
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
 
             $this->setError("Виберіть філію");

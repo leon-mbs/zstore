@@ -160,7 +160,7 @@ class GIList extends \App\Pages\Base
         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('firm', $doc->firm_name));
+ 
         $row->add(new Label('ispay'))->setVisible(false) ;
         $row->add(new Label('istruck'))->setVisible(false) ;
         if($doc->state >=4) {

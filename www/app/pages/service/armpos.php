@@ -1106,7 +1106,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText();
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
-        $this->_doc->firm_id = $this->pos->firm_id;
+        
         $this->_doc->username =System::getUser()->username;
         $this->calcTotal()  ;
         $this->_doc->amount = $this->docpanel->form2->total->getText();
@@ -1192,7 +1192,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['salesource'] = $this->_salesource;
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
-        $this->_doc->firm_id = $this->pos->firm_id;
+        
         $this->_doc->username =System::getUser()->username;
 
         $firm = H::getFirmData( );

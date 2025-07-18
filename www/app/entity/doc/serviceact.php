@@ -230,7 +230,7 @@ class ServiceAct extends Document
 
         $common = \App\System::getOptions('common');
         $printer = \App\System::getOptions('printer');
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']??'') > 0) {

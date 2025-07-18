@@ -1425,7 +1425,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->_store;
         $this->_doc->headerdata['pricetype'] = $this->_pricetype;
 
-        $this->_doc->firm_id = $this->_pos->firm_id;
+       
         $this->_doc->username = System::getUser()->username;
 
         $firm = H::getFirmData( );

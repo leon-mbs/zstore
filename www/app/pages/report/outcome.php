@@ -50,7 +50,7 @@ class Outcome extends \App\Pages\Base
         if (count($hlist) > 0) {
             $types[8] = "За холдінгами";
         }
-        $types[9] = "За компаніями";
+       
         $types[10] = "За складами";
         $types[11] = "За джерелами";
         $types[12] = "За брендами" ;
@@ -275,22 +275,7 @@ class Outcome extends \App\Pages\Base
             }
         }
 
-        if ($type == 9) {    //по компаниям
-            $sql = "
-            select  d.firm_name as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
-              from entrylist_view  e
-
-             
-             join documents_view d on d.document_id = e.document_id
-               where  e.partion  is  not null and  d.firm_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
-                {$br} {$u}
-              AND  (e.document_date) >= " . $conn->DBDate($from) . "
-              AND  (e.document_date) <= " . $conn->DBDate($to) . "
-                group by    d.firm_name
-               order  by d.firm_name
-        ";
-        }
+       
  
         if ($type == 10) {    //по складах
             $sql = "
