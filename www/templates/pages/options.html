@@ -27,7 +27,7 @@
                             <div class="form-group  ">
                                 <label for="qtydigits">Знаків після крапки в кількості</label>
 
-                                <select style="width:75px;" class="form-control" zippy="qtydigits">
+                                <select style="width:175px;" class="form-control" zippy="qtydigits">
                                     <option value="0">0</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -37,7 +37,7 @@
                             <div class="form-group  ">
                                 <label for="amdigits">Округлення вартості</label>
 
-                                <select class="form-control" zippy="amdigits">
+                                <select style="width:175px;" class="form-control" zippy="amdigits">
                                     <option value="0">Без копійок</option>
                                     <option value="1">До 1 копійки</option>
                                 </select>
@@ -56,10 +56,10 @@
                                    title="Друкувати двi цифри пiсля  коми в чеках незалежно вiд налаштувань "></i>
                             </div>                            
                            
-                            <div class="form-group  ">
+                            <div class="form-group   mt-2">
                                 <label for="dateformat">Формат дати</label>
 
-                                <select class="form-control" zippy="dateformat">
+                                <select style="width:175px;" class="form-control" zippy="dateformat">
                                     <option value="d.m.Y">dd.mm.yyyy</option>
                                     <option value="d-m-Y">dd-mm-yyyy</option>
                                     <option value="d/m/Y">dd/mm/yyyy</option>
@@ -73,45 +73,11 @@
                             <div class="form-group  ">
                                 <label for="phonel">Довжина номера телефону</label>
                                 <select style="width:75px" class="form-control" zippy="phonel">
-                                </select>
+                                </select>           
                             </div>
-
-                            <div class="form-check">
-                                <input zippy="usescanner" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usescanner">Підтримка сканера штрих
-                                    кодів </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Використання сканера штрих кодів для введення товарів в видаткову накладну "></i>
-                            </div>
-                    
-                            <div class="form-check">
-                                <input zippy="usebranch" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usebranch">Використання філій </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Філії (наприклад, торгові точки) використовуються для поділу доступу до ресурсів. Співробітники філії мають доступ до документів, складів і кас тільки вказаної філії. Відпускні ціни товарів запам'ятовуються в прив'язці до поточної філії."></i>
-                            </div>
-
-
-                             {{#hideblock}}
-                
-                            <div class="form-check">
-                                <input zippy="showactiveusers" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="showactiveusers">Показувати активних користувачiв </label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Користувачi, якi за останнi 5 хвилин вiдкрили будь яку сторiнку "></i>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="showchat" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="showchat">Загальний чат</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Чат для спiлкування мiж користувачами "></i>
-                            </div>
-
-                            {{/hideblock}}
-
-                       
+                                        
               
-                            <div class="form-group  "><br>
+                            <div class="form-group mt-2 ">  
                                 <label for="ts_start">Початок робочого дня</label>
 
                                 <input style="width:75px;" class="form-control" zippy="ts_start"
@@ -144,80 +110,7 @@
                     </div>
                 </div>
                 
-                 <div class="card">
-                    <div class="card-body">
-                        <h4>Підключення модулів</h4>
-                           <form zippy="modules">
-
-                            <div class="form-check">
-                                <input zippy="modshop" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modshop"> Онлайн каталог</label>
-                                <a href="https://zippy.com.ua/ext#id3" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="modnote" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modnote"> Органайзер (база знань)</label>
-                                <a href="https://zippy.com.ua/ext#id2" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="modissue" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modissue"> Проекти та завдання</label>
-                                <a href="https://zippy.com.ua/ext#id4" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="modocstore" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modocstore"> Iнтеграція з опенкарт</label>
-                                <a href="https://zippy.com.ua/ext#id1" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-
-                            <div class="form-check">
-                                <input zippy="modwoocomerce" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modwoocomerce"> Iнтеграція з woocomerce</label>
-                                <a href="https://zippy.com.ua/ext#id5" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                            <div class="form-check">
-                                <input zippy="modpromua" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modpromua"> Iнтеграція з PromUA</label>
-                                <a href="https://zippy.com.ua/ext#id9" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                          
-                            <div class="form-check">
-                                <input zippy="modnp" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта</label>
-                                <a href="https://zippy.com.ua/ext#id8" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                         
-                         
-                           
-                              
-                           <div class="form-check">
-                                <input zippy="modvdoc" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modvdoc"> Iнтеграція з Вчасно Документооборот</label>
-                                <a href="https://zippy.com.ua/ext#id16" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                              
-                              
-                             <div class="form-group mt-2 ">
-                                <label for="modfisctype">Тип фіскалізації (ПРРО) </label>
-                                <select class="form-control" zippy="modfisctype">
-                                   <option value="0">Не використовується</option>
-                                   <option value="1">Вбудований ПРРО</option>
-                                   <option value="2">Iнтеграція з CheckBox</option>
-                                   <option value="3">Iнтеграція з ВчасноКаса </option>
-                                </select>
-                                <small><a title="Опис" href="https://zippy.com.ua/ext#id6" target="_blank"><i class="fa fa-info-circle  "  ></i> Вбудований ПРРО</a>
-                                <br><a title="Опис" href="https://zippy.com.ua/ext#id12" target="_blank"><i class="fa fa-info-circle  "  ></i> CheckBox</a>
-                                <br><a title="Опис" href="https://zippy.com.ua/ext#id14" target="_blank"><i class="fa fa-info-circle  "  ></i> ВчасноКаса</a>
-                                </small>
-                            </div>      
-                          
-                        
-                            <div class="form-group">
-                                <button class="btn btn-success" type="submit">Зберегти</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>  
+              
                 
                 <div class="card">
                     <div class="card-body">
@@ -236,7 +129,8 @@
                         </form>         
                     </div>
                 </div>                   
-                 <div class="card">
+                              
+            <div class="card">
                     <div class="card-body">
                         <h4>Налаштування API</h4>
                         <small>Налаштування API для доступу до даних з iнших систем</small>
@@ -262,8 +156,7 @@
                             </div>
                         </form>
                     </div>
-                </div>                
-                              
+                </div>                        
                 
             </div>
             <div class="col-12  col-md-5 col-xl-4  "            >
@@ -343,6 +236,7 @@
                                 <small>Дата, раніше якої заборонено виконувати проводки</small>
 
                             </div> 
+                                             
                            <div class="form-group  ">
                                 <label for="usesnumber">Облік ТМЦ за серіями  </label>
                                 <select class="form-control" zippy="usesnumber"> 
@@ -352,7 +246,12 @@
 
                             </div>
                             
-                                                      
+                            <div class="form-check">    
+                                <input zippy="usescanner" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usescanner">Підтримка сканера штрих       кодів </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Використання сканера штрих кодів для введення товарів в видаткову накладну "></i>
+                            </div>                                      
                              <div class="form-check">
                                 <input zippy="storeemp" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="storeemp">Облік ТМЦ в  розрізі  співробітника</label>
@@ -360,7 +259,7 @@
                                    title="Облік ТМЦ в  розрізі  склад+співробітник (матерiально-вiдповiдальна особа)"></i>
                             </div>
                       
-  
+                       
                             <div class="form-check">
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="allowminus">Дозволити списання ТМЦ в   мiнус </label>
@@ -533,7 +432,9 @@
 
             </div>
             <div class="col-12  col-md-5 col-xl-4  ">
-     <div class="card">
+            
+            {{#usefood}}
+         <div class="card">
                     <div class="card-body">
                         <h4>Громадське харчування</h4>
                     
@@ -656,7 +557,7 @@
                     </div>
                 </div>   
    
-            
+          {{/usefood}}    
                 <div class="card">
                     <div class="card-body">
                         <h4>Налаштування SMS сервiсу    </h4>
@@ -748,7 +649,7 @@
                     </div>
                 </div>            
             
-                  
+               
                   <div class="card">
                     <div class="card-body">
                         <h4>Телеграм бот</h4>

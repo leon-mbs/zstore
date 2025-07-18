@@ -410,7 +410,7 @@ class Document extends \ZCL\DB\Entity
     
         $firm=Helper::getFirmData()  ;
      
-        $doc->headerdata["firm_name"]  =  $firm['firmname']  ;
+        $doc->headerdata["firm_name"]  =  $firm['firm_name']  ;
          
         return $doc;
     }

@@ -38,6 +38,13 @@ class Admin extends \App\Pages\Base
         $this->_tvars['issms'] = ($options['smstype'] ?? 0)>0;
         $this->_tvars['isbot'] = strlen($options['tbtoken']??'')>0;
         
+        $form = $this->add(new Form('configform'));
+        $form->add(new CheckBox('usebranch',$options['usebranch']??0));
+        $form->add(new CheckBox('usefood',$options['usefood']??0));
+        $form->add(new CheckBox('useprod',$options['useprod']??0));
+       
+        $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
+          
         $form = $this->add(new Form('optionsform'));
         $form->add(new CheckBox('capcha',$options['capcha']??0));
         $form->add(new CheckBox('noupdate',$options['noupdate']??0));
@@ -61,9 +68,62 @@ class Admin extends \App\Pages\Base
         $this->add(new Form('cdoc'))->onSubmit($this,"onCancelDoc");
         $this->cdoc->add(new TextInput('docn'))  ;
 
+        $modules = System::getOptions("modules");
+
+        $this->add(new Form('modules'))->onSubmit($this, 'onModules');
+        $this->modules->add(new CheckBox('modocstore', $modules['ocstore']));
+        $this->modules->add(new CheckBox('modshop', $modules['shop']));
+        $this->modules->add(new CheckBox('modnote', $modules['note']));
+        $this->modules->add(new CheckBox('modissue', $modules['issue']));
+        $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
+        $this->modules->add(new CheckBox('modnp', $modules['np']));
+        $this->modules->add(new CheckBox('modpromua', $modules['promua']));
+
+        $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
+
+//    
+        
+        $fisctype=0;
+        if($modules['ppo']==1) $fisctype=1;
+        if($modules['checkbox']==1) $fisctype=2;
+        if($modules['vkassa']==1) $fisctype=3;
+        $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
+
    
     }   
 
+    
+    public function saveConfig($sender) {
+        $options = System::getOptions("common");       
+        $options['usebranch']  =  $this->configform->usebranch->isChecked() ? 1 : 0;
+        $options['usefood']  =  $this->configform->usefood->isChecked() ? 1 : 0;
+        $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
+          
+        $conn = \ZDB\DB::getConnect();
+      
+        $where = " where meta_name in('OrderFood','ARMFood','DeliveryList','ArmProdFood','OutFood') or    menugroup= ".$conn->qstr('Кафе');
+        if($options['usefood']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+     
+        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','','','') or    menugroup= ".$conn->qstr('Виробництво');
+        if($options['useprod']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+        
+        
+        
+        System::setOptions("common",$options) ;
+        $this->setSuccess('Збережено')  ;  
+        App::Redirect("\\App\\Pages\\Admin");
+              
+    }
     
     public function saveOptions($sender) {
         $options = System::getOptions("common");       
@@ -210,8 +270,34 @@ class Admin extends \App\Pages\Base
            }           
            
           $this->setSuccess('Структура OK')  ;
-
-
     }    
+    
+   public function onModules($sender) {
+        $modules = System::getOptions("modules");
+        $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
+        $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
+        $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
+        $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
+        $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
+
+        $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
+
+        $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
+        $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
+
+ 
+        $fisctype = (int)$sender->modfisctype->getValue();
+   
+        $modules['ppo']   = $fisctype == 1 ? 1:0;
+        $modules['checkbox']   = $fisctype == 2 ? 1:0;
+        $modules['vkassa']   = $fisctype == 3 ? 1:0;
+ 
+        System::setOptions("modules", $modules);
+        $this->setSuccess('Збережено');
+        App::Redirect("\\App\\Pages\\Admin");
+
+    }
+    
+    
 }
  

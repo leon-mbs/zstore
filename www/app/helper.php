@@ -1500,7 +1500,14 @@ class Helper
             }  
         }
             
+        $migration6142 = \App\Helper::getKeyVal('migration6142'); 
+        if($migration6142 != "done"  ) {
+            Helper::log("Міграція 6142");
+         
+            \App\Helper::setKeyVal('migration6118', "done");           
         
+       
+        }       
     }
 
 
