@@ -62,17 +62,20 @@ class DocList extends \App\Pages\Base
 
     public function loaddocs($arg, $post=null) {
         //  $user = \App\System::getUser() ;
+        
+
+        $ret = [];
+        $ret['docs']  =  [];
+                
         $p = \App\Entity\Pos::load($arg[2]);
         $sql = "    meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         } else {
-            return [];
+             return json_encode($ret, JSON_UNESCAPED_UNICODE);
         }
         
-
-        $ret = [];
-        $ret['docs']  =  [];
+     
         foreach(Document::findYield($sql, "document_id desc") as $d) {
             $ret['docs'][] = array('id'=>$d->document_id,
                                    'number'=>$d->document_number,

@@ -50,9 +50,7 @@ class Firm extends \App\Pages\Base
         $this->firmform->add(new TextInput('kodu',$firm['kodu']));
         $this->firmform->add(new TextInput('gni',$firm['gni']));
         $this->firmform->add(new TextInput('kved',$firm['kved']));
-        $this->firmform->add(new CheckBox('jurid',$firm['jurid']==1));
-       
-  
+      
      
     }
 
@@ -80,7 +78,7 @@ class Firm extends \App\Pages\Base
         $firm['gni'] = $this->firmform->gni->getText();
         $firm['kved'] = $this->firmform->kved->getText();
         $firm['kodu'] = $this->firmform->kodu->getText();
-        $firm['jurid'] = $this->firmform->jurid->isChecked() ? 1:0;
+      
         $firm['logo'] = $this->firmform->logo->getText();
         $firm['stamp'] = $this->firmform->stamp->getText();
         $firm['sign'] = $this->firmform->sign->getText();
