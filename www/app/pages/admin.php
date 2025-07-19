@@ -101,7 +101,7 @@ class Admin extends \App\Pages\Base
           
         $conn = \ZDB\DB::getConnect();
       
-        $where = " where meta_name in('OrderFood','ARMFood','DeliveryList','ArmProdFood','OutFood') or    menugroup= ".$conn->qstr('Кафе');
+        $where = " where meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood') or    menugroup= ".$conn->qstr('Кафе');
         if($options['usefood']==1) {
             $sql="update metadata set  disabled=0 ";
         }   else {

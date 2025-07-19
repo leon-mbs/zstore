@@ -263,35 +263,7 @@ class Options extends \App\Pages\Base
 
         $this->onSMSType($this->sms->smstype);
 
-        //общепит
-        $food = System::getOptions("food");
-        if (!is_array($food)) {
-            $food = array();
-        }
-        $this->add(new Form('food'))->onSubmit($this, 'onFood');
-        $this->food->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(), $food['pricetype']));
-        $this->food->add(new DropDownChoice('foodpricetypeout', \App\Entity\Item::getPriceTypeList(), $food['pricetypeout']??0));
-        $this->food->add(new DropDownChoice('foodworktype', array(), $food['worktype']));
-        $this->food->add(new CheckBox('fooddelivery', $food['delivery']));
-        $this->food->add(new CheckBox('foodtables', $food['tables']));
-        $this->food->add(new CheckBox('foodpack', $food['pack']));
-        $this->food->add(new CheckBox('foodmenu', $food['menu']));
-        $this->food->add(new Textinput('goodname', $food['name']));
-        $this->food->add(new Textinput('goodaddress', $food['address']));
-        $this->food->add(new Textinput('goodphone', $food['phone']));
-        $this->food->add(new Textinput('timepn', $food['timepn']));
-        $this->food->add(new Textinput('timesa', $food['timesa']));
-        $this->food->add(new Textinput('timesu', $food['timesu']));
-    
-
-        $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and coalesce(parent_id,0)=0",'cat_name')  ;
-       
-        $this->food->add(new DropDownChoice('foodbasemenu',$menu,$food['foodbasemenu']));
-        $this->food->add(new DropDownChoice('foodmenu2',$menu,$food['foodmenu2']));
-        $this->food->add(new DropDownChoice('foodmenu3',$menu,$food['foodmenu3']));
-        $this->food->add(new DropDownChoice('foodmenu4',$menu,$food['foodmenu4']));
-
-
+ 
         //телеграм бот
 
         $this->add(new Form('tbform'))->onSubmit($this, "onBot");
@@ -518,40 +490,7 @@ class Options extends \App\Pages\Base
     }
 
 
-
-    public function onFood($sender) {
-        $food = System::getOptions("food");
-        if (!is_array($food)) {
-            $food = array();
-        }
-
-        $food['worktype'] = $sender->foodworktype->getValue();
-        $food['pricetype'] = $sender->foodpricetype->getValue();
-        $food['pricetypeout'] = $sender->foodpricetypeout->getValue();
-        $food['delivery'] = $sender->fooddelivery->isChecked() ? 1 : 0;
-        $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
-
-        $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
-        $food['menu'] = $sender->foodmenu->isChecked() ? 1 : 0;
-        $food['name'] = $sender->goodname->getText() ;
-        $food['address'] = $sender->goodaddress->getText() ;
-        $food['phone'] = $sender->goodphone->getText() ;
-        $food['timepn'] = $sender->timepn->getText() ;
-        $food['timesa'] = $sender->timesa->getText() ;
-        $food['timesu'] = $sender->timesu->getText() ;
-        $food['foodbasemenu'] = $sender->foodbasemenu->getValue() ;
-        $food['foodbasemenuname'] = $sender->foodbasemenu->getValueName() ;
-        $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
-        $food['foodmenu3'] = $sender->foodmenu3->getValue() ;
-        $food['foodmenu4'] = $sender->foodmenu4->getValue() ;
-        $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
-        $food['foodmenuname3'] = $sender->foodmenu3->getValueName() ;
-        $food['foodmenuname4'] = $sender->foodmenu4->getValueName() ;
-
-        System::setOptions("food", $food);
-        $this->setSuccess('Збережено');
-    }
-
+   
 
     public function OnAddSaleSource($sender) {
         $ls = new \App\DataItem();

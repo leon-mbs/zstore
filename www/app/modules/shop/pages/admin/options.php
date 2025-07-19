@@ -57,7 +57,7 @@ class Options extends \App\Pages\Base
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
 
-        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), 0 ));
+        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(2), 0 ));
         $this->shop->add(new DropDownChoice('defstore',\App\Entity\Store::getList(),  0));
     
 
