@@ -476,16 +476,15 @@ class Document extends \ZCL\DB\Entity
 
         $oldstate = $this->state;
         $this->state = $state;
-        if($state != $oldstate ) {
-            $this->insertLog($state);
-        }
-
+     
 
         $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
 
         if ($oldstate != $state) {
+            $this->insertLog($state);            
+            
             $doc = $this->cast();
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);

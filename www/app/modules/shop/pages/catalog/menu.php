@@ -89,7 +89,7 @@ class Menu extends \Zippy\Html\WebPage
                 $it=array(
                     'itemname'=>$item->itemname ,
                     'imglink'=>$item->getImageUrl(true) ,
-                    'desc'=> substr($item->description, 0, 200) ,
+                    'desc'=>  $item->description ,
                     'price'=>$item->getPrice($options['pricetype']) ,
                     'priceout'=>false ,
                     'customsize'=> $item->customsize 

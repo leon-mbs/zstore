@@ -27,18 +27,14 @@ class Invoice extends \App\Entity\Doc\Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
-                $detail[] = array("no"         => $i++,
-                                  "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
-                                  "tovar_code" => $item->item_code,
-                                  "quantity"   => H::fqty($item->quantity),
-                                  "price"      => H::fa($item->price),
-                                  "msr"        => $item->msr,
-                                  "amount"     => H::fa($item->quantity * $item->price)
-                );
-            }
+              $detail[] = array("no"         => $i++,
+                              "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
+                              "tovar_code" => $item->item_code,
+                              "quantity"   => H::fqty($item->quantity),
+                              "price"      => H::fa($item->price),
+                              "msr"        => $item->msr,
+                              "amount"     => H::fa($item->quantity * $item->price)
+              );
         }
 
         $totalstr =  \App\Util::money2str_ua($this->payamount);

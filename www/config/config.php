@@ -4,7 +4,7 @@
 $_config = array('common'=>[],'db'=>[],'smtp'=>[]) ;
 
 $_config['common']['timezone'] = 'Europe/Kiev'  ;
-$_config['common']['loglevel'] = 100  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
+
 
 //соединение с  сервером  БД
 $_config['db']['host'] = 'localhost:3306'  ;
