@@ -1342,6 +1342,7 @@ class Helper
         $conn = \ZDB\DB::getConnect();
 
         $vdb=\App\System::getOptions('version',true ) ;
+        $common=\App\System::getOptions('common' ) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
@@ -1501,10 +1502,22 @@ class Helper
         }
             
         $migration6142 = \App\Helper::getKeyVal('migration6142'); 
-        if($migration6142 != "done"  ) {
+        if($migration6142 != "done" && version_compare($vdb,'6.14.2')>=0  ) {
             Helper::log("Міграція 6142");
          
-            \App\Helper::setKeyVal('migration6118', "done");           
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
+            if($cnt > 0){
+               $common['usefood'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
+            if($cnt > 0){
+               $common['useprod'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            Session::getSession()->menu = [];     
+         
+            \App\Helper::setKeyVal('migration6142', "done");           
         
        
         }       

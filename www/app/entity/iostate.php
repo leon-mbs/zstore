@@ -12,7 +12,7 @@ namespace App\Entity;
 class IOState extends \ZCL\DB\Entity
 {
     //доход платежи
-    public const TYPE_BASE_INCOME  = 1;     //доходы основной  деятельности (продажа товаров, продукции, услуг)
+    public const TYPE_BASE_INCOME  = 1;     //доходы реализации товаров  услцн
     public const TYPE_OTHER_INCOME = 2;     //прочие доходы
     public const TYPE_FIN          = 3;     //доходы от  фин.  деятельности
  //   public const TYPE_CANCEL_CUST  = 5;     //отмена  платежа  покупки
@@ -23,7 +23,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
  
     //расход платежи
-    public const TYPE_BASE_OUTCOME     = 50;    //  расходы  основной  деятельности (закупка ТМЦ )
+    public const TYPE_BASE_OUTCOME     = 50;    // закупка ТМЦ  услуг
     public const TYPE_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     public const TYPE_ADMIN_OUTCOME    = 52;    //административные  расходы
     public const TYPE_SALE_OUTCOME     = 53;    //расходы на сбыт
@@ -100,7 +100,7 @@ class IOState extends \ZCL\DB\Entity
     public static function getTypeList($type = 0) {
         $list = array();
         if ($type == 1 ||   $type == 0  ) {
-            $list[self::TYPE_BASE_INCOME] = "Доходи основної діяльності";
+            $list[self::TYPE_BASE_INCOME] = "Доходи реалізації";
 
             $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
           //  $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
@@ -109,7 +109,7 @@ class IOState extends \ZCL\DB\Entity
         }
 
         if ($type == 2 ||   $type == 0  ) {
-            $list[self::TYPE_BASE_OUTCOME] = "Витрати основної діяльності";
+            $list[self::TYPE_BASE_OUTCOME] = "Витрати на закупку";
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";

@@ -6,6 +6,7 @@ use App\Entity\Employee;
 use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
+use App\Session;
 use App\Application as App;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\Form;
@@ -120,6 +121,9 @@ class Admin extends \App\Pages\Base
         
         
         System::setOptions("common",$options) ;
+        
+        Session::getSession()->menu = [];       
+        
         $this->setSuccess('Збережено')  ;  
         App::Redirect("\\App\\Pages\\Admin");
               
@@ -134,7 +138,10 @@ class Admin extends \App\Pages\Base
 
 
         System::setOptions("common",$options) ;
-        $this->setSuccess('Збережено')  ;        
+        Session::getSession()->menu = [];       
+        
+        $this->setSuccess('Збережено')  ; 
+        App::Redirect("\\App\\Pages\\Admin");               
     }
     public function sendEmail($sender) {
         $email = trim( $this->sendform->email->getText() );

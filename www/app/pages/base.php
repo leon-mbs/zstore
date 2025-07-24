@@ -26,7 +26,11 @@ class Base extends \Zippy\Html\WebPage
             return;
         }
       
-        
+        //миграция  данных
+        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
+            Helper::migration() ;
+            Session::getSession()->migrationcheck = true;
+        }       
       //  $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
@@ -244,15 +248,7 @@ class Base extends \Zippy\Html\WebPage
               }         
         }
         
- 
-
-        //миграция  данных
-        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
-            Helper::migration() ;
-            Session::getSession()->migrationcheck = true;
-        }
-       
-       
+          
     
     }
 
