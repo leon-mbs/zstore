@@ -87,7 +87,7 @@ class ProductView extends Base
         $form->onSubmit($this, 'OnComment');
         $form->add(new TextInput('starnick'));
         $form->add(new TextInput('rating'));
-        $form->add(new TextArea('comment'));
+        $form->add(new TextArea('starcomment'));
         $form->add(new TextInput('capchacode'));
         $form->add(new \ZCL\Captcha\Captcha('capcha'));
 

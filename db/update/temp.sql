@@ -1,5 +1,5 @@
 
-? ALTER TABLE saltypes ADD isedited  tinyint(1)   DEFAULT 0;
+? ALTER TABLE saltypes ADD detail  TEXT null ;
 
 
 
