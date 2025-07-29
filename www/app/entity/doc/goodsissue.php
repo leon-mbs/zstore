@@ -216,6 +216,7 @@ class GoodsIssue extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
+               
                 $sc->tag=Entry::TAG_SELL;
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;

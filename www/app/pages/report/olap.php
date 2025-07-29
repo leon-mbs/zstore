@@ -87,10 +87,11 @@ class OLAP extends \App\Pages\Base
 
         }
 
-        if($type==4) {
+        if($type==4 || $type==7 ) {
             $dim['service_name'] = "Послуга";
 
         }
+      
 
         if($type==5) {
             $dim['mf_name'] = "Рахунок";
@@ -250,6 +251,9 @@ class OLAP extends \App\Pages\Base
         if($type==5) {
             $data = "sum(amount) "  ;
         }
+        if($type==7) {
+            $data = "sum(outprice-cost) "  ;
+        }
         if($type==6) {
             $data = "count(document_id) "  ;
         }
@@ -386,6 +390,7 @@ class OLAP extends \App\Pages\Base
                
                 COALESCE(uv.username ,'Н/Д') AS username,
                 COALESCE(ev.partion,0) AS partion, 
+      
                 COALESCE(ev.outprice,0) AS outprice   
                 FROM entrylist_view ev   
                 JOIN documents dv ON ev.document_id = dv.document_id
@@ -400,7 +405,7 @@ class OLAP extends \App\Pages\Base
                 ";
         }
 
-        if($type == 4) {   //услуга
+        if($type == 4 || $type == 7) {   //услуга
 
 
 
@@ -410,7 +415,8 @@ class OLAP extends \App\Pages\Base
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
                 
                 COALESCE(uv.username ,'Н/Д') AS username,
-                COALESCE(ev.outprice,0) AS outprice   
+                COALESCE(ev.outprice,0) AS outprice,   
+                COALESCE(ev.cost,0) AS cost    
                 FROM entrylist_view ev   
                 JOIN documents dv ON ev.document_id = dv.document_id
                 JOIN services ss ON ev.service_id = ss.service_id
@@ -507,6 +513,9 @@ class OLAP extends \App\Pages\Base
         }
 
         if($type== 4) {
+            $_cols[] = 'service_name';
+        }
+        if($type== 7) {
             $_cols[] = 'service_name';
         }
 

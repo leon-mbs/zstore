@@ -210,7 +210,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 4 || $type == 7) {    //по сервисам
             $sql = "
-         select s.service_name as itemname,count(d.document_id) as docs, sum(0-e.quantity) as qty, sum(0-e.outprice*e.quantity) as summa    ,0 as navar
+         select s.service_name as itemname,count(d.document_id) as docs,   sum(0-e.quantity*e.cost) as summa, sum(0-(e.outprice - e.cost)*e.quantity)  as navar
               from entrylist_view  e
 
               join services s on e.service_id = s.service_id
@@ -387,7 +387,7 @@ class Outcome extends \App\Pages\Base
                     "code"      => $row['item_code']??'',
                     "name"      => $row['itemname'],
                     "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
-                    "qty"       => H::fqty($row['qty']),
+                    "qty"       => H::fqty($row['qty']??0),
                     "navar"     => H::fa($row['navar']),
                     "navarsign" => $row['navar'] > 0,
                     "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa'] + $row['navar'] ), 1, '.', '') : "",

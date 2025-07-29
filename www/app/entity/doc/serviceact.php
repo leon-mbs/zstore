@@ -127,6 +127,7 @@ class ServiceAct extends Document
                 $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
                 $sc->setService($ser->service_id);
 
+                $sc->cost= $ser->cost;
                 $sc->setOutPrice($ser->price * $k);
 
 

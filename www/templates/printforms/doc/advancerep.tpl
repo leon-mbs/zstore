@@ -18,7 +18,18 @@
     </tr>
  
     {{/storeemp}}    
- 
+    {{#emp}}
+    <tr>
+        <td colspan="6">
+            <b>Вiд спiвробiтника:</b> {{emp}}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <b>Сума:</b> {{examount}}
+        </td>
+    </tr>
+    {{/emp}}
 
 
     <tr style="font-weight: bolder;">

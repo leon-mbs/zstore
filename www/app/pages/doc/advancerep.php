@@ -23,7 +23,7 @@ use Zippy\Html\Link\SubmitLink;
 /**
  * Страница  ввода оприходование товаров
  */
-class IncomeItem extends \App\Pages\Base
+class AdvanceRep extends \App\Pages\Base
 {
     public $_itemlist  = array();
     private $_doc;
@@ -52,7 +52,9 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
- 
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
+        $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new TextInput('examount'));
        
         $this->add(new Form('editdetail'))->setVisible(false);
 
@@ -86,7 +88,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editsnitem->add(new TextArea('editsn'));
         $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
         $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
-        $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
+       $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
 
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
@@ -99,18 +101,21 @@ class IncomeItem extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
+            $this->docform->examount->setText($this->_doc->headerdata['examount']);
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
         } else {
-            $this->_doc = Document::create('IncomeItem');
+            $this->_doc = Document::create('AdvanceRep');
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'OutcomeItem') {
+                    if ($basedoc->meta_name == ' ') {
 
 
                         foreach ($basedoc->unpackDetails('detaildata') as $it) {
@@ -133,7 +138,7 @@ class IncomeItem extends \App\Pages\Base
 
         $this->docform->detail->Reload();
         $this->calcTotal();
-        
+        $this->OnEmp($this->docform->emp);
     }
 
     public function detailOnRow($row) {
@@ -273,9 +278,13 @@ class IncomeItem extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
-       
+        $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
+        $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
+
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -498,7 +507,15 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
- 
+    public function OnEmp($sender) {
+        if ($sender->getValue() > 0) {
+            $this->docform->examount->setVisible(true);
+            $this->docform->exmf->setVisible(true);
+        } else {
+            $this->docform->examount->setVisible(false);
+            $this->docform->exmf->setVisible(false);
+        }
+    }
     //добавление нового товара
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);

@@ -316,7 +316,8 @@ class POSCheck extends Document
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
             $sc->setOutPrice( $ser->price * $k);
-
+            $sc->cost= $ser->cost;
+        
             $sc->save();
         }
  

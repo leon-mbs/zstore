@@ -43,6 +43,7 @@ class Update extends \App\Pages\Base
       
  
         $this->_sql['6.13.0']='update6130to6140.sql';
+        $this->_sql['6.14.0']='update6140to6150.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -111,9 +112,10 @@ class Update extends \App\Pages\Base
         foreach($data['changelog'] as $item )  {
            $this->_tvars['list'][] = array('item'=>$item)  ;
         }
-            
-        if($na[1] !=$ca[1])  {
-             $va="{$na[0]}.{$na[1]}.0"; //если сменилась  средняя  цифра делаем сначала полное  обновление
+              
+        //если сменилась  средняя  цифра делаем сначала полное  обновление
+        if(  ($na[0] == $ca[0] ) &&( $na[1] !=$ca[1]) )  {
+             $va="{$na[0]}.{$na[1]}.0"; 
         }
         $this->_tvars['archive']  = $this->_baseurl . "update-{$va}.zip"   ;
         
