@@ -42,6 +42,7 @@ class IOState extends \ZCL\DB\Entity
  //   public const TYPE_OUTEQ            = 66;    // списание ОС
  //   public const TYPE_AMOR             = 67;    // амортизация ОС
      public const TYPE_PROD             = 68;    // прямые производственные  затраты
+     public const TYPE_ADVANCEREP       = 69;    // Подотчет сотрудниуц
 
     //внебалансовые расходы (для  статиcтики)   
     public const TYPE_LOST             = 80;     //потери при инвентаризации
@@ -106,7 +107,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
           //  $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
             $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
-            $list[self::TYPE_INEQ] = "Інші доходи";
+         //  $list[self::TYPE_INEQ] = "Інші доходи";
         }
 
         if ($type == 2 ||   $type == 0  ) {
@@ -127,6 +128,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
             $list[self::TYPE_OUTSERVICE] = "Витрати на послуги";
+            $list[self::TYPE_ADVANCEREP] = "Підзвіт співробітнику";
         }
 
   

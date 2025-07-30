@@ -224,9 +224,10 @@ class IncomeMoney extends \App\Pages\Base
         }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
-        }
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_OTHER_INCOME) ;            
+       }
        
-        if ($sender->getValue() == 0 || $sender->getValue() == 3 ) {
+        if ($sender->getValue() == 0   ) {
             $this->docform->mtype->setVisible(true);
             $this->docform->mtype->setValue(0) ;            
         }

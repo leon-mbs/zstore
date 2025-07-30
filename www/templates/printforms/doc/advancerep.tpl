@@ -6,32 +6,45 @@
     </tr>
 
     <tr>
-        <td colspan="6">
-            <b>На склад:</b> {{to}}
+        <td><b>На склад:</b> </td> 
+        <td colspan="5">
+             {{to}}
         </td>
     </tr>
    {{#storeemp}}
     <tr>
-        <td colspan="6">
-            <b>На спiвробiтника:</b> {{storeemp}}
+         <td><b>На спiвробiтника:</b> </td> 
+       <td colspan="5">
+             {{storeemp}}
         </td>
     </tr>
  
     {{/storeemp}}    
-    {{#emp}}
+  
     <tr>
-        <td colspan="6">
-            <b>Вiд спiвробiтника:</b> {{emp}}
+          <td><b>Вiд спiвробiтника:</b> </td> 
+      <td colspan="5">
+             {{emp}}
         </td>
     </tr>
+    {{#examount}}
     <tr>
-        <td colspan="6">
-            <b>Сума:</b> {{examount}}
+         <td><b>Сума повернення:</b> </td> 
+       <td colspan="5">
+             {{examount}}
         </td>
     </tr>
-    {{/emp}}
+   {{/examount}}  
+  {{#spentamount}}
+    <tr>
+         <td><b>Сума витрат:</b> </td> 
+       <td colspan="5">
+             {{spentamount}}
+        </td>
+    </tr>
+   {{/spentamount}}  
 
-
+    {{#isdetail}}  
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
@@ -62,6 +75,10 @@
         <td style="border-top:1px #000 solid;" colspan="6" align="right">На суму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
+    
+    {{/isdetail}}  
+    
+    
     <tr>
         <td colspan="6">
             {{{notes}}}

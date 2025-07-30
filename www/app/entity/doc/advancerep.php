@@ -26,35 +26,47 @@ class AdvanceRep extends Document
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
 
-
-
+  
         }
  
         
+        $examount=doubleval($this->headerdata['examount']);
+        $spentamount=doubleval($this->headerdata['spentamount']);
         
-        if ($this->headerdata['examount'] > 0) {
+        if ($examount > 0) {
          
-            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], $this->notes);
+            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $examount, $this->headerdata['exmf'], $this->notes);
          
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_ADVANCEREP);
+
+        }
+
+      
+        if ($spentamount > 0) {
+         
+            \App\Entity\IOState::addIOState($this->document_id, $spentamount, \App\Entity\IOState::TYPE_ADVANCEREP);
+            \App\Entity\IOState::addIOState($this->document_id, 0-$spentamount,, \App\Entity\IOState::TYPE_COMMON_OUTCOME);
 
         }
 
 
-        if ($this->headerdata['emp'] > 0) {
+ 
             //авансовый    отчет
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::OUTCOME_TO_MF;
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = $amount;
-            if ($this->headerdata['examount'] > 0) {
-                $ua->amount += $this->headerdata['examount'];
+            if ($examount > 0) {
+                $ua->amount += $examount;
+            }
+            if ($spentamount > 0) {
+                $ua->amount += $spentamount;
             }
             if ($ua->amount > 0) {
                 $ua->save();
             }
-        }
+        
 
         return true;
     }
@@ -80,23 +92,28 @@ class AdvanceRep extends Document
 
         $header = array(
             "_detail"         => $detail,
+            "isdetail"        => count($detail)>0,
             'date'            => H::fd($this->document_date),
-            "total"           => H::fa($this->amount),
+            "total"           => H::fa($this->headerdata["total"]),
             "to"              => $this->headerdata["storename"],
-            "emp"             => false,
+            "emp"             => $this->headerdata["empname"],
             "storeemp"             => false,
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
-        if ($this->headerdata["emp"] > 0 && $this->headerdata['examount']) {
-            $header['emp'] = $this->headerdata["empname"];
+        $header['spentamount'] = false;
+        if ($this->headerdata["spentamount"] > 0  ) {
+            $header['spentamount'] = H::fa($this->headerdata["spentamount"]);
+        }
+        $header['examount'] = false;
+        if ($this->headerdata["examount"] > 0  ) {
             $header['examount'] = H::fa($this->headerdata["examount"]);
         }
         if ($this->headerdata["storeemp"] > 0  ) {
             $header['storeemp'] = $this->headerdata["storeempname"];
         }
 
-        $report = new \App\Report('doc/incomeitem.tpl');
+        $report = new \App\Report('doc/advancerep.tpl');
 
         $html = $report->generate($header);
 
@@ -104,7 +121,7 @@ class AdvanceRep extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ОТ-000000';
+        return 'АЗ-000000';
     }
 
 }

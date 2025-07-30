@@ -25,14 +25,12 @@ class OutcomeMoney extends Document
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
             
         }  
-             
- 
-
-      $this->DoBalans() ;
+      
+        $this->DoBalans() ;
 
         if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
             $ua = new \App\Entity\EmpAcc();
-            $ua->optype = \App\Entity\EmpAcc::INCOME_FROM_MF;
+            $ua->optype = \App\Entity\EmpAcc::ADVANCE_ACC;
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = 0 - $this->amount;

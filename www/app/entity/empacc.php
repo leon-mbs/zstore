@@ -16,13 +16,13 @@ class EmpAcc extends \ZCL\DB\Entity
     public const  OUTCOME_TO_MF  = 2; //  перечисление на  счет
     public const  SALARY         = 3; //  начисления  зарплаты
     public const  SALARY_PAY     = 4; //  выплата  зарплаты
-    public const  ADVANCE_ACC    = 5; // авансовый отчет
-
+   
     //забалансовые сумы
-    public const  ADVANCE  = 101; // аванс
-    public const  BONUS    = 102; // бонусы
-    public const  FINE     = 103; // штрафы
-    public const  PRICE    = 104; // сдельная оплата
+    public const  ADVANCE        = 101; // аванс
+    public const  BONUS          = 102; // бонусы
+    public const  FINE           = 103; // штрафы
+    public const  PRICE          = 104; // сдельная оплата
+    public const  ADVANCE_ACC    = 105; // авансовый отчет
 
 
     protected function init() {

@@ -38,7 +38,7 @@ class IncomeMoney extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = $this->amount;
-            $ua->save();
+         //   $ua->save();  
 
         }
 

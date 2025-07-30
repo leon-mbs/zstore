@@ -52,9 +52,10 @@ class AdvanceRep extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
-        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));
+        $this->docform->add(new TextInput('spentamount'));
        
         $this->add(new Form('editdetail'))->setVisible(false);
 
@@ -88,7 +89,7 @@ class AdvanceRep extends \App\Pages\Base
         $this->editsnitem->add(new TextArea('editsn'));
         $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
         $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
-       $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
+        $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
 
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
@@ -105,6 +106,8 @@ class AdvanceRep extends \App\Pages\Base
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
             $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
             $this->docform->examount->setText($this->_doc->headerdata['examount']);
+            $this->docform->spentamount->setText($this->_doc->headerdata['spentamount']);
+            $this->docform->total->setText($this->_doc->headerdata['total']);
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -115,18 +118,7 @@ class AdvanceRep extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == ' ') {
-
-
-                        foreach ($basedoc->unpackDetails('detaildata') as $it) {
-
-                            //последняя партия
-                            $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$basedoc->headerdata['store'] }", 'stock_id desc');
-                            $it->price = $stock->partion;
-
-                            $this->_itemlist[] = $it;
-                        }
-                    }
+                   
                 }
             }
         }
@@ -138,7 +130,7 @@ class AdvanceRep extends \App\Pages\Base
 
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->OnEmp($this->docform->emp);
+       
     }
 
     public function detailOnRow($row) {
@@ -284,12 +276,14 @@ class AdvanceRep extends \App\Pages\Base
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
         $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
         $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
+        $this->_doc->headerdata['spentamount'] = $this->docform->spentamount->getText();
+        $this->_doc->headerdata['total'] = $this->docform->total->getText();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-        $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->amount =  doubleval( $this->docform->total->getText() ) + doubleval( $this->_doc->headerdata['examount'])+ doubleval( $this->_doc->headerdata['spentamount'] );
         if ($this->checkForm() == false) {
             return;
         }
@@ -365,12 +359,18 @@ class AdvanceRep extends \App\Pages\Base
                 $this->setError('Не створено унікальный номер документа');
             }
         }
-        if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+                                                           
+
+        if (($this->docform->store->getValue() > 0) == false &&  doubleval( $this->docform->examount->getText() ) > 0) {
+            $this->setError("Не обрано касу");
         }
 
-        if (($this->docform->store->getValue() > 0) == false) {
+        if (($this->docform->exmf->getValue() > 0) == false && count($this->_itemlist) > 0) {
             $this->setError("Не обрано склад");
+        }
+
+        if (($this->docform->emp->getValue() > 0) == false  ) {
+            $this->setError("Не обрано співробітника");
         }
 
 
@@ -394,6 +394,7 @@ class AdvanceRep extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
+   
     public function onOpensn($sender) {
         $this->docform->setVisible(false) ;
         $this->editsnitem->setVisible(true) ;
@@ -405,7 +406,7 @@ class AdvanceRep extends \App\Pages\Base
 
     } 
     
-   public function savesnOnClick($sender) {
+    public function savesnOnClick($sender) {
         $common = \App\System::getOptions("common");
 
         $id = $this->editsnitem->editsnitemname->getKey();
@@ -507,15 +508,7 @@ class AdvanceRep extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
-    public function OnEmp($sender) {
-        if ($sender->getValue() > 0) {
-            $this->docform->examount->setVisible(true);
-            $this->docform->exmf->setVisible(true);
-        } else {
-            $this->docform->examount->setVisible(false);
-            $this->docform->exmf->setVisible(false);
-        }
-    }
+ 
     //добавление нового товара
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
