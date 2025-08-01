@@ -45,7 +45,7 @@ class AdvanceRep extends Document
         if ($spentamount > 0) {
          
             \App\Entity\IOState::addIOState($this->document_id, $spentamount, \App\Entity\IOState::TYPE_ADVANCEREP);
-            \App\Entity\IOState::addIOState($this->document_id, 0-$spentamount,, \App\Entity\IOState::TYPE_COMMON_OUTCOME);
+            \App\Entity\IOState::addIOState($this->document_id, 0-$spentamount,  \App\Entity\IOState::TYPE_COMMON_OUTCOME);
 
         }
 

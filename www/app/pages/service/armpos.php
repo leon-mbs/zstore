@@ -761,7 +761,7 @@ class ARMPos extends \App\Pages\Base
         $this->_rowid = -1;
         $this->_editrow =  false;
         $this->setSuccess("Позиція додана");
-        $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;        
+     //   $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;        
 
     }
 

@@ -14,6 +14,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -75,6 +76,7 @@ class ItemList extends \App\Pages\Base
         $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
         
         $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+        $this->filter->add(new CheckBox('searchterm' ));
         
         $this->add(new Panel('itempanel'));
 
@@ -623,7 +625,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         } else {
             $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  {$wemp} ) ";
         }
-        
+        if ($form->searchterm->isChecked()  ) {   
+            $where = $where . " and item_id in (select item_id from store_stock where sdate is not null and sdate < CURDATE()  ) ";
+            
+        }      
         if($sqty==0) {
            $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str} ) >0 ";
         }
@@ -710,7 +715,10 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         if ($store > 0) {
             $where = $where . " and   store_id={$store}  ";
         }
-          
+        if ($form->searchterm->isChecked()  ) {   
+             $where = $where . "   and sdate is not null and sdate < CURDATE()   ";
+            
+        }         
         $emp = $form->searchemp->getValue();
         if ($emp > 0) {
             $where = $where . " and  emp_id={$emp}  ";

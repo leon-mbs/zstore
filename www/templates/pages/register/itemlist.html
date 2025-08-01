@@ -97,8 +97,15 @@
                           </div>
                        </div>
                       </div>                      
-                      
-                          <div class="col-auto">
+                      {{#usesnumberdate}}
+                       <div class="col-auto">
+                             <div class="  form-check">
+                                <input zippy="searchterm" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="searchterm">просроченi</label>
+                             </div>
+                      </div>
+                        {{/usesnumberdate}}
+                       <div class="col-auto">
                       <input class="btn btn-outline-success  " type="submit" value="ОК">
                       </div>
                     
