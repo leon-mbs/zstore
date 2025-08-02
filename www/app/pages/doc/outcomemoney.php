@@ -217,11 +217,11 @@ class OutcomeMoney extends \App\Pages\Base
         if ($sender->getValue() == 1 || $sender->getValue() == 2) {
             $this->docform->contract->setVisible(true);
             $this->docform->customer->setVisible(true);
-            $this->docform->mtype->вsetValue(\App\Entity\IOState::TYPE_BASE_OUTCOME) ;            
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_OUTCOME) ;            
          }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
-            $this->docform->mtype->вsetValue(\App\Entity\IOState::TYPE_ADVANCEREP) ;            
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_ADVANCEREP) ;            
         }
         if ($sender->getValue() == 0   ) {
             $this->docform->mtype->setVisible(true);

@@ -463,9 +463,18 @@ class Helper
      *
      * @param mixed $msg
      */
-    public static function log($msg) {
+    public static function logdebug($msg) {
         global $logger;
         $logger->debug($msg);
+    }
+    /**
+     * логгирование
+     *
+     * @param mixed $msg
+     */
+    public static function log($msg) {
+        global $logger;
+        $logger->info($msg);
     }
 
     /**

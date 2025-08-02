@@ -12,7 +12,7 @@ CREATE TABLE branches (
 CREATE TABLE contracts (
   contract_id int(11) NOT NULL AUTO_INCREMENT,
   customer_id int(11) DEFAULT '0',
-  firm_id int(11) DEFAULT '0',
+  
   createdon date NOT NULL,
   contract_number varchar(64) NOT NULL,
   disabled tinyint(1) DEFAULT '0',
@@ -96,7 +96,7 @@ CREATE TABLE documents (
   payed decimal(11, 2) DEFAULT '0.00',
   branch_id int(11) DEFAULT '0',
   parent_id bigint(20) DEFAULT '0',
-  firm_id int(11) DEFAULT NULL,
+   
   priority smallint(6) DEFAULT '100',
   lastupdate datetime DEFAULT NULL,
   PRIMARY KEY (document_id),
@@ -289,13 +289,7 @@ CREATE TABLE filesdata (
   UNIQUE KEY file_id (file_id)
 ) ENGINE = MYISAM DEFAULT CHARSET = utf8;
 
-CREATE TABLE firms (
-  firm_id int(11) NOT NULL AUTO_INCREMENT,
-  firm_name varchar(255) NOT NULL,
-  details longtext NOT NULL,
-  disabled tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (firm_id)
-) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+ 
 
 CREATE TABLE images (
   image_id int(11) NOT NULL AUTO_INCREMENT,
@@ -746,23 +740,22 @@ SELECT
   d.parent_id AS parent_id,
   d.branch_id AS branch_id,
   b.branch_name AS branch_name,
-  d.firm_id AS firm_id,
+  
   d.priority AS priority,
-  f.firm_name AS firm_name,
+ 
   d.lastupdate AS lastupdate,
   metadata.meta_name AS meta_name,
   metadata.description AS meta_desc
-FROM (((((documents d
+FROM documents d
   LEFT JOIN users_view u
-    ON ((d.user_id = u.user_id)))
+    ON d.user_id = u.user_id
   LEFT JOIN customers c
-    ON ((d.customer_id = c.customer_id)))
+    ON d.customer_id = c.customer_id
   JOIN metadata
-    ON ((metadata.meta_id = d.meta_id)))
+    ON metadata.meta_id = d.meta_id
   LEFT JOIN branches b
-    ON ((d.branch_id = b.branch_id)))
-  LEFT JOIN firms f
-    ON ((d.firm_id = f.firm_id))) ;
+    ON d.branch_id = b.branch_id ;
+   
     
 CREATE
 VIEW contracts_view
@@ -770,18 +763,16 @@ AS
 SELECT
   co.contract_id AS contract_id,
   co.customer_id AS customer_id,
-  co.firm_id AS firm_id,
+ 
   co.createdon AS createdon,
   co.contract_number AS contract_number,
   co.disabled AS disabled,
   co.details AS details,
-  cu.customer_name AS customer_name,
-  f.firm_name AS firm_name
-FROM ((contracts co
+  cu.customer_name AS customer_name
+
+FROM contracts co
   JOIN customers cu
-    ON ((co.customer_id = cu.customer_id)))
-  LEFT JOIN firms f
-    ON ((co.firm_id = f.firm_id))) ;
+    ON co.customer_id = cu.customer_id  ;
 
  
 CREATE VIEW custitems_view
@@ -1458,7 +1449,7 @@ CREATE TABLE shop_articles (
   
   
   
-INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
+INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', 'admin', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
 INSERT INTO roles (rolename, acl) VALUES( 'admins', 'a:11:{s:13:\"noshowpartion\";N;s:15:\"showotherstores\";N;s:7:\"aclview\";N;s:7:\"acledit\";N;s:6:\"aclexe\";N;s:9:\"aclcancel\";N;s:8:\"aclstate\";N;s:9:\"acldelete\";N;s:7:\"widgets\";N;s:7:\"modules\";N;s:9:\"smartmenu\";s:3:\"8,2\";}');
 UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin' ;
 
@@ -1466,7 +1457,6 @@ UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' 
 INSERT INTO stores (  storename, description) VALUES(  'Основний склад', '');
 INSERT INTO mfund (  mf_name, description, branch_id, detail) VALUES( 'Каса', '', NULL, '<detail><beznal>0</beznal><btran></btran><bank><![CDATA[]]></bank><bankacc><![CDATA[]]></bankacc></detail>');
 
-INSERT INTO firms (  firm_name, details, disabled) VALUES(  'Наша фiрма', '', 0);
 INSERT INTO customers ( customer_name, detail, email, phone, status, city, leadstatus, leadsource, createdon) VALUES( 'Фiз. особа', '<detail><code></code><discount></discount><bonus></bonus><type>0</type><fromlead>0</fromlead><jurid></jurid><shopcust_id></shopcust_id><isholding>0</isholding><holding>0</holding><viber></viber><nosubs>1</nosubs><user_id>4</user_id><holding_name><![CDATA[]]></holding_name><address><![CDATA[]]></address><comment><![CDATA[Умовний контрагент (якщо треба когось зазначити)]]></comment></detail>', '', '', 0, '', NULL, NULL, '2021-04-28');
   
   
