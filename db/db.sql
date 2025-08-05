@@ -1578,6 +1578,7 @@ INSERT INTO options (optname, optvalue) VALUES('version', '6.15.0');
 
 
 
+INSERT INTO keyval  (  keyd,vald)  VALUES ('cron','true');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbalans','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');

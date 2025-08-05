@@ -34,6 +34,7 @@ class Warranty extends Document
                         "notes"           => nl2br($this->notes),
                         "firm_name"       => $this->headerdata["firm_name"],
                         "customer_name"   => $this->headerdata["customer_name"],
+                        "basedon"         => $this->getHD('basedon','')== '' ? false : $this->getHD('basedon'),
                         "document_number" => $this->document_number
         );
 

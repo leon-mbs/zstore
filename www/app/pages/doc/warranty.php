@@ -77,8 +77,8 @@ class Warranty extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    $this->docform->customer->setText($basedoc->headerdata['customer_name']);
-
+                    $this->docform->customer->setText($basedoc->headerdata['customer_name'] ?? '');
+                    $this->_doc->headerdata["basedon"]  = $basedoc->document_number;
                     if ($basedoc->meta_name == 'GoodsIssue') {
                         $this->_doc->customer_id= $basedoc->customer_id;
                         $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];

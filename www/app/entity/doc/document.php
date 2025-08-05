@@ -489,7 +489,7 @@ class Document extends \ZCL\DB\Entity
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
             }
-
+            // подписка  на  смену  статуса
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
         }
 
@@ -1197,7 +1197,6 @@ class Document extends \ZCL\DB\Entity
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
- 
    
 
     /**
