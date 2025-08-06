@@ -11,7 +11,7 @@
          <div class="col-12   ">
                 <h5>Данi компанiї</h5>
            </div>
-  <div class="col-12   ">           
+         <div class="col-12   ">           
            <form zippy="firmform">  
             <div class="row">
                <div class="col-12 col-md-4 col-xl-3 ">
@@ -34,24 +34,19 @@
                                 <label for="city">Мiсто </label>
                                 <input class="form-control" type="text" zippy="city">
                             </div>  
-                    
+       
+                         <div class="form-check">
+                            <input   zippy="isjur" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
+                           
+                        </div>  
+                         <div class="form-check">
+                            <input   zippy="usetax" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="usetax">Загальна  система оподаткувнння </label>
+                           
+                        </div>             
                           
-      <div class="form-group">
-                        <label for="logo">Логотип </label>
-                        <input class="form-control" type="text" zippy="logo">
-                        <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня сайту. Наприклад,
-                            '/upload/logo.png'</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="stamp">Печатка </label>
-                        <input class="form-control" type="text" zippy="stamp">
-                        <small class="form-text text-muted">Шлях до файла зображення вiдносно кореня сайту. </small>
-                    </div>
-                    <div class="form-group">
-                        <label for="sign">Пiдпис (факсимiле) </label>
-                        <input class="form-control" type="text" zippy="sign">
-                        <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту. </small>
-                    </div>                            
+                                  
                                                                                      
          
 
@@ -99,7 +94,25 @@
                           
 
                         </div>   
-                          <div class="col-12   ">                                             
+                          
+              <div class="col-12 col-md-3 col-xl-2 "   >
+                <div class="form-group">
+                        <label for="logo">Логотип </label>
+                        <input class="form-control" type="text" zippy="logo">
+                        <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня сайту. Наприклад,
+                            '/upload/logo.png'</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="stamp">Печатка </label>
+                        <input class="form-control" type="text" zippy="stamp">
+                        <small class="form-text text-muted">Шлях до файла зображення вiдносно кореня сайту. </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="sign">Пiдпис (факсимiле) </label>
+                        <input class="form-control" type="text" zippy="sign">
+                        <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту. </small>
+                    </div>                          
+                  </div>         <div class="col-12   ">                                             
                            
                                <button class="btn btn-success" type="submit">Зберегти</button>
                               
