@@ -8,7 +8,13 @@
             <div class="col-12  ">
 
                 <h3>Журнал прибуткiв та видаткiв</h3>
-
+                  {{^bmode}}
+                 <a zippy="bmode">Режим Книги облiку прибуткiв та видаткiв</a> <small data-label="bmode">Для системи залального оподаткування</small>
+                  {{/bmode}}
+                   {{#bmode}}
+                 <a zippy="jmode">Режим повного журналу</a>
+                  {{/bmode}}
+                 
 
                 <div class="card">
                     <form zippy="filter" class="form-inline ">
@@ -18,7 +24,7 @@
                         <label for="to"> По </label>
                         <input type="text" class="form-control    " zippy="to" style="width:110px">
                       
-
+                          {{^bmode}}
                         <label for="fuser"> автор </label>
                         <select class="form-control mr-2" zippy="fuser">
                             <option value="0">Не обрано</option>
@@ -27,17 +33,30 @@
                         <select class="form-control mr-2" zippy="ftype">
                             <option value="0">Не обрано</option>
                         </select>
-
+                       {{/bmode}}
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
                     </form>
+                    
+                  {{#bmode}}
+                   <form zippy="docform" class="form-inline ">
+
+                        <label for="docnumber"> Документ </label>
+                        <input required="on" placeholder="Номер документа" class="form-control  mr-2  " zippy="docnumber"  >
+                        <input type="submit" class="  btn btn-outline-success  " value="Додати">
+                      
+                    </form>       
+                  {{/bmode}}
+                    
+                    
+                    
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-12 col-md-10 col-xl-8">
+            <div class="col-12 col-md-8 col-xl-6">
 
 
                 <br><a zippy="csv">Експорт у Excel</a>
@@ -47,10 +66,12 @@
 
                         <th>Дата</th>
                         <th>Номер</th>
-                        <th>Сума</th>
-                        <th>Автор</th>
+                        <th class="text-right">Доход</th>
+                        <th class="text-right">Витрата</th>
+                      {{^bmode}}     <th>Автор</th>    {{/bmode}}
                         <th>Тип прибутку/видатку</th>
                         <th></th>
+                        
 
 
                     </tr>
@@ -59,20 +80,25 @@
                         <td class="text-nowrap" zippy="date"></td>
 
                         <td zippy="number"></td>
-                        <td zippy="amount" class="text-right"></td>
-                        <td zippy="username"></td>
+                        <td zippy="amountin"  class="text-right"> </td>
+                        <td zippy="amountout"  class="text-right"> </td>
+                        
+                  {{^bmode}}       <td zippy="username"></td>     {{/bmode}}
                         <td zippy="iotype"></td>
                       
                         <td class="text-nowrap">
 
                             <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-
+                             {{#bmode}} 
+                             &nbsp;&nbsp;
+                             <a zippy="delete" title="Видалити"><i class="fa fa-trash text-danger"></i></a>
+                             {{/bmode}} 
 
                         </td>
 
 
                     </tr>
-
+    
                 </table>
 
                 <div class="col-12 col-lg-8 mb-2" zippy="pag"></div>
@@ -84,12 +110,23 @@
             <div class="col-12">
                 <div zippy="docview"></div>
             </div>
+            <div class="col-12">
+                <table   class="ctanle">
+                  
+                   <tr><td style="width:100px"  >Доход  </td><td class="text-right"><b> {{totalin}} </b> </td></tr>
+                   <tr><td style="width:100px"  >Видатки </td><td class="text-right"><b>{{totalout}}</b></td></tr>
+                   <tr><td style="width:100px"  >Прибуток </td><td class="text-right"><b>{{totaldiff}}</b></td></tr>
+
+                </table>
+            </div>
 
         </div>
 
 
-
-
-
+     <script>
+            function check_delete() {
+                return confirm("Видалити документ?")
+            }
+       </script>
     </body>
 </html>

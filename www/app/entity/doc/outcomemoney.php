@@ -17,10 +17,10 @@ class OutcomeMoney extends Document
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
        
         if ($this->headerdata['detail'] == 1)  {    // возврат  покупателю
-             \App\Entity\IOState::addIOState($this->document_id,   $this->amount,  \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
+             \App\Entity\IOState::addIOState($this->document_id,   0-$this->amount,  \App\Entity\IOState::TYPE_BASE_INCOME, true);
         }  else   
         if ($this->headerdata['detail'] == 2)  {    // оплата  поставщику
-             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_INCOME);
+             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         } else {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
             

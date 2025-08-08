@@ -36,13 +36,13 @@
                             </div>  
        
                          <div class="form-check">
-                            <input   zippy="isjur" type="checkbox" class="form-check-input">
+                            <input  disabled  zippy="isjur" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
                            
                         </div>  
                          <div class="form-check">
-                            <input   zippy="usetax" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="usetax">Загальна  система оподаткувнння </label>
+                            <input  disabled zippy="usends" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="usends">Платник  ПДВ </label>
                            
                         </div>             
                           
@@ -58,38 +58,52 @@
                       {{/vdoc}}           
                   </div>   
                     
-              <div class="col-12 col-md-3 col-xl-2 "   >
+              <div class="col-12 col-md-4 col-xl-3 "   >
                       
                                                                         
-                            <div class="form-group">
-                                <label for="inn">IПН </label>
-                                <input class="form-control" type="text" zippy="inn">
+                            <div class="form-group row">
+                                 <label class="col-3 col-form-label" for="inn">IПН </label>
+                              <div class="col-6">
+                                 <input class="form-control" type="text" zippy="inn">
+                              </div>
                             </div>
                            
-                            <div class="form-group">
-                                <label for="tin">ЄДРПОУ </label>
-                                <input class="form-control" type="text" zippy="tin">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="tin">ЄДРПОУ </label>
+                               <div class="col-6">
+                                 <input class="form-control" type="text" zippy="tin">
+                              </div>
                             </div>
                            
-                            <div class="form-group">
-                                <label for="koatuu">КОАТУУ</label>
-                                <input class="form-control " type="number" zippy="koatuu">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="koatuu">КОАТУУ</label>
+                               <div class="col-6">
+                                    <input class="form-control " type="number" zippy="koatuu">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="kopfg">КОПФГ</label>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="kopfg">КОПФГ</label>
+                               <div class="col-6">
                                 <input class="form-control " type="number" zippy="kopfg">
+                              </div>
                             </div>
-                            <div class="form-group">
-                                <label for="kodu">КОДУ</label>
-                                <input class="form-control " type="number" zippy="kodu">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="kodu">КОДУ</label>
+                                 <div class="col-6">
+                                   <input class="form-control " type="number" zippy="kodu">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="kved">КВЕД</label>
-                                <input class="form-control " zippy="kved">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="kved">КВЕД</label>
+                                  <div class="col-6">
+                                   <input class="form-control " zippy="kved">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="gni">Код ДПІ</label>
-                                <input class="form-control " type="number" zippy="gni">
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="gni">Код ДПІ</label>
+                               <div class="col-6">
+                                 <input class="form-control " type="number" zippy="gni">
+                               </div>
                             </div>
                           
 

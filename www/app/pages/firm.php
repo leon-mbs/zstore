@@ -40,9 +40,7 @@ class Firm extends \App\Pages\Base
         $this->firmform->add(new TextInput('address',$firm['address']));
         $this->firmform->add(new TextInput('city',$firm['address']));
         $this->firmform->add(new TextInput('vdoc',$firm['vdoc']));
-        $this->firmform->add(new CheckBox('isjur',$firm['isjur']??0));
-        $this->firmform->add(new CheckBox('usetax',$firm['usetax']??0));
-
+      
         $this->firmform->add(new TextInput('sign',$firm['sign']));
         $this->firmform->add(new TextInput('stamp',$firm['stamp']));
         $this->firmform->add(new TextInput('logo',$firm['logo']));
@@ -70,9 +68,7 @@ class Firm extends \App\Pages\Base
         $firm['phone'] = $this->firmform->phone->getText();
         $firm['address'] = $this->firmform->address->getText();
         $firm['vdoc'] = $this->firmform->vdoc->getText();
-        $firm['isjur'] = $this->firmform->isjur->isChecked() ? 1:0;
-        $firm['usetax'] = $this->firmform->usetax->isChecked() ? 1:0;
-
+  
         $firm['sign'] = $this->firmform->sign->getText();
         $firm['stamp'] = $this->firmform->stamp->getText();
         $firm['logo'] = $this->firmform->logo->getText();
