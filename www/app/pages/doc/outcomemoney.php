@@ -221,7 +221,7 @@ class OutcomeMoney extends \App\Pages\Base
          }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
-            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_ADVANCEREP) ;            
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_COMMON_OUTCOME) ;            
         }
         if ($sender->getValue() == 0   ) {
             $this->docform->mtype->setVisible(true);

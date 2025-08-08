@@ -194,7 +194,7 @@ class IOState extends \App\Pages\Base
         $i1 = 0;
         $i2 = 0;
         foreach ($list as $doc) {
-            if($doc->amount > 0) {
+            if($doc->iotype < 30)) {
                $i1++; 
                $i =  $i1;
                $sheet =  $sheet1; 
@@ -262,7 +262,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
         }
 
         if($this->page->_tvars['bmode'] ==true) {
-             $where .= " and ( iotype in (1,50,51)  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
+             $where .= " and ( iotype in (1,50,51,54)  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
         } else {
             $author = $this->page->filter->fuser->getValue();
             $type = $this->page->filter->ftype->getValue();

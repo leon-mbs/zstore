@@ -49,7 +49,7 @@ FROM  acc_entry e
 
  
 *****************************    
-? ALTER TABLE saltypes ADD detail  TEXT null ;
+ 
     
     
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 4, 'План рахункiв', 'AccountList', 'Бухоблiк',   0 );

@@ -27,7 +27,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     public const TYPE_ADMIN_OUTCOME    = 52;    //административные  расходы
     public const TYPE_SALE_OUTCOME     = 53;    //расходы на сбыт
- //   public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
+    public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
     public const TYPE_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
     public const TYPE_BILL_RENT        = 56;    //расходы на  аренду
     public const TYPE_OTHER_OUTCOME    = 57;   //прочие расходы
@@ -39,15 +39,15 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_ADS              = 63;    //   расходы на  маркетинг
     public const TYPE_BILL_OUTCOME     = 64;    //расходы на  комуналку
     public const TYPE_OUTSERVICE       = 65;    //расходы на услуги
- //   public const TYPE_OUTEQ            = 66;    // списание ОС
- //   public const TYPE_AMOR             = 67;    // амортизация ОС
+  //  public const TYPE_AMOR             = 67;    // амортизация ОС
      public const TYPE_PROD             = 68;    // прямые производственные  затраты
-     public const TYPE_ADVANCEREP       = 69;    // Подотчет сотрудниуц
+  //   public const TYPE_ADVANCEREP       = 69;    // Подотчет сотрудниу
 
     //внебалансовые расходы (для  статиcтики)   
     public const TYPE_LOST             = 80;     //потери при инвентаризации
     public const TYPE_TRASH            = 81;     //отходы производства
- 
+    public const TYPE_OUTEQ            = 82;    // списание ОС
+  
 
 
     protected function init() {
@@ -116,7 +116,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_PROD] = "Витрати на виробьництво";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-         //   $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
+            $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
             $list[self::TYPE_TAX_OUTCOME] =  "Податки та збори";
             $list[self::TYPE_BILL_OUTCOME] = "Витрати на комуналку";
             $list[self::TYPE_BILL_RENT] = "Витрати на оренду";
@@ -128,7 +128,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
             $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
             $list[self::TYPE_OUTSERVICE] = "Витрати на послуги";
-            $list[self::TYPE_ADVANCEREP] = "Підзвіт співробітнику";
+     //       $list[self::TYPE_ADVANCEREP] = "Підзвіт співробітнику";
         }
 
   
@@ -137,8 +137,8 @@ class IOState extends \ZCL\DB\Entity
         if (  $type == 0) {
          //   $list[self::TYPE_INEQ] = "Ввод ОЗ в  експлуатацію ";
        //     $list[self::TYPE_INVEQ] = "Ремонт та відновлення ОЗ";
-        //    $list[self::TYPE_OUTEQ] = "Списання ОЗ";
-      //      $list[self::TYPE_AMOR] = "Амортизація ОЗ";
+            $list[self::TYPE_OUTEQ] = "Списання ОЗ";
+        //    $list[self::TYPE_AMOR] = "Амортизація ОЗ";
             $list[self::TYPE_LOST] = "Втрати при інвентаризації";
             $list[self::TYPE_TRASH] = "Відходи виробництва";
             $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
