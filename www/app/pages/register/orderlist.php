@@ -606,12 +606,12 @@ class OrderList extends \App\Pages\Base
 
             //на  складе
             $ait['citemsstore']  =  array();
-            $ait['toco']  =  "addItemToCO([{$it->item_id}])";
-
+            $onstores=0;
             foreach($it->getQuantityAllStores( ) as $s=>$q) {
                 
                 if(0 < doubleval($q)) {
                     $ait['citemsstore'][] = array('itstore'=>$stl[$s],'itqty'=>H::fqty($q));
+                    $onstores += $q;
                 }
             }
             //у  поставщика
@@ -665,7 +665,12 @@ class OrderList extends \App\Pages\Base
                
             }
             
-           
+            $need=$it->quantity - $onstores;
+            if($need >0) {
+               $ait['toco']  =  "addItemToCO({$it->item_id},{$need})";
+            } else {
+               $ait['toco']  =  "addItemToCO({$it->item_id})";                
+            }
 
 
             $this->_tvars['citems'][]=$ait;

@@ -530,7 +530,8 @@ class Base extends \Zippy\Html\WebPage
     public function addItemToCO($args, $post=null) {
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
-            $d = \App\Entity\Doc\Document::load($e->document_id)  ;
+ 
+            $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
 
             if($d == null) {
                 return "По  даному  ТМЦ  закупок не  було";

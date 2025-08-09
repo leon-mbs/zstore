@@ -1242,8 +1242,8 @@
         }
         
        //ТМЦ в закупку
-       function addItemToCO(id){
-                callPageMethod('addItemToCO',[id],null,(data)=> 
+       function addItemToCO(id,qty=0){
+                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {
