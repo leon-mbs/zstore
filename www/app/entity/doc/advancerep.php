@@ -133,5 +133,9 @@ class AdvanceRep extends Document
     protected function getNumberTemplate() {
         return 'АЗ-000000';
     }
-
+    public   function DoAcc() {
+        parent:: DoAcc() ;
+      
+    } 
+ 
 }

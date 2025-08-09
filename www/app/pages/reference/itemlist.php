@@ -153,7 +153,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Image('editimage' ));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
-        $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes(),Item::TYPE_TOVAR));
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
 
 

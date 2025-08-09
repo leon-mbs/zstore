@@ -621,6 +621,27 @@ class Item extends \ZCL\DB\Entity
 
         $cnt = $conn->GetOne($sql);
         return $cnt;
+    }  
+    
+    
+    //количество  по  складам
+    public function getQuantityAllStores() {
+        $cstr = \App\ACL::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "    store_id in ({$cstr})  and   ";
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $where = "   {$cstr}  item_id = {$this->item_id} ";
+    
+       
+        $sql = "  select coalesce(sum(qty),0) as totqty, store_id  from  store_stock_view where ". $where ."  group by store_id ";
+       
+        $ret=[];
+        foreach($conn->Execute($sql) as $r) {
+          $ret[$r['store_id']]= $r['totqty'];
+        }
+        return $ret;
     }
 
     /**

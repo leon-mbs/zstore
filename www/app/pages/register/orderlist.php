@@ -576,6 +576,9 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $options = System::getOptions('common');
+        
+        
         $this->_doc = Document::load($this->_doc->document_id); 
           
         $this->_doc = $this->_doc->cast();
@@ -595,20 +598,23 @@ class OrderList extends \App\Pages\Base
         foreach($conn->Execute("select store_id,storename from stores") as $row) {
             $stl[$row['store_id']]=$row['storename'];
         }
-
-        $this->_tvars['citems'] = array();
+        $this->_tvars['isciprod']=false;
+        $this->_tvars['sitems'] = [];
+        $this->_tvars['citems'] = [];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
 
+            //на  складе
             $ait['citemsstore']  =  array();
             $ait['toco']  =  "addItemToCO([{$it->item_id}])";
 
-            foreach($stl as $k=>$v) {
-                $qty = $it->getQuantity($k);
-                if(0 < doubleval($qty)) {
-                    $ait['citemsstore'][] = array('itstore'=>$v,'itqty'=>H::fqty($qty));
+            foreach($it->getQuantityAllStores( ) as $s=>$q) {
+                
+                if(0 < doubleval($q)) {
+                    $ait['citemsstore'][] = array('itstore'=>$stl[$s],'itqty'=>H::fqty($q));
                 }
             }
+            //у  поставщика
             $ait['citemscust']  =  array();
             foreach(\App\Entity\CustItem::find("item_id={$it->item_id} ") as $ci) {
                 $cer = array('itcust'=>$ci->customer_name,'itcustcode'=>$ci->cust_code);
@@ -621,50 +627,57 @@ class OrderList extends \App\Pages\Base
                 $ait['citemscust'][]=$cer;
             }
          
+           //готово  к производству
             $ait['ciprod']  =  array();
-            $prod=[];
-
-            $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
-            if($itpr instanceof \App\Entity\Item)  {
-                $max = 1000000;
-                $parts = \App\Entity\ItemSet::find("pitem_id=".$itpr->item_id) ;
-
-                foreach($parts as $part) {
-                    $pi = \App\Entity\Item::load($part->item_id);
-                    if($pi==null) {
-                        continue;
-                    }
-                    $pqty = $pi->getQuantity();
-                    if($pqty==0) {
-                        $max=0;
-                        break;
-                    }
-                    $t = $pqty/$part->qty;
-                    if($t<$max) {
-                        $max = $t;
-                    }
-
-                }
-                if($max>0 && $max < 1000000) {
-                      $prod  =  array('prqty'=>H::fqty($max) );
-                }
-
            
 
-            }         
-         
-  
-            $ait['ciprod'][]=$prod;
-            $this->_tvars['isciprod']=count($ait['ciprod'])>0;
+            if($options['useprod']==1) {
+                $prod=[];
+                $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
+                if($itpr instanceof \App\Entity\Item)  {
+                    $max = 1000000;
+                    $parts = \App\Entity\ItemSet::find("pitem_id=".$itpr->item_id) ;
+
+                    foreach($parts as $part) {
+                        $pi = \App\Entity\Item::load($part->item_id);
+                        if($pi==null) {
+                            continue;
+                        }
+                        $pqty = $pi->getQuantity();
+                        if($pqty==0) {
+                            $max=0;
+                            break;
+                        }
+                        $t = $pqty/$part->qty;
+                        if($t<$max) {
+                            $max = $t;
+                        }
+
+                    }
+                    if($max>0 && $max < 1000000) {
+                        $ait['prqty']=$max;
+                        $this->_tvars['isciprod']=true;  //если хоть один  готов
+                    }
+
+               
+
+                }         
+               
+            }
+            
+           
+
 
             $this->_tvars['citems'][]=$ait;
-            
+       
+           //в закупке
+              
             $sitems=[];
             
             $corders= Document::find("meta_name='OrderCust' and state in(5,7) ")  ;
             
             foreach($corders as $o) {
-               foreach($this->_doc->unpackDetails('detaildata') as $it) {
+               
                   foreach($o->unpackDetails('detaildata') as $cit) {
                        if($it->item_id==$cit->item_id) {
                            $r=[] ;
@@ -675,13 +688,16 @@ class OrderList extends \App\Pages\Base
                            break;
                        }
                   }
-               }
+                
            }
-            $this->_tvars['sitems']= array_values($sitems);
-            $this->_tvars['issitems']= count($sitems) >0;
-
+       
+           foreach($sitems as $_si ) {
+              $this->_tvars['sitems'][] = $_si ;
+           }
 
         }
+
+        $this->_tvars['issitems']= count($sitems) >0;
 
         $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;
         $this->onBranch($this->statuspan->moveform->brmove);

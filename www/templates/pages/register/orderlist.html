@@ -119,7 +119,7 @@
                      <th>У постачальникiв</th>
                       {{#isciprod}}
                   
-                     <th>Гот. до вир.</th>
+                     <th class="text-right">Гот. до вир.</th>
                      {{/isciprod}}
                     
                   
@@ -156,14 +156,9 @@
                         </td>
                       {{#isciprod}}
                         
-                       <td>
-                          <table    class="ctable"> 
-                              {{#ciprod}}
-                              <tr>
-                                 <td style="width:100px;" class="text-right">{{prqty}}</td>
-                              </tr>
-                             {{/ciprod}} 
-                          </table>
+                       <td class="text-right">
+                           {{prqty}}
+                       
                         </td>
                       {{/isciprod}}
                         
@@ -178,7 +173,7 @@
           
                   
                 <details>
-                  <summary> Товари в  закупцi</summary>
+                  <summary> Товари в  заявках постачальнику</summary>
                <table class="table table-sm">
                      <tr>
                      <th>Заявка</th>

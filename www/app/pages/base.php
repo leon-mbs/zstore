@@ -538,7 +538,7 @@ class Base extends \Zippy\Html\WebPage
             $price = $e->partion;
             $quantity = $e->quantity;
             $customer_id = $d->customer_id;
-            if($args[1] > 0) {
+            if(($args[1] ??0)  > 0) {
                 $quantity = $args[1] ;
             }
             //ищем незакрытую заявку

@@ -115,7 +115,7 @@ class CronTask extends \ZCL\DB\Entity
                 $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
 
-                $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
+              //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
               
         
                 

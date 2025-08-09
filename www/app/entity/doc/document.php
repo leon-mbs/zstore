@@ -488,9 +488,16 @@ class Document extends \ZCL\DB\Entity
             $doc = $this->cast();
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
+                if($state >4 && true) {
+                   $doc->DoAcc();   
+                }
+                
             }
             // подписка  на  смену  статуса
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
+            
+           
+            
         }
 
         return true;
@@ -1332,5 +1339,8 @@ class Document extends \ZCL\DB\Entity
  
     }
     
-    
+    public   function DoAcc() {
+         
+    } 
+      
 }
