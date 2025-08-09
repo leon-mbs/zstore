@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Store;
+use App\Entity\IOState;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -56,7 +57,8 @@ class AdvanceRep extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
         $this->docform->add(new TextInput('examount'));
         $this->docform->add(new TextInput('spentamount'));
-       
+        $this->docform->add(new DropDownChoice('spenttype', IOState::getTypeListAdv(), IOState::TYPE_COMMON_OUTCOME));
+    
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -105,6 +107,7 @@ class AdvanceRep extends \App\Pages\Base
             $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
             $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
+            $this->docform->spenttype->setValue($this->_doc->headerdata['spenttype']);
             $this->docform->examount->setText($this->_doc->headerdata['examount']);
             $this->docform->spentamount->setText($this->_doc->headerdata['spentamount']);
             $this->docform->total->setText($this->_doc->headerdata['total']);
@@ -275,6 +278,8 @@ class AdvanceRep extends \App\Pages\Base
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
         $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
+        $this->_doc->headerdata['spenttype'] = $this->docform->spenttype->getValue();
+        $this->_doc->headerdata['spenttypename'] = $this->docform->spenttype->getValueName();
         $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
         $this->_doc->headerdata['spentamount'] = $this->docform->spentamount->getText();
         $this->_doc->headerdata['total'] = $this->docform->total->getText();

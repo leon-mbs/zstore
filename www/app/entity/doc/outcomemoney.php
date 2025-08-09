@@ -22,13 +22,16 @@ class OutcomeMoney extends Document
         if ($this->headerdata['detail'] == 2)  {    // оплата  поставщику
              \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         } else {
+        if ($this->headerdata['detail'] == 3)  {    // оплата  поставщику
+      
+        } else {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
             
         }  
       
         $this->DoBalans() ;
 
-        if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
+        if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику в  подотчет
             $ua = new \App\Entity\EmpAcc();
             $ua->optype = \App\Entity\EmpAcc::ADVANCE_ACC;
             $ua->document_id = $this->document_id;

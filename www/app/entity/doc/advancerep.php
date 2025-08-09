@@ -37,15 +37,15 @@ class AdvanceRep extends Document
          
             $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $examount, $this->headerdata['exmf'], $this->notes);
          
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_COMMON_OUTCOME);  //возврат
+        //    \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_COMMON_OUTCOME);  //возврат
 
         }
 
-      
+                                                                                                  
         if ($spentamount > 0) {
          
           //  \App\Entity\IOState::addIOState($this->document_id, $spentamount, \App\Entity\IOState::TYPE_ADVANCEREP);
-         //   \App\Entity\IOState::addIOState($this->document_id, 0-$spentamount,  \App\Entity\IOState::TYPE_COMMON_OUTCOME);
+            \App\Entity\IOState::addIOState($this->document_id, 0-$spentamount,  $this->headerdata['spenttype']);
 
         }
 
@@ -54,7 +54,7 @@ class AdvanceRep extends Document
         if ($amount > 0) {
          
              \App\Entity\IOState::addIOState($this->document_id, 0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
-             \App\Entity\IOState::addIOState($this->document_id, $amount,  \App\Entity\IOState::TYPE_COMMON_OUTCOME);
+        //     \App\Entity\IOState::addIOState($this->document_id, $amount,  \App\Entity\IOState::TYPE_COMMON_OUTCOME);
 
         }
 
@@ -113,6 +113,7 @@ class AdvanceRep extends Document
         $header['spentamount'] = false;
         if ($this->headerdata["spentamount"] > 0  ) {
             $header['spentamount'] = H::fa($this->headerdata["spentamount"]);
+            $header['spenttypename'] =  $this->headerdata["spenttypename"];
         }
         $header['examount'] = false;
         if ($this->headerdata["examount"] > 0  ) {

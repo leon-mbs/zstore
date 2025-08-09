@@ -262,7 +262,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
         }
 
         if($this->page->_tvars['bmode'] ==true) {
-             $where .= " and ( iotype in (1,50,51,54)  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
+             $where .= " and ( iotype in (1,50,51,54,60)  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
         } else {
             $author = $this->page->filter->fuser->getValue();
             $type = $this->page->filter->ftype->getValue();

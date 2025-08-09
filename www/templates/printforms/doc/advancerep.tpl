@@ -1,16 +1,17 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="6" align="center">
-            <b> Оприбуткування ТМЦ № {{document_number}} від {{date}}</b> <br>
+            <b> Авансовий звiт № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
-
+    {{#isdetail}}
     <tr>
         <td><b>На склад:</b> </td> 
         <td colspan="5">
              {{to}}
         </td>
     </tr>
+
    {{#storeemp}}
     <tr>
          <td><b>На спiвробiтника:</b> </td> 
@@ -20,7 +21,7 @@
     </tr>
  
     {{/storeemp}}    
-  
+     {{/isdetail}} 
     <tr>
           <td><b>Вiд спiвробiтника:</b> </td> 
       <td colspan="5">
@@ -40,6 +41,12 @@
          <td><b>Сума витрат:</b> </td> 
        <td colspan="5">
              {{spentamount}}
+        </td>
+    </tr>
+   <tr>
+         <td><b>Тип витрат:</b> </td> 
+       <td colspan="5">
+             {{spenttypename}}
         </td>
     </tr>
    {{/spentamount}}  

@@ -163,5 +163,20 @@ class IOState extends \ZCL\DB\Entity
        return $list;
     }
 
+ 
+    /**
+    * Для  авансовго отчета
+    * 
+    */
+    public static function getTypeListAdv( ) {
+       $list = array();
+       $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
+       $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
+       $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
+       $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+  
+       return $list;
+    }
+
 
 }
