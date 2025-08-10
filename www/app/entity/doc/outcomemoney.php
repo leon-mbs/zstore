@@ -21,7 +21,7 @@ class OutcomeMoney extends Document
         }  else   
         if ($this->headerdata['detail'] == 2)  {    // оплата  поставщику
              \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
-        } else {
+        } else  
         if ($this->headerdata['detail'] == 3)  {    // оплата  поставщику
       
         } else {

@@ -112,7 +112,7 @@ class CronTask extends \ZCL\DB\Entity
 
                 //очищаем статистику
                 $dt = $conn->DBDate(strtotime('-12 month', time())) ;
-                $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
+                $conn->Execute("delete  from stats  where category not in  in (4) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
 
               //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;

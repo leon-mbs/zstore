@@ -27,8 +27,10 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     public const TYPE_ADMIN_OUTCOME    = 52;    //административные  расходы
     public const TYPE_SALE_OUTCOME     = 53;    //расходы на сбыт
-    public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
-    public const TYPE_TAX_OUTCOME      = 55;    //уплата  налогов  и сборов
+ //   public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
+    public const TYPE_TAX_OUTCOME      = 55;    //уплата прочих налогов  и сборов
+    public const TYPE_TAX_NDS          = 70;    //уплата  НДС
+    public const TYPE_TAX_CARE         = 71;    //уплата  по страхованию
     public const TYPE_BILL_RENT        = 56;    //расходы на  аренду
     public const TYPE_OTHER_OUTCOME    = 57;   //прочие расходы
     public const TYPE_DIVIDEND_OUTCOME = 58;   //распределение прибыли
@@ -116,8 +118,10 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_PROD] = "Витрати на виробьництво";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-            $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
-            $list[self::TYPE_TAX_OUTCOME] =  "Податки та збори";
+       //     $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
+            $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
+            $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
+            $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
             $list[self::TYPE_BILL_OUTCOME] = "Витрати на комуналку";
             $list[self::TYPE_BILL_RENT] = "Витрати на оренду";
             $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
@@ -154,7 +158,7 @@ class IOState extends \ZCL\DB\Entity
     */
     public static function getTypeListSal( ) {
        $list = array();
-       $list[self::TYPE_PROD] = "Витрати на виробьництво";
+    //   $list[self::TYPE_PROD] = "Витрати на виробьництво";
        $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
        $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
        $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
@@ -178,5 +182,41 @@ class IOState extends \ZCL\DB\Entity
        return $list;
     }
 
+    /**
+    * Для  приходного кассового ордера
+    * 
+    */
+    public static function getTypeListInM( ) {
+       $list = array();
 
+       $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
+       $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
+     
+       return $list;
+    }
+    /**
+    * Для  расходного  кассового ордера
+    * 
+    */
+    public static function getTypeListOutM( ) {
+        $list = array();
+
+        $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
+        $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
+        $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
+        $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
+        $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
+        $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
+        $list[self::TYPE_BILL_OUTCOME] = "Витрати на комуналку";
+        $list[self::TYPE_BILL_RENT] = "Витрати на оренду";
+        $list[self::TYPE_DIVIDEND_OUTCOME] = "Розподіл прибутку";
+        $list[self::TYPE_INV] = "Інвестиції";
+        $list[self::TYPE_NAKL] =  "Накладні витрати";
+        $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
+        $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+   
+       return $list;
+    }
+    
+    
 }

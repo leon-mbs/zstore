@@ -40,7 +40,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('detail', array(), 1))->onChange($this, 'OnDetail');
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(1), 0));
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeListInM(), \App\Entity\IOState::TYPE_FIN));
 
         $this->docform->add(new DropDownChoice('contract', array(), 0));
         $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
