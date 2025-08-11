@@ -136,8 +136,9 @@ class Update extends \App\Pages\Base
             $sqlurl  = "https://zippy.com.ua/updates/". $data['sql'] ;
               
           }
-          $this->_tvars['sql']  =  @file_get_contents($sqlurl)   ;
-             
+
+          $this->_tvars['sqlurl']  =  $sqlurl  ;
+              
         }  
         
         $this->_tvars['reinstall']  = true;
