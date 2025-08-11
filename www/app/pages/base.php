@@ -26,7 +26,11 @@ class Base extends \Zippy\Html\WebPage
             return;
         }
       
-        
+        //миграция  данных
+        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
+            Helper::migration() ;
+            Session::getSession()->migrationcheck = true;
+        }       
       //  $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
@@ -36,6 +40,8 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+        $this->_tvars["usefood"] = $options['usefood'] == 1;
+        $this->_tvars["useprod"] = $options['useprod'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
         $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
@@ -242,15 +248,7 @@ class Base extends \Zippy\Html\WebPage
               }         
         }
         
- 
-
-        //миграция  данных
-        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
-            Helper::migration() ;
-            Session::getSession()->migrationcheck = true;
-        }
-       
-       
+          
     
     }
 
@@ -532,7 +530,8 @@ class Base extends \Zippy\Html\WebPage
     public function addItemToCO($args, $post=null) {
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
-            $d = \App\Entity\Doc\Document::load($e->document_id)  ;
+ 
+            $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
 
             if($d == null) {
                 return "По  даному  ТМЦ  закупок не  було";
@@ -540,7 +539,7 @@ class Base extends \Zippy\Html\WebPage
             $price = $e->partion;
             $quantity = $e->quantity;
             $customer_id = $d->customer_id;
-            if($args[1] > 0) {
+            if(($args[1] ??0)  > 0) {
                 $quantity = $args[1] ;
             }
             //ищем незакрытую заявку
@@ -781,10 +780,7 @@ class Base extends \Zippy\Html\WebPage
             $stores = \App\Entity\Store::getList() ;
             $ret['stores'] =  \App\Util::tokv($stores) ;
         }
-        if($post->firms ?? null) {
-            $firms = \App\Entity\Firm::getList() ;
-            $ret['firms'] =  \App\Util::tokv($firms) ;
-        }
+      
         if($post->mfs ?? null) {
             $mfs = \App\Entity\MoneyFund::getList() ;
             $ret['mfs'] =  \App\Util::tokv($mfs) ;

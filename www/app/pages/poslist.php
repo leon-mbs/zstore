@@ -39,8 +39,7 @@ class PosList extends \App\Pages\Base
 
         $this->add(new Form('posdetail'))->setVisible(false);
         $this->posdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
-        $this->posdetail->add(new DropDownChoice('editcomp', \App\Entity\Firm::getList(), 0));
-
+       
         $this->posdetail->add(new TextInput('editpos_name'));
 
         $this->posdetail->add(new CheckBox('edittesting'));
@@ -54,6 +53,9 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new TextInput('editcbpin'));
         $this->posdetail->add(new TextInput('editcbkey'));
         $this->posdetail->add(new TextInput('editvktoken'));
+        $this->posdetail->add(new TextInput('editfirmname'));
+        $this->posdetail->add(new TextInput('edittin'));
+        $this->posdetail->add(new TextInput('editipn'));
         $this->posdetail->add(new DropDownChoice('editautoshift'));
         $this->posdetail->add(new TextArea('editcomment'));
 
@@ -117,7 +119,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->setVisible(true);
         $this->posdetail->editpos_name->setText($this->_pos->pos_name);
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
-        $this->posdetail->editcomp->setValue($this->_pos->firm_id);
+
         $this->posdetail->editaddress->setText($this->_pos->address);
         $this->posdetail->editpayeq->setText($this->_pos->payeq);
         $this->posdetail->editpointname->setText($this->_pos->pointname);
@@ -128,6 +130,9 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editposinner->setText($this->_pos->fiscallocnumber);
         $this->posdetail->editfisc->setText($this->_pos->fiscalnumber);
         $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
+        $this->posdetail->editfirmname->setText($this->_pos->firmname);
+        $this->posdetail->edittin->setText($this->_pos->tin);
+        $this->posdetail->editipn->setText($this->_pos->ipn);
         $this->posdetail->edittesting->setChecked($this->_pos->testing);
         $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
 
@@ -155,7 +160,6 @@ class PosList extends \App\Pages\Base
         $this->_pos->pos_name = $this->posdetail->editpos_name->getText();
 
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
-        $this->_pos->firm_id = $this->posdetail->editcomp->getValue();
 
         $this->_pos->address = $this->posdetail->editaddress->getText();
         $this->_pos->payeq = $this->posdetail->editpayeq->getText();
@@ -167,6 +171,9 @@ class PosList extends \App\Pages\Base
         $this->_pos->fiscallocnumber = $this->posdetail->editposinner->getText();
         $this->_pos->fiscalnumber = $this->posdetail->editfisc->getText();
         $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();
+        $this->_pos->firmname = $this->posdetail->editfirmname->getText();
+        $this->_pos->tin = $this->posdetail->edittin->getText();
+        $this->_pos->ipn = $this->posdetail->editipn->getText();
         $this->_pos->testing = $this->posdetail->edittesting->isChecked() ? 1 : 0;
         $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
 
@@ -174,10 +181,7 @@ class PosList extends \App\Pages\Base
             $this->setError("Не введено назву");
             return;
         }
-        if ($this->_pos->firm_id == 0) {
-            $this->setError("Не обрано компанію");
-            return;
-        }
+     
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
 
             $this->setError("Виберіть філію");

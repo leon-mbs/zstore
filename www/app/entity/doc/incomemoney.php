@@ -19,10 +19,10 @@ class IncomeMoney extends Document
    
 
         if ($this->headerdata['detail'] == 1)  {    // оплата от покупателя
-             \App\Entity\IOState::addIOState($this->document_id,   $this->amount,  \App\Entity\IOState::TYPE_BASE_INCOME);
+             \App\Entity\IOState::addIOState($this->document_id,    $this->amount,  \App\Entity\IOState::TYPE_BASE_INCOME);
         }  else   
         if ($this->headerdata['detail'] == 2)  {    // возврат от поставщика
-             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
+             \App\Entity\IOState::addIOState($this->document_id,   $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
         } else {
             \App\Entity\IOState::addIOState($this->document_id,   $this->amount, $this->headerdata['type']);
             
@@ -38,7 +38,7 @@ class IncomeMoney extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = $this->amount;
-            $ua->save();
+         //   $ua->save();  
 
         }
 

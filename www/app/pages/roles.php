@@ -40,6 +40,7 @@ class Roles extends \App\Pages\Base
         $this->add(new Panel("editpanname"))->setVisible(false);
         $this->editpanname->add(new Form('editformname'))->onSubmit($this, 'savenameOnClick');
         $this->editpanname->editformname->add(new TextInput('editname'));
+        $this->editpanname->editformname->add(new CheckBox('editdisabled'));
         $this->editpanname->editformname->add(new Button('cancelname'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel("editpan"))->setVisible(false);
@@ -99,6 +100,7 @@ class Roles extends \App\Pages\Base
         $this->editpanname->setVisible(true);
         $this->role = $sender->getOwner()->getDataItem();
         $this->editpanname->editformname->editname->setText($this->role->rolename);
+        $this->editpanname->editformname->editdisabled->setChecked($this->role->disabled);
     }
 
     public function OnMenu($sender) {
@@ -186,6 +188,7 @@ class Roles extends \App\Pages\Base
 
     public function savenameOnClick($sender) {
         $this->role->rolename = $this->editpanname->editformname->editname->getText();
+        $this->role->disabled = $this->editpanname->editformname->editdisabled->isChecked() ?1:0;
 
         $role = UserRole::getFirst('rolename=' . UserRole::qstr($this->role->rolename));
         if ($role instanceof UserRole) {
@@ -358,6 +361,14 @@ class Roles extends \App\Pages\Base
         if ($item->cnt == 0) {
             $datarow->cnt->setVisible(false);
         }
+        
+        if($item->disabled == 1 ) {
+           $datarow->setAttribute('style',   'color: #aaa' );     
+           $datarow->acl->setVisible(false);     
+           $datarow->smenu->setVisible(false);     
+        }
+       
+          
     }
 
     public function metarowOnRow($row) {

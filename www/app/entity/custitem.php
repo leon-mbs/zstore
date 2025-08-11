@@ -44,7 +44,7 @@ class CustItem extends \ZCL\DB\Entity
     //поиск  в  номенклатуре
     public function findItem() {
         $item=null;
-        $op= \App\System::getOption('common','ci_compare') ;
+        $op= intval(\App\System::getOption('common','ci_compare') );
         if($op==0 && strlen($this->cust_code ??'') > 0 && strlen($this->brand ??'') > 0) {
             $item = Item::getFirst("item_code='{$this->cust_code}' and manufacturer='{$this->brand}'") ;    
         }

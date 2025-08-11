@@ -181,7 +181,7 @@ class Main extends Base
 
         foreach ($rs as $row) {
 
-            $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
+            $ps[]=[$names[$row['iotype']]??'',abs(round($row['am']??0))] ;
 
         }
         $this->_tvars['ps'] = json_encode($ps);

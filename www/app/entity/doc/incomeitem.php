@@ -30,32 +30,7 @@ class IncomeItem extends Document
 
         }
  
-        
-        
-        if ($this->headerdata['examount'] > 0) {
-         
-            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], $this->notes);
-         
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
-        }
-
-
-        if ($this->headerdata['emp'] > 0) {
-            //авансовый    отчет
-            $ua = new \App\Entity\EmpAcc();
-            $ua->optype = \App\Entity\EmpAcc::OUTCOME_TO_MF;
-            $ua->document_id = $this->document_id;
-            $ua->emp_id = $this->headerdata["emp"];
-            $ua->amount = $amount;
-            if ($this->headerdata['examount'] > 0) {
-                $ua->amount += $this->headerdata['examount'];
-            }
-            if ($ua->amount > 0) {
-                $ua->save();
-            }
-        }
-
+     
         return true;
     }
 
@@ -83,15 +58,12 @@ class IncomeItem extends Document
             'date'            => H::fd($this->document_date),
             "total"           => H::fa($this->amount),
             "to"              => $this->headerdata["storename"],
-            "emp"             => false,
+         
             "storeemp"             => false,
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
-        if ($this->headerdata["emp"] > 0 && $this->headerdata['examount']) {
-            $header['emp'] = $this->headerdata["empname"];
-            $header['examount'] = H::fa($this->headerdata["examount"]);
-        }
+     
         if ($this->headerdata["storeemp"] > 0  ) {
             $header['storeemp'] = $this->headerdata["storeempname"];
         }

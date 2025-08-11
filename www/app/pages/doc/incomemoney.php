@@ -40,7 +40,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('detail', array(), 1))->onChange($this, 'OnDetail');
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(1), 0));
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeListInM(), \App\Entity\IOState::TYPE_FIN));
 
         $this->docform->add(new DropDownChoice('contract', array(), 0));
         $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
@@ -224,9 +224,10 @@ class IncomeMoney extends \App\Pages\Base
         }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
-        }
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_OTHER_INCOME) ;            
+       }
        
-        if ($sender->getValue() == 0 || $sender->getValue() == 3 ) {
+        if ($sender->getValue() == 0   ) {
             $this->docform->mtype->setVisible(true);
             $this->docform->mtype->setValue(0) ;            
         }

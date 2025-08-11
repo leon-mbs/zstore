@@ -810,10 +810,12 @@
 
                                     </li>
 
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
+                               
+
+                                     <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/Firm" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Компанії</p>
+                                            <p>&nbsp;&nbsp;Данi компанiї</p>
                                         </a>
                                     </li>
 
@@ -1240,8 +1242,8 @@
         }
         
        //ТМЦ в закупку
-       function addItemToCO(id){
-                callPageMethod('addItemToCO',[id],null,(data)=> 
+       function addItemToCO(id,qty=0){
+                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {

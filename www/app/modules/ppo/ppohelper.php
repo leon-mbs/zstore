@@ -118,15 +118,24 @@ class PPOHelper
 
         $pos = \App\Entity\Pos::load($posid);
 
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
 
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        } 
 
         
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = strlen($firm['tin']) > 0 ? $firm['tin'] : false; 
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = strlen($pos->tin) > 0 ? $pos->tin : false; 
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -162,13 +171,23 @@ class PPOHelper
     public static function zform($posid, $stat, $rstat) {
         $pos = \App\Entity\Pos::load($posid);
 
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
 
         $header = array();
         //    $header['doctype'] = $open == true ? 100 : 101;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -301,16 +320,27 @@ class PPOHelper
  
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
 
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
+        
+        
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
         $header = array();
         //  $header['doctype'] = $doctype;
         //     $header['docsubtype'] = $docsubtype;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['testing'] = $pos->testing==1;
         $header['address'] = $pos->address;
         $header['pointname'] = $pos->pointname;
@@ -558,14 +588,24 @@ class PPOHelper
 
 
         $pos = \App\Entity\Pos::load($pos_id);
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
         $mf = \App\Entity\MoneyFund::load($payment);
 
         $header = array();
 
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['firmname'] = $pos->firmname ;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -625,15 +665,24 @@ class PPOHelper
 
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
         $header = array();
-        //  $header['doctype'] = $doctype;
-        //    $header['docsubtype'] = $docsubtype;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+  
+        $header['firmname'] = $pos->firmname ;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -783,8 +832,7 @@ class PPOHelper
         if ($pos == 0) {
             return;
         }
-        //$branch = \App\Entity\Branch::load($pos->firm_id);
-    
+     
         //"2022-05-01T00:00:00+03:00"
 
         $dt = new  \App\DateTime() ;

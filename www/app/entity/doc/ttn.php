@@ -46,7 +46,7 @@ class TTN extends Document
         }
 
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $printer = System::getOptions('printer');
 
@@ -120,7 +120,7 @@ class TTN extends Document
         }
 
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
         if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {

@@ -444,29 +444,42 @@ class Subscribe extends \ZCL\DB\Entity
         $header['day_nal']= H::fa($conn->GetOne($sql));
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
         $header['day_beznal']= H::fa($conn->GetOne($sql));
-     $sql = "
-          select   sum(0-e.quantity*e.outprice) as summa 
+       
+        $sql = "  select   sum(0-e.quantity*e.outprice) as summa 
               from entrylist_view  e
-
-             
-             join documents_view d on d.document_id = e.document_id
-               where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              join documents_view d on d.document_id = e.document_id
+              where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
               and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck', 'TTN','OrderCust','OrderFood')           
               AND  e.document_date = CURDATE() ";             
               
         $header['day_summa']= H::fa( abs(  $conn->GetOne($sql) ) );
-   $sql = "
-          select   sum(0-e.quantity*e.outprice) as summa 
+        $sql = " select   sum(0-e.quantity*e.outprice) as summa 
               from entrylist_view  e
-
-             
-             join documents_view d on d.document_id = e.document_id
-               where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              join documents_view d on d.document_id = e.document_id
+              where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
               and d.meta_name in ( 'ReturnIssue' )           
               AND  e.document_date = CURDATE() ";             
               
         $header['day_return']= H::fa( abs( $conn->GetOne($sql) ));
         
+        
+        
+ //минимальное количество
+            $header['minqtylist']  = [];
+   
+            $sql = "select coalesce(t.qty,0) as onstoreqty, i.minqty,i.itemname as name,i.item_code as code    from 
+           items  i 
+          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock       group by  item_id    ) t
+               on t.item_id = i.item_id
+           
+            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
+            $rs = $conn->Execute($sql);
+  
+            foreach($rs as $row) {
+               $header['minqtylist'][]= $row; 
+            }
+  
+   
         try {
             $m = new \Mustache_Engine();
             $text = $m->render($this->msgtext, $header);

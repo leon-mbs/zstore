@@ -53,7 +53,6 @@ class IncomeService extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
   
         $this->docform->add(new DropDownChoice('store', Store::getList(), 0));
@@ -137,8 +136,7 @@ class IncomeService extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->firm->setValue($this->_doc->firm_id);
-            $this->OnCustomerFirm(null);
+         
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
@@ -306,10 +304,7 @@ class IncomeService extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->docform->store->getValue()  ;
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName()  ;
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
+       
 
         $this->calcTotal();
 
@@ -462,9 +457,8 @@ class IncomeService extends \App\Pages\Base
 
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+    
+        $ar = \App\Entity\Contract::getList($c );
 
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {

@@ -13,7 +13,7 @@ use App\Helper as H;
 class ServiceAct extends Document
 {
     public function generateReport() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $i = 1;
 
@@ -127,6 +127,7 @@ class ServiceAct extends Document
                 $sc = new Entry($this->document_id, 0 - ($ser->price * $ser->quantity), 0 - $ser->quantity);
                 $sc->setService($ser->service_id);
 
+                $sc->cost= $ser->cost;
                 $sc->setOutPrice($ser->price * $k);
 
 
@@ -230,7 +231,7 @@ class ServiceAct extends Document
 
         $common = \App\System::getOptions('common');
         $printer = \App\System::getOptions('printer');
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $wp = 'style="width:40mm"';
         if (strlen($printer['pwidth']??'') > 0) {

@@ -28,10 +28,13 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
         $this->details .= "<fiscallocnumber>{$this->fiscallocnumber}</fiscallocnumber>";
         $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
+        $this->details .= "<firmname>{$this->firmname}</firmname>";
+        $this->details .= "<tin>{$this->tin}</tin>";
+        $this->details .= "<ipn>{$this->ipn}</ipn>";
 
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
         $this->details .= "<testing>{$this->testing}</testing>";
-        $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
+
         $this->details .= "<vktoken>{$this->vktoken}</vktoken>";
         $this->details .= "<cbkey>{$this->cbkey}</cbkey>";
         $this->details .= "<cbpin>{$this->cbpin}</cbpin>";
@@ -63,7 +66,10 @@ class Pos extends \ZCL\DB\Entity
         $this->fiscalnumber = (string)($xml->fiscalnumber[0]);
         $this->fiscallocnumber = (int)($xml->fiscallocnumber[0]);
         $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);
-        $this->firm_id = (int)($xml->firm_id[0]);
+        $this->firmname = (string)($xml->firmname[0]);
+        $this->tin = (string)($xml->tin[0]);
+        $this->ipn = (string)($xml->ipn[0]);
+
         $this->autoshift = (int)($xml->autoshift[0]);
 
         $this->testing = (int)($xml->testing[0]);

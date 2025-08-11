@@ -17,22 +17,23 @@ class OutcomeMoney extends Document
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
        
         if ($this->headerdata['detail'] == 1)  {    // возврат  покупателю
-             \App\Entity\IOState::addIOState($this->document_id,   $this->amount,  \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
+             \App\Entity\IOState::addIOState($this->document_id,   0-$this->amount,  \App\Entity\IOState::TYPE_BASE_INCOME, true);
         }  else   
         if ($this->headerdata['detail'] == 2)  {    // оплата  поставщику
-             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_INCOME);
+             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        } else  
+        if ($this->headerdata['detail'] == 3)  {    // оплата  поставщику
+      
         } else {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
             
         }  
-             
- 
+      
+        $this->DoBalans() ;
 
-      $this->DoBalans() ;
-
-        if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику
+        if ($this->headerdata['detail'] == 3) {  //перечисление  сотруднику в  подотчет
             $ua = new \App\Entity\EmpAcc();
-            $ua->optype = \App\Entity\EmpAcc::INCOME_FROM_MF;
+            $ua->optype = \App\Entity\EmpAcc::ADVANCE_ACC;
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = 0 - $this->amount;

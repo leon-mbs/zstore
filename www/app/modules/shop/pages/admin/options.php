@@ -56,8 +56,8 @@ class Options extends \App\Pages\Base
 
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
-        $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name", "disabled <>1"), "0"));
-        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), 0 ));
+
+        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(2), 0 ));
         $this->shop->add(new DropDownChoice('defstore',\App\Entity\Store::getList(),  0));
     
 
@@ -93,7 +93,7 @@ class Options extends \App\Pages\Base
         $this->shop->defstore->setValue($shop['defstore']??0);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->salesource->setValue($shop['salesource']);
-        $this->shop->firm->setValue($shop['firm']??0);
+
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
@@ -173,7 +173,7 @@ class Options extends \App\Pages\Base
         $shop['defmf'] = $this->shop->defmf->getValue();
         $shop['defstore'] = $this->shop->defstore->getValue();
         $shop['salesource'] = $this->shop->salesource->getValue();
-        $shop['firm'] = $this->shop->firm->getValue();
+
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();

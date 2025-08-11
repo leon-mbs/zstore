@@ -12,7 +12,7 @@ CREATE TABLE branches (
 CREATE TABLE contracts (
   contract_id int(11) NOT NULL AUTO_INCREMENT,
   customer_id int(11) DEFAULT '0',
-  firm_id int(11) DEFAULT '0',
+  
   createdon date NOT NULL,
   contract_number varchar(64) NOT NULL,
   disabled tinyint(1) DEFAULT '0',
@@ -96,7 +96,7 @@ CREATE TABLE documents (
   payed decimal(11, 2) DEFAULT '0.00',
   branch_id int(11) DEFAULT '0',
   parent_id bigint(20) DEFAULT '0',
-  firm_id int(11) DEFAULT NULL,
+   
   priority smallint(6) DEFAULT '100',
   lastupdate datetime DEFAULT NULL,
   PRIMARY KEY (document_id),
@@ -186,7 +186,8 @@ CREATE TABLE employees (
 CREATE TABLE entrylist (
   entry_id bigint(20) NOT NULL AUTO_INCREMENT,
   document_id int(11) NOT NULL,
-  quantity decimal(11, 3) DEFAULT '0.000',
+  quantity decimal(11, 3) DEFAULT 0,
+  cost decimal(11, 2) DEFAULT 0,
   stock_id int(11) DEFAULT NULL,
   service_id int(11) DEFAULT NULL,
   outprice decimal(10, 2) DEFAULT NULL,
@@ -288,13 +289,7 @@ CREATE TABLE filesdata (
   UNIQUE KEY file_id (file_id)
 ) ENGINE = MYISAM DEFAULT CHARSET = utf8;
 
-CREATE TABLE firms (
-  firm_id int(11) NOT NULL AUTO_INCREMENT,
-  firm_name varchar(255) NOT NULL,
-  details longtext NOT NULL,
-  disabled tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (firm_id)
-) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+ 
 
 CREATE TABLE images (
   image_id int(11) NOT NULL AUTO_INCREMENT,
@@ -584,6 +579,7 @@ CREATE TABLE roles (
   role_id int(11) NOT NULL AUTO_INCREMENT,
   rolename varchar(255) DEFAULT NULL,
   acl mediumtext,
+  disabled tinyint(1),
   PRIMARY KEY (role_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -744,23 +740,22 @@ SELECT
   d.parent_id AS parent_id,
   d.branch_id AS branch_id,
   b.branch_name AS branch_name,
-  d.firm_id AS firm_id,
+  
   d.priority AS priority,
-  f.firm_name AS firm_name,
+ 
   d.lastupdate AS lastupdate,
   metadata.meta_name AS meta_name,
   metadata.description AS meta_desc
-FROM (((((documents d
+FROM documents d
   LEFT JOIN users_view u
-    ON ((d.user_id = u.user_id)))
+    ON d.user_id = u.user_id
   LEFT JOIN customers c
-    ON ((d.customer_id = c.customer_id)))
+    ON d.customer_id = c.customer_id
   JOIN metadata
-    ON ((metadata.meta_id = d.meta_id)))
+    ON metadata.meta_id = d.meta_id
   LEFT JOIN branches b
-    ON ((d.branch_id = b.branch_id)))
-  LEFT JOIN firms f
-    ON ((d.firm_id = f.firm_id))) ;
+    ON d.branch_id = b.branch_id ;
+   
     
 CREATE
 VIEW contracts_view
@@ -768,18 +763,16 @@ AS
 SELECT
   co.contract_id AS contract_id,
   co.customer_id AS customer_id,
-  co.firm_id AS firm_id,
+ 
   co.createdon AS createdon,
   co.contract_number AS contract_number,
   co.disabled AS disabled,
   co.details AS details,
-  cu.customer_name AS customer_name,
-  f.firm_name AS firm_name
-FROM ((contracts co
+  cu.customer_name AS customer_name
+
+FROM contracts co
   JOIN customers cu
-    ON ((co.customer_id = cu.customer_id)))
-  LEFT JOIN firms f
-    ON ((co.firm_id = f.firm_id))) ;
+    ON co.customer_id = cu.customer_id  ;
 
  
 CREATE VIEW custitems_view
@@ -895,6 +888,7 @@ SELECT
   store_stock.item_id AS item_id,
   store_stock.partion AS partion,
   case when entrylist.createdon  is NULL  then documents.document_date else entrylist.createdon  end      AS document_date,
+  entrylist.cost AS cost,
   entrylist.outprice AS outprice
 FROM ((entrylist
   LEFT JOIN store_stock
@@ -1188,6 +1182,7 @@ AS
 SELECT
   roles.role_id AS role_id,
   roles.rolename AS rolename,
+  roles.disabled AS disabled,
   roles.acl AS acl,
   (SELECT
       COALESCE(COUNT(0), 0)
@@ -1454,7 +1449,7 @@ CREATE TABLE shop_articles (
   
   
   
-INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
+INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', 'admin', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
 INSERT INTO roles (rolename, acl) VALUES( 'admins', 'a:11:{s:13:\"noshowpartion\";N;s:15:\"showotherstores\";N;s:7:\"aclview\";N;s:7:\"acledit\";N;s:6:\"aclexe\";N;s:9:\"aclcancel\";N;s:8:\"aclstate\";N;s:9:\"acldelete\";N;s:7:\"widgets\";N;s:7:\"modules\";N;s:9:\"smartmenu\";s:3:\"8,2\";}');
 UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin' ;
 
@@ -1462,7 +1457,6 @@ UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' 
 INSERT INTO stores (  storename, description) VALUES(  'Основний склад', '');
 INSERT INTO mfund (  mf_name, description, branch_id, detail) VALUES( 'Каса', '', NULL, '<detail><beznal>0</beznal><btran></btran><bank><![CDATA[]]></bank><bankacc><![CDATA[]]></bankacc></detail>');
 
-INSERT INTO firms (  firm_name, details, disabled) VALUES(  'Наша фiрма', '', 0);
 INSERT INTO customers ( customer_name, detail, email, phone, status, city, leadstatus, leadsource, createdon) VALUES( 'Фiз. особа', '<detail><code></code><discount></discount><bonus></bonus><type>0</type><fromlead>0</fromlead><jurid></jurid><shopcust_id></shopcust_id><isholding>0</isholding><holding>0</holding><viber></viber><nosubs>1</nosubs><user_id>4</user_id><holding_name><![CDATA[]]></holding_name><address><![CDATA[]]></address><comment><![CDATA[Умовний контрагент (якщо треба когось зазначити)]]></comment></detail>', '', '', 0, '', NULL, NULL, '2021-04-28');
   
   
@@ -1480,17 +1474,17 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Послуги, роботи', 'ServiceList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Акт виконаних робіт', 'ServiceAct', 'Послуги', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення від покупця', 'ReturnIssue', 'Продажі', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Наряди', 'TaskList', 'Виробництво', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Наряд', 'Task', 'Виробництво', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Оплата по виробництву', 'EmpTask', 'Виробництво', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Наряди', 'TaskList', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Наряд', 'Task', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Оплата по виробництву', 'EmpTask', 'Виробництво', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Закупівлі', 'Income', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Продажі', 'Outcome', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Замовлення клієнтів', 'OrderList', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовлення', 'Order', 'Продажі', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Оприбуткування з виробництва', 'ProdReceipt', 'Виробництво', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списання на виробництво', 'ProdIssue', 'Виробництво', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по виробництву', 'Prod', 'Виробництво', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Виробничі дільниці', 'ProdAreaList', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Оприбуткування з виробництва', 'ProdReceipt', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списання на виробництво', 'ProdIssue', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по виробництву', 'Prod', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Виробничі дільниці', 'ProdAreaList', '', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Продажі', 'GIList', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Обладнання та ОЗ', 'EqList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Закупівлі', 'GRList', 'Закупівлі', 0);
@@ -1528,18 +1522,18 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Розрахунки з постачальниками', 'PaySelList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Розрахунки з покупцями', 'PayBayList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення грошей', 'MoveMoney', 'Каса та платежі', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Кафе', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Кафе', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Прибутки та видатки', 'IOState', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Програма лояльності', 'Discounts', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Нарахування зарплати', 'CalcSalary', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Нарахування та утримання', 'SalaryTypeList', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Вир. етапи', 'ProdStageList', 'Виробництво', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Вир. процеси', 'ProdProcList', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Вир. етапи', 'ProdStageList', 'Виробництво', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення партiй ТМЦ', 'MovePart', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Повернення покупцiв', 'Returnselled', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Повернення постачальникам', 'Returnbayed', 'Закупівлі', 0);
@@ -1553,12 +1547,12 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Офiсний документ', 'OfficeDoc', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Офiс', 'OfficeList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналітика', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товари на комісії', 'ItemComission', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
-
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Авансовий звiт', 'AdvanceRep', 'Каса та платежі',   0);
 
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(2, 105, 'Основна зарплата', 'осн', 0);
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(3, 200, 'Всього нараховано', 'вс. нар', 0);
@@ -1578,12 +1572,13 @@ INSERT INTO options (optname, optvalue) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0
 INSERT INTO options (optname, optvalue) VALUES('sms', 'YToxMTp7czoxMjoic21zY2x1YnRva2VuIjtzOjA6IiI7czoxMjoic21zY2x1YmxvZ2luIjtzOjA6IiI7czoxMToic21zY2x1YnBhc3MiO3M6MDoiIjtzOjk6InNtc2NsdWJhbiI7czowOiIiO3M6MTA6InNtc2NsdWJ2YW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15dG9rZW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15ZGV2aWQiO3M6MDoiIjtzOjExOiJmbHlzbXNsb2dpbiI7czowOiIiO3M6MTA6ImZseXNtc3Bhc3MiO3M6MDoiIjtzOjg6ImZseXNtc2FuIjtzOjA6IiI7czo3OiJzbXN0eXBlIjtzOjE6IjAiO30=');
 INSERT INTO options (optname, optvalue) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
 INSERT INTO options (optname, optvalue) VALUES('salary', 'YTo3OntzOjQ6ImNhbGMiO3M6MjE2OiIgLy/QstGB0YzQvtCz0L4g0L3QsNGA0LDRhdC+0LLQsNC90L4NCiAgdjIwMCA9ICB2MTA1DQoNCiAvL9C/0L7QtNCw0YLQutC4DQp2MjIwID0gIHYyMDAgKiAwLjE4DQp2MzAwID0gIHYyMDAgKiAwLjIyDQovL9Cy0YHRjNC+0LPQviDRg9GC0YDQuNC80LDQvdC+DQp2NjAwID12MjAwICAtIHYyMjAtIHYzMDANCi8v0L3QsCDRgNGD0LrQuA0KdjkwMCA9djIwMCAgLSB2NjAwLXY4NTAiO3M6ODoiY2FsY2Jhc2UiO3M6NjE6Ii8v0L7RgdC90L7QstC90LAgINC30LDRgNC/0LvQsNGC0LANCiB2MTA1PXRhc2tzdW0rc2VsbHZhbHVlDQoiO3M6MTM6ImNvZGViYXNlaW5jb20iO3M6MzoiMTA1IjtzOjEwOiJjb2RlcmVzdWx0IjtzOjM6IjkwMCI7czoxMToiY29kZWFkdmFuY2UiO3M6MToiMCI7czo4OiJjb2RlZmluZSI7czoxOiIwIjtzOjk6ImNvZGVib251cyI7czoxOiIwIjt9');
-INSERT INTO options (optname, optvalue) VALUES('version', '6.14.0');
+INSERT INTO options (optname, optvalue) VALUES('version', '6.15.0');
 
 
 
 
 
+INSERT INTO keyval  (  keyd,vald)  VALUES ('cron','true');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbalans','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');

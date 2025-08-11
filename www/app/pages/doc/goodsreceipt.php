@@ -52,8 +52,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
+         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
         $this->docform->add(new CheckBox('comission', 0));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
@@ -197,7 +196,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            $this->docform->firm->setValue($this->_doc->firm_id);
+            
             $this->OnCustomerFirm($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -264,7 +263,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
                         $this->docform->val->setValue($invoice->headerdata['val']);
                         $this->docform->rate->setText($invoice->headerdata['rate']);
-                        $this->docform->firm->setValue($invoice->firm_id);
+                        
                         $this->OnCustomerFirm($this->docform->customer);
 
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
@@ -295,7 +294,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $basedoc = $basedoc->cast();
-                        $this->docform->firm->setValue($basedoc->firm_id);
+                       
                         $this->OnCustomerFirm($this->docform->customer);
                         $this->docform->val->setValue($basedoc->headerdata['val']);
                         $this->docform->rate->setText($basedoc->headerdata['rate']);
@@ -677,10 +676,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
+       
 
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();

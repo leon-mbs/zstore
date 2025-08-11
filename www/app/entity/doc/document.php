@@ -407,7 +407,11 @@ class Document extends \ZCL\DB\Entity
         $hash = md5(''.rand(1, 1000000), false);
         $hash = base64_encode(substr($hash, 0, 24));
         $doc->headerdata['hash'] = strtolower($hash)  ;
-
+    
+        $firm=Helper::getFirmData()  ;
+     
+        $doc->headerdata["firm_name"]  =  $firm['firm_name']  ;
+         
         return $doc;
     }
 
@@ -472,22 +476,28 @@ class Document extends \ZCL\DB\Entity
 
         $oldstate = $this->state;
         $this->state = $state;
-        if($state != $oldstate ) {
-            $this->insertLog($state);
-        }
-
+     
 
         $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
 
         if ($oldstate != $state) {
+            $this->insertLog($state);            
+            
             $doc = $this->cast();
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
+                if($state >4 && true) {
+                   $doc->DoAcc();   
+                }
+                
             }
-
+            // подписка  на  смену  статуса
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
+            
+           
+            
         }
 
         return true;
@@ -1108,7 +1118,7 @@ class Document extends \ZCL\DB\Entity
             return '';
         }
         $url =$this->getFiscUrl();
-        // $firm = \App\Entity\Firm::load($this->firm_id);
+        
         if($text) {
             if(strlen($url)==0) {
                 return false;
@@ -1139,26 +1149,23 @@ class Document extends \ZCL\DB\Entity
         if( $this->payamount > 0 &&  $this->payamount <=  $this->payed  ) {
             return false;
         }
-        $f=null;
-        if($this->firm_id >0) {
-            $f =  \App\Entity\Firm::load($this->firm_id) ;
-        } else {
-            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
-        }
-
-        if($f == null) {
-            return false;
-        }
-        $kod=strlen($f->tin) >0 ? $f->tin : $f->inn;
-       
-        $iban=$this->getIBAN();
-         
+ 
+   
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
         
-        if(strlen($kod)==0 || strlen($iban) == 0) {
+      
+        if($mf == null) {
+            return false;
+        }
+ 
+        $payee= $mf->payname ??'' ;
+        $kod= $mf->code ??'' ;   
+        $iban = $mf->iban??'';
+        if(strlen($kod)==0 || strlen($iban) == 0|| strlen($payee) == 0) {
             return false;
         }
 
-       
+         
         
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
@@ -1170,18 +1177,10 @@ class Document extends \ZCL\DB\Entity
             $payamount =  $this->headerdata['payedcard'] ;
         }
 
-        $payee= (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ;
+    
+ 
         
-        /*
-        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
-        
-        if($mf != null  && strlen($mf->tin??'') >0) {
-            $kod =  $mf->tin??'';
-        }       
-        if($mf != null  && strlen($mf->payname??'') >0) {
-            $payee =  $mf->payname??'';
-        }       
-        */
+ 
         $url = "BCD\n002\n1\nUCT\n\n";
         $url = $url .  $payee ."\n";
         $url = $url .  $iban."\n";
@@ -1205,24 +1204,7 @@ class Document extends \ZCL\DB\Entity
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
- 
-    public function getIBAN() {
-        if($this->firm_id >0) {
-            $f =  \App\Entity\Firm::load($this->firm_id) ;
-        } else {
-            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
-        }  
-        
-        $iban=$f->iban??'';  
-        
-        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
-        
-        if($mf != null  && strlen($mf->iban??'') >0) {
-            $iban =  $mf->iban??'';
-        }
-        
-        return $iban;
-    }
+   
 
     /**
     *    возвращает ссылку  на чек в  налоговой
@@ -1357,5 +1339,8 @@ class Document extends \ZCL\DB\Entity
  
     }
     
-    
+    public   function DoAcc() {
+         
+    } 
+      
 }

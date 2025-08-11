@@ -6,6 +6,7 @@ use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Store;
+use App\Entity\IOState;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -23,7 +24,7 @@ use Zippy\Html\Link\SubmitLink;
 /**
  * Страница  ввода оприходование товаров
  */
-class IncomeItem extends \App\Pages\Base
+class AdvanceRep extends \App\Pages\Base
 {
     public $_itemlist  = array();
     private $_doc;
@@ -52,8 +53,12 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
- 
-       
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+        $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new TextInput('examount'));
+        $this->docform->add(new TextInput('spentamount'));
+        $this->docform->add(new DropDownChoice('spenttype', IOState::getTypeListAdv(), IOState::TYPE_COMMON_OUTCOME));
+    
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -99,29 +104,24 @@ class IncomeItem extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
+            $this->docform->spenttype->setValue($this->_doc->headerdata['spenttype']);
+            $this->docform->examount->setText($this->_doc->headerdata['examount']);
+            $this->docform->spentamount->setText($this->_doc->headerdata['spentamount']);
+            $this->docform->total->setText($this->_doc->headerdata['total']);
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
         } else {
-            $this->_doc = Document::create('IncomeItem');
+            $this->_doc = Document::create('AdvanceRep');
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'OutcomeItem') {
-
-
-                        foreach ($basedoc->unpackDetails('detaildata') as $it) {
-
-                            //последняя партия
-                            $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$basedoc->headerdata['store'] }", 'stock_id desc');
-                            $it->price = $stock->partion;
-
-                            $this->_itemlist[] = $it;
-                        }
-                    }
+                   
                 }
             }
         }
@@ -133,7 +133,7 @@ class IncomeItem extends \App\Pages\Base
 
         $this->docform->detail->Reload();
         $this->calcTotal();
-        
+       
     }
 
     public function detailOnRow($row) {
@@ -273,14 +273,22 @@ class IncomeItem extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
-       
+        $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
+        $this->_doc->headerdata['spenttype'] = $this->docform->spenttype->getValue();
+        $this->_doc->headerdata['spenttypename'] = $this->docform->spenttype->getValueName();
+        $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
+        $this->_doc->headerdata['spentamount'] = $this->docform->spentamount->getText();
+        $this->_doc->headerdata['total'] = $this->docform->total->getText();
+
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-        $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->amount =  doubleval( $this->docform->total->getText() ) + doubleval( $this->_doc->headerdata['examount'])+ doubleval( $this->_doc->headerdata['spentamount'] );
         if ($this->checkForm() == false) {
             return;
         }
@@ -356,12 +364,18 @@ class IncomeItem extends \App\Pages\Base
                 $this->setError('Не створено унікальный номер документа');
             }
         }
-        if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+                                                           
+
+        if (($this->docform->store->getValue() > 0) == false &&  doubleval( $this->docform->examount->getText() ) > 0) {
+            $this->setError("Не обрано касу");
         }
 
-        if (($this->docform->store->getValue() > 0) == false) {
+        if (($this->docform->exmf->getValue() > 0) == false && count($this->_itemlist) > 0) {
             $this->setError("Не обрано склад");
+        }
+
+        if (($this->docform->emp->getValue() > 0) == false  ) {
+            $this->setError("Не обрано співробітника");
         }
 
 
@@ -385,6 +399,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
+   
     public function onOpensn($sender) {
         $this->docform->setVisible(false) ;
         $this->editsnitem->setVisible(true) ;
@@ -396,7 +411,7 @@ class IncomeItem extends \App\Pages\Base
 
     } 
     
-   public function savesnOnClick($sender) {
+    public function savesnOnClick($sender) {
         $common = \App\System::getOptions("common");
 
         $id = $this->editsnitem->editsnitemname->getKey();

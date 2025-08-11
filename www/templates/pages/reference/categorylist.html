@@ -124,14 +124,18 @@
                             </div> 
                         </div> 
                            {{/useimages}}
+                        {{#shop}}   
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозi</label>
                         </div>
+                         {{/shop}}
+                            {{#usefood}}  
                         <div class="form-check">
                             <input zippy="editnofastfood" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="editnofastfood">Не показувати в кафе</label>
                         </div>
+                          {{/usefood}}  
                            <div class="form-check">
                                 <input zippy="editnoprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>

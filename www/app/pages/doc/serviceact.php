@@ -51,7 +51,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
+
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
        
@@ -157,7 +157,7 @@ class ServiceAct extends \App\Pages\Base
 
             $this->_itemlist = $this->_doc->unpackDetails('detail2data');
             $this->_serlist = $this->_doc->unpackDetails('detaildata');
-            $this->docform->firm->setValue($this->_doc->firm_id);
+            
 
             $this->OnChangeCustomer($this->docform->customer);
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -512,8 +512,7 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['devdesc'] = $this->docform->devdesc->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-
+      
         $this->_doc->packDetails('detaildata', $this->_serlist);
         $this->_doc->packDetails('detail2data', $this->_itemlist);
 
@@ -786,9 +785,8 @@ class ServiceAct extends \App\Pages\Base
   
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+      
+        $ar = \App\Entity\Contract::getList($c );
 
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {

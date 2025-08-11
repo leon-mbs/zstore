@@ -10,14 +10,15 @@ class Menu extends \Zippy\Html\WebPage
     public function __construct($pm=0,$tn=0) {
         parent::__construct();
 
-        $options = \App\System::getOptions('food');
-
-        
-        
-        if($options['menu'] != 1) {
+        $options = \App\System::getOptions('common');
+         
+        if($options['usefood'] != 1) {
             http_response_code(404);
             die;
-        }
+        }  
+     
+        $options = \App\System::getOptions('food');
+       
         $this->_tvars['alert']   = false ;     
   
         if($pm=='tableno')  {
@@ -88,7 +89,7 @@ class Menu extends \Zippy\Html\WebPage
                 $it=array(
                     'itemname'=>$item->itemname ,
                     'imglink'=>$item->getImageUrl(true) ,
-                    'desc'=> substr($item->description, 0, 200) ,
+                    'desc'=>  $item->description ,
                     'price'=>$item->getPrice($options['pricetype']) ,
                     'priceout'=>false ,
                     'customsize'=> $item->customsize 

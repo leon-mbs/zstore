@@ -46,12 +46,7 @@ class common extends JsonRPC
         return $list;
     }
 
-    //список  компаний
-    public function firmlist() {
-        $list = \App\Entity\Firm::findArray('firm_name', 'disabled<>1', 'firm_name');
-
-        return $list;
-    }
+  
 
     //список  источников  продаж
     public function sourcelist() {

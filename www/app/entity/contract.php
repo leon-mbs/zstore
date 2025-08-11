@@ -60,15 +60,13 @@ class Contract extends \ZCL\DB\Entity
         return true;
     }
 
-    public static function getList($c, $f = 0) {
+    public static function getList($c ) {
 
         $ar = array();
 
         if ($c > 0) {
             $where = "disabled <> 1 and customer_id={$c} ";
-            if ($f > 0) {
-                $where .= " and firm_id =  " . $f;
-            }
+     
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
                 $ar[$k] = $v->contract_number . ' ' . $v->shortdesc;

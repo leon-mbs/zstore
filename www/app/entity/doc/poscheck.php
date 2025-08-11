@@ -50,7 +50,7 @@ class POSCheck extends Document
 
         $common = System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id,$this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
         $shopname=$common["shopname"] ;
         $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
@@ -132,7 +132,7 @@ class POSCheck extends Document
 
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
     
         $shopname=$common["shopname"] ;
         $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
@@ -316,7 +316,8 @@ class POSCheck extends Document
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
             $sc->setOutPrice( $ser->price * $k);
-
+            $sc->cost= $ser->cost;
+        
             $sc->save();
         }
  

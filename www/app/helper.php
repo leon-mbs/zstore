@@ -463,9 +463,18 @@ class Helper
      *
      * @param mixed $msg
      */
-    public static function log($msg) {
+    public static function logdebug($msg) {
         global $logger;
         $logger->debug($msg);
+    }
+    /**
+     * логгирование
+     *
+     * @param mixed $msg
+     */
+    public static function log($msg) {
+        global $logger;
+        $logger->info($msg);
     }
 
     /**
@@ -478,23 +487,7 @@ class Helper
         $logger->error($msg);
     }
 
-    /**
-     * Возвращает компанию  по  умолчанию
-     *
-     */
-    public static function getDefFirm() {
-        $user = System::getUser();
-        if($user->deffirm > 0) {
-            return $user->deffirm;
-        }
-        $first = \App\Entity\Firm::getFirst( "disabled <> 1", "firm_id");;
-
-        if($first != null) {
-          
-            return $first->firm_id;
-        }
-        return 0;
-    }
+ 
 
     /**
      * Возвращает склад  по  умолчанию
@@ -750,22 +743,11 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($firm_id = 0, $branch_id = 0) {
-        $data = array();
-        if($firm_id > 0) {
-            $firm = \App\Entity\Firm::load($firm_id);
-            if($firm == null) {
-                $firm = \App\Entity\Firm::load(self::getDefFirm());
-            }
-            if($firm != null) {
-                $data = $firm->getData();
-            }
-        } else {
-            $firm = \App\Entity\Firm::load(self::getDefFirm());
-            if($firm != null) {
-                $data = $firm->getData();
-            }
-        }
+    public static function getFirmData(  $branch_id = 0) {
+        
+         
+        $data = System::getOptions("firm");
+ 
 
         if($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
@@ -778,6 +760,11 @@ class Helper
             }
         }
 
+        $user = System::getUser() ;
+        if(strlen($user->payname ??'')>0)   $data['firm_name']  = $user->payname;
+        if(strlen($user->address ??'')>0)   $data['address']  = $user->address;
+        if(strlen($user->tin ??'')>0)   $data['tin']  = $user->tin;
+         
         return $data;
     }
 
@@ -1364,6 +1351,7 @@ class Helper
         $conn = \ZDB\DB::getConnect();
 
         $vdb=\App\System::getOptions('version',true ) ;
+        $common=\App\System::getOptions('common' ) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
@@ -1522,7 +1510,26 @@ class Helper
             }  
         }
             
+        $migration6142 = \App\Helper::getKeyVal('migration6142'); 
+        if($migration6142 != "done" && version_compare($vdb,'6.14.2')>=0  ) {
+            Helper::log("Міграція 6142");
+         
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
+            if($cnt > 0){
+               $common['usefood'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
+            if($cnt > 0){
+               $common['useprod'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            Session::getSession()->menu = [];     
+         
+            \App\Helper::setKeyVal('migration6142', "done");           
         
+       
+        }       
     }
 
 

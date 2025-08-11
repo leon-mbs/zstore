@@ -49,12 +49,16 @@ class GoodsIssue extends Document
 
         $totalstr =  \App\Util::money2str_ua($this->payamount);
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');
 
-        $iban=$this->getIBAN();
+        $iban=$mf->iban??'';
+        if(strlen($mf->payname ??'') > 0) $firm['firm_name']   = $mf->payname;
+        if(strlen($mf->address ??'') > 0) $firm['address']   = $mf->address;
+        if(strlen($mf->tin ??'') > 0) $firm['fedrpou']   = $mf->tin;
+        if(strlen($mf->inn ??'') > 0) $firm['finn']   = $mf->inn;
    
 
         $header = array('date'      => H::fd($this->document_date),
@@ -110,10 +114,7 @@ class GoodsIssue extends Document
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['inn']) > 0) {
-            $header["finn"] = $firm['inn'];
-        }
-
+  
 
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
@@ -215,6 +216,7 @@ class GoodsIssue extends Document
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
+               
                 $sc->tag=Entry::TAG_SELL;
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
@@ -264,7 +266,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');

@@ -429,7 +429,7 @@ class Order extends \App\Pages\Base
             return;
         }
        
-        $item = Item::findBarCode($code,$store_id);
+        $item = Item::findBarCode($code,$store_id??0);
  
         if ($item == null) {
             $this->setWarn("Товар з кодом `{$code}` не знайдено");

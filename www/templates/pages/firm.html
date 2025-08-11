@@ -1,0 +1,145 @@
+<html>
+ <head>
+        <title>  Данi компанiї  </title>
+
+    </head>
+
+    <body>
+ 
+        <div class="row">
+             
+         <div class="col-12   ">
+                <h5>Данi компанiї</h5>
+           </div>
+         <div class="col-12   ">           
+           <form zippy="firmform">  
+            <div class="row">
+               <div class="col-12 col-md-4 col-xl-3 ">
+                       
+                            <div class="form-group">
+                                <label for="firm_name">Назва</label>
+                                <input  required  class="form-control" zippy="firm_name"/>
+                            </div>
+
+                           
+                            <div class="form-group">
+                                <label for="phone">Телефон  </label>
+                                <input class="form-control" type="text" zippy="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Адреса </label>
+                                <input class="form-control" type="text" zippy="address">
+                            </div>  
+                         <div class="form-group">
+                                <label for="city">Мiсто </label>
+                                <input class="form-control" type="text" zippy="city">
+                            </div>  
+       
+                         <div class="form-check">
+                            <input  disabled  zippy="isjur" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
+                           
+                        </div>  
+                         <div class="form-check">
+                            <input  disabled zippy="usends" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="usends">Платник  ПДВ </label>
+                           
+                        </div>             
+                          
+                                  
+                                                                                     
+         
+
+                 {{#vdoc}}
+                     <div class="form-group">
+                        <label for="vdoc">Токен Вчасно.EDO</label>
+                        <input type="text" zippy="vdoc" class="form-control" />
+                    </div> 
+                      {{/vdoc}}           
+                  </div>   
+                    
+              <div class="col-12 col-md-4 col-xl-3 "   >
+                      
+                                                                        
+                            <div class="form-group row">
+                                 <label class="col-3 col-form-label" for="inn">IПН </label>
+                              <div class="col-6">
+                                 <input class="form-control" type="text" zippy="inn">
+                              </div>
+                            </div>
+                           
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="tin">ЄДРПОУ </label>
+                               <div class="col-6">
+                                 <input class="form-control" type="text" zippy="tin">
+                              </div>
+                            </div>
+                           
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="koatuu">КОАТУУ</label>
+                               <div class="col-6">
+                                    <input class="form-control " type="number" zippy="koatuu">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="kopfg">КОПФГ</label>
+                               <div class="col-6">
+                                <input class="form-control " type="number" zippy="kopfg">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="kodu">КОДУ</label>
+                                 <div class="col-6">
+                                   <input class="form-control " type="number" zippy="kodu">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="kved">КВЕД</label>
+                                  <div class="col-6">
+                                   <input class="form-control " zippy="kved">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-3 col-form-label" for="gni">Код ДПІ</label>
+                               <div class="col-6">
+                                 <input class="form-control " type="number" zippy="gni">
+                               </div>
+                            </div>
+                          
+
+                        </div>   
+                          
+              <div class="col-12 col-md-3 col-xl-2 "   >
+                <div class="form-group">
+                        <label for="logo">Логотип </label>
+                        <input class="form-control" type="text" zippy="logo">
+                        <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня сайту. Наприклад,
+                            '/upload/logo.png'</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="stamp">Печатка </label>
+                        <input class="form-control" type="text" zippy="stamp">
+                        <small class="form-text text-muted">Шлях до файла зображення вiдносно кореня сайту. </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="sign">Пiдпис (факсимiле) </label>
+                        <input class="form-control" type="text" zippy="sign">
+                        <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту. </small>
+                    </div>                          
+                  </div>         <div class="col-12   ">                                             
+                           
+                               <button class="btn btn-success" type="submit">Зберегти</button>
+                              
+                         </div>                        
+                   </div>                        
+                                                           
+                  </form>
+            
+           </div>
+              
+        </div>
+ 
+           
+    </body>
+
+</html>

@@ -34,7 +34,7 @@ class Users extends \App\Pages\Base
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\Entity\UserRole::findArray('rolename', '', 'rolename'), 0));
+        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\Entity\UserRole::findArray('rolename', 'disabled<>1', 'rolename'), 0));
 
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();
@@ -44,7 +44,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('editlogin'));
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
-        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', '', 'rolename')));
+        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', 'disabled<>1', 'rolename')));
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
