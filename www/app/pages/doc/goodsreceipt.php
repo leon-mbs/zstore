@@ -1129,9 +1129,8 @@ class GoodsReceipt extends \App\Pages\Base
 
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+     
+        $ar = \App\Entity\Contract::getList($c f);
 
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {

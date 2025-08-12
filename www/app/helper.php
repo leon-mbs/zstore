@@ -1510,9 +1510,9 @@ class Helper
             }  
         }
             
-        $migration6142 = \App\Helper::getKeyVal('migration6142'); 
-        if($migration6142 != "done" && version_compare($vdb,'6.14.2')>=0  ) {
-            Helper::log("Міграція 6142");
+        $migration6150 = \App\Helper::getKeyVal('migration6150'); 
+        if($migration6150 != "done" && version_compare($vdb,'6.15.0')>=0  ) {
+        //    Helper::log("Міграція 6150");
          
             $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
             if($cnt > 0){
@@ -1526,7 +1526,7 @@ class Helper
             }
             Session::getSession()->menu = [];     
          
-            \App\Helper::setKeyVal('migration6142', "done");           
+            \App\Helper::setKeyVal('migration6150', "done");           
         
        
         }       
