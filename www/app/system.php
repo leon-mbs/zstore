@@ -301,6 +301,7 @@ class System
     * 
     */
     public static function checkVersion() {
+        /*
         $phpv =   phpversion()  ;
         $phpv = substr(str_replace('.','',$phpv),0,2) ;
        
@@ -312,7 +313,10 @@ class System
             $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
             $data = @json_decode($v, true);
         }   
-        
+        */
+        $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
+        $data = @json_decode($v, true);
+   
         return $data;     
     }
 }
