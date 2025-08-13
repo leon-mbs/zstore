@@ -1314,16 +1314,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "2.3.10",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "22058ce75b774bf40ceefcadd090a424d558f1ca"
+                "reference": "3a3cad86101a77019eb2fc693aab1a8c11b18b94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/22058ce75b774bf40ceefcadd090a424d558f1ca",
-                "reference": "22058ce75b774bf40ceefcadd090a424d558f1ca",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/3a3cad86101a77019eb2fc693aab1a8c11b18b94",
+                "reference": "3a3cad86101a77019eb2fc693aab1a8c11b18b94",
                 "shasum": ""
             },
             "require": {
@@ -1413,9 +1413,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.3.10"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.4.0"
             },
-            "time": "2025-07-23T04:43:28+00:00"
+            "time": "2025-08-10T06:45:13+00:00"
         },
         {
             "name": "picqer/php-barcode-generator",
