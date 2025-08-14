@@ -37,7 +37,7 @@ include_once _ROOT . "vendor/adodb/adodb-php/adodb-exceptions.inc.php";
 // логгер
 $logger = new \Monolog\Logger("main");
 
-$level = 200  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;;
+$level = $_config['common']['loglevel'] ??200;
 
 $output = "%datetime%  %level_name%: %message% \n";
 $formatter = new \Monolog\Formatter\LineFormatter($output, "Y-m-d H:i");

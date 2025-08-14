@@ -105,9 +105,13 @@ class Helper
         if ($cat_id == 0) {
             return $list;
         }
-        $conn = DB::getConnect();
-
+ 
         $cat = \App\Entity\Category::load($cat_id);
+        if ($cat == null) {
+            return $list;
+        }
+        $conn = DB::getConnect();
+        
         $plist = $cat->getParents();
         $plist[] = $cat_id;
         $grlist = implode(',', $plist);

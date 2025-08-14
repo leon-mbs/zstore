@@ -989,7 +989,7 @@ class Item extends \ZCL\DB\Entity
         
         $s=explode('-',$barcode) ;
         
-        $item= Item::load(trim($s[2]));
+        $item= Item::load(trim($s[2]??0));
         if($item != null)  {
                 
                 $item->price = \App\Helper::fa($s[0]);
