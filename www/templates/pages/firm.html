@@ -34,21 +34,14 @@
                                 <label for="city">Мiсто </label>
                                 <input class="form-control" type="text" zippy="city">
                             </div>  
-       
+                          {{#hideblock}} 
                          <div class="form-check">
-                            <input  disabled  zippy="isjur" type="checkbox" class="form-check-input">
+                            <input     zippy="isjur" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
                            
                         </div>  
-                         <div class="form-check">
-                            <input  disabled zippy="usends" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="usends">Платник  ПДВ </label>
-                           
-                        </div>             
-                          
-                                  
-                                                                                     
-         
+                          {{/hideblock}} 
+ 
 
                  {{#vdoc}}
                      <div class="form-group">

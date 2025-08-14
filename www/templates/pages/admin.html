@@ -33,13 +33,19 @@
                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                    title="Вмикаются  пункти меню, що стосуются виробництсва "></i>
             </div>
+                 {{#hideblock}} 
+             <div class="form-check">
+                <input  disabled zippy="usends" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usends">Облiк  ПДВ </label>
+               
+            </div>   
           
              <div class="form-check">
-                <input  disabled zippy="useacc" type="checkbox" class="form-check-input">
+                <input    zippy="useacc" type="checkbox" class="form-check-input">
                 <label class="form-check-label" for="useacc">Бухгалтерський облiк </label>
                
             </div>      
-  
+                {{/hideblock}} 
            
              <div class="form-group mt-2"> 
 

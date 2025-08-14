@@ -45,12 +45,13 @@ try {
 
 
 } catch (Throwable $e) {
-    if ($e instanceof \ADODB_Exception) {
-
-        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
-    }
     $msg = $e->getMessage();
-    $logger->error($e);
+    $logger->error($msg);
+    if ($e instanceof \ADODB_Exception) {
+        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
+        $logger->debug($e->sql);        
+    }
+
     if ($e instanceof Throwable) {
         echo $e->getMessage() . '<br>';
         echo $e->getLine() . ' ';

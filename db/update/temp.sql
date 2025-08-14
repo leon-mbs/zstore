@@ -1,12 +1,14 @@
 
 
 
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(60, 3, 'Реестр НН', 'TaxInvoiceList', '', '', 0, 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(61, 1, 'Налоговая накладная', 'TaxInvoice', 'Продажи', '', 0, 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(62, 1, 'Приложение2 к НН', 'TaxInvoice2', 'Продажи', '', 1, 0);
-INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(63, 1, 'Входящая НН', 'TaxInvoiceIncome', 'Закупки', '', 0, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(60, 3, 'Реєстр ПН', 'TaxInvoiceList', '', '', 0, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(61, 1, 'Податкова накладна', 'TaxInvoice', 'Продажі', '', 0, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(62, 1, 'Дрдаток2 к НН', 'TaxInvoice2', 'Продажі', '', 1, 0);
+INSERT INTO `metadata` (`meta_id`, `meta_type`, `description`, `meta_name`, `menugroup`, `notes`, `disabled`, `smartmenu`) VALUES(63, 1, 'Вхідна ПН', 'TaxInvoiceIncome', 'Закупівлі', '', 0, 0);
 
-
+ 
+*****************************    
+ 
 CREATE TABLE acc_entry (
   id bigint NOT NULL AUTO_INCREMENT,
   createdon DATE DEFAULT NULL,
@@ -47,9 +49,7 @@ FROM  acc_entry e
   JOIN documents d
     ON  d.document_id = e.document_id ;
 
- 
-*****************************    
- 
+
     
     
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 4, 'План рахункiв', 'AccountList', 'Бухоблiк',   0 );
