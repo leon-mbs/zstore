@@ -194,7 +194,7 @@ class IOState extends \App\Pages\Base
         $i1 = 0;
         $i2 = 0;
         foreach ($list as $doc) {
-            if($doc->iotype < 30)) {
+            if($doc->iotype < 30)  {
                $i1++; 
                $i =  $i1;
                $sheet =  $sheet1; 
