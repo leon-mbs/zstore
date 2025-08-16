@@ -28,9 +28,9 @@ class TaxInvoice extends Document
                 "measure_name" => $value['measure_name'],
                 "measure_code" => $value['measure_code'],
                 "quantity" => $value['quantity'] / 1000,
-                "price" => H::famt($value['price']),
-                "nds" => H::famt($value['pricends'] - $value['price']),
-                "amount" => H::famt(($value['quantity'] ) * $value['price'])
+                "price" => H::fa($value['price']),
+                "nds" => H::fa($value['pricends'] - $value['price']),
+                "amount" => H::fa(($value['quantity'] ) * $value['price'])
             );
             $total += ($value['quantity'] ) * $value['price'];
         }
@@ -59,9 +59,9 @@ class TaxInvoice extends Document
             "paytype" => $this->headerdata["paytype"],
             "document_number" => \App\Util::addSpaces($this->document_number),
             "document_date" => \App\Util::addSpaces(date('Ymd', $this->document_date)),
-            "totalnds" => H::famt($this->headerdata["totalnds"]),
-            "total" => H::famt($total),
-            "totalall" => H::famt($total + $this->headerdata["totalnds"])
+            "totalnds" => H::fa($this->headerdata["totalnds"]),
+            "total" => H::fa($total),
+            "totalall" => H::fa($total + $this->headerdata["totalnds"])
         );
 
         $report = new \App\Report('taxinvoice.tpl');
@@ -147,11 +147,11 @@ class TaxInvoice extends Document
                 $xml .= "<RXXXXG4  ROWNUM=\"{$num}\">{$value['uktzed']}</RXXXXG4>";
             $xml .= "<RXXXXG3S ROWNUM=\"{$num}\">{$value['itemname']}</RXXXXG3S>";
             $xml .= "<RXXXXG5  ROWNUM=\"{$num}\">{$value['quantity']}</RXXXXG5>";
-            $xml .= "<RXXXXG6  ROWNUM=\"{$num}\">" . H::famt($value['price']) . "</RXXXXG6>";
-            $xml .= "<RXXXXG010   ROWNUM=\"{$num}\">" . H::famt($value['quantity'] * $value['price']) . "</RXXXXG010 >";
+            $xml .= "<RXXXXG6  ROWNUM=\"{$num}\">" . H::fa($value['price']) . "</RXXXXG6>";
+            $xml .= "<RXXXXG010   ROWNUM=\"{$num}\">" . H::fa($value['quantity'] * $value['price']) . "</RXXXXG010 >";
         }
-        $total = H::famt($this->headerdata["total"]);
-        $totalnds = H::famt($this->headerdata["totalnds"]);
+        $total = H::fa($this->headerdata["total"]);
+        $totalnds = H::fa($this->headerdata["totalnds"]);
         $totalall = $total + $totalnds;
 
         $xml .= "<R04G11>{$totalall}</R04G11>";

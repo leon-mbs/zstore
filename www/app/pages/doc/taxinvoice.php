@@ -74,7 +74,7 @@ class TaxInvoice extends \App\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
 
-            $this->docform->totalnds->setText(H::famt($this->_doc->headerdata['totalnds']));
+            $this->docform->totalnds->setText(H::fa($this->_doc->headerdata['totalnds']));
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->ernn->setChecked($this->_doc->headerdata['ernn']);
             $this->docform->paytype->setText($this->_doc->headerdata['paytype']);
@@ -140,9 +140,9 @@ class TaxInvoice extends \App\Pages\Base
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('measure', $item->measure_name));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', H::famt($item->price)));
-        $row->add(new Label('pricends', H::famt($item->pricends)));
-        $row->add(new Label('amount', H::famt(($item->quantity ) * $item->pricends)));
+        $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
+        $row->add(new Label('amount', H::fa(($item->quantity ) * $item->pricends)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -168,8 +168,8 @@ class TaxInvoice extends \App\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editprice->setText(H::famt($item->price));
-        $this->editdetail->editpricends->setText(H::famt($item->pricends));
+        $this->editdetail->editprice->setText(H::fa($item->price));
+        $this->editdetail->editpricends->setText(H::fa($item->pricends));
 
 
         $this->editdetail->edititem->setValue($item->item_id);
@@ -275,8 +275,8 @@ class TaxInvoice extends \App\Pages\Base
         }
 
         $nds = H::nds() * $total;
-        $this->docform->totalnds->setText(H::famt($nds));
-        $this->docform->total->setText(H::famt($total + $nds));
+        $this->docform->totalnds->setText(H::fa($nds));
+        $this->docform->total->setText(H::fa($total + $nds));
     }
 
     /**
@@ -316,11 +316,11 @@ class TaxInvoice extends \App\Pages\Base
     public function OnChangeItem($sender) {
 
         $item = Item::load($this->editdetail->edititem->getKey());
-        $this->editdetail->editprice->setText(H::famt($item->price1));
+        $this->editdetail->editprice->setText(H::fa($item->price1));
 
         $nds = H::nds();
 
-        $this->editdetail->editpricends->setText(H::famt($item->price1 + $item->price1 * $nds));
+        $this->editdetail->editpricends->setText(H::fa($item->price1 + $item->price1 * $nds));
 
         $this->updateAjax(array('editprice', 'editpricends'));
     }

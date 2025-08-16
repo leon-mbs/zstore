@@ -72,7 +72,7 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
             $this->_doc = Document::load($docid);
             $this->docform->document_number->setText($this->_doc->document_number);
 
-            $this->docform->totalnds->setText(H::famt($this->_doc->headerdata['totalnds']));
+            $this->docform->totalnds->setText(H::fa($this->_doc->headerdata['totalnds']));
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->ernn->setChecked($this->_doc->headerdata['ernn']);
             $this->docform->paytype->setText($this->_doc->headerdata['paytype']);
@@ -140,9 +140,9 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('measure', $item->measure_name));
         $row->add(new Label('quantity', $item->quantity / 1000));
-        $row->add(new Label('price', H::famt($item->price)));
-        $row->add(new Label('pricends', H::famt($item->pricends)));
-        $row->add(new Label('amount', H::famt(($item->quantity / 1000) * $item->pricends)));
+        $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
+        $row->add(new Label('amount', H::fa(($item->quantity / 1000) * $item->pricends)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -168,8 +168,8 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
         $this->docform->setVisible(false);
 
         $this->editdetail->editquantity->setText($item->quantity / 1000);
-        $this->editdetail->editprice->setText(H::famt($item->price));
-        $this->editdetail->editpricends->setText(H::famt($item->pricends));
+        $this->editdetail->editprice->setText(H::fa($item->price));
+        $this->editdetail->editpricends->setText(H::fa($item->pricends));
 
 
         $this->editdetail->edittovar->setValue($item->item_id);
@@ -276,8 +276,8 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
         }
 
         $nds = H::nds() * $total;
-        $this->docform->totalnds->setText(H::famt($nds));
-        $this->docform->total->setText(H::famt($total + $nds));
+        $this->docform->totalnds->setText(H::fa($nds));
+        $this->docform->total->setText(H::fa($total + $nds));
     }
 
     /**
@@ -307,9 +307,9 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
     public function OnItem(DropDownChoice $sender) {
         $id = $sender->getValue();
         $item = Item::load($id);
-        $this->editdetail->editprice->setText(H::famt($item->priceopt));
+        $this->editdetail->editprice->setText(H::fa($item->priceopt));
 
-        $this->editdetail->editpricends->setText(H::famt($item->priceopt + $item->priceopt * H::nds()));
+        $this->editdetail->editpricends->setText(H::fa($item->priceopt + $item->priceopt * H::nds()));
 
         $this->updateAjax(array('editprice', 'editpricends'));
     }
@@ -322,11 +322,11 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
     public function OnChangeItem($sender) {
 
         $item = Item::load($this->editdetail->edittovar->getValue());
-        $this->editdetail->editprice->setText(H::famt($item->priceopt));
+        $this->editdetail->editprice->setText(H::fa($item->priceopt));
 
         $nds = H::nds();
 
-        $this->editdetail->editpricends->setText(H::famt($item->priceopt + $item->priceopt * $nds));
+        $this->editdetail->editpricends->setText(H::fa($item->priceopt + $item->priceopt * $nds));
 
         $this->updateAjax(array('editprice', 'editpricends', 'qtystock'));
     }

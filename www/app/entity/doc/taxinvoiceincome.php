@@ -24,9 +24,9 @@ class TaxInvoiceIncome extends Document
                 "itemname" => $value['itemname'],
                 "measure" => $value['msr'],
                 "quantity" => $value['quantity'],
-                "price" => H::famt($value['price']),
-                "pricends" => H::famt($value['pricends']),
-                "amount" => H::famt($value['quantity'] * $value['price'])
+                "price" => H::fa($value['price']),
+                "pricends" => H::fa($value['pricends']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
         }
 
@@ -38,8 +38,8 @@ class TaxInvoiceIncome extends Document
             "firmcode" => $firm['code'],
             "customername" => $this->headerdata["customername"],
             "document_number" => $this->document_number,
-            "totalnds" => $this->headerdata["totalnds"] > 0 ? H::famt($this->headerdata["totalnds"]) : 0,
-            "total" => H::famt($this->headerdata["total"])
+            "totalnds" => $this->headerdata["totalnds"] > 0 ? H::fa($this->headerdata["totalnds"]) : 0,
+            "total" => H::fa($this->headerdata["total"])
         );
 
         $report = new \App\Report('taxinvoiceincome.tpl');

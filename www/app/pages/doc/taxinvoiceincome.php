@@ -149,9 +149,9 @@ class TaxInvoiceIncome extends \App\Pages\Base
         $row->add(new Label('tovar', $item->itemname));
         $row->add(new Label('measure', $item->measure_name));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new Label('price', H::famt($item->price)));
-        $row->add(new Label('pricends', H::famt($item->pricends)));
-        $row->add(new Label('amount', H::famt($item->amount)));
+        $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
+        $row->add(new Label('amount', H::fa($item->amount)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -165,8 +165,8 @@ class TaxInvoiceIncome extends \App\Pages\Base
 
 
         $this->editdetail->editquantity->setText($item->quantity);
-        $this->editdetail->editprice->setText(H::famt($item->price));
-        $this->editdetail->editpricends->setText(H::famt($item->pricends));
+        $this->editdetail->editprice->setText(H::fa($item->price));
+        $this->editdetail->editpricends->setText(H::fa($item->pricends));
         $this->_rowid = $item->item_id;
     }
 
@@ -282,8 +282,8 @@ class TaxInvoiceIncome extends \App\Pages\Base
             $total = $total + $item->amount;
             $totalnds = $totalnds + ($item->pricends - $item->price) * $item->quantity;
         }
-        $this->docform->total->setText(H::famt($total));
-        $this->docform->totalnds->setText(H::famt($totalnds));
+        $this->docform->total->setText(H::fa($total));
+        $this->docform->totalnds->setText(H::fa($totalnds));
     }
 
     /**

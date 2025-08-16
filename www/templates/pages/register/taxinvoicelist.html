@@ -1,10 +1,14 @@
 <html>
+     <head>
+        <title> Податковi накладнi  </title>
+
+    </head>
     <body>
         <div class="row">
-            <div class="col-10">
+            <div class="col-12 col-md-8 col-xl-6 ">
 
 
-                <h3>Реестр налоговых накладных </h3>
+                <h3>Податковi накладнi </h3>
 
                 <form zippy="filter" class="form-inline ">
 
@@ -18,11 +22,11 @@
                     <div class="form-check   ">
 
                         <input class="form-check-input"  type="checkbox" zippy="notchecked">
-                        <label class="form-check-label mr-sm-2" for="notchecked">Не проверены </label>
+                        <label class="form-check-label mr-sm-2" for="notchecked">Не в ЄРПН </label>
                     </div>
 
 
-                    <input type="submit" class="  btn btn-outline-success  " value="ОК">
+                    <input   type="submit" class="  btn btn-outline-success  " value="ОК">
 
 
                 </form>
@@ -30,11 +34,12 @@
 
                 <table class="table table-striped  table-sm">
                     <tr>
-                        <th>Название</th>
+                        <th>Назва</th>
                         <th>Номер</th>
-                        <th>Дата документа</th>
-                        <th style="text-align: right;">Сумма</th>
-                        <th style="width:20px">ЕРНН</th>
+                        <th>Дата </th>
+                      
+                        <th class="text-right" >Сума</th>
+                        <th class="text-right" >В ЄРПН </th>
                         <th></th>
 
 
@@ -44,21 +49,23 @@
                         <td zippy="number"></td>
                         <td zippy="date"></td>
                         <td zippy="amount"  class="text-right"></td>
-                        <td align="center"><i zippy="ernn" class="fa fa-check"></i></td>
-
+                        <td  > </td>
+                            <span zippy="ernn"></span>
                         <td>
-                            <a zippy="show" title="Пересмотр"><i class="fa fa-search"></i></a>
-                            <a zippy="edit" title="Редактировть"><i class="fa fa-edit"></i></a>
-                            <a zippy="cancel" title="Отменить"><i class="fa fa-undo"></i></a>
-
+                            <a zippy="show" title="Перегляд"><i class="fa fa-search"></i></a>
+                        
                         </td>
 
                     </tr>
                 </table>
-                <br>
+                  <div zippy="pag"></div>
+                 
                 <div zippy="docview"></div>
 
             </div>
         </div>
+        
+           
+        
     </body>
 </html>

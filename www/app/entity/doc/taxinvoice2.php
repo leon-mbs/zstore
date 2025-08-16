@@ -27,9 +27,9 @@ class TaxInvoice2 extends Document
                 "measure_name" => $value['measure_name'],
                 "measure_code" => $value['measure_code'],
                 "quantity" => $value['quantity'] / 1000,
-                "price" => H::famt($value['price']),
-                "pricends" => H::famt($value['pricends']),
-                "amount" => H::famt($value['quantity'] * $value['price'])
+                "price" => H::fa($value['price']),
+                "pricends" => H::fa($value['pricends']),
+                "amount" => H::fa($value['quantity'] * $value['price'])
             );
             $total += ($value['quantity'] / 1000) * $value['price'];
         }
@@ -56,9 +56,9 @@ class TaxInvoice2 extends Document
             "contractnumber" => $contractnumber,
             "paytype" => $this->headerdata["paytype"],
             "document_number" => $this->document_number,
-            "totalnds" => H::famt($this->headerdata["totalnds"]),
-            "total" => H::famt($total),
-            "totalall" => H::famt($total + $this->headerdata["totalnds"])
+            "totalnds" => H::fa($this->headerdata["totalnds"]),
+            "total" => H::fa($total),
+            "totalall" => H::fa($total + $this->headerdata["totalnds"])
         );
 
         $report = new \ZippyERP\ERP\Report('taxinvoice2.tpl');
@@ -138,11 +138,11 @@ class TaxInvoice2 extends Document
                 $xml .= "<RXXXXG4  ROWNUM=\"{$num}\">{$value['uktzed']}</RXXXXG4>";
             $xml .= "<RXXXXG3S ROWNUM=\"{$num}\">{$value['itemname']}</RXXXXG3S>";
             $xml .= "<RXXXXG5  ROWNUM=\"{$num}\">{$value['quantity']}</RXXXXG5>";
-            $xml .= "<RXXXXG6  ROWNUM=\"{$num}\">" . H::famt($value['price']) . "</RXXXXG6>";
-            $xml .= "<RXXXXG7  ROWNUM=\"{$num}\">" . H::famt($value['quantity'] * $value['price']) . "</RXXXXG7>";
+            $xml .= "<RXXXXG6  ROWNUM=\"{$num}\">" . H::fa($value['price']) . "</RXXXXG6>";
+            $xml .= "<RXXXXG7  ROWNUM=\"{$num}\">" . H::fa($value['quantity'] * $value['price']) . "</RXXXXG7>";
         }
-        $total = H::famt($this->headerdata["total"]);
-        $totalnds = H::famt($this->headerdata["totalnds"]);
+        $total = H::fa($this->headerdata["total"]);
+        $totalnds = H::fa($this->headerdata["totalnds"]);
         //$all = $total + $totalnds;
         $xml .= "<R01G7>" . ($total - $totalnds) . "</R01G7>";
         $xml .= "<R01G11>{$total}</R01G11>";
