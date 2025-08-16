@@ -255,7 +255,7 @@
                                    title="Код товару має бути унiкальним.
                                         Якщо використовується код виробника, слiд додати бренд до коду, наприклад, k123_назвабренду"></i>
                                 </label>                                
-                                <div class="col-7">
+                                <div class="col-5">
                                     <input class="form-control" zippy="editcode"/>
                                   
 
@@ -264,51 +264,41 @@
 
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editbarcode">Штрих код (основний)</label>
-                                <div class="col-7">
+                                <div class="col-5">
                                     <input class="form-control" zippy="editbarcode"/>
                                     <small   >Латинскi  букви i цифри</small>
                                 </div>
                             </div>
                            <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editbarcode1">Штрих код (додатковий)</label>
-                                <div class="col-7">
+                                <div class="col-5">
                                     <input class="form-control" zippy="editbarcode1"/>
                                     
                                 </div>
                             </div>
                       <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editbarcode2">Штрих код (додатковий)</label>
-                                <div class="col-7">
+                                <div class="col-5">
                                     <input class="form-control" zippy="editbarcode2"/>
                                     
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcode">Тип ТМЦ</label>
-                                <div class="col-7">
+                                <div class="col-5">
                                     <select class="form-control" zippy="edittype">
                                         <option value="0">Не вказано</option>
                                     </select>
-                                    <small  >Використовується якщо є виробництво</small>
+
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editminqty">Мін. кількість
-                                  <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Якщо задано, то при зменшенні кількості на складі менше вказаного,
-                                        товар з'явиться у відповідному віджеті на головній сторінці"></i>
-                                </label>                                 
-                                <div class="col-7">
-                                    <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editminqty"/>
-                                   
-                                </div>
-                            </div>
+                       
 
 
                            <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editmsr">Од. виміру</label>
-                                <div class="col-7">
+                                <div class="col-3">
                                     <input class="form-control" zippy="editmsr"/>
                                 </div>
                             </div>       
@@ -324,6 +314,26 @@
                                     
                                 </div>
                             </div>
+                         {{#usends}}      
+                            
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editisnds">Використання ПДВ</label>
+                            <div class="col-5">
+                                <select class="form-control" zippy="editisnds">
+                                    <option value="0">По категорії</option>
+                                    <option value="1">Без ПДВ</option>
+                                    <option value="2">Як вказано</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="form-group row">
+                            <label  class="col-5 col-form-label" for="editnds">Ставка ПДВ,%</label>
+                             <div class="col-4">
+                               <input style="width:75px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
+                            </div>  
+                        </div> 
+                         {{/usends}}     
+                              {{#useprod}}   
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editzarp">Сума оплати 
                                    <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
@@ -334,7 +344,7 @@
                                     
                                 </div>
                             </div>
-                      
+                            {{/useprod}}  
                             {{#usesnumber}}
                             <div class="form-check">
                                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
@@ -386,6 +396,17 @@
 
                         </div>
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                                 <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editminqty">Мін. кількість
+                                  <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Якщо задано, то при зменшенні кількості на складі менше вказаного,
+                                        товар з'явиться у відповідному віджеті на головній сторінці"></i>
+                                </label>                                 
+                                <div class="col-7">
+                                    <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editminqty"/>
+                                   
+                                </div>
+                            </div>
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник   </label>
                                 <div class="col-7">

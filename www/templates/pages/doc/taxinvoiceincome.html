@@ -1,0 +1,159 @@
+<html>
+    <head>
+        <script>
+            {{#usends}}
+            $(document).ready(function () {
+            $("#editprice").change(function () {
+            var s = $("#editprice").val()
+                    s = parseFloat(s) + s * {{_nds}};
+            $("#editpricends").val(s.toFixed(2));
+            });
+            $("#editpricends").change(function () {
+            var s = $("#editpricends").val() - $("#editpricends").val() * {{nds_}};
+            $("#editprice").val(s.toFixed(2));
+            });
+            })
+            {{/usends}}
+        </script>
+    </head>
+    <body>
+
+
+        <form zippy="docform" enctype="multipart/form-data">
+            <h3>Входная НН</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="document_number" >Номер документу</label>
+                        <input class="form-control" type="text" zippy="document_number" required="required">
+                    </div>
+                    <div class="form-group  ">
+                        <label for="customer" >Поставщик</label>
+
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="customer" />
+
+
+                    </div>
+                    <div class="form-group  ">
+                        <label for="contract" >Заказ, договор </label>
+
+                        <input class="form-control" type="text" zippy="contract">
+
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="document_date" > Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  >
+                    </div>
+
+                    <div class="form-group  ">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" zippy="ernn"> В ЕРНН
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+
+                    <a zippy="addrow">Добавть позицию</a>
+                    <table class="table  table-sm">
+                        <tr>
+                            <th>Назва</th>
+                            <th width="50">Ед.изм.</th>
+                            <th width="40" class="text-right"> Кол.</th>
+                            <th width="100"  class="text-right">Цена-</th>
+                            <th width="100"  class="text-right">Цена+</th>
+                            <th width="67"  class="text-right">Сумма</th>
+
+                            <th width="50"></th>
+                        </tr>
+                        <tr zippy="detail">
+                            <td zippy="tovar"></td>
+                            <td zippy="measure"></td>
+                            <td zippy="quantity"  class="text-right"></td>
+                            <td zippy="price"  class="text-right"></td>
+                            <td zippy="pricends"  class="text-right"></td>
+                            <td zippy="amount"  class="text-right"></td>
+
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td colspan="5"  class="text-right">Всего:</td>
+                            <td zippy="total"  class="text-right"></td>
+                            <td></td>
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td colspan="5"  class="text-right"><span data-label="totalnds">В т.ч. НДС:</span></td>
+                            <td zippy="totalnds"  class="text-right"></td>
+                            <td></td>
+                        </tr>
+
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-light  ">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-info  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="Закрыть" class="btn btn-outline-info  ">
+                    &nbsp;
+                    &nbsp;
+                    Импорт <input zippy="import" type="file" style="display:inline">
+                    <input zippy="importdoc" type="submit" value="Загрузить" class="btn btn-outline-info  ">
+
+                </div>
+            </div>
+
+
+        </form>
+        <form zippy="editdetail">
+            <h4>Ввод Позиції </h4>
+            <div class="row">
+                <div class="col-4">
+
+
+                    <div class="form-group">
+                        <label for="edittovar">Название </label>
+                        <input placeholder="Начните вводить..." class="form-control "   zippy="edittovar" />
+
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editquantity">Количество</label>
+                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
+                               style="width: 100px;"></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="editprice">Цена без НДС</label>
+                        <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
+                               style="width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editpricends">Цена с НДС</label>
+                        <input class="form-control" type="text" zippy="editpricends" required="required" pattern="[0-9\.]+"
+                               style="width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-info"> <input type="button"
+                                                                                                                    zippy="cancelrow"
+                                                                                                                    value="Отмена"
+                                                                                                                    class="btn btn-light ">
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </body>
+</html>

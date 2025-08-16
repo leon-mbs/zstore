@@ -53,7 +53,7 @@ class Discounts extends \App\Pages\Base
         $this->add(new Panel('ptab'));
         $this->add(new Panel('etab'));
 
-        $this->onTab($this->tabo);
+        $this->onTab($this->tabc);
 
         $common = System::getOptions("common");
         $this->_tvars['price1name'] = $common['price1'];
