@@ -110,7 +110,7 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
      
-        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','','','') or    menugroup= ".$conn->qstr('Виробництво');
+        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','Prod','EmpTask' ) or    menugroup= ".$conn->qstr('Виробництво');
         if($options['useprod']==1) {
             $sql="update metadata set  disabled=0 ";
         }   else {
