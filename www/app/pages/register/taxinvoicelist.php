@@ -26,7 +26,7 @@ class TaxInvoiceList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new Date('from', time() - (15 * 24 * 3600)));
         $this->filter->add(new Date('to', 0));
-        $this->filter->add(new CheckBox('notchecked'))->setChecked(  true);
+        $this->filter->add(new CheckBox('notchecked')) ;
            
         $doclist = $this->add(new DataView('doclist', new TaxListDataSource($this), $this, 'doclistOnRow'));
         $this->add(new Paginator('pag', $doclist));
@@ -50,20 +50,12 @@ class TaxInvoiceList extends \App\Pages\Base
         $row->add(new Label('name', $item->meta_desc));
         $row->add(new Label('number', $item->document_number));
         $row->add(new Label('date', date('d-m-Y', $item->document_date)));
-        $row->add(new Label('amount', ($item->amount > 0) ? H::famt($item->amount) : ""));
+        $row->add(new Label('amount', ($item->amount > 0) ? H::fa($item->amount) : ""));
 
-        $row->add(new Label('ernn',date('d-m-Y', $item->document_date))) ;
+        $row->add(new ClickLink('toff', $this, 'tonOnClick'))->setVisible($item->headerdata['ernn'] != 1);
+        $row->add(new ClickLink('ton', $this, 'toffOnClick'))->setVisible($item->headerdata['ernn'] == 1);
+       
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-   
-        if ($item->state == Document::STATE_CLOSED) {
-            $row->edit->setVisible(false);
-            $row->cancel->setVisible(true);
-        } else {
-            $row->edit->setVisible(true);
-            $row->cancel->setVisible(false);
-        }
-
-
        
     }
 
@@ -72,6 +64,22 @@ class TaxInvoiceList extends \App\Pages\Base
         $item = $sender->owner->getDataItem();
         $this->docview->setVisible(true);
         $this->docview->setDoc($item);
+    }
+
+   
+    public function tonOnClick($sender) {
+        $doc = $sender->getOwner()->getDataItem();
+        $doc->headerdata['ernn']   = 1;
+        $doc->save();
+        $this->doclist->Reload();
+    }
+
+  
+    public function toffOnClick($sender) {
+        $doc = $sender->getOwner()->getDataItem();
+        $doc->headerdata['ernn']   = 0;
+        $doc->save();
+        $this->doclist->Reload();  
     }
 
  

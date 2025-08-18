@@ -27,7 +27,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_COMMON_OUTCOME   = 51;    //общепроизводственные  расходы
     public const TYPE_ADMIN_OUTCOME    = 52;    //административные  расходы
     public const TYPE_SALE_OUTCOME     = 53;    //расходы на сбыт
- //   public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
+    public const TYPE_SALARY_OUTCOME   = 54;    //выплата зарплат
     public const TYPE_TAX_OUTCOME      = 55;    //уплата прочих налогов  и сборов
     public const TYPE_TAX_NDS          = 70;    //уплата  НДС
     public const TYPE_TAX_CARE         = 71;    //уплата  по страхованию
@@ -118,7 +118,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_PROD] = "Витрати на виробьництво";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-       //     $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
+            $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
             $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
             $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
             $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
@@ -213,6 +213,8 @@ class IOState extends \ZCL\DB\Entity
         $list[self::TYPE_INV] = "Інвестиції";
         $list[self::TYPE_NAKL] =  "Накладні витрати";
         $list[self::TYPE_ADS] =  "Витрати на маркетинг та  рекламу";
+        $list[self::TYPE_BANK] = "Послуги банку";
+        $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
         $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
    
        return $list;

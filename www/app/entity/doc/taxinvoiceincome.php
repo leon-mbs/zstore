@@ -30,19 +30,20 @@ class TaxInvoiceIncome extends Document
             );
         }
 
-        $firm = \App\System::getOptions("firmdetail");
-
+        $firm = H::getFirmData(  $this->branch_id);
+        
         $header = array('date' => date('d.m.Y', $this->document_date),
             "_detail" => $detail,
-            "firmname" => $firm['name'],
-            "firmcode" => $firm['code'],
-            "customername" => $this->headerdata["customername"],
+            "firmname" => $firm['firm_name'],
+            "firmcode" => $firm['inn'],
+            "customername" => $this->customer_name,
             "document_number" => $this->document_number,
-            "totalnds" => $this->headerdata["totalnds"] > 0 ? H::fa($this->headerdata["totalnds"]) : 0,
+            "totalnds" =>   H::fa($this->headerdata["totalnds"])  ,
+            "totalall" =>   H::fa($this->headerdata["totalnds"]) + H::fa($this->headerdata["total"]) ,
             "total" => H::fa($this->headerdata["total"])
         );
 
-        $report = new \App\Report('taxinvoiceincome.tpl');
+        $report = new \App\Report('doc/taxinvoiceincome.tpl');
 
         $html = $report->generate($header);
 
@@ -50,13 +51,9 @@ class TaxInvoiceIncome extends Document
     }
 
     public function Execute() {
-        AccountEntry::AddEntry("6412", "644", $this->headerdata["totalnds"], $this->document_id);
+      //  AccountEntry::AddEntry("6412", "644", $this->headerdata["totalnds"], $this->document_id);
 
-        // $sc = new SubConto($this, 6412, $this->headerdata["totalnds"]);
-        //   $sc->setCustomer($this->headerdata["customer"]);
-        //$sc->setExtCode(H::TAX_NDS);
-        // $sc->save();
-
+  
 
         return true;
     }
@@ -69,7 +66,7 @@ class TaxInvoiceIncome extends Document
      */
     public static function importGNAU($data) {
         if (strpos($data, "<DECLARHEAD>") == false) {
-            return "Неверный формат";
+            return "Невірный формат";
         }
         $data = iconv("WINDOWS-1251", "UTF-8", $data);
         $data = str_replace("windows-1251", "utf-8", $data);
@@ -77,7 +74,7 @@ class TaxInvoiceIncome extends Document
         if ($xml instanceof \SimpleXMLElement) {
             
         } else {
-            return "Неверный формат";
+            return "Невірный формат";
         }
 
         $type = (string) $xml->DECLARHEAD->C_DOC . (string) $xml->DECLARHEAD->C_DOC_SUB;
@@ -96,7 +93,7 @@ class TaxInvoiceIncome extends Document
         $inn = (string) $xml->DECLARBODY->HKSEL;
         $customer = \ZippyERP\ERP\Entity\Customer::loadByInn($inn);
         if ($customer == null) {
-            return "Не найден  контрагент  с  ИНН " . $inn;
+            return "Не знайлений  контрагент з IПН " . $inn;
         }
         $doc->headerdata['customer'] = $customer->customer_id;
         $ernn = (string) $xml->DECLARBODY->HERPN;
@@ -130,9 +127,9 @@ class TaxInvoiceIncome extends Document
             if ($row['code'] > 0) {
                 $item = \ZippyERP\ERP\Entity\Item::loadByUktzed($row['code']);
                 if ($item == null) {
-                    return "Не найден  ТМЦ с  кодом  УКТ ЗЕД: " . $row['code'];
-                }
-                $item->price = $row['price'] * 100;
+                    return "Не знайдено  ТМЦ с  кодом  УКТЗЕД: " . $row['code'];
+                }                            
+                $item->price = $row['price']  ;
                 $item->pricends = $item->price + $item->price * $nds;
                 $item->quantity = $row['qty'];
                 $doc->detaildata[] = $item;
@@ -141,14 +138,14 @@ class TaxInvoiceIncome extends Document
             // Пытаемся  найти  по имени
             $item = \ZippyERP\ERP\Entity\Item::getFirst("itemname='" . trim($row['price']) . "'");
             if ($item != null) {
-                $item->price = $row['price'] * 100;
+                $item->price = $row['price']  ;
                 $item->quantity = $row['qty'];
                 $doc->detaildata[] = $item;
                 continue;
             }
         }
         if (count($details) > count($doc->detaildata)) {
-            return "Не найдены  все  записи  таблицы";
+            return "Не знайдені всі  строки таблиці";
         }
 
         return $doc;

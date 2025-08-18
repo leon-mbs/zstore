@@ -55,6 +55,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
 
         $this->docform->add(new Label('totalnds'));
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('totalall'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
 
@@ -74,6 +75,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
 
 
+            $this->docform->ernn->setChecked($this->_doc->headerdata['ernn']);
             $this->docform->contract->setText($this->_doc->headerdata['contractnumber']);
 
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -109,7 +111,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
                         }
                     }
                     // Создать  на  основании  счета  входящего
-                    if ($basedoc->meta_name == 'PurchaseInvoice') {
+                    if ($basedoc->meta_name == 'InvoiceCust') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
@@ -122,20 +124,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
-                    // Создать  на  основании  Акта  выполненых услуг
-                    if ($basedoc->meta_name == 'ServiceIncome') {
-
-                        $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
-
-
-                        $this->docform->contract->setText($basedoc->headerdata['contractnumber']);
-
-                        foreach ($basedoc->detaildata as $item) {
-                            $item = new Item($item);
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
-                    }
+                  
                 }
             }
         }
@@ -188,7 +177,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не выбрана позиция");
+            $this->setError("Не вибрана позиція");
             return;
         }
         $item = Item::load($id);
@@ -236,7 +225,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
             $this->_doc->detaildata[] = $tovar->getData();
         }
 
-        $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->amount = $this->docform->totalall->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
@@ -252,7 +241,7 @@ class TaxInvoiceIncome extends \App\Pages\Base
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
             if ($this->_basedocid > 0) {
-                $this->_doc->AddConnectedDoc($this->_basedocid);
+                $this->_doc->parent_id=$this->_basedocid;
                 $this->_basedocid = 0;
             }
             $conn->CommitTrans();
@@ -260,42 +249,39 @@ class TaxInvoiceIncome extends \App\Pages\Base
         } catch (\Exception $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setError("Ошибка записи. Детализация в логе ");
+            $this->setError($ee->getMessage());
 
             $logger->error($ee);
             return;
         }
     }
 
-    /**
-     * Расчет  итого
-     *
-     */
+ 
     private function calcTotal() {
         $total = 0;
         $totalnds = 0;
+        $totalall = 0;
         foreach ($this->_tovarlist as $item) {
             $item->amount = $item->price * $item->quantity;
-            if (H::usends()) {
-                $item->amount = $item->pricends * $item->quantity;
-            }
+        //    if (H::usends()) {
+            //    $item->amount = $item->pricends * $item->quantity;
+         //   }
             $total = $total + $item->amount;
-            $totalnds = $totalnds + ($item->pricends - $item->price) * $item->quantity;
+            $totalnds = $totalnds + H::fa(($item->pricends - $item->price) * $item->quantity );
+            $totalall = $total + $totalnds;
         }
         $this->docform->total->setText(H::fa($total));
         $this->docform->totalnds->setText(H::fa($totalnds));
+        $this->docform->totalall->setText(H::fa($totalall));
     }
 
-    /**
-     * Валидация   формы
-     *
-     */
+ 
     private function checkForm() {
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не выбран  поставщик");
+            $this->setError("Не вказано постачальника");
         }
         if (count($this->_tovarlist) == 0) {
-            $this->setError("Не введены товары");
+            $this->setError("Не введено ТМЦ");
         }
         return !$this->isError();
     }
@@ -323,25 +309,25 @@ class TaxInvoiceIncome extends \App\Pages\Base
         $this->docform->document_date->setDate($this->_doc->document_date);
 
         $this->docform->based->setText($this->_doc->headerdata['based']);
-        $this->docform->customer->setValue($this->_doc->headerdata['customer']);
-
+        $this->docform->customer->setKey($this->_doc->customer_id);
+        $this->docform->customer->setText($this->_doc->customer_name);
+        $this->_tovarlist=[];
         foreach ($this->_doc->detaildata as $item) {
             //$item = new Item($item);
             $this->_tovarlist[$item->item_id] = $item;
         }
-
+        $this->calcTotal();
         $this->docform->detail->Reload();
     }
 
     public function OnAutoItem($sender) {
 
-        $text = Item::qstr('%' . $sender->getText() . '%');
-        return Item::findArray('itemname', "disabled <> 1 and (itemname like {$text} or item_code like {$text})");
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
     }
 
     public function OnAutoCustomer($sender) {
-        $text = Customer::qstr('%' . $sender->getText() . '%');
-        return Customer::findArray("customer_name", "Customer_name like " . $text);
+       return Customer::getList($sender->getText(), 2);
     }
 
 }

@@ -5,7 +5,7 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-12 col-md-8 col-xl-6 ">
+            <div class="col-12 col-md-7 col-xl-5 ">
 
 
                 <h3>Податковi накладнi </h3>
@@ -39,7 +39,7 @@
                         <th>Дата </th>
                       
                         <th class="text-right" >Сума</th>
-                        <th class="text-right" >В ЄРПН </th>
+                        <th class="text-center"  >В ЄРПН </th>
                         <th></th>
 
 
@@ -49,16 +49,27 @@
                         <td zippy="number"></td>
                         <td zippy="date"></td>
                         <td zippy="amount"  class="text-right"></td>
-                        <td  > </td>
-                            <span zippy="ernn"></span>
+                        <td class="text-center" >  
+                          <a   zippy="ton"> <i class="fa fa-toggle-on text-success"></i></a> 
+                          <a   zippy="toff"> <i class="fa fa-toggle-off"></i></a>
+                          </td>
                         <td>
-                            <a zippy="show" title="Перегляд"><i class="fa fa-search"></i></a>
+                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                         
                         </td>
 
                     </tr>
                 </table>
                   <div zippy="pag"></div>
+                  
+                  <table class="ctable">
+                     <tr><td>Податковий кредит</td><td zippy="text-right">0</td></tr>
+                     <tr><td>Податковi зобов'язання</td><td zippy="text-right">0</td></tr>
+                     <tr><td>Сплачено  ПДВ</td><td zippy="text-right">0</td></tr>
+                     <tr><td>До сплати</td><td zippy="text-right">0</td></tr>
+                  </table>
+              </div>
+                <div class="col-12   ">
                  
                 <div zippy="docview"></div>
 
