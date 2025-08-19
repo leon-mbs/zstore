@@ -93,7 +93,7 @@ class TaxInvoiceIncome extends Document
         $inn = (string) $xml->DECLARBODY->HKSEL;
         $customer = \ZippyERP\ERP\Entity\Customer::loadByInn($inn);
         if ($customer == null) {
-            return "Не знайлений  контрагент з IПН " . $inn;
+            return "Не знайдений  контрагент з IПН " . $inn;
         }
         $doc->headerdata['customer'] = $customer->customer_id;
         $ernn = (string) $xml->DECLARBODY->HERPN;

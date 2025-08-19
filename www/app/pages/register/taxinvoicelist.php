@@ -31,17 +31,18 @@ class TaxInvoiceList extends \App\Pages\Base
         $doclist = $this->add(new DataView('doclist', new TaxListDataSource($this), $this, 'doclistOnRow'));
         $this->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
-    
         $doclist->setSelectedClass('table-success');
-        $doclist->Reload();
+        $this->update(); 
+
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
    
+
     }
 
     public function filterOnSubmit($sender) {
         $this->docview->setVisible(false);
      
-        $this->doclist->Reload();
+        $this->update();  
     }
 
     public function doclistOnRow($row) {
@@ -71,7 +72,7 @@ class TaxInvoiceList extends \App\Pages\Base
         $doc = $sender->getOwner()->getDataItem();
         $doc->headerdata['ernn']   = 1;
         $doc->save();
-        $this->doclist->Reload();
+        $this->update();  
     }
 
   
@@ -79,7 +80,44 @@ class TaxInvoiceList extends \App\Pages\Base
         $doc = $sender->getOwner()->getDataItem();
         $doc->headerdata['ernn']   = 0;
         $doc->save();
+        $this->update();  
+    }
+
+    public function update( ) {
         $this->doclist->Reload();  
+
+        $this->_tvars['ndsin']   = 0;
+        $this->_tvars['ndsout']  = 0;
+        $this->_tvars['ndspay']  = 0;
+        $this->_tvars['ndsrest'] = 0;  
+        
+        $conn = \ZDB\DB::getConnect();
+     
+        $where = " state > 4 and content like '%<ernn>1</ernn>%' and  document_date >= " . $conn->DBDate($this->filter->from->getDate()) ;
+
+        $wherep = " select coalesce(  sum(abs(amount)) ,0) from iostate_view where iotype=70  and   document_date >= " . $conn->DBDate($this->filter->from->getDate()) ;
+         
+        $to = $this->filter->to->getDate();
+        if($to) {
+           $where .=  " and  document_date <= " . $conn->DBDate($to);
+           $wherep .=  " and  document_date <= " . $conn->DBDate($to);
+        }
+        
+        $where .= " and  (meta_name = 'TaxInvoice' or meta_name = 'TaxInvoiceIncome'  or meta_name = 'TaxInvoice2' )";
+
+        foreach( Document::findYield($where) as $doc ){
+             if($doc->meta_name=='TaxInvoiceIncome') {
+                 $this->_tvars['ndsin'] += H::fa($doc->getHD('totalnds'));
+             }   else {
+                 $this->_tvars['ndsout'] += H::fa($doc->getHD('totalnds'));
+             }
+        }
+        
+        $this->_tvars['ndspay']  = H::fa( doubleval( $conn->GetOne($wherep)) );
+         
+        $this->_tvars['ndsrest']  =  $this->_tvars['ndsout'] - $this->_tvars['ndsin']    - $this->_tvars['ndspay'] ;
+        
+           
     }
 
  
