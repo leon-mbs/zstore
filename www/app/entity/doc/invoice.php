@@ -43,7 +43,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
-                        "firm_address"    => $firm['address'],
+                       
                         "logo"            => _BASEURL . $firm['logo'],
                         "islogo"          => strlen($firm['logo']) > 0,
                         "stamp"           => _BASEURL . $firm['stamp'],
@@ -58,7 +58,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
                         "iban"      => strlen($iban) > 0 ? $iban : false,
-                        "email"           => $this->headerdata["email"],
+                 
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
@@ -73,7 +73,8 @@ class Invoice extends \App\Entity\Doc\Document
         }
 
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;
+        $header["isfop"] = false;
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
@@ -82,14 +83,24 @@ class Invoice extends \App\Entity\Doc\Document
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }
-        if (strlen($cust->address) > 0) {
-            $header["address"] = $cust->address;
-        }
+     
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
+        }
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        }
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
         }
      
 

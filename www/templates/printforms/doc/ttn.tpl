@@ -4,18 +4,32 @@
     <tr>
         <td></td>
         <td valign="top"><b>Покупець</b></td>
-        <td colspan="5">{{customer_name}}</td>
+     <td colspan="5"> {{customer_name}}</b> 
+          {{#phone}} Тел. {{phone}}  {{/phone}} 
+        </td>
     </tr>
     {{#isfirm}}
     <tr>
         <td></td>
 
         <td valign="top"><b>Продавець</b></td>
-        <td colspan="5">{{firm_name}}</td>
+      <td colspan="7"> {{firm_name}} 
+        {{#fphone}} Тел.  {{fphone}}  {{/fphone}} 
+          
+        </td>
 
     </tr>
     {{/isfirm}}
+    {{#isfop}}
+    <tr>
 
+        <td></td>
+        <td><b> Продавець</b></td>
+        <td colspan="5"> {{fop_name}} </td>
+
+    </tr> 
+      
+   {{/isfop}} 
     <tr>
         <td></td>
         <td valign="top"><b>Склад</b></td>
@@ -44,11 +58,7 @@
         <td><b>Телефон</b></td>
         <td colspan="5">{{phone}}</td>
     </tr>
-    <tr>
-        <td></td>
-        <td><b>E-mail</b></td>
-        <td colspan="5">{{email}}</td>
-    </tr>
+ 
 
     <tr>
         <td></td>
