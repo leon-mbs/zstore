@@ -760,11 +760,7 @@ class Helper
             }
         }
 
-        $user = System::getUser() ;
-        if(strlen($user->payname ??'')>0)   $data['firm_name']  = $user->payname;
-        if(strlen($user->address ??'')>0)   $data['address']  = $user->address;
-        if(strlen($user->tin ??'')>0)   $data['tin']  = $user->tin;
-         
+             
         return $data;
     }
 
