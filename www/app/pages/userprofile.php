@@ -95,12 +95,7 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
-        $form = new Form('firmform');
-        $form->add(new TextInput('editpayname', $this->user->payname));
-        $form->add(new TextInput('editaddress', $this->user->address));
-        $form->add(new TextInput('edittin', $this->user->tin));
-        $form->onSubmit($this, 'saveFirmOnClick');
-        $this->add($form);     
+           
         
         
              
@@ -333,16 +328,5 @@ class UserProfile extends \App\Pages\Base
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
-    
-    public function saveFirmOnClick($sender) {
-        $this->user->payname = $sender->editpayname->getText() ;
-        $this->user->address = $sender->editaddress->getText() ;
-        $this->user->tin = $sender->edittin->getText() ;
-
-        $this->user->save();
-        $this->setSuccess('Збережено');
-        System::setUser($this->user);
-          
-    }
-    
+ 
 }

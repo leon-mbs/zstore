@@ -34,13 +34,13 @@
                                 <label for="city">Мiсто </label>
                                 <input class="form-control" type="text" zippy="city">
                             </div>  
-                          {{#hideblock}} 
+                       
                          <div class="form-check">
                             <input     zippy="isjur" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
                            
                         </div>  
-                          {{/hideblock}} 
+                         
  
 
                  {{#vdoc}}
@@ -119,9 +119,22 @@
                         <input class="form-control" type="text" zippy="sign">
                         <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту. </small>
                     </div>                          
-                  </div>         <div class="col-12   ">                                             
+                  </div>      
+
+           <div class="col-12 col-md-3 col-xl-4 "   >
+                    <b>Альтернативнi данi</b>  <br>                     
+                    <small>Для вибору в продажних документах вiд рiзних ФОПiв</small> 
+                    <table class="ctable">                      
+                      <tr><td>Назва, тел.</td><td>ЄДРПОУ</td><td></td></tr>
+                      <tr zippy="fopslist"><td><input required="on" class="form-control "   zippy="fopname"></td><td> <input  required="on" style="width:150px" class="form-control "   zippy="fopedrpou"></td><td><a zippy="delfop"><i class="fa fa-trash"></i></a></td></tr>
+                    </table>  
+                     <button zippy="addfop" class="btn btn-success btn-sm" type="submit">Додати</button>
+                                             
+                  </div>      
+   
+                     <div class="col-12 text-center   ">                                             
                            
-                               <button class="btn btn-success" type="submit">Зберегти</button>
+                               <button zippy="save" class="btn btn-success" type="submit">Зберегти</button>
                               
                          </div>                        
                    </div>                        
