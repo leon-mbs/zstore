@@ -31,6 +31,7 @@ class Invoice extends \App\Pages\Base
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = -1;
+    private $_fops =[];
 
 
     /**
@@ -40,6 +41,8 @@ class Invoice extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
+        $firm = H::getFirmData(  $this->branch_id);
+              
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -55,7 +58,13 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
 
-        $this->docform->add(new TextInput('email'));
+        $this->_fops=[];
+        foreach(($firm['fops']??[]) as $fop) {
+          $this->_fops[$fop->id]=$fop->name ; 
+        }
+        $this->docform->add(new DropDownChoice('fop', $this->_fops,0))->setVisible(count($this->_fops)>0) ;
+
+   
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextInput('customer_print'));
 
@@ -118,6 +127,7 @@ class Invoice extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
+            $this->docform->fop->setValue($this->_doc->headerdata['fop']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
 
@@ -133,7 +143,7 @@ class Invoice extends \App\Pages\Base
             $this->docform->total->setText($this->_doc->amount);
 
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->email->setText($this->_doc->headerdata['email']);
+
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
             $this->docform->customer_print->setText($this->_doc->headerdata['customer_print']);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -207,6 +217,7 @@ class Invoice extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
                      
                         $this->docform->total->setText($basedoc->amount);
 
@@ -462,9 +473,10 @@ class Invoice extends \App\Pages\Base
 
  
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
-        $this->_doc->headerdata['email'] = $this->docform->email->getText();
+
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['customer_print'] = $this->docform->customer_print->getText();
+        $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
@@ -670,8 +682,10 @@ class Invoice extends \App\Pages\Base
                     $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
+            $this->docform->phone->setText($cust->phone);
             $this->docform->custdisc->setText($disctext);
             $this->docform->custdisc->setVisible(strlen($disctext) >0);
+
 
         }
 
