@@ -35,7 +35,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = -1;
     private $_rownumber = 1;
     private $_orderid   = 0;
-
+    private $_fops =[];
     private $_changedpos  = false;
 
     /**
@@ -47,7 +47,8 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-  
+        $firm = H::getFirmData(  $this->branch_id);
+
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -86,6 +87,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
+        $this->_fops=[];
+        foreach(($firm['fops']??[]) as $fop) {
+          $this->_fops[$fop->id]=$fop->name ; 
+        }
+        $this->docform->add(new DropDownChoice('fop', $this->_fops,0))->setVisible(count($this->_fops)>0) ;
 
         $cp = \App\Session::getSession()->clipboard;
         $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
@@ -140,7 +146,8 @@ class GoodsIssue extends \App\Pages\Base
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
-     
+            $this->docform->fop->setValue($this->_doc->headerdata['fop']);
+         
       
             $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
@@ -238,7 +245,8 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
-
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
+     
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
@@ -291,7 +299,8 @@ class GoodsIssue extends \App\Pages\Base
                         $this->OnCustomerFirm(null);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
-
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
+     
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
@@ -701,6 +710,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
+        $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
 
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();

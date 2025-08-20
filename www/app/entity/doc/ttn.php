@@ -69,7 +69,7 @@ class TTN extends Document
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
                         "phone"           => $this->headerdata["phone"],
-                        "email"           => $this->headerdata["email"],
+                       
                         "total"           => H::fa($this->amount),
         );
 
@@ -80,7 +80,19 @@ class TTN extends Document
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
         $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
-
+        $header["fphone"] = false;
+        $header["isfop"] = false;
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        } 
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+         }
         $report = new \App\Report('doc/ttn.tpl');
 
         $html = $report->generate($header);
@@ -144,7 +156,7 @@ class TTN extends Document
             $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
         }
 
-
+     
         $report = new \App\Report('doc/ttn_bill.tpl');
 
         $html = $report->generate($header);

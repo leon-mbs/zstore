@@ -36,6 +36,7 @@ class TTN extends \App\Pages\Base
     private $_rowid     = -1;
     private $_orderid   = 0;
     private $_changedpos  = false;
+    private $_fops =[];
 
      /**
     * @param mixed $docid     редактирование
@@ -45,7 +46,8 @@ class TTN extends \App\Pages\Base
         parent::__construct();
 
         $common = System::getOptions("common");
-
+        $firm = H::getFirmData(  $this->branch_id);
+   
      
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -67,6 +69,11 @@ class TTN extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
+        $this->_fops=[];
+        foreach(($firm['fops']??[]) as $fop) {
+          $this->_fops[$fop->id]=$fop->name ; 
+        }
+        $this->docform->add(new DropDownChoice('fop', $this->_fops,0))->setVisible(count($this->_fops)>0) ;
 
          
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
@@ -80,7 +87,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new TextInput('ship_number'));
         $this->docform->add(new TextInput('ship_amount'));
         $this->docform->add(new TextArea('ship_address'));
-        $this->docform->add(new TextInput('email'));
+
         $this->docform->add(new TextInput('phone'));
 
         $this->docform->add(new Label('notesfromorder'));
@@ -135,7 +142,7 @@ class TTN extends \App\Pages\Base
             $this->docform->ship_address->setText($this->_doc->headerdata['ship_address']);
             $this->docform->emp->setValue($this->_doc->headerdata['emp_id']);
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
-            $this->docform->email->setText($this->_doc->headerdata['email']);
+         
             $this->docform->phone->setText($this->_doc->headerdata['phone']);
             $this->docform->nostore->setChecked($this->_doc->headerdata['nostore']);
             $this->docform->payseller->setChecked($this->_doc->headerdata['payseller']);
@@ -143,7 +150,8 @@ class TTN extends \App\Pages\Base
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
             $this->docform->customer->setKey($this->_doc->customer_id);
-
+            $this->docform->fop->setValue($this->_doc->headerdata['fop']);
+   
             if ($this->_doc->customer_id) {
                 $this->docform->customer->setText($this->_doc->customer_name);
             } else {
@@ -245,7 +253,8 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->total->setText($invoice->amount);
                         
-
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
+                 
                         $this->OnChangeCustomer($this->docform->customer);
 
                         $itemlist = $basedoc->unpackDetails('detaildata');
@@ -278,7 +287,8 @@ class TTN extends \App\Pages\Base
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
-       
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
+                     
                       
                         $this->OnChangeCustomer($this->docform->customer);
                         $k = 1;      //учитываем  скидку
@@ -602,7 +612,7 @@ class TTN extends \App\Pages\Base
         $this->_doc->headerdata['sent_date'] = $this->docform->sent_date->getDate();
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
-        $this->_doc->headerdata['email'] = $this->docform->email->getText();
+
         $this->_doc->headerdata['nostore'] = $this->docform->nostore->isChecked() ? 1 : 0;
         $this->_doc->headerdata['payseller'] = $this->docform->payseller->isChecked() ? 1 : 0;
 
@@ -614,7 +624,8 @@ class TTN extends \App\Pages\Base
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
-
+        $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
+ 
         if($this->_doc->headerdata['nostore']==1)  {
            // $this->_doc->payamount = 0;
         }
@@ -806,7 +817,6 @@ class TTN extends \App\Pages\Base
                 $this->docform->ship_address->setText($customer->address);
             }
             $this->docform->phone->setText($customer->phone);
-            $this->docform->email->setText($customer->email);
         }
     }
 

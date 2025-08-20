@@ -89,10 +89,11 @@ class GoodsIssue extends Document
 
         $header["customer_name"] = $this->headerdata["customer_name"];
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;   
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
+        $header["isfop"] = false;
         $header['isprep'] = ($this->headerdata["prepaid"] ??0 )> 0;
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]??'');
 
@@ -114,13 +115,23 @@ class GoodsIssue extends Document
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-  
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        }  
 
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
         }
 
-
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
+        }
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
