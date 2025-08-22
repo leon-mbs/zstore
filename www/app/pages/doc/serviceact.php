@@ -9,6 +9,7 @@ use App\Entity\Item;
 use App\Entity\Service;
 use App\Entity\Store;
 use App\Entity\MoneyFund;
+use App\System;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -278,6 +279,8 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->docform->setVisible(false);
+        $this->wselitem->setVisible(false);
+              
         $this->_rowid = -1;
     }
 
@@ -287,6 +290,8 @@ class ServiceAct extends \App\Pages\Base
         $this->editserdetail->editserprice->setText("");
         $this->editserdetail->editserdesc->setText("");
         $this->docform->setVisible(false);
+        $this->wselitem->setVisible(false);
+              
         $this->_rowid = -1;
     }
 
