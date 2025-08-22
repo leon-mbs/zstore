@@ -1,10 +1,10 @@
 <?php
 
-namespace ZippyERP\ERP\Entity\Doc;
+namespace App\Entity\Doc;
 
-use ZippyERP\ERP\Helper as H;
-use ZippyERP\ERP\Util;
-use ZippyERP\System\System;
+use App\Helper as H;
+use App\Util;
+use App\System\System;
 
 /**
  * Класс-сущность  документ налоговая  накладая
@@ -35,7 +35,7 @@ class TaxInvoice2 extends Document
         }
 
         $firm = System::getOptions("firmdetail");
-        $customer = \ZippyERP\ERP\Entity\Customer::load($this->headerdata["customer"]);
+        $customer = \App\Entity\Customer::load($this->headerdata["customer"]);
         $contract = Document::load($this->headerdata["contract"]);
         if ($contract instanceof Document) {
             $contractnumber = $contract->document_number;
@@ -61,7 +61,7 @@ class TaxInvoice2 extends Document
             "totalall" => H::fa($total + $this->headerdata["totalnds"])
         );
 
-        $report = new \ZippyERP\ERP\Report('taxinvoice2.tpl');
+        $report = new \App\Report('taxinvoice2.tpl');
 
         $html = $report->generate($header, $detail);
 

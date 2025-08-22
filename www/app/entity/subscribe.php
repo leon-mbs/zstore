@@ -463,7 +463,7 @@ class Subscribe extends \ZCL\DB\Entity
         $header['day_return']= H::fa( abs( $conn->GetOne($sql) ));
         
         
-        
+      /*  
  //минимальное количество
             $header['minqtylist']  = [];
    
@@ -479,7 +479,7 @@ class Subscribe extends \ZCL\DB\Entity
                $header['minqtylist'][]= $row; 
             }
   
-   
+          */
         try {
             $m = new \Mustache_Engine();
             $text = $m->render($this->msgtext, $header);

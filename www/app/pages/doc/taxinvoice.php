@@ -1,6 +1,6 @@
 <?php
 
-//todofirst
+ 
 
 namespace App\Pages\Doc;
 
@@ -274,7 +274,7 @@ class TaxInvoice extends \App\Pages\Base
             $total = $total + $tovar->price * ($tovar->quantity );
         }
 
-        $nds = H::nds() * $total;
+      //  $nds = H::nds() * $total;
         $this->docform->totalnds->setText(H::fa($nds));
         $this->docform->total->setText(H::fa($total + $nds));
     }
@@ -296,7 +296,7 @@ class TaxInvoice extends \App\Pages\Base
 
         $this->calcTotal();
 
-        App::$app->getResponse()->addJavaScript("var _nds = " . H::nds() . ";var nds_ = " . H::nds(true) . ";");
+        App::$app->getResponse()->addJavaScript("var _nds = " .  ";var nds_ = "  . ";");
     }
 
     public function backtolistOnClick($sender) {
@@ -318,7 +318,7 @@ class TaxInvoice extends \App\Pages\Base
         $item = Item::load($this->editdetail->edititem->getKey());
         $this->editdetail->editprice->setText(H::fa($item->price1));
 
-        $nds = H::nds();
+     //   $nds = H::nds();
 
         $this->editdetail->editpricends->setText(H::fa($item->price1 + $item->price1 * $nds));
 

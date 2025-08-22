@@ -121,7 +121,9 @@ class TaxInvoiceIncome extends Document
         foreach ($xml->xpath('//RXXXXG4S') as $node) {
             $details[(string) $node->attributes()->ROWNUM]['mname'] = (string) $node;
         }
-        $nds = H::nds();
+       ..
+       
+       // $nds = H::nds();
         $doc->detaildata = array();
         foreach ($details as $row) {
             if ($row['code'] > 0) {

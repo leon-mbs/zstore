@@ -1,8 +1,6 @@
 <?php
 
-//todofirst
-
-namespace ZippyERP\ERP\Pages\Doc;
+namespace App\Pages\Doc;
 
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -16,17 +14,17 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
-use ZippyERP\ERP\Entity\Customer;
-use ZippyERP\ERP\Entity\Doc\Document;
-use ZippyERP\ERP\Entity\Item;
-use ZippyERP\ERP\Helper as H;
+use App\Entity\Customer;
+use App\Entity\Doc\Document;
+use App\Entity\Item;
+use App\Helper as H;
 use Zippy\WebApplication as App;
-use ZippyERP\System\System;
+use App\System;
 
 /**
  * Страница  ввода приложения 2 к  налоговой  накладной
  */
-class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
+class TaxInvoice2 extends \App\Pages\Base
 {
 
     public $_tovarlist = array();
@@ -42,7 +40,7 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('customer', Customer::findArray('customer_name', " cust_type=" . Customer::TYPE_FIRM, 'customer_name')));
+        $this->docform->add(new DropDownChoice('customer', Customer::findArray('customer_name', ""  , 'customer_name')));
 
         $this->docform->add(new AutocompleteTextInput('contract'))->onText($this, "OnAutoContract");
 
@@ -93,8 +91,8 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
             $this->_doc = Document::create('TaxInvoice2');
             $this->docform->document_number->setText($this->_doc->nextNumber());
             $user = System::getUser();
-            $employee = \ZippyERP\ERP\Entity\Employee::find("login='{$user->userlogin}'");
-            if ($employee instanceof \ZippyERP\ERP\Entity\Employee) {
+            $employee = \App\Entity\Employee::find("login='{$user->userlogin}'");
+            if ($employee instanceof \App\Entity\Employee) {
                 $this->docform->author->setText($employee->fullname);
             }
             if ($basedocid > 0) {  //создание на  основании
@@ -275,7 +273,7 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
             $total = $total + $tovar->price * ($tovar->quantity / 1000);
         }
 
-        $nds = H::nds() * $total;
+     //   $nds = H::nds() * $total;
         $this->docform->totalnds->setText(H::fa($nds));
         $this->docform->total->setText(H::fa($total + $nds));
     }
@@ -297,7 +295,7 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
 
         $this->calcTotal();
 
-        App::$app->getResponse()->addJavaScript("var _nds = " . H::nds() . ";var nds_ = " . H::nds(true) . ";");
+        App::$app->getResponse()->addJavaScript("var _nds = " );
     }
 
     public function backtolistOnClick($sender) {
@@ -309,7 +307,7 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
         $item = Item::load($id);
         $this->editdetail->editprice->setText(H::fa($item->priceopt));
 
-        $this->editdetail->editpricends->setText(H::fa($item->priceopt + $item->priceopt * H::nds()));
+        $this->editdetail->editpricends->setText(H::fa($item->priceopt + $item->priceopt  ));
 
         $this->updateAjax(array('editprice', 'editpricends'));
     }
@@ -324,7 +322,7 @@ class TaxInvoice2 extends \ZippyERP\ERP\Pages\Base
         $item = Item::load($this->editdetail->edittovar->getValue());
         $this->editdetail->editprice->setText(H::fa($item->priceopt));
 
-        $nds = H::nds();
+      //  $nds = H::nds();
 
         $this->editdetail->editpricends->setText(H::fa($item->priceopt + $item->priceopt * $nds));
 
