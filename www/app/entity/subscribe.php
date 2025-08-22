@@ -464,20 +464,7 @@ class Subscribe extends \ZCL\DB\Entity
         
         
         
- //минимальное количество
-            $header['minqtylist']  = [];
-   
-            $sql = "select coalesce(t.qty,0) as onstoreqty, i.minqty,i.itemname as name,i.item_code as code    from 
-           items  i 
-          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock       group by  item_id    ) t
-               on t.item_id = i.item_id
-           
-            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
-            $rs = $conn->Execute($sql);
-  
-            foreach($rs as $row) {
-               $header['minqtylist'][]= $row; 
-            }
+ 
   
    
         try {
