@@ -143,6 +143,7 @@
  
                             <th class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
+                            <th class="text-right">  {{#usends}} Ціна з ПДВ {{/usends}}</th>
 
                             <th class="text-right">Сума</th>
 
@@ -160,6 +161,9 @@
                             <td class="text-right" zippy="quantity"></td>
 
                             <td zippy="price" class="text-right"></td>
+                            <td  class="text-right">
+                             {{#usends}} <span zippy="pricends"></span> {{/usends}}
+                            </td>
 
                             <td zippy="amount" class="text-right"></td>
 
@@ -168,27 +172,30 @@
                             </td>
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            <td colspan="9" class="text-right">На суму:</td>
+                            <td colspan="10" class="text-right">На суму:</td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
                         {{^prepaid}}
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="nds" colspan="9" class="text-right">ПДВ:</td>
+                            <td data-label="nds" colspan="10" class="text-right">ПДВ:</td>
                             <td zippy="nds" class="text-right"></td>
-                            <td data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i
-                                        class="fa fa-edit"></i></a></td>
+                            <td data-label="nds">
+                             {{^usends}} 
+                                 <a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i class="fa fa-edit"></i></a> 
+                             {{/usends}}
+                                        </td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td data-label="disc" colspan="9" class="text-right">Знижка:</td>
+                            <td data-label="disc" colspan="10" class="text-right">Знижка:</td>
                             <td zippy="disc" class="text-right"></td>
                             <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                        {{/prepaid}}
                           <tr style="font-weight: bolder;">
-                            <td data-label="delivery" colspan="9" class="text-right">Доставка:</td>
+                            <td data-label="delivery" colspan="10" class="text-right">Доставка:</td>
                             <td zippy="delivery" class="text-right"></td>
                             <td data-label="delivery"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
                         </tr>
@@ -196,21 +203,21 @@
  
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="payamount" colspan="9" class="text-right">Всього:</td>
+                            <td data-label="payamount" colspan="10" class="text-right">Всього:</td>
                             <td zippy="payamount" class="text-right"></td>
                             <td data-label="payamount"><a href="javascript:void(0);" data-toggle="modal"
                                                           data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan="9" class="text-right">Передплата:</td>
+                            <td data-label="prepaid" colspan="10" class="text-right">Передплата:</td>
                             <td   class="text-right">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}
 
                         <tr style="font-weight: bolder;">
-                            <td data-label="payed" colspan="9" class="text-right">Внесено оплату:</td>
+                            <td data-label="payed" colspan="10" class="text-right">Внесено оплату:</td>
                             <td zippy="payed" class="text-right"></td>
                             <td data-label="payed"><a href="javascript:void(0);" data-toggle="modal"
                                                       data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
@@ -424,7 +431,7 @@
 
 
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editprice">Ціна </label>
+                        <label class="col-6 col-form-label" for="editprice">Ціна {{#usends}} (без ПДВ) {{/usends}} </label>
                          <div class="col-6">
                             <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
                          </div>
