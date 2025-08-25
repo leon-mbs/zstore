@@ -17,7 +17,7 @@ class EmpAcc extends \ZCL\DB\Entity
     public const  SALARY         = 3; //  начисления  зарплаты
     public const  SALARY_PAY     = 4; //  выплата  зарплаты
    
-    //забалансовые сумы
+    //забалансовые сумы (для статистики)
     public const  ADVANCE        = 101; // аванс
     public const  BONUS          = 102; // бонусы
     public const  FINE           = 103; // штрафы
