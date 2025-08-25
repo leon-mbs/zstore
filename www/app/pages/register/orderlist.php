@@ -655,11 +655,11 @@ class OrderList extends \App\Pages\Base
 
                     }
                     if($max>0 && $max < 1000000) {
-                        $ait['prqty']=$max;
+                        $ait['prqty']= H::fqty($max);
                         $this->_tvars['isciprod']=true;  //если хоть один  готов
                     }
 
-               
+                
 
                 }         
                

@@ -169,15 +169,7 @@ class Task extends Document
                     $ua->amount = $cost;
                     $ua->save();     
          
-                    $user = \App\Entity\User::getByLogin($emp->login) ;
-                             
-                    if($user != null){
-                        $n = new \App\Entity\Notify();
-                        $n->user_id = $user->user_id; 
-                        $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
-                        $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                        $n->save();   
-                    }         
+                            
                     
                      
                  }  
