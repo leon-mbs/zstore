@@ -1159,9 +1159,9 @@ class Document extends \ZCL\DB\Entity
         }
  
         $payee= $mf->payname ??'' ;
-        $kod= $mf->code ??'' ;   
+          
         $iban = $mf->iban??'';
-        if(strlen($kod)==0 || strlen($iban) == 0|| strlen($payee) == 0) {
+        if(  strlen($iban) == 0|| strlen($payee) == 0) {
             return false;
         }
 

@@ -40,7 +40,7 @@ class Orders extends \App\Pages\Base
 
         $defpaytype=intval($modules['ocpaytype']??2);
         $defstore=intval($modules['ocstore']);
-        $defmf=intval($modules['ocmf']);
+        $defmf=intval($modules['ocmf']??0);
            
         
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
