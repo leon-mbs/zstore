@@ -307,6 +307,8 @@ class ServiceAct extends \App\Pages\Base
 
             $this->editdetail->edittovar->setKey($item->item_id);
             $this->editdetail->edittovar->setText($item->itemname);
+            $this->_rowid =  array_search($item, $this->_itemlist, true);
+            
         }
         if ($item instanceof Service) {
             $this->editserdetail->setVisible(true);
@@ -316,12 +318,12 @@ class ServiceAct extends \App\Pages\Base
             $this->editserdetail->editserprice->setText($item->price);
 
             $this->editserdetail->editservice->setValue($item->service_id);
+            $this->_rowid =  array_search($item, $this->_serlist, true);
 
         }
 
 
-        $this->_rowid =  array_search($item, $this->_itemlist, true);
-
+      
     }
 
     public function saverowOnClick($sender) {
@@ -423,7 +425,7 @@ class ServiceAct extends \App\Pages\Base
         }
         $id = $this->editserdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не обрано послугу");
             return;
         }
   
