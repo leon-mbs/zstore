@@ -24,7 +24,9 @@ class Service extends \ZCL\DB\Entity
         $this->price = (string)($xml->price[0]);
         $this->cost = (string)($xml->cost[0]);
         $this->msr = (string)($xml->msr[0]);
+        $this->noprice = (int)($xml->noprice[0]);
         $this->techcard = (string)($xml->techcard[0]);
+        $this->notes = (string)($xml->notes[0]);
         $this->actionprice = doubleval($xml->actionprice[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
@@ -48,6 +50,7 @@ class Service extends \ZCL\DB\Entity
         $this->detail .= "<price>{$this->price}</price>";
         $this->detail .= "<hours>{$this->hours}</hours>";
         $this->detail .= "<msr>{$this->msr}</msr>";
+        $this->detail .= "<noprice>{$this->noprice}</noprice>";
         if ($this->actionprice > 0) {
             $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
         }
@@ -55,6 +58,7 @@ class Service extends \ZCL\DB\Entity
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
      
         $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
+        $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         
         $itemset = $this->itemset ?? [] ;
         $itemset = base64_encode( serialize($itemset) ) ;
