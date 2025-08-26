@@ -30,8 +30,8 @@ class AdvanceRep extends Document
         }
  
         
-        $examount=doubleval($this->headerdata['examount']);
-        $spentamount=doubleval($this->headerdata['spentamount']);
+        $examount=doubleval($this->headerdata['examount']);  //возврат
+        $spentamount=doubleval($this->headerdata['spentamount']); //потрачено
         
         if ($examount > 0) {
          
@@ -62,7 +62,7 @@ class AdvanceRep extends Document
  
             //авансовый    отчет
             $ua = new \App\Entity\EmpAcc();
-            $ua->optype = \App\Entity\EmpAcc::OUTCOME_TO_MF;
+            $ua->optype = \App\Entity\EmpAcc::ADVANCE_ACC;
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = $amount;

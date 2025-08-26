@@ -11,6 +11,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Form\Date;
 use App\Entity\SalType;
+use Zippy\Html\DataList\Pager;
 
 /**
  *  Лицевой счет
@@ -34,9 +35,13 @@ class EmpAcc extends \App\Pages\Base
         $d = $d->startOfMonth()->subMonth(1) ;
 
         $this->filters->add(new Date('from', $d->getTimestamp()));
-        $this->filters->add(new Date('to', time()));
+        $this->filters->add(new Date('to' ));
+        
+        $this->_tvars['az'] = false;
+              
+        
     }
-
+    //зарплата
     public function OnSubmitZ($sender) {
 
         $dt = new \App\DateTime();
@@ -145,6 +150,7 @@ class EmpAcc extends \App\Pages\Base
 
     }
 
+    //лицевой счет
     public function OnSubmitS($sender) {
 
 
@@ -154,37 +160,38 @@ class EmpAcc extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where  optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
-
-        $b = $conn->GetOne($sql);
-
-
-        $sql =    $sql = "select * from empacc_view where  optype < 100 and   emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
-        $rc = $conn->Execute($sql);
-
+        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(3,4) and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+        $this->_tvars['z']  = H::fa($conn->GetOne($sql) );
+        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(105) and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+        $this->_tvars['a'] = H::fa($conn->GetOne($sql) );
+    
+        $this->_tvars['az'] = true;
+         
+         $sql = "select * from empacc_view where     emp_id = {$emp_id}   and createdon >= " . $conn->DBDate($from) ;
+         if($to > 0) {
+             $sql = $sql . "  and createdon <= " . $conn->DBDate($to)  ;
+         }
+         $sql = $sql ." order  by  ea_id ";
+        
         $en=\App\Entity\EmpAcc::getNames();
 
         $detail = array();
         
-        foreach ($rc as $row) {
-            $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
-            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
-            $detail[] = array(
+        foreach ($conn->Execute($sql) as $row) {
+              $detail[] = array(
                 'notes'    => $row['notes'],
                 'opname'    => $en[$row['optype']],
                 'dt'    => H::fd(strtotime($row['createdon'])),
-                'doc'   => $row['document_number'],
-                'begin' => H::fa($b),
-                'in'    => H::fa($in),
-                'out'   => H::fa($out),
-                'end'   => H::fa($b + $in - $out)
+                'amount'    => H::fa($row['amount']),
+                'doc'   => $row['document_number'] 
+                
             );
 
 
-            $b = H::fa($b + $in - $out);
+             
         }
 
-        $this->_tvars['mempacc']  =  $detail;
+        $this->_tvars['detacc']  =  $detail;
 
     }
 
