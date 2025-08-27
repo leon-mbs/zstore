@@ -259,5 +259,20 @@ class GoodsReceipt extends Document
         }
         
     }
-}     
+    
+    
+   protected function onState($state, $oldstate) {
+        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'OrderCust'  ) {
+                      $order = $order->cast() ;
+                      $order->updateStatus(Document::STATE_CLOSED);
+                      
+                }    
+            }
+      }
+   }
+}
 
