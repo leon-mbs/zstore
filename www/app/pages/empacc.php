@@ -160,10 +160,10 @@ class EmpAcc extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(3,4) and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
-        $this->_tvars['z']  = H::fa($conn->GetOne($sql) );
-        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(105) and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
-        $this->_tvars['a'] = H::fa($conn->GetOne($sql) );
+        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(3,4) and  emp_id = {$emp_id}   "  ;
+        $this->_tvars['z']  = 0-H::fa($conn->GetOne($sql) );
+        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(105) and  emp_id = {$emp_id}  "  ;
+        $this->_tvars['a'] = 0-H::fa($conn->GetOne($sql) );
     
         $this->_tvars['az'] = true;
          
