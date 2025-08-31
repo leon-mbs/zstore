@@ -83,6 +83,7 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->docform->add(new Label('totalnds', 0));
         $this->docform->add(new Label('total', 0));
         $this->docform->add(new Label('totaldisc', 0));
         $this->docform->add(new TextInput('edittotaldisc'));
@@ -265,6 +266,7 @@ class Invoice extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('disc', H::fa($item->disc)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -343,7 +345,8 @@ class Invoice extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
-
+        $item->pricends= $item->price + $item->price * $item->nds();
+ 
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $item->price) {
@@ -480,7 +483,8 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-      
+        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
+        
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
@@ -546,11 +550,17 @@ class Invoice extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+         $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
-
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
             $total = $total + $item->amount;
+        }
+        if($nds>0) {
+            $this->docform->totalnds->setText(H::fa($nds));            
         }
 
         $this->docform->total->setText(H::fa($total));
@@ -560,9 +570,13 @@ class Invoice extends \App\Pages\Base
     private function calcPay() {
         $total = $this->docform->total->getText();
         $totaldisc = $this->docform->totaldisc->getText();
+        $totalnds = $this->docform->totalnds->getText();
 
         if($totaldisc>0) {
             $total = $total - $totaldisc;
+        }
+        if($totalnds>0) {
+            $total = $total + $totalnds;
         }
 
 

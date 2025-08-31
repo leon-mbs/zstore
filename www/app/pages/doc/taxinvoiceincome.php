@@ -105,8 +105,8 @@ class TaxInvoiceIncome extends \App\Pages\Base
 
                         //$this->docform->contract->setText($basedoc->headerdata['contractnumber']);
 
-                        foreach ($basedoc->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                        
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
@@ -119,8 +119,8 @@ class TaxInvoiceIncome extends \App\Pages\Base
 
                         //$this->docform->contract->setText($basedoc->headerdata['contractnumber']);
 
-                        foreach ($basedoc->detaildata as $item) {
-                            $item = new Item($item);
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                           
                             $this->_tovarlist[$item->item_id] = $item;
                         }
                     }
