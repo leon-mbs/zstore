@@ -103,14 +103,19 @@ class TaxInvoiceList extends \App\Pages\Base
            $wherep .=  " and  document_date <= " . $conn->DBDate($to);
         }
         
-        $where .= " and  (meta_name = 'TaxInvoice' or meta_name = 'TaxInvoiceIncome'  or meta_name = 'TaxInvoice2' )";
+        $where .= " and  (meta_name = 'TaxInvoice' or meta_name = 'TaxInvoiceIncome'  or meta_name = 'TaxInvoice2' or meta_name = 'RetCustIssue' )";
 
         foreach( Document::findYield($where) as $doc ){
              if($doc->meta_name=='TaxInvoiceIncome') {
                  $this->_tvars['ndsin'] += H::fa($doc->getHD('totalnds'));
-             }   else {
+             }  
+             if($doc->meta_name=='TaxInvoice' || $doc->meta_name=='TaxInvoice2') {
                  $this->_tvars['ndsout'] += H::fa($doc->getHD('totalnds'));
              }
+             if($doc->meta_name=='RetCustIssue') {
+                 $this->_tvars['ndsin'] -= H::fa($doc->getHD('nds'));
+             }  
+                 
         }
         
         $this->_tvars['ndspay']  = H::fa( doubleval( $conn->GetOne($wherep)) );

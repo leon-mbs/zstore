@@ -80,7 +80,7 @@ class GoodsReceipt extends Document
             $header['isval'] = false;
         }
         $val = H::getValList();
-        $header['val'] = $val[$this->headerdata['val']];
+        $header['val'] = $val[$this->headerdata['val']]??'';
 
         $report = new \App\Report('doc/goodsreceipt.tpl');
 
@@ -222,7 +222,7 @@ class GoodsReceipt extends Document
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        $list['MoveItem'] = self::getDesc('MoveItem');
+      //  $list['MoveItem'] = self::getDesc('MoveItem');
   
 
         return $list;

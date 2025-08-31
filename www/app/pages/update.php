@@ -44,9 +44,11 @@ class Update extends \App\Pages\Base
  
         $this->_prev['6.14.1']='6.14.0';
         $this->_prev['6.15.0']='6.14.1';
+        $this->_prev['6.16.0']='6.15.1';
         
         $this->_sql['6.13.0']='update6130to6140.sql';
         $this->_sql['6.14.0']='update6140to6150.sql';
+        $this->_sql['6.15.0']='update6150to6160.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -145,7 +147,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['rollback']  = false;
 
          // откат к предыдущей       
-         if(strlen($this->_prev[System::CURR_VERSION]) >0 ) {
+         if(strlen($this->_prev[System::CURR_VERSION]??0) >0 ) {
              $this->_tvars['rollback']  = true;
                
          }     

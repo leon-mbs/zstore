@@ -57,7 +57,7 @@ class InvoiceCust extends Document
             $header['isval'] = false;
         }
         $val = H::getValList();
-        $header['val'] = $val[$this->headerdata['val']];
+        $header['val'] = $val[$this->headerdata['val']]??'';
 
         $report = new \App\Report('doc/invoicecust.tpl');
 

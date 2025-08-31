@@ -63,6 +63,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('nds'));
 
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
@@ -229,7 +230,8 @@ class RetCustIssue extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
-
+        $item->pricends= $item->price + $item->price * $item->nds();
+  
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
@@ -278,6 +280,10 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
+        if($this->_doc->headerdata['nds']>0) {
+           $this->_doc->headerdata['ernn'] = 1;
+        }
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
@@ -350,9 +356,13 @@ class RetCustIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
 
             $total = $total + $item->amount;
         }
@@ -370,7 +380,10 @@ class RetCustIssue extends \App\Pages\Base
             $payed  = $payed*$k;           
         }        
 
-        
+        if($nds>0) {
+            $this->docform->nds->setText(H::fa($nds));            
+        }
+       
         $this->docform->total->setText(H::fa($total));
         $this->docform->payed->setText(H::fa($payed));
         $this->docform->editpayed->setText(H::fa($payed));
