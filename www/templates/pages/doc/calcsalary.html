@@ -21,14 +21,21 @@
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="date" v-model="doc.document_date"  required >
                     </div>
-
-
-                    <div class="form-group  ">
-                        <label for="notes">Примiтка </label>
-
-                        <textarea class="form-control" type="text" v-model="doc.notes"></textarea>
-
+                     <div class="form-group  ">
+                        <label for="department">Вiддiл </label>
+                        <input  list="dlist" class="form-control" v-model="doc.department">
+                         <datalist id="dlist">
+                             <option v-for="dep in deps"  v-bind:label="dep"  v-bind:value="dep" >
+                         </datalist>                                  
                     </div>
+                     <div class="form-group  ">
+                        <label for="iostate">Тип витрат</label>
+                        <select   class="form-control" v-model="doc.iostate">
+                             <option value="0">Не вказано</option>
+                             <option v-for="ios in iostates "  v-bind:value="ios.key">{{ios.value}}</option>
+                        </select>
+                    </div>
+               
 
                 </div>
                 <div id="formd" class="col-12 col-md-4 col-xl-3">
@@ -49,7 +56,12 @@
                         <input v-on:change="hch()" style="width:100px;"  type="number"  required   class="form-control" v-model="doc.daysmon">
                         <small>Кiлькiсть робочих днiв в  мiсяцi</small>
                     </div>
- 
+                     <div class="form-group  ">
+                        <label for="notes">Примiтка </label>
+
+                        <textarea class="form-control" type="text" v-model="doc.notes"></textarea>
+
+                    </div>
                 </div>
             </div>
            
@@ -155,6 +167,8 @@
           years:[] ,
           emps : [] ,
           deleted : [] ,
+          iostates : [] ,
+          deps : [] ,
           selectednewemp:0 ,
           opt:{},
           doc:{
@@ -164,6 +178,8 @@
               year:0 ,
               month:0 ,
               daysmon:1,
+              iostate:0,
+              department:""
           },
         
           
@@ -210,12 +226,16 @@
  
              tocalc:  function ( ){
                if(checkFormInput('docform')==false) return;
-                 
+               if(this.doc.iostate==0) {
+                   toastr.error("Не вибраний тип витрат")  
+                   return;
+               } 
                  
                  this.showheader = false
                 this.showcalc = true
                 
                 var data = {
+                    department:this.doc.department,
                     year:this.doc.year,
                     month:this.doc.month
                     
@@ -223,12 +243,13 @@
                 
                 
              callPageMethod('loaddata',[ ], JSON.stringify(data),(data)=> 
-                  {
+                  {  
                        var data = JSON.parse(data)
-                        
+                     
               
                        this.opt = data.opt 
                        this.emps = data.emps 
+        
                        
                        if(data.newdoc || this.hchanged ) {
                            for(var e of this.emps) {
@@ -324,7 +345,8 @@
                            $('#formd').hide()
                        }
                         
-                        
+                       this.iostates = data.iostates 
+                       this.deps = data.deps                 
                   });
               
                    

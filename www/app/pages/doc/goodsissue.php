@@ -35,7 +35,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = -1;
     private $_rownumber = 1;
     private $_orderid   = 0;
-
+    private $_fops =[];
     private $_changedpos  = false;
 
     /**
@@ -47,7 +47,8 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-  
+        $firm = H::getFirmData(  $this->branch_id);
+
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -66,19 +67,20 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc'));
+        $this->docform->add(new Label('totalnds'));
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+       
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
@@ -86,6 +88,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
+        $this->_fops=[];
+        foreach(($firm['fops']??[]) as $fop) {
+          $this->_fops[$fop->id]=$fop->name ; 
+        }
+        $this->docform->add(new DropDownChoice('fop', $this->_fops,0))->setVisible(count($this->_fops)>0) ;
 
         $cp = \App\Session::getSession()->clipboard;
         $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
@@ -139,7 +146,9 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->salesource->setValue($this->_doc->headerdata['salesource']);
-
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->fop->setValue($this->_doc->headerdata['fop']);
+         
       
             $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
@@ -159,8 +168,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->_orderid = $this->_doc->headerdata['order_id'];
 
 
-            $this->docform->firm->setValue($this->_doc->firm_id);
-            $this->OnChangeCustomer($this->docform->customer);
+             $this->OnChangeCustomer($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
 
@@ -175,6 +183,9 @@ class GoodsIssue extends \App\Pages\Base
 
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
+                        if($basedoc->getHD('paytype',0) != 3){
+                            $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
+                        }         
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
@@ -235,13 +246,13 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
-
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
+     
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
 
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                        
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
                     
 
@@ -286,11 +297,11 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
 
-                        $this->docform->firm->setValue($basedoc->firm_id);
                         $this->OnCustomerFirm(null);
 
                         $this->docform->contract->setValue($basedoc->headerdata['contract_id']);
-
+                        $this->docform->fop->setValue($basedoc->headerdata['fop']);
+     
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
@@ -330,6 +341,15 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcTotal();
                         $this->calcPay();
                     }
+                    
+                    
+                    $ch = $basedoc->getChildren('GoodsIssue');
+                    
+                    if(count($ch)>0) {
+                        $this->setWarn('Вже створено накладну на  підставі '.$basedoc->document_number) ;
+                    }       
+                    
+                    
                 }
             } else {
                 if(intval($common['paytypeout']) == 1) {
@@ -362,6 +382,7 @@ class GoodsIssue extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('disc', $item->disc));
         $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -402,13 +423,13 @@ class GoodsIssue extends \App\Pages\Base
      //   $common = \App\System::getOptions("common");
         
         $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
 
         if ($code == '') {
             return;
         }
+        
+        $this->docform->barcode->setText('');
+        
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
             $this->setError('Не обрано склад');
@@ -416,20 +437,22 @@ class GoodsIssue extends \App\Pages\Base
         }
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::findBarCode($code,$store_id);
+ 
+     
+        if ($item != null) { 
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id ) {
+                    $this->_itemlist[$ri]->quantity += 1;
+                    $this->_rownumber  = 1;
 
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->item_id == $item->item_id ) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->_rownumber  = 1;
-
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-                $this->CalcPay();
-                return;
+                    $this->docform->detail->Reload();
+                    $this->calcTotal();
+                    $this->CalcPay();
+                    return;
+                }
             }
         }
-
 
  
         if ($item == null) {      //ищем по серийному
@@ -572,7 +595,8 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->setWarn('Введено більше товару, чим мається в наявності');
         }
-
+        $item->pricends= $item->price + $item->price * $item->nds();
+ 
         
         if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
             
@@ -685,15 +709,13 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
-
+       
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
-
+        $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
+        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
+    
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
@@ -707,6 +729,8 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
 
@@ -737,22 +761,9 @@ class GoodsIssue extends \App\Pages\Base
                         $msg= "В документі {$this->_doc->document_number}, створеному на підставі {$order->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ " ;
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
-
-                    if( $order->meta_name =='Order') {
-                        
-
-                        if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
-                            $order->updateStatus(Document::STATE_INSHIPMENT);
-                        }                            
-                        
-                        if($this->_doc->payamount >0 ) {  //если  платим  в  накладной
-                            if ($order->state == Document::STATE_INSHIPMENT) {
-                                $order->updateStatus(Document::STATE_CLOSED);
-                            }
-                        }
-                        
-                        $order->unreserve();
-                    }
+                    if($order->meta_name == 'Order') {
+                        $order->unreserve();     
+                    }  
                 }
        
        
@@ -822,16 +833,22 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+         $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
-
-
+ 
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
+  
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-
-
+        if($nds>0) {
+            $this->docform->totalnds->setText(H::fa($nds));            
+        }
+      
 
     }
 
@@ -841,13 +858,17 @@ class GoodsIssue extends \App\Pages\Base
 
         $total = $this->docform->total->getText();
         $totaldisc = $this->docform->totaldisc->getText();
+        $totalnds = $this->docform->totalnds->getText();
 
         if($totaldisc > 0) {
             $total = $total - $totaldisc;
         }
+        if($totalnds>0) {
+            $total = $total + $totalnds;
+        }
 
         $this->docform->payamount->setText(H::fa($total));
-        $prepaid = doubleval($this->_doc->headerdata['prepaid']) ;
+        $prepaid = doubleval($this->_doc->headerdata['prepaid']??0) ;
         if ($prepaid > 0) {
             //  $disc =0;
 
@@ -928,7 +949,7 @@ class GoodsIssue extends \App\Pages\Base
            'store'=>$store_id,
            'customer'=>$customer_id
          ));
-        $qty = $item->getQuantity($store_id);
+        $qty = $item->getQuantity($store_id,"",0,$this->docform->storeemp->getValue());
         $qtyex = $item->getQuantity() - $qty;
 
         $this->editdetail->qtystock->setText(H::fqty($qty));
@@ -1056,9 +1077,8 @@ class GoodsIssue extends \App\Pages\Base
 
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+      
+        $ar = \App\Entity\Contract::getList($c );
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {
             $this->docform->contract->setVisible(true);

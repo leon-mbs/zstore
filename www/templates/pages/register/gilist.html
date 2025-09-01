@@ -11,7 +11,7 @@
                         <h3>Журнал продажів </h3>
 
 
-                        <div class="navbar nav">
+                        <div class="card">
                             <form zippy="filter" class="row   g-2 align-items-center">
                               <div class="col-auto">  
                                   <div class=" row no-gutters"> 
@@ -33,17 +33,7 @@
                                  </div>
                                 </div>
                                </div>
-                               <div class="col-auto">  
-                                  <div class=" row no-gutters"> 
-
-                                <label class="col-auto mt-2"   for="searchcomp">Продавець</label>
-                                  <div class="col-auto">
-                                  <select zippy="searchcomp" class="form-control mr-sm-2">
-                                    <option value="0">Не обрано</option>
-                                </select>
-                                 </div>
-                                </div>
-                               </div>
+                              
                                 <div class="col-auto">  
                                   <div class=" row no-gutters"> 
                                       
@@ -97,7 +87,7 @@
                                 <th>Замовлення</th>
                                 <th>Клієнт</th>
 
-                                <th>Продавець</th>
+                               
 
                                 <th class="text-right">Сума</th>
 
@@ -118,7 +108,7 @@
                                 <td zippy="order"></td>
                                 <td zippy="customer" class="text-nowrap"></td>
 
-                                <td zippy="firm"></td>
+                                
 
                                 <td zippy="amount" class="text-right"></td>
 
@@ -153,7 +143,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="navbar nav">
+                        <div class="card">
                             <form zippy="statusform" class="form-inline ">
                                 {{#np}}
                                 <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 " title="Створити експрес-накладну">Доставка НП</button>
@@ -164,7 +154,7 @@
 
                                 &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                                 <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Створити ТТН</button>
-                                <button zippy="bgi" type="submit" class="  btn btn-success  mr-2 ">Створити РН</button>
+                                <button zippy="bgi" type="submit" class="  btn btn-success  mr-2 ">Створити ВН</button>
                                 <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантійний талон</button>
                                 <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Повернення</button>
                                 &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларацiї </span> <i data-label="ship_number"  class="fa fa-info-circle " data-toggle="tooltip" data-placement="top" title="Номер декларацiї служби доставки."></i> 

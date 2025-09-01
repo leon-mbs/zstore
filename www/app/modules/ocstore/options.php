@@ -29,15 +29,24 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
         $form->add(new CheckBox('ssl', $modules['ocssl']));
-        $form->add(new CheckBox('outcome', $modules['ocoutcome']));
+
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
-        $form->add(new CheckBox('setpayamount', $modules['ocsetpayamount']));
+
         $form->add(new CheckBox('v4', $modules['ocv4']));
         $form->add(new TextArea('key', $modules['ockey']));
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']));
         $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
+        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['ocstoreid']??0));
+      
+        $pt=[];
+        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[2] = 'Постоплата';
+        $pt[3] = 'Оплата в Чеку або ВН';
+        $pt[4] = 'Тiльки списати зi складу';
+      
+        $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
     }
@@ -51,15 +60,33 @@ class Options extends \App\Pages\Base
         $pricetype = $this->cform->defpricetype->getValue();
         $salesource = $this->cform->salesource->getValue();
         $mf = $this->cform->defmf->getValue();
-        $outcome = $this->cform->outcome->isChecked() ? 1 : 0;
+        $store = $this->cform->defstore->getValue();
+        $paytype = intval($this->cform->defpaytype->getValue() );
+
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $v4 = $this->cform->v4->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
-        $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
+
 
         if (strlen($pricetype) < 2) {
 
             $this->setError('Не вказано тип ціни');
+            return;
+        }
+
+        if ( $paytype==0) {
+
+            $this->setError('Не вказано тип оплати');
+            return;
+        }
+        if ( $paytype==1 && $mf==0) {
+
+            $this->setError('Не вказано касу');
+            return;
+        }
+        if ( $paytype==4 && $store==0) {
+
+            $this->setError('Не вказано склад');
             return;
         }
 
@@ -77,9 +104,11 @@ class Options extends \App\Pages\Base
         $modules['ocssl'] = $ssl;
         $modules['ocv4'] = $v4;
         $modules['ocinsertcust'] = $insertcust;
-        $modules['ocoutcome'] = $outcome;
-        $modules['ocsetpayamount'] = $setpayamount;
+
+
         $modules['ocmf'] = $mf;
+        $modules['ocstoreid'] = $store;
+        $modules['ocpaytype'] = $paytype;
 
         System::setOptions("modules", $modules);
 

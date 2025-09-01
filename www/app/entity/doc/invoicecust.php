@@ -11,7 +11,7 @@ use App\Helper as H;
 class InvoiceCust extends Document
 {
     public function generateReport() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $i = 1;
 
@@ -32,9 +32,8 @@ class InvoiceCust extends Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
-                        "firm_name"       => $firm['firm_name'],
-                        "isfirm"          => strlen($firm["firm_name"]) > 0,
-                         "isval"           => strlen($this->headerdata['val']) > 1,
+                        
+                         "isval"           => strlen($this->headerdata['val']??'') > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),
                        "total"           => H::fa($this->amount),
@@ -53,12 +52,12 @@ class InvoiceCust extends Document
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
 
-        $header['rate'] = $this->headerdata["rate"];
+        $header['rate'] = $this->headerdata["rate"]??1;
         if ($header['rate'] == 0 || $header['rate'] == 1) {
             $header['isval'] = false;
         }
         $val = H::getValList();
-        $header['val'] = $val[$this->headerdata['val']];
+        $header['val'] = $val[$this->headerdata['val']]??'';
 
         $report = new \App\Report('doc/invoicecust.tpl');
 

@@ -41,10 +41,11 @@ class UserProfile extends \App\Pages\Base
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
         $form->add(new CheckBox('usebotfornotify', $this->user->usebotfornotify));
-        $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
+
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
+        $form->add(new DropDownChoice('defpaytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $this->user->defpaytype ))  ;
 
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
 
@@ -94,10 +95,13 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
+           
         
+        
+             
         $form = new Form('scaleform');
         $form->add(new TextInput('scaleserver', $this->user->scaleserver));
-        $form->onSubmit($this, 'saveScalelOnClick');
+        $form->onSubmit($this, 'saveScaleOnClick');
         $this->add($form);     
 
         if(strlen($this->user->prtype) == 0) {
@@ -152,9 +156,10 @@ class UserProfile extends \App\Pages\Base
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
         $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;
 
-        $this->user->deffirm = $sender->deffirm->getValue();
+
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
+        $this->user->defpaytype = $sender->defpaytype->getValue();
         $this->user->defsalesource = $sender->defsalesource->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
@@ -249,11 +254,14 @@ class UserProfile extends \App\Pages\Base
         $this->user->pwsym = trim($this->printer->pwsym->getText());
         $this->user->pserver = trim($this->printer->pserver->getText());
         $this->user->pserver  = rtrim($this->user->pserver, "/") ;
-
+        if($this->user->prtype >0) {
+           $this->user->usemobileprinter = 0;
+           $this->profileform->usemobileprinter->setChecked(0) ;                     
+        }
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
-
+        App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
     public function onPSTypelabel($sender) {
@@ -296,7 +304,7 @@ class UserProfile extends \App\Pages\Base
 
     }
 
-    public function saveScalelOnClick($sender) {
+    public function saveScaleOnClick($sender) {
         $this->user->scaleserver = $sender->scaleserver->getText() ;
         $this->user->save();
         $this->setSuccess('Збережено');
@@ -317,7 +325,8 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
-
+        App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
+ 
 }

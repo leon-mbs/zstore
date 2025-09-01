@@ -200,7 +200,7 @@ GROUP BY c.customer_name,
         $this->_doclist = array();
 
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = 21    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
             $this->_doclist[] = $d;
 
         }
@@ -265,6 +265,7 @@ GROUP BY c.customer_name,
        
        if(strpos($sender->id,'stpayed')===0) {
            $doc->updateStatus(Document::STATE_PAYED,true);  
+           
        }      
        if(strpos($sender->id,'stdone')===0) {
            $doc->updateStatus(Document::STATE_FINISHED,true);  
@@ -318,6 +319,9 @@ GROUP BY c.customer_name,
         $this->paypan->payform->pamount->setText(H::fa($amount));
         $this->paypan->payform->pcomment->setText("");
         $this->paypan->pname->setText($this->_doc->document_number);
+        if($this->_doc->getHD('payment') >0) {
+            $this->paypan->payform->payment->setValue($this->_doc->getHD('payment'));
+        }
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
@@ -351,13 +355,13 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
-
-
+        
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
+           
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
             $amount = 0 - $amount;
-            $type = \App\Entity\IOState::TYPE_BASE_INCOME;
+   
         } else {
             $options=\App\System::getOptions('common')  ;
             if($options['allowminusmf'] !=1) {
@@ -369,14 +373,16 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
-
+            \App\Entity\IOState::addIOState($this->_doc->document_id,  0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         }
 
 
  
         $payed = Pay::addPayment($this->_doc->document_id, $pdate, 0-$amount, $form->payment->getValue(), $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, $type);
 
+   
+     
+            
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }

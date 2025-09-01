@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
                 <h4>Повідомлення</h4>
-                <div class="navbar nav justify-content-start">
+                <div class="card justify-content-start">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -28,7 +28,7 @@
                             &nbsp;&nbsp;&nbsp;<i zippy="sendericon" ></i> <span zippy="sender"></span>
                             <p zippy="msg">
                             </p>
-                            <span zippy="nanswer"  style="cursor:pointer" >Відповісти</span>
+                            <a zippy="nanswer"  >Відповісти</a>
     
                         </td>
                         <td><span zippy="newn" class="badge badge-info">Нове</span></td>
@@ -39,7 +39,29 @@
                 <div zippy="pag"></div>
 
             </div>
-                     
+            <div class="col-12 col-md-4 col-xl-3">
+              <h4>Відправити повідомлення</h4> 
+                <form zippy="msgform"  >
+
+                     <div class="form-group  ">
+                        <label for="msguser">Отримувач</label>
+
+                        <select class="form-control" zippy="msguser">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="msgtext">Повідомлення</label>
+                        <textarea class="form-control"   zippy="msgtext"    ></textarea>
+                    </div>
+
+                 
+                     <div class="form-group  "> 
+                        <input type="submit" class="  btn btn-outline-success  " value="Відправити">
+                       </div>
+                        
+                    </form>            
+        </div>
         </div>
   
 <script>

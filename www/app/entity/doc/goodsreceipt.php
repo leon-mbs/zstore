@@ -13,7 +13,7 @@ use App\Helper as H;
 class GoodsReceipt extends Document
 {
     public function generateReport() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $i = 1;
 
@@ -43,13 +43,14 @@ class GoodsReceipt extends Document
                         "firm_name"       => $firm['firm_name'],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
-                        "isval"           => strlen($this->_doc->headerdata['val']) > 1,
-                        "valname"           => $this->_doc->headerdata['valname'],
-                        "rate"           => $this->_doc->headerdata['rate'],
+                        "isval"           => strlen($this->headerdata['val']) > 1,
+                        "valname"           => $this->headerdata['valname'],
+                        "rate"           => $this->headerdata['rate'],
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "storeemp"             => false,
+                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
@@ -57,6 +58,10 @@ class GoodsReceipt extends Document
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
+        if ($this->headerdata["storeemp"] > 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
+        }
+
 
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
@@ -75,7 +80,7 @@ class GoodsReceipt extends Document
             $header['isval'] = false;
         }
         $val = H::getValList();
-        $header['val'] = $val[$this->headerdata['val']];
+        $header['val'] = $val[$this->headerdata['val']]??'';
 
         $report = new \App\Report('doc/goodsreceipt.tpl');
 
@@ -127,7 +132,7 @@ class GoodsReceipt extends Document
                 $iprice = 0;
             }
        //     $item->amount = $iprice * $item->quantity;
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0,$this->headerdata['storeemp']??0);
 
             $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
@@ -217,7 +222,8 @@ class GoodsReceipt extends Document
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        $list['MoveItem'] = self::getDesc('MoveItem');
+     //   $list['TaxInvoiceIncome'] = self::getDesc('TaxInvoiceIncome');
+      //  $list['MoveItem'] = self::getDesc('MoveItem');
   
 
         return $list;
@@ -254,5 +260,20 @@ class GoodsReceipt extends Document
         }
         
     }
-}     
+    
+    
+   protected function onState($state, $oldstate) {
+        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'OrderCust'  ) {
+                      $order = $order->cast() ;
+                      $order->updateStatus(Document::STATE_CLOSED);
+                      
+                }    
+            }
+      }
+   }
+}
 

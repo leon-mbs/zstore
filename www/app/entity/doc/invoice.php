@@ -12,26 +12,29 @@ class Invoice extends \App\Entity\Doc\Document
 {
     public function generateReport() {
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
-
+        $iban=$mf->iban??'';
+        
+        if(strlen($mf->payname ??'') > 0) $firm['firm_name']   = $mf->payname;
+        if(strlen($mf->address ??'') > 0) $firm['address']   = $mf->address;
+        if(strlen($mf->tin ??'') > 0) $firm['fedrpou']   = $mf->tin;
+        if(strlen($mf->inn ??'') > 0) $firm['finn']   = $mf->inn;
+        
+ 
         $i = 1;
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
-                $detail[] = array("no"         => $i++,
-                                  "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
-                                  "tovar_code" => $item->item_code,
-                                  "quantity"   => H::fqty($item->quantity),
-                                  "price"      => H::fa($item->price),
-                                  "msr"        => $item->msr,
-                                  "amount"     => H::fa($item->quantity * $item->price)
-                );
-            }
+              $detail[] = array("no"         => $i++,
+                              "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
+                              "tovar_code" => $item->item_code,
+                              "quantity"   => H::fqty($item->quantity),
+                              "price"      => H::fa($item->price),
+                              "msr"        => $item->msr,
+                              "amount"     => H::fa($item->quantity * $item->price)
+              );
         }
 
         $totalstr =  \App\Util::money2str_ua($this->payamount);
@@ -40,7 +43,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
-                        "firm_address"    => $firm['address'],
+                       
                         "logo"            => _BASEURL . $firm['logo'],
                         "islogo"          => strlen($firm['logo']) > 0,
                         "stamp"           => _BASEURL . $firm['stamp'],
@@ -53,9 +56,9 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
-                        "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
-                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
-                        "email"           => $this->headerdata["email"],
+                        "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
+                        "iban"      => strlen($iban) > 0 ? $iban : false,
+                 
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
@@ -69,28 +72,41 @@ class Invoice extends \App\Entity\Doc\Document
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+        $header["nds"] = false;
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;
+        $header["isfop"] = false;
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }
-        if (strlen($cust->address) > 0) {
-            $header["address"] = $cust->address;
-        }
+     
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['inn']) > 0) {
-            $header["finn"] = $firm['inn'];
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
         }
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
+        }
+     
 
 
         if ($this->headerdata["contract_id"] > 0) {
@@ -132,14 +148,14 @@ class Invoice extends \App\Entity\Doc\Document
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
         //  $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
-        $list['ServiceAct'] = self::getDesc('ServiceAct');
+    //    $list['ServiceAct'] = self::getDesc('ServiceAct');
    //     $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }
 
     protected function getEmailBody() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
         $header = array();
         $header['customer_name'] = $this->customer_name;

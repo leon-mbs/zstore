@@ -30,7 +30,7 @@ use Zippy\Html\Link\BookmarkableLink;
 class ProdStageList extends \App\Pages\Base
 {
     private $_stage = null;
-    public $_emps  = array();
+ 
     public $_dates = array();
     public $_docs  = array();
 
@@ -46,11 +46,10 @@ class ProdStageList extends \App\Pages\Base
         }
 
         $this->add(new Panel("listpan"));
-        $this->listpan->add(new ClickLink("opencal", $this, "opencalOnClick"));
-
+      
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->listpan->filter->add(new DropDownChoice('fproc', ProdProc::findArray('procname', 'state=' . ProdProc::STATE_INPROCESS, 'procname'), 0));
-        $this->listpan->filter->add(new DropDownChoice('fparea', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
+        $this->listpan->filter->add(new DropDownChoice('fparea', \App\Entity\ProdArea::findArray('pa_name', "disabled<>1","pa_name"), 0));
 
         $stlist = $this->listpan->add(new DataView('stlist', new ProcStageDataSource($this), $this, 'stlistOnRow'));
 
@@ -62,57 +61,27 @@ class ProdStageList extends \App\Pages\Base
         $this->cardpan->add(new Label("carddata"));
         $this->cardpan->add(new ClickLink("backc", $this, "backOnClick"));
 
-        $this->add(new Panel("userspan"))->setVisible(false);
-        $this->userspan->add(new Label("stageh5"));
-        $this->userspan->add(new Form("useraddform"))->onSubmit($this, "onAddEmp");
-
-        $this->userspan->useraddform->add(new DropDownChoice('adduser', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")));
-        $this->userspan->useraddform->add(new  TextInput("addktu"));
-        $this->userspan->add(new DataView('userslist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_emps')), $this, 'empOnRow'));
-
-        $this->userspan->add(new Button("saveusers"))->onClick($this, "onSaveEmp");
-        $this->userspan->add(new Button("cancelusers"))->onClick($this, "backOnClick");
-
+  
         $this->add(new Panel("statuspan"))->setVisible(false);
         $this->statuspan->add(new Label("stagenames"));
         $this->statuspan->add(new ClickLink("backs", $this, "backOnClick"));
         $this->statuspan->add(new ClickLink("btntoprod", $this, "toprodOnClick"));
+
         $this->statuspan->add(new ClickLink("btnfromprod", $this, "fromprodOnClick"));
         $this->statuspan->add(new ClickLink("btnservice", $this, "btnserviceOnClick"));
+        $this->statuspan->add(new ClickLink("btnmove", $this, "btnmoveOnClick"));
         $this->statuspan->add(new ClickLink("btnclose", $this, "closeOnClick"));
         $this->statuspan->add(new ClickLink("btnstop", $this, "stopOnClick"));
         $this->statuspan->add(new ClickLink("btnstart", $this, "startOnClick"));
 
         $this->statuspan->add(new DataView('doclist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_docs')), $this, 'onDocRow'));
         $this->statuspan->add(new \App\Widgets\DocView('docview'))->setVisible(false);
-
-
-        $this->add(new Panel("calpan"))->setVisible(false);
-        $this->calpan->add(new Label("stagenamed"));
-        $this->calpan->add(new Label("planhours"));
-        $this->calpan->add(new Label("facthours"));
-        $this->calpan->add(new ClickLink("backd", $this, "backOnClick"));
-
-        $this->calpan->add(new Form("calform"))->onSubmit($this, "onAddCal");
-        $this->calpan->calform->add(new Date("addcaldate"));
-        $this->calpan->calform->add(new Time("addcalfrom"));
-        $this->calpan->calform->add(new Time("addcalto"));
-        $this->calpan->add(new DataView('callist', new  ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_dates')), $this, 'onCalRow'));
-
-        $this->add(new Panel("calendarpan"))->setVisible(false);
-        $this->calendarpan->add(new ClickLink("backcal", $this, "backOnClick"));
-
-        $this->calendarpan->add(new Form('calfilter'));
-        $this->calendarpan->calfilter->add(new SubmitButton('filterok'))->onClick($this, "onCalFilter");
-        $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpa', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
-        $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpp', ProdProc::findArray('procname', 'state=' . ProdProc::STATE_INPROCESS, 'procname'), 0))->onChange($this, "onProd");
-        $this->calendarpan->calfilter->add(new DropDownChoice('calfilterps', array(), 0))->setVisible(false);
-        $this->calendarpan->calfilter->add(new DropDownChoice('calfilteremp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"), 0));
-
+ 
+  
+ 
         $stlist->Reload();
 
-        $this->_tvars['gtp'] = false;
-        $this->_tvars['gtf'] = false;
+  
 
 
     }
@@ -125,26 +94,19 @@ class ProdStageList extends \App\Pages\Base
     public function stlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $st = $row->getDataItem();
 
-        $row->add(new Label('sname', $st->stagename));
+        $row->add(new ClickLink('sname', $this, 'showOnClick'))->setValue($st->stagename) ;
         $row->add(new Label('pname', $st->procname));
-        $row->add(new Label('snumber', $st->snumber));
+      
         $row->add(new Label('sstate', ProdStage::getStateName($st->state)));
 
-        $row->add(new Label('startdateplan', H::fd($st->startdateplan)));
-        $row->add(new Label('enddateplan', H::fd($st->enddateplan)));
-        $row->add(new Label('hoursplan', H::fa($st->hoursplan)));
-        $row->add(new Label('startdatefact', H::fd($st->startdate)));
-        $row->add(new Label('enddatefact', H::fd($st->enddate)));
-        $row->add(new Label('hoursfact', H::fa($st->hours)));
+      
         $row->add(new Label('hasnotes'))->setVisible(strlen($st->notes) > 0);
         $row->hasnotes->setAttribute('title', $st->notes);
 
         $row->add(new ClickLink('card', $this, 'cardOnClick'))->setVisible(strlen($st->card) > 0);
 
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $row->add(new ClickLink('workers', $this, 'wOnClick'));
-        $row->add(new ClickLink('agenda', $this, 'cOnClick'));
-
+  
 
     }
 
@@ -158,255 +120,8 @@ class ProdStageList extends \App\Pages\Base
 
     }
 
-    public function wOnClick($sender) {
-        $this->userspan->setVisible(true);
-        $this->listpan->setVisible(false);
-        $this->_stage = $sender->getOwner()->getDataItem();
-        $this->_emps = $this->_stage->emplist;
-
-        $this->userspan->userslist->Reload();
-        $this->userspan->stageh5->setText($this->_stage->stagename);
-
-
-    }
-
-    public function onAddEmp($sender) {
-        $id = $sender->adduser->getValue();
-        $ktu = $sender->addktu->getText();
-
-        if ($id > 0 && $ktu > 0) {
-            $emp = \App\Entity\Employee::load($id);
-            $emp->ktu = $ktu;
-            $this->_emps[$id] = $emp;
-            $sender->clean();
-            $this->userspan->userslist->Reload();
-        }
-
-
-    }
-
-    public function empOnRow($row) {
-        $e = $row->getDataItem();
-
-        $row->add(new Label('username', $e->emp_name));
-        $row->add(new Label('ktu', $e->ktu));
-        $row->add(new ClickLink('deluser', $this, 'deluserOnClick'));
-
-    }
-
-    public function deluserOnClick($sender) {
-        $e = $sender->getOwner()->getDataItem();
-        $this->_emps = array_diff_key($this->_emps, array($e->employee_id => $this->_emps[$e->employee_id]));
-
-        $this->userspan->userslist->Reload();
-    }
-
-    public function onSaveEmp($sender) {
-
-        if (count($this->_emps) > 0) {
-            $ktu = 0;
-            foreach ($this->_emps as $emp) {
-                $ktu += doubleval($emp->ktu);
-            }
-            if ($ktu != 1) {
-                $this->setError("Сумарний КТУ повинен бути 1");
-                return;
-            }
-
-        }
-
-        $this->_stage->emplist = $this->_emps;
-        $this->_stage->save();
-        $this->userspan->setVisible(false);
-        $this->listpan->setVisible(true);
-    }
-
-
-    public function cOnClick($sender) {
-        $this->calpan->setVisible(true);
-        $this->listpan->setVisible(false);
-        $this->_stage = $sender->getOwner()->getDataItem();
-
-        $this->calpan->stagenamed->setText($this->_stage->stagename);
-        $this->calpan->planhours->setText($this->_stage->hours);
-
-        $this->onCalUpdate();
-        $this->calpan->calform->clean() ;
-    }
-
-    public function onAddCal($sender) {
-        $d = $sender->addcaldate->getDate();
-        if ($d == false) {
-            return;
-        }
-        $from = $sender->addcalfrom->getDateTime($d);
-        $to = $sender->addcalto->getDateTime($d);
-        if ($from >= $to) {
-            $this->setError('Невірний інтервал');
-            return;
-        }
-
-        $conn = \ZDB\DB::getConnect();
-        $t_start = $conn->DBTimeStamp($from);
-        $t_end = $conn->DBTimeStamp($to);
-
-        $sql = " select  count(*)  from prodstageagenda where    st_id={$this->_stage->st_id}  and   (( {$t_start} between  enddate  and   startdate) or (  {$t_end} between startdate and enddate))";
-        $cnt = $conn->GetOne($sql);
-
-        if ($cnt > 0) {
-            $this->setError("Інтервал перетинається з існуючим для цього етапу");
-            return;
-        }
-
-        $sql = " select  count(*)  from prodstageagenda_view where  pa_id={$this->_stage->pa_id} and  st_id<>{$this->_stage->st_id}  and   (( {$t_start} between  enddate  and   startdate) or (  {$t_end} between startdate and enddate))";
-        $cnt = $conn->GetOne($sql);
-
-        if ($cnt > 0) {
-            $this->setWarn("Інтервал перетинається з наявним на цій ділянці для іншого етапу");
-        }
-
-        $ag = new ProdStageAgenda();
-        $ag->startdate = $from;
-        $ag->enddate = $to;
-        $ag->st_id = $this->_stage->st_id;
-
-        $ag->save();
-
-        $this->onCalUpdate();
-        $sender->clean();
-    }
-
-    public function onCalRow($row) {
-        $st = $row->getDataItem();
-
-        $row->add(new Label('date', H::fd($st->startdate)));
-        $row->add(new Label('from', H::ft($st->startdate)));
-        $row->add(new Label('to', H::ft($st->enddate)));
-        $row->add(new Label('hours', number_format($st->hours, 1, '.', '')));
-        $row->add(new ClickLink('delcal', $this, 'onCalDel'));
-
-    }
-
-    public function onCalDel($sender) {
-        $sta = $sender->getOwner()->getDataItem();
-        ProdStageAgenda::delete($sta->sta_id);
-        $this->onCalUpdate();
-    }
-
-    public function onCalUpdate() {
-        $conn = \ZDB\DB::getConnect();
-
-        $this->_dates = ProdStageAgenda::find("st_id=" . $this->_stage->st_id, "startdate");
-
-        $this->calpan->callist->Reload();
-        $h = 0;
-        foreach ($this->_dates as $d) {
-            $h += $d->hours;
-        }
-
-        $this->calpan->facthours->setText(number_format($h, 1, '.', ''));
-
-    }
-
-    public function opencalOnClick($sender) {
-        $this->calendarpan->setVisible(true);
-        $this->listpan->setVisible(false);
-        $this->updateCal();
-
-    }
-
-    public function onCalFilter($sender) {
-
-        $this->updateCal();
-
-    }
-
-    public function onProd($sender) {
-        $pp_id = $sender->getValue();
-        $this->calendarpan->calfilter->calfilterps->setVisible(false);
-        $this->calendarpan->calfilter->calfilterps->setOptionList(array());
-        $this->calendarpan->calfilter->calfilterps->setValue(0);
-        if ($pp_id > 0) {
-            $this->calendarpan->calfilter->calfilterps->setVisible(true);
-            $this->calendarpan->calfilter->calfilterps->setOptionList(ProdStage::findArray('stagename', 'state <>2 and pp_id=' . $pp_id, 'stagename'));
-        }
-
-    }
-
-    public function updateCal() {
-
-        $tasks = array();
-        $where = "pp_id in (select pp_id from prodproc where  state=1) and st_id in (select st_id from prodstage where  state <>2 )";
-        $emp_id = $this->calendarpan->calfilter->calfilteremp->getValue();
-        $stemps = array(0);
-        if ($emp_id > 0) {
-
-            foreach (ProdStage::find($where) as $ps) {
-                $ei = array_keys($ps->emplist);
-                if (in_array($emp_id, $ei)) {
-                    $stemps[] = $ps->st_id;
-                }
-            }
-
-            $where .= " and st_id in (" . implode(",", $stemps) . ") ";
-
-        }
-
-        $pp_id = $this->calendarpan->calfilter->calfilterpp->getValue();
-        $st_id = $this->calendarpan->calfilter->calfilterps->getValue();
-        $pa_id = $this->calendarpan->calfilter->calfilterpa->getValue();
-        if ($pp_id > 0) {
-            $where .= " and  pp_id=" . $pp_id;
-        }
-        if ($st_id > 0) {
-            $where .= " and  st_id=" . $st_id;
-        }
-        if ($pa_id > 0) {
-            $where .= " and  pa_id=" . $pa_id;
-        }
-
-
-        $items = ProdStage::find($where);
-        $p =  "[";
-        $f =  "[";
-
-
-
-
-        foreach($items as $st) {
-            $sp= $st->startdateplan;
-            $ep= $st->enddateplan;
-            $sf= $st->startdate;
-            $ef= $st->enddate;
-            if($sp >0  && $ep >0) {
-                $p .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y", $sp) .", ". (date("m", $sp) -1).", ". date("d", $sp) ."), new Date(". date("Y", $ep) .", ". (date("m", $ep) -1).", ". date("d", $ep) ."), null,  100,  null],";
-            }
-            if($sf >0  && $ef >0) {
-
-                $f .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y", $sf) .", ". (date("m", $sf) -1).", ". date("d", $sf) ."), new Date(". date("Y", $ef) .", ". (date("m", $ef) -1).", ". date("d", $ef) ."), null,  100,  null],";
-            }
-        }
-
-
-
-        $p .=  "]";
-        $f .=  "]";
-
-
-        if($p=="[]") {
-            $p = false;
-        }
-        if($f=="[]") {
-            $f = false;
-        }
-        $this->_tvars['gtp'] = $p;
-        $this->_tvars['gtf'] = $f;
-
-
-
-    }
-
-
+  
+ 
 
     public function toprodOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
@@ -425,12 +140,22 @@ class ProdStageList extends \App\Pages\Base
         Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, 0, $this->_stage->st_id);
 
     }
-  public function btnserviceOnClick($sender) {
+    
+    public function btnserviceOnClick($sender) {
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->_stage->state = ProdStage::STATE_INPROCESS;
             $this->_stage->save();
         }
         Application::Redirect("\\App\\Pages\\Doc\\IncomeService", 0, 0, $this->_stage->st_id);
+
+    }
+   
+    public function btnmoveOnClick($sender) {
+        if ($this->_stage->state == ProdStage::STATE_NEW) {
+            $this->_stage->state = ProdStage::STATE_INPROCESS;
+            $this->_stage->save();
+        }
+        Application::Redirect("\\App\\Pages\\Doc\\ProdMove", 0, 0, $this->_stage->st_id);
 
     }
 
@@ -473,6 +198,9 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->btntoprod->setVisible(true);
         $this->statuspan->btnfromprod->setVisible(true);
 
+        $this->statuspan->btnservice->setVisible(true);
+        $this->statuspan->btnmove->setVisible(true);
+
         if ($this->_stage->state == ProdStage::STATE_NEW) {
             $this->statuspan->btnclose->setVisible(false);
             $this->statuspan->btnstop->setVisible(false);
@@ -482,14 +210,20 @@ class ProdStageList extends \App\Pages\Base
             $this->statuspan->btnstart->setVisible(false);
 
         }
-        if ($this->_stage->state == ProdStage::STATE_STOPPED) {
+        if ($this->_stage->state == ProdStage::STATE_STOPPED || $this->_stage->state == ProdStage::STATE_NEW ) {
             $this->statuspan->btnstop->setVisible(false);
             $this->statuspan->btntoprod->setVisible(false);
             $this->statuspan->btnfromprod->setVisible(false);
 
+            $this->statuspan->btnservice->setVisible(false);
+            $this->statuspan->btnmove->setVisible(false);
+
         }
 
         if ($this->_stage->state == ProdStage::STATE_FINISHED) {
+            $this->statuspan->btnservice->setVisible(false);
+            $this->statuspan->btnmove->setVisible(false);
+
             $this->statuspan->btntoprod->setVisible(false);
             $this->statuspan->btnfromprod->setVisible(false);
             $this->statuspan->btnclose->setVisible(false);
@@ -498,7 +232,23 @@ class ProdStageList extends \App\Pages\Base
 
         }
 
-        $this->_docs = \App\Entity\Doc\Document::find("state>4 and meta_name in('ProdReceipt','ProdIssue') and content like '%<st_id>{$this->_stage->st_id}</st_id>%'   ", "document_id");
+        
+        $role_id = intval( \App\System::getOption('common','prodrole') );
+        $u=\App\System::getUser() ;
+      
+        if($role_id > 0 && $role_id==$u->role_id) {
+           
+            $this->statuspan->btnservice->setVisible(false);
+            $this->statuspan->btntoprod->setVisible(false);
+
+            $this->statuspan->btnclose->setVisible(false);
+             
+            
+        }
+                
+        
+        
+        $this->_docs = \App\Entity\Doc\Document::find("state>4 and meta_name in('ProdReceipt','ProdIssue','Task','IncomeService') and content like '%<st_id>{$this->_stage->st_id}</st_id>%'   ", "document_id");
         $this->statuspan->doclist->Reload();
 
         $this->statuspan->docview->setVisible(false);
@@ -524,10 +274,9 @@ class ProdStageList extends \App\Pages\Base
 
     public function backOnClick($sender) {
         $this->cardpan->setVisible(false);
-        $this->userspan->setVisible(false);
+     
         $this->statuspan->setVisible(false);
-        $this->calpan->setVisible(false);
-        $this->calendarpan->setVisible(false);
+   
         $this->listpan->setVisible(true);
 
         $this->listpan->stlist->Reload();
@@ -553,7 +302,7 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
 
-        $where = "procstate =" . ProdProc::STATE_INPROCESS;
+        $where = "procstate = " . ProdProc::STATE_INPROCESS;
 
         $proc = $this->page->listpan->filter->fproc->getValue();
         $parea = $this->page->listpan->filter->fparea->getValue();
@@ -565,6 +314,14 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and pa_id=" . $parea;
         }
 
+        $role_id = intval( \App\System::getOption('common','prodrole') );
+        $u=\App\System::getUser() ;
+      
+        if($role_id > 0 && $role_id==$u->role_id) {
+           
+            $where .= " and detail like '%#{$u->employee_id}#%'  " ;
+        }
+        
         return $where;
     }
 
@@ -573,7 +330,7 @@ class ProcStageDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return ProdStage::find($this->getWhere(), "");
+        return ProdStage::find($this->getWhere(), "state asc ");
     }
 
     public function getItem($id) {

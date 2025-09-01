@@ -229,6 +229,13 @@ class DocList extends \App\Pages\Base
         } else {
             $list = "";
             foreach ($basedonlist as $doctype => $docname) {
+                
+                if($this->_tvars['usends'] != true) {
+                     if($doctype=='TaxInvoiceIncome') continue;
+                     if($doctype=='TaxInvoice') continue;
+                     if($doctype=='TaxInvoice2') continue;
+                }
+                
                 $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
             }
             $row->basedon->add(new Label('basedlist'))->setText($list, true);
@@ -307,9 +314,10 @@ class DocList extends \App\Pages\Base
     }
 
     public function show($doc) {
-        $doc = $doc->cast();
-
-        $this->_doc = $doc;
+        $doc = Document::load($doc->document_id);;
+ 
+        $this->_doc = $doc->cast();
+ 
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
@@ -348,6 +356,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
         $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' ||
                                               $this->_doc->meta_name=='IncomeItem' ||
+                                              $this->_doc->meta_name=='MoveItem' ||
                                               $this->_doc->meta_name=='Order' ||
                                               $this->_doc->meta_name=='GoodsIssue' ||
                                               $this->_doc->meta_name=='TTN' ||
@@ -507,6 +516,17 @@ class DocList extends \App\Pages\Base
 
         $doc = $doc->cast();
 
+        
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$doc->document_date) {
+           $this->setError("Не можна скасовувати документ старший " .date('Y-m-d', $da));
+           return;
+            
+        }
+        
+        
         //   if (false == \App\ACL::checkEditDoc($doc, true))
         //     return;
         $user = System::getUser();
@@ -516,7 +536,7 @@ class DocList extends \App\Pages\Base
                 //свой может  отменить
             } else {
 
-                $this->setError("Немає права відміняти документ " . $doc->meta_desc);
+                $this->setError("Немає права скасовувати документ " . $doc->meta_desc);
                 return;
             }
         }
@@ -558,8 +578,8 @@ class DocList extends \App\Pages\Base
             return;
         }
         if(strlen($doc->headerdata["fiscalnumber"]??'')>0) {
-            $this->setWarn('Відмінено фіскалізований документ') ;
-
+            $this->setError('Не можна  скасовувати фіскалізований документ') ;
+            return;
         }
 
 
@@ -631,9 +651,14 @@ class DocList extends \App\Pages\Base
 
 
             if ($sender->id == "bstatus") {
-                $newst =   $this->statusform->mstates->getValue() ;
-                if($newst >0  && $newst != $this->_doc->state) {
-                    $this->_doc->updateStatus($newst, true);
+                $newst =  $this->statusform->mstates->getValue() ;
+                if($newst > 0  && $newst != $this->_doc->state) {
+                    if($newst == Document::STATE_EXECUTED) {
+                        $this->_doc->updateStatus($newst, true );    
+                    } else {
+                        $this->_doc->updateStatus($newst  );                        
+                    }
+                    
                 }
 
 
@@ -793,10 +818,8 @@ class DocList extends \App\Pages\Base
             
             $dataUri = \App\Util::generateQR($url, 150, 5)  ;
             $html = "<img src=\"{$dataUri}\"  />";
-            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()");
-            return;
- 
-
+            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()" );
+        
 
     }
     
@@ -820,7 +843,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
                 $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
             }
             if($filter->to > 0) {
-                $where .= " and  document_date <= " . $conn->DBDate($filter->to) ;
+                $where .= " and  document_date <= " . $conn->DBTimeStamp($filter->to+3600*24-1) ;
             }
         }    
             

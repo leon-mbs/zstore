@@ -3,28 +3,22 @@
         <meta charset="utf-8">
         <meta lang="ua" >
 
-        <title>Меню</title>
-        <meta name="description" content="">
+        <title>{{name}} | Меню</title>
+        <meta name="description" content="Меню кафе">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
-        <link rel="stylesheet" href="/assets/css/bootstrap.css">
-        <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
-        <link rel="stylesheet" href="/assets/css/toastr.min.css">
-
-        <link rel="stylesheet" href="/assets/css/shop.css">
-
+        <link rel="stylesheet" href="/assets/css/adminlte.css">
+      
+     
         <script src="/assets/fontawesome/js/all.js" ></script>
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
-        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js" type="text/javascript"></script>
-        <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
-
-        <script src="/assets/js/app.js" type="text/javascript"></script>
-  
+        
+       
     </head>
-    <body>
+    <body class="dark-mode">
     <style>
     
       .textcat {
@@ -32,42 +26,88 @@
       }
       .textprice {
           font-size:18px;
-          color:red;
+          color:yellow;
           font-weight: bolder;
+      }  
+      .textval {
+          font-size:18px;
+     
+         
       }
-      .img {
+    .dark-mode .fa {
+       color: white;
+    }
+    .dark-mode .fas {
+       color: white;
+    }
+
+    .dark-mode a {
+       color: #ccf;      
+    }   
+   .img {
          width:128px;
-      }
-    
+      }    
     </style>
     
       <div class="container-fluid ">
+               {{#alert}}
+             <div class="row">
+               <div class=" col-12 col-sm-6 col-md-3  col-xl-2  justify-content-center ">
+                   <div class="alert alert-success justify-content-center" role="alert">
+                      <i class="fa fa-bullhorn"></i> Офiцiанта  викликано
+                   </div>
+              </div>
+            </div>
+             {{/alert}}
         <div class="row ">
+    
             <div class="mt-2  col-12 col-sm-6 col-md-4  col-xl-3  ">
                  <div class="row ">
-                     <div class="col-12 col-sm-6">
-                         <a href="/menu"> <img style="width:80%" src="{{logo}}"> </a> 
+                     <div class="col-auto">
+                        <h4> <a style="color: white;font-family:Georgia;text-decoration:none" href="/menu"> {{name}} </a> </h4>
                     </div>
-                     <div class="col-12 col-sm-6  text-right">
-                         <i class="fa fa-phone"></i>  {{phone}}
+                    {{#phone}}
+                     <div class="col-auto  text-right pl-4">
+                       <a href="tel:{{phone}}">  <i class="fa fa-phone text-success"></i>  {{phone}} </a>
                     </div>
-                     <div class="col-12 text-center mb-4">
-                         <h2  style="font-family:Georgia"><a href="/menu" style="text-decoration:none" >{{name}} </a></h2>    
-                    </div>
+                     {{/phone}}
                   
                     {{^list}}
                     <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-outline-secondary w-50" href="/menu/1"> {{bmname}} </a> </h4>    
+                         <h4  > <a class="btn btn-secondary w-50" href="/menu/1"> {{bmname}} </a> </h4>    
                     </div>
                       {{#secondm}}
                     <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-outline-secondary  w-50" href="/menu/2"> {{smname}} </a> </h4>    
+                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/2"> {{smname}} </a> </h4>    
                     </div>
                       {{/secondm}}                    
+                    {{#secondm3}}
+                    <div class="col-12  text-center">
+                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/3"> {{smname3}} </a> </h4>    
+                    </div>
+                      {{/secondm3}}                    
+                  {{#secondm4}}
+                    <div class="col-12  text-center">
+                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/4"> {{smname4}} </a> </h4>    
+                    </div>
+                      {{/secondm4}}                    
                     {{/list}}  
                 </div>
              
                  {{#list}}
+                <div class="col-12  ">
+                 <b> <a   href="/menu/1"> {{bmname}} </a> &nbsp;
+                    {{#secondm}}
+                  <a   href="/menu/2"> {{smname}} </a>  &nbsp;
+                    {{/secondm}}  
+                  {{#secondm3}}
+                  <a   href="/menu/3"> {{smname3}} </a>  &nbsp;
+                    {{/secondm3}}  
+                  {{#secondm4}}
+                  <a   href="/menu/4"> {{smname4}} </a>  &nbsp;
+                    {{/secondm4}}  
+                  </b>
+                </div> 
                 <div class="col-12  ">
                  <ul class="nav nav-tabs">
                    {{#cats}}
@@ -89,9 +129,11 @@
                             <td colspan="2" ><br><br><b> {{itemname}}</b></td>
                           </tr>
                           <tr>
-                            <td class="textprice" >   {{price}}  грн</td>
-                            <td class="textprice"  align="right" >  {{customsize}} </td>
+                            <td  >  <span class="textprice"> {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
+                            <td class="textval"  align="right" >  {{customsize}} </td>
                           </tr>
+                      
+                        
                          <tr>
                             <td  valign="top"    > <small> {{desc}} </small> </td>
                             <td  ><img class="img" src="{{imglink}}" > </td>
@@ -115,17 +157,36 @@
                 
                 <div class="row ">                
                     <div class="col-12  text-center mt-4">
+                         <b  >Адреса </b>   
+                    </div>
+                   <div class="col-12  text-center mt-4">
+                          {{address}}    
+                    </div>
+                    <div class="col-12  text-center mt-4">
                          <b  >Розклад роботи </b>    
                     </div>
-                    <div class="col-12 justify-content-center mb-2">
-                       <table class="table table-sm">
-                          <tr><td align="right">Пн - Пт</td><td> {{timepn}}</td></tr>
-                          <tr><td align="right">Сб</td><td> {{timesa}}</td></tr>
-                          <tr><td align="right">Вс</td><td> {{timesu}}</td></tr>
-                       </table>   
+                    <div class="col-6  text-right  ">
+                        Пн - Пт  
                     </div>
+                    <div class="col-6     ">
+                         {{timepn}}     
+                    </div>
+                    <div class="col-6  text-right  ">
+                          Сб  
+                    </div>
+                    <div class="col-6     ">
+                          {{timesa}}   
+                    </div>
+                  <div class="col-6  text-right  ">
+                          Нд  
+                    </div>
+                    <div class="col-6     ">
+                         {{timesu}}      
+                    </div>
+                    <div class="col-12   mb-2">
+                      
                     
-                </div>
+                    </div>
  
               
                 

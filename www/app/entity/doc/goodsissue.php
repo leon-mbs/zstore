@@ -49,12 +49,17 @@ class GoodsIssue extends Document
 
         $totalstr =  \App\Util::money2str_ua($this->payamount);
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');
 
-
+        $iban=$mf->iban??'';
+        if(strlen($mf->payname ??'') > 0) $firm['firm_name']   = $mf->payname;
+        if(strlen($mf->address ??'') > 0) $firm['address']   = $mf->address;
+        if(strlen($mf->tin ??'') > 0) $firm['fedrpou']   = $mf->tin;
+        if(strlen($mf->inn ??'') > 0) $firm['finn']   = $mf->inn;
+   
 
         $header = array('date'      => H::fd($this->document_date),
                         "_detail"   => $detail,
@@ -76,7 +81,7 @@ class GoodsIssue extends Document
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
                         "notes"           => nl2br($this->notes),
 
-                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
+                        "iban"      => strlen($iban) > 0 ? $iban : false,
                         "payed"      => $this->headerdata["payed"] > 0 ? H::fa($this->headerdata["payed"]) : false,
                         "payamount"  => $this->payamount > 0 ? H::fa($this->payamount) : false
 
@@ -84,13 +89,15 @@ class GoodsIssue extends Document
 
         $header["customer_name"] = $this->headerdata["customer_name"];
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;   
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
+        $header["isfop"] = false;
         $header['isprep'] = ($this->headerdata["prepaid"] ??0 )> 0;
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]??'');
-
+        $header["nds"] = false;
+   
         if ($this->customer_id > 0) {
             $cust = \App\Entity\Customer::load($this->customer_id);
             $header["customer_name"] = $cust->customer_name;
@@ -109,23 +116,33 @@ class GoodsIssue extends Document
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['inn']) > 0) {
-            $header["finn"] = $firm['inn'];
-        }
-
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        }  
 
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
         }
 
-
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
+        }
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
+ 
 
         $report = new \App\Report('doc/goodsissue.tpl');
 
@@ -150,7 +167,7 @@ class GoodsIssue extends Document
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'],"",0,$this->headerdata['storeemp']??0)) ;
             $required = $item->quantity - $onstore;
 
 
@@ -160,7 +177,7 @@ class GoodsIssue extends Document
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
-                        $lost = 0;
+                      
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null) {
@@ -171,13 +188,7 @@ class GoodsIssue extends Document
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
                         }
-                         //учитываем  отходы
-                        if ($itemp->lost > 0) {
-                            $kl = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $kl;
-                            $lost = $kl - 1;
-                        }
-
+                    
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -186,17 +197,7 @@ class GoodsIssue extends Document
                             $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
- 
-                            if ($lost > 0) {
-                                $io = new \App\Entity\IOState();
-                                $io->document_id = $this->document_id;
-                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                                $io->save();
-
-                            }    
-                            
+                           
                             
                         }
                     }
@@ -223,25 +224,25 @@ class GoodsIssue extends Document
             }
 
             //продажа
-            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
+            $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item,$this->headerdata['storeemp']??0);
 
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
                 $sc->setOutPrice($item->price * $k);
+               
                 $sc->tag=Entry::TAG_SELL;
                 $sc->save();
                 $amount += $item->price * $k * $st->quantity;
             }
         }
 
-
-
-        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
- 
-        \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
-
+        if($this->getHD('payed',0) > 0){
+            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
+            \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
+        }
+        
         $this->DoBalans() ;
 
 
@@ -280,7 +281,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $printer = System::getOptions('printer');
@@ -325,23 +326,42 @@ class GoodsIssue extends Document
     }
 
     protected function onState($state, $oldstate) {
-        if($state == Document::STATE_EXECUTED) {
+        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
 
             if($this->parent_id > 0) {
-                $order = Document::load($this->parent_id);
-                if($order->meta_name == 'Order') {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'Invoice' && $order->parent_id > 0) {
+                      $order = Document::load($order->parent_id);
+                      $order = $order->cast() ;
+                      
+                }
+                 
+                if($order->meta_name == 'Order' && $order->state > 4) {
 
-                    if($order->payamount == 0 || ($order->payamount > 0 && $order->payamount == $order->payed)) {
-                        $this->updateStatus(Document::STATE_DELIVERED) ;
+                          
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+            
+                    if($order->state == Document::STATE_INSHIPMENT || 
+                        $order->state == Document::STATE_INPROCESS ||  
+                        $order->state == Document::STATE_FINISHED ||  
+                        $order->state == Document::STATE_READYTOSHIP) {
+                            
+                        $order->updateStatus(Document::STATE_DELIVERED);
+                    }                            
+               
+                    if($this->payed  >= $this->payamount  ) {  //если  оплачено  
+                        if ($order->state == Document::STATE_DELIVERED) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                        }
                     }
+                    
+                
+
                 }
             }
-
-
         }
-
-
     }
+    
     /**
     * @override
     */

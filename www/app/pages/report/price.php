@@ -37,11 +37,11 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('showimage'));
 
         $catlist = array();
-        foreach (Category::getList( ) as $k => $v) {
-            if($v->noprice==1) {
+        foreach (Category::findYield("cat_id in (select cat_id from items where disabled <>1 )", "cat_name") as $c) {
+            if($c->noprice==1) {
                 continue;
             }
-            $catlist[$k] = $v;
+            $catlist[$c->cat_id] = $c->cat_name;
         }
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
         $this->filter->add(new TextInput('searchbrand'));
@@ -85,7 +85,9 @@ class Price extends \App\Pages\Base
         $showqty = $this->filter->showqty->isChecked();
         $cat = $this->filter->searchcat->getValue();
         $brand = $this->filter->searchbrand->getText();
-
+        
+        $this->_tvars['showimage'] = $showimage;
+        
         $detail = array();
         
         
@@ -135,16 +137,22 @@ class Price extends \App\Pages\Base
                   $item->image_id=0; 
                }
             }
+            
+            $notes  = str_replace("\"","`",$item->notes) ;
+            $notes  = str_replace("'","`",$notes) ;
+            $notes  = str_replace("<","&lt;",$notes) ;
+            $notes  = str_replace(">","&gt;",$notes) ;
+            
             $detail[] = array(
                 "code"   => $item->item_code,
                 "name"   => $item->itemname,
                 "desc"   => $item->description,
-                "isimage"   => $item->image_id>0,
+                "isimage"   => $item->image_id>0 && $showimage==true,
                 "im"   => $im,
                 "cat"    => $item->cat_name,
                 "brand"  => $item->manufacturer,
                 "msr"    => $item->msr,
-                "notes"  => $item->notes,
+                "notes"  => $notes,
                 "qty"    => \App\Helper::fqty($qty),
                 "price1" => $isp1 ? $item->getPrice('price1') : "",
                 "price2" => $isp2 ? $item->getPrice('price2') : "",

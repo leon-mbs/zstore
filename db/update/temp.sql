@@ -25,7 +25,7 @@ CREATE TABLE acc_entry (
   createdon date NOT NULL,
   accdt char(5) NOT NULL,
   accct char(5) NOT NULL,
-  amount decimal(10, 2) NOT NULL,
+  amount decimal(11, 2) NOT NULL,
   document_id bigint NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8; 

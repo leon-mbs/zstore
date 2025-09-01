@@ -11,12 +11,13 @@
             <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
                     <h2>Довідник контрагентів </h2>
-                    <div class="navbar nav  ">
-                        <form zippy="leadf" class="form-inline ">
-                            <input   zippy="chleads" type="checkbox"> <label for="chleads">Режим роботи з лідами </label>
-                        </form>
+                    <div class="card  ">
+                        
                     </div>
-                    <div class="navbar nav  ">
+                    <div class="card ">
+                    <form zippy="leadf" class="form-inline ">
+                            <input   zippy="chleads" type="checkbox"> <label for="chleads"> Режим роботи з лідами </label>
+                        </form>
                         <form zippy="filter" class="form-inline ">
 
                             <label for="searchkey">Пошук</label>
@@ -198,7 +199,7 @@
                 <div class="form-check">
                     <input zippy="editisholding" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editisholding">Холдинг</label>
-                    <br><small>Компанія, що об'єднує дочірні компанії. </small>
+                    <br><small>Компанія (або просто умовна назва), що об'єднує дочірні компанії для  консолідованої звітності  </small>
                 </div>
                 <div class="form-group">
                     <label for="editholding">Дочірня для холдинга</label>
@@ -221,10 +222,12 @@
 
             <div class="col-12 col-md-4 ">
                 {{^leadmode}}  
+                {{#hideblock}}
                 <div class="form-group">
                     <label for="editcity">Країна</label>
                     <input class="form-control" zippy="editcity"/>
                 </div>
+                  {{/hideblock}}
                 <div class="form-group">
                     <label for="editcountry">Місто</label>
                     <input class="form-control" zippy="editcountry"/>
@@ -251,8 +254,8 @@
            <div class="form-group  ">
                         <label for="editpricetype">Тип ціни</label>
                         <select class="form-control" zippy="editpricetype">
-                         <option value="none">Не обрано</option>
-                        </select>
+                         <option value="none">Не обрано</option>                         </select>
+                         <small>Для підстановки в  накладних<small>
                     </div>         
                 
                 {{/leadmode}} 

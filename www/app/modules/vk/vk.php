@@ -139,7 +139,7 @@ class VK
         $check['sum'] =  self::fa($sum); 
 
   
-        if($doc->headerdata['payment']??''  >0) {
+        if(($doc->headerdata['payment']??0)  >0) {
 
 
              
@@ -158,7 +158,7 @@ class VK
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
                     $payment=array(
-                    "type"=>2,
+                    "type"=>1,
                     "sum"=>self::fa($doc->headerdata['payed'] )
                     );
                 } else {
@@ -190,7 +190,7 @@ class VK
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
                 $payment=array(
-                "type"=>2,
+                "type"=>1,
                 "sum"=>self::fa($doc->headerdata['payedcard'] ) 
                 );
                 $check["pays"][] = $payment;
@@ -289,7 +289,7 @@ class VK
            return "HTTP Error #:" . $status_code. ' ' . $response;
         }
 
-
+       
         $response = json_decode($response, true);
     
 
@@ -304,9 +304,10 @@ class VK
         $ret =[];
 
         $ret["fiscnumber"] = $response['info']['doccode'];
-      //  $ret["qr"] = $response['info']['qr'];
-      
-
+    //    $ret["tax_url"] = $response['info']['qr'];
+        $ret["tax_url"] = "https://kasa.vchasno.ua/check-viewer/". $response['info']['doccode'];
+        $ret["checkid"] = $response['info']['dataid'];
+    
         return $ret;
 
     }
@@ -488,8 +489,7 @@ class VK
         
         
         $pos = \App\Entity\Pos::load($posid);
-        $firm = \App\Entity\Firm::load($pos->firm_id);
-     
+       
        
         $vk = new VK($pos->vktoken) ;
         
@@ -537,3 +537,4 @@ class VK
     
         
 }
+ 

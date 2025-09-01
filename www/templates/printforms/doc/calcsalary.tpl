@@ -13,6 +13,14 @@
         </td>
     </tr>
 
+    {{#department}}  
+   <tr>
+        <td  colspan="{{colspan}}">
+            <b>Відділ:</b> {{department}}  
+        </td>
+    </tr>
+    {{/department}}  
+    
     <tr>
         <td  colspan="{{colspan}}">
             {{{notes}}}

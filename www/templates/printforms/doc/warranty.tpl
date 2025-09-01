@@ -3,14 +3,16 @@
 
     <tr style="font-weight: bolder;">
         <td></td>
-        <td colspan="4">
-            Гарантійний талон {{document_number}}
-        </td>
-        <td colspan="3">
-            від {{date}}
+        <td colspan="8">
+            Гарантійний талон {{document_number}}  &nbsp;     від {{date}}
         </td>
     </tr>
+    {{#basedon}}
    <tr>
+        <td colspan="8">Підстава {{basedon}}</td>
+    </tr>
+    {{/basedon}}    
+  <tr>
         <td colspan="8">{{{notes}}}</td>
     </tr>
     

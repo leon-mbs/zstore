@@ -69,6 +69,7 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bginv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'statusOnSubmit');
@@ -94,16 +95,7 @@ class OrderList extends \App\Pages\Base
 
         $this->listpanel->doclist->Reload();
 
-
-        $this->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
-        $this->payform->add(new TextInput('pamount'));
-        $this->payform->add(new TextInput('pcomment'));
-        $this->payform->add(new CheckBox('closeorder'));
-        $this->payform->add(new Date('pdate', time()));
-        $this->payform->setVisible(false);
-
+  
         $this->add(new Panel("editpanel"))->setVisible(false);
         $this->editpanel->add(new Label("editdn"));
         $this->editpanel->add(new Label("editchat"));
@@ -121,8 +113,7 @@ class OrderList extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         $this->statuspan->setVisible(false);
-        $this->payform->setVisible(false);
-
+      
         $this->listpanel->doclist->Reload();
 
     }
@@ -155,6 +146,15 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
 
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
+        
+        if($doc->getHD('waitpay')==1){
+            $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
+            $row->ispay->setAttribute('title','До сплати');            
+        }   else {
+            $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
+            $row->ispay->setAttribute('title','Оплачено');            
+        }
         $row->add(new Label('isreserved'))->setVisible($doc->hasStore());
 
         $stname = Document::getStateName($doc->state);
@@ -260,7 +260,9 @@ class OrderList extends \App\Pages\Base
 
         }
         $this->listpanel->doclist->Reload(false);
-
+        $this->statuspan->setVisible(false);    
+        $this->_doc = null;            
+        $this->listpanel->doclist->Reload(false);
     }
 
 
@@ -318,6 +320,11 @@ class OrderList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
             return;
         }
+        if ($sender->id == "bginv") {
+
+            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
+            return;
+        }
         if ($sender->id == "bco") {
 
             App::Redirect("\\App\\Pages\\Doc\\OrderCust", 0, $this->_doc->document_id);
@@ -343,14 +350,17 @@ class OrderList extends \App\Pages\Base
             }
 
             if ($sender->id == "bref") {
+                $this->_doc->setHD('waitpay',0) ;
                 $this->_doc->updateStatus(Document::STATE_FAIL);
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();     
 
                 $this->setWarn('Замовлення анульовано');
             }
 
             if ($sender->id == "bclose") {
 
-
+  
 
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
@@ -360,9 +370,10 @@ class OrderList extends \App\Pages\Base
                     $this->setWarn('Замовлення закрито без доставки');
                 }
 
-
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
- 
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();     
+
             }
             $conn->CommitTrans();
 
@@ -415,6 +426,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bcopy->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
@@ -435,6 +447,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
         }
 
@@ -445,12 +458,14 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(true);
+            $this->statuspan->statusform->bginv->setVisible(true);
         }
         if ($state == Document::STATE_INSHIPMENT) {
 
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
         }
         if ($state == Document::STATE_READYTOSHIP) {
@@ -458,6 +473,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(true);
+            $this->statuspan->statusform->bginv->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(false);
         }
         if ($state == Document::STATE_DELIVERED) {
@@ -465,6 +481,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
         }
@@ -475,6 +492,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
@@ -484,7 +502,7 @@ class OrderList extends \App\Pages\Base
 
         if ($state == Document::STATE_WP) {
 
-            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
+            if($this->_doc->getHD('waitpay')==1) {
                 $this->statuspan->statusform->btopay->setVisible(true);
                 $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
             }
@@ -501,6 +519,9 @@ class OrderList extends \App\Pages\Base
 
         if ($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
             // $this->statuspan->statusform->bclose->setVisible(false);
+        }
+        if ($state < 5) {
+            $this->statuspan->statusform->bref->setVisible(true);
         }
 
         if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
@@ -532,16 +553,34 @@ class OrderList extends \App\Pages\Base
         if ($this->_doc->hasPayments()) {
             $this->statuspan->statusform->bpos->setVisible(false);
         }
+        
+        $pt= $this->_doc->getHD('paytype');
+        
+        if ($pt ==1 ||  $pt==2) {
+            $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
+        }
+        if ($pt ==3  ) {
+            $this->statuspan->statusform->bttn->setVisible(false);
+        
+        }
+        
+        
     }
 
     //просмотр
     public function showOnClick($sender) {
-        $this->payform->setVisible(false);
-
+     
         $this->_doc = $sender->owner->getDataItem();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
+        $options = System::getOptions('common');
+        
+        
+        $this->_doc = Document::load($this->_doc->document_id); 
+          
         $this->_doc = $this->_doc->cast();
 
         $this->statuspan->setVisible(true);
@@ -559,20 +598,23 @@ class OrderList extends \App\Pages\Base
         foreach($conn->Execute("select store_id,storename from stores") as $row) {
             $stl[$row['store_id']]=$row['storename'];
         }
-
-        $this->_tvars['citems'] = array();
+        $this->_tvars['isciprod']=false;
+        $this->_tvars['sitems'] = [];
+        $this->_tvars['citems'] = [];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             $ait=array('itemname'=>$it->itemname,'itemcode'=>$it->item_code,'itemqty'=>$it->quantity);
 
+            //на  складе
             $ait['citemsstore']  =  array();
-            $ait['toco']  =  "addItemToCO([{$it->item_id}])";
-
-            foreach($stl as $k=>$v) {
-                $qty = $it->getQuantity($k);
-                if(0 < doubleval($qty)) {
-                    $ait['citemsstore'][] = array('itstore'=>$v,'itqty'=>H::fqty($qty));
+            $onstores=0;
+            foreach($it->getQuantityAllStores( ) as $s=>$q) {
+                
+                if(0 < doubleval($q)) {
+                    $ait['citemsstore'][] = array('itstore'=>$stl[$s],'itqty'=>H::fqty($q));
+                    $onstores += $q;
                 }
             }
+            //у  поставщика
             $ait['citemscust']  =  array();
             foreach(\App\Entity\CustItem::find("item_id={$it->item_id} ") as $ci) {
                 $cer = array('itcust'=>$ci->customer_name,'itcustcode'=>$ci->cust_code);
@@ -585,67 +627,82 @@ class OrderList extends \App\Pages\Base
                 $ait['citemscust'][]=$cer;
             }
          
+           //готово  к производству
             $ait['ciprod']  =  array();
-            $prod=[];
-
-            $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
-            if($itpr instanceof \App\Entity\Item)  {
-                $max = 1000000;
-                $parts = \App\Entity\ItemSet::find("pitem_id=".$itpr->item_id) ;
-
-                foreach($parts as $part) {
-                    $pi = \App\Entity\Item::load($part->item_id);
-                    if($pi==null) {
-                        continue;
-                    }
-                    $pqty = $pi->getQuantity();
-                    if($pqty==0) {
-                        $max=0;
-                        break;
-                    }
-                    $t = $pqty/$part->qty;
-                    if($t<$max) {
-                        $max = $t;
-                    }
-
-                }
-                if($max>0 && $max < 1000000) {
-                      $prod  =  array('prqty'=>H::fqty($max) );
-                }
-
            
 
-            }         
-         
-  
-            $ait['ciprod'][]=$prod;
-            $this->_tvars['isciprod']=count($ait['ciprod'])>0;
+            if($options['useprod']==1) {
+                $prod=[];
+                $itpr=\App\Entity\Item::getFirst("disabled<> 1 and  item_id = {$it->item_id} and  item_id in(select pitem_id from item_set)") ;
+                if($itpr instanceof \App\Entity\Item)  {
+                    $max = 1000000;
+                    $parts = \App\Entity\ItemSet::find("pitem_id=".$itpr->item_id) ;
+
+                    foreach($parts as $part) {
+                        $pi = \App\Entity\Item::load($part->item_id);
+                        if($pi==null) {
+                            continue;
+                        }
+                        $pqty = $pi->getQuantity();
+                        if($pqty==0) {
+                            $max=0;
+                            break;
+                        }
+                        $t = $pqty/$part->qty;
+                        if($t<$max) {
+                            $max = $t;
+                        }
+
+                    }
+                    if($max>0 && $max < 1000000) {
+                        $ait['prqty']= H::fqty($max);
+                        $this->_tvars['isciprod']=true;  //если хоть один  готов
+                    }
+
+                
+
+                }         
+               
+            }
+            
+            $need=$it->quantity - $onstores;
+            if($need >0) {
+               $ait['toco']  =  "addItemToCO({$it->item_id},{$need})";
+            } else {
+               $ait['toco']  =  "addItemToCO({$it->item_id})";                
+            }
+
 
             $this->_tvars['citems'][]=$ait;
-            
+       
+           //в закупке
+              
             $sitems=[];
             
             $corders= Document::find("meta_name='OrderCust' and state in(5,7) ")  ;
             
             foreach($corders as $o) {
-               foreach($this->_doc->unpackDetails('detaildata') as $it) {
+               
                   foreach($o->unpackDetails('detaildata') as $cit) {
                        if($it->item_id==$cit->item_id) {
                            $r=[] ;
                            $r['dnum']  = $o->document_number;
-                           $r['dd']  = $o->headerdata['delivery_date'] >0 ? H::fd($o->headerdata['delivery_date']) :'';
+                           $r['dd']  = ($o->headerdata['delivery_date'] ?? 0) >0 ? H::fd($o->headerdata['delivery_date']) :'';
                            $r['dc']  = $o->customer_name;
                            $sitems[$o->document_id] = $r;
                            break;
                        }
                   }
-               }
+                
            }
-            $this->_tvars['sitems']= array_values($sitems);
-            $this->_tvars['issitems']= count($sitems) >0;
-
+       
+           foreach($sitems as $_si ) {
+              $this->_tvars['sitems'][] = $_si ;
+           }
 
         }
+
+        $this->_tvars['issitems']= count($sitems) >0;
 
         $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;
         $this->onBranch($this->statuspan->moveform->brmove);
@@ -662,6 +719,9 @@ class OrderList extends \App\Pages\Base
             $this->setError($cc);
 
             return;
+        }
+        if($doc->hasStore()) {
+           $doc->setHD('doreserv',1);
         }
         $doc->updateStatus(Document::STATE_CANCELED);
         $doc->payed = 0;
@@ -724,7 +784,7 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
         $this->statuspan->setVisible(false);
-        $this->payform->setVisible(false);
+      
         $this->_doc = Document::load($this->_doc->document_id);
         $this->editpanel->editchat->setAttribute('onclick', "opencchat({$this->_doc->document_id})");
 
@@ -951,23 +1011,24 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
-        $where = "     meta_name  = 'Order'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date ";
+          
+        $where = "     meta_name  = 'Order'   ";
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {
-            $where .= " and   content like '%<salesource>{$salesource}</salesource>%' ";
+            $where .= " and   content like '%<salesource>{$salesource}</salesource>%'  ";
 
         }
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17,15) ";
+            $where .= " and  state not in (9,17,15)   ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
         }
         if ($status == 2) {
-            $where .= " and  state =21 ";
+            $where .= " and   (state = 21 or content like '%<waitpay>1</waitpay>%') ";
         }
 
 

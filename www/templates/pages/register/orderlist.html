@@ -11,7 +11,7 @@
             </div>
              <div zippy="listpanel" class="col-12 col-xl-11">
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -58,6 +58,7 @@
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
 
 
                     </tr>
@@ -74,6 +75,9 @@
                         <td ><small zippy="onotes"></small></td>
                         <td>
                             <i  zippy="isreserved" title="Зарезервованi товари" class="fa fa-archive"></i>
+                        </td>
+                        <td>
+                            <i  zippy="ispay"   class="fa fa-credit-card "></i>
                         </td>
                          <td>
                            <i style="cursor:pointer" zippy="cchat" title="Чат с  замовником" ></i>  
@@ -97,40 +101,7 @@
 
         </div>
 
-        <div class="row">
-            <div class="col-12 col-xl-10">
-                <div class="navbar nav">
-                    <form zippy="payform" class="form-inline ">
-                        <label>До сплати</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
-                               class="form-control mr-2">
-                        <label for="payment">рахунок</label>
-                        <select class="form-control mr-2" zippy="payment">
-
-                        </select>
-                        {{#fiscal}}
-                        <label for="pos">POS</label>
-                        <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не обрано</option>
-
-                        </select>
-                        {{/fiscal}}
-                        <label>дата</label>
-                        <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
-
-                        <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
-
-                        <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
-                        <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
-
-
-                    </form>
-
-                </div>
-            </div>
-        </div>
-
-
+      
 
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">
@@ -148,7 +119,7 @@
                      <th>У постачальникiв</th>
                       {{#isciprod}}
                   
-                     <th>Гот. до вир.</th>
+                     <th class="text-right">Гот. до вир.</th>
                      {{/isciprod}}
                     
                   
@@ -185,14 +156,9 @@
                         </td>
                       {{#isciprod}}
                         
-                       <td>
-                          <table    class="ctable"> 
-                              {{#ciprod}}
-                              <tr>
-                                 <td style="width:100px;" class="text-right">{{prqty}}</td>
-                              </tr>
-                             {{/ciprod}} 
-                          </table>
+                       <td class="text-right">
+                           {{prqty}}
+                       
                         </td>
                       {{/isciprod}}
                         
@@ -207,7 +173,7 @@
           
                   
                 <details>
-                  <summary> Товари в  закупцi</summary>
+                  <summary> Товари в  заявках постачальнику</summary>
                <table class="table table-sm">
                      <tr>
                      <th>Заявка</th>
@@ -226,9 +192,10 @@
                  {{/issitems}} 
             </div>
              <div class="col-12 col-xl-10 mt-2">      
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="statusform" class="form-inline row">
                        <div class="col-12 mb-2">      
+                      
                         <button zippy="binp" class="btn btn-success  mr-2"><i class="fa fa-cog"></i> На обробку</button>
                         
                         <button zippy="bscan" class="btn btn-primary  mr-2"><i class="fa fa-gifts"></i> Зiбрати</button>
@@ -243,14 +210,21 @@
                         <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
                         <button zippy="bpos" class="btn btn-info  mr-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
                         <button zippy="bgi" class="btn btn-info  mr-2">  Видаткову накладну                </button>
-                        <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику               </button>
+                        <button zippy="bginv" class="btn btn-info  mr-2">  Рахунок-фактуру                </button>
+                        <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику                                       </button>
+                        {{#useprod}} 
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">  Наряд</button>
+                            {{/useprod}}
                         <button zippy="bcopy" class="btn btn-info  mr-4"><i class="fa fa-copy"></i> Копію</button>
                        </div>     
                             
                     </form> 
-                    
-                      <table>  <tr><td>  
+                          </div>
+                       <div class="col-12 mb-2">      
+                      
+                       <div class="row"> 
+                       <div class="col-auto"> 
+                          
               
                      
                      <form zippy="resform" class="form-inline mt-1">
@@ -262,7 +236,9 @@
 
 
                     </form>       
-                     </td><td>  
+                      </div>
+                       <div class="col-auto"> 
+                    
                     <form zippy="moveform" class="form-inline mt-1 ml-4">
                         <label class="mr-2">Перевести на: </label>
                        {{#usebranch}}
@@ -281,8 +257,10 @@
                         <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
                    
                      </form>                
-                
-                   </td></tr></table>
+                    </div>
+                       </div>  
+                   
+                    
                 </div>
 
 
@@ -297,7 +275,7 @@
                  <h5>Замовлення <span zippy="editdn"></span></h5>
                  <form zippy="editform"  >
                      {{#usescanner}}
-                    <div class="navbar nav justify-content-start">
+                    <div class="card justify-content-start">
                         Штрих код &nbsp;<input autofocus="on"   style="width:150px;" autocomplete="off"  type="text" zippy="editbarcode"  onkeydown="onBarCode()">
                         &nbsp;   &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                 

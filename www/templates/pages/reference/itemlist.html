@@ -17,7 +17,7 @@
                        У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
                 </h3>
 
-                <div class="navbar nav">
+                <div class="card">
 
                     <form zippy="filter" class="row   g-2 align-items-center">
                       <div class="col-auto">
@@ -92,14 +92,18 @@
                     <small zippy="taglist"></small>
                  </details>
                    
-                 <div class="row "  >
+                 <div class="row mb-2"  >
                  <div class="col-2   "  >
                                 
                 <a zippy="addnew" class="btn btn-primary mr-4  "> <i class="fa fa-plus-circle"></i> Додати новий</a>
                  </div>  
-                 <div class="col-4  "  >
+                <div class="col-1   "  >
+                                
+                <a   href="/index.php?p=App/Pages/Service/Import"> <i class="fa fa-download"></i> Iмпорт</a>
+                 </div>  
+                 <div class="col-2  "  >
                  
-                   <a class="btn btn-outline-success mr-2"   zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
+                   <a     zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
                 
                 </div>               
                 </div>               
@@ -152,7 +156,7 @@
 
                             <td ><a zippy="itemname"></a></td>
 
-                            <td zippy="code"></td>
+                            <td class="text-nowrap"  zippy="code"></td>
                             <td zippy="cat_name"></td>
                             <td zippy="manufacturer"></td>
                             <td zippy="msr"></td>
@@ -251,7 +255,7 @@
                                    title="Код товару має бути унiкальним.
                                         Якщо використовується код виробника, слiд додати бренд до коду, наприклад, k123_назвабренду"></i>
                                 </label>                                
-                                <div class="col-7">
+                                <div class="col-5">
                                     <input class="form-control" zippy="editcode"/>
                                   
 
@@ -259,67 +263,88 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editbarcode">Штрих код</label>
-                                <div class="col-7">
+                                <label class="col-5 col-form-label" for="editbarcode">Штрих код (основний)</label>
+                                <div class="col-5">
                                     <input class="form-control" zippy="editbarcode"/>
                                     <small   >Латинскi  букви i цифри</small>
                                 </div>
                             </div>
+                           <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editbarcode1">Штрих код (додатковий)</label>
+                                <div class="col-5">
+                                    <input class="form-control" zippy="editbarcode1"/>
+                                    
+                                </div>
+                            </div>
+                      <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editbarcode2">Штрих код (додатковий)</label>
+                                <div class="col-5">
+                                    <input class="form-control" zippy="editbarcode2"/>
+                                    
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcode">Тип ТМЦ</label>
-                                <div class="col-7">
+                                <div class="col-5">
                                     <select class="form-control" zippy="edittype">
                                         <option value="0">Не вказано</option>
                                     </select>
-                                    <small  >Використовується якщо є виробництво</small>
+
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editminqty">Мін. кількість
-                                  <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Якщо задано, то при зменшенні кількості на складі менше вказаного,
-                                        товар з'явиться у відповідному віджеті на головній сторінці"></i>
-                                </label>                                 
-                                <div class="col-7">
-                                    <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editminqty"/>
-                                   
-                                </div>
-                            </div>
+                       
 
 
                            <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editmsr">Од. виміру</label>
-                                <div class="col-7">
+                                <div class="col-3">
                                     <input class="form-control" zippy="editmsr"/>
                                 </div>
                             </div>       
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editwarranty">Гарантiйний термін</label>
-                                <div class="col-7">
-                                    <input class="form-control" zippy="editwarranty"/>
+                           
 
-                                </div>
-                            </div> 
-                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="edituktz">УКТЗЕД</label>
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editcostprice">Собiвартiсть (облiкова цiна)
+                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Використовується за замовчанням при оприходуваннi.  Для виробництва має приоритет перед комплектами"></i>
+                                </label>  
                                 <div class="col-7">
-                                    <input class="form-control" zippy="edituktz"/>
+                                    <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editcostprice"/>
+                                    
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editzarp">Собiвартiсть виробництва
+                         {{#usends}}      
+                            
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label" for="editisnds">Використання ПДВ</label>
+                            <div class="col-5">
+                                <select class="form-control" zippy="editisnds">
+                                    <option value="0">По категорії</option>
+                                    <option value="1">Без ПДВ</option>
+                                    <option value="2">Як вказано</option>
+                                </select>
+                            </div>
+                        </div>
+                         <div class="form-group row">
+                            <label  class="col-5 col-form-label" for="editnds">Ставка ПДВ,%</label>
+                             <div class="col-4">
+                               <input style="width:75px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
+                            </div>  
+                        </div> 
+                         {{/usends}}     
+                              {{#useprod}}   
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editzarp">Сума оплати 
                                    <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Використовується для готової продукції і напівфабрикатів при
-                                        відрядній оплаті"></i>
+                                   title="Нарахування оплати за одиницю при відрядній оплаті"></i>
                                 </label>  
                                 <div class="col-7">
                                     <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editzarp"/>
                                     
                                 </div>
                             </div>
-                      
+                            {{/useprod}}  
                             {{#usesnumber}}
                             <div class="form-check">
                                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
@@ -334,14 +359,16 @@
                             </div>
                             <div class="form-check">
                                 <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозi</label>
+                                <label class="form-check-label" for="editnoshop">Не показувати в онлайн торгiвлi   </label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Не показувати в онлайн каталозi, меню кафе та  IM  "></i>                                
                             </div>
                             <div class="form-check">
                                 <input zippy="editautooutcome" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editautooutcome">Автоматичне списання комплекту</label> 
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Списання складових частин у виробництво при оприбуткуванні готової продукції.
-                                   Підходить для короткого циклу виробництва, наприклад, в громадському харчуванні"></i>
+                                   Підходить для короткого циклу виробництва, наприклад, в громадському харчуванні. Списуватиме тiльки  перший рiвень - комплект в  комплектi слiд списувати вручну"></i>
 
                             </div>
                             <div class="form-check">
@@ -369,6 +396,17 @@
 
                         </div>
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                                 <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editminqty">Мін. кількість
+                                  <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Якщо задано, то при зменшенні кількості на складі менше вказаного,
+                                        товар з'явиться у відповідному віджеті на головній сторінці"></i>
+                                </label>                                 
+                                <div class="col-7">
+                                    <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editminqty"/>
+                                   
+                                </div>
+                            </div>
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editmanufacturer">Бренд, виробник   </label>
                                 <div class="col-7">
@@ -389,7 +427,18 @@
                                     <input autocomplete="on" class="form-control" zippy="editcountry"/>
                                 </div>
                             </div>
-
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editwarranty">Гарантiйний термін</label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="editwarranty"/>
+                                </div>
+                            </div> 
+                              <div class="form-group row">
+                                <label class="col-5 col-form-label" for="edituktz">УКТЗЕД</label>
+                                 <div class="col-7">
+                                    <input class="form-control" zippy="edituktz"/>
+                                </div>
+                            </div>
                       
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcell">Комірка на складі</label>
@@ -417,6 +466,7 @@
                                 </div>
                             </div>
                              {{/np}}
+                              {{#usefood}}  
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcustomsize">Параметр для покупця (об'єм, вага)</label>
                                 <div class="col-7">
@@ -436,7 +486,8 @@
                                    
                                 </div>
                             </div>   
-
+                            {{/usefood}}  
+                            
                             {{#useimages}}
                             <div class="form-group row">
                                 <label class="col-5 col-form-label">Зображення
@@ -481,10 +532,12 @@
                                 <label class="col-5 col-form-label" for="editprintqty">Друк етикеток</label>
                                 <div class="col-7">
                                     <select class="form-control" zippy="editprintqty">
+
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">За кiлькiстю на складi (або в документi) </option>
                                         <option value="4">За кiл. на складi але не бiльше 10</option>
+                                        <option value="5">Не друкувати</option>                  
                                     </select>
                                       <small>Для вагового товару завжди 1</small>
                                 </div>
@@ -546,7 +599,7 @@
                 <h4 zippy="stitle"></h4>
                
                 {{#complin}}
-                <span>Комплекти (складовi частини) для готової продукцiї та напiвфабрикатiв</span>
+                <span>Комплекти (рецепти) для готової продукцiї та напiвфабрикатiв</span>
                 <form zippy="setform" class="form-inline mt-2 mb-2">
                     <label for="editsname">ТМЦ</label>
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
@@ -645,14 +698,27 @@
                                    title="Використовується, наприклад, в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника й імені виробника.
                                     Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
                             </div> 
+                             <div class="form-check">
+                                <input zippy="allowchange" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="allowchange">Дозволяти міняти використований артикул</label>
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Дозволяти міняти артикули ТМЦ що вже  використані в  проведених документах "></i>
+                            </div> 
                              <div class="form-check ">
                                 <input zippy="autoarticle" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="autoarticle"> Автоматично створювати
-                                    артикули</label>
+                                <label class="form-check-label" for="autoarticle"> Автоматично створювати                                    артикули</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Автоматична генерація номерів артикулів для товарів"></i>
                             </div> 
-                             <div class="form-group row">
+                            {{#usebranch}}
+                             <div class="form-check ">
+                                <input zippy="branchprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="branchprice"> Прив'язувати ціни до філій
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="При збереженні  ТМЦ відпускні  ціни будуть збережені окреемо для вибраної (вверху) філії"></i>
+                            </div> 
+                               {{/usebranch}}
+                             <div class="form-group row mt-2">
                                 <label class="col-3 col-form-label" for="articleprefix">Префікс в артикулах</label>
                                 <div class="col-2">
                                     <input pattern="[a-zA-Z]+"    class="form-control" zippy="articleprefix"/>

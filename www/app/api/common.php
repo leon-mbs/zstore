@@ -13,7 +13,8 @@ class common extends JsonRPC
         $user = \App\Helper::login($args['login'], $args['password']);
 
         if ($user instanceof \App\Entity\User) {
-            $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+          //  $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+            $key = 'api'.\App\Helper::getSalt();            
             $exp = strlen($api['exp']) > 0 ? $api['exp'] : 60;
 
             $payload = array(
@@ -40,17 +41,12 @@ class common extends JsonRPC
 
     //список  производственных участвков
     public function parealist() {
-        $list = \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name');
+        $list = \App\Entity\ProdArea::findArray('pa_name', "disabled<>1","pa_name");
 
         return $list;
     }
 
-    //список  компаний
-    public function firmlist() {
-        $list = \App\Entity\Firm::findArray('firm_name', 'disabled<>1', 'firm_name');
-
-        return $list;
-    }
+  
 
     //список  источников  продаж
     public function sourcelist() {

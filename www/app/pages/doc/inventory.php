@@ -30,6 +30,7 @@ class Inventory extends \App\Pages\Base
     private $_doc;
     private $_rowid    = -1;
     private $_qint     = false;
+    private $_showqty  = false;
 
     /**
     * @param mixed $docid     редактирование
@@ -40,6 +41,7 @@ class Inventory extends \App\Pages\Base
         $qtydigits = \App\System::getOption("common",'qtydigits');
         
         $this->_qint = intval($qtydigits)==0;
+        $this->_showqty =  \App\System::getUser()->rolename=='admins' ;
         
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -47,7 +49,8 @@ class Inventory extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('category', Category::getList(), 0))->onChange($this, 'OnChangeCat');
-
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+ 
         $this->docform->add(new TextInput('brand'));
         $this->docform->brand->setDataList(Item::getManufacturers());
         
@@ -83,6 +86,7 @@ class Inventory extends \App\Pages\Base
             // $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->document_date->setDate(time());
             $this->docform->store->setValue($this->_doc->headerdata['store']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
             $this->docform->category->setValue($this->_doc->headerdata['cat']);
             $this->docform->brand->setText($this->_doc->headerdata['brand']);
 
@@ -113,9 +117,9 @@ class Inventory extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
-        //  $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('quantity', $this->_showqty ? H::fqty($item->quantity) : '-' ));
         $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this, "onText", true);
-
+      
         if($this->_qint) {
            $row->qfact->setAttribute('type', 'number');            
         }
@@ -130,8 +134,6 @@ class Inventory extends \App\Pages\Base
     public function onText($sender) {
 
     }
-
-
 
     public function OnDelAll($sender) {
 
@@ -183,13 +185,14 @@ class Inventory extends \App\Pages\Base
 
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_id==$item->item_id && $it->snumber==$item->snumber) {
-                $this->setError("ТМЦ  уже  в  списку") ;
+                $this->setError("ТМЦ  вже  в  списку") ;
                 return;
             }
         }
         $this->_itemlist[] = $item;
 
-
+        if($this->_showqty) $this->setInfoTopPage("На облiку {$item->quantity} по  факту {$item->qfact}");
+  
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -223,6 +226,8 @@ class Inventory extends \App\Pages\Base
         $this->_doc->headerdata['brand'] = $this->docform->brand->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
 
         $reserved = array();
         if($this->_doc->headerdata['reserved'] ==1) {
@@ -236,7 +241,7 @@ class Inventory extends \App\Pages\Base
 
 
         foreach ($this->_itemlist as $item) {
-            $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber, $this->docform->document_date->getDate(0));
+           // $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber, $this->docform->document_date->getDate(0));
             if($reserved[$item->item_id] > 0  && $this->_doc->headerdata['reserved']  ==1) {
                 $item->quantity += $reserved[$item->item_id] ;
             }
@@ -372,9 +377,14 @@ class Inventory extends \App\Pages\Base
     public function loadallOnClick($sender) {
         $this->_itemlist = array();
         $store_id = $this->docform->store->getValue();
+        $storeemp_id = $this->docform->storeemp->getValue();
+        $wemp="";
+        if($storeemp_id > 0) {
+           $wemp = " and emp_id = ".$storeemp_id ; 
+        }
 
-        $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id})    ";
-
+        $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id} {$wemp}   )    ";
+    
         $brand =trim( $this->docform->brand->getText() );
         if(strlen($brand) >0){
            $w = $w . " and manufacturer = " .Item::qstr($brand) ;
@@ -393,7 +403,7 @@ class Inventory extends \App\Pages\Base
         
         foreach (Item::findYield($w, 'itemname') as $item) {
             $item->qfact = 0;
-            $item->quantity = 0;
+            $item->quantity = $item->getQuantity($store_id,"",0,$storeemp_id);
             $this->_itemlist[$item->item_id] = $item;
         }
         $this->docform->detail->Reload();
@@ -401,45 +411,20 @@ class Inventory extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $this->docform->barcode->setText('');
-        $code0 = $code;
-        $code = ltrim($code, '0');
-
-        foreach($this->_itemlist as $i=> $it) {
-            if($it->item_code==$code || $it->bar_code==$code) {
-                $d= $this->_itemlist[$i]->qfact;
-                $qf= doubleval($d) ;
-                $this->_itemlist[$i]->qfact = $qf + 1;
-
-                // Издаем звук если всё ок
-                App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
-
-
-                $this->docform->detail->Reload();
-                return;
-            }
+        if($code=='' ){
+            return;
         }
-
-
+        $this->docform->barcode->setText('');
+      
+  
 
         $store = $this->docform->store->getValue();
-        $code_ = Item::qstr($code);
-        $code0 = Item::qstr($code0);
+      
 
         $cat_id = $this->docform->category->getValue();
-        $w = "item_code={$code_} or bar_code={$code_} or  item_code={$code0} or bar_code={$code0} ";
-        if ($cat_id > 0) {
+      
+        $item = Item::findBarCode($code,$store,$cat_id );
 
-
-            $c = Category::load($cat_id) ;
-            $ch = $c->getChildren();
-            $ch[]=$cat_id;
-            $cats = implode(",", $ch)  ;
-
-
-            $w = $w . " and cat_id in ({$cats}) ";
-        }
-        $item = Item::getFirst($w);
         if ($item == null) {
             $this->setError("ТМЦ з кодом `{$code}` не знайдено");
             // Издаем звук если ШК не найден
@@ -450,6 +435,22 @@ class Inventory extends \App\Pages\Base
             App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
         }
 
+        foreach($this->_itemlist as $i=> $it) {
+            if($it->item_id==$item->item_id  ) {
+                $d= $this->_itemlist[$i]->qfact;
+                $qf= doubleval($d) ;
+                $this->_itemlist[$i]->qfact = $qf + 1;
+                if($this->_showqty) $this->setInfoTopPage("На облiку {$this->_itemlist[$i]->quantity} по  факту {$this->_itemlist[$i]->qfact}");
+  
+                // Издаем звук если всё ок
+              //  App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+
+
+                $this->docform->detail->Reload();
+                return;
+            }
+        }        
+        
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
 
             $this->editdetail->setVisible(true);
@@ -471,7 +472,8 @@ class Inventory extends \App\Pages\Base
         $d= $this->_itemlist[$item->item_id]->qfact;
         $qf= doubleval($d) ;
         $this->_itemlist[$item->item_id]->qfact = $qf + 1;
-
+        if($this->_showqty) $this->setInfoTopPage("На облiку {$this->_itemlist[$item->item_id]->quantity} по  факту {$this->_itemlist[$item->item_id]->qfact}");
+  
 
         $this->docform->detail->Reload();
     }

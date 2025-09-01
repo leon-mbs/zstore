@@ -62,17 +62,20 @@ class DocList extends \App\Pages\Base
 
     public function loaddocs($arg, $post=null) {
         //  $user = \App\System::getUser() ;
-        $p = \App\Entity\Pos::load($arg[2]);
-        $sql = " (firm_id={$p->firm_id} or coalesce(firm_id,0)=0) and  meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
-        if($arg[0] > 0) {
-            $sql .= " and customer_id={$arg[0]} ";
-        } else {
-            return [];
-        }
         
 
         $ret = [];
         $ret['docs']  =  [];
+                
+        $p = \App\Entity\Pos::load($arg[2]);
+        $sql = "    meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        if($arg[0] > 0) {
+            $sql .= " and customer_id={$arg[0]} ";
+        } else {
+             return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        }
+        
+     
         foreach(Document::findYield($sql, "document_id desc") as $d) {
             $ret['docs'][] = array('id'=>$d->document_id,
                                    'number'=>$d->document_number,
@@ -102,11 +105,11 @@ class DocList extends \App\Pages\Base
     public function check($arg, $post=null) {
         $p = \App\Entity\Pos::load($arg[0]);
 
-        $firm = \App\Entity\Firm::load($p->firm_id)  ;
-        if(strlen($firm->vdoc)==0) {
+        $firm = \App\Helper::getFirmData()   ;
+        if(strlen($firm['vdoc'])==0) {
             return "Не задано токен Вчасно в довiднику  компанiй";
         }
-        if(strlen($firm->tin)==0) {
+        if(strlen($firm['tin'])==0) {
             return "Компанiя повинна мати ЄДРПОУ";
         }
         if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
@@ -148,13 +151,13 @@ class DocList extends \App\Pages\Base
             }
 
             //send
-            $firm = \App\Entity\Firm::load($doc->firm_id)  ;
+            $firm = \App\Helper::getFirmData()  ;
 
             $c = \App\Entity\Customer::load($doc->customer_id) ;
 
            
             $na=[];
-            $na[]= $firm->tin  ;
+            $na[]= $firm['tin']  ;
             $na[]= $c->edrpou ;
             $na[]=  date('Ymd', $doc->document_date) ;
             $na[]=  str_replace(' ','', $doc->meta_desc) ;

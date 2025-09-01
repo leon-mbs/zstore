@@ -40,8 +40,9 @@ class Task extends \App\Pages\Base
     * @param mixed $docid      редактирование
     * @param mixed $basedocid  создание на  основании
     * @param mixed $date       дата  с  календаря
+
     */
-    public function __construct($docid = 0, $basedocid = 0, $date = null) {
+    public function __construct($docid = 0, $basedocid = 0, $date = 0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -96,8 +97,8 @@ class Task extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->document_time->setDateTime($this->_doc->headerdata['start']);
-            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-
+            $this->docform->parea->setValue($this->_doc->headerdata['pa_id']);
+                                                                            
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
             $this->_eqlist = $this->_doc->unpackDetails('eqlist');
             $this->_emplist = $this->_doc->unpackDetails('emplist');
@@ -129,6 +130,10 @@ class Task extends \App\Pages\Base
                     }
                 }
             }
+       
+
+        
+        
         }
 
         $this->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
@@ -316,8 +321,8 @@ class Task extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
-        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
@@ -335,7 +340,12 @@ class Task extends \App\Pages\Base
         $this->_doc->packDetails('eqlist', $this->_eqlist);
         $this->_doc->packDetails('emplist', $this->_emplist);
         $this->_doc->packDetails('prodlist', $this->_prodlist);
-
+        //для поиска
+        $this->_doc->headerdata['searchemp'] ='';
+        foreach($this->_emplist as $e){
+           $this->_doc->headerdata['searchemp'] .= "#{$e->employee_id}#" ;
+        }
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -399,7 +409,7 @@ class Task extends \App\Pages\Base
             $this->setError('Введіть дату документа');
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
-            $this->setError("Не введено позиції");
+            $this->setError("Мають бути введені роботи та/або продукція");
         }
         if (count($this->_emplist) > 0) {
             $ktu = 0;

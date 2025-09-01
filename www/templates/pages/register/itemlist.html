@@ -13,7 +13,7 @@
 
             <div class="col-12    " zippy="itempanel">
                 <h3>Товари на складі </h3>
-                <div class="navbar nav  ">
+                <div class="card  ">
                     <form zippy="filter" class="row   g-2 align-items-center">
                         <div class="col-auto">
        
@@ -33,14 +33,26 @@
                         </div>
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
-                      <label class="col-auto mt-2" for="searchstore">Склад</label>
+                               <label class="col-auto mt-2" for="searchstore">Склад</label>
                                <div class="col-auto">
-                        <select class="form-control mr-sm-2" zippy="searchstore">
-                            <option value="0">По всім</option>
-                        </select>
-                         </div>
+                                    <select class="form-control mr-sm-2" zippy="searchstore">
+                                        <option value="0">По всім</option>
+                                    </select>
+                              </div>
+                           </div>
                         </div>
-                        </div>
+                        {{#storeemp}}
+                      <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                               <label class="col-auto mt-2" for="searchemp">Співробітник</label>
+                               <div class="col-auto">
+                                    <select class="form-control mr-sm-2" zippy="searchemp">
+                                        <option value="0">Не вказано</option>
+                                    </select>
+                              </div>
+                           </div>
+                      </div>
+                       {{/storeemp}}
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
                       <label class="col-auto mt-2" for="searchprice">Сума по  </label>
@@ -85,8 +97,15 @@
                           </div>
                        </div>
                       </div>                      
-                      
-                          <div class="col-auto">
+                      {{#usesnumberdate}}
+                       <div class="col-auto">
+                             <div class="  form-check">
+                                <input zippy="searchterm" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="searchterm">просроченi</label>
+                             </div>
+                      </div>
+                        {{/usesnumberdate}}
+                       <div class="col-auto">
                       <input class="btn btn-outline-success  " type="submit" value="ОК">
                       </div>
                     
@@ -111,6 +130,9 @@
                         <th> <i title="Комірка" class="fa fa-box"></i> </th>     
 
                         <th class="text-right  ">Кіл.</th>
+  <th class="text-right  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
+  <th class="text-right  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
+                        
    {{^noshowpartion}}                         
                         <th class="text-right  ">Обл. ціна</th>
    {{/noshowpartion}}         
@@ -146,6 +168,8 @@
                         <td zippy="cell"></td>
 
                         <td zippy="iqty" class="text-right  "></td>
+                        <td zippy="iqtyr" class="text-right  "></td>
+                        <td zippy="iqtyb" class="text-right  "></td>
                         
                            {{^noshowpartion}} 
                         <td zippy="inprice" class="text-right  "></td>
@@ -186,6 +210,9 @@
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
+                         {{#storeemp}}
+                        <th>Спiвробiтник</th>
+                         {{/storeemp}}
                         {{#usesnumber}}
                         <th class="text-right text-nowrap">Серія</th>
 
@@ -203,6 +230,9 @@
                     </tr>
                     <tr zippy="stocklist">
                         <td zippy="storename"></td>
+                        {{#storeemp}}
+                         <td zippy="emp_name"></td>
+                         {{/storeemp}}                        
                         {{#usesnumber}}
                         <td zippy="snumber" class="text-right  "></td>
                         <td zippy="sdate" class="text-right  "></td>

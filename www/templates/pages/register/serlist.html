@@ -10,7 +10,7 @@
                 <h3>Журнал послуг  </h3>
 
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -43,8 +43,9 @@
 
                         <th>Статус</th>
 
-
+                            <th></th>
                         <th>Примітка</th>
+                   
                         <th></th>
 
 
@@ -59,6 +60,10 @@
 
 
                         <td class="text-nowrap" zippy="state"></td>
+       <td>
+                            <i  zippy="ispay"   class="fa fa-credit-card "></i>
+                        </td>
+                                        
                         <td zippy="onotes"></td>
 
                         <td class="text-nowrap">
@@ -84,7 +89,7 @@
         <div class="row" zippy="statuspan">
             <div class="col-12">
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="statusform" class="form-inline ">
 
                         <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На виконання</button>
@@ -93,10 +98,12 @@
                         <button zippy="bpos" class="btn btn-info  mr-2">   {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}    </button>
  
 
-                        <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гарантійний талон  </button>
-                        
-                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Створити наряд</button>
-                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Замовлення анульовано</button>
+                        <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Рахунок  </button>
+                        <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гар. талон  </button>
+                          {{#useprod}}
+                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Наряд</button>
+                         {{/useprod}}
+                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Анулювано</button>
 
 
                     </form>

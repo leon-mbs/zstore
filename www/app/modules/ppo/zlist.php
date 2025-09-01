@@ -107,32 +107,35 @@ class ZList extends \App\Pages\Base
         $this->detail->setVisible(true);
         $printer = \App\System::getOptions('printer');
 
-        $this->detail->vxml->setText($this->_doc->sentxml);
-
+    
         $answer = PPOHelper::decrypt($this->_doc->taxanswer) ;
-
-        $this->detail->axml->setText($answer);
+    
+        $this->detail->axml->setText(mb_convert_encoding($answer , "utf-8", "windows-1251" ) );
 
         $xml = $this->_doc->sentxml;
-
+ 
+        
         $p = strpos($xml, "?>") ;
         if($p !== false) {
             $xml = substr($xml, $p+2) ;
+        }   else{
+           $xml = base64_decode($xml) ;
         }
+        
+  
+        
+        $this->detail->vxml->setText(mb_convert_encoding($xml , "utf-8", "windows-1251" ) );
 
         $xml = new \SimpleXMLElement($xml);
 
         $header = array();
-        $wp = 'style="width:40mm"';
-        if (strlen($printer['pwidth']) > 0) {
-            $wp = 'style="width:' . $printer['pwidth'] . '"';
-        }
+     
         
         $d =  (string)$xml->ZREPHEAD->ORDERDATE[0] . (string)$xml->ZREPHEAD->ORDERTIME[0] ;
         $dl = str_split($d,2) ;
         $d= $dl[2]. $dl[3].'-'.$dl[1].'-'.$dl[0].' '. $dl[4].':'.$dl[5] ;
         
-        $header['printw']  = $wp;
+   
         $header['date']  = date('Y-m-d H:i', strtotime($d)) ;
         $header['fnpos']  =   $this->_doc->fnpos;
         $header['fndoc']  =   $this->_doc->fndoc;
@@ -143,16 +146,20 @@ class ZList extends \App\Pages\Base
 
         if(isset($xml->ZREPREALIZ->PAYFORMS)) {
             foreach($xml->ZREPREALIZ->PAYFORMS->children() as $row) {
-                $header['payments'][]=array('forma'=>$row->PAYFORMNM,'amount'=>H::fa($row->SUM));
+                $header['payments'][]=array('forma'=>(string)$row->PAYFORMNM,'amount'=>H::fa((string)$row->SUM));
             }
         }
 
         if(isset($xml->v->PAYFORMS)) {
             foreach($xml->ZREPRETURN->PAYFORMS->children() as $row) {
-                $header['rpayments'][]=array('forma'=>$row->PAYFORMNM,'amount'=>H::fa($row->SUM));
+                $header['rpayments'][]=array('forma'=>(string)$row->PAYFORMNM,'amount'=>H::fa((string)$row->SUM));
             }
         }
         $header['address']  = (string)  $xml->ZREPHEAD->POINTADDR;
+        $addr = \App\Util::splitstr($header['address'],50) ;
+        
+        $header['address']  = implode('<br>',$addr) ;
+        
         $header['test']  = "1" == (string)  $xml->ZREPHEAD->TESTING;
 
         $header['inn']  = (string)  $xml->ZREPHEAD->IPN;

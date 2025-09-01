@@ -45,11 +45,12 @@ class ProdReceipt extends \App\Pages\Base
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", "disabled<>1","pa_name"), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new TextArea('notes'));
-
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+  
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -75,6 +76,7 @@ class ProdReceipt extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
 
@@ -106,11 +108,14 @@ class ProdReceipt extends \App\Pages\Base
 
                         $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
-
+                
                         foreach ($basedoc->unpackDetails('prodlist') as $item) {
                             $item->price = $item->getProdprice();
                             $this->_itemlist[] = $item;
                         }
+                        
+                        $this->docform->emp->setVisible(false);
+                        
                     }
               
                     
@@ -123,7 +128,14 @@ class ProdReceipt extends \App\Pages\Base
                 $this->_doc->headerdata['st_id'] = $st->st_id;
                 $this->_doc->headerdata['pp_id'] = $st->pp_id;
                 $this->docform->notes->setText($st->stagename);
-
+                $this->docform->emp->setVisible(false);
+                $st= \App\Entity\ProdStage::load($st_id);
+                $i=1;
+                foreach($st->itemlist as $it){
+                    $item = Item::load($it->item_id) ;
+                    $item->quantity = $it->quantity;
+                    $this->_itemlist[$i++]=$item;
+                }
 
             }
 
@@ -147,7 +159,7 @@ class ProdReceipt extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
-        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
+        $row->add(new Label('amount', H::fa(doubleval($item->price) * doubleval($item->quantity))));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->edit->setVisible($item->old != true);
 
@@ -204,6 +216,21 @@ class ProdReceipt extends \App\Pages\Base
             return;
         }
 
+        if($this->_doc->headerdata['st_id'] >0) {
+            $st= \App\Entity\ProdStage::load($this->_doc->headerdata['st_id']);
+            
+            if( count($st->itemlist)>0) {
+               $ids= array_keys($st->itemlist) ; 
+               
+               if(!in_array($item->item_id,$ids)) {
+                    $this->setError( "ТМЦ не в перелiку  на  етапi");
+                    return;
+          
+               }
+               
+            }
+            
+        }
 
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
@@ -261,6 +288,8 @@ class ProdReceipt extends \App\Pages\Base
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -314,7 +343,7 @@ class ProdReceipt extends \App\Pages\Base
         $total = 0;
 
         foreach ($this->_itemlist as $item) {
-            $item->amount = $item->price * $item->quantity;
+            $item->amount = doubleval($item->price) * doubleval($item->quantity);
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));

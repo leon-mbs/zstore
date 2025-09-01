@@ -9,6 +9,8 @@
             <div class="col-12 col-md-10 col-xl-8">
                 <div zippy="plist">
                     <h3>Підписки на події </h3>
+                    <small>Для відправки  email та  підписок  за  роскладом слід ввімкнути <a href="/index.php?p=App/Pages/CronTab">планувальник</a></small>
+                    <br>
                     <a  zippy="addnew" class="btn btn-info">Додати</a>
                     <table class="table  table-sm">
                         <tr>
@@ -43,6 +45,7 @@
                     <div class="form-group">
                         <label for="editeventtype">Тип події</label>
                         <select   class="form-control" zippy="editeventtype">
+                          <option value="0">Не обрано</option> 
 
                         </select>
                     </div>
@@ -65,7 +68,7 @@
                     <div class="form-group">
                         <label for="editrecievertype">Отримувач</label>
                         <select   class="form-control" zippy="editrecievertype">
-
+                          <option value="0">Не обрано</option> 
                         </select>
                     </div>           
  
@@ -87,15 +90,21 @@
                     <div class="form-group">
                         <label for="editmsgtype">Тип повiдомлення</label>
                         <select   class="form-control" zippy="editmsgtype">
+                           <option value="0">Не обрано</option> 
 
                         </select>
                     </div>  
+                    
+                     <div class="form-group">
+                        <label data-label="editemail" for="editemail">Email</label>
+                        <input  type="email"  class="form-control" zippy="editemail">
+                    </div>                    
+                    
                     <div class="form-group">
                         <label data-label="editmsgsubject" for="editmsgsubject">Тема повiдомлення</label>
                         <input    class="form-control" zippy="editmsgsubject">
-
-
                     </div>
+                    
                     <div class="form-group">
                         <label data-label="editurl" for="editurl">URL</label>
                         <input type="url"   class="form-control" zippy="editurl">
@@ -157,7 +166,7 @@
                         <br>
                         <br>Для реалізації логіки в шаблоні використовується синтаксис шаблонізатора  Mustache
                         <br>
-                        Допускаються наступні змінні шаблонізатора для документу :
+                        Теги шаблонізатора для документу :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Телефон контрагента</small></td></tr>
@@ -177,6 +186,7 @@
                             <tr><td><small><b>{credit} </b></small></td><td><small>Борг покупця</small></td></tr>
                             <tr><td><small><b>{payed} </b></small></td><td><small>Прийнята оплата по документу</small></td></tr>
                             <tr><td><small><b>{taxurl} </b></small></td><td><small>Посилання на фiскальний чек</small></td></tr>
+                            <tr><td><small><b>{orderno} </b></small></td><td><small>Номер замовлення.Якщо документ не  Замовлення  шукатиме  замовлення  як  батькiвський (для чека  i ТТН)</small></td></tr>
                             <tr><td><small><b>{author} </b></small></td><td><small>Автор документа</small></td></tr>
                             <tr><td><small><b>{notes} </b></small></td><td><small>Примiтка до документа</small></td></tr>
                             <tr><td><small><b>{ttnnp} </b></small></td><td><small>Декларацiя НП та iнших служб доставок </small></td></tr>
@@ -186,13 +196,22 @@
                             <tr><td><small><b>{botname} </b></small></td><td><small>Телеграм-бот </small></td></tr>
                           
                         </table>
-                        Допускаються наступні змінні для контрагента :
+                        Теги для контрагента :
                         <table  >
                             <tr><td><small><b>{customer_name}</b></small> </td><td><small>Ім'я контрагента</small></td></tr>
                             <tr><td><small><b>{customer_id}</b></small></td><td><small>ID контрагента</small></td></tr>
                         
                         </table>
                         
+                        Теги для підсумків дня :
+                        <table  >
+                            <tr><td><small><b>{day_nal}</b></small> </td><td><small>Готівка в  касах</small></td></tr>
+                            <tr><td><small><b>{day_beznal}</b></small></td><td><small>Безготівка на рахунках</small></td></tr>
+                            <tr><td><small><b>{day_summa}</b></small></td><td><small>Сума продаж</small></td></tr>
+                            <tr><td><small><b>{day_return}</b></small></td><td><small>Сума повернень</small></td></tr>
+                             
+                        </table>
+                         <br>
                         
                                Якщо потрібно вивести текст в залежності від наявності значення, наприклад,
                         <br>
@@ -218,16 +237,16 @@
                         Наприклад:<br>
                         <p class="text-bold">
                             Привiт {customer_name}&lt;br&gt; <br> 
-                            Ми впарили тобi наступне <br>
+                           <br>
                             &lt;table&gt;  <br>
                             &lt;tr&gt; &lt;th&gt;Товар&lt;/th&gt; &lt;th align="right" &gt;Кiл. &lt;/th&gt; &lt;/tr&gt;<br>
                             {#list} <br>
                             &lt;tr&gt; &lt;td&gt;{item_name} &lt;/td&gt; &lt;td align="right" &gt;{qty} &lt;/td&gt;&lt;/tr&gt; <br>
                             {/list} <br>
                             &lt;/table&gt;&lt;br&gt;   <br> 
-                            До сплати {forpay} чистоганом &lt;br&gt;<br> 
+                            До сплати {forpay}   &lt;br&gt;<br> 
                             Прайси за &lt;a href="https://price.com/"&gt;посиланням&lt;/a&gt;&lt;br&gt;<br>
-                            Пока, лошара
+                           
                         </p>
 
 

@@ -86,6 +86,7 @@ class CustItems extends \App\Pages\Base
         $this->importform->add(new DropDownChoice("colcustcode", $cols));
         $this->importform->add(new DropDownChoice("colcustbarcode", $cols));
         $this->importform->add(new DropDownChoice("colbrand", $cols));
+        $this->importform->add(new DropDownChoice("colstore", $cols));
         $this->importform->add(new DropDownChoice("colqty", $cols));
         $this->importform->add(new DropDownChoice("colprice", $cols));
         $this->importform->add(new DropDownChoice("colcomment", $cols));
@@ -115,6 +116,7 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('brand', $item->brand));
         $row->add(new Label('store', $item->store));
         $row->add(new Label('bar_code', $item->bar_code));
+        $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('customer_name', $item->customer_name));
         $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
@@ -205,13 +207,13 @@ class CustItems extends \App\Pages\Base
            $this->_item->item_id= $it->item_id; 
         }
         $this->_item->save();
-
+        $this->updateFilter(); 
 
         if($this->_edit) {
             $this->itemtable->setVisible(true);
             $this->itemdetail->setVisible(false);
             $this->itemtable->listform->itemlist->Reload(false);
-             
+                   
         }  else {
             $this->itemdetail->editcustname->setText('');
             $this->itemdetail->editprice->setText('');
@@ -602,3 +604,4 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
 }
+

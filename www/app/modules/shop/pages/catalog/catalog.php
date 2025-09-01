@@ -96,7 +96,7 @@ class Catalog extends Base
         $fields .= ",coalesce((  select     count(0)   from  shop_prod_comments c   where     c.item_id = items_view.item_id ),0) AS comments";
         $fields .= ",coalesce((  select     sum(r.rating)   from  shop_prod_comments r   where    r.item_id = items_view.item_id),0) AS ratings";
         $store = "";
-        if ($options['defstore'] > 0) {
+        if (( $options['defstore'] ?? 0 ) > 0) {
             $store = " s.store_id={$options['defstore']}  and ";
         }
         $fields .= ",coalesce((  select     sum(s.qty)   from  store_stock s  where  {$store}  s.item_id = items_view.item_id) ,0) AS qty";

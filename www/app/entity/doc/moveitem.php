@@ -21,7 +21,7 @@ class MoveItem extends Document
 
             //списываем  со склада
 
-            $listst = Stock::pickup($this->headerdata['store'], $item);
+            $listst = Stock::pickup($this->headerdata['store'], $item, $this->headerdata["storeemp"] );
             if (count($listst) == 0) {
                 \App\System::setErrorMsg("Недостатньо товару " . $item->itemname);
 
@@ -32,7 +32,7 @@ class MoveItem extends Document
                 $sc->setStock($st->stock_id);
                 $sc->save();
 
-                $sti = Stock::getStock($this->headerdata['tostore'], $st->item_id, $st->partion, $st->snumber, $st->sdate, true);
+                $sti = Stock::getStock($this->headerdata['tostore'], $st->item_id, $st->partion, $st->snumber, $st->sdate, true,0,$this->headerdata["tostoreemp"] );
                 $sc = new Entry($this->document_id, $st->quantity * $sti->partion, $st->quantity);
                 $sc->setStock($sti->stock_id);
                 $sc->save();
@@ -51,6 +51,7 @@ class MoveItem extends Document
 
             $detail[] = array("no"        => $i++,
                               "item_name" => $name,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
                               "quantity"  => H::fqty($item->quantity));
@@ -61,9 +62,18 @@ class MoveItem extends Document
             'date'            => H::fd($this->document_date),
             "from"            => $this->headerdata["storename"],
             "to"              => $this->headerdata["tostorename"],
+            "storeemp"             => false,
+            "tostoreemp"             => false,
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
+        if ($this->headerdata["storeemp"] > 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
+        }
+        if ($this->headerdata["tostoreemp"] > 0  ) {
+            $header['tostoreemp'] = $this->headerdata["tostoreempname"];
+        }
+        
         $report = new \App\Report('doc/moveitem.tpl');
 
         $html = $report->generate($header);

@@ -19,6 +19,7 @@ class User extends \ZCL\DB\Entity
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->defpaytype = 0;
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
@@ -72,6 +73,7 @@ class User extends \ZCL\DB\Entity
 
         $this->custtype = $acl['custtype']??0;
         $this->canevent = $acl['canevent']??0;
+        $this->dashboard = $acl['dashboard']??0;
         $this->noshowpartion = $acl['noshowpartion']??0;
         $this->showotherstores = $acl['showotherstores']??0;
 
@@ -82,7 +84,7 @@ class User extends \ZCL\DB\Entity
         $this->aclstate = $acl['aclstate'];
         $this->acldelete = $acl['acldelete'];
 
-        $this->widgets = $acl['widgets'];
+      
         $this->modules = $acl['modules'];
         $this->smartmenu = $acl['smartmenu'];
 
@@ -98,11 +100,12 @@ class User extends \ZCL\DB\Entity
         $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
+        $this->defpaytype = $options['defpaytype']??0;
         $this->defsalesource = $options['defsalesource'] ??0 ;
-        $this->pagesize = (int)$options['pagesize'];
+        $this->pagesize = $options['pagesize'] ??0;
         $this->phone = $options['phone']?? '';
         $this->viber = $options['viber']?? '';
-
+     
         $this->darkmode = $options['darkmode']?? 0;
 
         $this->hidesidebar = (int)$options['hidesidebar'];
@@ -147,6 +150,7 @@ class User extends \ZCL\DB\Entity
         $options['defstore'] = $this->defstore;
         $options['deffirm'] = $this->deffirm;
 
+        $options['defpaytype'] = $this->defpaytype;
         $options['defmf'] = $this->defmf;
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
@@ -169,6 +173,7 @@ class User extends \ZCL\DB\Entity
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
+         
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
         $options['scaleserver'] = $this->scaleserver   ;

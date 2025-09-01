@@ -105,7 +105,7 @@ class ProductList extends \App\Pages\Base
     public function OnGroupRow($row) {
         $group = $row->getDataItem();
         $row->add(new ClickLink('groupname', $this, 'onGroup'))->setValue($group->full_name);
-        if ($group->cat_id == $this->group->cat_id) {
+        if ($group->cat_id == ($this->group->cat_id ?? 0) ) {
             $row->setAttribute('class', 'table-success');
         }
     }
@@ -117,6 +117,8 @@ class ProductList extends \App\Pages\Base
         $this->grouplist->Reload(false);
         $this->editpanel->setVisible(false);
         $this->listpanel->setVisible(true);
+        $this->editimagepanel->setVisible(false);
+             
         $this->listpanel->plist->Reload();
     }
 
@@ -142,13 +144,16 @@ class ProductList extends \App\Pages\Base
 
         $row->add(new Label("lcnt", \App\Helper::fqty($item->getQuantity())));
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl( $item->getImageUrl(true,true) );
+        
+       
     }
 
     //редактирование
 
     public function lnameOnClick($sender) {
 
-
+        $this->editimagepanel->setVisible(false);
+     
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
         $this->_item = $sender->getOwner()->getDataItem();
@@ -268,7 +273,7 @@ class ProductList extends \App\Pages\Base
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl( $image->getImageUrl(true,true) );
+        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl( "/loadshopimage.php?id=".$image->image_id .  '&t=t' ) ;
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
 
@@ -285,7 +290,10 @@ class ProductList extends \App\Pages\Base
         $this->imglist = array();
 
         foreach ($this->_item->getImages() as $id) {
-            $this->imglist[] = \App\Entity\Image::load($id);
+            $im = \App\Entity\Image::load($id);
+            if($im != null) {
+                $this->imglist[] = $im;                
+            }
         }
         $this->editimagepanel->imagelist->Reload();
     }
@@ -324,7 +332,7 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
         if ($this->page->group instanceof Category) {
 
 
-            $where .= " and  cat_id =  " . $this->page->group->cat_id;
+            $where .= " and  cat_id > 0 and  cat_id =  " . $this->page->group->cat_id;
         }
 
         $st = $this->page->listpanel->searchform->skeyword->getText();

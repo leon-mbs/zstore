@@ -35,20 +35,28 @@ class Orders extends \App\Pages\Base
         $statuses = System::getSession()->statuses;
         if (is_array($statuses) == false) {
             $statuses = array();
-            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
+            $this->setWarn('Нажміть перевірити з`єднання  ');
         }
 
+        $defpaytype=intval($modules['ocpaytype']??2);
+        $defstore=intval($modules['ocstore']);
+        $defmf=intval($modules['ocmf']??0);
+           
+        
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
-        $this->add(new Form('filter2'))->onSubmit($this, 'onOutcome');
-        $this->filter2->add(new DropDownChoice('store', \App\Entity\Store::getList(), 0));
-        $this->filter2->add(new DropDownChoice('kassa', \App\Entity\MoneyFund::getList(), \App\Helper::getDefMF()));
-        $this->filter2->setVisible($modules['ocoutcome'] == 1);
-
+        $this->add(new Form('filter2'))->onSubmit($this, 'onImport');
+        $pt=[];
+        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[2] = 'Постоплата';
+        $pt[3] = 'Оплата в Чеку або ВН';
+        $pt[4] = 'Тiльки списати зi складу';
+          
+        $this->filter2->add(new DropDownChoice('paytype',$pt, $defpaytype));
+         
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
-        $this->add(new ClickLink('importbtn', $this, 'onImport'))->setVisible($modules['ocoutcome'] != 1);
-
+        
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
@@ -59,7 +67,7 @@ class Orders extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
-
+   
         if(strlen(System::getSession()->octoken)==0) {
             Helper::connect();
         }
@@ -128,15 +136,28 @@ class Orders extends \App\Pages\Base
     }
 
     public function onImport($sender) {
+          
+        if($sender->paytype->getValue() ==4) {
+            $this->onOutcome( );            
+        }   else{
+            $this->onOrder( ); 
+        }
+        
+    }
+    public function onOrder(  ) {
+        $defpaytype = $this->filter2->paytype->getValue() ;
+            
         $modules = System::getOptions("modules");
-
+        $defstore=intval($modules['ocstoreid']);
+        $defmf=intval($modules['ocmf']);
+ 
         $i = 0;
         foreach ($this->_neworders as $shoporder) {
 
 
             $neworder = Document::create('Order');
             $neworder->document_date = strtotime($shoporder->date_added);
-
+  
             $neworder->document_number = $neworder->nextNumber();
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'OC00001';
@@ -187,7 +208,14 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = 'price1';
             $neworder->headerdata['salesource'] = $modules['ocsalesource'];
-
+            $neworder->headerdata['paytype'] = $defpaytype;  
+            $neworder->headerdata['paytypename'] = $this->filter2->paytype->getValueName() ;  
+            $neworder->headerdata['payment'] = $defmf ; 
+            if($neworder->headerdata['paytype']==2) {
+                $neworder->headerdata['waitpay'] =1;   //ждет оплату
+            }
+            $neworder->headerdata['store'] = $defstore ; 
+      
             $neworder->notes = "OC номер: {$shoporder->order_id};";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
@@ -230,22 +258,31 @@ class Orders extends \App\Pages\Base
             }
             if (strlen($shoporder->telephone) > 0) {
                 $neworder->notes .= " Тел: " . $shoporder->telephone . ";";
+                $neworder->headerdata['phone'] = $phone;            
             }
             $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
             $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+            
+            $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
+            
             if($modules['ocmf'] >0) {
                $neworder->headerdata['payment'] = $modules['ocmf'];
         
             }
-        
+            if ($neworder->headerdata['paytype'] == 2) {
+                $neworder->setHD('waitpay',1); 
+            }        
             $neworder->save();
+            
+             
             $neworder->updateStatus(Document::STATE_NEW);
-            if($modules['ocsetpayamount']==1) {
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WP);
-            } else {
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
-            }
+  
+            $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
+          
+            if($neworder->headerdata['store']>0) {
+                $neworder->reserve();   //если задан  склад резервируем товары
+            }            
 
 
             $i++;
@@ -257,16 +294,19 @@ class Orders extends \App\Pages\Base
     }
 
     //только  списание
-    public function onOutcome($sender) {
+    public function onOutcome( ) {
         $modules = System::getOptions("modules");
-        $store = $this->filter2->store->getValue();
-        $kassa = $this->filter2->kassa->getValue();
+       
+        $store=intval($modules['ocstoreid']);
+        $kassa=intval($modules['ocmf']);
+        
+        
         if ($store == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не задано склад");
             return;
         }
         if ($kassa == 0) {
-            $this->setError("Не обрано касу");
+            $this->setError("Не задано касу");
             return;
         }
         $allowminus = \App\System::getOption("common", "allowminus");

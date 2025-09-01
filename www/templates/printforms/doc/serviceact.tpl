@@ -26,7 +26,7 @@
     {{#isdevice}}
     <tr>
         <td colspan="7">
-            Виріб, матеріали: {{device}} с/н: {{devsn}}
+           Прийнято від замовника: {{device}} с/н: {{devsn}}
         </td>
 
     </tr>

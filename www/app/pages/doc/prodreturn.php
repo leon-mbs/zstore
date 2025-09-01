@@ -35,7 +35,7 @@ class ProdReturn extends \App\Pages\Base
     * @param mixed $basedocid  создание на  основании
 
     */
-    public function __construct($docid = 0, $basedocid = 0 ) {
+    public function __construct($docid = 0, $basedocid = 0, $st_id = 0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -44,7 +44,7 @@ class ProdReturn extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", "disabled<>1","pa_name"), 0));
         $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
@@ -94,7 +94,15 @@ class ProdReturn extends \App\Pages\Base
                     }
                }
             }
-   
+            if ($st_id > 0) {
+                $st = \App\Entity\ProdStage::load($st_id);
+                $this->docform->parea->setValue($st->pa_id);
+                $this->_doc->headerdata['st_id'] = $st->st_id;
+                $this->_doc->headerdata['pp_id'] = $st->pp_id;
+                $this->docform->notes->setText($st->stagename);
+
+
+            } 
 
 
         }
@@ -292,8 +300,7 @@ class ProdReturn extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+   
 
         $this->docform->barcode->setText('');
         if ($code == '') {
@@ -305,19 +312,16 @@ class ProdReturn extends \App\Pages\Base
             $this->setError('Не обрано склад');
             return;
         }
-        $code0 = Item::qstr($code0);
+   
+        $item = Item::findBarCode($code,$store_id);
 
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0} )");
 
         if ($item == null) {
             $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
-
-        $store_id = $this->docform->store->getValue();
-
+       
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
             $this->setError("Товару {$item->itemname} немає на складі");
@@ -394,7 +398,7 @@ class ProdReturn extends \App\Pages\Base
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
 
-        $criteria = " disabled <> 1 and  item_type in(2,3,5) and item_id in(select item_id from store_stock ) and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        $criteria = " disabled <> 1 and  item_type not in (1,4) and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
         
         return Item::findArray("itemname",$criteria,"itemname");
     }

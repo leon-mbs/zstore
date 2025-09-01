@@ -32,9 +32,16 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));
-        $form->add(new CheckBox('setpayamount', $modules['wcsetpayamount']));
-        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['wcsalesource']));
+         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['wcsalesource']));
         $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['wcmf']??0));
+        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['wcstore']??0));
+      
+        $pt=[];
+        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[2] = 'Постоплата';
+        $pt[3] = 'Оплата в Чеку або ВН';
+        
+        $form->add(new DropDownChoice('defpaytype',$pt, $modules['wcpaytype']??0));
 
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -48,15 +55,27 @@ class Options extends \App\Pages\Base
         $keys = $this->cform->keys->getText();
         $api = $this->cform->api->getValue();
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
-        $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
+   
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
 
         $pricetype = $this->cform->defpricetype->getValue();
-        $defmf = $this->cform->defmf->getValue();
-        $salesource = $this->cform->salesource->getValue();
+        $mf = $this->cform->defmf->getValue();
+        $store = $this->cform->defstore->getValue();
+        $paytype = intval($this->cform->defpaytype->getValue() );
+         $salesource = $this->cform->salesource->getValue();
 
         if (strlen($pricetype) < 2) {
             $this->setError('Не вказано тип ціни');
+            return;
+        }
+      if ( $paytype==0) {
+
+            $this->setError('Не вказано тип оплати');
+            return;
+        }
+        if ( $paytype==1 && $mf==0) {
+
+            $this->setError('Не вказано касу');
             return;
         }
 
@@ -71,10 +90,13 @@ class Options extends \App\Pages\Base
         $modules['wcinsertcust'] = $insertcust;
 
         $modules['wcpricetype'] = $pricetype;
-        $modules['wcmf'] = $defmf;
+        $modules['wcpaytype'] = $paytype;
+        $modules['wcmf'] = $mf;
+        $modules['wcstore'] = $store;
+
         $modules['wcsalesource'] = $salesource;
         $modules['wcssl'] = $ssl;
-        $modules['wcsetpayamount'] = $setpayamount;
+
 
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');

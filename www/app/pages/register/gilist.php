@@ -5,7 +5,7 @@ namespace App\Pages\Register;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
-use App\Entity\Firm;
+ 
 use App\Entity\Customer;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -47,7 +47,7 @@ class GIList extends \App\Pages\Base
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
         $this->listpan->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові', 2 => 'Відправлені', 5 => 'Готові до відправки', 3 => 'Всі'), 0));
-        $this->listpan->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->listpan->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -160,7 +160,7 @@ class GIList extends \App\Pages\Base
         $row->add(new Label('customer', $doc->customer_name));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('firm', $doc->firm_name));
+ 
         $row->add(new Label('ispay'))->setVisible(false) ;
         $row->add(new Label('istruck'))->setVisible(false) ;
         if($doc->state >=4) {
@@ -363,7 +363,7 @@ class GIList extends \App\Pages\Base
 
 
         $this->statuspan->setVisible(true);
-        $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']);
+        $this->statuspan->statusform->ship_number->setText($this->_doc->headerdata['ship_number']??'');
         $this->statuspan->docview->setDoc($this->_doc);
 
         $this->listpan->doclist->Reload(false);
@@ -874,6 +874,7 @@ class GIList extends \App\Pages\Base
             }
             $this->_doc->headerdata['ship_number'] = $result['data'][0]['IntDocNumber'];
             $this->_doc->headerdata['ship_numberref'] = $result['data'][0]['Ref'];
+            $this->_doc->headerdata['moneyback'] = $moneyback;
             $this->_doc->save();
             $this->setSuccess("Створено декларацію номер " . $this->_doc->headerdata['ship_number']);
 
@@ -951,10 +952,7 @@ class GoodsIssueDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and state = " . Document::STATE_READYTOSHIP;
         }
 
-        $comp = $this->page->listpan->filter->searchcomp->getValue();
-        if ($comp > 0) {
-            $where = $where . " and firm_id = " . $comp;
-        }
+      
         $cust = $this->page->listpan->filter->searchcust->getKey();
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;

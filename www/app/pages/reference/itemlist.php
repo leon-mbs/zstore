@@ -122,8 +122,11 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editprice5->setVisible(false);
         }
         $this->itemdetail->add(new TextInput('editbarcode'));
+        $this->itemdetail->add(new TextInput('editbarcode1'));
+        $this->itemdetail->add(new TextInput('editbarcode2'));
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
+        $this->itemdetail->add(new TextInput('editcostprice'));
         $this->itemdetail->add(new TextInput('editweight'));
         $this->itemdetail->add(new TextInput('editmaxsize'));
         $this->itemdetail->add(new TextInput('editvolume'));
@@ -150,9 +153,11 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Image('editimage' ));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
-        $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes(),Item::TYPE_TOVAR));
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
-
+        $this->itemdetail->add(new DropDownChoice('editisnds'))->onChange($this, 'onNds');;
+        $this->itemdetail->add(new TextInput('editnds'))->setVisible(false);
+  
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -190,8 +195,10 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->add(new SubmitLink('addnewcf'))->onClick($this, 'OnAddCF');
         $this->optionsform->add(new CheckBox('autoarticle'));
         $this->optionsform->add(new CheckBox('nocheckarticle'));
+        $this->optionsform->add(new CheckBox('allowchange'));
         $this->optionsform->add(new CheckBox('usecattree'));
         $this->optionsform->add(new CheckBox('useimages'));
+        $this->optionsform->add(new CheckBox('branchprice'));
         $this->optionsform->add(new TextInput('articleprefix'));
           
      
@@ -287,8 +294,9 @@ class ItemList extends \App\Pages\Base
 
         $this->itemdetail->editcode->setText(Item::getNextArticle());
         $this->itemdetail->editbarcode->setText('');
-        $this->itemdetail->editcode->setText(Item::getNextArticle());
- 
+        $this->itemdetail->editbarcode1->setText('');
+        $this->itemdetail->editbarcode2->setText('');
+        
 
     }
 
@@ -312,11 +320,15 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
         $this->itemdetail->editcountry->setText($this->_item->country);
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
-
+        $this->itemdetail->editisnds->setValue($this->_item->isnds ??0);
+        $this->itemdetail->editnds->setText($this->_item->nds);
+ 
 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
+        $this->itemdetail->editbarcode1->setText($this->_item->bar_code1);
+        $this->itemdetail->editbarcode2->setText($this->_item->bar_code2);
         $this->itemdetail->editmsr->setText($this->_item->msr);
         $this->itemdetail->editnotes->setText($this->_item->notes);
         $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
@@ -333,7 +345,8 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcell->setText($this->_item->cell);
         $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
-        $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
+        $this->itemdetail->editzarp->setText(\App\Helper::fa($this->_item->zarp));
+        $this->itemdetail->editcostprice->setText(\App\Helper::fa($this->_item->costprice));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
@@ -374,6 +387,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['cflist'] = count($this->_cflistv) > 0 ;
    
     }
+
     public function addOnClick($sender) {
         $this->_copy = 0;
         $this->itemtable->setVisible(false);
@@ -425,7 +439,8 @@ class ItemList extends \App\Pages\Base
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
-   
+        $options = System::getOptions('common');
+        
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->itemname = trim($this->_item->itemname);
 
@@ -435,15 +450,18 @@ class ItemList extends \App\Pages\Base
         }
 
         $itemcode =trim($this->itemdetail->editcode->getText());
-        //проверка  на использование
-        if (strlen($this->_item->item_code) > 0 &&  $itemcode !== $this->_item->item_code ) {
-            $code = Item::qstr($this->_item->item_code);
-            $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
-            if ($cnt > 0) {
-                $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
-                return;
-            }
-        }        
+        
+        if($options['allowchange'] != 1) {
+            //проверка  на использование
+            if (strlen($this->_item->item_code) > 0 &&  $itemcode !== $this->_item->item_code ) {
+                $code = Item::qstr($this->_item->item_code);
+                $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
+                if ($cnt > 0) {
+                    $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
+                    return;
+                }
+            }        
+        }
         
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
@@ -458,6 +476,8 @@ class ItemList extends \App\Pages\Base
         $this->_item->country = trim($this->itemdetail->editcountry->getText());
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
+        $this->_item->bar_code1 = trim($this->itemdetail->editbarcode1->getText());
+        $this->_item->bar_code2 = trim($this->itemdetail->editbarcode2->getText());
         $this->_item->url = trim($this->itemdetail->editurl->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->notes = $this->itemdetail->editnotes->getText();
@@ -475,9 +495,12 @@ class ItemList extends \App\Pages\Base
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
+        $this->_item->costprice = $this->itemdetail->editcostprice->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
+        $this->_item->nds = $this->itemdetail->editnds->getText();
+        $this->_item->isnds = $this->itemdetail->editisnds->getValue();
 
         $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
         $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
@@ -560,11 +583,11 @@ class ItemList extends \App\Pages\Base
         $this->_item->save();
 
         $file = $this->itemdetail->editaddfile->getFile();
-        if (strlen($file["tmp_name"]) > 0) {
+        if (strlen($file["tmp_name"] ??'') > 0) {
             
-            if (filesize($file["tmp_name"])  > 1024*1024) {
+            if (filesize($file["tmp_name"])  > 1024*1024*4) {
 
-                    $this->setError('Розмір файлу більше 1M');
+                    $this->setError('Розмір файлу більше 4M');
                     return;
             }
            
@@ -1253,7 +1276,9 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->articleprefix->setText($options['articleprefix'] ?? "ID");
         $this->optionsform->usecattree->setChecked($options['usecattree']);
         $this->optionsform->nocheckarticle->setChecked($options['nocheckarticle']);
+        $this->optionsform->allowchange->setChecked($options['allowchange']);
         $this->optionsform->useimages->setChecked($options['useimages']);
+        $this->optionsform->branchprice->setChecked($options['branchprice']);
         $this->optionsform->autoarticle->setChecked($options['autoarticle']);
         
         
@@ -1301,8 +1326,10 @@ class ItemList extends \App\Pages\Base
         $this->_tvars["useimages"] = $options['useimages'] == 1;        
         
         $options['nocheckarticle'] = $this->optionsform->nocheckarticle->isChecked() ? 1 : 0;
+        $options['allowchange'] = $this->optionsform->allowchange->isChecked() ? 1 : 0;
         $options['usecattree'] = $this->optionsform->usecattree->isChecked() ? 1 : 0;
         $options['autoarticle'] = $this->optionsform->autoarticle->isChecked() ? 1 : 0;
+        $options['branchprice'] = $this->optionsform->branchprice->isChecked() ? 1 : 0;
         $options['articleprefix'] = $this->optionsform->articleprefix->getText() ;
         
         
@@ -1322,6 +1349,11 @@ class ItemList extends \App\Pages\Base
          
     }
     
+    public function onNds($sender) {
+        $id = $sender->getValue();
+        $this->itemdetail->editnds->setVisible($id==2);
+   
+    }
      
 }
 
@@ -1387,13 +1419,15 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         }
 
         if (strlen($text) > 0) {
+           
             if ($p == false) {
                 $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
                 $text = Item::qstr('%' . $text . '%');
                 $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or detail like {$det} )  ";
             } else {
                 $text = Item::qstr($text);
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} )  ";
+                $text_ = trim($text,"'") ;
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text}   or detail like '%<bar_code1><![CDATA[{$text_}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$text_}]]></bar_code2>%'  )  ";
             }
         }
         return $where;

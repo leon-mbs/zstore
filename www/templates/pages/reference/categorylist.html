@@ -63,12 +63,12 @@
                                  </td> 
                                 <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
                                 <td> <a zippy="prices" title="Змiнити цiни">-<i class="fa fa-coins"></i>+ </a>   </td>
-                                <td> <a zippy="cfields" title="Кастоинi поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
+                                <td> <a zippy="cfields" title="Кастомнi поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
                                 <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
                                     &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         </table>
-
+                     <div   zippy="pag"></div>
 
                     </div>
 
@@ -109,6 +109,7 @@
                                 <small class="form-text text-muted">Типи цін задаються в налаштуваннях </small>
                             </div>
                         </div>
+                           {{#useimages}}
                         <div class="form-group">
                             <label for="editparent">Зображення</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control" zippy="editaddfile">
@@ -122,19 +123,30 @@
                                 <span data-label="editdelimage" for="editdelimage">Видалити зображення</span>       
                             </div> 
                         </div> 
+                           {{/useimages}}
+                        {{#shop}}   
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозi</label>
                         </div>
+                         {{/shop}}
+                            {{#usefood}}  
                         <div class="form-check">
                             <input zippy="editnofastfood" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="editnofastfood">Не показувати в кафе</label>
                         </div>
+                          {{/usefood}}  
                            <div class="form-check">
                                 <input zippy="editnoprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
                             </div>
-                        
+                          {{#usends}}    
+                         <div class="form-group">
+                            <label for="editnds">ПДВ,%</label>
+                            <input style="width: 100px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
+                            <small>Якщо без  ПДВ залишити пустим</small>
+                        </div>  
+                           {{/usends}}    
                         <div class="form-group">
                             <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
                             <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">

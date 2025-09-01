@@ -1,27 +1,147 @@
 <html>
   <head>
-     <title>  Адміністрування  </title>
+     <title>  Адміністратор  </title>
  
 </head>
 <body>
-   <h3>Адміністрування</h3>
+  
      
  <div class="row">
+  <div class="col-12 col-lg-4 col-xl-3  " > 
+          <h5>Конфiгурацiя системи</h5>  
+         <small>Після зміни налаштувань слід перелогінитись</small>
+     
+       <form zippy="configform"  class="mb-4"> 
+       
+            <div class="form-check">
+                <input zippy="usebranch" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usebranch">Використання філій </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Філії (наприклад, торгові точки) використовуються для поділу доступу до ресурсів. Співробітники філії мають доступ до документів, складів і кас тільки вказаної філії. Відпускні ціни товарів запам'ятовуються в прив'язці до поточної філії."></i>
+            </div>
+
+            <div class="form-check">
+                <input zippy="usefood" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefood">Функціональність кафе </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Вмикаются АРМ кафе та інші  пункти меню, що стосуются громадського харчуванням "></i>
+            </div>
+
+            <div class="form-check">
+                <input zippy="useprod" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useprod">Функціональність виробництва </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Вмикаются  пункти меню, що стосуются виробництсва "></i>
+            </div>
+              
+             <div class="form-check">
+                <input    zippy="usends" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usends">Облiк  ПДВ </label>
+                
+                <a href="https://zippy.com.ua/zstoreusage#nds" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                 
+            </div>   
+               {{#hideblock}} 
+             <div class="form-check">
+                <input    zippy="useacc" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useacc">Бухгалтерський облiк </label>
+               
+            </div>      
+                {{/hideblock}} 
+           
+             <div class="form-group mt-2"> 
+
+             <input zippy="saveconfig" type="submit" value="Зберегти" class="btn btn-info  ">
+            </div>  
+            
+        </form>    
         
+          <h5>Підключення модулів</h5>
+            <form zippy="modules">
+
+                            <div class="form-check">
+                                <input zippy="modshop" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modshop"> Онлайн каталог</label>
+                                <a href="https://zippy.com.ua/ext#id3" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modnote" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modnote"> Органайзер (база знань)</label>
+                                <a href="https://zippy.com.ua/ext#id2" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modissue" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modissue"> Проекти та завдання</label>
+                                <a href="https://zippy.com.ua/ext#id4" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modocstore" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modocstore"> Iнтеграція з опенкарт</label>
+                                <a href="https://zippy.com.ua/ext#id1" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+
+                            <div class="form-check">
+                                <input zippy="modwoocomerce" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modwoocomerce"> Iнтеграція з woocomerce</label>
+                                <a href="https://zippy.com.ua/ext#id5" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modpromua" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modpromua"> Iнтеграція з PromUA</label>
+                                <a href="https://zippy.com.ua/ext#id9" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                          
+                            <div class="form-check">
+                                <input zippy="modnp" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта</label>
+                                <a href="https://zippy.com.ua/ext#id8" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                         
+                         
+                           
+                              
+                           <div class="form-check">
+                                <input zippy="modvdoc" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modvdoc"> Iнтеграція з Вчасно Документооборот</label>
+                                <a href="https://zippy.com.ua/ext#id16" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                              
+                              
+                             <div class="form-group mt-2 ">
+                                <label for="modfisctype">Тип фіскалізації (ПРРО) </label>
+                                <select class="form-control" zippy="modfisctype">
+                                   <option value="0">Не використовується</option>
+                                   <option value="1">Вбудований ПРРО</option>
+                                   <option value="2">Iнтеграція з CheckBox</option>
+                                   <option value="3">Iнтеграція з ВчасноКаса </option>
+                                </select>
+                                <small><a title="Опис" href="https://zippy.com.ua/ext#id6" target="_blank"><i class="fa fa-info-circle  "  ></i> Вбудований ПРРО</a>
+                                <br><a title="Опис" href="https://zippy.com.ua/ext#id12" target="_blank"><i class="fa fa-info-circle  "  ></i> CheckBox</a>
+                                <br><a title="Опис" href="https://zippy.com.ua/ext#id14" target="_blank"><i class="fa fa-info-circle  "  ></i> ВчасноКаса</a>
+                                </small>
+                            </div>      
+                          
+                        
+                            <div class="form-group">
+                                <button class="btn btn-info" type="submit">Зберегти</button>
+                            </div>
+                        </form>        
+                      
+    </div>        
     <div class="col-12 col-lg-4 col-xl-3  "   >
-            <form zippy="optionsform"> 
-             <div class="form-group">
-                <h5>Налаштування</h5>  
-             </div>
+        <h5>Налаштування безпеки</h5>   
+         <form zippy="optionsform"  class="mb-4"> 
+             
+                 <div class="form-check">
+                    <input zippy="capcha" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="capcha">Капча на формi логiну</label>
+                  </div> 
                  <div class="form-check">
                     <input zippy="noupdate" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="noupdate">Не перевiряти оновлення</label>
                  <br><small>   Якщо кастомна  версiя i є ризик  затерти змiни  </small>
                   </div> 
-               <div class="form-check">
-                    <input zippy="capcha" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="capcha">Капча на формi логiну</label>
-                  </div> 
+           
               
                <div class="form-check mt-4">
                     <input zippy="checkip" type="checkbox" class="form-check-input">
@@ -39,14 +159,22 @@
              <input zippy="save" type="submit" value="Зберегти" class="btn btn-info  ">
             </div>  
             
-        </form>    
+        </form>   
+       <h5>Скасування  документів </h5>  
+           <form zippy="cdoc" class="form-inline" >   
+            
+                   <input required="on" class="form-control" placeholder="Номер документу" zippy="docn"> 
+                   <input type="submit" value="Скасувати" class="btn   btn-primary  ">
+                   
+          </form> 
+          <small>Скасування  документів які не можна  скасувати через журнал. Наприклад  фіскалізовані чеки</small>
+            
+      
      </div>  
     <div class="col-12 col-lg-4 col-xl-3  "   >
-       
-         <form zippy="sendform" >
-              <div class="form-group">
-                <h5>Перевірка відправки пошти</h5>  
-             </div>
+             <h5>Перевірка відправки пошти</h5>  
+         <form class="mt-4" zippy="sendform" >
+           
               <div class="form-group">
                    <label for="email">Email</label>
                    <input class="form-control" type="text" zippy="email">
@@ -80,7 +208,15 @@
                     <input zippy="sendbot" type="submit" value="Відправити" class="btn   btn-primary  ">
                  
                </div>
-              {{/isbot}}               
+                 {{/isbot}} 
+     <div class="form-group">
+                <h5>Перевірка правильності структури бази данних</h5>  
+             </div>               
+              <div class="form-group">
+                    <input zippy="checkdb" type="submit" value="Перевірити" class="btn   btn-primary  ">
+                 
+               </div>
+               <div zippy="checkdbanswer"></div>           
          </form>
          
   </div>       
@@ -92,6 +228,11 @@
           
             return true;
        
+        }       
+        function check_checkdb(ele){
+           
+            document.getElementById('dialogwait').showModal()
+            return true;     
         }       
       </script>
 </body>

@@ -87,7 +87,7 @@ class ProductView extends Base
         $form->onSubmit($this, 'OnComment');
         $form->add(new TextInput('starnick'));
         $form->add(new TextInput('rating'));
-        $form->add(new TextArea('comment'));
+        $form->add(new TextArea('starcomment'));
         $form->add(new TextInput('capchacode'));
         $form->add(new \ZCL\Captcha\Captcha('capcha'));
 
@@ -149,7 +149,7 @@ class ProductView extends Base
         \App\Session::getSession()->recently = $recently;
 
 
-        if(strlen($_COOKIE['viewitem_'.$product->item_id])==0) {
+        if(strlen($_COOKIE['viewitem_'.$product->item_id]??'')==0) {
             \App\Helper::insertstat(\App\Helper::STAT_VIEW_ITEM, $product->item_id, 0) ;
             setcookie('viewitem_'.$product->item_id, "viewed", time() + 60 * 60 * 24);
 

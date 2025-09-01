@@ -16,15 +16,25 @@
 
         <div class="row" zippy="listpan">
             <div class="col-12 col-md-12 col-xl-10">
-
-                <a  zippy="addnewproc" class="btn btn-info">Створити</a>
+                  <div class="row  "  >
+                    <div class="col-2  "  >
+                <a  zippy="addnewproc" class="btn btn-info">Створити</a>    
+                 
+                   </div> 
+                      <div class="col-2  "  >
+                 
+                   <a class="btn btn-outline-success mr-2"   zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
+                
+                  </div>  
+                </div>  
+                  
                 <table class="table   table-sm   ">
                     <tr>
 
 
                         <th>Найменування</th>
                         <th>Замовлення, договір</th>
-                        <th>Серія, партія</th>
+                      
                         <th>Статус</th>
                         <th>Початок</th>
                         <th>Кінець</th>
@@ -32,7 +42,7 @@
 
                         <th  > </th>
                         <th  > </th>
-                        <th  > </th>
+                     
                         <th  > </th>
                         <th  > </th>
                         <th  >  </th>
@@ -43,7 +53,7 @@
                     <tr zippy="proclist">
                         <td zippy="name"></td>
                         <td zippy="basedoc"></td>
-                        <td zippy="snumber"></td>
+                      
                         <td zippy="state"></td>
 
                         <td class="text-nowrap" zippy="startdate"></td>
@@ -77,7 +87,8 @@
                 <div zippy="pag"></div>
 
             </div>
-            <div zippy="showpan" class="col-12">
+  
+          <div zippy="showpan" class="col-12">
                 <div   class="row">
                     <div   class="col-12  ">
                         <div class="navbar nav justify-content-start">
@@ -111,19 +122,30 @@
                     <div   class="col-12 col-md-6 col-xl-4">
                         <h5>Готова продукція</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th class="text-right">План</th><th class="text-right">Факт</th></tr>
+                            <tr><th>Найменування</th><th  >Код</th>  <th>Серія, партія</th><th class="text-right">План</th><th class="text-right">Оприходувано</th></tr>
                             {{#prodready}}
-                            <tr><td >{{itemname}} </td><td class="text-right">{{itemplan}} </td><td class="text-right">  {{itemfact}}</td></tr>
+                            <tr><td >{{itemname}} </td><td >{{item_code}} </td><td >{{itemsnumber}} </td><td class="text-right">{{itemplan}} </td><td class="text-right">  {{itemfact}}</td></tr>
                             {{/prodready}}
                         </table>
-                    </div>            
-                    <div   class="col-12 col-md-6 col-xl-4">
-                        <h5>Списано матеріалів та комплектуючих</h5>
+                    </div>  
+                    <div class="w-100"></div>           
+                    <div   class="col-12 col-md-8 col-xl-6">
+                        <h5>Матеріали та комплектуючі</h5>
                         <table class="table table-sm">
-                            <tr><th>Найменування</th><th class="text-right">Кіл.</th><th class="text-right">На суму</th></tr>
+                            <tr><th>Найменування</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Списано</th><th class="text-right">Наявність</th></tr>
                             {{#prodstuff}}
-                            <tr><td >{{itemname}} </td><td class="text-right">{{itemqty}} </td><td class="text-right">  {{itemamount}}</td></tr>
+                            <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-right">{{itemqtyplan}} </td><td class="text-right">  {{itemqtyfact}}</td><td class="text-right">  {{itemqtystore}}</td></tr>
                             {{/prodstuff}}                     
+                        </table>
+                    </div>            
+                    <div class="w-100"></div>           
+                    <div   class="col-12 col-md-8 col-xl-6">
+                        <h5>Роботи</h5>
+                        <table class="table table-sm">
+                            <tr><th>Найменування</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Виконано</th>  </tr>
+                            {{#prodservice}}
+                            <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-right">{{itemqtyplan}} </td> <td class="text-right">  {{itemqtystore}}</td></tr>
+                            {{/prodservice}}                     
                         </table>
                     </div>            
 
@@ -138,35 +160,45 @@
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="editname">Найменування</label>
+                        <label for="editname">Найменування <small class="text-danger">*</small></label>
                         <input  required  class="form-control" zippy="editname"/>
                     </div>
                     <div class="form-group">
                         <label for="editbasedoc">Замовлення, договір</label>
                         <input   class="form-control" zippy="editbasedoc"/>
                     </div>
-                    <div class="form-group">
-                        <label for="editsnumber">Серія, партія</label>
-                        <input   class="form-control" zippy="editsnumber"/>
-                    </div>
+                
                     <div class="form-group">
                         <label for="editstartdateplan">Початок (план)</label>
-                        <input   class="form-control" zippy="editstartdateplan"/>
+                        <input    class="form-control" zippy="editstartdateplan"/>
                     </div>
                     <div class="form-group">
                         <label for="editenddateplan">Кінець (план)</label>
-                        <input   class="form-control" zippy="editenddateplan"/>
-                    </div>
-                    <div class="form-group">
+                        <input    class="form-control" zippy="editenddateplan"/>
+                    </div>        
+                  
+                </div>
+                 <div class="col-12 col-md-3 col-xl-2">
+                
+                  <div class="form-group  ">
+                        <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
+                        <select class="form-control" zippy="editstore">
+                            <option value="0">Не вказано</option>
+                        </select>
+                         <small>Бажано створити окремий (можна віртуальний)    </small>
+                                
+                     </div>   
+                   <div class="form-group">
                         <label for="editnotes">Примітка</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
-                    </div>
+                  </div>                                     
+                            
+                                     
                 </div>
 
                 <div class="col-12">
-                    <input zippy="save"   type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
-
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">  
+                    <input zippy="save"   type="submit" value="Зберегти" class="btn btn-primary  ">
                 </div>
             </div>
         </form>           
@@ -174,7 +206,7 @@
         <div class="row" zippy="prodspan" >
             <div class="col-12 col-md-8 col-xl-6">
                 <h5>Запланована готова продукція</h5>
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="addprodform" class="form-inline ">
                         <label  for="additem">Найменування</label>
 
@@ -184,7 +216,11 @@
                         </select>
                         <label for="addqty">Кіл.</label>
                         <input style="width:60px"  class="form-control qtyprice mr-2" zippy="addqty" pattern="[0-9,\.]+"  />
-
+                           {{#usesnumber}}
+                        <label for="addsnumber">Серія, партія</label>
+                 
+                        <input   class="form-control  mr-2" zippy="addsnumber"/>
+                        {{/usesnumber}} 
                         <input type="submit" class="  btn btn-success  " value="+">
 
 
@@ -195,6 +231,7 @@
                     <tr zippy="proditemlist">
                         <td zippy="proditemname"></td>
                         <td class="text-right" zippy="proditemqty"></td>
+                         <td zippy="proditemsnumber"></td>
                         <td><a zippy="proditemdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
@@ -204,7 +241,7 @@
         </div>
 
         <div class="row" zippy="stagespan" >
-            <div class="col-12 col-md-10 col-xl-8">
+            <div class="col-12 col-md-8 col-xl-6">
                 <h5>Виробничі етапи </h5>
                 <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку процесів</a>  <br>
                 <a zippy="addstage"  class="btn  btn-success">Додати</a>
@@ -213,9 +250,9 @@
                        <th>Назва</th>
                        <th>Статус</th>
                        <th>Вир. дільниця</th>
-                       <th>Початок</th>
-                       <th>Кінець</th>
-                       <th>Годин</th>
+             
+                       <th> </th>
+                       <th> </th>
                        <th> </th>
                        <th> </th>
                        <th> </th>
@@ -224,11 +261,11 @@
                         <td zippy="stagename"></td>
                         <td zippy="stagestate"></td>
                         <td zippy="stageareaname"></td>
-                        <td zippy="stagestartdate"></td>
-                        <td zippy="stageenddate"></td>
-                        <td zippy="stagehours"></td>
+                 
 
                         <td><a title="Редагувати" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
+                        <td><a title="ТМЦ" zippy="stageitems"><i class="fa fa-cogs"></i></a></td>
+                        <td><a title="Виконавці " zippy="stageemps"><i class="fa fa-users"></i></a></td>
                         <td><a title="Тех. карта" zippy="stagecard"><i class="fa fa-wrench"></i></a></td>
                         <td><a title="Видалити" zippy="stagedel"><i class="fa fa-trash"></i></a></td>
                     </tr>
@@ -252,23 +289,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="editstagestartdateplan">Початок (план)</label>
-                        <input  required   class="form-control" zippy="editstagestartdateplan"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="editstageenddateplan">Кінець (план)</label>
-                        <input  required    class="form-control" zippy="editstageenddateplan"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editstagehours">Кіл. годин (план)</label>
-                        <input pattern="[0-9,\.]+" style="width:75px"   class="form-control qtyprice" zippy="editstagehours"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="editstagesalary">Сума по зарплаті</label>
-                        <input pattern="[0-9]+" style="width:75px"   class="form-control" zippy="editstagesalary"/>
-                    </div>
+                 
                     <div class="form-group">
                         <label for="editstagenotes">Коментар</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
@@ -276,8 +297,8 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="savestage"   type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-outline-primary  mr-2">   
+                    <input zippy="savestage"   type="submit" value="Зберегти" class="btn btn-primary  "> 
                 </div>
             </div>
         </form> 
@@ -293,12 +314,114 @@
 
                 </div>
                 <div class="col-12">
-                    <input zippy="savecard"   type="submit" value="Зберегти" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancelcard" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+                    <input zippy="cancelcard" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">   
+                    <input zippy="savecard"   type="submit" value="Зберегти" class="btn btn-primary  "> 
                 </div> 
             </div>
         </form> 
 
+     <div class="col-12 col-md-4 col-xl-3 "  zippy="itemspan">
+
+            <i zippy="stagename5"></i><br>    
+                   
+            <h5>Виготовлювані ТМЦ</h5>
+            <div class="card">
+
+             <form zippy="edititemsform" class="form-inline">
+                        <select zippy="edititem" class="form-control select2">
+                            <option value="0">Не обрано</option>
+                        </select>
+ 
+                        <label class="ml-2" for="editqty">Кіл.</label>
+                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9]+" value="1"  style="width: 50px;">
+      
+                     
+
+                        <input zippy="saveitem" type="submit" value="+" class="btn btn-primary">
+                   </form>                    
+                </div>              
+   
+
+                    <table class="table  table-sm">
+                   
+                        <tr zippy="detailitem">
+                            <td zippy="itemname"></td>
+                            <td zippy="item_code"></td>
+                            <td zippy="item_qty" class="text-right"></td>
+                          
+                            <td class="text-right">
+
+                                <a zippy="deleteitem"><i class="fa fa-trash"></i></a>
+
+                            </td>
+                        </tr>
+
+
+                    </table>
+                    
+                   <a zippy="cancelitems" class="btn btn-secondary mr-4" >Скасувати</a> 
+                   <a zippy="saveitems" class="btn btn-primary mr-4" >Зберегти</a> 
+                    
+                    
+                   </div>
+
+
+             <div class="col-12 col-md-4 col-xl-3 "  zippy="empspan" >
+                  <i zippy="stagename6"></i><br>    
+   
+
+                    <h5><b>Виконавці</b></h5>
+                  
+             <form zippy="editempsform" class="form-inline">
+                        <select zippy="editemp" class="form-control mr-2  ">
+                            <option value="0">Не обрано</option>
+                        </select>
+ 
+                        <label   for="editktu">КТУ</label>
+                        <input zippy="editktu" class="form-control qtyprice mr-2 " pattern="[0-9,\.]+" style="width:50px" >
+                       
+
+                        <input zippy="saveemp" type="submit" value="+" class="btn btn-primary">
+                   </form>                    
+                     
+                  
+                    <table class="table  table-sm">
+               
+                        <tr zippy="detailemp">
+
+                            <td zippy="emp_name"></td>
+                            <td zippy="empktu"  ></td>
+                            <td class="text-right">
+                                <a zippy="deleteemp"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    </table>
+                   <a zippy="cancelemps" class="btn btn-secondary mr-4" >Скасувати</a> 
+                   <a zippy="saveemps" class="btn btn-primary mr-4" >Зберегти</a> 
+                          
+               </div>  
+                     
+   <div class="col-12  col-md-8 col-xl-6 ">
+                <form zippy="optionsform"  >
+                 <h4>Налаштування     </h4>
+                   <div class="form-group  ">
+                        <label for="editrole">Роль для робітників</label>
+                        <select class="form-control" zippy="editrole">
+                            <option value="0">Не вказано</option>
+                        </select>
+                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
+                                      
+                  </div> 
+                 <div class="col-12">
+                    <a zippy="cancelopt"    class="btn btn-outline-primary  mr-2">Скасувати</a>   
+                    <input   type="submit" value="Зберегти" class="btn btn-primary  "> 
+                </div>               
+           
+                </form>   
+     </div>             
+        
+        
+        
         <script>
             function check_delete() {
                 return confirm("Видалити?")

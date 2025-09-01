@@ -10,7 +10,7 @@
                 <div zippy="branchtable">
                     <h3>Перелік філій </h3>
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
-                    <table class="table table-bordered   table-sm" style="width:400px">
+                    <table class="table table-bordered   table-sm" style="width:500px">
 
                         <tr zippy="branchlist">
                             <td zippy="branch_name"></td>
@@ -18,12 +18,15 @@
                             <td zippy="address"></td>
 
 
-                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
-                                    zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                            <td style="width:100px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
+                           &nbsp;&nbsp; <a zippy="delete" title="Вилучити"><i class="fa fa-trash text-danger"></i></a></td>
                         </tr>
                     </table>
-
-
+                  <b>Перевести не прив`язані до філій ресурси  </b>
+                  <form zippy="formmove"  class="form-inline"  >
+                     На філію <select zippy="selmove" class="form-control mr-4"><option value="0">Вибрати</option></select> <input zippy="btnmove"  class="btn btn-success" type="submit" value="Виконати">
+                  </form>
+                  <small>Якщо підтримка філій ввімкнена  після  вже  проведених документів </small>
                 </div>
 
                 <form class="col-6 col-md-4" zippy="branchdetail">
@@ -61,7 +64,12 @@
                 </form>
             </div>
         </div>
+     <script  >
 
+        function check_btnmove() {
+                return confirm("Виконати?")
+        }   
+     </script>
     </body>
 </html>
 

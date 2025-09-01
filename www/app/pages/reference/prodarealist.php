@@ -9,6 +9,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -35,6 +36,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->padetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->padetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         $this->padetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
+        $this->padetail->add(new CheckBox('editdisabled',  0));
     }
 
     public function palistOnRow($row) {
@@ -44,7 +46,8 @@ class ProdAreaList extends \App\Pages\Base
         $row->add(new Label('pa_notes', $item->notes));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-    }
+        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+   }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkDelRef('ProdAreaList')) {
@@ -67,6 +70,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->padetail->editpa_name->setText($this->_pa->pa_name);
         $this->padetail->editbranch->setValue($this->_pa->branch_id);
         $this->padetail->editpa_notes->setText($this->_pa->notes);
+        $this->padetail->editdisabled->setCHecked($this->_pa->disabled);
 
     }
 
@@ -88,6 +92,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->_pa->branch_id = $this->padetail->editbranch->getValue();
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();
         $this->_pa->notes = $this->padetail->editpa_notes->getText();
+        $this->_pa->disabled = $this->padetail->editdisabled->isChecked() ?1:0;
         if ($this->_pa->pa_name == '') {
             $this->setError("Не введено назву");
             return;

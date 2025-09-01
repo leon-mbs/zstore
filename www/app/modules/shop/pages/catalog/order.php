@@ -56,10 +56,10 @@ class Order extends Base
         $form->add(new \Zippy\Html\Form\Time('deltime', time() + 3600))->setVisible($this->_tvars["isfood"]);
 
 
-        $form->add(new TextInput('email',$_COOKIE['shop_email']));
-        $form->add(new TextInput('phone',$_COOKIE['shop_phone']));
-        $form->add(new TextInput('firstname',$_COOKIE['shop_fn']));
-        $form->add(new TextInput('lastname',$_COOKIE['shop_ln']));
+        $form->add(new TextInput('email',$_COOKIE['shop_email']??''));
+        $form->add(new TextInput('phone',$_COOKIE['shop_phone']??''));
+        $form->add(new TextInput('firstname',$_COOKIE['shop_fn']??''));
+        $form->add(new TextInput('lastname',$_COOKIE['shop_ln']??''));
         $form->add(new TextArea('address'))->setVisible(false);
         $form->add(new TextArea('notes'));
         $form->onSubmit($this, 'OnSave');
@@ -248,9 +248,11 @@ class Order extends Base
                 'email'         => $email,
                 'deltime'       => $time,
                 'phone'         => $phone,
+                'store'         => $store_id,
                 'ship_address'  => $address,
                 'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
+                'paytype'       => 2,
                 'totaldisc'     => $this->disc,
                 'total'         => $amount
             );
@@ -296,7 +298,7 @@ class Order extends Base
             $order->payamount = $amount - $this->disc;
 
          //   $order->branch_id = $shop["defbranch"] ?? 0;
-            $order->firm_id = $shop["firm"];
+          
             $order->user_id = intval($shop["defuser"]??0) ;
             if($order->user_id==0) {
                 $user = \App\Entity\User::getByLogin('admin') ;
@@ -330,14 +332,7 @@ class Order extends Base
             if ($shop['ordertype'] == 1) {  //Кассовый чек
                 $order->updateStatus(Document::STATE_EXECUTED);
             } else {
-
-                if($payment == 1) {
-                    $order->updateStatus(Document::STATE_WP);
-                } else {
-                    $order->updateStatus(Document::STATE_INPROCESS);
-                }
-
-
+                $order->updateStatus(Document::STATE_INPROCESS);
             }
 
 

@@ -12,13 +12,14 @@
                 <h3>  Програми лояльності</h3>
 
                 <div class="mt-1" style="font-size: 1.5rem"  >
-                    <a zippy="tabo"><span class="{{{tabobadge}}}"> Бонуси</span> </a> &nbsp;&nbsp;
-                    <a zippy="tabc"><span class="{{{tabcbadge}}}">  Знижки   </span> </a>
+                     <a zippy="tabc"><span class="{{{tabcbadge}}}">  Знижки   </span> </a>
                     
                     <a zippy="tabi"><span class="{{{tabibadge}}}">  Акції, товари   </span> </a>
                     <a zippy="tabs"><span class="{{{tabsbadge}}}">  Акції, послуги    </span> </a>
-            
+                  
+                    <a zippy="tabo"><span class="{{{tabobadge}}}"> Бонуси</span> </a> &nbsp;&nbsp;
                     <a zippy="tabp"><span class="{{{tabpbadge}}}">  Промокоди    </span> </a>
+                   
                     <a zippy="tabe"><span class="{{{tabebadge}}}">  Співробітники    </span> </a>
               
 
@@ -84,7 +85,7 @@
                             </form>
                             
                             <h5> Персональнi бонуси</h5>
-                            <div class="navbar nav  ">
+                            <div class="card  ">
                                 <form zippy="pbfilter" class="form-inline ">
 
                                     <label for="pbsearchkey">Контрагент</label>
@@ -115,7 +116,7 @@
                         
                         <div class="col-12 col-md-6 col-xl-6   ">
                             <h5> Нарахованi бонуси</h5> 
-                           <div class="navbar nav  ">
+                           <div class="card  ">
                                 <form zippy="blfilter" class="form-inline ">
                                     <input placeholder="Контрагент..." class="form-control " type="search"  zippy="blsearch">
                                     <input class="btn btn-success mr-4" type="submit" value="Шукати"  >
@@ -203,7 +204,7 @@
                              </div>
                          <div class="col-12 col-md-8 col-xl-6   ">    
                             <h5> Постiйнi знижки</h5>
-                            <div class="navbar nav  ">
+                            <div class="card  ">
                                 <form zippy="cfilter" class="form-inline ">
 
                                     <label for="csearchkey">Контрагент</label>
@@ -248,7 +249,7 @@
                              
                             <span><i class="fa fa-exclamation-triangle"></i> Тiльки для цін типу <i> {{price1name}}</i> </span>
                             <h5>Акційні ціни</h5>                            
-                            <div class="navbar nav  ">
+                            <div class="card  ">
                                             <form zippy="ifilter" class="form-inline ">
 
                                                 <label for="isearchkey">Назва</label>
@@ -268,7 +269,7 @@
                                         </div>
                                         
                             <span>Встановлює акційну ціну на даний товар</span>  
-                           <div class="navbar nav  ">
+                           <div class="card  ">
                                 <form zippy="gfilter" class="form-inline ">
 
                                     <label for="gsearchkey">Категорiя</label>
@@ -326,7 +327,7 @@
                             </form>
                             
                             <h5>Знижки для опту (2 товари і більше)</h5> 
-                                       <div class="navbar nav  ">
+                                       <div class="card  ">
                                             <form zippy="iofilter" class="form-inline ">
 
                                                 <label for="isearchokey">Назва</label>
@@ -376,7 +377,7 @@
                     <div class="row">
                         <div class="col-12 col-md-10 col-xl-8   ">
                             
-                            <div class="navbar nav  ">
+                            <div class="card  ">
                                 <form zippy="sfilter" class="form-inline ">
 
                                     <label for="ssearchkey">Назва</label>
@@ -423,7 +424,7 @@
                              
                            <div zippy="listpan">
                            <span>Використовується в замовленнях та чеках</span>
-                             <div class="navbar nav  ">
+                             <div class="card  ">
                                 <form zippy="pfilter" class="form-inline ">
                                     <label for="psearchkey">Код</label>
                                     <input placeholder="Код для пошуку" class="form-control mr-2" type="search" zippy="psearchkey">
@@ -572,12 +573,14 @@
     <div id="modaladdbonus" class="modal fade  " tabindex="-1" role="dialog"   >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
+                         {{#admins}}
                         <div class="modal-header">
                             <h5 class="modal-title">Додати (відняти) бонуси</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                         {{/admins}}
                         <div class="modal-body"> 
                            <form zippy="formaddbc" >
                                 <div class="form-group  ">

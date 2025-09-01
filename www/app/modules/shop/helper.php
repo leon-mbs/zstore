@@ -13,8 +13,8 @@ class Helper
     public static function getBreadScrumbs($id) {
 
         $bs = "<li class=\"breadcrumb-item\"><a href='/shop'>Каталог</a></li>";
-        if ($id > 0) {
-            $g = Category::load($id);
+        $g = Category::load($id);
+        if ($g != null) {
             $gl = $g->getParents();
             $gl = array_reverse($gl);
             $all = Category::find('');
@@ -105,9 +105,13 @@ class Helper
         if ($cat_id == 0) {
             return $list;
         }
-        $conn = DB::getConnect();
-
+ 
         $cat = \App\Entity\Category::load($cat_id);
+        if ($cat == null) {
+            return $list;
+        }
+        $conn = DB::getConnect();
+        
         $plist = $cat->getParents();
         $plist[] = $cat_id;
         $grlist = implode(',', $plist);

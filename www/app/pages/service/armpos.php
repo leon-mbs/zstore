@@ -26,6 +26,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
+use App\Application as App;
 
 /**
  * АРМ кассира
@@ -58,19 +59,24 @@ class ARMPos extends \App\Pages\Base
         
         $this->_docid = $docid;
         $this->_basedocid = $basedocid;
+        $ss='';
+        if($basedocid >0) {
+            $bd= Document::load($basedocid)->cast();
+            $ss = $bd->getHD('salesource','') ;
+        }
         
         $filter = \App\Filter::getFilter("armpos");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
-            $filter->salesource = H::getDefSaleSource();
+            $filter->salesource =  strlen($ss) > 0 ? $ss : H::getDefSaleSource();
             $filter->mfnal = H::getDefSaleSource();
             $filter->mfbeznal = H::getDefSaleSource();
 
 
         }
-
+        
         //обшие настройки
         $this->add(new Form('form1'));
         $plist = \App\Entity\Pos::findArray('pos_name', '');
@@ -213,8 +219,10 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editserdetail->add(new TextInput('editserquantity'))->setText("1");
         $this->docpanel->editserdetail->add(new TextInput('editserprice'));
 
-        $this->docpanel->editserdetail->add(new AutocompleteTextInput('editser'))->onText($this, 'OnAutoSer');
-        $this->docpanel->editserdetail->editser->onChange($this, 'OnChangeSer', true);
+
+        $this->docpanel->editserdetail->add(new DropDownChoice('editser', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeSer', true);
+           
+
 
         $this->docpanel->editserdetail->add(new Button('cancelser'))->onClick($this, 'cancelrowOnClick');
         $this->docpanel->editserdetail->add(new SubmitButton('submitser'))->onClick($this, 'saveserOnClick');
@@ -420,10 +428,22 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form2->customer->setKey($bd->customer_id);
             $this->docpanel->form2->customer->setText($bd->customer_name);
             if($bd->meta_name=='ServiceAct') {
+                if($bd->getHD('paytype',0) != 3){
+                    $this->setWarn('В Акті не повинно бути оплати якщо оплата  чеком  ') ;
+                    App::Redirect("\\App\\Pages\\Register\\SerList");
+                    return; 
+                }                
                 $this->_itemlist = $bd->unpackDetails('detail2data');
                 $this->_serlist =  $bd->unpackDetails('detaildata');
             }
             if($bd->meta_name=='Order') {
+                if($bd->getHD('paytype',0) != 3){
+                    $this->setWarn('В Замовленні не повинно бути оплати якщо оплата  чеком  ') ;
+                    App::Redirect("\\App\\Pages\\Register\\OrderList");
+                    return; 
+                }
+          
+                
                 $this->_itemlist = $bd->unpackDetails('detaildata');
             }
 
@@ -524,7 +544,8 @@ class ARMPos extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setWarn("У  контрагента  вього {$b} бонусів на рахунку");                
+                $this->setError("У  контрагента  вього {$b} бонусів на рахунку");                
+                return;
             }
 
            
@@ -567,103 +588,7 @@ class ARMPos extends \App\Pages\Base
         $row->add(new ClickLink('seredit'))->onClick($this, 'sereditOnClick');
     }
 
-    public function addcodeOnClick($sender) {
-        $barcode = trim($this->docpanel->form2->barcode->getText());
-        $code0 = $barcode;
-        $code = ltrim($barcode, '0');
-
-        $store = $this->form1->store->getValue();
-        $this->docpanel->form2->barcode->setText('');
-        if ($code == '') {
-            return;
-        }
-
-
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_})");
-      
-        // проверка  на  стикер
-        if ($item == null) {
-       
-            $item = Item::unpackStBC($barcode);
-            if($item instanceof Item) {
-                $item->pureprice = $item->getPurePrice();
-                $this->_itemlist[ ] = $item;
-
-                $this->docpanel->form2->detail->Reload();
-                $this->calcTotal();  
-                return;           
-            }
-        }  
-          
-        if ($item == null) {
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
-            return;
-        }
-
-        $qty = $item->getQuantity($store);
-        if ($qty <= 0) {
-            $this->setWarn("Товару {$item->itemname} немає на складі");
-        }
-
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->docpanel->form2->detail->Reload();
-                $this->calcTotal();
-
-                return;
-            }
-        }
-
-
-        $customer_id = $this->docpanel->form2->customer->getKey();
-
-        $pt=     $this->getPriceType() ;
-        $price = $item->getPriceEx(array(
-           'pricetype'=>$pt,
-           'store'=>$store,
-           'customer'=>$customer_id
-         ));
-        $item->price = $price;
-        $item->quantity = 1;
-        $item->pureprice = $item->getPurePrice();
-        if($item->pureprice > $item->price) {
-            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
-        }
-
-        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-
-            $serial = '';
-            $slist = $item->getSerials($store);
-            if (count($slist) == 1) {
-                $serial = array_pop($slist);
-            }
-
-            if (strlen($serial) == 0) {
-                $this->setWarn('Потрібна партія виробника');
-                $this->docpanel->editdetail->setVisible(true);
-                $this->docpanel->form2->setVisible(false);
-
-                $this->docpanel->editdetail->edittovar->setKey($item->item_id);
-                $this->docpanel->editdetail->edittovar->setText($item->itemname);
-                $this->docpanel->editdetail->editserial->setText('');
-                $this->docpanel->editdetail->editquantity->setText('1');
-                $this->docpanel->editdetail->editprice->setText($item->price);
-
-                return;
-            } else {
-                $item->snumber = $serial;
-            }
-        }
-
-
-        $this->_itemlist[ ] = $item;
-
-        $this->docpanel->form2->detail->Reload();
-        $this->calcTotal();
-    }
-
+  
     public function editOnClick($sender) {
         $tovar = $sender->owner->getDataItem();
         $this->docpanel->editdetail->setVisible(true);
@@ -699,8 +624,8 @@ class ARMPos extends \App\Pages\Base
     public function sereditOnClick($sender) {
         $ser = $sender->owner->getDataItem();
         $this->docpanel->editserdetail->setVisible(true);
-        $this->docpanel->editserdetail->editser->setKey($ser->service_id);
-        $this->docpanel->editserdetail->editser->setText($ser->service_name);
+        $this->docpanel->editserdetail->editser->setValue($ser->service_id);
+
         $this->docpanel->editserdetail->editserquantity->setText($ser->quantity);
         $this->docpanel->editserdetail->editserprice->setText($ser->price);
 
@@ -731,6 +656,8 @@ class ARMPos extends \App\Pages\Base
         $this->_rowid = -1;
         $this->docpanel->navbar->setVisible(false);
         $this->_editrow =  false;
+        
+        $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;
     }
 
     public function addserOnClick($sender) {
@@ -834,12 +761,13 @@ class ARMPos extends \App\Pages\Base
         $this->_rowid = -1;
         $this->_editrow =  false;
         $this->setSuccess("Позиція додана");
+     //   $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;        
 
     }
 
     public function saveserOnClick($sender) {
 
-        $id = $this->docpanel->editserdetail->editser->getKey();
+        $id = $this->docpanel->editserdetail->editser->getValue();
         if ($id == 0) {
             $this->setError("Не обрано послугу або роботу");
             return;
@@ -876,8 +804,8 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->detailser->Reload();
 
         //очищаем  форму
-        $this->docpanel->editserdetail->editser->setKey(0);
-        $this->docpanel->editserdetail->editser->setText('');
+        $this->docpanel->editserdetail->editser->setValue(0);
+
         $this->docpanel->editserdetail->editserquantity->setText("1");
         $this->docpanel->editserdetail->editserprice->setText("");
         $this->calcTotal();
@@ -1022,15 +950,10 @@ class ARMPos extends \App\Pages\Base
         return Item::findArrayAC($text);
     }
 
-    public function OnAutoSer($sender) {
-
-        $text = trim($sender->getText());
-        $text = Service::qstr('%' . $text . '%');
-        return Service::findArray('service_name', "disabled <> 1 and service_name like {$text}");
-    }
+  
 
     public function OnChangeSer($sender) {
-        $id = $sender->getKey();
+        $id = $sender->getValue();
         $ser = Service::load($id);
         $customer_id = $this->docpanel->form2->customer->getKey();
 
@@ -1183,7 +1106,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText();
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
-        $this->_doc->firm_id = $this->pos->firm_id;
+        
         $this->_doc->username =System::getUser()->username;
         $this->calcTotal()  ;
         $this->_doc->amount = $this->docpanel->form2->total->getText();
@@ -1269,15 +1192,15 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['salesource'] = $this->_salesource;
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
-        $this->_doc->firm_id = $this->pos->firm_id;
+        
         $this->_doc->username =System::getUser()->username;
 
-        $firm = H::getFirmData($this->_doc->firm_id);
+        $firm = H::getFirmData( );
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
         $this->_doc->headerdata["phone"] = $firm['phone'];
-
+       
         $this->_doc->packDetails('detaildata', $this->_itemlist);
         $this->_doc->packDetails('services', $this->_serlist);
 
@@ -1364,6 +1287,9 @@ class ARMPos extends \App\Pages\Base
 
                         if(is_array($ret)) {
                             $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                            $this->_doc->headerdata["vkassa"] = $ret['checkid'];
+                                                 
                         } else {
                             throw new \Exception($ret);
 
@@ -1585,7 +1511,7 @@ class ARMPos extends \App\Pages\Base
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+        if ($ret['success'] == false && ($ret['doclocnumber'] ??0 ) > 0) {
             //повторяем для  нового номера
             $this->pos->fiscdocnumber = $ret['doclocnumber'];
             $this->pos->save();
@@ -2044,7 +1970,108 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-    //simple mode
+    //штриз код
+    public function addcodeOnClick($sender) {
+        $barcode = trim($this->docpanel->form2->barcode->getText());
+        $code0 = $barcode;
+        $code = ltrim($barcode, '0');
+
+        $store = $this->form1->store->getValue();
+        $this->docpanel->form2->barcode->setText('');
+        if ($code == '') {
+            return;
+        }
+
+
+        $code_ = Item::qstr($code);
+        $code__ = trim($code_,"'") ;        
+        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_}   or detail like '%<bar_code1><![CDATA[{$code__}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code__}]]></bar_code2>%'   )");
+      
+        // проверка  на  стикер
+        if ($item == null) {
+       
+            $item = Item::unpackStBC($barcode);
+            if($item instanceof Item) {
+                $item->pureprice = $item->getPurePrice();
+                $this->_itemlist[ ] = $item;
+
+                $this->docpanel->form2->detail->Reload();
+                $this->calcTotal();  
+                return;           
+            }
+        }  
+          
+        if ($item == null) {
+            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            \App\Application::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
+                
+            return;
+        }
+
+       \App\Application::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+        $qty = $item->getQuantity($store);
+      
+       
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->bar_code == $code || $_item->item_code == $code) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docpanel->form2->detail->Reload();
+                $this->calcTotal();
+                $this->checkQty($item);
+                return;
+            }
+        }
+
+        $this->checkQty($item);
+        $customer_id = $this->docpanel->form2->customer->getKey();
+
+        $pt=     $this->getPriceType() ;
+        $price = $item->getPriceEx(array(
+           'pricetype'=>$pt,
+           'store'=>$store,
+           'customer'=>$customer_id
+         ));
+        $item->price = $price;
+        $item->quantity = 1;
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
+        }
+
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+
+            $serial = '';
+            $slist = $item->getSerials($store);
+            if (count($slist) == 1) {
+                $serial = array_pop($slist);
+            }
+
+            if (strlen($serial) == 0) {
+                $this->setWarn('Потрібна партія виробника');
+                $this->docpanel->editdetail->setVisible(true);
+                $this->docpanel->form2->setVisible(false);
+
+                $this->docpanel->editdetail->edittovar->setKey($item->item_id);
+                $this->docpanel->editdetail->edittovar->setText($item->itemname);
+                $this->docpanel->editdetail->editserial->setText('');
+                $this->docpanel->editdetail->editquantity->setText('1');
+                $this->docpanel->editdetail->editprice->setText($item->price);
+
+                return;
+            } else {
+                $item->snumber = $serial;
+            }
+        }
+
+
+        $this->_itemlist[ ] = $item;
+
+        $this->docpanel->form2->detail->Reload();
+        $this->calcTotal();
+    }
+    
+    
+    //ввод  в  упрощенном режиме
     public function addItemSmOnClick($sender) {
         $store = $this->form1->store->getValue();
 
@@ -2069,12 +2096,26 @@ class ARMPos extends \App\Pages\Base
             return;
         }
 
+        
+        $this->docpanel->form2->addtovarsm->setKey(0);
+        $this->docpanel->form2->addtovarsm->setText('');
+
+        $this->docpanel->form2->qtysm->setText("");
+        $this->docpanel->form2->storeqtysm->setText("");
+
+        
         $qstock = $item->getQuantity($store);
-        if ($item->quantity > $qstock) {
-            $this->setWarn('Введено більше товару, чим є в наявності');
+ 
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($item->item_id ==  $_item->item_id ) {
+                $this->_itemlist[$ri]->quantity += $item->quantity;
+                $this->docpanel->form2->detail->Reload();
+                $this->calcTotal();
+              
+                return;
+            }
         }
-
-
+ 
         $pt=     $this->getPriceType() ;
         $price = $item->getPriceEx(array(
          'pricetype'=>$pt,
@@ -2091,26 +2132,15 @@ class ARMPos extends \App\Pages\Base
         if($item->pureprice > $item->price) {
             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
-
-
-
+ 
+ 
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
             $this->_itemlist[$this->_rowid] = $item;
         }
 
-
-
-        $this->docpanel->form2->addtovarsm->setKey(0);
-        $this->docpanel->form2->addtovarsm->setText('');
-
-        $this->docpanel->form2->qtysm->setText("");
-        $this->docpanel->form2->storeqtysm->setText("");
-
-        $this->_rowid = -1;
-
-
+  
         $this->docpanel->form2->detail->Reload();
 
 
@@ -2120,6 +2150,35 @@ class ARMPos extends \App\Pages\Base
 
     }
 
+    /**
+    * предупреждение о заканчившемся  товаре
+    * 
+    * @param Item $item
+     */
+    private function checkQty(Item $item) {
+        $store = $this->form1->store->getValue();
+
+        $qty = $item->getQuantity($store);
+        
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($item->item_id ==  $_item->item_id ) {
+                
+               $qty = $qty - $_item->quantity;
+                
+            }
+        }
+        
+
+        if (  $qty <= 0  ) {
+            $this->setError("Товару {$item->itemname} не залишилось на складі");
+            return;            
+        }
+        if ($item->minqty > 0 && $qty < $item->minqty   ) {
+            $this->setWarn("Товару {$item->itemname} залишилось менше  мінімальної кількості");
+            return;                        
+        }        
+    }
+    
     public function beforeRender() {
         
         $pn= intval( \App\Session::getSession()->armpass ?? 0 );        

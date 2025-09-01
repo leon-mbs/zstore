@@ -41,16 +41,18 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O' );
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O','P' => 'P','Q' => 'Q' );
         $form->add(new DropDownChoice("colname", $cols,$sc['colname'] ?? 0));
         $form->add(new DropDownChoice("colcode", $cols,$sc['colcode'] ?? 0));
         $form->add(new DropDownChoice("colbarcode", $cols,$sc['colbarcode'] ?? 0));
         $form->add(new DropDownChoice("colcat", $cols,$sc['colcat'] ?? 0));
         $form->add(new DropDownChoice("colqty", $cols,$sc['colqty'] ?? 0));
         $form->add(new DropDownChoice("colcell", $cols,$sc['colcell'] ?? 0));
+        $form->add(new DropDownChoice("coluktz", $cols,$sc['coluktz'] ?? 0));
         $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
         $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
         $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
+        $form->add(new DropDownChoice("colnotes", $cols,$sc['colnotes'] ?? 0));
         $form->add(new DropDownChoice("colminqty", $cols,$sc['colminqty'] ?? 0));
 
         $pt = \App\Entity\Item::getPriceTypeList();
@@ -61,11 +63,11 @@ class Import extends \App\Pages\Base
         $form->add(new Label('pricename4', $pt['price4'] ??''));
         $form->add(new Label('pricename5', $pt['price5'] ??''));
 
-        $form->add(new DropDownChoice("colprice1", $cols,$sc['colprice1'] ?? 0))->setVisible(strlen($pt['price1'])>0);
-        $form->add(new DropDownChoice("colprice2", $cols,$sc['colprice2'] ?? 0))->setVisible(strlen($pt['price2'])>0);
-        $form->add(new DropDownChoice("colprice3", $cols,$sc['colprice3'] ?? 0))->setVisible(strlen($pt['price3'])>0);
-        $form->add(new DropDownChoice("colprice4", $cols,$sc['colprice4'] ?? 0))->setVisible(strlen($pt['price4'])>0);
-        $form->add(new DropDownChoice("colprice5", $cols,$sc['colprice5'] ?? 0))->setVisible(strlen($pt['price5'])>0);
+        $form->add(new DropDownChoice("colprice1", $cols,$sc['colprice1'] ?? 0))->setVisible(strlen($pt['price1'] ??'')>0);
+        $form->add(new DropDownChoice("colprice2", $cols,$sc['colprice2'] ?? 0))->setVisible(strlen($pt['price2'] ??'')>0);
+        $form->add(new DropDownChoice("colprice3", $cols,$sc['colprice3'] ?? 0))->setVisible(strlen($pt['price3'] ??'')>0);
+        $form->add(new DropDownChoice("colprice4", $cols,$sc['colprice4'] ?? 0))->setVisible(strlen($pt['price4'] ??'')>0);
+        $form->add(new DropDownChoice("colprice5", $cols,$sc['colprice5'] ?? 0))->setVisible(strlen($pt['price5'] ??'')>0);
 
 
 
@@ -197,11 +199,13 @@ class Import extends \App\Pages\Base
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colcell = $this->iform->colcell->getValue();
+        $coluktz = $this->iform->coluktz->getValue();
         $colbrand = $this->iform->colbrand->getValue();
         $coldesc = $this->iform->coldesc->getValue();
         $colimage = $this->iform->colimage->getValue();
         $colshortname = $this->iform->colshortname->getValue();
         $colwar = $this->iform->colwar->getValue();
+        $colnotes = $this->iform->colnotes->getValue();
         $colprice1 = $this->iform->colprice1->getValue();
         $colprice2 = $this->iform->colprice2->getValue();
         $colprice3 = $this->iform->colprice3->getValue();
@@ -236,12 +240,13 @@ class Import extends \App\Pages\Base
         $save['colinprice']=$colinprice;
         $save['colmsr']=$colmsr;
         $save['colcell']=$colcell;
+        $save['coluktz']=$coluktz;
         $save['colbrand']=$colbrand;
         $save['coldesc']=$coldesc;
         $save['colimage']=$colimage;
         $save['colshortname']=$colshortname;
         $save['colminqty']=$colminqty;
-        $save['colwar']=$colwar;
+      
   
         $letters=[];
         foreach($save as $s){
@@ -303,6 +308,7 @@ class Import extends \App\Pages\Base
                     'colprice5'  => $row[$colprice5] ?? '',
                     'colbrand'   => $row[$colbrand] ?? '',
                     'colcell'    => $row[$colcell] ?? '',
+                    'coluktz'    => $row[$coluktz] ?? '',
                     'coldesc'    => $row[$coldesc] ?? ''
                 );
             }
@@ -324,11 +330,13 @@ class Import extends \App\Pages\Base
             $itemname = trim($row[$colname] ?? '');
             $itembarcode = trim($row[$colbarcode] ?? '');
             $cell = trim($row[$colcell] ?? '');
+            $uktz = trim($row[$coluktz] ?? '');
             $msr = trim($row[$colmsr] ?? '');
             $desc = trim($row[$coldesc] ?? '');
             $catname = trim($row[$colcat] ?? '');
             $image = trim($row[$colimage] ?? '');
             $warranty = trim($row[$colwar]);
+            $notes = trim($row[$colnotes]);
             $shortname = trim($row[$colshortname] ?? '');
             $minqty = trim($row[$colminqty] ?? '');
             $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
@@ -379,10 +387,12 @@ class Import extends \App\Pages\Base
             if($colbarcode !='0') $item->bar_code = $itembarcode;
             if($colmsr !='0')         $item->msr = $msr;
             if($colcell !='0')        $item->cell = $cell;
-            if($colbrand   !='0')       $item->manufacturer = $brand;
+            if($coluktz !='0')        $item->uktz = $uktz;
+            if($colbrand   !='0')     $item->manufacturer = $brand;
             if($coldesc !='0')        $item->description = $desc;
             if($colshortname !='0')   $item->shortname = $shortname;
             if($colwar !='0')    $item->warranty = $warranty;
+            if($colnotes !='0')    $item->notes = $notes;
 
             
             if ($colprice1 !='0') $item->price1 = doubleval($price1) ;
@@ -436,7 +446,7 @@ class Import extends \App\Pages\Base
             $itlist = array();
             foreach ($newitems as $item) {
                 $itlist[$item->item_id] = $item;
-                $amount = $amount + ($item->quantity * $item->price);
+                $amount = $amount + (doubleval($item->quantity) * doubleval($item->price ));
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);

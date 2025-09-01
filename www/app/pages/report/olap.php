@@ -53,7 +53,7 @@ class OLAP extends \App\Pages\Base
         $this->reppan->filter->add(new DropDownChoice('slcustomer_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slservice_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('sldocument_date', array(), 0));
-        $this->reppan->filter->add(new DropDownChoice('slfirm_name', array(), 0));
+
         $this->reppan->filter->add(new DropDownChoice('slusername', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slmf_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slstorename', array(), 0));
@@ -76,7 +76,7 @@ class OLAP extends \App\Pages\Base
 
         $dim['document_date'] = "Дата";
         $dim['customer_name'] = "Контрагент";
-        $dim['firm_name'] = "Фірма";
+  
         $dim['username'] = "Співробітник";
 
         if($type  < 4) {
@@ -87,10 +87,11 @@ class OLAP extends \App\Pages\Base
 
         }
 
-        if($type==4) {
+        if($type==4 || $type==7 ) {
             $dim['service_name'] = "Послуга";
 
         }
+      
 
         if($type==5) {
             $dim['mf_name'] = "Рахунок";
@@ -155,7 +156,7 @@ class OLAP extends \App\Pages\Base
         $this->_tvars['service_name']  = in_array('service_name', $cols);
         $this->_tvars['customer_name']  = in_array('customer_name', $cols);
         $this->_tvars['storename']  = in_array('storename', $cols);
-        $this->_tvars['firm_name']  = in_array('firm_name', $cols);
+  
         $this->_tvars['mf_name']  = in_array('mf_name', $cols);
         $this->_tvars['username']  = in_array('username', $cols);
         $this->_tvars['branch_name']  = in_array('branch_name', $cols);
@@ -249,6 +250,9 @@ class OLAP extends \App\Pages\Base
         }
         if($type==5) {
             $data = "sum(amount) "  ;
+        }
+        if($type==7) {
+            $data = "sum(outprice-cost) "  ;
         }
         if($type==6) {
             $data = "count(document_id) "  ;
@@ -383,9 +387,10 @@ class OLAP extends \App\Pages\Base
                 COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
-                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+               
                 COALESCE(uv.username ,'Н/Д') AS username,
                 COALESCE(ev.partion,0) AS partion, 
+      
                 COALESCE(ev.outprice,0) AS outprice   
                 FROM entrylist_view ev   
                 JOIN documents dv ON ev.document_id = dv.document_id
@@ -393,14 +398,14 @@ class OLAP extends \App\Pages\Base
                 JOIN store_stock_view ssv ON ev.stock_id = ssv.stock_id
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
-                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+               
                 LEFT JOIN branches b ON dv.branch_id = b.branch_id
                 where  {$where}
                 
                 ";
         }
 
-        if($type == 4) {   //услуга
+        if($type == 4 || $type == 7) {   //услуга
 
 
 
@@ -408,16 +413,17 @@ class OLAP extends \App\Pages\Base
                 COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
-                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+                
                 COALESCE(uv.username ,'Н/Д') AS username,
-                COALESCE(ev.outprice,0) AS outprice   
+                COALESCE(ev.outprice,0) AS outprice,   
+                COALESCE(ev.cost,0) AS cost    
                 FROM entrylist_view ev   
                 JOIN documents dv ON ev.document_id = dv.document_id
                 JOIN services ss ON ev.service_id = ss.service_id
 
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
-                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+               
                 LEFT JOIN branches b ON dv.branch_id = b.branch_id
                 where  {$where}
                 
@@ -438,14 +444,14 @@ class OLAP extends \App\Pages\Base
                 COALESCE(c.customer_name,'Н/Д') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
-                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+              
                 COALESCE(uv.username ,'Н/Д') AS username,
                 COALESCE(pv.amount,0) AS amount 
                 FROM paylist_view pv   
                 JOIN documents dv ON pv.document_id = dv.document_id
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
-                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+             
                 LEFT JOIN branches b ON dv.branch_id = b.branch_id
                 where dv.meta_name in('GoodsIssue', 'POSCheck','OrderFood','ServiceAct') and  {$where}
                 
@@ -464,7 +470,7 @@ class OLAP extends \App\Pages\Base
                 COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
-                COALESCE(f.firm_name,'Н/Д') AS firm_name,
+               
                 COALESCE(uv.username ,'Н/Д') AS username,
                 dv.document_id    
                 FROM entrylist_view ev   
@@ -474,7 +480,7 @@ class OLAP extends \App\Pages\Base
                 LEFT JOIN store_stock_view ssv ON ev.stock_id = ssv.stock_id
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
-                LEFT JOIN firms f ON dv.firm_id = f.firm_id 
+           
                 LEFT JOIN branches b ON dv.branch_id = b.branch_id
                 where  {$where}
                 
@@ -496,7 +502,7 @@ class OLAP extends \App\Pages\Base
 
         $_cols[] = 'document_date';
         $_cols[] = 'customer_name';
-        $_cols[] = 'firm_name';
+   
         $_cols[] = 'username';
 
         if($type < 4) {
@@ -507,6 +513,9 @@ class OLAP extends \App\Pages\Base
         }
 
         if($type== 4) {
+            $_cols[] = 'service_name';
+        }
+        if($type== 7) {
             $_cols[] = 'service_name';
         }
 

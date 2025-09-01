@@ -37,6 +37,9 @@ class CategoryList extends \App\Pages\Base
 
         $this->add(new Panel('categorytable'))->setVisible(true);
         $this->categorytable->add(new DataView('categorylist', new ArrayDataSource($this, '_catlist'), $this, 'categorylistOnRow'));
+        $this->categorytable->categorylist->setPageSize(\App\Helper::getPG());
+        $this->categorytable->add(new \Zippy\Html\DataList\Paginator('pag', $this->categorytable->categorylist));
+        
         $this->categorytable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->add(new Form('categorydetail'))->setVisible(false);
         $this->categorydetail->add(new TextInput('editcat_name'));
@@ -48,6 +51,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->add(new TextInput('editprice3'));
         $this->categorydetail->add(new TextInput('editprice4'));
         $this->categorydetail->add(new TextInput('editprice5'));
+        $this->categorydetail->add(new TextInput('editnds'));
         
         $this->add(new Form('categoryprice'))->setVisible(false);
         $this->categoryprice->add(new Label('catprname')) ;
@@ -232,6 +236,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->editprice3->setText($this->_category->price3);
         $this->categorydetail->editprice4->setText($this->_category->price4);
         $this->categorydetail->editprice5->setText($this->_category->price5);
+        $this->categorydetail->editnds->setText($this->_category->nds);
 
         if ($this->_category->image_id > 0) {
             $this->categorydetail->editdelimage->setChecked(false);
@@ -263,7 +268,7 @@ class CategoryList extends \App\Pages\Base
         }
 
         $pid=$this->categorydetail->editparent->getValue() ;
-        $this->_category->parent_id = $pid >0 ? $pid  :null;
+        $this->_category->parent_id = $pid >0 ? $pid  :0;
         $this->_category->cat_name = $this->categorydetail->editcat_name->getText();
         $this->_category->cat_desc = $this->categorydetail->editcat_desc->getText();
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
@@ -279,6 +284,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->price3 = $this->categorydetail->editprice3->getText();
         $this->_category->price4 = $this->categorydetail->editprice4->getText();
         $this->_category->price5 = $this->categorydetail->editprice5->getText();
+        $this->_category->nds = $this->categorydetail->editnds->getText();
 
         //delete image
         if ($this->categorydetail->editdelimage->isChecked()) {
@@ -291,7 +297,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->save();
 
         $file = $this->categorydetail->editaddfile->getFile();
-        if (strlen($file["tmp_name"]) > 0) {
+        if (strlen($file["tmp_name"]??'') > 0) {
             
             if (filesize($file["tmp_name"])  > 1024*1024) {
 

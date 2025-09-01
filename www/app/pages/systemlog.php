@@ -44,7 +44,7 @@ class SystemLog extends \App\Pages\Base
         
         $files = scandir(_ROOT.'logs');
         foreach($files as $f){
-           if(strpos($f,'.log') > 0 )  {
+           if(strpos($f,'.txt') > 0 )  {
                $di= new \App\DataItem()  ;
                $di->fname=$f;
                $flist[]=$di;

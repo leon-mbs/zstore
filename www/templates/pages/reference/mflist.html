@@ -90,15 +90,37 @@
                         <label for="editbankacc" data-label="editbankacc">Розрахунковий рахунок</label>
                         <input class="form-control" type="text" zippy="editbankacc">
                     </div>
-                 
+                     <div class="form-group">
+                        <label for="editiban" data-label="editiban">IBAN</label>
+                        <input class="form-control" type="text" zippy="editiban">
+                   </div> 
                     <div class="form-group">
-                        <label for="editbtran" data-label="editbtran">Процент банку, видаток</label>
-                        <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtran"/>
+                            <label for="editpayname" data-label="editpayname">Платник/Одержувач</label>
+                            <input class="form-control" type="text" zippy="editpayname">
+                            
+                    </div>                    
+                                 
+                    <div class="form-group row">
+                            <label class="col-6 col-form-label" for="edittin" data-label="edittin">ЄДРПОУ/IПН</label>
+                            <div class="col-6">
+                                <input class="form-control" type="text" zippy="edittin">
+                            </div>
+                            
+                                        
+                    </div>                    
+                          
+                    <div class="form-group row">
+                        <label class="col-8 col-form-label" for="editbtran" data-label="editbtran">Процент банку, видаток</label>
+                        <div class="col-4">
+                          <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtran"/>
+                         </div>
                         <small  data-label="editbtran">Процент, який банк бере за перевод суми з рахунку. </small>
                     </div>
-                    <div class="form-group">
-                        <label for="editbtranin" data-label="editbtranin">Процент банку, прибуток</label>
-                        <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtranin"/>
+                    <div class="form-group row">
+                        <label class="col-8 col-form-label" for="editbtranin" data-label="editbtranin">Процент банку, прибуток</label>
+                        <div class="col-4">
+                          <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtranin"/>
+                        </div>
                         <small data-label="editbtranin">Процент, який банк бере за переказ суми на рахунок </small>
                     </div>
                      <div class="form-check">

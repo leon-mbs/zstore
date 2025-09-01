@@ -44,9 +44,10 @@ class ProdIssue extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", "disabled<>1","pa_name"), 0));
         $this->docform->add(new TextArea('notes'));
 
+        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -75,6 +76,7 @@ class ProdIssue extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->parea->setValue($this->_doc->headerdata['parea']);
@@ -92,6 +94,9 @@ class ProdIssue extends \App\Pages\Base
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
+                        $this->_doc->headerdata['st_id'] = $basedoc->headerdata['st_id'];
+                        $this->_doc->headerdata['pp_id'] = $basedoc->headerdata['pp_id'];
+                                   
                        //комплекты
                         foreach($basedoc->unpackDetails('prodlist') as $prod) {
                             $set =  \App\Entity\ItemSet::find("item_id > 0  and pitem_id=" . $prod->item_id);
@@ -333,6 +338,8 @@ class ProdIssue extends \App\Pages\Base
         $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
+        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -393,8 +400,7 @@ class ProdIssue extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+  
 
         $this->docform->barcode->setText('');
         if ($code == '') {
@@ -406,19 +412,16 @@ class ProdIssue extends \App\Pages\Base
             $this->setError('Не обрано склад');
             return;
         }
-        $code0 = Item::qstr($code0);
+  
+        $item = Item::findBarCode($code,$store_id );
 
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and  (item_code = {$code_} or bar_code = {$code_} or item_code = {$code0} or bar_code = {$code0} )");
 
         if ($item == null) {
             $this->setError("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
-
-        $store_id = $this->docform->store->getValue();
-
+       
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
             $this->setError("Товару {$item->itemname} немає на складі");

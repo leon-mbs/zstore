@@ -41,9 +41,12 @@ class ProdReceipt extends Document
                         "pareaname"       => $this->headerdata["pareaname"] ??'',
                         "storename"       => $this->headerdata["storename"]??'',
                         "notes"           => nl2br($this->notes),
-                        "total"           => H::fa($this->amount)
+                        "emp"             => false,
+                      "total"           => H::fa($this->amount)
         );
-
+        if ($this->headerdata["emp"] > 0  ) {
+            $header['emp'] = $this->headerdata["empname"];
+        }
         $report = new \App\Report('doc/prodreceipt.tpl');
 
         $html = $report->generate($header);
@@ -54,9 +57,13 @@ class ProdReceipt extends Document
     public function Execute() {
         $types = array();
         $common = \App\System::getOptions("common");
-
+        $lost = 0;
+        $cost = 0;
+        
         foreach ($this->unpackDetails('detaildata') as $item) {
-
+            if($item->zarp > 0) {
+                $cost += doubleval($item->zarp * $item->quantity) ;
+            }
             if ($item->autooutcome == 1) {  //списание  комплектующих
                 $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                 foreach ($set as $part) {
@@ -67,13 +74,13 @@ class ProdReceipt extends Document
                         continue;
                     }
                     
-                    //учитываем  отходы
-                    if ($itemp->lost > 0) {
-                        $kl = 1 / (1 - $itemp->lost / 100);
-                        $itemp->quantity = $itemp->quantity * $kl;
-                        $lost = $kl - 1;
-                    }
-                    
+                       //учитываем  отходы
+                        $kl=0;
+                        if ($itemp->lost > 0) {
+                            $kl = 1 / (1 - $itemp->lost / 100);
+                            $itemp->quantity = $itemp->quantity * $kl;
+                                              
+                        }
                     $itemp->quantity = $item->quantity * $part->qty;
                     if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
                         throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
@@ -88,15 +95,9 @@ class ProdReceipt extends Document
 
                         $sc->save();
                         
-                        if ($lost > 0) {
-                            $io = new \App\Entity\IOState();
-                            $io->document_id = $this->document_id;
-                            $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                            $io->save();
-
-                        }    
+                        if ($kl > 0) {
+                             $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
+                        }     
                         
                     }
                 }
@@ -113,7 +114,41 @@ class ProdReceipt extends Document
             $sc->save();
         }
 
+       if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $this->document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
 
+            $io->save();
+       }
+       if ($this->getHD('emp') > 0 && $cost > 0 ) {
+    
+            $ua = new \App\Entity\EmpAcc();
+            $ua->optype = \App\Entity\EmpAcc::PRICE;
+            $ua->document_id = $this->document_id;
+            $ua->emp_id = $this->getHD('emp');
+            $ua->amount = $cost;
+            $ua->save();  
+         
+            $emp  = \App\Entity\Employee::load($ua->emp_id)  ;
+     
+            $user = \App\Entity\User::getByLogin($emp->login) ;
+                             
+            if($user != null){
+                $n = new \App\Entity\Notify();
+                $n->user_id = $user->user_id; 
+                $n->message = "Нараховано до сплати {$cost} ({$this->document_number})"    ;
+                $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                $n->save();   
+            }                   
+              
+        } 
+        if ($this->getHD('st_id') > 0 && $cost > 0 ) {
+          //  $st = \App\Entity\ProdStage::load($this->getHD('st_id') ) ;
+            
+           
+        } 
         return true;
     }
 

@@ -79,12 +79,12 @@ class OrderCustList extends \App\Pages\Base
         $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
         $row->add(new Label('date', H::fd($doc->document_date)));
         $delivery ="";
-        if($doc->headerdata['delivery_date'] >0) {
-              $delivery =  H::fd($doc->headerdata['delivery_date']);
+        if($doc->getHD('delivery_date',0) >0) {
+              $delivery =  H::fd($doc->getHD('delivery_date',0));
         }
       
         $row->add(new Label('delivery', $delivery));
-        if($doc->headerdata['delivery_date'] >0 && $doc->headerdata['delivery_date'] < time() && $doc->state== Document::STATE_INPROCESS  ) {
+        if($doc->getHD('delivery_date',0)>0 && $doc->getHD('delivery_date',0) < time() && $doc->state== Document::STATE_INPROCESS  ) {
               $row->delivery->setAttribute('class','text-danger');
         }
         

@@ -11,6 +11,7 @@ use App\Entity\EmpAcc;
 use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
+use App\Entity\IOState;
 
 use Zippy\Html\Label;
 
@@ -136,6 +137,8 @@ class CalcSalary extends \App\Pages\Base
         $this->_doc->headerdata['daysmon'] = $post->doc->daysmon;
         $this->_doc->headerdata['year'] = $post->doc->year;
         $this->_doc->headerdata['month'] = $post->doc->month;
+        $this->_doc->headerdata['iostate'] = $post->doc->iostate;
+        $this->_doc->headerdata['department'] = $post->doc->department;
         $mlist = \App\Util::getMonth();
         $this->_doc->headerdata['monthname'] = $mlist[$post->doc->month] ;
 
@@ -168,6 +171,7 @@ class CalcSalary extends \App\Pages\Base
             }          
              
             $emp->_baseval = $e->_baseval;
+            $emp->_tasksum = $e->tasksum;
           
             $this->_list[]= $emp;
         }
@@ -250,7 +254,7 @@ class CalcSalary extends \App\Pages\Base
 
         }
         
-        $etasklist = []; 
+        
         
         $from =''.$post->year .'-'. $post->month .'-01' ;
         $from =  strtotime($from);
@@ -266,44 +270,21 @@ class CalcSalary extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
-       //по нарядам
-       $where = "   meta_name='Task'   
-              AND   document_date  >= " . $conn->DBDate($from) . "
-              AND   document_date  <= " . $conn->DBDate($to) . "
-                
-        and state= " . Document::STATE_CLOSED;      
-        if (strlen($brids) > 0) {
-            $where = " and branch_id in ({$brids}) ";
-        }     
-        
-       foreach (Document::findYield($where) as $doc) {
-
-            $emplist = $doc->unpackDetails('emplist');
-            if (count($emplist) == 0) {
-                continue;
-            }        
-            $total = 0;
-        
-            foreach ($doc->unpackDetails('detaildata') as $service) {
-                $ser = \App\Entity\Service::load($service->service_id);
-
-                $total += (doubleval($ser->cost) * doubleval($service->quantity)) ;
-              
-            }    
-    
-            foreach ($emplist as $emp) {
-
-               if(!isset($etasklist[$emp->employee_id])){
-                  $etasklist[$emp->employee_id]=0;  
-               }
-                
-
-                $etasklist[$emp->employee_id] += round($total * $emp->ktu);
-              
-            }        
-            
-                  
+       //сдельная
+       
+       $etasklist = []; 
+       $be="";
+       if (strlen($brids) > 0) {
+          $be = " and document_id in(select document_id from documents where branch_id in ({$brids}) )   ";
        }  
+       
+       
+       $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = 104 {$be} AND DATE(createdon) >= {$from}   AND DATE(createdon) <= " .$to . "  group by  emp_id   ";
+      
+       foreach($conn->Execute($sql) as $r){
+          $etasklist[$r['emp_id']]  =  $r['am'];
+       }
+      
         //по  продажам
         $sqlitem = "
                   select   sum(0-e.quantity*e.outprice) as summa 
@@ -330,9 +311,9 @@ class CalcSalary extends \App\Pages\Base
 
         $ret=[];
         $ret['newdoc'] = $this->_doc->document_id == 0 ;
-        $ret['emps'] = array() ;
-
-        $ret['opt'] = array() ;
+        $ret['emps'] = [] ;
+  
+        $ret['opt'] = [];
         $ret['opt']['coderesult']  =  $opt['coderesult'];
         $ret['opt']['codebaseincom']  =  $opt['codebaseincom'];
 
@@ -404,6 +385,7 @@ class CalcSalary extends \App\Pages\Base
             $e['salarytype'] = $emp->ztype ;
             $e['salarym'] = $emp->zmon  ;
             $e['salaryh'] = $emp->zhour  ;
+            $e['department'] = $emp->department  ;
             
          
 
@@ -412,9 +394,18 @@ class CalcSalary extends \App\Pages\Base
             }
             $e['_baseval'] = $emp->_baseval  ??0 ;
     
+            if(strlen($post->department ??'') >0)  {
+               if($e['department'] != $post->department )   {
+                   continue;
+               }
+            }
+    
             $ret['emps'][] = $e;
         }
 
+        
+ 
+        
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
     }
 
@@ -437,7 +428,14 @@ class CalcSalary extends \App\Pages\Base
         foreach($this->_stlist as $st) {
             $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
         }
-
+    
+        $pd = Employee::getDP() ;
+        $ret['deps'] = $pd['d'] ;
+        $ret['iostates'] = [] ; 
+        foreach(IOState::getTypeListSal()as $k=>$v) {
+            $ret['iostates'][]=['key'=>$k,'value'=>$v];
+        }    
+        
         $ret['doc'] = [] ;
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
         $ret['doc']['document_number']   =   $this->_doc->document_number ;
@@ -446,6 +444,8 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
+        $ret['doc']['iostate']   =   $this->_doc->headerdata['iostate'] ??0;
+        $ret['doc']['department']   =   $this->_doc->headerdata['department'] ??'';
 
 
         return json_encode($ret, JSON_UNESCAPED_UNICODE);

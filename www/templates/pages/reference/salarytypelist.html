@@ -23,8 +23,9 @@
        <div class="row"    >
        
                <div zippy="tablepan"  class="col-12  col-md-8  col-xl-6" >
-                <h3>Довідник нарахувань та утримань </h3>    
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
+                <h4>Коди нарахувань та утримань </h4>    
+                <small>За замовчанням коди до 200 - нарахування </small>    
+                   <br> <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
                             <th>Найменування</th>
@@ -59,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editcode">Код                        </label>
-                        <input style="width:75px;" pattern="[0-9]{3}"  required  class="form-control" zippy="editcode"/>
+                        <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required  class="form-control" zippy="editcode"/>
                         <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.
                          </small>
                     </div>
@@ -80,7 +81,7 @@
        </div>
   </div>
   <div class="tab-pane  " id="calctab"  >
-     <h3>Формули розрахунку зарплати</h3>   
+     <h4>Формули розрахунку зарплати</h4>   
       <div class="row"    >
        <div class="col-12 col-md-6 col-xl-4"    >
          
@@ -88,12 +89,12 @@
              <div class="form-group">
                 <label for="calcbase">Розрахунок основної зарплати</label>             
                 <textarea style="height:100px;width:300px" class="form-control" zippy="calcbase" ></textarea>
-                <span>Виконується однократно для заповнення поля  редагування</span>
+                <small>Виконується однократно для заповнення поля  редагування</small>
              </div> 
              <div class="form-group">
                 <label for="calc">Розрахунок нарахувань та утримань </label>
                 <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
-                <span>Виконується після редагування основної зарплати</span>
+                <small>Виконується після редагування основної зарплати</small>
            </div> 
              <div class="form-group">
                     
@@ -113,7 +114,7 @@
        <b>salarym</b> - оклад    <br>
        <b>salaryh</b> - погодинна  сума    <br>
        <b>sellvalue</b> - виручка   по продажних документах співробітника <br>
-       <b>tasksum</b> - сума  по нарядах <br>
+       <b>tasksum</b> - сума  по вiдрядному  виробництву <br>
        <b>hours</b> - робочi години з облiку часу <br>
        <b>days</b> - робочi днi з облiку часу <br>
        <b>hours_over</b> - переробка <br>
@@ -156,7 +157,7 @@
        
   </div>
   <div class="tab-pane  " id="optiontab"  >
-     <h3>Налаштування </h3>
+     <h4>Налаштування </h4>
     <div class="row"    >
        <div class="col-12 col-md-6 col-xl-4"    >
          
@@ -214,13 +215,10 @@
   </div>
 </div>           
 </div>           
-                     
-                 
-                
-                
-            </div>
-        </div>
-        </div>
+   </div>
+      
+  </div>
+</div>
            <script>               
          function check_delete() {
                 return confirm("Видалити?")

@@ -25,22 +25,28 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
- 
-         
-        
-        $this->_tvars['curversion'] = System::CURR_VERSION ;
+      
+        //миграция  данных
+        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
+            Helper::migration() ;
+            Session::getSession()->migrationcheck = true;
+        }       
+      //  $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
 
         //опции
-        $this->_tvars["usescanner"] = $options['usescanner'] == 1 || $options['usemobilescanner'] == 1;
-        $this->_tvars["usemobilescanner"] = $options['usemobilescanner'] == 1;
+        $this->_tvars["usescanner"] = $options['usescanner'] == 1  ;
+
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
-        $this->_tvars["useval"] = $options['useval'] == 1;
+        $this->_tvars["usefood"] = $options['usefood'] == 1;
+        $this->_tvars["useprod"] = $options['useprod'] == 1;
+        $this->_tvars["usends"] = $options['usends'] == 1;
+        $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
         $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
+        $this->_tvars["storeemp"] = $options['storeemp'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
         $this->_tvars["canevent"] = $user->canevent == 1;
         if($user->rolename=='admins') {
@@ -136,7 +142,6 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
-        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
        
 
@@ -182,9 +187,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
-        if (strpos(System::getUser()->modules ?? '', 'horoshop') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["horoshop"] = false;
-        }
+     
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
         }
@@ -199,7 +202,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
-            $this->_tvars["horoshop"] ||
+  
          
             $this->_tvars["vdoc"] ||
             $this->_tvars["np"]
@@ -230,46 +233,7 @@ class Base extends \Zippy\Html\WebPage
         //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
 
-        //активные   пользователий
-        if ($options['showactiveusers'] == 1) {
-            $this->_tvars["showactiveusers"] = true;
-            $this->_tvars["activeuserscnt"] = 0;
-            $this->_tvars["aulist"] = array();
-
-            $conn = \ZDB\DB::getConnect();
-            $conn->Execute("update users  set  lastactive = now() where  user_id= " . $user->user_id);
-
-
-            $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
-          
-
-            if ($this->branch_id > 0) {
-                $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
-            }
-
-
-            $users = \App\Entity\User::findArray('username', $w, 'username');
-            foreach ($users as $id => $u) {
-                if ($id == $user->user_id) {
-                    $id = null;
-                }
-                $this->_tvars["aulist"][] = array("auserid" => $id, 'ausername' => $u);
-            }
-
-
-            $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
-
-        }
-        //чат
-        if ($options['showchat'] == 1) {
-            $this->_tvars["showchat"] = true;
-
-            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id'] ?? 0));
-
-            $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;
-
-        }
-
+  
   
      
     //    $duration =  Session::getSession()->duration() ;
@@ -285,15 +249,7 @@ class Base extends \Zippy\Html\WebPage
               }         
         }
         
- 
-
-        //миграция  данных
-        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
-            Helper::migration() ;
-            Session::getSession()->migrationcheck = true;
-        }
-       
-       
+          
     
     }
 
@@ -568,14 +524,15 @@ class Base extends \Zippy\Html\WebPage
     /**
     * добавляет строку  заказа в  заявку  поставщику
     * 
-    * @param mixed $args
+    * @param mixed $args   $args[0] - item_id;  $args[1]  - количество
     * @param mixed $post
     * @return mixed
     */
     public function addItemToCO($args, $post=null) {
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
-            $d = \App\Entity\Doc\Document::load($e->document_id)  ;
+ 
+            $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
 
             if($d == null) {
                 return "По  даному  ТМЦ  закупок не  було";
@@ -583,7 +540,7 @@ class Base extends \Zippy\Html\WebPage
             $price = $e->partion;
             $quantity = $e->quantity;
             $customer_id = $d->customer_id;
-            if($args[1] > 0) {
+            if(($args[1] ??0)  > 0) {
                 $quantity = $args[1] ;
             }
             //ищем незакрытую заявку
@@ -678,14 +635,14 @@ class Base extends \Zippy\Html\WebPage
 
     public function vonTextCust($args, $post=null) {
 
-        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]));
+        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]??null));
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
     public function vonTextItem($args, $post=null) {
 
-        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1], $args[2]));
+        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1]??null, $args[2]??null));
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
@@ -724,7 +681,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['itemname'] = $item->itemname;
 
             $ret['price'] = $item->getPriceEx(array(
-                 'pricetype'=>$p['pt'],
+                 'pricetype'=>$p['pt']??0,
                  'store'=>$p['store'] ,
                  'customer'=>$p['customer']
 
@@ -824,10 +781,7 @@ class Base extends \Zippy\Html\WebPage
             $stores = \App\Entity\Store::getList() ;
             $ret['stores'] =  \App\Util::tokv($stores) ;
         }
-        if($post->firms ?? null) {
-            $firms = \App\Entity\Firm::getList() ;
-            $ret['firms'] =  \App\Util::tokv($firms) ;
-        }
+      
         if($post->mfs ?? null) {
             $mfs = \App\Entity\MoneyFund::getList() ;
             $ret['mfs'] =  \App\Util::tokv($mfs) ;
@@ -846,7 +800,7 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    //для vue
+   
     public function vgetPriceByQty($args, $post) {
         $post = json_decode($post) ;
 

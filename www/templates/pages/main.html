@@ -8,7 +8,8 @@
     </head>
 
     <body>
-        {{#winfo}}
+        {{#dashboard}}
+  
 
         <div class="row  "  >
             <div class="col-6 col-sm-4 col-lg-2 ">
@@ -64,9 +65,7 @@
       
 
         </div>
-        {{/winfo}}
-
-        {{#wgraph}}
+   
 
         <div class="row">
 
@@ -99,14 +98,14 @@
                 </div>    
             </div>
         </div>     
-        {{/wgraph}}    
+     
+        {{/dashboard}}    
 
         <div class="row">  
 
            <div   class="col-12 col-lg-6 ">
  
-
-            {{#wrdoc}}
+         
 
 
                 <div   class="card ">
@@ -138,10 +137,8 @@
                         <div zippy="wrpag"></div>    
                     </div>
                 </div>
-      
-            {{/wrdoc}}
-
-            {{#wmdoc}}
+             </div> 
+           <div   class="col-12 col-lg-6 ">
            
                 <div   class="card ">
                     <div   class="card-body">
@@ -167,41 +164,13 @@
                     </div>
                 </div>
 
-            {{/wmdoc}}
-            </div>      
-             <div   class="col-12 col-lg-6 ">
-                    
-            {{#wsdate}}
-                   <div   class="card ">
-                    <div   class="card-body">
-                        <h4>Простроченi товари</h4>
-                        <small>Товари для котрих закiнчився термін придатностi</small>
-                        <br><a zippy="sdcsv">Експорт у Excel</a>
-                        <table class="table   table-sm">
-                            <tr>
-
-                                <th>Склад</th>
-                                <th>Товар</th>
-                                <th>Серiя</th>
-                                <th>Придатний до</th>
-                                <th class="text-right">Кiл.</th>
-                            </tr>
-                            <tr zippy="sdlist" >
-                                <td zippy="wsd_storename"></td>
-                                <td zippy="wsd_itemname"></td>
-                                <td zippy="wsd_snumber"></td>
-                                <td><span zippy="wsd_edate"></span></td>
-                                <td zippy="wsd_qty" class="text-right"></td>
-                            </tr>
-                        </table>
-                        <div zippy="sdpag" ></div>               
-
-                    </div>
-                </div>
-         
-            {{/wsdate}}
             
-            {{#wminqty}}
+            </div>   
+            
+  {{#dashboard}}            
+               
+             <div   class="col-12 col-lg-6 ">
+    
          
                 <div   class="card ">
                     <div   class="card-body">
@@ -231,11 +200,44 @@
                         <div zippy="mqpag"></div>        
                     </div>
                 </div>
-               
-            {{/wminqty}}
-             
+           </div>    
+            <div   class="col-12 col-lg-6 ">
+                   
+            {{#usesnumberdate}}
+                   <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Простроченi товари</h4>
+                        <small>Товари для котрих закiнчився термін придатностi</small>
+                        <br><a zippy="sdcsv">Експорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+
+                                <th>Склад</th>
+                                <th>Товар</th>
+                                <th>Серiя</th>
+                                <th>Придатний до</th>
+                                <th class="text-right">Кiл.</th>
+                            </tr>
+                            <tr zippy="sdlist" >
+                                <td zippy="wsd_storename"></td>
+                                <td zippy="wsd_itemname"></td>
+                                <td zippy="wsd_snumber"></td>
+                                <td><span zippy="wsd_edate"></span></td>
+                                <td zippy="wsd_qty" class="text-right"></td>
+                            </tr>
+                        </table>
+                        <div zippy="sdpag" ></div>               
+
+                    </div>
+                </div>
+         
+            {{/usesnumberdate}}
+            
+                     
       
         </div>
+        
+   {{/dashboard}}         
       </div>
    
  

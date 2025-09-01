@@ -29,7 +29,7 @@ class PPOHelper
 
         try {
 
-            $pposigntype = $pos->pposigntype;
+           
             $serhost = $pos->ppohost;
             $serport = $pos->ppoport;
             $usessl = $pos->ppousessl;
@@ -38,87 +38,19 @@ class PPOHelper
             $certdata = $pos->ppocert;
             $isjks = $pos->ppoisjks;
 
-            if ($pposigntype == 1 || $pposigntype == 2) {     //server
+    
+            $key = @unserialize(@base64_decode($pos->ppokey));
+            $cert = @unserialize(@base64_decode($pos->ppocert));
 
-                $req = array();
-                $req['serversidekey'] = $pposigntype == 2;
-                $req['data'] = base64_encode($data);
-
-                if ($pposigntype == 1) {
-
-                    if (strlen($password) == 0 || strlen($keydata) == 0) {
-                        return array('success' => false, 'data' => 'Не заданий  ключ');
-
-
-                    }
-
-                    if ($isjks != 1 &&  strlen($certdata) == 0) {
-                        return array('success' => false, 'data' => 'Не заданий  ключ');
-
-
-                    }
-                    $req['password'] = $password;
-                    $req['key'] =  ($keydata);
-                    $req['cert'] =  ($certdata);
-
-
-                }
-
-                $json = json_encode($req);
-
-                $serhost = rtrim($serhost, '/');
-
-                $request = curl_init();
-                $url =   $serhost. ":" .$serport . ($isjks == 1 ? "/signjks" : "/sign")  ;
-
-                curl_setopt_array($request, [
-                    CURLOPT_PORT           => $serport,
-                    CURLOPT_URL            => $url,
-                    CURLOPT_POST           => true,
-                    CURLOPT_ENCODING       => "",
-                    CURLOPT_MAXREDIRS      => 10,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_CONNECTTIMEOUT => 20,
-                    CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_SSL_VERIFYPEER => $usessl == 1,
-                    CURLOPT_POSTFIELDS     => $json
-                ]);
-                //самоподписаный сертификат
-                $fileselfsert = _ROOT . "config/ssl.ser";
-                if(file_exists($fileselfsert)) {
-                    curl_setopt($request, CURLOPT_CAINFO, $fileselfsert) ;
-                }
-
-                $ret = curl_exec($request);
-                if (curl_errno($request) > 0) {
-                    $msg = "sign server error: ".curl_error($request);
-                    $msg = str_replace("'", "\"", $msg) ;
-                    return array('success' => false, 'data' => $msg);
-                }
-
-                curl_close($request);
-                $ret = json_decode($ret);
-                if ($ret->success == false) {
-                    $msg = $ret->error;
-                    $msg = str_replace("'", "\"", $msg) ;
-                    return array('success' => false, 'data' => $ret->error);
-                }
-
-                $signed = base64_decode($ret->data);
-            } else {
-
-                $key = @unserialize(@base64_decode($pos->ppokey));
-                $cert = @unserialize(@base64_decode($pos->ppocert));
-
-                if ($key == null || $cert == null) {
-                    $msg = "Не завантажений ключ або сертифікат";
-                    $msg = str_replace("'", "\"", $msg) ;
-                    return array('success' => false, 'data' => $msg);
-                }
-
-                $signed = PPO::sign($data, $key, $cert);
-
+            if ($key == null || $cert == null) {
+                $msg = "Не завантажений ключ або сертифікат";
+                $msg = str_replace("'", "\"", $msg) ;
+                return array('success' => false, 'data' => $msg);
             }
+
+            $signed = PPO::sign($data, $key, $cert);
+
+      
             if($onlysign == true) {
                 return array('success' => true, 'signed' => $signed);
             }
@@ -144,59 +76,10 @@ class PPOHelper
             if ($type == "doc") {
 
 
-                if ($pposigntype == 1 || $pposigntype == 2) {
-                    $req = array();
-                    $req['serversidekey'] = $pposigntype == 2;
-                    $req['data'] = base64_encode($return);
+                
+               $decrypted = PPO::decrypt($return, true);
 
-
-                    $json = json_encode($req);
-
-                    $serhost = rtrim($serhost, '/');
-
-                    $request = curl_init();
-
-                    curl_setopt_array($request, [
-                        CURLOPT_PORT           => $serport,
-                        CURLOPT_URL            => $serhost . ":" . $serport . "/decrypt",
-                        CURLOPT_POST           => true,
-                        CURLOPT_ENCODING       => "",
-                        CURLOPT_MAXREDIRS      => 10,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_CONNECTTIMEOUT => 20,
-                        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_SSL_VERIFYPEER => $usessl == 1,
-                        CURLOPT_POSTFIELDS     => $json
-                    ]);
-
-                    //самоподписаный сертификат
-                    $fileselfsert = _ROOT . "config/ssl.ser";
-                    if(file_exists($fileselfsert)) {
-                        curl_setopt($request, CURLOPT_CAINFO, $fileselfsert) ;
-                    }
-
-
-                    $ret = curl_exec($request);
-                    if (curl_errno($request) > 0) {
-                        $msg = "sign server error: ".curl_error($request);
-                        $msg = str_replace("'", "\"", $msg) ;
-                        return array('success' => false, 'data' => $msg);
-                    }
-
-                    curl_close($request);
-                    $ret = json_decode($ret);
-                    if ($ret->success == false) {
-                        $msg = $ret->error;
-                        $msg = str_replace("'", "\"", $msg) ;
-                        return array('success' => false, 'data' => $ret->error);
-                    }
-
-                    $decrypted = base64_decode($ret->data);
-
-                } else {
-                    $decrypted = PPO::decrypt($return, true);
-
-                }
+             
 
                 if (substr($decrypted, 0, 5) == "<?xml") {
                     $xml = $decrypted;
@@ -235,15 +118,24 @@ class PPOHelper
 
         $pos = \App\Entity\Pos::load($posid);
 
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
 
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        } 
 
         
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = strlen($firm['tin']) > 0 ? $firm['tin'] : false; 
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = strlen($pos->tin) > 0 ? $pos->tin : false; 
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -279,13 +171,23 @@ class PPOHelper
     public static function zform($posid, $stat, $rstat) {
         $pos = \App\Entity\Pos::load($posid);
 
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
 
         $header = array();
         //    $header['doctype'] = $open == true ? 100 : 101;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -418,16 +320,27 @@ class PPOHelper
  
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
 
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
+        
+        
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
         $header = array();
         //  $header['doctype'] = $doctype;
         //     $header['docsubtype'] = $docsubtype;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['testing'] = $pos->testing==1;
         $header['address'] = $pos->address;
         $header['pointname'] = $pos->pointname;
@@ -675,14 +588,24 @@ class PPOHelper
 
 
         $pos = \App\Entity\Pos::load($pos_id);
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
         $mf = \App\Entity\MoneyFund::load($payment);
 
         $header = array();
 
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+        $header['firmname'] = $pos->firmname ;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -742,15 +665,24 @@ class PPOHelper
 
 
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
-        $firm = \App\Helper::getFirmData($pos->firm_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if(strlen($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if(strlen($pos->inn ??'')=='') {
+            $pos->inn = $firm['inn']  ;
+        }
+        if(strlen($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
 
         $header = array();
-        //  $header['doctype'] = $doctype;
-        //    $header['docsubtype'] = $docsubtype;
-        $header['firmname'] = $firm['firm_name'];
-        $header['inn'] = strlen($firm['inn']) > 0 ? $firm['inn'] : false;
-        $header['tin'] = $firm['tin'];
+  
+        $header['firmname'] = $pos->firmname ;
+        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
         $header['pointname'] = $pos->pointname;
@@ -900,8 +832,7 @@ class PPOHelper
         if ($pos == 0) {
             return;
         }
-        //$branch = \App\Entity\Branch::load($pos->firm_id);
-    
+     
         //"2022-05-01T00:00:00+03:00"
 
         $dt = new  \App\DateTime() ;

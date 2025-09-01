@@ -57,7 +57,11 @@ class Orders extends \App\Pages\Base
 
     public function filterOnSubmit($sender) {
         $modules = System::getOptions("modules");
-
+              
+        $defpaytype=intval($modules['wcpaytype']);
+        $defstore=intval($modules['wcstore']);
+        $defmf=intval($modules['wcmf']);
+ 
         $client = \App\Modules\WC\Helper::getClient();
         $st = $this->filter->eistatus->getValue();
         $this->_neworders = array();
@@ -135,10 +139,10 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
-
-                if($modules['wcmf']>0) {
-                  $neworder->headerdata['payment'] = $modules['wcmf'];
-                }
+                $neworder->headerdata['paytype'] = $defpaytype;  //постоплата
+                $neworder->headerdata['payment'] = $defmf;   
+                $neworder->headerdata['store'] = $defstore;   
+ 
 
 
                 $neworder->document_date = time();
@@ -201,9 +205,7 @@ class Orders extends \App\Pages\Base
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
-            if($modules['wcsetpayamount']==1) {
-                $shoporder->updateStatus(Document::STATE_WP);
-            }
+          
  
 
         }

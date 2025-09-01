@@ -50,7 +50,7 @@
     <th colspan="2" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -78,7 +78,7 @@
 <tr style="font-weight: bolder;">
     <th style="border: solid black 1px;width:120px;">Дата</th>
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
     <th></th>
     <th></th>
 
@@ -111,8 +111,8 @@
     <th colspan="2" style="border: solid black 1px">Найменування</th>
 
     
-    <th align="right" style="border: solid black 1px;width:60px;">Кіл.</th>
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">Кіл.</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
     
  
 </tr>
@@ -143,7 +143,7 @@
     <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
  
 
  

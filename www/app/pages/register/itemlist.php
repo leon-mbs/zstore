@@ -7,12 +7,14 @@ use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
 use App\Entity\Entry;
+use App\Entity\Doc\Document;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -24,6 +26,8 @@ use App\Application as App;
 class ItemList extends \App\Pages\Base
 {
     public $_item;
+    public $_itemr=[];
+    public $_itemb=[];
    
 
     public function __construct() {
@@ -69,6 +73,11 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
+        $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
+        
+        $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+        $this->filter->add(new CheckBox('searchterm' ));
+        
         $this->add(new Panel('itempanel'));
 
         $this->itempanel->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
@@ -87,16 +96,49 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
         $this->detailpanel->add(new Form('iformbay'))->onSubmit($this,'OnToPay');
         $this->detailpanel->iformbay->add(new TextInput('iformbayqty'));
- 
-        $this->OnFilter(null);
+        
+        //в закупке
+        $where = "   meta_name='OrderCust'  and  state= " . Document::STATE_INPROCESS;
+     
+        foreach (Document::findYield($where) as $doc) {
 
+            foreach ($doc->unpackDetails('detaildata') as $item) {
+                if (!isset($this->_itemb[$item->item_id])) {
+                    $this->_itemb[$item->item_id] = 0;
+                }
+                $this->_itemb[$item->item_id] += $item->quantity;
+               
+            }
+        }
+        
+        //в резерве
+        $conn = \ZDB\DB::getConnect() ;
+
+        $sql = "SELECT  i.item_id, sum(ev.quantity) as qty  FROM entrylist_view ev 
+                 JOIN items i ON ev.item_id = i.item_id
+                 WHERE  tag = -64 
+                 GROUP  BY   i.item_id   ";
+                  
+
+        $res = $conn->Execute($sql);        
+        foreach($res as $r) {
+            if (!isset($this->_itemr[$r['item_id']])) {
+                $this->_itemr[$r['item_id']] = 0;
+            }
+            $this->_itemr[$r['item_id']] += (0- $r['qty'] );
+                 
+        }    
          
+        $this->OnFilter(null);
+          
 
     }
 
     public function itemlistOnRow(  $row) {
         $item = $row->getDataItem();
         $store = $this->filter->searchstore->getValue();
+        $emp = $this->filter->searchemp->getValue();
+    
         $row->add(new ClickLink('itemname',$this, 'showOnClick'))->setValue($item->itemname);
    
 
@@ -105,18 +147,21 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cell', $item->cell));
 
-        $qty = $item->getQuantity($store);
+        $qty = $item->getQuantity($store,'',0,$emp);
         $row->add(new Label('iqty', H::fqty($qty)));
+        $row->add(new Label('iqtyr',  ( $this->_itemr[$item->item_id] ??0) > 0 ?  H::fqty($this->_itemr[$item->item_id]) :'' )  );
+        $row->add(new Label('iqtyb',  ( $this->_itemb[$item->item_id] ??0) > 0 ?  H::fqty($this->_itemb[$item->item_id]) :'' )  );
+       
       //  $row->add(new Label('minqty', H::fqty($item->minqty)));
       
         $inprice="";
         if($this->_tvars['noshowpartion'] != true) {
-          $inprice = $item->getPartion($store);  
+          $inprice = $item->getPartion($store,"",$emp);  
         }
         $row->add(new Label('inprice', H::fa($inprice)));
         $pt = $this->filter->searchprice->getValue();
         if($pt=='price') {
-            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store));
+            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store,"",0,$emp));
             
             $pr = ''; 
            
@@ -167,6 +212,7 @@ class ItemList extends \App\Pages\Base
     public function getTotalAmount() {
 
         $store = $this->filter->searchstore->getValue();
+        $emp = $this->filter->searchemp->getValue();
         $pt = $this->filter->searchprice->getValue();
 
         $src = new ItemDataSource($this) ;
@@ -175,10 +221,10 @@ class ItemList extends \App\Pages\Base
         $items = $src->getItems(-1, -1) ;
         $total = 0;
         foreach($items as $item) {
-            $qty = $item->getQuantity($store); 
+            $qty = H::fqty($item->getQuantity($store,"",0,$emp) ); 
             
             if($pt=='price') {
-                $am = $item->getAmount($store);
+                $am = H::fa( $item->getAmount($store,$emp) );
                 if( $sqty==0 && $qty >0) {
                    $total += $am;
                 }
@@ -189,7 +235,7 @@ class ItemList extends \App\Pages\Base
                    $total += $am ;
                 }
             } else {
-                $am= $qty * $item->getPrice($pt, $store);
+                $am= H::fa( $qty * $item->getPrice($pt, $store) );
                 if( $sqty==0 && $qty >0) {
                    $total += $am;
                 }
@@ -210,6 +256,7 @@ class ItemList extends \App\Pages\Base
     public function detailistOnRow($row) {
         $stock = $row->getDataItem();
         $row->add(new Label('storename', $stock->storename));
+        $row->add(new Label('emp_name', $stock->emp_name));
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
@@ -549,7 +596,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
-
+        $emp = $form->searchemp->getValue();
+    
         if ($cat != 0) {
             if ($cat == -1) {
                 $where = $where . " and cat_id=0";
@@ -565,13 +613,22 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             }
         }
         $str="";
+        $wemp="";
+        
+        if ($emp > 0) {
+            $wemp =   " and  emp_id={$emp}  ";
+            $str .= " and emp_id={$emp} ";            
+        }        
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store} {$wemp} ) ";
             $str .= " and store_id={$store}";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  ) ";
+            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  {$wemp} ) ";
         }
-        
+        if ($form->searchterm->isChecked()  ) {   
+            $where = $where . " and item_id in (select item_id from store_stock where sdate is not null and sdate < CURDATE()  ) ";
+            
+        }      
         if($sqty==0) {
            $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str} ) >0 ";
         }
@@ -585,14 +642,16 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
-
+         
             if ($p == false) {
                 $det = Item::qstr('%' . "<cflist>%{$text}%</cflist>" . '%');
                 $text = Item::qstr('%' . $text . '%');
                 $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text}  or detail like {$det}  )  ";
             } else {
                 $text = Item::qstr($text);
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";
+                $text_ = trim($text,"'") ;
+                
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text}   or detail like '%<bar_code1><![CDATA[{$text_}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$text_}]]></bar_code2>%'  or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";
             }
 
 
@@ -604,7 +663,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and item_id in (select item_id from items where  manufacturer = {$brand}  ) ";
 
         }
-
+       
 
         return $where;
     }
@@ -657,6 +716,14 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         $store = $form->searchstore->getValue();
         if ($store > 0) {
             $where = $where . " and   store_id={$store}  ";
+        }
+        if ($form->searchterm->isChecked()  ) {   
+             $where = $where . "   and sdate is not null and sdate < CURDATE()   ";
+            
+        }         
+        $emp = $form->searchemp->getValue();
+        if ($emp > 0) {
+            $where = $where . " and  emp_id={$emp}  ";
         }
           
         return $where;

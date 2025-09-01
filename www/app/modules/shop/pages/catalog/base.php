@@ -56,7 +56,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
-        $this->_tvars["usepayment"] =  ($shop["paysystem"]??0) > 0 ;
+        $this->_tvars["usepayment"] = false;// ($shop["paysystem"]??0) > 0 ;
         $this->_tvars["wp"] = ($shop["paysystem"]??0) == 1;
         $this->_tvars["lp"] = ($shop["paysystem"]??0) == 2;
         $this->_tvars["qr"] = (($shop["paysystem"]??0) == 3 || ($shop["addqr"]??0) ==1) ;
@@ -65,6 +65,11 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');
         $this->searchform->searchitem->onChange($this, 'onSelect');
+     
+        $this->add(new \Zippy\Html\Form\Form('searchformmob'));
+        $this->searchformmob->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitemmob'))->onText($this, 'onSearch');
+        $this->searchformmob->searchitemmob->onChange($this, 'onSelect');
+
         $this->add(new \Zippy\Html\Link\BookmarkableLink('shopcart', "/index.php?p=/App/Modules/Shop/Pages/Catalog/Order"))->setVisible(false);
         $this->add(new \Zippy\Html\Link\BookmarkableLink('showcompare', "/index.php?p=/App/Modules/Shop/Pages/Catalog/Compare"))->setVisible(false);
 

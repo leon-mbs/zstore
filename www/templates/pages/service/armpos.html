@@ -229,7 +229,7 @@
                                 <td zippy="price" class="text-right"></td>
 
                                 <td zippy="amount" class="text-right"></td>
-                                <td>&nbsp;
+                                <td> 
                                 {{^simplemode}}
                                  <a zippy="edit" ><i class="fa fa-edit"></i></a>
                                 {{/simplemode}}
@@ -254,7 +254,7 @@
                                 <td zippy="serprice" class="text-right"></td>
 
                                 <td zippy="seramount" class="text-right"></td>
-                                <td>&nbsp;<a zippy="seredit"><i class="fa fa-edit"></i></a></td>
+                                <td><a zippy="seredit"><i class="fa fa-edit"></i></a></td>
                                 <td><a zippy="serdelete"><i class="fa fa-trash"></i></a></td>
 
                             <tr style="font-weight: bolder;" >
@@ -489,7 +489,7 @@
                         <h4>Введення товару </h4>
                         <div class="form-group">
                             <label for="edittovar">Назва</label>
-                            <input autofocus="on" placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                            <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                             <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
                             &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                            <br>
@@ -548,8 +548,9 @@
 
                         <div class="form-group">
                             <label for="editser">Назва</label>
-                            <input placeholder="Почніть вводити..." class="form-control " zippy="editser"/>
-
+                            <select zippy="editser" class="form-control select2">
+                                <option value="0">Не обрано</option>
+                            </select>
 
                         </div>
 
@@ -852,7 +853,7 @@
                if(false == checkFormInput('form3') ){
                    return false;
                }  
-                      document.getElementById('dialogwait').showModal()
+               document.getElementById('dialogwait').showModal()
 
                 return true;
             }

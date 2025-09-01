@@ -38,6 +38,8 @@ class ServiceList extends \App\Pages\Base
         $this->add(new Panel('servicetable'))->setVisible(true);
         $this->servicetable->add(new DataView('servicelist', new ServiceDataSource($this), $this, 'servicelistOnRow'))->Reload();
         $this->servicetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+        $this->servicetable->add(new ClickLink('toexport'))->onClick($this, 'ExportOnClick');
+        $this->servicetable->add(new ClickLink('toimport'))->onClick($this, 'ImportOnClick');
         $this->servicetable->servicelist->setPageSize(H::getPG());
         $this->servicetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->servicetable->servicelist));
 
@@ -48,7 +50,9 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->add(new TextInput('editcost'));
         $this->servicedetail->add(new TextInput('edithours'));
         $this->servicedetail->add(new TextInput('editmsr'));
+        $this->servicedetail->add(new TextInput('editnotes'));
         $this->servicedetail->add(new CheckBox('editdisabled'));
+        $this->servicedetail->add(new CheckBox('editnoprice'));
 
         $this->servicedetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->servicedetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -60,27 +64,46 @@ class ServiceList extends \App\Pages\Base
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
         $this->setpanel->setform->add(new SubmitButton('setformbtn'))->onClick($this, 'OnAddSet');
-
-
+  
         $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
         $this->setpanel->cardform->add(new TextArea('editscard'));
 
         $this->setpanel->add(new Label('stitle'));
 
         $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
+
+        $this->add(new Panel('exportform'))->setVisible(false);        
+        $this->exportform->add(new ClickLink('eback', $this, "onback"));
+        $this->exportform->add(new Label('preview' ));
+    
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F'  );
+           
+        $this->add(new Panel('importform'))->setVisible(false);        
+        $this->importform->add(new ClickLink('iback', $this, "onback"));
+        $form= $this->importform->add(new Form('cform' ));
+        $form->add(new CheckBox("cpreview"));
+        $form->add(new CheckBox("cpassfirst"));
+        $form->add(new DropDownChoice("colname", $cols));
+        $form->add(new DropDownChoice("colcat", $cols));
+        $form->add(new DropDownChoice("colprice", $cols));
+        $form->add(new DropDownChoice("colnotes", $cols));
         
-        
+        $form->add(new \Zippy\Html\Form\File("cfilename"));
+
+        $form->onSubmit($this, "onImport");
+       
     }
 
     public function servicelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
+        $row->add(new ClickLink('service_name', $this, 'editOnClick'))->setValue($item->service_name);
 
-        $row->add(new Label('service_name', $item->service_name));
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         $row->add(new Label('price', $item->price));
         $row->add(new Label('cost', $item->cost));
         $row->add(new Label('hours', $item->hours));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('notes', $item->notes));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
@@ -116,7 +139,9 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->editcost->setText($this->_service->cost);
         $this->servicedetail->edithours->setText($this->_service->hours);
         $this->servicedetail->editmsr->setText($this->_service->msr);
+        $this->servicedetail->editnotes->setText($this->_service->notes);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
+        $this->servicedetail->editnoprice->setChecked($this->_service->noprice);
         $this->servicedetail->editcat->setText($this->_service->category);
         $this->servicedetail->editcat->setDataList(Service::getCategoryList());
         $this->servicedetail->editmsr->setDataList(Service::getMsrList());
@@ -144,11 +169,13 @@ class ServiceList extends \App\Pages\Base
         $this->_service->cost = $this->servicedetail->editcost->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         $this->_service->msr = $this->servicedetail->editmsr->getText();
+        $this->_service->notes = $this->servicedetail->editnotes->getText();
         if ($this->_service->service_name == '') {
             $this->setError("Не введено назву");
             return;
         }
         $this->_service->disabled = $this->servicedetail->editdisabled->isChecked() ? 1 : 0;
+        $this->_service->noprice = $this->servicedetail->editnoprice->isChecked() ? 1 : 0;
 
         $this->_service->save();
         $this->servicedetail->setVisible(false);
@@ -167,13 +194,152 @@ class ServiceList extends \App\Pages\Base
     public function OnFilter($sender) {
         $this->servicetable->servicelist->Reload();
     }
-    
-    
-    //комплекты
+   
     public function onback($sender) {
         $this->setpanel->setVisible(false);
+        $this->exportform->setVisible(false);
+        $this->importform->setVisible(false);
         $this->servicetable->setVisible(true);
-    }    
+    }  
+    public function ExportOnClick($sender) {
+        $this->exportform->setVisible(true);
+        $this->importform->setVisible(false);
+        $this->servicetable->setVisible(false);
+
+        foreach (Service::findYield("disabled <> 1 and  detail not like '%<noprice>1</noprice>%' ", "category,service_name") as $item) {
+       
+       
+             $detail[] = array(
+                
+                "name"   => $item->service_name,
+                "cat"    => $item->category,
+                "price"   =>  H::fa($item->price),
+                "notes"   => $item->notes 
+
+               );
+        } 
+
+        $header = array(
+            "_detail"    => $detail,
+   
+            'date'       => H::fd(time())
+        );
+        $report = new \App\Report('report/priceser.tpl');
+
+        $html = $report->generate($header);
+        
+      
+        $this->exportform->preview->setText($html, true);
+        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+
+        
+        
+    }  
+    
+    public function ImportOnClick($sender) {
+        $this->exportform->setVisible(false);
+        $this->importform->setVisible(true);
+        $this->servicetable->setVisible(false);
+    }  
+    
+    
+  public function onImport($sender) {
+        
+        $preview = $this->importform->cform->cpreview->isChecked();
+        $passfirst = $this->importform->cform->cpassfirst->isChecked();
+        $this->_tvars['preview2'] = false;
+
+        $colname = $this->importform->cform->colname->getValue();
+        $colcat = $this->importform->cform->colcat->getValue();
+        $colprice = $this->importform->cform->colprice->getValue();
+        $colnotes  = $this->importform->cform->colnotes->getValue();
+       
+        if ($colname === '0') {
+            $this->setError('Не вказано колонку з назвою');
+            return;
+        }
+
+        $file = $this->importform->cform->cfilename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+            $this->setError('Не вибраний файл');
+            return;
+        }
+
+
+        $data = array();
+
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); // Вариант и для xls и xlsX
+
+
+        $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
+
+        for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
+
+            $row = array();
+            for ($iCol = 'A'; $iCol <= $oCells->getHighestColumn(); $iCol++) {
+                $oCell = $oCells->get($iCol . $iRow);
+                if ($oCell) {
+                    $row[$iCol] = $oCell->getValue();
+                }
+            }
+            $data[$iRow] = $row;
+        }
+
+        unset($oSpreadsheet);
+
+        if ($preview) {
+
+            $this->_tvars['preview2'] = true;
+            $this->_tvars['list2'] = array();
+            foreach ($data as $row) {
+
+                $this->_tvars['list2'][] = array(
+                    'colname'    => $row[$colname] ?? '',
+                    'colcat'   => $row[$colcat] ?? '',
+                    'colprice'   => $row[$colprice] ?? '',
+                    'colnotes'   => $row[$colnotes] ?? ''
+                );
+            }
+            return;
+        }
+
+        $cnt = 0;
+        $newitems = array();
+        foreach ($data as $row) {
+
+            $s = null;
+            $name = $row[$colname] ?? '';
+           
+            if (strlen(trim($name)) == 0) {
+                continue;
+            }
+
+          
+            $s = Service::getFirst('service_name=' . Service::qstr($name));
+           
+
+            if ($s == null) {
+                $s = new Service();
+                $s->service_name= $name;
+            }    
+            
+            $s->price = H::fa( $row[$colprice] ?? 0);
+            $s->category = $row[$colcat] ?? '';
+            $s->notes = $row[$colnotes] ?? '';
+        
+
+            $s->save();
+            $cnt++;
+             
+        }
+
+       $this->servicetable->servicelist->Reload();
+       $this->setSuccess("Імпортовано {$cnt} позицiй ");
+    }
+    
+    
+    
+      //комплекты  
     public function setOnClick($sender) {
         $this->_service = $sender->owner->getDataItem();
 
@@ -263,10 +429,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicetable->servicelist->Reload();
 
     }
-    
-    
-    
-    
+      
     public function  showcardOnClick($sender){
         $item = $sender->getOwner()->getDataItem();
         $desc = str_replace("'","`",$item->techcard);

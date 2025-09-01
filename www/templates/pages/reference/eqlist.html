@@ -8,7 +8,7 @@
         
             <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
                 <h3>Обладнання та основнi засоби </h3>
-                <div class="navbar nav  ">
+                <div class="card  ">
                     <form zippy="filter" class="form-inline">
 
                         <label for="searchkey">Пошук</label>
@@ -35,19 +35,7 @@
                 </div>
                 <a zippy="addnew" class="btn btn-primary  ">Додати</a>
                 <table class="table table-bordered  table-sm  ">
-                    <tr>
-                        <th>Найменування</th>
-                        {{#usebranch}}
-                        <th>Філія</th>
-                        {{/usebranch}}
-                        <th>Інв. номер</th>
-                      
-
-
-                        <th   ></th>
-                        <th   ></th>
-                        <th   ></th>
-                    </tr>
+           
                     <tr zippy="eqlist">
                         <td zippy="eq_name"></td>
                         {{#usebranch}}
@@ -55,9 +43,13 @@
                         {{/usebranch}}
                      
                         <td zippy="invnumber"></td>
+                        <td zippy="pa_name"></td>
                         <td ><small zippy="notes"></small></td>
                         <td  >
-                             <a zippy="view" title="Перегляд операцій"><i class="fa fa-cog"></i></a>
+                             <a zippy="view" title="Перегляд операцій"><i class="fa fa-gavel"></i></a>
+                       </td>
+                        <td  >
+                             <a zippy="barcode" title="Друк штрих-коду інвентарного номеру"><i class="fa fa-barcode"></i></a>
                        </td>
                         <td  >
                     
@@ -143,7 +135,7 @@
           <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
           <h5 zippy="oname"> </h5>
           <a zippy="addop" class="btn  btn-info btn-sm" >  Додати</a>                 
-          <br><a zippy="showall"   >  Показати всі</a>                 
+          <br><a zippy="showall"   >  Показати переміщення</a>                 
       
       
            <table class="ctable">
@@ -165,9 +157,28 @@
                  <td colspan="2">   </td>  
               </tr> 
            </table>
-      
+         
        </div>    
-            
+  <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="tag"></td>
+                            </tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>            
+           
    </div>         
             
         <script>               

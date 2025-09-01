@@ -8,7 +8,7 @@
             <div class="col-12 col-md-8 col-xl-6">
                 <div zippy="servicetable">
                     <h3>Послуги, роботи </h3>
-                    <div class="navbar nav">
+                    <div class="card">
 
                         <form zippy="filter" class="form-inline">
 
@@ -27,7 +27,9 @@
 
                         </form>
                     </div>
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a> 
+                    <a zippy="toexport" class="ml-3 ">   Експорт (прайс) <i class="fa fa-upload"></i></a> 
+                    <a zippy="toimport" class="ml-3 ">   Iмпорт <i class="fa fa fa-download"></i></a> 
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Назва</th>
@@ -39,15 +41,20 @@
                             
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                         <tr zippy="servicelist">
-                            <td zippy="service_name"></td>
+                            <td  > <a zippy="service_name"  > </a></td>
                             <td zippy="msr"></td>
                             <td  ><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
                             <td class="text-right" zippy="price"></td>
                             <td class="text-right" zippy="cost"></td>
                             <td class="text-right" zippy="hours"></td>
                             <td    >
+                          
+                              <small zippy="notes"  > </small>
+                              
+                            </td>  <td    >
                           
                               <a zippy="hascard" title="Тех. карта" >  <i class="fa fa-wrench"></i></a>
                               
@@ -84,15 +91,15 @@
                     </div>
                 </div>
                 <div class="form-group row ">
-                    <label class="col-5 col-form-label" for="editprice">Вартість</label>
+                    <label class="col-5 col-form-label" for="editprice">Вартість (ціна)</label>
                     <div class="col-7">
-                        <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                        <input required zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
                 <div class="form-group  row">
-                    <label class="col-5 col-form-label" for="editcost">Розцiнки</label>
+                    <label class="col-5 col-form-label" for="editcost">Розцiнки (собівартість)</label>
                     <div class="col-7">
-                        <input zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                        <input required zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
                 <div class="form-group  row">
@@ -106,8 +113,19 @@
                     <div class="col-7">
                         <input class="form-control" style="width: 100px" zippy="editmsr"/>
                     </div>
-                </div>                 
-                <div class="form-check">
+                </div>    
+                 <div class="form-group  ">
+                    <label  for="editnotes">Примітка</label>
+                    
+                        <input class="form-control"   zippy="editnotes"/>
+                    
+                    <small>Наприклад для прайсу</small>
+                </div>    
+                 <div class="form-check">
+                        <input zippy="editnoprice" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
+                 </div>                             
+                  <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не використовується</label>
                 </div>
@@ -122,7 +140,7 @@
             <div class="col-12 col-md-7 col-xl-5" zippy="setpanel">
                 <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До довідника</a>
                 <h4 zippy="stitle"></h4>
-                <small>Комплекти (складовi частини) для готової продукцiї та напiвфабрикатiв</small>
+                <small>Комплектуючi та матерiали, необхiднi для виконання роботи</small>
                 <form zippy="setform" class="form-inline mt-2 mb-2">
                     <label for="editsname">ТМЦ</label>
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
@@ -159,8 +177,117 @@
                 
             </div>
         </div>
+         <div class="row" zippy="exportform" >
+             <div class="col-12 col-md-8 col-xl-6" >
+                 <a zippy="eback"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>  <br>
+                        <div>
+
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/servicelist" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/servicelist" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+
+                    </div>
+
+                    <div zippy="preview"  >
+                    </div>                 
+                 
+            </div>
+        </div>
+    <div class="row" zippy="importform" >
+             <div class="col-12 col-md-8 col-xl-6" >
+                 <a zippy="iback"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>  <br>
+                        <div>
+                  <form zippy="cform" class="row" enctype="multipart/form-data">
+                    <div class="col-6">
+                    
+
+                        <div class="form-group  ">
+                            <label for="cfilename">Файл імпорту</label>
+                            <input type="file" zippy="cfilename" class="form-control  "/>
+
+                        </div>
+                        <div class="  form-check">
+                            <input zippy="cpassfirst" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="cpassfirst">Пропустити першу строку</label>
+                        </div>
+
+                        <div class="  form-check">
+                            <input zippy="cpreview" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="cpreview">Попередній перегляд</label>
+                        </div>
+
+                        <div class="form-group  ">
+                            <input class="btn btn-info" type="submit" value="Завантажити"/>
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group  ">
+                            <label><b>Номери колонок Excel файлу</b> </label>
+
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colname">Найменування</label>
+                            <div class="col-4">
+                              <select style="width:100px;" zippy="colname" class="form-control  ">
+                            </select> </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colcat">Категорія</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colcat" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colprice">Ціна</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colprice" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colnotes">Примітка</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colnotes" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                       
+
+
+                    </div>
+
+
+                </form>
+                {{#preview2}}
+                <div class="row">
+                    <div class="col-12 col-lg-8 col-xl-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Найменування</th>
+                                <th>Категорія</th>
+                                <th class="text-right">Ціна</th>
+                                <th>Примітка</th>
+                               
+
+                            </tr>
+                            {{#list2}}
+                            <tr>
+                                <td>{{colname}}</td>
+                                <td>{{colcat}}</td>
+                                <td  class="text-right">{{colprice}}</td>
+                                <td>{{colnotes}}</td>
+                                
+                              </tr>
+                                {{/list2}}
+                        </table>
+                    </div>
+                </div>
+                {{/preview2}}
+                                   
+                 
+            </div>
+        </div>
         
-       <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+         <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
              aria-hidden="true">
             <div class="modal-dialog  ">
                 <div  class="modal-content">

@@ -7,21 +7,14 @@
     <body>
 
         <div class="row ">
-            <div class="col-10  col-md-8 col-lg-6">
+            <div class="col-10  col-md-8 col-lg-6 col-xl-5">
 
                 <h4>Мій профіль</h4>
                 <form role="form" zippy="profileform">
                     <div class="row ">
                         <div class="col-12 col-md-6 ">         
 
-
-                            <div class="form-group  ">
-                                <label for="defstore">Компанія за замовчуванням</label>
-
-                                <select class="form-control" zippy="deffirm">
-                                    <option value="0">Не встановлено</option>
-                                </select>
-                            </div>
+                      
                             <div class="form-group  ">
                                 <label for="defstore">Склад за замовчуванням</label>
 
@@ -36,6 +29,14 @@
                                     <option value="0">Не встановлено</option>
                                 </select>
                             </div>
+                        <div class="form-group  ">
+                                <label for="defpaytype">Тип оплати за замовчуванням</label>
+
+                                <select class="form-control" zippy="defpaytype">
+                                    <option value="0">Не встановлено</option>
+                                </select>
+                                <small>Для Замовлення  та  Акту виконаних послуг</small>
+                            </div>
                             <div class="form-group  ">
                                 <label for="defsalesource">Джерело продаж за замовчуванням</label>
 
@@ -49,12 +50,14 @@
                                 <select class="form-control" zippy="pagesize" style="width:100px;">
 
                                 </select>
-
+                                 <small>Велике значення  може  сповільнити  роботу програми</small>
+                                 </div>
 
                                 <div class="form-group  ">
                                     <label for="mainpage">Головна сторiнка</label>
 
                                     <select class="form-control" zippy="mainpage">
+                                        <option value="\App\Pages\Blank">Не вказано</option>
                                         <option value="\App\Pages\Main">Дашборд (вiджети)</option>
                                     </select>
                                 </div>
@@ -62,7 +65,29 @@
                               
                               
                                 
+                             
+                        </div>
+
+
+                        <div class="col-12 col-md-6 ">         
+                            <div class="form-group">
+                                <label for="userlogin">Логін</label>
+                                <span zippy="userlogin" class="form-control-plaintext"></span>
                             </div>
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" class="form-control" zippy="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Телефон</label>
+                                <input   class="form-control" zippy="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="viber">Viber</label>
+                                <input   class="form-control" zippy="viber">
+                            </div>   
+
+                          
                   
                  
                            <div class="form-check">
@@ -91,28 +116,8 @@
                                    title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділитись. 
                                     Стосується тільки системних принтерів"></i>
 
-                                </div>                              
-                        </div>
-
-
-                        <div class="col-12 col-md-6 ">         
-                            <div class="form-group">
-                                <label for="userlogin">Логін</label>
-                                <span zippy="userlogin" class="form-control-plaintext"></span>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">E-mail</label>
-                                <input type="email" class="form-control" zippy="email">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Телефон</label>
-                                <input   class="form-control" zippy="phone">
-                            </div>
-                            <div class="form-group">
-                                <label for="viber">Viber</label>
-                                <input   class="form-control" zippy="viber">
-                            </div>   
-
+                                </div>                             
+                            
                         </div>
 
 
@@ -130,8 +135,28 @@
                     </div>            
                 </form>
             </div>
-        
+            <div class="col-10 col-lg-3 col-md-4 col-xl-3">
+
+                <h4>Зміна пароля</h4>
+                <form role="form" zippy="passwordform">
+
+                    <div class="form-group">
+                        <label for="userpassword">Новий пароль</label>
+                        <input type="password" class="form-control" zippy="userpassword"  required >
+                        <small>Перед введенням перевірте розкладку та регістр клавіатури </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userpassword">Підтвердження</label>
+                        <input type="password" class="form-control " zippy="confirmpassword"  required >
+                    </div>
+
+                    <button type="submit"   class="btn btn-primary">Зберегти</button>
+                </form>
+              
+            </div>
             <div class="col-10  col-md-4 col-xl-3">
+            <small>  <a href="/index.php?p=App/Pages/Options#printer"><i class="fa fa-link"></i> Параметри для етикеток і цінників</a> </small>
                          <h4>Принтер чеків</h4>
                          <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
                          <form zippy="printer">
@@ -236,28 +261,7 @@
                             </div>                           
                         </form>       
         </div>
-            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
-
-                <h4>Зміна пароля</h4>
-                <form role="form" zippy="passwordform">
-
-                    <div class="form-group">
-                        <label for="userpassword">Новий пароль</label>
-                        <input type="password" class="form-control" zippy="userpassword"  required >
-                        <small>Перед введенням перевірте розкладку та регістр клавіатури </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userpassword">Підтвердження</label>
-                        <input type="password" class="form-control " zippy="confirmpassword"  required >
-                    </div>
-
-                    <button type="submit"   class="btn btn-primary">Зберегти</button>
-                </form>
-                <br>
-
-
-            </div>
+          
         </div>
        <script>
          $(document).ready(function () {

@@ -46,7 +46,17 @@
                         </div> 
                     </div>
                     
-                    
+                <div class="form-group row  ">
+                        <label class="col-6 col-form-label" for="defstore">Склад</label>
+                       <div class="col-6">
+                        <select class="form-control" zippy="defstore">
+                            <option value="0">Не вказаний</option>
+
+                        </select>
+                       </div>  
+
+                    </div>
+            
                  <div class="form-group  row">
                         <label  class="col-6 col-form-label"  for="salesource">Джерело продаж</label>
                          <div class="col-6">
@@ -74,15 +84,8 @@
                             </div>  
                        
                     </div>
-                    <div class="form-group  row ">
-                        <label  class="col-6 col-form-label"   for="firm">Продавець </label>
-                          <div class="col-6">    
-                            <select class="form-control" zippy="firm">
-                                <option value="0">Не обрано</option>
-                            </select>
-                            </div>  
                       
-                    </div>         {{#usebranch}}
+                       {{#usebranch}}
                     <div class="form-group  row ">
                      <div class="col-6">
                         <label      for="shopdefbranch">Фiлiя </label>
@@ -193,8 +196,10 @@
                                           
             </div>
            
+          {{#hideblock}}
+           
             <div class="col-12 col-md-4 col-xl-3    ">
-      <h4>Онлайн оплата</h4>
+                 <h4>Онлайн оплата</h4>
                 <form zippy="pay" >
                    <div class="form-group   ">
                         <label   for="paysystem">Тип системи </label>
@@ -264,12 +269,8 @@
                 </form>
              </div>
            
-           
-         
-           
-           
+             {{/hideblock}}
        
-            
             
         </div>
         

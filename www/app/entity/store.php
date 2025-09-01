@@ -33,7 +33,7 @@ class Store extends \ZCL\DB\Entity
         return Store::findArray('storename', 'disabled <> 1', 'store_id');
     }
     /**
-    * без ограничений по  фииалам
+    * без ограничений по  филиалам
     *
     */
     public static function getListAll() {

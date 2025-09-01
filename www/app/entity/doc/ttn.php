@@ -46,7 +46,7 @@ class TTN extends Document
         }
 
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $printer = System::getOptions('printer');
 
@@ -69,7 +69,7 @@ class TTN extends Document
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
                         "phone"           => $this->headerdata["phone"],
-                        "email"           => $this->headerdata["email"],
+                       
                         "total"           => H::fa($this->amount),
         );
 
@@ -80,7 +80,19 @@ class TTN extends Document
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
         $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
-
+        $header["fphone"] = false;
+        $header["isfop"] = false;
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        } 
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+         }
         $report = new \App\Report('doc/ttn.tpl');
 
         $html = $report->generate($header);
@@ -120,7 +132,7 @@ class TTN extends Document
         }
 
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
         if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
@@ -144,7 +156,7 @@ class TTN extends Document
             $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
         }
 
-
+     
         $report = new \App\Report('doc/ttn_bill.tpl');
 
         $html = $report->generate($header);
@@ -154,7 +166,8 @@ class TTN extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-
+       $lost = 0;
+      
 
         if ($this->headerdata['nostore'] == 1) {
             return;
@@ -180,8 +193,7 @@ class TTN extends Document
                 if ($item->autooutcome == 1) { //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
-                        $lost = 0;
-
+                       
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null) {
                             continue;
@@ -192,12 +204,7 @@ class TTN extends Document
                             throw new \Exception("На складі всього ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
 
                         }
-                         //учитываем  отходы
-                        if ($itemp->lost > 0) {
-                            $kl = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $kl;
-                            $lost = $kl - 1;
-                        }
+                     
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
@@ -208,15 +215,7 @@ class TTN extends Document
 
                             $sc->save();
                             
-                            if ($lost > 0) {
-                                $io = new \App\Entity\IOState();
-                                $io->document_id = $this->document_id;
-                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                                $io->save();
-
-                            }    
+                               
                             
                         }
                     }
@@ -253,6 +252,8 @@ class TTN extends Document
                 $sc->save();
             }
         }
+ 
+        
         $this->DoBalans() ;
 
         return true;
@@ -260,6 +261,33 @@ class TTN extends Document
 
     public function onState($state, $oldstate) {
 
+        
+        if ($state == Document::STATE_INSHIPMENT || $state == Document::STATE_READYTOSHIP ) {
+              
+            if($this->parent_id > 0) {
+                 $order = Document::load($this->parent_id);
+                 $order = $order->cast() ;
+                
+                 if($order->meta_name == 'Invoice' && $order->parent_id > 0) {
+                      $order = Document::load($order->parent_id);
+                      $order = $order->cast() ;
+                      
+                 }
+                 if($order->meta_name == 'Order' && $order->state > 4) {
+
+                     if( count( $order->getNotSendedItem() ) >0 ) return;
+                                
+                    
+                     if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
+                        $order->updateStatus(Document::STATE_INSHIPMENT);
+                     }                            
+                           
+                                       
+                }   
+            }  
+        }
+                
+        
         if ($state == Document::STATE_DELIVERED) {
                                           
             //расходы на  доставку
@@ -269,13 +297,52 @@ class TTN extends Document
                // $this->DoBalans() ;
             }
             
-            if ($this->headerdata['ship_amount'] > 0  ) {
+            if ($this->headerdata['ship_amount'] > 0  ) {   //расходы на  доставку
                
                 \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['ship_amount'], \App\Entity\IOState::TYPE_SALE_OUTCOME);
 
             }
+            
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id);
+                $order = $order->cast() ;
+                
+                if($order->meta_name == 'Order' && $order->state > 4) {
+
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+                    
+                    
+                    if($this->headerdata['moneyback'] >0  ) { //обратная  доставка  денег
+                         $mf = intval($order->headerdata['payment'] );
+                         if($mf==0)  {
+                            $mf = \App\Helper::getDefMF()  ;
+                         }
+                       
+                         if($order->state == Document::STATE_WP  || ($order->getHD('paytype')==2 && $order->getHD('waitpay')==1  )  )    {
+                             $order->payed = \App\Entity\Pay::addPayment($order->document_id, $this->document_date, $this->headerdata['moneyback'], $mf);
+                             $order->setHD('waitpay',0) ;
+                             $order->save();
+                             $order->DoBalans() ;
+                             if( $order->payed >= $order->payamount   )  {
+                                $order->updateStatus(Document::STATE_PAYED);
+                             }
+                         }
+                         
+                         
+                    }
+                    
+                    
+                    if( $order->payed >= $order->payamount   )  {
+                        $order->updateStatus(Document::STATE_CLOSED);
+                    }
+                        
+                     
+                }
+            }            
+            
         }
         
+      
     }
 
     public function getRelationBased() {

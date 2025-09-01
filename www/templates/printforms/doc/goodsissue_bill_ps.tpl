@@ -9,7 +9,7 @@
     {{#isbank}}
 <text>{{bank}}</text>
 <text>р/р {{bankacc}}</text>    
-
+   {{/isbank}}
 <text>Тел. {{phone}}</text>
 <text>Покупець: {{customer_name}}</text>
 <separator>-</separator>

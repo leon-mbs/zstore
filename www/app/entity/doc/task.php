@@ -77,7 +77,7 @@ class Task extends Document
 
 
         $header = array('date'            => H::fd($this->document_date),
-                        "pareaname"       => strlen($this->headerdata["pareaname"]) > 0 ? $this->headerdata["pareaname"] : false,
+                        "pareaname"       => strlen($this->headerdata["pa_name"]) > 0 ? $this->headerdata["pa_name"] : false,
                         "document_date"   => H::fd($this->document_date),
                         "document_number" => $this->document_number,
                         "notes"           => nl2br($this->notes),
@@ -98,14 +98,16 @@ class Task extends Document
 
     public function Execute() {
         $conn = \ZDB\DB::getConnect();
-
+       
         foreach ($this->unpackDetails('detaildata') as $ser) {
 
             $sc = new Entry($this->document_id, 0 - $ser->cost, $ser->qty);
-            $sc->setService($ser->service_id);
+            $sc->setService($ser->service_id);                            
             // $sc->save();
+            
+           
         }
-
+         
 
         return true;
     }
@@ -122,6 +124,57 @@ class Task extends Document
     //    $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
+    }
+    
+    public function onState($state, $oldstate) {
+         if ($state == Document::STATE_INPROCESS) {
+             foreach ($this->unpackDetails('eqlist') as $eq) {
+
+                $entry = new \App\Entity\EqEntry( );
+                $entry->document_id = $this->document_id;
+                $entry->eq_id = $eq->eq_id;
+                $entry->optype= \App\Entity\EqEntry::OP_MOVE;
+                $entry->amount = 0   ;
+                $entry->save();    
+               
+            }
+
+         }
+         if ($state == Document::STATE_CLOSED ) {
+              
+            $total = 0;
+            foreach ($this->unpackDetails('detaildata') as $ser) {
+                $total += doubleval($ser->cost * $ser->quantity)  ;
+            }
+                 
+             
+            foreach ($this->unpackDetails('prodlist') as $item) {
+                if($item->zarp > 0) {
+                    $total += doubleval($item->zarp*$item->quantity) ;
+                } 
+            }          
+          
+            $emplist = $this->unpackDetails('emplist');
+            foreach ($emplist as $emp) {
+
+                 $cost =   doubleval($total * $emp->ktu) ;
+                 if($cost > 0){
+                     
+                   
+                     
+                    $ua = new \App\Entity\EmpAcc();
+                    $ua->optype = \App\Entity\EmpAcc::PRICE;
+                    $ua->document_id = $this->document_id;
+                    $ua->emp_id = $emp->employee_id;
+                    $ua->amount = $cost;
+                    $ua->save();     
+         
+                            
+                    
+                     
+                 }  
+            }          
+         }           
     }
 
 }

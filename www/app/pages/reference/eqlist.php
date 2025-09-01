@@ -89,11 +89,23 @@ class EqList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('eq_name', $item->eq_name));
         $row->add(new Label('invnumber', $item->invnumber));
+        
+        $pa_name='';
+        
+        $eq= \App\Entity\EqEntry::getFirst('optype=5 and eq_id='.$item->eq_id,'id desc') ;
+        
+        if($eq != null) {
+            $d = \App\Entity\Doc\Document::load($eq->document_id)  ;
+            $pa_name = $d->headerdata['pa_name'] ??'';
+        }
+        
+        $row->add(new Label('pa_name', $pa_name));
         $row->add(new Label('notes', $item->description));
       
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
 
- 
+        $row->add(new ClickLink('barcode'))->onClick($this, 'printOnClick', true);
+     
         $row->add(new ClickLink('view'))->onClick($this, 'viewOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -175,7 +187,7 @@ class EqList extends \App\Pages\Base
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->type = $this->itemdetail->edittype->getValue()  ;
 
-        $this->_item->Save();
+        $this->_item->save();
 
         $this->itemtable->eqlist->Reload();
     }
@@ -205,7 +217,7 @@ class EqList extends \App\Pages\Base
         }
         $total = 0;
         
-        foreach(EqEntry::find($where,"document_date,id") as $ee )  {
+        foreach(EqEntry::findYield($where,"document_date,id") as $ee )  {
          
            $det = ""; 
            
@@ -214,13 +226,13 @@ class EqList extends \App\Pages\Base
            if($doc->customer_id >0 ) {
               $det = $det. ' '. $doc->customer_name;  
            }
-           if($doc->headerdata['pa_id'] > 0 ) {
+           if( ( $doc->headerdata['pa_id'] ??0) > 0 ) {
               $det = $det. ' '. $doc->headerdata['pa_name'];  
            }
-           if($doc->headerdata['emp_id'] > 0 ) {
+           if( ($doc->headerdata['emp_id'] ??0) > 0 ) {
               $det = $det. ' '. $doc->headerdata['emp_name'];  
            }
-           if($doc->headerdata['item_id'] > 0 ) {
+           if( ( $doc->headerdata['item_id'] ??0) > 0 ) {
               $det = $det. ' '. $doc->headerdata['item_name'];  
            }
             
@@ -245,6 +257,70 @@ class EqList extends \App\Pages\Base
     public function createDoc($sender) {
         \App\Application::Redirect("\\App\\Pages\\Doc\\EQ",0,$this->_item->eq_id);
     }
+  public function printOnClick($sender) {
+
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+
+        $item = $sender->getOwner()->getDataItem();
+        $header = [];
+        if(intval($user->prtypelabel) == 0) {
+            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+            $data = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($item->invnumber, $printer['barcodetype'])) . "\"";
+                                      
+            $report = new \App\Report('eq.tpl');
+            $header['src'] = $data;
+
+            $html =  $report->generate($header);                  
+
+            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            return;
+        }
+       
+        try {
+            $buf=[];
+            if(intval($user->prtypelabel) == 1) {
+                
+               $report = new \App\Report('eq_ps.tpl');
+               $header['barcode'] = $item->invnumber;
+
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+            if(intval($user->prtypelabel) == 2) {
+                $rows=[];
+              
+                $report = new \App\Report('eq_ts.tpl');
+                $header['barcode'] = $item->invnumber;
+
+                $text = $report->generate($header, false);
+                $r = explode("\n", $text);
+                foreach($r as $row) {
+                    $row = str_replace("\n", "", $row);
+                    $row = str_replace("\r", "", $row);
+                    $row = trim($row);
+                    if($row != "") {
+                       $rows[] = $row;  
+                    }
+                   
+                }           
+                
+                $buf = \App\Printer::arr2comm($rows);
+            }
+       
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
+
+    }
 
 }
 
@@ -266,21 +342,25 @@ class EQDS implements \Zippy\Interfaces\DataSource
         $showdis = $form->showdis->isChecked();
 
         if ($emp > 0) {
-            $where = $where . " and detail like '%<emp_id>{$emp}</emp_id>%' ";
+            $where  = $where . " and detail like '%<resemp_id>{$emp}</resemp_id>%' ";
         }
         if ($type > 0) {
-            $where = $where . " and type = ".$type;
+            $where  = $where . " and type = ".$type;
         }
         if ($showdis > 0) {
 
         } else {
-            $where = $where . " and disabled <> 1";
+            $where  = $where . " and disabled <> 1";
         }
         if (strlen($text) > 0) {
             $text = Equipment::qstr(  $text  );
             $_text = Equipment::qstr('%' . $text . '%');
             $where = $where . " and (invnumber = {$text} or eq_name like {$_text} or detail like {$_text} )  ";
         }
+        
+        
+        
+        
         return $where;
     }
 

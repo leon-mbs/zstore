@@ -9,7 +9,7 @@
                   <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевiрити  з'єднання</a>
   
 
-                <div class="navbar nav">
+                <div class="navbar nav justify-content-start">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -55,25 +55,20 @@
                     </tr>
 
                 </table>
-                <div class="navbar nav">
-                    <a zippy="importbtn" class="  btn btn-outline-success  ">Імпортувати</a>
-                    <form zippy="filter2" class="form-inline ">
+                <div class="navbar nav justify-content-start">
+                       <form zippy="filter2" class="form-inline ">
 
 
-                        <label for="store" data-label="store">склад</label>
+                        <label for="paytype"  >Тип оплати</label>
 
-                        <select class="form-control mr-2" zippy="store">
-                            <option value="0">Не обрано</option>
+                        <select class="form-control mr-2" zippy="paytype">
+                            
                         </select>
-                        <label for="kassa" data-label="kassa">каса </label>
-
-                        <select class="form-control mr-2" zippy="kassa">
-                            <option value="0">Не обрано</option>
-                        </select>
+                     
 
 
                         <input type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Списати">
+                               value="Імпортувати">
 
 
                     </form>
@@ -83,7 +78,7 @@
             <div class="col-12 col-xl-10       ">
 
                 <h3>Експорт статусів в магазин</h3>
-                <div class="navbar nav">
+                <div class="navbar nav justify-content-start">
                     <a zippy="refreshbtn" class="  btn btn-outline-success  ">Оновити</a>
 
                 </div>

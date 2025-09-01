@@ -103,8 +103,8 @@ class OrderCust extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
-            if($this->_doc->headerdata['delivery_date'] >0) {
-              $this->docform->delivery_date->setDate($this->_doc->headerdata['delivery_date']);
+            if($this->_doc->getHD('delivery_date',0) >0) {
+              $this->docform->delivery_date->setDate($this->_doc->getHD('delivery_date'));
             }
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
@@ -267,7 +267,7 @@ class OrderCust extends \App\Pages\Base
 
         $this->editdetail->editprice->setText("");
         $this->editdetail->qtystock->setText("");
-
+        $this->addJavaScript("$(\"#edititem\").focus()",true)  ;
     }
 
     public function editOnClick($sender) {

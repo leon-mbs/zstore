@@ -5,7 +5,7 @@ namespace App\Pages\Reference;
 use App\Entity\Contract;
 use App\Entity\Customer;
 use App\Entity\Employee;
-use App\Entity\Firm;
+ 
 use App\Entity\Pay;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
@@ -37,7 +37,7 @@ class ContractList extends \App\Pages\Base
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
-        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+ 
 
         $this->add(new Panel('contracttable'))->setVisible(true);
         $this->contracttable->add(new DataView('contractlist', new ContractDataSource($this), $this, 'contractlistOnRow'));
@@ -53,10 +53,9 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new TextArea('editdesc'));
         $this->contractdetail->add(new TextInput('editcontract_number'));
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
-        $this->contractdetail->add(new DropDownChoice('editcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
-        $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
-        $this->contractdetail->add(new DropDownChoice('editctype', array(), 0));
 
+        $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
+       
         $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
 
         $this->contractdetail->add(new CheckBox('editdisabled'));
@@ -93,7 +92,7 @@ class ContractList extends \App\Pages\Base
         }
 
         $row->add(new Label('customer', $item->customer_name));
-        $row->add(new Label('firm', $item->firm_name));
+      
         $c = Customer::load($item->customer_id);
         $row->add(new Label('emp', $item->emp_name));
         $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
@@ -137,9 +136,8 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editdisabled->setChecked($this->_contract->disabled);
         $this->contractdetail->editcust->setKey($this->_contract->customer_id);
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
-        $this->contractdetail->editcomp->setValue($this->_contract->firm_id);
+
         $this->contractdetail->editemp->setValue($this->_contract->emp_id);
-        $this->contractdetail->editctype->setValue($this->_contract->ctype);
     }
 
     public function addOnClick($sender) {
@@ -167,16 +165,8 @@ class ContractList extends \App\Pages\Base
             $this->setError("Не задано контрагента");
             return;
         }
-        $this->_contract->firm_id = $this->contractdetail->editcomp->getValue();
-        if ($this->_contract->firm_id == 0) {
-            $this->setError("Не обрано компанію");
-            return;
-        }
-        $this->_contract->ctype = $this->contractdetail->editctype->getValue();
-        if ($this->_contract->ctype == 0) {
-            $this->setError("Не обрано тип контракту");
-            return;
-        }
+      
+    
 
 
         $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
@@ -270,10 +260,7 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
             $where = $where . " and customer_id = " . $cust;
         }
 
-        $comp = $form->searchcomp->getValue();
-        if ($comp > 0) {
-            $where = $where . " and firm_id = " . $comp;
-        }
+       
 
         if ($showdis > 0) {
 

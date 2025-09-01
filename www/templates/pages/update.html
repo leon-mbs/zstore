@@ -35,15 +35,16 @@
       <div class="row  ">
   
          {{#tooold}}
-       <div class="col-12  mb-4">
-  
-        <i class="fa fa-exclamation-triangle text-danger" ></i>  <b>Пропущено  кілька крупних оновлень </b>
-           <br>Перейдіть на  <a href="https://zippy.com.ua/update">історію версій </a> 
+       <div class="col-12 col-xl-8 mb-4">
+         <small>
+        <i class="fa fa-exclamation-triangle text-danger" ></i>   Якщо пропущено кiлька оновлень може знадобитись ручне  оновлення.
+            Для цього перейдіть на  <a href="https://zippy.com.ua/update">історію оновлень </a> 
             і виконайте послідовне оновлення структури база данних у відповідності з інструкціями, починаючи з поточної версії.
             Виконайте  повне  оновлення  з    <a class="link" href="https://zippy.com.ua/download/fullzstore.zip"> архiву</a> (крім config.php). 
             {{#oldphp}}
             <br> Оскільки поточна  версія PHP застаріла, папку vendor необхідно  <a class="link" href="https://zippy.com.ua/download/vendor74.zip"> зкачати  </a> окремо 
              {{/oldphp}}
+          </small>
      </div>  
          {{/tooold}}
          {{#oldphp}}
@@ -76,12 +77,16 @@
          </ul>
          </p>
          <p>
-          {{notes}}
+           {{{notes}}}
           </p>
+          {{#warn}}
+          <i class="fa fa-exclamation-triangle"></i> {{warn}}
+          <br>
+          {{/warn}}
         <small>    <a href="https://zippy.com.ua/update">Детальніше...</a>  </small>                  
           
       
-           <br><br><a zippy="updatefile"><b>Оновити файли автоматично</b></a>
+           <br><br><a zippy="updatefile"><i class="fa fa-download"></i> <b>Оновити файли автоматично</b></a>
 
            <br> <br>Для оновлення вручну завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
             
@@ -109,7 +114,6 @@
      <div class="col-12 mt-2 ">  
 
            <b>Оновлення структури бази данних</b>
-           <br>Завантажити  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного оновлення
            <br><small><i class="fa fa-exclamation-triangle"></i>  
                Перед оновленням рекомендується зробити бакап БД.
                 Користувачі "коробкових" версій можуть просто скопіювати або заархівувати папку із сервером
@@ -117,10 +121,9 @@
                
            </small>
      
-           <br><br><a zippy="updatesql"><b>Оновити автоматично</b></a>
-           <br><small><i class="fa fa-exclamation-triangle"></i>  
-                У випадку помилки з`єднання оновіть спочтаку код, як  написано  вище  потім  спробуйте  ще  раз оновити БД
-           </small>           
+           <br><br><a zippy="updatesql"><i class="fa fa-download"></i>  <b>Оновити структуру БД автоматично</b></a>
+           <br>Завантажити  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного оновлення
+                    
            <br><br>
    </div>  
             {{/showdb}}       
@@ -138,7 +141,7 @@
           {{/rollback}}        
          {{^oldphp}}
         <br>  <br> 
-        <i class="fa fa-undo"></i> <a zippy="updatevendor"><b>Оновити папку  vendor</b> </a> 
+         <a zippy="updatevendor"><i class="fa fa-download"></i> <b>Оновити папку  vendor</b> </a> 
         <br><small>Якщо були оновленi стороннi бiблiотеки</small>
           {{/oldphp}}        
      </div>  

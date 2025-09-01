@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  коментари
+ * Клас-сущность  коментарий
  *
  * @table=messages
  * @view=messages_view

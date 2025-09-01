@@ -15,7 +15,7 @@
                 </h3>
 
 
-      <div class="navbar nav  ">
+      <div class="card  ">
                     <form zippy="filter" class="row   g-2 align-items-center">
                       <div class="col-auto">
                        <div class="  row no-gutters"> 
@@ -126,9 +126,9 @@
                         <th></th>
 
                          <th class="text-nowrap  "><a zippy="sortdoc">Тип документа</a></th>
-                        <th class="text-nowrap  "><a zippy="sortnum">Номер</a></th>
-                        <th class="text-nowrap  "><a zippy="sortdate">Дата</a></th>
-                        <th class="text-nowrap  "><a zippy="sortcust">Контрагент</a></th>
+                        <th  ><a zippy="sortnum">Номер</a></th>
+                        <th  ><a zippy="sortdate">Дата</a></th>
+                        <th ><a zippy="sortcust">Контрагент</a></th>
                         <th class="text-right   "><a zippy="sortamount">Сума</a></th>
                         <th  > Статус </th>
                         {{#usebranch}}
@@ -153,8 +153,8 @@
                             <a  zippy="fromfav"><i title="Видалити з обраного" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
-                            <td ><a zippy="name"></a></td>
-                            <td ><a zippy="number"></a></td>
+                            <td class="text-nowrap  "><a zippy="name"></a></td>
+                            <td class="text-nowrap  "><a zippy="number"></a></td>
                             <td   class="text-nowrap" zippy="date"></td>
                             <td zippy="cust"></td>
                             <td zippy="amount" class="text-right  "></td>
@@ -201,7 +201,7 @@
                 <div style="width:50%" zippy="pag"></div>
 
 
-                <div class="navbar nav">
+                <div class=" card">
                     <form zippy="statusform" class="form-inline ">
                          <label data-label="mstates" for="mstates"> Статус </label>
                          <select zippy="mstates" class="form-control mr-2">
@@ -268,6 +268,7 @@
                           <tr><td align="center">
                           <div class="mb-2" id="imagelink" > </div>
                           </td></tr>
+                          
                           <tr><td align="center">
                           <a  class="btn btn-info  " id="urllink"  >  Відкрити посилання        </a>
 

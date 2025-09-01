@@ -16,6 +16,14 @@
             Зi складу <b>{{storename}}</b><br>
         </td>
     </tr>
+    {{#emp}}
+    <tr>
+        <td colspan="9">
+            <b>Відповідальний:</b> {{emp}}
+        </td>
+    </tr>
+ 
+    {{/emp}}       
     <tr>
         <td colspan="9" valign="middle">
             {{{notes}}}<br>

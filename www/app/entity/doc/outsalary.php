@@ -32,7 +32,7 @@ class OutSalary extends Document
         }
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
     
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_SALARY_OUTCOME);
+    //    \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_SALARY_OUTCOME);
 
         return true;
     }

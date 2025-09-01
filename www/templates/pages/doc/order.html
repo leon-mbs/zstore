@@ -93,6 +93,22 @@
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="form-group  ">
+                        <label for="paytype">Тип оплати</label>
+
+                        <select class="form-control" zippy="paytype">
+                               <option value="0">Не вказано</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group  ">
+                                <label for="payment">Каса, рахунок</label>
+                                <select class="form-control" zippy="payment">
+                                    <option value="0">Не обрано</option>
+                                </select>
+                               
+                            </div>                    
+                    
+                    <div class="form-group  ">
                         <label for="delivery">Доставка</label>
 
                         <select class="form-control" zippy="delivery">
@@ -203,6 +219,15 @@
                             <td zippy="payamount" class="text-right"></td>
                             <td> </td>
                         </tr>
+                     <tr style="font-weight: bolder;">
+
+                            <td colspan="7" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
+
+
+                            <td zippy="payed"  class="text-right">           </td>
+                            <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal" data-target="#modalpayed"><i
+                                        class="fa fa-edit"></i></a></td>
+                        </tr>
                     
 
                     </table>
@@ -213,9 +238,8 @@
                     <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ">
                     &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-primary  ">
-                    &nbsp;<input zippy="topaydoc" type="submit" title="Перевод в  статус Очікує оплату" value="До сплати" class="btn btn-info  ">
-                    &nbsp;<a data-toggle="modal" data-target="#modalpayed"  href="javascript:void(0);"  class="btn btn-info  ">Оплатити</a>
 
+                   
 
                 </div>
             </div>
@@ -267,8 +291,7 @@
                 </div>
             </div>
 
-           
-            <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
+             <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -278,31 +301,19 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group  ">
-                                <label for="payment">Каса, рахунок</label>
-                                <select class="form-control" zippy="payment">
-                                    <option value="0">Не обрано</option>
-                                </select>
-                               
-                            </div>
-                        
-                            <div class="form-group  ">
-                                <label for="payment">Внесено оплату</label>
-                                                         
-                                <input class="form-control qtyprice" type="text" zippy="payed" pattern="[0-9,\.]+">
-                                
-                            </div>
-                                <div class="input-group">
-                                    <input type="submit" value="Оплатити" zippy="paydoc" class="   btn btn-info  ">
+                            <div class="input-group  ">
+                                <input class="form-control qtyprice" type="text" zippy="editpayed" pattern="[0-9,\.]+">
+                                <div class="input-group-append">
+                                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
 
                                 </div>
-                            
+                            </div>
                         </div>
 
                     </div>
                 </div>
-            </div>
-            
+            </div>     
+          
             
             <div id="modalpromo" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">

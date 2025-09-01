@@ -1,0 +1,173 @@
+<html>
+   <head>
+          <title> Переміщення між етапами</title>
+    </head>
+
+    <body>
+
+
+        <form zippy="docform">
+            <h3>Переміщення між етапами </h3>
+            <small>Переміщення  незаверщеного виробництва між виробничими етапами (ділянками) </small>
+           
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа</label>
+                        <input class="form-control" type="text" zippy="document_number"  required >
+                    </div>  
+                 
+                    
+                     <div class="form-group  ">
+                        <label for="pp">Виробничий процес</label>
+                        <select class="form-control" zippy="pp">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+                     <div class="form-group  ">
+                        <label for="psfrom">З етапу</label>
+                        <select class="form-control" zippy="psfrom">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+
+                     <div class="form-group  ">
+                        <label for="psto">До етапу</label>
+                        <select class="form-control" zippy="psto">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="document_date"> Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  required >
+                    </div>
+       <div class="form-group  ">
+                        <label for="emp">Виконавець </label>
+                        <select class="form-control  " zippy="emp">
+                            <option value="0">Не вказано</option>
+                        </select>
+                        <small> Для нарахування  зарплати при вiдрядному виробництвi</small>
+                    </div>                      
+                  
+                 
+                 
+                     <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+                        <textarea class="form-control"   zippy="notes"></textarea>
+                    </div>            
+              
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-8 col-xl-6">
+                    {{#usescanner}}
+                    <div class="navbar nav justify-content-start">
+                        Штрих код &nbsp;<input autofocus="on" autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
+                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+  
+                    </div>
+                    {{/usescanner}}
+                    <a zippy="addrow" class="btn btn-info  ">Додати ТМЦ</a>
+
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Назва</th>
+                            <th>Код</th>
+                            <th>Од.</th>
+                           <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                        
+
+
+                            <th class="text-right">Кіл.</th>
+
+
+                            <th  ></th>
+                        </tr>
+                        <tr zippy="detail">
+                            <td zippy="tovar"></td>
+                            <td zippy="code"></td>
+                            <td zippy="msr"></td>
+
+                           
+                            <td zippy="snumber"></td>
+                          
+
+                            <td zippy="quantity" class="text-right"></td>
+
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  mr-2 ">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary   mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+
+
+                </div>
+            </div>
+        </form>
+        <form zippy="editdetail">
+            <h4>Введення ТМЦ </h4>
+          <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+
+                    <div class="form-group">
+                       <label for="edititem">Назва </label>
+                        <select class="form-control select2" zippy="edititem">
+                            <option value="1">Не обрано</option>
+                        </select>
+                    </div>
+                    {{#usesnumber}}
+                    <div class="form-group">
+                        <label for="editserial">Серія виробника </label>
+                        <input class="form-control " zippy="editserial"/>
+
+                    </div>
+
+                    {{/usesnumber}}
+                    <div class="form-group">
+                        <label for="editquantity">Кількість</label>
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.]+"
+                               style="width: 70px;">
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary  mr-2">
+                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
+                        
+                    </div>
+
+
+                </div>
+            </div>
+        </form>
+        {{#usescanner}}
+        <script>
+             $("#edittovar").focus()    
+ 
+
+            function onBarCode(ele) {
+
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                    // alert($('#barcode').val());
+                    $('#addcode').click()
+                }
+            }
+        </script>
+        {{/usescanner}}
+
+    </body>
+</html>

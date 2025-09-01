@@ -3,13 +3,13 @@
 namespace App\Pages\Doc;
 
 use App\Application as App;
-use App\System;
 use App\Entity\Customer;
 use App\Entity\Doc\Document;
-use App\Entity\MoneyFund;
-use App\Entity\Service;
 use App\Entity\Item;
+use App\Entity\Service;
 use App\Entity\Store;
+use App\Entity\MoneyFund;
+use App\System;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -25,12 +25,16 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
 
 /**
- * Страница  ввода  акта выполненных работ
+ * Страница   ввода  акта выполненных работ
  */
 class ServiceAct extends \App\Pages\Base
 {
+    public $_itemlist  = array();
+    public $_serlist  = array();
     private $_doc;
-    private $_basedocid   = 0;
+    private $_basedocid = 0;
+    private $_rowid     = -1;
+
 
     /**
     * @param mixed $docid     редактирование
@@ -39,224 +43,491 @@ class ServiceAct extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
-        
-        $this->add(new \App\Widgets\ItemList("itemsel"))->init();
-        
-        $common = System::getOptions("common");
+        $this->add(new Form('docform'));
+        $this->docform->add(new TextInput('document_number'));
 
-        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
+        $this->docform->add(new Date('document_date'))->setDate(time());
+
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
+
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+        $this->docform->customer->onChange($this, 'OnChangeCustomer');
+
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
+
+       
+        $this->docform->add(new TextArea('notes'));
+
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], 2 ))->onChange($this, 'OnPayType');
+  
+    
+        $this->docform->add(new TextInput('phone'));
+        $this->docform->add(new TextInput('device'));
+        $this->docform->add(new TextInput('devsn'));
+        $this->docform->add(new TextArea('devdesc'));
+        $this->docform->add(new TextInput('gar'));
+      
+        $this->docform->add(new TextInput('editpayed', "0"));
+        $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
+        $this->docform->add(new Label('payed', 0));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        
+        $this->docform->add(new Label('custdisc'));
+
+        $this->docform->add(new Label('payamount', 0));
+
+        $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
+
+        $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new SubmitLink('addserrow'))->onClick($this, 'addserrowOnClick');
+        $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+
+        $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
+
+        $this->docform->add(new Label('total', 0));
+        $this->docform->add(new Label('totaldisc', 0));
+        $this->docform->add(new TextInput('edittotaldisc'));
+        $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
+
+       
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+
+        $this->add(new Form('editdetail'))->setVisible(false);
+        $this->editdetail->add(new TextInput('editquantity'))->setText("1");
+        $this->editdetail->add(new TextInput('editprice'));
+        $this->editdetail->add(new TextInput('editsnumber'));
+
+        $this->editdetail->add(new AutocompleteTextInput('edittovar'))->onText($this, 'OnAutoItem');
+        $this->editdetail->edittovar->onChange($this, 'OnChangeItem', true);
+
+        $this->editdetail->add(new Label('qtystock'));
+      
+        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
+        $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+
+        $this->add(new Form('editserdetail'))->setVisible(false);
+        $this->editserdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this, 'OnChangeServive', true);
+        $this->editserdetail->add(new TextInput('editserquantity'))->setText("1");
+        $this->editserdetail->add(new TextInput('editserprice'));
+        $this->editserdetail->add(new TextArea('editserdesc'));
+        $this->editserdetail->add(new Button('cancelserrow'))->onClick($this, 'cancelrowOnClick');
+        $this->editserdetail->add(new SubmitButton('submitserrow'))->onClick($this, 'saveserrowOnClick');
+
+        //добавление нового кантрагента
+        $this->add(new Form('editcust'))->setVisible(false);
+        $this->editcust->add(new TextInput('editcustname'));
+        $this->editcust->add(new TextInput('editcustphone'));
+        $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+
+        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
+            $this->docform->document_number->setText($this->_doc->document_number);
 
+            $this->docform->document_date->setDate($this->_doc->document_date);
+
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
+            $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+
+            $this->docform->store->setValue($this->_doc->headerdata['store']);
+            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+                $this->_doc->payed = $this->_doc->headerdata['payed'];
+            }
+
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
+
+            $this->docform->payamount->setText($this->_doc->payamount);
+
+
+            $this->docform->total->setText($this->_doc->amount);
+
+            $this->docform->notes->setText($this->_doc->notes);
+
+            $this->docform->phone->setText($this->_doc->headerdata['phone'] ??'');
+            $this->docform->gar->setText($this->_doc->headerdata['gar']);
+            $this->docform->device->setText($this->_doc->headerdata['device']);
+            $this->docform->devsn->setText($this->_doc->headerdata['devsn']);
+            $this->docform->devdesc->setText($this->_doc->headerdata['devdesc']);
+
+            $this->docform->customer->setKey($this->_doc->customer_id);
+            $this->docform->customer->setText($this->_doc->customer_name);
+
+
+            $this->_itemlist = $this->_doc->unpackDetails('detail2data');
+            $this->_serlist = $this->_doc->unpackDetails('detaildata');
+            
+
+            $this->OnChangeCustomer($this->docform->customer);
+            $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
         } else {
             $this->_doc = Document::create('ServiceAct');
-            $this->_doc->document_number = $this->_doc->nextNumber();
-            $this->_doc->document_date = time();
-            if ($basedocid > 0) {  //создание на  основании
-                $basedoc = Document::load($basedocid)->cast();
-                $this->_doc->document_date = time();
-                $this->_doc->customer_id = $basedoc->customer_id;
-                $this->_doc->firm_id = $basedoc->firm_id;
-                $this->_doc->customer_id = $basedoc->customer_id;
+            $this->docform->document_number->setText($this->_doc->nextNumber());
 
+            if ($basedocid > 0) {  //создание на  основании
+                    $basedoc = Document::load($basedocid)->cast();
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+      
                     if ($basedoc->meta_name == 'ServiceAct') {
 
-                        $this->_doc->headerdata['detaildata'] = $basedoc->headerdata['detaildata'];
-                        $this->_doc->headerdata['detail2data'] = $basedoc->headerdata['detail2data'];
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        $this->docform->customer->setText($basedoc->customer_name);
+                        $this->OnChangeCustomer($this->docform->customer);
+                      
+                      
 
-
+                        $this->_serlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detail2data');
+                      
+                      
+                        $this->calcTotal();
+                        $this->calcPay();
                     }
-                }
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    $list =[];
                     if ($basedoc->meta_name == 'Task') {
-                        $i=0;
-                        foreach($basedoc->unpackDetails('detaildata') as $v) {
-                            if($v->service_id>0) {
-                                $list[++$i] = $v ;
-                            }
-                        }
-                        $this->_doc->packDetails('detaildata', $list);
-                    }
-                }
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'Invoice') {
-                        $i=0;
-                        $list=[];
-                        foreach($basedoc->unpackDetails('detaildata') as $v) {
-                            if($v->service_id>0) {
-                                $list[++$i] = $v ;
-                            }
-                        }
-                        $this->_doc->packDetails('detaildata', $list);
-                        $i=0;
-                        $list=[];
-                        foreach($basedoc->unpackDetails('detaildata') as $v) {
-                            if($v->item_id>0) {
-                                $list[++$i] = $v ;
-                            }
-                        }
-                        $this->_doc->packDetails('detail2data', $list);
 
-                    }
+                      
+                        $this->_serlist = $basedoc->unpackDetails('detaildata');
+                     
+                      
+                        $this->calcTotal();
+                        $this->calcPay();
+
+                      
+                      
+                    }  
+                    
                 }
             }
         }
+        $this->OnPayType($this->docform->paytype);
+
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_serlist')), $this, 'detailOnRow'))->Reload();
+        $this->docform->add(new DataView('detail2', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detail2OnRow'))->Reload();
+        if (false == \App\ACL::checkShowDoc($this->_doc)) {
+            return;
+        }
+
     }
 
-    public function loaddata($args, $post) {
+    public function detailOnRow($row) {
+        $item = $row->getDataItem();
 
-        if (false == \App\ACL::checkShowDoc($this->_doc, false, false)) {
+        $row->add(new Label('service',  $item->service_name));
 
-            return json_encode(['error'=>'Нема прав на  доступ до документу' ], JSON_UNESCAPED_UNICODE);
+        $row->add(new Label('desc', $item->desc));
+        
+
+        $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('disc', H::fa($item->disc)));
+
+        $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
+        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+    }
+
+    public function detail2OnRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('tovar',  $item->itemname  ));
+
+        $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('sn2', $item->msr));
+        $row->add(new Label('msr', $item->msr));
+
+        $row->add(new Label('quantity2', H::fqty($item->quantity)));
+        $row->add(new Label('price2', H::fa($item->price)));
+        $row->add(new Label('disc2', H::fa($item->disc)));
+
+        $row->add(new Label('amount2', H::fa($item->quantity * $item->price)));
+        $row->add(new ClickLink('delete2'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('edit2'))->onClick($this, 'editOnClick');
+    }
+
+    public function deleteOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+        $item = $sender->owner->getDataItem();
+        
+        if ($item instanceof Service) {
+  
+            $rowid =  array_search($item, $this->_serlist, true);
+
+            $this->_serlist = array_diff_key($this->_serlist, array($rowid => $this->_serlist[$rowid]));
+
+            $this->docform->detail->Reload();
+        }
+        if ($item instanceof Item) {
+  
+            $rowid =  array_search($item, $this->_itemlist, true);
+
+            $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+
+            $this->docform->detail2->Reload();
+        }
+        $this->calcTotal();
+        $this->calcPay();
+    }
+   
+    public function addrowOnClick($sender) {
+        $this->editdetail->setVisible(true);
+        $this->editdetail->editquantity->setText("1");
+        $this->editdetail->editprice->setText("");
+        $this->editdetail->editsnumber->setText("");
+        $this->docform->setVisible(false);
+        $this->wselitem->setVisible(false);
+              
+        $this->_rowid = -1;
+    }
+
+    public function addserrowOnClick($sender) {
+        $this->editserdetail->setVisible(true);
+        $this->editserdetail->editserquantity->setText("1");
+        $this->editserdetail->editserprice->setText("");
+        $this->editserdetail->editserdesc->setText("");
+        $this->docform->setVisible(false);
+        $this->wselitem->setVisible(false);
+              
+        $this->_rowid = -1;
+    }
+
+    public function editOnClick($sender) {
+        $item = $sender->getOwner()->getDataItem();
+        $this->docform->setVisible(false);
+        if ($item instanceof Item) {
+            $this->editdetail->setVisible(true);
+
+            $this->editdetail->editquantity->setText($item->quantity);
+            $this->editdetail->editprice->setText($item->price);
+            $this->editdetail->editsnumber->setText($item->snumber);
+
+            $this->editdetail->edittovar->setKey($item->item_id);
+            $this->editdetail->edittovar->setText($item->itemname);
+            $this->_rowid =  array_search($item, $this->_itemlist, true);
+            
+        }
+        if ($item instanceof Service) {
+            $this->editserdetail->setVisible(true);
+
+            $this->editserdetail->editserdesc->setText($item->desc);
+            $this->editserdetail->editserquantity->setText($item->quantity);
+            $this->editserdetail->editserprice->setText($item->price);
+
+            $this->editserdetail->editservice->setValue($item->service_id);
+            $this->_rowid =  array_search($item, $this->_serlist, true);
+
+        }
+
+
+      
+    }
+
+    public function saverowOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
         }
         $common = System::getOptions("common");
-
-
-        $ret =[];
         
-        $ret['options'] = [];        
-        $ret['options']['usesnumber']   =  $common['usesnumber'] ;
-        
-        $ret['doc'] = [];
-        $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
-        $ret['doc']['document_number']   =   $this->_doc->document_number ;
-        $ret['doc']['notes']   =   $this->_doc->notes ;
-        $ret['doc']['firm_id']   =   $this->_doc->firm_id ?? 0;
-        $ret['doc']['customer_id']   =   $this->_doc->customer_id ?? 0;
-        $ret['doc']['customer_name']   =   $this->_doc->customer_name ;
-        $ret['doc']['store']   =   $this->_doc->headerdata['store'] ?? 0;
-        $ret['doc']['contract_id']   =   $this->_doc->headerdata['contract_id'] ?? 0;
-        $ret['doc']['device']   =   $this->_doc->headerdata['device'] ?? '';
-        $ret['doc']['devsn']   =   $this->_doc->headerdata['devsn'] ?? '';
-        $ret['doc']['devdesc']   =   $this->_doc->headerdata['devdesc'] ?? '';
-        $ret['doc']['gar']   =   $this->_doc->headerdata['gar'] ?? '';
-        $ret['doc']['amount']   = H::fa($this->_doc->amount);
-        $ret['doc']['payamount']   = H::fa($this->_doc->payamount);
-        $ret['doc']['paydisc']   = H::fa($this->_doc->headerdata['paydisc']??0);
-        $ret['doc']['payment']   = H::fa($this->_doc->headerdata['payment']??0);
-        $ret['doc']['payed']   = H::fa($this->_doc->headerdata['payed']??0);
-        $ret['doc']['totaldisc']   = H::fa($this->_doc->headerdata['totaldisc']??0);
-        $ret['doc']['bonus']   = H::fa($this->_doc->headerdata['bonus']??0);
-
-        $ret['doc']['services'] = [];
-        $servicelist =  $this->_doc->unpackDetails('detaildata') ;
-        foreach($servicelist as $ser) {
-            $ret['doc']['services'][]  = array(
-               'service_id'=>$ser->service_id,
-               'service_name'=>$ser->service_name ,
-               'desc'=>$ser->desc ,
-               'price'=>H::fa($ser->price) ,
-               'disc'=>$ser->disc ,
-               'msr'=>$ser->msr ,
-               'pureprice'=>$ser->pureprice ,
-
-               'quantity'=>H::fqty($ser->quantity) ,
-               'amount'=>H::fa(doubleval($ser->quantity) * doubleval($ser->price))
-
-            );
+        $id = $this->editdetail->edittovar->getKey();
+        if ($id == 0) {
+            $this->setError("Не обрано товар");
+            return;
         }
 
-        $ret['doc']['items'] = [];
-        $itemlist =  $this->_doc->unpackDetails('detail2data') ;
-        foreach($itemlist as $item) {
-            $ret['doc']['items'][]  = array(
-               'item_id'=>$item->item_id,
-               'itemname'=>$item->itemname ,
-               'item_code'=>$item->item_code ,
-               'price'=>H::fa($item->price) ,
-               'disc'=>$item->disc ,
-               'msr'=>$item->msr ,
-               'snumber'=>$item->snumber ,
-               'pureprice'=>$item->pureprice ,
+        $item = Item::load($id);
 
-               'quantity'=>H::fqty($item->quantity) ,
-               'amount'=>H::fa($item->quantity * $item->price)
+        $item->snumber = $this->editdetail->editsnumber->getText();
+        $item->quantity = $this->editdetail->editquantity->getText();
 
-            );
+        $item->price = $this->editdetail->editprice->getText();
+
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
-        //для  комбобокса
-        $ret['servicelist'] = \App\Util::tokv(\App\Entity\Service::getList()) ;
+        if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
+            
+            if (strlen($item->snumber) == 0  ) {
 
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+                $this->setError("Потрібен серійний номер");
+                return;
+            }
+            
+
+            $slist = $item->getSerials($store_id);
+            
+            if (in_array($item->snumber, $slist) == false) {
+
+                $this->setError('Невірний серійний номер  ');
+                return;
+            }  
+
+            
+            if($common['usesnumber'] == 2  ) {           
+                $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
+                if ($st instanceof Stock) {
+                     $item->sdate = $st->sdate;
+                }           
+            }
+            if($common['usesnumber'] == 3  ) {           
+
+                foreach(  $this->_itemlist as $i){
+                    if($this->_rowid == -1 && strlen($item->snumber) > 0 &&  $item->snumber==$i->snumber )  {
+                        $this->setError('Вже є ТМЦ  з таким серійним номером');
+                        return;
+                        
+                    }
+                }
+                
+            }
+        }
+  
+        if($this->_rowid == -1) {
+            $found=false;
+            
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id ) {
+                    $this->_itemlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+        
+            if(!$found) {
+               $this->_itemlist[] = $item;    
+            }
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
+        }
+
+
+        $this->editdetail->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->detail2->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+        //очищаем  форму
+        $this->editdetail->edittovar->setKey(0);
+        $this->editdetail->edittovar->setText('');
+
+        $this->editdetail->editquantity->setText("1");
+
+        $this->editdetail->editprice->setText("");
     }
 
+    public function saveserrowOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+        $id = $this->editserdetail->editservice->getValue();
+        if ($id == 0) {
+            $this->setError("Не обрано послугу");
+            return;
+        }
+  
+        $item = Service::load($id);
+ 
+        $item->quantity = $this->editserdetail->editserquantity->getText();
+        $item->desc = $this->editserdetail->editserdesc->getText();
 
-    public function save($args, $post) {
-        $post = json_decode($post) ;
-        if (false == \App\ACL::checkEditDoc($this->_doc, false, false)) {
+        $price = $this->editserdetail->editserprice->getText();
 
-            return json_encode(['error'=>'Нема прав редагування документу' ], JSON_UNESCAPED_UNICODE);
+        $item->disc = '';
+        $item->pureprice = $item->getPurePrice();
+        if($item->pureprice > $price) {
+            $item->disc = number_format((1 - ($price/($item->pureprice)))*100, 1, '.', '') ;
         }
 
-        $this->_doc->document_number = $post->doc->document_number;
-        $this->_doc->document_date = strtotime($post->doc->document_date);
-        $this->_doc->notes = $post->doc->notes;
-        $this->_doc->firm_id = $post->doc->firm_id;
-        $this->_doc->customer_id = $post->doc->customer_id;
-        if($this->_doc->customer_id >0) {
-            $c = \App\Entity\Customer::load($this->_doc->customer_id);
-            $this->_doc->headerdata['customerphone'] = $c->phone;
+        $item->price = $price;
+
+        if($this->_rowid == -1) {
+            $found=false;
+            
+            foreach ($this->_serlist as $ri => $_item) {
+                if ($_item->service_id == $item->service_id ) {
+                    $this->_serlist[$ri]->quantity += $item->quantity;
+                    $found = true;
+                }
+            }        
+        
+            if(!$found) {
+               $this->_serlist[] = $item;    
+            }
+        } else {
+            $this->_serlist[$this->_rowid] = $item;
         }
 
-        $this->_doc->amount = $post->doc->total;
-        $this->_doc->payamount = $post->doc->payamount;
-        $this->_doc->payed = $post->doc->payed;
-        $this->_doc->headerdata['payed'] = $post->doc->payed;
-        $this->_doc->headerdata['store'] = $post->doc->store;
-        $this->_doc->headerdata['devsn'] = $post->doc->devsn;
-        $this->_doc->headerdata['devdesc'] = $post->doc->devdesc;
-        $this->_doc->headerdata['device'] = $post->doc->device;
-        $this->_doc->headerdata['gar'] = $post->doc->gar;
-        $this->_doc->headerdata['contract_id'] = $post->doc->contract_id;
-        $this->_doc->headerdata['payment'] = $post->doc->payment??0;
-        $this->_doc->headerdata['totaldisc'] = $post->doc->totaldisc;
-        $this->_doc->headerdata['bonus'] = $post->doc->bonus;
+        $this->editserdetail->setVisible(false);
 
-        if (false == $this->_doc->checkUniqueNumber()) {
-            return json_encode(['error'=>'Не унікальний номер документу. Створено новий.','newnumber'=>$this->_doc->nextNumber()], JSON_UNESCAPED_UNICODE);
+        $this->docform->setVisible(true);
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+        $this->calcPay();
+        //очищаем  форму
+        $this->editserdetail->clean();
+
+
+        $this->editserdetail->editserquantity->setText("1");
+
+
+    }
+
+    public function cancelrowOnClick($sender) {
+        $this->editdetail->setVisible(false);
+        $this->editserdetail->setVisible(false);
+        $this->editserdetail->clean();
+        $this->editserdetail->editserquantity->setText("1");
+
+        $this->docform->setVisible(true);
+        //очищаем  форму
+        $this->editdetail->clean();
+
+        $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
+ 
+    }
+
+    public function savedocOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+        $this->_doc->document_number = $this->docform->document_number->getText();
+        $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+        $this->_doc->notes = $this->docform->notes->getText();
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+        if ($this->_doc->customer_id > 0) {
+            $customer = Customer::load($this->_doc->customer_id);
+            $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
+        }
+        $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+
+        if ($this->checkForm() == false) {
+            return;
         }
 
+ 
+        $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
 
-        $i=0;
+        $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
+        $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
+        $this->_doc->headerdata['device'] = $this->docform->device->getText();
+        $this->_doc->headerdata['devsn'] = $this->docform->devsn->getText();
+        $this->_doc->headerdata['devdesc'] = $this->docform->devdesc->getText();
+        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
+      
+        $this->_doc->packDetails('detaildata', $this->_serlist);
+        $this->_doc->packDetails('detail2data', $this->_itemlist);
 
-        $itemlist=[];
-        foreach($post->doc->items as $it) {
-            $i++;
-            $item = Item::load($it->item_id);
+        $this->_doc->amount = $this->docform->total->getText();
+        $this->_doc->payed = 0;
+        $this->_doc->payamount = $this->docform->payamount->getText();
 
-            $item->quantity = $it->quantity;
-            $item->disc = $it->disc;
-            $item->price = $it->price;
-            $item->pureprice = $it->pureprice;
-            $item->snumber = $it->snumber;
-            $item->rowid = $i;
-
-            $itemlist[$i]=$item;
-        }
-        $this->_doc->packDetails('detail2data', $itemlist);
-
-        $i=0;
-        $servicelist=[];
-        foreach($post->doc->services as $s) {
-            $i++;
-            $ser = Service::load($s->service_id);
-
-            $ser->quantity = $s->quantity;
-            $ser->disc = $s->disc;
-            $ser->desc = $s->desc;
-            $ser->price = $s->price;
-            $ser->pureprice = $s->pureprice;
-            $ser->rowid = $i;
-
-            $servicelist[$i]=$ser;
-        }
-
-        $this->_doc->packDetails('detaildata', $servicelist);
-        $isEdited = $this->_doc->document_id >0;
+        $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -265,47 +536,283 @@ class ServiceAct extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
-
-
             $this->_doc->save();
-
-            if ($post->op != 'savedoc') {
+            if ($sender->id == 'savedoc') {
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
+            }
+            if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
+                $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                
 
-
-                if ($post->op == 'execdoc' || $post->op == 'paydoc') {
-                    
-                    $this->_doc->headerdata['timeentry'] = time();
-                    $this->_doc->updateStatus(Document::STATE_INPROCESS);
-                }
-                if (  $post->op == 'paydoc') {
-                     $this->_doc->updateStatus(Document::STATE_WP);
-                }
-
-
-            } else {
-                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
+
             $conn->CommitTrans();
+            if ($sender->id == 'execdoc') {
+                // App::Redirect("\\App\\Pages\\Register\\GList");
+                //  return;
+            }
 
-
+            if ($isEdited) {
+                App::RedirectBack();
+            } else {
+                App::Redirect("\\App\\Pages\\Register\\SerList" );
+            }
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
             if ($isEdited == false) {
                 $this->_doc->document_id = 0;
             }
+            $this->setError($ee->getMessage());
+
             $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            return;
+        }
+    }
+ 
+    public function onTotaldisc($sender) {
+        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
+        $this->calcPay() ;
+    }
+  
+    /**
+     * Расчет  итого
+     *
+     */
+    private function calcTotal() {
 
-            return json_encode(['error'=>$ee->getMessage()], JSON_UNESCAPED_UNICODE);
+        $total = 0;
+        foreach ($this->_serlist as $ser) {
+            $ser->amount = H::fa($ser->price * $ser->quantity);
 
+            $total = $total + $ser->amount;
+        }
+
+        foreach ($this->_itemlist as $item) {
+            $item->amount = H::fa($item->price * $item->quantity);
+
+            $total = $total + $item->amount;
+        }
+
+        $this->docform->total->setText(H::fa($total));
+ 
+    }
+
+    private function calcPay() {
+        $total = $this->docform->total->getText();
+        $totaldisc = $this->docform->totaldisc->getText();
+
+        if($totaldisc>0) {
+            $total = $total - $totaldisc;
+        }
+
+
+        $this->docform->payamount->setText(H::fa($total));
+
+
+    }
+
+    /**
+     * Валидация   формы
+     *
+     */
+    private function checkForm() {
+        if (strlen($this->_doc->document_number) == 0) {
+            $this->setError('Введіть номер документа');
+        }
+        if (false == $this->_doc->checkUniqueNumber()) {
+            $next = $this->_doc->nextNumber();
+            $this->docform->document_number->setText($next);
+            $this->_doc->document_number = $next;
+            if (strlen($next) == 0) {
+                $this->setError('Не створено унікальный номер документа');
+            }
+        }
+        if (count($this->_serlist) == 0) {
+            $this->setError("Не введено послуг");
+        }
+
+        if ( count($this->_itemlist) > 0 && ($this->docform->store->getValue() > 0) == false) {
+            $this->setError("Не обрано склад");
+        }
+
+        $c = $this->docform->customer->getKey();
+        if ($c == 0) {
+            $this->setError("Не задано замовника");
+        }
+
+        return !$this->isError();
+    }
+
+    public function OnPayType($sender) {
+         $this->docform->payed->setVisible($sender->getValue()==1);
+         $this->docform->payment->setVisible($sender->getValue()==1);
+    }
+
+    public function backtolistOnClick($sender) {
+        App::RedirectBack();
+    }
+
+    public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $price = $item->getLastPartion(0, "", false);
+      
+        $store_id = $this->docform->store->getValue();
+
+        $customer_id = $this->docform->customer->getKey()  ;
+     
+        $price = $item->getPrice();
+
+
+        $this->editdetail->editprice->setText(H::fa($price));
+
+    }
+
+    
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+       
+
+        $this->wselitem->Reload();
+    }
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edittovar->setKey($item_id);
+        $this->editdetail->edittovar->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edittovar);
+    }
+    
+    public function OnAutoCustomer($sender) {
+        return Customer::getList($sender->getText(), 0, true);
+    }
+
+    public function OnChangeServive($sender) {
+        $id = $sender->getValue();
+        $customer_id = $this->docform->customer->getKey()  ;
+
+        $item = Service::load($id);
+        $price = $item->getPrice($customer_id);
+
+        $this->editserdetail->editserprice->setText($price);
+
+
+    }
+
+    public function OnChangeCustomer($sender) {
+        $this->docform->custdisc->setVisible(false);
+
+        $customer_id = $this->docform->customer->getKey();
+        if ($customer_id > 0) {
+            $cust = Customer::load($customer_id);
+          
+
+            $disctext = "";
+            $d =  $cust->getDiscount() ;
+            if (doubleval($d) > 0) {
+                $disctext = "Постійна знижка " . " {$d}%";
+            } else {
+                $bonus = $cust->getBonus();
+                if ($bonus > 0) {
+                    $disctext = "Нараховано бонусів {$bonus} ";
+                }
+            }
+            $this->docform->phone->setText($cust->phone);
+            $this->docform->custdisc->setText($disctext);
+            $this->docform->custdisc->setVisible(strlen($disctext) >0);
 
         }
 
-        return json_encode([], JSON_UNESCAPED_UNICODE);
+
+
+        //    $this->calcTotal();
+        //     $this->calcPay();
+        $this->OnCustomerFirm(null);
+    }
+
+    public function OnAutoItem($sender) {
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text);
+    }
+
+    //добавление нового контрагента
+    public function addcustOnClick($sender) {
+        $this->editcust->setVisible(true);
+        $this->docform->setVisible(false);
+
+        $this->editcust->editcustname->setText('');
+        $this->editcust->editcustphone->setText('');
+    }
+
+    public function savecustOnClick($sender) {
+        $custname = trim($this->editcust->editcustname->getText());
+        if (strlen($custname) == 0) {
+            $this->setError("Не введено назву");
+            return;
+        }
+        $cust = new Customer();
+        $cust->customer_name = $custname;
+        $cust->phone = $this->editcust->editcustphone->getText();
+        $cust->phone = \App\Util::handlePhone($cust->phone);
+
+        if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
+            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            return;
+        }
+
+        $c = Customer::getByPhone($cust->phone);
+        if ($c != null) {
+            if ($c->customer_id != $cust->customer_id) {
+                $this->setError("Вже існує контрагент з таким телефоном");
+                return;
+            }
+        }
+        $cust->type = 1;
+        $cust->save();
+        $this->docform->customer->setText($cust->customer_name);
+        $this->docform->customer->setKey($cust->customer_id);
+
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->custdisc->setVisible(false);
+
+        $this->docform->phone->setText($cust->phone);
+    }
+
+    public function cancelcustOnClick($sender) {
+        $this->editcust->setVisible(false);
+        $this->docform->setVisible(true);
+    }
+  
+    public function OnCustomerFirm($sender) {
+        $c = $this->docform->customer->getKey();
+      
+        $ar = \App\Entity\Contract::getList($c );
+
+        $this->docform->contract->setOptionList($ar);
+        if (count($ar) > 0) {
+            $this->docform->contract->setVisible(true);
+        } else {
+            $this->docform->contract->setVisible(false);
+            $this->docform->contract->setValue(0);
+        }
+    }
+
+    public function getPriceByQty($args, $post=null) {
+        $item = Item::load($args[0]) ;
+        $args[1] = str_replace(',', '.', $args[1]) ;
+        $price = $item->getActionPriceByQuantity($args[1]);
+
+
+        return $price;
 
     }
+
+   
 }

@@ -28,7 +28,10 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $this->detail .= "<bank><![CDATA[{$this->bank}]]></bank>";
         $this->detail .= "<bankacc><![CDATA[{$this->bankacc}]]></bankacc>";
-
+        $this->detail .= "<iban><![CDATA[{$this->iban}]]></iban>";
+        $this->detail .= "<payname><![CDATA[{$this->payname}]]></payname>";
+        $this->detail .= "<tin><![CDATA[{$this->tin}]]></tin>";
+   
         $this->detail .= "</detail>";
 
         return true;
@@ -49,6 +52,10 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $this->bank = (string)($xml->bank[0]);
         $this->bankacc = (string)($xml->bankacc[0]);
+        $this->iban = (string)($xml->iban[0]);
+        $this->payname = (string)($xml->payname[0]);
+        $this->tin = (string)($xml->tin[0]);
+       
 
         parent::afterLoad();
     }

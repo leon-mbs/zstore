@@ -113,17 +113,14 @@ class Orders extends \App\Pages\Base
             $neworder->packDetails('detaildata', $itlist);
             $neworder->headerdata['pricetype'] = 'price1';
 
-            $neworder->headerdata['cemail'] = $puorder['email'];
-            $neworder->headerdata['cname'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
-            $neworder->headerdata['cphone'] = $puorder['phone'] ;
+            $neworder->headerdata['email'] = $puorder['email'];
+            $neworder->headerdata['name'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
+            $neworder->headerdata['phone'] = $puorder['phone'] ;
             $neworder->headerdata['puorder'] = $puorder['id'];
             $neworder->headerdata['outnumber'] = $puorder['id'];
             $neworder->headerdata['puorderback'] = 0;
             $neworder->headerdata['salesource'] = $modules['pusalesource'];
-            if($modules['pumf']>0) {
-              $neworder->headerdata['payment'] = $modules['pumf'];
-            }
-
+                 
             $neworder->headerdata['puclient'] = $puorder['client_first_name'] . ' ' . $puorder['client_last_name'];
 
             $neworder->amount = H::fa($puorder['price']);
@@ -139,13 +136,40 @@ class Orders extends \App\Pages\Base
             if (strlen($puorder['phone']) > 0) {
                 $neworder->notes .= " Тел:" . str_replace('+', '', $puorder['phone']). ";";
             }
+            
+            if (strlen($puorder['payment_data']['name']) > 0) {
+                $neworder->notes .= " Оплата: " . $puorder['payment_data']['type']." " . $puorder['payment_data']['status'] . "    ;";
+            }
+   
+            if ( is_array($puorder['payment_option']) &&   count($puorder['payment_option']) > 0) {
+                $neworder->notes .= " Оплата: "  ;
+                foreach($puorder['payment_option'] as $o) {
+                   $neworder->notes .= ($puorder['payment_option']['name'] . " ");    
+                }
+               $neworder->notes .=  ";" ; 
+            }            
+            
+            
             if (strlen($puorder['delivery_option']['name']) > 0) {
-                $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . ";";
+                $neworder->notes .= " Доставка:" . $puorder['delivery_option']['name'] . "  " . $puorder['delivery_option']['shipping_service'] . ";";
             }
 
             if (strlen($puorder['delivery_address']) > 0) {
                 $neworder->notes .= " Адреса:" . $puorder['delivery_address'] . ";";
+                $neworder->headerdata['ship_address']   = $puorder['delivery_address'];
             }
+            
+            if (is_array($puorder['delivery_provider_data'])  ) {
+        
+                if($puorder['delivery_provider_data']['provider']=='nova_poshta'){
+                   $neworder->headerdata['delivery'] =  Document::DEL_NP ;
+                   $neworder->headerdata['npaddress'] = $puorder['delivery_address'] ;
+                }
+                 
+            }
+            
+            
+            
             if (strlen($puorder['client_notes']) > 0) {
                 $neworder->notes .= " Комментар:" . $puorder['client_notes'] . ";";
             }
@@ -169,6 +193,9 @@ class Orders extends \App\Pages\Base
 
     public function onImport($sender) {
         $modules = System::getOptions("modules");
+        $defpaytype=intval($modules['pupaytype']);
+        $defstore=intval($modules['pustore']);
+        $defmf=intval($modules['pumf']);
 
         foreach ($this->_neworders as $shoporder) {
             $shoporder->document_number = $shoporder->nextNumber();
@@ -177,19 +204,19 @@ class Orders extends \App\Pages\Base
             }
 
             if ( $modules['puinsertcust'] == 1) {
-                $phone = \App\Util::handlePhone($shoporder->headerdata['cphone'] )  ;
+                $phone = \App\Util::handlePhone($shoporder->headerdata['phone'] )  ;
                 $cust = Customer::getByPhone($phone);
                 if ($cust == null) {
-                    $cust = Customer::getByEmail($shoporder->headerdata['cemail']);
+                    $cust = Customer::getByEmail($shoporder->headerdata['email']);
                 }   
-                if ($cust == null &&strlen($shoporder->headerdata['cname']) >0 && ( strlen($phone) >0 || strlen($shoporder->headerdata['cemail'])>0 ) ) {
+                if ($cust == null &&strlen($shoporder->headerdata['name']) >0 && ( strlen($phone) >0 || strlen($shoporder->headerdata['email'])>0 ) ) {
                     $cust = new Customer();
-                    $cust->customer_name = $shoporder->headerdata['cname'];
+                    $cust->customer_name = $shoporder->headerdata['name'];
                     $cust->phone = $phone;
 
                     $cust->type = Customer::TYPE_BAYER;
 
-                    $cust->email = $shoporder->headerdata['cemail'];
+                    $cust->email = $shoporder->headerdata['email'];
                     $cust->comment = "Клiєнт Prom UA";
                     $cust->save();
                 }        
@@ -198,13 +225,14 @@ class Orders extends \App\Pages\Base
                 }
             }
 
-
+            $shoporder->headerdata['paytype'] = $defpaytype;  //постоплата
+            $shoporder->headerdata['payment'] = $defmf;   
+            $shoporder->headerdata['store'] = $defstore;   
+ 
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
-            if($modules['pusetpayamount']==1) {
-                $shoporder->updateStatus(Document::STATE_WP);
-            }
+     
 
 
         }

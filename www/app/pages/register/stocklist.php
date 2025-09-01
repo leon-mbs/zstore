@@ -42,7 +42,10 @@ class StockList extends \App\Pages\Base
         $this->filter->add(new AutocompleteTextInput('fitem'))->onText($this, 'OnAutoItem');
         $this->filter->fitem->onChange($this, "onItem");
         $this->filter->add(new TextInput('fsnumber'))->setVisible(false);
- 
+        $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
+        
+        $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+   
         $doclist = $this->add(new DataView('doclist', new StockListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -133,6 +136,7 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         $store_id = $this->page->filter->fstore->getValue();
         $item_id = $this->page->filter->fitem->getKey();
         $snumber = $this->page->filter->fsnumber->getText();
+        $emp = $this->page->filter->searchemp->getValue();
 
         $where = " s.item_id = {$item_id} and date(d.document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(d.document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
         if (strlen($snumber) > 0) {
@@ -140,6 +144,10 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         }
         if ($store_id > 0) {
             $where .= " and s.store_id=" . $store_id;
+        }
+
+        if ($emp > 0) {
+            $where .= " and s.emp_id=" . $emp;
         }
 
 

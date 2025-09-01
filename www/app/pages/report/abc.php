@@ -25,11 +25,11 @@ class ABC extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = "Товари, Маржа";
+        $this->typelist[1] = "Товари, маржа";
         $this->typelist[2] = "Постачальники, об`єм поставок";
         $this->typelist[3] = "Покупці, об`єм продаж";
-        $this->typelist[4] = "Послуги, виторг";
-        $this->typelist[5] = "Покупці, Маржа";
+        $this->typelist[4] = "Послуги, маржа";
+        $this->typelist[5] = "Покупці, маржа";
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
@@ -75,7 +75,7 @@ class ABC extends \App\Pages\Base
         if ($type == 3) {  //Покупатели, объем продаж"
             $detail = $this->find3();
         }
-        if ($type == 4) {   //Услуги, выручка
+        if ($type == 4) {   //Услуги, прибыль
             $detail = $this->find4();
         }
         if ($type == 5) {  //Покупатели, прибыль
@@ -203,7 +203,7 @@ class ABC extends \App\Pages\Base
         $list = array();
         $conn = \ZDB\DB::getConnect();
         $sql = "SELECT * FROM (
-                    SELECT services.service_name as name, SUM( ABS( entrylist_view.outprice *entrylist_view.quantity ) ) AS value
+                    SELECT services.service_name as name, SUM( ABS( (entrylist_view.outprice - entrylist_view.cost) *entrylist_view.quantity ) ) AS value
                     FROM  entrylist_view 
                        join services on entrylist_view.service_id = services.service_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 

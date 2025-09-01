@@ -50,7 +50,7 @@ class POSCheck extends Document
 
         $common = System::getOptions('common');
 
-        $firm = H::getFirmData($this->firm_id,$this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
         $shopname=$common["shopname"] ;
         $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
@@ -132,7 +132,7 @@ class POSCheck extends Document
 
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
     
         $shopname=$common["shopname"] ;
         $pos = \App\Entity\Pos::load($this->headerdata['pos']) ;
@@ -181,6 +181,7 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
+                        "payeq"           => strlen($pos->payeq ) > 0 ? $pos->payeq : false,
                         "isdocqrcode"     =>  $common['printoutqrcode']==1,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
                         "docqrcode"       => $this->getQRCodeImage(),
@@ -240,7 +241,10 @@ class POSCheck extends Document
                 $header['form3']  = true;
             }
         }
-
+        if($header['form1']  == true) {
+           $header['payeq']  = false; 
+        }
+        
         if($ps) {
             $report = new \App\Report('doc/poscheck_bill_ps.tpl');
         } else {
@@ -254,7 +258,8 @@ class POSCheck extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-
+        $lost = 0;
+      
         $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
         $k = 1;   //учитываем  скидку
         if ($dd > 0 && $this->amount > 0) {
@@ -294,9 +299,10 @@ class POSCheck extends Document
             $parent = Document::load($this->parent_id);
             if ($parent->meta_name == 'ServiceAct' ) {
                 if($parent->state == Document::STATE_WP )  {
-                   $parent->updateStatus(Document::STATE_PAYED); 
+               //    $parent->updateStatus(Document::STATE_PAYED); 
                 }
-                
+            //    $parent->setHD('waitpay',0); 
+             //   $parent->save();             
                 
                 return true; //проводки выполняются  в  сервисе
             }
@@ -306,11 +312,12 @@ class POSCheck extends Document
         // работы
         foreach ($this->unpackDetails('services') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0-$ser->quantity);
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $ser->price * $k);
-
+            $sc->setOutPrice( $ser->price * $k);
+            $sc->cost= $ser->cost;
+        
             $sc->save();
         }
  
@@ -327,7 +334,7 @@ class POSCheck extends Document
                 if ($item->autooutcome == 1) {    //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
-                        $lost = 0;
+                       
 
                         $itemp = \App\Entity\Item::load($part->item_id);
                         if($itemp == null) {
@@ -339,13 +346,7 @@ class POSCheck extends Document
                             throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
 
                         }
-                        //учитываем  отходы
-                        if ($itemp->lost > 0) {
-                            $kl = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $kl;
-                            $lost = $kl - 1;
-                        }
-
+                       
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
@@ -355,16 +356,7 @@ class POSCheck extends Document
                             $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
-                    
-                            if ($lost > 0) {
-                                $io = new \App\Entity\IOState();
-                                $io->document_id = $this->document_id;
-                                $io->amount = 0 - $st->quantity * $st->partion * $lost;
-                                $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-                                $io->save();
-
-                            }    
+                            
                        }
                     }
                 }
@@ -413,16 +405,23 @@ class POSCheck extends Document
         $disc = \App\System::getOptions("discount");
         $emp_id = \App\System::getUser()->employee_id ;
         if($emp_id >0 && ($disc["bonussell"]??0) >0) {
-            $b =  $this->amount * $disc["bonussell"] / 100;
-            $ua = new \App\Entity\EmpAcc();
-            $ua->optype = \App\Entity\EmpAcc::BONUS;
-            $ua->document_id = $this->document_id;
-            $ua->emp_id = $emp_id;
-            $ua->amount = $b;
-            $ua->save();
-
+            $b = intval( $this->amount * $disc["bonussell"] / 100);
+            if($b >0){
+                $ua = new \App\Entity\EmpAcc();
+                $ua->optype = \App\Entity\EmpAcc::BONUS;
+                $ua->document_id = $this->document_id;
+                $ua->emp_id = $emp_id;
+                $ua->amount = $b;
+                $ua->save();
+             
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\System::getUser()->user_id;;;
+                $n->message = "Бонус " . $b  ;
+                $n->sender_id =  \App\Entity\Notify::SYSTEM;
+                $n->save(); 
+            }
         }
-      
+ 
         
         return true;
     }
@@ -477,4 +476,37 @@ class POSCheck extends Document
         
     }
 
+    
+   protected function onState($state, $oldstate) {
+        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'Order' && $order->state > 4) {
+
+                          
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+            
+                    if($order->state == Document::STATE_INSHIPMENT || 
+                        $order->state == Document::STATE_INPROCESS ||  
+                        $order->state == Document::STATE_FINISHED ||  
+                        $order->state == Document::STATE_READYTOSHIP) {
+                            
+                        $order->updateStatus(Document::STATE_DELIVERED);
+                    }                            
+                    \App\Helper::log("order  state {$order->state} payamount {$this->payamount} payed  {$this->payed}  ");
+                    if($this->payed  >= $this->payamount  ) {  //если  оплачено  
+                        if ($order->state == Document::STATE_DELIVERED) {
+                            $order->updateStatus(Document::STATE_CLOSED);
+                        }
+                    }
+                    
+                
+
+                }
+            }
+        }
+    }
+     
+    
 }

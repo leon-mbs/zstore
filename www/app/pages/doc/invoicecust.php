@@ -44,7 +44,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new Date('document_date'))->setDate(time());
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
+     
         $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new TextInput('notes'));
@@ -118,7 +118,7 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
             $this->docform->customer->setText($this->_doc->customer_name);
-            $this->docform->firm->setValue($this->_doc->firm_id);
+
             $this->OnCustomerFirm($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -165,6 +165,7 @@ class InvoiceCust extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -232,7 +233,8 @@ class InvoiceCust extends \App\Pages\Base
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
         }
-
+        $item->pricends= $item->price + $item->price * $item->nds();
+ 
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
@@ -289,10 +291,7 @@ class InvoiceCust extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
+     
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
@@ -383,12 +382,19 @@ class InvoiceCust extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
         }
         $this->docform->total->setText(H::fa($total));
+        if($nds>0) {
+            $this->docform->nds->setText(H::fa($nds));            
+        }
     }
 
     private function CalcPay() {
@@ -417,9 +423,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
-
-
-
+ 
  
     /**
      * Валидация   формы
@@ -514,9 +518,8 @@ class InvoiceCust extends \App\Pages\Base
 
     public function OnCustomerFirm($sender) {
         $c = $this->docform->customer->getKey();
-        $f = $this->docform->firm->getValue();
-
-        $ar = \App\Entity\Contract::getList($c, $f);
+      
+        $ar = \App\Entity\Contract::getList($c );
 
         $this->docform->contract->setOptionList($ar);
         if (count($ar) > 0) {

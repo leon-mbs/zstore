@@ -1,0 +1,148 @@
+<html>
+    <head>
+              <title>Вхідна ПН</title>
+    </head>
+    <body>
+
+
+        <form zippy="docform" enctype="multipart/form-data">
+            <h3>Вхідна ПН</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="document_number" >Номер документу</label>
+                        <input class="form-control" type="text" zippy="document_number" required="required">
+                    </div>
+                    <div class="form-group  ">
+                        <label for="customer" >Постачальник</label>
+
+                        <input placeholder="Почніть вводити..." class="form-control "   zippy="customer" />
+
+
+                    </div>
+                    <div class="form-group  ">
+                        <label for="contract" >Замовлення, договір </label>
+
+                        <input class="form-control" type="text" zippy="contract">
+
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="form-group">
+                        <label for="document_date" > Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  >
+                    </div>
+
+                    <div class="form-group  ">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" zippy="ernn"> В ЕРНН
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+
+                    <a zippy="addrow">Додати</a>
+                    <table class="table  table-sm">
+                        <tr>
+                            <th>Назва</th>
+                            <th  >Ед.изм.</th>
+                            <th   class="text-right"> Кіл.</th>
+                            <th    class="text-right">Ціна-</th>
+                            <th    class="text-right">Ціна+</th>
+                            <th    class="text-right">Сума</th>
+
+                            <th width="50"></th>
+                        </tr>
+                        <tr zippy="detail">
+                            <td zippy="tovar"></td>
+                            <td zippy="measure"></td>
+                            <td zippy="quantity"  class="text-right"></td>
+                            <td zippy="price"  class="text-right"></td>
+                            <td zippy="pricends"  class="text-right"></td>
+                            <td zippy="amount"  class="text-right"></td>
+
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> <a zippy="delete"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td colspan="5"  class="text-right">Всього:</td>
+                            <td zippy="total"  class="text-right"></td>
+                            <td></td>
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td colspan="5"  class="text-right">  ПДВ: </td>
+                            <td zippy="totalnds"  class="text-right"></td>
+                            <td></td>
+                        </tr>
+                         <tr style="font-weight: bolder;">
+                            <td colspan="5"  class="text-right">Разом:</td>
+                            <td zippy="totalall"  class="text-right"></td>
+                            <td></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-info  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-info  ">
+                    &nbsp;
+                    &nbsp;
+                    Iмпорт з XML <input zippy="import" type="file" style="display:inline">
+                    <input zippy="importdoc" type="submit" value="Загрузить" class="btn btn-outline-info  ">
+
+                </div>
+            </div>
+
+
+        </form>
+        <form zippy="editdetail">
+            <h4>Редагування </h4>
+            <div class="row">
+                <div class="col-4">
+
+
+                    <div class="form-group">
+                        <label for="edittovar">Назва </label>
+                        <input placeholder="Почніть вводити..." class="form-control "   zippy="edittovar" />
+
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editquantity">Кількість</label>
+                        <input class="form-control" type="text" zippy="editquantity" required="required" pattern="[0-9\.]+"
+                               style="width: 100px;"></input>
+                    </div>
+                    <div class="form-group">
+                        <label for="editprice">Ціна без ПДВ</label>
+                        <input class="form-control" type="text" zippy="editprice" required="required" pattern="[0-9\.]+"
+                               style="width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="editpricends">Ціна з ПДВ</label>
+                        <input class="form-control" type="text" zippy="editpricends" required="required" pattern="[0-9\.]+"
+                               style="width: 100px;">
+                    </div>
+                    <div class="form-group">
+                        <input type="button"     zippy="cancelrow"  value="Скасувати"  class="btn btn-secondary mr-2">
+                        <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-info"> 
+                       
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    </body>
+</html>

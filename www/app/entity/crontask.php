@@ -76,6 +76,14 @@ class CronTask extends \ZCL\DB\Entity
                 \App\Helper::setKeyVal('lastcronh', time()) ;
 
             }
+       
+            //задачи в  конце дня
+            $last =   \App\Helper::getKeyVal('lastcronhed');
+            $endday = strtotime( date('Y-m-d 23:00') );
+            if($last !==  date('Ymd') && time() > $endday  ) {
+                \App\Helper::setKeyVal('lastcronhed',date('Ymd')) ;
+                \App\Entity\Subscribe::onEndDay();
+            }
 
             //задачи  раз  в  сутки
             $last =  intval(\App\Helper::getKeyVal('lastcrond'));
@@ -104,9 +112,10 @@ class CronTask extends \ZCL\DB\Entity
 
                 //очищаем статистику
                 $dt = $conn->DBDate(strtotime('-12 month', time())) ;
-                $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
+                $conn->Execute("delete  from stats  where category not in  in (4) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
-                   
+
+              //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
               
         
                 

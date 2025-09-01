@@ -3,110 +3,42 @@
 namespace App\API;
 
 use App\Entity\Item;
+use App\Entity\CustItem;
 use App\Helper as H;
 
-class items extends JsonRPC
+class custitems extends JsonRPC
 {
-    // список категорий  ТМЦ
-    public function catlist() {
-
-
-        $list = array();
-        foreach (\App\Entity\Category::find('', 'cat_name') as $cat) {
-            $list[] = array('id' => $cat->cat_id, 'name' => $cat->cat_name);
-        }
-        return $list;
-    }
-
-    //список  складов
-    public function storelist() {
-
-
-        $list = array();
-        foreach (\App\Entity\Store::find('', 'storename') as $store) {
-            $list[] = array('id' => $store->store_id, 'name' => $store->storename);
-        }
-        return $list;
-    }
-
-    //список  типов ТМЦ
-    public function typelist() {
-        return Item::getTypes();
-    }
-
-    // список артикулов
-    public function articlelist() {
-
-
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-
-        $res = $conn->GetCol("select item_code from items order  by  item_code");
-        foreach ($res as $code) {
-            if (strlen($code) > 0) {
-                $list[] = $code;
-            }
-        }
-
-        return $list;
-    }
+ 
 
     //  список  ТМЦ
     public function itemlist($args) {
 
         $list = array();
-        $w = 'disabled<> 1 ';
+        $w = '1 = 1 ';
 
-        if ($args['cat'] > 0) {
-            $w .= " and cat_id=" . $args['cat'];
+        if ($args['customer_id'] > 0) {
+            $w .= " and customer_id=" . $args['cat'];
+        } else {
+            throw new \Exception('Не вказано  постачальника');            
         }
-        if ($args['item_type'] > 0) {
-            $w .= " and item_type=" . $args['item_type'];
-        }
-        if (strlen($args['item_code']) > 0) {
-            $w .= " and item_code=" . Item::qstr($args['item_code']);
-        }
-        if (strlen($args['bar_code']) > 0) {
-            $w .= " and bar_code=" . Item::qstr($args['bar_code']);
-        }
+        
+ 
 
-        foreach (Item::findYield($w, 'itemname') as $item) {
+        foreach (CustItem::findYield($w, 'cust_name') as $item) {
             $plist = array();
 
             $it = array(
                
+                'cust_code'    => $item->item_code,
+                'cust_name'     => $item->cust_name,
+                'price'     => $item->price,
+                'quantity'      => $item->quantity,
                 'item_code'    => $item->item_code,
-                'bar_code'     => $item->bar_code,
-                'itemname'     => $item->itemname,
-                'description'  => base64_encode($item->description),
-                'measure'      => $item->msr,
-                'item_type'    => $item->item_type,
-                'manufacturer' => $item->manufacturer,
-                'cat_name'     => $item->cat_name,
-                'cat_id'       => $item->cat_id
+                'bar_code' => $item->bar_code,
+                'brand'     => $item->brand 
+                 
             );
 
-           // $it = array_merge($it, $item->getData());
-
-           // unset($it['detail']);
-           // unset($it['disabled']);
-
-
-            if (strlen($item->price1) > 0) {
-                $it['price1'] = $item->price1;
-            }
-            if (strlen($item->price2) > 0) {
-                $it['price2'] = $item->price2;
-            }
-            if (strlen($item->price3) > 0) {
-                $it['price3'] = $item->price3;
-            }
-            if (strlen($item->price4) > 0) {
-                $it['price4'] = $item->price4;
-            }
-            if (strlen($item->price5) > 0) {
-                $it['price5'] = $item->price5;
-            }
          
             $list[] = $it;
         }
@@ -115,27 +47,7 @@ class items extends JsonRPC
          return $list;
     }
 
-    //  количества на  складе
-    public function getqty($args) {
-        $list = array();
-        $conn = \ZDB\DB::getConnect();
-
-        $sql = "select  item_code,coalesce(sum(qty),0)  as qty from store_stock_view ";
-        if ($args['store_id'] > 0) {
-            $sql .= " and store_id=" . $args['store_id'];
-        }
-        $sql .= " group by   item_code";
-        $res = $conn->Execute($sql);
-        foreach ($res as $row) {
-            $list[] = array(
-                'item_code' => $row['item_code'],
-                'qty'       => H::fqty($row['qty'])
-            );
-        }
-
-        return $list;
-    }
-
+ 
     // запись  ТМЦ.
     public function save($args) {
         if (strlen($args['item_code']) == 0) {
@@ -223,29 +135,5 @@ class items extends JsonRPC
     }
 
 
-    //  список  работ и услуг
-    public function servicelist($args) {
-
-        $list = array();
-        $w = 'disabled<> 1 ';
-
-
-        foreach (\App\Entity\Service::find($w, 'service_name') as $item) {
-            $plist = array();
-
-            $it = array(
-                'service_name' => $item->service_name,
-                'price'        => $item->price,
-                'category'     => $item->category,
-                'service_id'   => $item->service_id
-            );
-
-
-            $list[] = $it;
-        }
-
-
-        return $list;
-    }
-
+  
 }

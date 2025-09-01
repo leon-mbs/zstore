@@ -4,24 +4,15 @@
     <tr>
         <td></td>
         <td valign="top"><b>Покупець</b></td>
-        <td colspan="6"><b>{{customer_name}}</b></td>
+     <td><b>Покупець</b></td>
+        <td colspan="6"> {{customer_name}}</b> 
+          {{#phone}} Тел. {{phone}}  {{/phone}} 
+        </td>
     </tr>
       {{/customer_name}} 
       
-    {{#phone}}
-    <tr>
-        <td></td>
-        <td valign="top">Телефон</td>
-        <td colspan="6">{{phone}}</td>
-    </tr>
-     {{/phone}} 
-   {{#address}}
-    <tr>
-        <td></td>
-        <td valign="top">Адреса</td>
-        <td colspan="6">{{address}}</td>
-    </tr>
-     {{/address}} 
+  
+ 
    {{#edrpou}}
     <tr>
         <td></td>
@@ -38,7 +29,10 @@
         <td></td>
 
         <td valign="top"><b>Продавець</b></td>
-        <td colspan="6"><b>{{firm_name}}</b></td>
+       <td colspan="6"> {{firm_name}} 
+        {{#fphone}} Тел.  {{fphone}}  {{/fphone}} 
+          
+        </td>
 
     </tr>
    {{#fedrpou}}
@@ -55,6 +49,23 @@
         <td colspan="6">{{finn}}</td>
     </tr>
      {{/finn}}           
+   
+      
+    {{/isfirm}}
+    {{#isfop}}
+    <tr>
+
+        <td></td>
+        <td><b> Продавець</b></td>
+        <td colspan="7"> {{fop_name}} </td>
+
+    </tr> 
+    <tr>
+        <td></td>
+        <td valign="top">ЄДРПОУ</td>
+        <td colspan="7">{{fop_edrpou}}</td>
+    </tr>       
+   {{/isfop}}      
     {{#isbank}}
     <tr>
 
@@ -72,9 +83,7 @@
         <td colspan="8">{{iban}}   </td>
 
     </tr>
-    {{/iban}}    
-      
-    {{/isfirm}}
+    {{/iban}}     
     {{#iscontract}}
     <tr>
 
@@ -148,7 +157,12 @@
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
-
+   {{#nds}}
+    <tr style="font-weight: bolder;">
+        <td colspan="7" align="right">ПДВ:</td>
+        <td align="right">{{nds}}</td>
+    </tr>
+    {{/nds}}
 
    {{#payamount}}
     <tr style="font-weight: bolder;">

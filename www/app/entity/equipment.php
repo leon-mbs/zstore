@@ -19,6 +19,7 @@ class Equipment extends \ZCL\DB\Entity
     protected function init() {
         $this->eq_id = 0;
         $this->branch_id = 0;
+        $this->resemp_id = 0;
     }
 
     protected function beforeSave() {
@@ -48,11 +49,26 @@ class Equipment extends \ZCL\DB\Entity
    
  
     public static function getConstraint() {
-        $br = \App\ACL::getBranchConstraint();
-        if (strlen($br) > 0) {
-            $br = " (" . $br . " or coalesce(branch_id,0)=0)  ";
+        $c = \App\ACL::getBranchConstraint();
+        if (strlen($c) > 0) {
+            $c = " (" . $c . " or coalesce(branch_id,0)=0)  ";
         }   
-        return $br;
+        
+        
+        $user = \App\System::getUser();
+       
+        if ($user->rolename != 'admins') {
+            if (strlen($c) == 0) {
+                $c = "1=1 ";
+            }
+      
+            if (strlen($user->aclview) > 0) {
+                $c .= " and detail like '%<resemp_id>{$user->employee_id}</resemp_id>%' ";
+            }  
+        }        
+        
+        
+        return $c;
     }
 
     public static function getTypeName(int $t){
@@ -94,6 +110,9 @@ class Equipment extends \ZCL\DB\Entity
     }    
 
     public  function getBalance($tm=0) {
-
+        $conn = \ZDB\DB::getConnect();
+        $sql = "  select sum(amount)  from  eqentry where   eq_id =   {$this->eq_id}   ";
+        return doubleval( $conn->GetOne($sql) );
+  
     }   
 }

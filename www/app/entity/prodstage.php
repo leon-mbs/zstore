@@ -15,8 +15,9 @@ class ProdStage extends \ZCL\DB\Entity
 {
     public const STATE_NEW       = 0;
     public const STATE_INPROCESS = 1;
-    public const STATE_FINISHED  = 2;
-    public const STATE_STOPPED  = 3;
+    public const STATE_STOPPED   = 2;
+
+    public const STATE_FINISHED  = 4;
 
     protected function init() {
         $this->st_id = 0;
@@ -28,15 +29,15 @@ class ProdStage extends \ZCL\DB\Entity
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail>";
-        $this->detail .= "<hoursplan>{$this->hoursplan}</hoursplan>";
-        $this->detail .= "<salary>{$this->salary}</salary>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
         $this->detail .= "<card><![CDATA[{$this->card}]]></card>";
+        $this->detail .= "<empids><![CDATA[{$this->empids}]]></empids>";
+ 
         $emplist = base64_encode(serialize($this->emplist));
         $this->detail .= "<emplist>{$emplist}</emplist>";
-        $this->detail .= "<startdateplan>{$this->startdateplan}</startdateplan>";
-        $this->detail .= "<enddateplan>{$this->enddateplan}</enddateplan>";
-
+        $itemlist = base64_encode(serialize($this->itemlist));
+        $this->detail .= "<itemlist>{$itemlist}</itemlist>";
+     
         $this->detail .= "</detail>";
 
         return true;
@@ -44,25 +45,24 @@ class ProdStage extends \ZCL\DB\Entity
 
     protected function afterLoad() {
         //распаковываем  данные из detail
-        $this->startdate = strtotime($this->startdate);
-        $this->enddate = strtotime($this->enddate);
-
+     
 
         if (strlen($this->detail) == 0) {
             return;
         }
 
         $xml = simplexml_load_string($this->detail);
-        $this->hoursplan = doubleval($xml->hoursplan[0]);
-        $this->salary = intval($xml->salary[0]);
         $this->notes = (string)($xml->notes[0]);
         $this->card = (string)($xml->card[0]);
-        $this->startdateplan = (string)($xml->startdateplan[0]);
-        $this->enddateplan = (string)($xml->enddateplan[0]);
-
+        $this->empids = (string)($xml->empids[0]);
+      
         $this->emplist = @unserialize(@base64_decode((string)($xml->emplist[0])));
         if (!is_array($this->emplist)) {
             $this->emplist = array();
+        }
+        $this->itemlist = @unserialize(@base64_decode((string)($xml->itemlist[0])));
+        if (!is_array($this->itemlist)) {
+            $this->itemlist = array();
         }
 
         parent::afterLoad();
@@ -78,7 +78,7 @@ class ProdStage extends \ZCL\DB\Entity
             case ProdStage::STATE_FINISHED:
                 return "Виконаний";
             case ProdStage::STATE_STOPPED:
-                return "Припинено";
+                return "Зупинений";
 
 
             default:

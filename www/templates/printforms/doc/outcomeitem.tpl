@@ -10,6 +10,14 @@
         </td>
 
     </tr>
+   {{#storeemp}}
+    <tr>
+        <td colspan="6">
+            <b>Зі спiвробiтника:</b> {{storeemp}}
+        </td>
+    </tr>
+ 
+    {{/storeemp}}       
     <tr>
         <td colspan="6">{{{notes}}}</td>
     </tr>

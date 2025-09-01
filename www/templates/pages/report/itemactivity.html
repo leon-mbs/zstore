@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12   ">
                 <h3>Рух по складу</h3>
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="from">З</label>
@@ -20,7 +20,17 @@
                         <select class="form-control mr-sm-2" zippy="store"> 
                          
                         </select>
-
+                        {{#storeemp}}
+             
+                       <label class="col-auto mt-2" for="searchemp">Співробітник</label>
+                
+                        <select class="form-control mr-sm-2" zippy="searchemp">
+                            <option value="0">Не вказано</option>
+                        </select>
+        
+                       {{/storeemp}}                        
+                        
+             
                         <label for="item">ТМЦ</label>
                         <input placeholder="Почніть вводити..." class="form-control mr-sm-2" zippy="item">
                              {{#usesnumber}}
@@ -30,7 +40,7 @@
                              {{/usesnumber}}
                    
 
-                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+                        <input zippy="show" class="btn btn-outline-primary  " type="submit" value="ОК">
 
 
                     </form>
@@ -46,27 +56,20 @@
                     </div>
 
 
-                    <div zippy="preview" class="table-responsive-sm">
-                     <div class="spinner-border m-3" role="status">
-                      <span class="sr-only">Завантаження...</span>
-                    </div>                 
+                    <div zippy="preview"  >
+                                  
                     </div>
 
                 </div>
             </div>
         </div>
    <script>
-                    function loadRep(){
-                        
-                        callPageMethod('getData',null,null,(data)=> 
-                        {
-                           
-                              
-                               $('#preview').html(data);  
-
-
-                        });
-                    }
+           function check_show(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }              
         </script>        
     </body>
 </html>
