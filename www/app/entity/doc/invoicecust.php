@@ -33,7 +33,7 @@ class InvoiceCust extends Document
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         
-                         "isval"           => strlen($this->headerdata['val']) > 1,
+                         "isval"           => strlen($this->headerdata['val']??'') > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),
                        "total"           => H::fa($this->amount),
@@ -52,7 +52,7 @@ class InvoiceCust extends Document
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
 
-        $header['rate'] = $this->headerdata["rate"];
+        $header['rate'] = $this->headerdata["rate"]??1;
         if ($header['rate'] == 0 || $header['rate'] == 1) {
             $header['isval'] = false;
         }
