@@ -198,6 +198,7 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->add(new CheckBox('allowchange'));
         $this->optionsform->add(new CheckBox('usecattree'));
         $this->optionsform->add(new CheckBox('useimages'));
+        $this->optionsform->add(new CheckBox('branchprice'));
         $this->optionsform->add(new TextInput('articleprefix'));
           
      
@@ -1277,6 +1278,7 @@ class ItemList extends \App\Pages\Base
         $this->optionsform->nocheckarticle->setChecked($options['nocheckarticle']);
         $this->optionsform->allowchange->setChecked($options['allowchange']);
         $this->optionsform->useimages->setChecked($options['useimages']);
+        $this->optionsform->branchprice->setChecked($options['branchprice']);
         $this->optionsform->autoarticle->setChecked($options['autoarticle']);
         
         
@@ -1327,6 +1329,7 @@ class ItemList extends \App\Pages\Base
         $options['allowchange'] = $this->optionsform->allowchange->isChecked() ? 1 : 0;
         $options['usecattree'] = $this->optionsform->usecattree->isChecked() ? 1 : 0;
         $options['autoarticle'] = $this->optionsform->autoarticle->isChecked() ? 1 : 0;
+        $options['branchprice'] = $this->optionsform->branchprice->isChecked() ? 1 : 0;
         $options['articleprefix'] = $this->optionsform->articleprefix->getText() ;
         
         

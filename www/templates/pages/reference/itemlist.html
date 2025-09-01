@@ -706,12 +706,19 @@
                             </div> 
                              <div class="form-check ">
                                 <input zippy="autoarticle" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="autoarticle"> Автоматично створювати
-                                    артикули</label>
+                                <label class="form-check-label" for="autoarticle"> Автоматично створювати                                    артикули</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="Автоматична генерація номерів артикулів для товарів"></i>
                             </div> 
-                             <div class="form-group row">
+                            {{#usebranch}}
+                             <div class="form-check ">
+                                <input zippy="branchprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="branchprice"> Прив'язувати ціни до філій
+                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="При збереженні  ТМЦ відпускні  ціни будуть збережені окреемо для вибраної (вверху) філії"></i>
+                            </div> 
+                               {{/usebranch}}
+                             <div class="form-group row mt-2">
                                 <label class="col-3 col-form-label" for="articleprefix">Префікс в артикулах</label>
                                 <div class="col-2">
                                     <input pattern="[a-zA-Z]+"    class="form-control" zippy="articleprefix"/>

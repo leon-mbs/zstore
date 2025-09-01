@@ -131,9 +131,10 @@ class Item extends \ZCL\DB\Entity
         $this->shortname = str_replace("'","`",$this->shortname) ;
         $this->shortname = str_replace("\"","`",$this->shortname) ;
          
-        
+        $branchprice = \App\System::getOption('common','branchprice');
+       
         $fid = \App\System::getBranch();
-        if ($fid > 0) {
+        if ($fid > 0 && $branchprice==1) {
             $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
             $this->price1 = $prev->price1;
