@@ -92,7 +92,7 @@ class ProjectList extends \App\Pages\Base
         $user = System::getUser();
 
         if ($user->rolename != 'admins') {
-            $where .= " and project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )   ";
+            $where .= " and (details like '%<creator_id>{$user->user_id}</creator_id>%'     or project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )  ) ";
         }
 
         if (strlen($number) > 0) {
@@ -167,14 +167,19 @@ class ProjectList extends \App\Pages\Base
     }
 
     public function save($args, $post=null) {
+        $user=\App\System::getUser()  ;
         $pd = Project::load($args[0])  ;
         if($pd==null) {
             $pd = new  Project();
+            $pd->creator_id  = $user->user_id;
+            $pd->creator  = $user->username;
         }
 
         $users = trim($post["users"], ",");
         if(strlen($users)>0) {
             $pd->setUsers(explode(",", $users));
+        }  else {
+           $pd->setUsers([]); //для вставки текущего
         }
         $pd->project_name=$post["name"] ;
         $pd->desc=$post["desc"] ;
