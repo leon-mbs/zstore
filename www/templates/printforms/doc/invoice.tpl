@@ -143,6 +143,12 @@
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
+   {{#nds}}
+    <tr style="font-weight: bolder;">
+        <td colspan="8" align="right">ПДВ:</td>
+        <td align="right">{{nds}}</td>
+    </tr>
+    {{/nds}}
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">До сплати:</td>

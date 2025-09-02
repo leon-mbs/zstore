@@ -759,8 +759,7 @@ class Helper
                 $data['phone'] = $branch->phone;
             }
         }
-
-             
+      
         return $data;
     }
 
