@@ -229,6 +229,13 @@ class DocList extends \App\Pages\Base
         } else {
             $list = "";
             foreach ($basedonlist as $doctype => $docname) {
+                
+                if($this->_tvars['usends'] != true) {
+                     if($doctype=='TaxInvoiceIncome') continue;
+                     if($doctype=='TaxInvoice') continue;
+                     if($doctype=='TaxInvoice2') continue;
+                }
+                
                 $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
             }
             $row->basedon->add(new Label('basedlist'))->setText($list, true);

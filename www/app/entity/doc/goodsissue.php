@@ -96,7 +96,8 @@ class GoodsIssue extends Document
         $header["isfop"] = false;
         $header['isprep'] = ($this->headerdata["prepaid"] ??0 )> 0;
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]??'');
-
+        $header["nds"] = false;
+   
         if ($this->customer_id > 0) {
             $cust = \App\Entity\Customer::load($this->customer_id);
             $header["customer_name"] = $cust->customer_name;
@@ -138,7 +139,10 @@ class GoodsIssue extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
+ 
 
         $report = new \App\Report('doc/goodsissue.tpl');
 

@@ -105,7 +105,7 @@ class User extends \ZCL\DB\Entity
         $this->pagesize = $options['pagesize'] ??0;
         $this->phone = $options['phone']?? '';
         $this->viber = $options['viber']?? '';
- 
+     
         $this->darkmode = $options['darkmode']?? 0;
 
         $this->hidesidebar = (int)$options['hidesidebar'];
@@ -173,7 +173,7 @@ class User extends \ZCL\DB\Entity
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
-        
+         
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
         $options['scaleserver'] = $this->scaleserver   ;

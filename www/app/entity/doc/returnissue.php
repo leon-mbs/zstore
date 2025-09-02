@@ -49,7 +49,11 @@ class ReturnIssue extends Document
                         "payamount"           => H::fa($this->payamount),
                         "payed"           => H::fa($this->headerdata['payed'])
         );
-
+        $header["nds"] = false;
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
+  
         $report = new \App\Report('doc/returnissue.tpl');
 
         $html = $report->generate($header);

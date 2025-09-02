@@ -61,6 +61,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->docform->add(new Label('totalnds'));
         $this->docform->add(new Label('total'));
         $this->docform->add(new Label('discount'));
         $this->docform->add(new Label('bonus'));
@@ -181,6 +182,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -240,6 +242,9 @@ class ReturnIssue extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
+    
+        $item->pricends= $item->price + $item->price * $item->nds();
+     
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
@@ -284,7 +289,8 @@ class ReturnIssue extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
 
-
+        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
+    
         $firm = H::getFirmData(  $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
@@ -439,15 +445,22 @@ class ReturnIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
+ 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-
-        $payamount= $total  ;
+        if($nds>0) {
+            $this->docform->totalnds->setText(H::fa($nds));            
+        }
+ 
+        $payamount= $total + $nds ;
 
         if($this->_basedocid >0) {
             $parent = Document::load($this->_basedocid) ;

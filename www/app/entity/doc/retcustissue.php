@@ -48,6 +48,7 @@ class RetCustIssue extends Document
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
+                        "nds"           =>   $this->getHD('nds',0) >0 ? H::fa($this->getHD('nds' )) : false,  
                         "payed"           => H::fa($this->headerdata["payed"])
         );
 

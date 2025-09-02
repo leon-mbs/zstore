@@ -72,6 +72,7 @@ class Invoice extends \App\Entity\Doc\Document
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+        $header["nds"] = false;
         $header["phone"] = false;
         $header["fphone"] = false;
         $header["isfop"] = false;
@@ -80,6 +81,9 @@ class Invoice extends \App\Entity\Doc\Document
         $header["finn"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }

@@ -114,6 +114,9 @@ class Item extends \ZCL\DB\Entity
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
         $this->printqty = intval($xml->printqty[0]);
+      
+        $this->isnds = (int)$xml->isnds[0];
+        $this->nds = (string)$xml->nds[0];
 
        
         
@@ -128,9 +131,10 @@ class Item extends \ZCL\DB\Entity
         $this->shortname = str_replace("'","`",$this->shortname) ;
         $this->shortname = str_replace("\"","`",$this->shortname) ;
          
-        
+        $branchprice = \App\System::getOption('common','branchprice');
+       
         $fid = \App\System::getBranch();
-        if ($fid > 0) {
+        if ($fid > 0 && $branchprice==1) {
             $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
             $this->price1 = $prev->price1;
@@ -214,6 +218,8 @@ class Item extends \ZCL\DB\Entity
             $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
+        $this->detail .= "<isnds>{$this->isnds}</isnds>";
+        $this->detail .= "<nds>{$this->nds}</nds>";
 
 
         $this->detail .= "</detail>";
@@ -1133,5 +1139,44 @@ class Item extends \ZCL\DB\Entity
         return $image->image_id;       
     }
      
-     
+     /**
+    * коеффициоет НДС на  который  умножается  цена
+    * 
+    * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
+    */
+    public   function nds($revert = false) {
+        $nds = 1;
+        if($this->isnds==2){
+           
+            $nds = doubleval($this->nds) / 100;
+            if ($revert) {
+                $nds = 1 - 100 / (100 + doubleval($this->nds));
+            }           
+        }
+        if($this->isnds==0){
+            
+           $cat= Category::load($this->item_cat); 
+           if($cat != null) {
+              $nds = doubleval($cat->nds) / 100;
+              if ($revert) {
+                  $nds = 1 - 100 / (100 + doubleval($cat->nds));
+              } 
+              
+           }
+        }
+        
+        return $nds;
+    }
+     /**
+    * счет  учета  по типу
+    *  
+    */
+    public  function getAccCode(){
+            if($this->item_type==Item::TYPE_TOVAR)  return '28';
+            if($this->item_type==Item::TYPE_MAT)  return '201';
+            if($this->item_type==Item::TYPE_MBP)  return '22';
+            if($item->item_type==Item::TYPE_PROD)  return '26';
+            if($this->item_type==Item::TYPE_HALFPROD)  return '25';
+         
+    }    
 }
