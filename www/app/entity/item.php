@@ -1145,7 +1145,8 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
     */
     public   function nds($revert = false) {
-        $nds = 1;
+        $nds = 0 ;
+      
         if($this->isnds==2){
            
             $nds = doubleval($this->nds) / 100;

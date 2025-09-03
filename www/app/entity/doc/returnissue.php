@@ -32,6 +32,7 @@ class ReturnIssue extends Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
                                   "msr"        => $item->msr,
+                                  "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }

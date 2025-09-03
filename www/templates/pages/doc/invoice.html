@@ -113,9 +113,8 @@
 
                             <th class="text-right">Кіл.</th>
                             <th class="text-right"><i class="fa fa-gift"></i>,%</th>
-                            <th class="text-right">Ціна</th>
-                          <th class="text-right">  {{#usends}} Ціна з ПДВ {{/usends}}</th>
- 
+                           <th class="text-right">Ціна</th>
+                        
                             <th class="text-right">Сума</th>
                             <th  ></th>
                         </tr>
@@ -127,10 +126,9 @@
 
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="disc" class="text-right"></td>
+                          
                             <td zippy="price" class="text-right"></td>
-                           <td  class="text-right">
-                             {{#usends}} <span zippy="pricends"></span> {{/usends}}
-                            </td>   
+                             
 
                             <td zippy="amount" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
@@ -138,27 +136,27 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="7" class="text-right">Всього:</td>
+                            <td colspan="6" class="text-right">Всього:</td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
                            {{#usends}} 
                        <tr style="font-weight: bolder;">
-                            <td colspan="7" class="text-right">ПДВ:</td>
+                            <td colspan="6" class="text-right"> В т.ч. ПДВ:</td>
                             <td zippy="totalnds" class="text-right"></td>
                             <td></td>
                         </tr>
                           {{/usends}} 
                        {{^usends}} 
                        <tr style="font-weight: bolder;">
-                            <td colspan="7" class="text-right">Знижка:</td>
+                            <td colspan="6" class="text-right">Знижка:</td>
                             <td zippy="totaldisc" class="text-right"></td>
                             <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modaltotaldisc"><i class="fa fa-edit"></i></a></td>
                         </tr>
                           {{/usends}} 
                         <tr style="font-weight: bolder;">
-                            <td colspan="7" class="text-right"><span data-label="payamount">До сплати:</span></td>
+                            <td colspan="6" class="text-right"><span data-label="payamount">До сплати:</span></td>
                             <td zippy="payamount" class="text-right"></td>
                             <td></td>
                         </tr>

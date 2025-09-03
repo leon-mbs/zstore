@@ -118,7 +118,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Ціна</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Ціна  {{#nds}} (без ПДВ)  {{/nds}} </th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сума</th>
     </tr>
     {{#_detail}}
@@ -129,7 +129,7 @@
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{price}}  {{#nds}} ({{pricenonds}})  {{/nds}}   </td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -145,7 +145,7 @@
     {{/totaldisc}}
    {{#nds}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">ПДВ:</td>
+        <td colspan="8" align="right">В т.ч. ПДВ:</td>
         <td align="right">{{nds}}</td>
     </tr>
     {{/nds}}

@@ -43,6 +43,7 @@ class GoodsIssue extends Document
                               "msr"        => $item->msr,
                               "disc"       => $item->disc,
                               "price"      => H::fa($item->price),
+                              "pricenonds"      => H::fa($item->pricenonds),
                               "amount"     => H::fa($item->quantity * $item->price)
             );
         }

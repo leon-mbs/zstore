@@ -33,6 +33,7 @@ class RetCustIssue extends Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "msr"        => $item->msr,
                                   "price"      => H::fa($item->price),
+                                  "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
