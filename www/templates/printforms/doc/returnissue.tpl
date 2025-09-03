@@ -27,9 +27,9 @@
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
         </th>
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна  {{#nds}} (без ПДВ)  {{/nds}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -37,7 +37,7 @@
         <td colspan="2">{{tovar_name}}</td>
 
         <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{price}}  {{#nds}} ({{pricenonds}})  {{/nds}}</td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -47,7 +47,7 @@
     </tr>
        {{#nds}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="5" align="right">ПДВ:</td>
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">В т.ч. ПДВ:</td>
         <td style="border-top:1px #000 solid;" align="right">{{nds}}</td>
     </tr>
        {{/nds}}

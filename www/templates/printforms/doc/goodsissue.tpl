@@ -126,10 +126,10 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Зн. %</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Зн. %</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна  {{#nds}} (без ПДВ)  {{/nds}}</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -140,7 +140,7 @@
 
         <td align="right">{{quantity}}</td>
         <td align="right">{{disc}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{price}}  {{#nds}} ({{pricenonds}})  {{/nds}} </td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -159,7 +159,7 @@
     {{/totaldisc}}
    {{#nds}}
     <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">ПДВ:</td>
+        <td colspan="7" align="right">В т.ч. ПДВ:</td>
         <td align="right">{{nds}}</td>
     </tr>
     {{/nds}}

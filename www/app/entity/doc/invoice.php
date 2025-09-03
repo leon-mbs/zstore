@@ -32,6 +32,7 @@ class Invoice extends \App\Entity\Doc\Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "price"      => H::fa($item->price),
+                              "pricenonds"      => H::fa($item->pricenonds),
                               "msr"        => $item->msr,
                               "amount"     => H::fa($item->quantity * $item->price)
               );

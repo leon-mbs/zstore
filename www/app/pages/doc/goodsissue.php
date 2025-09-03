@@ -382,8 +382,7 @@ class GoodsIssue extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('disc', $item->disc));
         $row->add(new Label('price', H::fa($item->price)));
-        $row->add(new Label('pricends', H::fa($item->pricends)));
-
+     
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -595,7 +594,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->setWarn('Введено більше товару, чим мається в наявності');
         }
-        $item->pricends= $item->price + $item->price * $item->nds();
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
  
         
         if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
@@ -833,15 +832,15 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-         $nds = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
  
-            if($item->pricends > $item->price) {
-                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            if($item->pricenonds < $item->price) {
+                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
             }
-  
+     
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
