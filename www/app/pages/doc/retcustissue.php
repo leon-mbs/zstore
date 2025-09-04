@@ -379,6 +379,9 @@ class RetCustIssue extends \App\Pages\Base
  
             $payed  = $payed*$k;           
         }        
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
 
         if($nds>0) {
             $this->docform->nds->setText(H::fa($nds));            

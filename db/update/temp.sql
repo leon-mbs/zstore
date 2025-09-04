@@ -1,6 +1,7 @@
  
 
 ALTER TABLE empacc ADD notes varchar(255) DEFAULT NULL;
+ALTER TABLE contracts ADD state int(6) DEFAULT 0;
 
 
 DROP VIEW empacc_view ;
@@ -23,6 +24,26 @@ FROM ((empacc e
   JOIN employees em
     ON ((em.employee_id = e.emp_id))) ;
 
+DROP VIEW contracts_view ;    
+    
+CREATE VIEW contracts_view
+AS
+SELECT
+  co.contract_id AS contract_id,
+  co.customer_id AS customer_id,
+ 
+  co.createdon AS createdon,
+  co.contract_number AS contract_number,
+  co.state AS state,
+  co.disabled AS disabled,
+  co.details AS details,
+  cu.customer_name AS customer_name
+
+FROM contracts co
+  JOIN customers cu
+    ON co.customer_id = cu.customer_id  ;    
+    
+    
 INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  1, 'Повернення (чек)', 'RetCheck', 'Продажі',     0);
     
 INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  3, 'Реєстр ПН', 'TaxInvoiceList', '',    0);

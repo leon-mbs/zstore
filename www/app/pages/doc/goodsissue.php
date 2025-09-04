@@ -844,6 +844,11 @@ class GoodsIssue extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+      
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
         if($nds>0) {
             $this->docform->totalnds->setText(H::fa($nds));            
         }

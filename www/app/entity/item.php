@@ -1156,7 +1156,7 @@ class Item extends \ZCL\DB\Entity
         }
         if($this->isnds==0){
             
-           $cat= Category::load($this->item_cat); 
+           $cat= Category::load($this->cat_id); 
            if($cat != null) {
               $nds = doubleval($cat->nds) / 100;
               if ($revert) {
@@ -1168,6 +1168,7 @@ class Item extends \ZCL\DB\Entity
         
         return $nds;
     }
+ 
      /**
     * счет  учета  по типу
     *  

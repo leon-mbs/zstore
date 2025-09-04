@@ -51,6 +51,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->add(new TextInput('edithours'));
         $this->servicedetail->add(new TextInput('editmsr'));
         $this->servicedetail->add(new TextInput('editnotes'));
+        $this->servicedetail->add(new TextInput('editnds'));
         $this->servicedetail->add(new CheckBox('editdisabled'));
         $this->servicedetail->add(new CheckBox('editnoprice'));
 
@@ -140,6 +141,7 @@ class ServiceList extends \App\Pages\Base
         $this->servicedetail->edithours->setText($this->_service->hours);
         $this->servicedetail->editmsr->setText($this->_service->msr);
         $this->servicedetail->editnotes->setText($this->_service->notes);
+        $this->servicedetail->editnds->setText($this->_service->nds);
         $this->servicedetail->editdisabled->setChecked($this->_service->disabled);
         $this->servicedetail->editnoprice->setChecked($this->_service->noprice);
         $this->servicedetail->editcat->setText($this->_service->category);
@@ -169,6 +171,7 @@ class ServiceList extends \App\Pages\Base
         $this->_service->cost = $this->servicedetail->editcost->getText();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         $this->_service->msr = $this->servicedetail->editmsr->getText();
+        $this->_service->nds = $this->servicedetail->editnds->getText();
         $this->_service->notes = $this->servicedetail->editnotes->getText();
         if ($this->_service->service_name == '') {
             $this->setError("Не введено назву");
