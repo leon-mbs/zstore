@@ -73,6 +73,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         
         $this->docform->add(new Label('custdisc'));
+        $this->docform->add(new Label('totalnds'));
 
         $this->docform->add(new Label('payamount', 0));
 
@@ -130,6 +131,7 @@ class ServiceAct extends \App\Pages\Base
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docform->totalnds->setText($this->_doc->headerdata['nds']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
@@ -350,6 +352,9 @@ class ServiceAct extends \App\Pages\Base
         if($item->pureprice > $item->price) {
             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
+        
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+         
         if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
             
             if (strlen($item->snumber) == 0  ) {
@@ -443,7 +448,8 @@ class ServiceAct extends \App\Pages\Base
         }
 
         $item->price = $price;
-
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+ 
         if($this->_rowid == -1) {
             $found=false;
             
@@ -511,6 +517,7 @@ class ServiceAct extends \App\Pages\Base
 
  
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
+        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
 
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
@@ -584,21 +591,36 @@ class ServiceAct extends \App\Pages\Base
      *
      */
     private function calcTotal() {
+         $nds = 0;
 
         $total = 0;
         foreach ($this->_serlist as $ser) {
             $ser->amount = H::fa($ser->price * $ser->quantity);
-
+            if($ser->pricenonds < $ser->price) {
+                $nds = $nds + doubleval($ser->price - $ser->pricenonds) * $ser->quantity;                
+            }
+    
             $total = $total + $ser->amount;
         }
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
-
+            if($item->pricenonds < $item->price) {
+                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
+            }
+    
             $total = $total + $item->amount;
         }
 
         $this->docform->total->setText(H::fa($total));
+        
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
+        if($nds>0) {
+            $this->docform->totalnds->setText(H::fa($nds));            
+        }        
  
     }
 
@@ -720,7 +742,7 @@ class ServiceAct extends \App\Pages\Base
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
+                 //   $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
             $this->docform->phone->setText($cust->phone);

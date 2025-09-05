@@ -42,14 +42,14 @@
 
 </table>
 <br>
-<table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">
+<table class="ctable"   cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;"> </th>
         <th style="border: 1px solid black;"  >Од.</th>
-        <th style="border: 1px solid black;" align="right">Кількість</th>
-        <th style="border: 1px solid black;" align="right">Вартість</th>
+        <th style="border: 1px solid black;" align="right">Кіл.</th>
+        <th style="border: 1px solid black;" align="right">Ціна  {{#nds}} (без ПДВ)  {{/nds}}</th>
         <th style="border: 1px solid black;" align="right">Сума</th>
 
     </tr>
@@ -62,7 +62,7 @@
 
         <td  >{{msr}}</td>
         <td align="right">{{qty}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{price}}   {{#nds}} ({{pricenonds}})  {{/nds}}  </td>
         <td align="right">{{amount}}</td>
 
     </tr>
@@ -76,7 +76,15 @@
         <td colspan="6" align="right">Знижка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/totaldisc}}    
+    {{/totaldisc}}  
+  {{#nds}}
+    <tr style="font-weight: bolder;">
+        <td colspan="6" align="right">В т.ч. ПДВ:</td>
+        <td align="right">{{nds}}</td>
+    </tr>
+    {{/nds}}  
+    
+      
    {{#bonus}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Списані бонуси:</td>

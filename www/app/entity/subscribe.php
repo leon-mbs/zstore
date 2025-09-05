@@ -440,9 +440,9 @@ class Subscribe extends \ZCL\DB\Entity
         $header = array();
      
 
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and  paydate = CURDATE() and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
         $header['day_nal']= H::fa($conn->GetOne($sql));
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and  paydate = CURDATE() and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
         $header['day_beznal']= H::fa($conn->GetOne($sql));
        
         $sql = "  select   sum(0-e.quantity*e.outprice) as summa 

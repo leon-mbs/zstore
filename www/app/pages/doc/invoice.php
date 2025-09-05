@@ -201,6 +201,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->total->setText($basedoc->amount);
 
+                        $this->calcTotal();
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');

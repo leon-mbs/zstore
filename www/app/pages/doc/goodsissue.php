@@ -274,7 +274,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->total->setText($basedoc->amount);
 
-                        //    $this->calcTotal();
+                        $this->calcTotal();
                         $this->calcPay();
 
 
@@ -311,6 +311,7 @@ class GoodsIssue extends \App\Pages\Base
                         //$this->calcTotal();
                         //$this->calcPay();
                         $this->docform->total->setText($basedoc->amount);
+                        $this->calcTotal();
                         $this->calcPay();
 
                     }
