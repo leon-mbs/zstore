@@ -24,7 +24,8 @@ class ServiceAct extends Document
                               "desc"         => $ser->desc,
                               "msr"         => $ser->msr,
                               "qty"          => H::fqty($ser->quantity),
-                              "price"        => H::fa($ser->price),
+                              "pricenonds"      => H::fa($ser->pricenonds),
+                               "price"        => H::fa($ser->price),
                               "amount"       => H::fa($ser->price * $ser->quantity)
             );
         }
@@ -34,6 +35,7 @@ class ServiceAct extends Document
                               "desc"         => $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'') ,
                               "msr"         => $item->msr  ,
                               "qty"          => H::fqty($item->quantity),
+                              "pricenonds"      => H::fa($item->pricenonds),
                               "price"        => H::fa($item->price),
                               "amount"       => H::fa($item->price * $item->quantity)
             );
@@ -55,6 +57,7 @@ class ServiceAct extends Document
                         "devsn"           => $this->headerdata["devsn"],
                         "devdesc"           => $this->headerdata["devdesc"],
                         "notes"           => $this->notes,
+                        "nds"           => false,
                         "document_number" => $this->document_number,
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
@@ -82,7 +85,10 @@ class ServiceAct extends Document
         }
 
         $header['isfinished'] =  $this->checkStates(array(self::STATE_FINISHED)) > 0;
-
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
+ 
         $report = new \App\Report('doc/serviceact.tpl');
 
         $html = $report->generate($header);

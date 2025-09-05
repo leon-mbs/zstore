@@ -173,13 +173,21 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
+                          {{#usends}} 
+                       <tr style="font-weight: bolder;">
+                            <td colspan="7" class="text-right">В т.ч. ПДВ:</td>
+                            <td zippy="totalnds" class="text-right"></td>
+                            <td> </td>
+                        </tr>
+                          {{/usends}} 
+                          {{^usends}} 
                        <tr style="font-weight: bolder;">
                             <td colspan="7" class="text-right">Знижка:</td>
                             <td zippy="totaldisc" class="text-right"></td>
                             <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modaltotaldisc"><i class="fa fa-edit"></i></a></td>
                         </tr>
-                      
+                          {{/usends}} 
                         <tr style="font-weight: bolder;">
                             <td colspan="7" class="text-right"><span data-label="payamount">До сплати:</span></td>
                             <td zippy="payamount" class="text-right"></td>

@@ -201,6 +201,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->total->setText($basedoc->amount);
 
+                        $this->calcTotal();
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -411,7 +412,8 @@ class Invoice extends \App\Pages\Base
         }
 
         $item->price = $price;
-
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+    
         if($this->_rowid == -1) {
             $found=false;
             
@@ -553,7 +555,7 @@ class Invoice extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-         $nds = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
@@ -561,6 +563,9 @@ class Invoice extends \App\Pages\Base
                 $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
             }
             $total = $total + $item->amount;
+        }
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
         }
         if($nds>0) {
             $this->docform->totalnds->setText(H::fa($nds));            

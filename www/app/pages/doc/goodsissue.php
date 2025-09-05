@@ -274,7 +274,7 @@ class GoodsIssue extends \App\Pages\Base
 
                         $this->docform->total->setText($basedoc->amount);
 
-                        //    $this->calcTotal();
+                        $this->calcTotal();
                         $this->calcPay();
 
 
@@ -311,6 +311,7 @@ class GoodsIssue extends \App\Pages\Base
                         //$this->calcTotal();
                         //$this->calcPay();
                         $this->docform->total->setText($basedoc->amount);
+                        $this->calcTotal();
                         $this->calcPay();
 
                     }
@@ -844,6 +845,11 @@ class GoodsIssue extends \App\Pages\Base
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+      
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
         if($nds>0) {
             $this->docform->totalnds->setText(H::fa($nds));            
         }

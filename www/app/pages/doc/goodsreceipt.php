@@ -876,6 +876,10 @@ class GoodsReceipt extends \App\Pages\Base
 
         }
         $this->docform->total->setText(H::fa($total));
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
         if($nds>0) {
             $this->docform->nds->setText(H::fa($nds));            
         }
