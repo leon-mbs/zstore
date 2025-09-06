@@ -40,11 +40,12 @@
 
                             
                             <th>Вiдповiдальний</th>
-
+                           <th class="text-right"  >Сума</th>
+                         
                      
                            
-                            <th></th>
-                            <th></th>
+                        
+                         
                        
                             <th></th>
 
@@ -59,13 +60,12 @@
 
                           
                             <td zippy="emp"></td>
+                            <td class="text-right" zippy="amount"></td>
                          
 
 
-                            <td zippy="shortdesc"></td>
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i>
-                            </td>
-                            <td><a zippy="scanlink" title="Завантажити скан"> <i class="fa fa-paperclip"></i> </a></td>
+                            <td ><small zippy="shortdesc"></small></td>
+                           
                             <td><a zippy="show" title="Документи"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
 
                             <td><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
@@ -80,38 +80,34 @@
             </div>
         </div>
 
-        <form zippy="contractdetail" enctype="multipart/form-data">
+        <form zippy="contractdetail"  >
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="editcontract_number">Номер</label>
-                        <input autofocus="on"    required  class="form-control" zippy="editcontract_number"/>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editcontract_number">Номер</label>
+                        <div class="col-7  ">
+                            <input autofocus="on"    required  class="form-control" zippy="editcontract_number"/>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editcreatedon">Дата початку</label>
-                        <input style="width: 120px;"  required  class="form-control" zippy="editcreatedon"/>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editcreatedon">Дата початку</label>
+                      <div class="col-7  ">
+                         <input style="width: 120px;"  required  class="form-control" zippy="editcreatedon"/>
+                     </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editenddate">Дата закiнчення</label>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editenddate">Дата закiнчення</label>
+                       <div class="col-7  ">
                         <input style="width: 120px;"  required  class="form-control" zippy="editenddate"/>
+                     </div>
                     </div>
-                    <div class="form-group">
-                        <label  required  for="editshortdesc">Скорочений опис, призначення</label>
-                        <input class="form-control" zippy="editshortdesc"/>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editamount">Сума</label>
+                       <div class="col-7  ">
+                        <input style="width: 120px;"     class="form-control" zippy="editamount"/>
+                     </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editdesc">Детальний опис</label>
-                        <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
-                    </div>
-
-
-                    <div class="form-check">
-                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Закритий</label>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
+                     <div class="form-group">
                         <label for="editcust">Контрагент</label>
                         <input placeholder="Почнiть вводити..." class="form-control" zippy="editcust"/>
                     </div>
@@ -124,14 +120,23 @@
                         <select zippy="editemp" class="form-control  ">
                             <option value="0">Не вказано</option>
                         </select>
+                    </div>   
+
+
+                     
+                </div>
+                <div class="col-12 col-md-4 col-xl-3">
+                   
+                      <div class="form-group">
+                        <label  required  for="editshortdesc">Скорочений опис, призначення</label>
+                        <input class="form-control" zippy="editshortdesc"/>
                     </div>
                     <div class="form-group">
-
-                        <label for="scan"> Оригiнал (скан, doc, etc) документа</label>
-
-                        <input class="form-control" type="file" zippy="scan">
-
+                        <label for="editdesc">Детальний опис</label>
+                        <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
                     </div>
+                   
+                
                  
                 </div>
 

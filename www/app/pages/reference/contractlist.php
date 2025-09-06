@@ -56,10 +56,7 @@ class ContractList extends \App\Pages\Base
 
         $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
        
-        $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
-
-        $this->contractdetail->add(new CheckBox('editdisabled'));
-
+       
         $this->contractdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->contractdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -95,14 +92,8 @@ class ContractList extends \App\Pages\Base
       
         $c = Customer::load($item->customer_id);
         $row->add(new Label('emp', $item->emp_name));
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
-        $row->hasnotes->setAttribute('title', $item->desc);
-
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
-        if ($item->file_id > 0) {
-            $row->scanlink->setVisible(true);
-            $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
-        }
+    
+     
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -133,7 +124,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcontract_number->setText($this->_contract->contract_number);
         $this->contractdetail->editshortdesc->setText($this->_contract->shortdesc);
         $this->contractdetail->editdesc->setText($this->_contract->desc);
-        $this->contractdetail->editdisabled->setChecked($this->_contract->disabled);
+   
         $this->contractdetail->editcust->setKey($this->_contract->customer_id);
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
 
@@ -176,15 +167,10 @@ class ContractList extends \App\Pages\Base
 
         $this->_contract->emp_id = $this->contractdetail->editemp->getValue();
         $this->_contract->emp_name = $this->contractdetail->editemp->getValueName();
-        $this->_contract->disabled = $this->contractdetail->editdisabled->isChecked() ? 1 : 0;
-
+     
         $this->_contract->save();
 
-        $file = $this->contractdetail->scan->getFile();
-        if ($file['size'] > 0) {
-            $this->_contract->file_id = H::addFile($file, $this->_contract->contract_id, 'Скан ', \App\Entity\Message::TYPE_CONTRACT);
-            $this->_contract->save();
-        }
+     
 
 
         $this->contractdetail->setVisible(false);
@@ -265,7 +251,7 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
         if ($showdis > 0) {
 
         } else {
-            $where = $where . " and disabled <> 1";
+            
         }
         if (strlen($text) > 0) {
             $text = Contract::qstr('%' . $text . '%');

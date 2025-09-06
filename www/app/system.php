@@ -11,6 +11,7 @@ use App\Entity\User;
 class System
 {
     public const CURR_VERSION = "6.15.2";
+    public const PREV_VERSION = "6.15.1";
     public const REQUIRED_DB  = "6.15.0";
    
 
