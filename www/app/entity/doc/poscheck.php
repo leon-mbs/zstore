@@ -110,7 +110,7 @@ class POSCheck extends Document
 
             $detail[] = array(
                 "tovar_name" => $name,
-                "quantity"   => H::fqty($item->quantity),
+                "quantity"   => H::fqty($item->quantity,true),
                 "price"   => H::fasell($item->price),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
@@ -119,7 +119,7 @@ class POSCheck extends Document
         foreach ($this->unpackDetails('services') as $ser) {
             $detail[] = array("no"         => $i++,
                               "tovar_name" => $ser->service_name,
-                              "quantity"   => H::fqty($ser->quantity),
+                              "quantity"   => H::fqty($ser->quantity,true),
                               "price"   => H::fasell($ser->price),
                               "amount"     => H::fasell($ser->quantity * $ser->price)
             );
