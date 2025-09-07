@@ -15,7 +15,7 @@ CREATE TABLE contracts (
   
   createdon date NOT NULL,
   contract_number varchar(64) NOT NULL,
-  disabled tinyint(1) DEFAULT '0',
+  state int(6) DEFAULT 0,
   details longtext NOT NULL,
   PRIMARY KEY (contract_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -276,6 +276,7 @@ CREATE TABLE eventlist (
 CREATE TABLE files (
   file_id int(11) NOT NULL AUTO_INCREMENT,
   item_id int(11) DEFAULT NULL,
+  user_id int(11) DEFAULT NULL,
   filename varchar(255) DEFAULT NULL,
   description varchar(255) DEFAULT NULL,
   item_type int(11) NOT NULL,
@@ -767,7 +768,7 @@ SELECT
  
   co.createdon AS createdon,
   co.contract_number AS contract_number,
-  co.disabled AS disabled,
+  co.state AS state,
   co.details AS details,
   cu.customer_name AS customer_name
 
@@ -1573,7 +1574,7 @@ INSERT INTO options (optname, optvalue) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0
 INSERT INTO options (optname, optvalue) VALUES('sms', 'YToxMTp7czoxMjoic21zY2x1YnRva2VuIjtzOjA6IiI7czoxMjoic21zY2x1YmxvZ2luIjtzOjA6IiI7czoxMToic21zY2x1YnBhc3MiO3M6MDoiIjtzOjk6InNtc2NsdWJhbiI7czowOiIiO3M6MTA6InNtc2NsdWJ2YW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15dG9rZW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15ZGV2aWQiO3M6MDoiIjtzOjExOiJmbHlzbXNsb2dpbiI7czowOiIiO3M6MTA6ImZseXNtc3Bhc3MiO3M6MDoiIjtzOjg6ImZseXNtc2FuIjtzOjA6IiI7czo3OiJzbXN0eXBlIjtzOjE6IjAiO30=');
 INSERT INTO options (optname, optvalue) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
 INSERT INTO options (optname, optvalue) VALUES('salary', 'YTo3OntzOjQ6ImNhbGMiO3M6MjE2OiIgLy/QstGB0YzQvtCz0L4g0L3QsNGA0LDRhdC+0LLQsNC90L4NCiAgdjIwMCA9ICB2MTA1DQoNCiAvL9C/0L7QtNCw0YLQutC4DQp2MjIwID0gIHYyMDAgKiAwLjE4DQp2MzAwID0gIHYyMDAgKiAwLjIyDQovL9Cy0YHRjNC+0LPQviDRg9GC0YDQuNC80LDQvdC+DQp2NjAwID12MjAwICAtIHYyMjAtIHYzMDANCi8v0L3QsCDRgNGD0LrQuA0KdjkwMCA9djIwMCAgLSB2NjAwLXY4NTAiO3M6ODoiY2FsY2Jhc2UiO3M6NjE6Ii8v0L7RgdC90L7QstC90LAgINC30LDRgNC/0LvQsNGC0LANCiB2MTA1PXRhc2tzdW0rc2VsbHZhbHVlDQoiO3M6MTM6ImNvZGViYXNlaW5jb20iO3M6MzoiMTA1IjtzOjEwOiJjb2RlcmVzdWx0IjtzOjM6IjkwMCI7czoxMToiY29kZWFkdmFuY2UiO3M6MToiMCI7czo4OiJjb2RlZmluZSI7czoxOiIwIjtzOjk6ImNvZGVib251cyI7czoxOiIwIjt9');
-INSERT INTO options (optname, optvalue) VALUES('version', '6.15.0');
+INSERT INTO options (optname, optvalue) VALUES('version', '6.16.0');
 
 
 
