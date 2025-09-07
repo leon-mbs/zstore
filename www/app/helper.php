@@ -363,10 +363,10 @@ class Helper
            // throw new \Exception('Розмір файлу більше 4M');
            return 0;
         }        
-        
+        $user=\App\System::getUser() ;
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
+        $sql = "insert  into files (item_id,filename,description,item_type,mime,user_id) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}',{$user->user_id}) ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
@@ -391,6 +391,7 @@ class Helper
         foreach($rs as $row) {
             $item = new \App\DataItem();
             $item->file_id = $row['file_id'];
+            $item->user_id = $row['user_id'];
             $item->filename = $row['filename'];
             $item->description = $row['description'];
             $item->mime = $row['mime'];

@@ -2,6 +2,7 @@
 
 ALTER TABLE empacc ADD notes varchar(255) DEFAULT NULL;
 ALTER TABLE contracts ADD state int(6) DEFAULT 0;
+ALTER TABLE files ADD user_id int  DEFAULT 0;
 
 
 DROP VIEW empacc_view ;

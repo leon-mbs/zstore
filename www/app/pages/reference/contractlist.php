@@ -9,7 +9,9 @@ use App\Entity\User;
 use App\Entity\Pay;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
+use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataRow;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
@@ -27,6 +29,8 @@ class ContractList extends \App\Pages\Base
 {
     private $_contract;
     public $_states=[];
+    public $_fileslist=[];
+    public $_msglist=[];
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -75,6 +79,15 @@ class ContractList extends \App\Pages\Base
         $statusform->add(new DropDownChoice('musers',   User::findArray('username', 'disabled<>1', 'username'), 0));
         $statusform->add(new SubmitButton('bstatus'))->onClick($this, 'bstatusOnClick');
         $statusform->add(new SubmitButton('buser'))->onClick($this, 'buserOnClick');
+     
+        $this->docpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
+        $this->docpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
+        $this->docpan->addfileform->add(new TextInput('adddescfile'));
+        $this->docpan->add(new DataView('dw_files', new ArrayDataSource(new Bind($this, '_fileslist')), $this, 'fileListOnRow'));
+
+        $this->docpan->add(new Form('addmsgform'))->onSubmit($this, 'OnMsgSubmit');
+        $this->docpan->addmsgform->add(new TextArea('addmsg'));
+        $this->docpan->add(new DataView('dw_msglist', new ArrayDataSource(new Bind($this, '_msglist')), $this, 'msgListOnRow'));
           
       
         if ($id > 0) {
@@ -198,10 +211,25 @@ class ContractList extends \App\Pages\Base
     public function bstatusOnClick($sender) {
         $this->contracttable->setVisible(true);
         $this->docpan->setVisible(false);
+        $oldatate =$this->_contract->state;
         $this->_contract->state = $this->docpan->statusform->mstates->getValue();
-       
-        $this->_contract->save();      
-        $this->contracttable->contractlist->Reload(false);
+        if($this->_contract->state != $oldatate)  {
+            $this->_contract->save();      
+            $this->contracttable->contractlist->Reload(false);
+            
+            
+            $msg = new \App\Entity\Message();
+            $msg->message = " Змiна  статусу  на  ". $this->_states[$this->_contract->state];
+            $msg->created = time();
+            $msg->user_id = 0;
+            $msg->item_id = $this->_contract->contract_id;
+            $msg->item_type = \App\Entity\Message::TYPE_CONTRACT;
+           
+            $msg->save();  
+                
+        }
+         
+        
         
     }
     public function buserOnClick($sender) {
@@ -259,9 +287,94 @@ class ContractList extends \App\Pages\Base
           );  
         }
      
+     
+        $this->updateMessages() ; 
+        $this->updateFiles() ; 
     }
   
+    public function OnFileSubmit($sender) {
 
+        $file = $this->docpan->addfileform->addfile->getFile();
+        if ($file['size'] > 10000000) {
+            $this->setError("Файл більше 10 МБ!");
+            return;
+        }
+
+        H::addFile($file, $this->_contract->contract_id, $this->docpan->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_CONTRACT);
+        $this->docpan->addfileform->adddescfile->setText('');
+        $this->updateFiles();
+    }
+
+    // обновление  списка  прикрепленных файлов
+    private function updateFiles() {
+        $this->_fileslist = H::getFileList($this->_contract->contract_id, \App\Entity\Message::TYPE_CONTRACT);
+        $this->docpan->dw_files->Reload();
+    }
+
+    //вывод строки  прикрепленного файла
+    public function filelistOnRow(DataRow $row) {
+        $item = $row->getDataItem();
+
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
+        $file->setValue($item->filename);
+        $file->setAttribute('title', $item->description);
+        $user= \App\System::getUser() ;
+        $row->add(new ClickLink('delfile',$this, 'deleteFileOnClick'))->setVisible(   $item->user_id == $user->user_id || $user->rolename=='admins'  ); 
+    }
+
+    //удаление прикрепленного файла
+    public function deleteFileOnClick($sender) {
+        $file = $sender->owner->getDataItem();
+        H::deleteFile($file->file_id);
+        $this->updateFiles();
+  
+    }
+
+    /**
+     * добавление коментария
+     *
+     * @param mixed $sender
+     */
+    public function OnMsgSubmit($sender) {
+        $msg = new \App\Entity\Message();
+        $msg->message = $this->docpan->addmsgform->addmsg->getText();
+        $msg->created = time();
+        $msg->user_id = \App\System::getUser()->user_id;
+        $msg->item_id = $this->_contract->contract_id;
+        $msg->item_type = \App\Entity\Message::TYPE_CONTRACT;
+        if (strlen($msg->message) == 0) {
+            return;
+        }
+        $msg->save();
+
+        $this->docpan->addmsgform->addmsg->setText('');
+        $this->updateMessages();
+    }
+
+    //список   комментариев
+    private function updateMessages() {
+        $this->_msglist = \App\Entity\Message::find('item_type = 7 and item_id=' . $this->_contract->contract_id, 'message_id');
+        $this->docpan->dw_msglist->Reload();
+    }
+
+    //вывод строки  коментария
+    public function msgListOnRow(DataRow $row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label("msgdata", nl2br($item->message)));
+        $row->add(new Label("msgdate", H::fdt($item->created)));
+        $row->add(new Label("msguser", $item->username));
+        $user = \App\System::getUser() ;
+        $row->add(new ClickLink('delmsg',$this, 'deleteMsgOnClick'))->setVisible( $item->user_id>0 &&( $item->user_id == $user->user_id || $user->rolename=='admins' ));
+    }
+
+    //удаление коментария
+    public function deleteMsgOnClick($sender) {
+        $msg = $sender->owner->getDataItem();
+        \App\Entity\Message::delete($msg->message_id);
+        $this->updateMessages();
+       
+    }
 }
 
 class ContractDataSource implements \Zippy\Interfaces\DataSource

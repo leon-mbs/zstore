@@ -72,7 +72,7 @@ class Contract extends \ZCL\DB\Entity
         $ar = array();
 
         if ($c > 0) {
-            $where = "  customer_id={$c} ";
+            $where = " state=6 and  customer_id={$c} ";
      
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
