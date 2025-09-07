@@ -39,7 +39,7 @@
                             <th>Контрагент</th>
 
                             
-                            <th>Вiдповiдальний</th>
+                            <th>Статус</th>
                            <th class="text-right"  >Сума</th>
                          
                      
@@ -54,12 +54,12 @@
                             <th></th>
                         </tr>
                         <tr zippy="contractlist">
-                            <td zippy="contract_number"></td>
+                            <td  ><a zippy="contract_number"></a> </td>
                             <td class="text-nowrap" zippy="term"></td>
                             <td zippy="customer"></td>
 
                           
-                            <td zippy="emp"></td>
+                            <td zippy="state"></td>
                             <td class="text-right" zippy="amount"></td>
                          
 
@@ -153,53 +153,114 @@
             <div class="col-12 ">  
                 <h5 zippy="cname"></h5>
                 <a zippy="back">До переліку</a>
+               <div class="card ">  
+              
+                    <form zippy="statusform" class="form-inline ">
+                         <label data-label="mstates" for="mstates"> Статус </label>
+                         <select zippy="mstates" class="form-control mr-2">
+                        
+                         </select>
+                         <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
+                         <label data-label="musers" for="mstates"> Відповідальний </label>
+                         <select zippy="musers" class="form-control mr-2">
+                         <option value="0">Не обрано</option>
+                         </select>
+                         <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+                      </form>
+              
+              </div>
             </div>
-            <div class="col-12 col-md-8 col-xl-6 card">    
-                <h4>Документи</h4>                
+            <div class="col-12 col-md-8 col-xl-3  "> 
+                       <h5> Коментарі </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_msglist">
+                                <td>
+                                    <span><b zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
+
+                                    <p zippy="msgdata"></p>
+                                </td>
+                                <td valign="top" style="width: 30px;"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addmsgform">
+                            <div class="form-group">
+                                <label for="addmsg">Коментар</label>
+                                <textarea  required  class="form-control" zippy="addmsg"
+                                          style=" height:120px;"></textarea>
+                            </div>
+                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                        </form>  
+            </div>
+            <div class="col-12 col-md-8 col-xl-3  "> 
+                      <h5> Прикріплені файли </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_files">
+                                <td><a zippy="filename" target="_blank"></a></td>
+                                <td style="width: 30px;"><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addfileform" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="addfile">Вибрати файл</label>
+                                <input type="file" class="form-control"  required  zippy="addfile">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adddescfile">Опис </label>
+                                <input class="form-control" zippy="adddescfile">
+                            </div>
+
+
+                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+
+                        </form>   
+            </div>
+               
+            <div class="col-12 col-md-4 col-xl-3  ">    
+                 <pre zippy="showdesc"></pre> 
+            
+                <details>
+                        <summary  >Документи</summary>
+                             
                 <table class="table table-sm">
-                    <tr>
-                        <th>Тип</th>
-                        <th>Номер</th>
-                        <th>Дата</th>
-                        <th class="text-right">Сума</th>
+                    
+                    {{#dtable}}
+                    <tr  >
+                        <td  > {{dtype}}</td>
+                        <td  >{{dnum}}</td>
+                        <td   class="text-nowrap">{{ddate}}</td>
+                        <td   class="text-right">{{dsumma}}</td>
 
                     </tr>
-
-                    <tr zippy="dtable">
-                        <td zippy="dtype"></td>
-                        <td zippy="dnum"></td>
-                        <td zippy="ddate" class="text-nowrap"></td>
-                        <td zippy="dsumma" class="text-right"></td>
-
-                    </tr>
-
+                     {{/dtable}}
                 </table>
-                <div zippy="dpag"></div>
-            </div>     
-            <div class="col-12 col-md-4 col-xl-3 card ml-4">  
-                <h4>Платежi</h4> 
+              
+                </details>
+                  <details>
+                        <summary  >Платежi</summary>
+               
+                 
                 <table class="table table-sm">
-                    <tr>
-                        <th>Рахунок</th>
-                        <th>Дата</th>
-                        <th class="text-right">Сума</th>
-                        <th> </th>
-                    </tr>
-                    <tr zippy="ptable">
-                        <td zippy="pmfname"></td>
+                    {{#ptable}}
+                    <tr  >
+                        <td  >{{pmfname}}</td>
 
-                        <td zippy="pdate" class="text-nowrap"></td>
-                        <td zippy="psumma" class="text-right"></td>
-                        <td zippy="pnotes"></td> 
+                        <td   class="text-nowrap">{{pdate}}</td>
+                        <td   class="text-right">{{psumma}}</td>
+                        <td  >{{pnotes}}</td> 
                     </tr>
-
+                    {{/ptable}}
                 </table>
-                <div zippy="ppag"></div>    
+                
+                </details>
             </div>
         </div>
 
 
 
-
+    
 </body>
 </html>

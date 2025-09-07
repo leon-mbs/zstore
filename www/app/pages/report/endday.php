@@ -51,8 +51,13 @@ class EndDay extends \App\Pages\Base
         $date = $conn->DBDate($from) ;
      
       
+        $usr = '';
         $brf = '';
      
+        if($user->rolename!='admins') {
+           $usr = " and user_id=" . $user->user_id ;  
+        }
+       
       
         $brids = \App\ACL::getBranchIDsConstraint();
     
@@ -69,7 +74,7 @@ class EndDay extends \App\Pages\Base
               mf_name,
               username
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate={$date} {$brf}
+            WHERE paytype <= 1000  and paydate={$date} {$brf} {$usr}  
             GROUP BY username,
                      mf_name
             ORDER BY username, mf_name ";
