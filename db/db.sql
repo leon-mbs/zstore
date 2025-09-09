@@ -548,8 +548,8 @@ CREATE TABLE prodproc (
   pp_id int(11) NOT NULL AUTO_INCREMENT,
   procname varchar(255) NOT NULL,
   basedoc varchar(255) DEFAULT NULL,
-  snumber varchar(255) DEFAULT NULL,
-  state smallint(4) DEFAULT '0',
+   
+  state smallint(4) DEFAULT 0,
   detail longtext,
   PRIMARY KEY (pp_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
