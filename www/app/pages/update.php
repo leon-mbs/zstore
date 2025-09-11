@@ -21,7 +21,7 @@ use Zippy\Html\Link\ClickLink;
 class Update extends \App\Pages\Base
 {
      private $_sql=[];
-     private $_prev=[];
+   
      
      public function __construct() {
         global $_config; 
@@ -42,9 +42,6 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatevendor',$this,'OnVendorUpdate')) ;
       
  
-        $this->_prev['6.14.1']='6.14.0';
-        $this->_prev['6.15.0']='6.14.1';
-        $this->_prev['6.16.0']='6.15.1';
         
         $this->_sql['6.13.0']='update6130to6140.sql';
         $this->_sql['6.14.0']='update6140to6150.sql';
@@ -54,17 +51,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversiondb'] =   System::getOptions('version',true );
       
-
-        $requireddb=  System::REQUIRED_DB ;
  
-        if($this->_tvars['curversiondb'] != $requireddb){
-           $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
-           $this->_tvars['actualdb'] = false;  
-        } else{
-           $this->_tvars['reqversion']  = '';
-           $this->_tvars['actualdb'] =true;
-        }
-        
         
  
         $this->_tvars['showdb']  = false   ;
@@ -79,7 +66,7 @@ class Update extends \App\Pages\Base
             $this->setError('Помилка завантаження version.json') ;
             return  ;
         }
-       
+   
         
         $c = str_replace("v", "", \App\System::CURR_VERSION);
         $n = str_replace("v", "", $data['version']);
@@ -128,29 +115,33 @@ class Update extends \App\Pages\Base
         
           
         //обновление  БД
-        if($this->_tvars['curversiondb'] != $requireddb){
-          $this->_tvars['tooold']  = true;  
+        $requireddb=  System::REQUIRED_DB ;
+        $this->_tvars['reqversion']  = '';
+        $this->_tvars['actualdb'] =true;         
+        
+        $b= version_compare($requireddb,$this->_tvars['curversiondb']   );
+        
+        if($b ==1){
+              $this->_tvars['tooold']  = true;  
            
-          $this->_tvars['showdb']  = true   ;
-          if(isset($this->_sql[$this->_tvars['curversiondb']])) {
-            $sqlurl  = "https://zippy.com.ua/updates/". $this->_sql[$this->_tvars['curversiondb']] ;
-          } else {
-            $sqlurl  = "https://zippy.com.ua/updates/". $data['sql'] ;
-              
-          }
+              $this->_tvars['showdb']  = true   ;
+              if(isset($this->_sql[$this->_tvars['curversiondb']])) {
+                $sqlurl  = "https://zippy.com.ua/updates/". $this->_sql[$this->_tvars['curversiondb']] ;
+              } else {
+                $sqlurl  = "https://zippy.com.ua/updates/". $data['sql'] ;
+                  
+              }
 
-          $this->_tvars['sqlurl']  =  $sqlurl  ;
-              
+              $this->_tvars['sqlurl']  =  $sqlurl  ;
+              $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
+              $this->_tvars['actualdb'] = false;  
+           
         }  
         
         $this->_tvars['reinstall']  = true;
-        $this->_tvars['rollback']  = false;
+        $this->_tvars['rollback']  = true;
 
-         // откат к предыдущей       
-         if(strlen($this->_prev[System::CURR_VERSION]??0) >0 ) {
-             $this->_tvars['rollback']  = true;
-               
-         }     
+          
          
          if($this->_tvars['show'] == true) {
              $this->_tvars['rollback']  = false;
@@ -344,7 +335,7 @@ class Update extends \App\Pages\Base
 
             $archive = _ROOT.'upload/update.zip' ;
             @unlink($archive) ;
-            $path = "https://zippy.com.ua/updates/update-".$this->_prev[System::CURR_VERSION].".zip";
+            $path = "https://zippy.com.ua/updates/update-".System::PREV_VERSION.".zip";
             
             @file_put_contents($archive, file_get_contents($path)) ;
          

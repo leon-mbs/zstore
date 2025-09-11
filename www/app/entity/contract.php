@@ -11,8 +11,15 @@ namespace App\Entity;
  */
 class Contract extends \ZCL\DB\Entity
 {
+    public const STATE_NEW=0 ;
+    public const STATE_NEGOTIATE=2 ;
+    public const STATE_SHIFTED=4 ;
+    public const STATE_INWORK=6 ;
+    public const STATE_CLODED=8 ;
+    
     protected function init() {
         $this->contract_id = 0;
+        $this->state = 0;
         $this->createdon = time();
     }
 
@@ -24,10 +31,10 @@ class Contract extends \ZCL\DB\Entity
 
         $this->shortdesc = (string)($xml->shortdesc[0]);
         $this->desc = (string)($xml->desc[0]);
-        $this->emp_name = (string)($xml->emp_name[0]);
-        //        $this->pay = (int)($xml->pay[0]);
-        $this->file_id = (int)($xml->file_id[0]);
-        $this->emp_id = (int)($xml->emp_id[0]);
+        $this->username = (string)($xml->username[0]);
+    
+        $this->user_id = (int)($xml->user_id[0]);
+        $this->creator_id = (int)($xml->creator_id[0]);
      
         $this->enddate = (int)($xml->enddate[0]);
 
@@ -49,10 +56,10 @@ class Contract extends \ZCL\DB\Entity
         //упаковываем  данные
         $this->details .= "<shortdesc><![CDATA[{$this->shortdesc}]]></shortdesc>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
-        $this->details .= "<emp_name><![CDATA[{$this->emp_name}]]></emp_name>";
-        //    $this->details .= "<pay>{$this->pay}</pay>";
-        $this->details .= "<file_id>{$this->file_id}</file_id>";
-        $this->details .= "<emp_id>{$this->emp_id}</emp_id>";
+        $this->details .= "<username><![CDATA[{$this->username}]]></username>";
+         
+        $this->details .= "<creator_id>{$this->creator_id}</creator_id>";
+        $this->details .= "<user_id>{$this->user_id}</user_id>";
        
         $this->details .= "<enddate>{$this->enddate}</enddate>";
         $this->details .= "</details>";
@@ -65,7 +72,7 @@ class Contract extends \ZCL\DB\Entity
         $ar = array();
 
         if ($c > 0) {
-            $where = "disabled <> 1 and customer_id={$c} ";
+            $where = " state=6 and  customer_id={$c} ";
      
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
@@ -126,6 +133,15 @@ class Contract extends \ZCL\DB\Entity
         return $ar;
     }
 
-
+    public  static function getStates() {
+        $ret=[];
+        $ret[Contract::STATE_NEW]='Новий';
+        $ret[Contract::STATE_NEGOTIATE]='Перемовини';
+        $ret[Contract::STATE_SHIFTED]='Вiдкдалений';
+        $ret[Contract::STATE_INWORK]='В роботi';
+        $ret[Contract::STATE_CLODED]='Закритий';
+        
+        return  $ret;
+    }
 
 }

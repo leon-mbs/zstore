@@ -250,13 +250,11 @@ class OrderFood extends Document
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp_id;
                     $ua->amount = $b;
+                    $ua->notes = "Бонус " ;
+             
                     $ua->save();
                     
-                    $n = new \App\Entity\Notify();
-                    $n->user_id = \App\System::getUser()->user_id;;;
-                    $n->message = "Бонус " . $b  ;
-                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                    $n->save();   
+                    
                 }
             }
         }
