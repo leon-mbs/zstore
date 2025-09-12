@@ -41,7 +41,7 @@
      //округление  цен
      function fa(v){
           var d = {{amdigits}}     
-          var _v =  parseVal(v)
+          var _v =  Number.parseFloat(v)
           if(d>0) {
              return  Number.parseFloat(_v.toFixed(2) )   
           }
@@ -51,9 +51,9 @@
      //округление  количеств
      function fqty(v){
           var d = {{qtydigits}}
-          var _v =  parseVal(v)
+          var _v =  Number.parseFloat(v)
           
-          return   _v.toFixed(d) 
+          return   Number.parseFloat( _v.toFixed(d) )
          
      }      
       </script>

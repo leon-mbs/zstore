@@ -51,16 +51,7 @@ class CalcSalary extends \App\Pages\Base
         }
 
 
-          if ($this->_doc->document_id == 0) {
-
-                foreach ($this->_list as $emp) {
-                    foreach ($this->_stlist as $st) {
-                        $c   = "_c".$st->salcode ;
-                        $emp->{$c} = 0;
-                    }
-                }
-      
-          }
+  
 
         $calcvar ='';
         //переменные  из настроек
@@ -79,13 +70,16 @@ class CalcSalary extends \App\Pages\Base
         $calcvar .= "var days_vac = fa(emp.days_vac)   \n" ;
         $calcvar .= "var days_sick = fa(emp.days_sick)   \n" ;
         $calcvar .= "var days_bt = fa(emp.days_bt)   \n" ;
+        $calcvar .= "var advance = fa(emp.advance)   \n" ;
+        $calcvar .= "var fine = fa(emp.fine)   \n" ;
+        $calcvar .= "var bonus = fa(emp.bonus)   \n" ;
      
      
        
         // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st) {
          
-            $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
+            $calcvar .= "var v{$st->salcode} =  Number.parseFloat(emp['_c{$st->salcode}'] ) ;\n ";
 
         }
 
@@ -93,7 +87,7 @@ class CalcSalary extends \App\Pages\Base
         $calcinit .= "\n\n";
         $calcinit .= $opt['calcbase'];  //формулы начислений
         $calcinit .= "\n\n";
-        $calcinit .= "emp._baseval=v".$opt['codebaseincom'];
+        $calcinit .= "emp._baseval=fa(v".$opt['codebaseincom'].")";
         $calcinit .= "\n\n";
         
   
@@ -111,8 +105,8 @@ class CalcSalary extends \App\Pages\Base
         foreach($this->_stlist as $st) {
 
    
-            $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
-            $calcinit .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
+            $calc .= "emp['_c{$st->salcode}']  = fa( v{$st->salcode}) ;\n ";
+            $calcinit .= "emp['_c{$st->salcode}']  = fa( v{$st->salcode}) ;\n ";
       
         }
 
@@ -220,36 +214,19 @@ class CalcSalary extends \App\Pages\Base
         $post = json_decode($post) ;
         $conn = \ZDB\DB::getConnect();
 
+        
+        $rowsadv=[];
+        $rowsb=[];
+        $rowsf=[];
+        
         if ($this->_doc->document_id == 0) {
          
-
-
-            if (($opt['codeadvance'] ??0) > 0) { //аванс
-
-                $rows = EmpAcc::getAmountByType(EmpAcc::ADVANCE,  $post->year,  $post->month );
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codeadvance'];
-                    $this->_list[$row['emp_id']]->{$c} =   H::fa($row['am']);
-                }
-            }
-
-            if (($opt['codebonus'] ??0) > 0) { 
-
-                $rows = EmpAcc::getAmountByType(EmpAcc::BONUS,  $post->year,  $post->month );
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codebonus'];
-                    $this->_list[$row['emp_id']]->{$c} =  H::fa($row['am']);
-                }
-            }
-
-            if (($opt['codefine'] ??0) > 0) { 
-
-                $rows = EmpAcc::getAmountByType(EmpAcc::FINE,  $post->year,  $post->month );
-                foreach ($rows as $row) {
-                    $c = '_c' . $opt['codefine'];
-                    $this->_list[$row['emp_id']]->{$c} =   H::fa($row['am']);
-                }
-            }
+      
+            $rowsadv = EmpAcc::getAmountByType(EmpAcc::ADVANCE,  $post->year,  $post->month );
+            
+            $rowsb = EmpAcc::getAmountByType(EmpAcc::BONUS,  $post->year,  $post->month );
+            $rowsf = EmpAcc::getAmountByType(EmpAcc::FINE,  $post->year,  $post->month );
+ 
 
 
         }
@@ -346,6 +323,9 @@ class CalcSalary extends \App\Pages\Base
              $e['days_vac'] =0;
              $e['days_sick'] =0;
              $e['days_bt'] =0;
+             $e['advance'] = H::fa($rowsadv[$emp->employee_id] ?? 0 ) ;
+             $e['fine'] =H::fa($rowsb[$emp->employee_id] ?? 0) ;
+             $e['bonus'] =H::fa($rowsf[$emp->employee_id] ?? 0) ;
             
             $sql="select sum(tm) as tm, count(distinct dd) as dd,t_type   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm,t_type from timesheet where    emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t  group by t_type ";
           
@@ -390,7 +370,7 @@ class CalcSalary extends \App\Pages\Base
          
 
             foreach($this->_stlist as $st) {
-                $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
+          //      $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
             }
             $e['_baseval'] = $emp->_baseval  ??0 ;
     
@@ -432,7 +412,7 @@ class CalcSalary extends \App\Pages\Base
         $pd = Employee::getDP() ;
         $ret['deps'] = $pd['d'] ;
         $ret['iostates'] = [] ; 
-        foreach(IOState::getTypeListSal()as $k=>$v) {
+        foreach(IOState::getTypeListSal() as $k=>$v) {
             $ret['iostates'][]=['key'=>$k,'value'=>$v];
         }    
         
