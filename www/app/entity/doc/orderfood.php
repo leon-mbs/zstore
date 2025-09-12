@@ -96,7 +96,7 @@ class OrderFood extends Document
 
             $detail[] = array(
                 "tovar_name" => $name,
-                "quantity"   => H::fqty($item->quantity),
+                "quantity"   => H::fqty($item->quantity,true),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
         }

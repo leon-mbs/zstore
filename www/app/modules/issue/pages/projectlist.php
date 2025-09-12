@@ -76,7 +76,7 @@ class ProjectList extends \App\Pages\Base
 
 
 
-        $number = trim($post->searchnumber);
+        $number = trim($post->searchnumber ??'');
         $cust = $post->searchcust;
         $status = $post->searchstate;
 
@@ -106,12 +106,16 @@ class ProjectList extends \App\Pages\Base
         foreach(Project::find($where, "project_id desc", $post->count, $post->start) as $p) {
             $pa = $p->getData() ;
             $pa['status_id']  = $p->status;
-            $pa['allowedit']  = true;
-            $pa['allowdel']  = true;
+            $pa['allowedit']  = false;
+            $pa['allowdel']  = false;
 
-            if ($user->rolename != 'admins' && $user->user_id != $p->creator_id) {
-                $pa['allowedit']  = false;
-                $pa['allowdel']  = false;
+            if ($user->rolename == 'admins' ) {
+                $pa['allowedit']  = true;
+                $pa['allowdel']  = true;
+            }
+            if (  $user->user_id == $p->creator_id) {
+                $pa['allowedit']  = true;
+                $pa['allowdel']  = true;
             }
 
 

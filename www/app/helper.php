@@ -594,9 +594,10 @@ class Helper
      * Форматирование количества
      *
      * @param mixed $qty
+     * @param mixed $check    убрать нули после  запятой (для печати в  чеках)
      * @return mixed
      */
-    public static function fqty($qty) {
+    public static function fqty($qty,$check=false) {
         if(strlen('' . $qty) == 0) {
             return '';
         }
@@ -608,7 +609,17 @@ class Helper
 
         $common = System::getOptions("common");
         if($common['qtydigits'] > 0) {
-            return number_format(doubleval($qty), $common['qtydigits'], '.', '');
+            
+           $r = number_format(doubleval($qty), $common['qtydigits'], '.', '');
+           if($check) {
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'.') ;
+             
+           }
+           return $r;
+           
         } else {
             return intval($qty);
         }
