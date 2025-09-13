@@ -88,7 +88,8 @@ class Shahmatka extends \App\Pages\Base
         $conn->Execute($sql);
          
         
-        $acclist = Account::getList(true);
+       $acclist = Account::getList();
+       $acclist=array_keys($acclist)  ;
 
         $detail = array();
        
@@ -102,26 +103,26 @@ class Shahmatka extends \App\Pages\Base
 
         foreach ($acclist as $acc) {
 
-            $data = $acc->getOb($from, $to);  //получаем остатки  и  обороты  на  период
+            $data = Account::getOb($acc,$from, $to);  //получаем остатки  и  обороты  на  период
 
-            $top[] = array('cell' => $acc->acc_code,   'bold' => true);
+            $top[] = array('cell' => $acc,   'right' => true,   'bold' => true);
 
             $bottom[] = array('cell' => H::fa($data['ct']),'right' => true, 'bold' => true);
         }
-        $top[] = array('cell' => 'Дебет', 'bold' => true);
+        $top[] = array('cell' => 'Дебет', 'right' => true, 'bold' => true);
         $bottom[] = array('cell' => '');
      
 
         $detail[] = array('row' => $top);
         foreach ($acclist as $acc) {
             $arr = array();
-            $data = $acc->getOb($from, $to);  //получаем остатки  и  обороты  на  период
-            $arr[] = array('cell' => $acc->acc_code,  'bold' => true);
+            $data = Account::getOb($acc,$from, $to);  //получаем остатки  и  обороты  на  период
+            $arr[] = array('cell' => $acc,  'bold' => true);
 
             foreach ($acclist as $acc2) {
 
-               $acc_dt = $conn->qstr($acc->acc_code . '%');
-               $acc_ct = $conn->qstr($acc2->acc_code . '%');
+               $acc_dt = $conn->qstr($acc . '%');
+               $acc_ct = $conn->qstr($acc2 . '%');
 
                $sql = "select coalesce(sum(amount),0) from   acc_entry_tmp where   accdt like {$acc_dt} and  accct like {$acc_ct} "  ;
 

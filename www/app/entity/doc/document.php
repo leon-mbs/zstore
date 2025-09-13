@@ -353,9 +353,10 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from custacc where document_id=" . $this->document_id);
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
-   
-            $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-
+          
+            if( System::getOption("common",'useacc')==1) {
+                $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+            }
  
     }
 
@@ -490,7 +491,8 @@ class Document extends \ZCL\DB\Entity
             $doc = $this->cast();
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
-                if($state >4 && true) {
+            
+                if($state >4 && System::getOption("common",'useacc')==1) {
                    $doc->DoAcc();   
                 }
                 

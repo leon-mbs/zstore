@@ -64,10 +64,10 @@ class Account
     * @param mixed $from
     * @param mixed $to
     */
-    public function getOb($from, $to) {
+    public static function getOb($acc,$from, $to) {
         $conn = \ZDB\DB::getConnect();
  
-        $acc = $conn->qstr($this->acc_code.'%');
+        $acc = $conn->qstr($acc.'%');
         
         $from = $conn->DBDate($from)  ;
         $to = $conn->DBDate($to)  ;
