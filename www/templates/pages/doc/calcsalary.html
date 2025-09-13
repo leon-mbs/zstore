@@ -252,9 +252,12 @@
         
                        
                        if(data.newdoc || this.hchanged ) {
+                          
+                          
                            for(var e of this.emps) {
                           
                                this.calcempinit(e)
+                               
                            }                   
                            
                            
@@ -273,13 +276,14 @@
              
          
              recalc:  function ( ){
-                       
+                    
                    for(var e of this.emps) {
                   
                        this.calcemp(e)
+                      
                    }                   
-
-             
+                   
+                   this.$forceUpdate(); 
              }  ,            
             
                  
@@ -299,6 +303,9 @@
              onbtn:function (bname){
                       
                     if(checkFormInput('docform')==false) return;
+                    
+                    this.recalc()
+                    
                     var data={
                         doc:{
                         }

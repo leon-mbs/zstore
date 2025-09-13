@@ -67,7 +67,7 @@ class EmpAcc extends \ZCL\DB\Entity
         }
         
         foreach($conn->Execute($sql) as $r) {
-           $ret[]=  $r ;
+           $ret[$r['emp_id']] =  $r['am'] ;
         }
         return  $ret ;
     }
