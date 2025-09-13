@@ -1,0 +1,51 @@
+<html>
+   <head>
+        <title> Оборотно-сальдова вiдомiсть   </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   ">
+                <h3>Оборотно-сальдова вiдомiсть</h3>
+                <div class="card">
+                    <form zippy="filter" class="form-inline">
+
+                        <label for="from">З</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+
+                        <label for="to">по</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+                            
+                         
+
+                        <input zippy="show" class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/obsaldo" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/obsaldo" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                                                                         
+
+                    </div>
+
+                     <div zippy="preview" class="table-responsive-sm" >                    </div>
+                  
+
+                </div>
+            </div>
+        </div>
+   <script>      
+        function check_show(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }                  
+        </script>        
+    </body>
+</html>
