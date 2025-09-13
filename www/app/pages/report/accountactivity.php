@@ -33,11 +33,9 @@ class AccountActivity extends \App\Pages\Base
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
 
-        $list=[];
+        $list=Account::     getUsedList(true);
         
-        foreach(Account::find('acc_code in(select accdt from acc_entry) or acc_code in(select accct from acc_entry)  ','iszab asc,acc_code asc') as $acc){
-           $list[$acc->acc_code]=  $acc->acc_code.' '.$acc->acc_name;  
-        }
+       
         
         $this->filter->add(new DropDownChoice('acc', $list ));
         $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');

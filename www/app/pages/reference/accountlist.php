@@ -27,22 +27,16 @@ class AccountList extends \App\Pages\Base
             return;
         }
         
-        $acctable = $this->add(new Panel('acctable'));
-        $acctable->add(new DataView('acclist', new \ZCL\DB\EntityDataSource('\App\Entity\Account','','iszab asc, acc_code asc'), $this, 'acclistOnRow'));
+        
+      
+        $this->_tvars['acclist'] = [];
+        
+        foreach(Account::getList() as $c=>$n){
+           $this->_tvars['acclist'] = array('acc_code'=>$c,'acc_name'=>$n);  
+        }
+    }
 
  
-        $acctable->acclist->Reload();
-    }
-
-    public function acclistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $item = $row->getDataItem();
-
-        $row->add(new Label('acc_code', $item->acc_code));
-         $row->add(new Label('acc_name', $item->acc_name));
-       
-      
-
-    }
 
   
 

@@ -6,17 +6,54 @@ namespace App\Entity;
  * Клас-сущность  бухгалтерский  счет
  *
  */
-class Account implements \Zippy\Interfaces\DataItem
+class Account  
 {
-    
- 
-
+  
     /**
      * список  счетов
      *
      */
-    public static function getList() {
-       
+    public static function getList($namewithcode =false,$onlyman=false) {
+         $ret=[];
+         $ret[23]='Виробництво';
+         $ret[40]='Статутний капiтал';
+         $ret[79]='Фiнансовий результат';
+         
+         if($namewithcode) { 
+            $retc=[]; 
+            foreach($ret as $c=>$n) {
+               $retc[$c] = $c.' '. $n  ;
+            }
+            return $retc;
+         }
+         
+         
+         return $ret;
+    }
+ 
+    /**
+     * список использованых счетов
+     *
+     */
+    public static function getUsedList($namewithcode =false ) {
+           $all=self::getList($namewithcode) ;
+           $ret=[];
+           $conn = \ZDB\DB::getConnect();
+           $col=$conn->GetCol("select distinct  accdt from acc_entry");
+           foreach($col  as $code){
+              if(!isset($ret[$code])) {
+                 $ret[$code]  = $all[$code]  ;
+              }
+           }
+           $col=$conn->GetCol("select distinct  accct from acc_entry");
+           foreach($col as $code){
+              if(!isset($ret[$code])) {
+                 $ret[$code]  = $all[$code]  ;
+              }
+           }  
+           
+           
+           return $ret;         
     }
  
 
@@ -155,5 +192,5 @@ class Account implements \Zippy\Interfaces\DataItem
         } 
         return array_keys($list);
     }    
-
+   
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity\Doc;
 
+use App\Entity\Account;
 use App\Entity\AccEntry;
 use App\Helper as H;
 
@@ -12,20 +13,26 @@ use App\Helper as H;
 class ManualEntry extends Document
 {
     public function Execute() {
-
-        AccEntry::addEntry($this->headerdata["dt"],$this->headerdata["ct"],H::fa($this->amount),$this->document_id);
+         
         return true;
     }
-
+    public   function DoAcc() {
+       parent::DoAcc()  ;
+       AccEntry::addEntry($this->headerdata["dt"],$this->headerdata["ct"],H::fa($this->amount),$this->document_id);
+          
+    } 
     public function generateReport() {
 
+        $list = Account::getList(true);
 
         $header = array(
             'amount'          => H::fa($this->amount),
             'date'            => H::fd($this->document_date),
             "notes"           => nl2br($this->notes),
-            "dt"            => $this->headerdata["dt"],
-            "ct"              => $this->headerdata["ct"],
+            "dt"              => $this->headerdata["dt"],
+            "dtname"          => $list[$this->headerdata["dt"] ],
+            "ct"              => $this->headerdata["ct"]  ,
+            "ctname"          => $list[$this->headerdata["ct"] ],
             "document_number" => $this->document_number
         );
         

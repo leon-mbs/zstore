@@ -88,7 +88,7 @@ class Shahmatka extends \App\Pages\Base
         $conn->Execute($sql);
          
         
-        $acclist = Account::find("", "iszab asc,acc_code asc ");
+        $acclist = Account::getList(true);
 
         $detail = array();
        

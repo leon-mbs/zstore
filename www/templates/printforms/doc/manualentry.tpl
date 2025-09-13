@@ -1,30 +1,42 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
-        <td colspan="4" align="center">
+        <td colspan="3" align="center">
             <b> Ручна проводка № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
 
 
     <tr>
-        <td colspan="4">
-            <b>Дебет:</b> {{dt}}
+        <td  >
+            <b>Дебет:</b>  
+        </td>
+       <td  >
+              {{dt}}
+        </td>
+     <td  >
+              {{dtname}}
         </td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b>Кредит:</b> {{ct}}
+        <td  >
+            <b>Кредит:</b>  
+        </td>
+       <td  >
+              {{ct}}
+        </td>
+       <td  >
+              {{ctname}}
         </td>
     </tr>
     <tr>
-        <td colspan="4">
+        <td colspan="3">
             <b>Сума:</b> {{amount}}
         </td>
     </tr>
 
 
     <tr>
-        <td colspan="4">
+        <td colspan="3">
             {{{notes}}}
         </td>
     </tr>

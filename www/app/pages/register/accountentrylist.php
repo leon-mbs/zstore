@@ -40,11 +40,8 @@ class AccountEntryList extends \App\Pages\Base
       
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         
-        $list=[];
-        
-        foreach(Account::find('acc_code in(select accdt from acc_entry) or acc_code in(select accct from acc_entry)  ','iszab asc,acc_code asc') as $acc){
-           $list[$acc->acc_code]=  $acc->acc_code.' '.$acc->acc_name;  
-        }
+        $list = Account::getList(true);
+
             
         $this->filter->add(new DropDownChoice('facc', $list, 0));
         $this->filter->add(new DropDownChoice('ftype', [], 0));

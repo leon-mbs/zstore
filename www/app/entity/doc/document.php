@@ -353,6 +353,8 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from custacc where document_id=" . $this->document_id);
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
+   
+            $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
 
  
     }
@@ -1340,7 +1342,9 @@ class Document extends \ZCL\DB\Entity
     }
     
     public   function DoAcc() {
-         
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+ 
     } 
       
 }

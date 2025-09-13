@@ -32,12 +32,9 @@ class ManualEntry extends \App\Pages\Base
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
-       
+                      
 
-        $list = array();
-        foreach (Account::find('isman=1','iszab asc,acc_code asc') as $acc) {
-            $list[$acc->acc_code] = str_pad($acc->acc_code,  5, " ")   .   $acc->acc_name;
-        }
+        $list = Account::getList(true);
 
   
         $this->docform->add(new DropDownChoice('dt', $list, 0));
