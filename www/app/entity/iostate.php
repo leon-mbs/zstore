@@ -158,7 +158,7 @@ class IOState extends \ZCL\DB\Entity
     */
     public static function getTypeListSal( ) {
        $list = array();
-    //   $list[self::TYPE_PROD] = "Витрати на виробьництво";
+       $list[self::TYPE_PROD] = "Витрати на виробництво";
        $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
        $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
        $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";

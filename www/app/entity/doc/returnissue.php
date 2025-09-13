@@ -32,6 +32,7 @@ class ReturnIssue extends Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
                                   "msr"        => $item->msr,
+                                  "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
@@ -115,13 +116,10 @@ class ReturnIssue extends Document
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp_id;
                     $ua->amount = 0-$b;
+                    $ua->notes = "Штраф " ;
                     $ua->save();
 
-                    $n = new \App\Entity\Notify();
-                    $n->user_id = \App\System::getUser()->user_id;;;
-                    $n->message = "Штраф { $b} ({$this->document_number})"    ;
-                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                    $n->save();                  
+                                  
                 } 
                 
             }

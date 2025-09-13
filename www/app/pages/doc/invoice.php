@@ -142,6 +142,7 @@ class Invoice extends \App\Pages\Base
 
 
             $this->docform->total->setText($this->_doc->amount);
+            $this->docform->totalnds->setText($this->_doc->headerdata['nds']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -200,6 +201,7 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->total->setText($basedoc->amount);
 
+                        $this->calcTotal();
                         $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
@@ -266,7 +268,7 @@ class Invoice extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('disc', H::fa($item->disc)));
-        $row->add(new Label('pricends', H::fa($item->pricends)));
+    //    $row->add(new Label('pricenonds', H::fa($item->pricenonds)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
@@ -345,7 +347,8 @@ class Invoice extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getText();
 
         $item->price = $this->editdetail->editprice->getText();
-        $item->pricends= $item->price + $item->price * $item->nds();
+    
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
  
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
@@ -383,6 +386,7 @@ class Invoice extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
+        $this->wselitem->setVisible(false);
     }
 
     public function saveserrowOnClick($sender) {
@@ -408,7 +412,8 @@ class Invoice extends \App\Pages\Base
         }
 
         $item->price = $price;
-
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+    
         if($this->_rowid == -1) {
             $found=false;
             
@@ -550,14 +555,17 @@ class Invoice extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-         $nds = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
-            if($item->pricends > $item->price) {
-                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            if($item->pricenonds < $item->price) {
+                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
             }
             $total = $total + $item->amount;
+        }
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
         }
         if($nds>0) {
             $this->docform->totalnds->setText(H::fa($nds));            
@@ -575,9 +583,7 @@ class Invoice extends \App\Pages\Base
         if($totaldisc>0) {
             $total = $total - $totaldisc;
         }
-        if($totalnds>0) {
-            $total = $total + $totalnds;
-        }
+        
 
 
         $this->docform->payamount->setText(H::fa($total));

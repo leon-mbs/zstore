@@ -563,9 +563,11 @@ function dec_digits_group($number, $power, $digits = 1) {
     if (function_exists('gmp_init') && $power >0) {
         return   gmp_intval(gmp_mod(gmp_div(intval($number), gmp_pow(10, intval($power) * intval($digits))), gmp_pow(10, (int)$digits)));
     }
-    return    intval((intval($number)/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
-
-    // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
+ 
+    
+    return  intval(($number/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
+  
+   //  return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
 
 // service function to get plural form for the number

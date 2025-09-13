@@ -4,12 +4,14 @@ namespace App\Pages\Reference;
 
 use App\Entity\Contract;
 use App\Entity\Customer;
-use App\Entity\Employee;
+use App\Entity\User;
  
 use App\Entity\Pay;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
+use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\DataList\DataRow;
 use Zippy\Html\Form\Button;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
@@ -26,6 +28,9 @@ use Zippy\Html\Panel;
 class ContractList extends \App\Pages\Base
 {
     private $_contract;
+    public $_states=[];
+    public $_fileslist=[];
+    public $_msglist=[];
 
     public function __construct($id = 0) {
         parent::__construct();
@@ -33,6 +38,8 @@ class ContractList extends \App\Pages\Base
             return;
         }
 
+        $this->_states=Contract::getStates() ;
+        
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new CheckBox('showdis'));
         $this->filter->add(new TextInput('searchkey'));
@@ -54,26 +61,35 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->add(new TextInput('editcontract_number'));
         $this->contractdetail->add(new AutocompleteTextInput('editcust'))->onText($this, 'OnAutoCustomer');
 
-        $this->contractdetail->add(new DropDownChoice('editemp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
+        $this->contractdetail->add(new DropDownChoice('editemp', User::findArray('username', 'disabled<>1', 'username'), 0));
        
-        $this->contractdetail->add(new \Zippy\Html\Form\File('scan'));
-
-        $this->contractdetail->add(new CheckBox('editdisabled'));
-
+       
         $this->contractdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->contractdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('docpan'))->setVisible(false);
         $this->docpan->add(new Label("cname"));
 
+        $this->docpan->add(new Label('showdesc'));
         $this->docpan->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
-        $this->docpan->add(new DataView('dtable', new ArrayDataSource(array()), $this, 'doclistOnRow'));
-        $this->docpan->dtable->setPageSize(H::getPG());
-        $this->docpan->add(new \Zippy\Html\DataList\Paginator('dpag', $this->docpan->dtable));
-        $this->docpan->add(new DataView('ptable', new ArrayDataSource(array()), $this, 'paylistOnRow'));
-        $this->docpan->dtable->setPageSize(H::getPG());
-        $this->docpan->add(new \Zippy\Html\DataList\Paginator('ppag', $this->docpan->ptable));
+ 
+        $statusform=$this->docpan->add(new Form('statusform'));
+   
+        $statusform->add(new DropDownChoice('mstates',   $this->_states, 0));
+        $statusform->add(new DropDownChoice('musers',   User::findArray('username', 'disabled<>1', 'username'), 0));
+        $statusform->add(new SubmitButton('bstatus'))->onClick($this, 'bstatusOnClick');
+        $statusform->add(new SubmitButton('buser'))->onClick($this, 'buserOnClick');
+     
+        $this->docpan->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
+        $this->docpan->addfileform->add(new \Zippy\Html\Form\File('addfile'));
+        $this->docpan->addfileform->add(new TextInput('adddescfile'));
+        $this->docpan->add(new DataView('dw_files', new ArrayDataSource(new Bind($this, '_fileslist')), $this, 'fileListOnRow'));
 
+        $this->docpan->add(new Form('addmsgform'))->onSubmit($this, 'OnMsgSubmit');
+        $this->docpan->addmsgform->add(new TextArea('addmsg'));
+        $this->docpan->add(new DataView('dw_msglist', new ArrayDataSource(new Bind($this, '_msglist')), $this, 'msgListOnRow'));
+          
+      
         if ($id > 0) {
             $c = Contract::load($id);
             $this->filter->searchkey->setText($c->contract_number);
@@ -83,8 +99,8 @@ class ContractList extends \App\Pages\Base
 
     public function contractlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
+        $row->add(new ClickLink('contract_number',$this, 'showOnClick'))->setValue($item->contract_number);
 
-        $row->add(new Label('contract_number', $item->contract_number));
         $row->add(new Label('shortdesc', $item->shortdesc));
         $row->add(new Label('term', H::fd($item->createdon) . ' - ' . H::fd($item->enddate)));
         if ($item->enddate > 0 && $item->enddate < time()) {
@@ -94,19 +110,13 @@ class ContractList extends \App\Pages\Base
         $row->add(new Label('customer', $item->customer_name));
       
         $c = Customer::load($item->customer_id);
-        $row->add(new Label('emp', $item->emp_name));
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->desc) > 0);
-        $row->hasnotes->setAttribute('title', $item->desc);
-
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('scanlink'))->setVisible(false);
-        if ($item->file_id > 0) {
-            $row->scanlink->setVisible(true);
-            $row->scanlink->setLink(_BASEURL . 'loadfile.php?id=' . $item->file_id);
-        }
+        $row->add(new Label('state', $this->_states[$item->state ?? 0] ));
+    
+     
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new ClickLink('edit',$this, 'editOnClick'))->setVisible($item->state< Contract::STATE_INWORK);
+        $row->add(new ClickLink('delete',$this, 'deleteOnClick'))->setVisible($item->state< Contract::STATE_INWORK);;
     }
 
     public function deleteOnClick($sender) {
@@ -133,7 +143,7 @@ class ContractList extends \App\Pages\Base
         $this->contractdetail->editcontract_number->setText($this->_contract->contract_number);
         $this->contractdetail->editshortdesc->setText($this->_contract->shortdesc);
         $this->contractdetail->editdesc->setText($this->_contract->desc);
-        $this->contractdetail->editdisabled->setChecked($this->_contract->disabled);
+   
         $this->contractdetail->editcust->setKey($this->_contract->customer_id);
         $this->contractdetail->editcust->setText($this->_contract->customer_name);
 
@@ -166,25 +176,26 @@ class ContractList extends \App\Pages\Base
             return;
         }
       
-    
+        $user=\App\System::getUser() ;
+   
+        if($this->_contract->contract_id==0) {
+             $this->_contract->creator_id = $user->user_id;
+         
+        }
+        if($this->_contract->state==0) {
+           $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
+        
+        }
 
-
-        $this->_contract->createdon = $this->contractdetail->editcreatedon->getDate();
         $this->_contract->enddate = $this->contractdetail->editenddate->getDate();
         $this->_contract->shortdesc = $this->contractdetail->editshortdesc->getText();
         $this->_contract->desc = $this->contractdetail->editdesc->getText();
 
-        $this->_contract->emp_id = $this->contractdetail->editemp->getValue();
-        $this->_contract->emp_name = $this->contractdetail->editemp->getValueName();
-        $this->_contract->disabled = $this->contractdetail->editdisabled->isChecked() ? 1 : 0;
-
+        $this->_contract->user_id = $this->contractdetail->editemp->getValue();
+        $this->_contract->username = $this->contractdetail->editemp->getValueName();
+     
         $this->_contract->save();
-
-        $file = $this->contractdetail->scan->getFile();
-        if ($file['size'] > 0) {
-            $this->_contract->file_id = H::addFile($file, $this->_contract->contract_id, 'Скан ', \App\Entity\Message::TYPE_CONTRACT);
-            $this->_contract->save();
-        }
+      
 
 
         $this->contractdetail->setVisible(false);
@@ -196,6 +207,42 @@ class ContractList extends \App\Pages\Base
         $this->contracttable->setVisible(true);
         $this->contractdetail->setVisible(false);
         $this->docpan->setVisible(false);
+    }
+    public function bstatusOnClick($sender) {
+        $this->contracttable->setVisible(true);
+        $this->docpan->setVisible(false);
+        $oldatate =$this->_contract->state;
+        $this->_contract->state = $this->docpan->statusform->mstates->getValue();
+        if($this->_contract->state != $oldatate)  {
+            $this->_contract->save();      
+            $this->contracttable->contractlist->Reload(false);
+            
+            
+            $msg = new \App\Entity\Message();
+            $msg->message = " Змiна  статусу  на  ". $this->_states[$this->_contract->state];
+            $msg->created = time();
+            $msg->user_id = 0;
+            $msg->item_id = $this->_contract->contract_id;
+            $msg->item_type = \App\Entity\Message::TYPE_CONTRACT;
+           
+            $msg->save();  
+                
+        }
+         
+        
+        
+    }
+    public function buserOnClick($sender) {
+        $this->contracttable->setVisible(true);
+        $this->docpan->setVisible(false);
+        $user_id= $this->docpan->statusform->musers->getValue()  ;
+        if($user_id > 0){
+            $this->_contract->user_id = $user_id;
+            $this->_contract->username = $this->docpan->statusform->musers->getValueName();
+            $this->_contract->save();      
+            $this->contracttable->contractlist->Reload(false);
+        }
+        
     }
 
     public function OnFilter($sender) {
@@ -212,32 +259,122 @@ class ContractList extends \App\Pages\Base
         $this->contracttable->setVisible(false);
         $this->docpan->setVisible(true);
         $this->docpan->cname->setText($this->_contract->contract_number);
+        $this->docpan->showdesc->setText($this->_contract->desc);
+
+        $this->docpan->statusform->mstates->setValue($this->_contract->state);
+        $this->docpan->statusform->musers->setValue($this->_contract->user_id);
 
         $dlist = $this->_contract->getDocs();
         $plist = $this->_contract->getPayments();
 
-        $this->docpan->dtable->getDataSource()->setArray($dlist);
-        $this->docpan->dtable->Reload();
-        $this->docpan->ptable->getDataSource()->setArray($plist);
-        $this->docpan->ptable->Reload();
+        $this->_tvars['dtable'] =[]  ;
+        $this->_tvars['ptable'] =[]  ;
+        foreach($dlist as $doc)  {
+          $this->_tvars['dtable'] = array(
+            "dnum" => $doc->document_number,
+            "dtype" => $doc->meta_desc,
+            "ddate" => H::fd($doc->document_date),
+            "dsumma" => H::fa($doc->amount) 
+          );  
+        }
+        
+      foreach($plist as $doc)  {
+          $this->_tvars['ptable'] = array(
+            "pmfname" => $doc->mf_name,
+            "pnotes" => $doc->notes,
+            "pdate" => H::fd($doc->paydate),
+            "psumma" => H::fa($doc->amount) 
+          );  
+        }
+     
+     
+        $this->updateMessages() ; 
+        $this->updateFiles() ; 
+    }
+  
+    public function OnFileSubmit($sender) {
+
+        $file = $this->docpan->addfileform->addfile->getFile();
+        if ($file['size'] > 10000000) {
+            $this->setError("Файл більше 10 МБ!");
+            return;
+        }
+
+        H::addFile($file, $this->_contract->contract_id, $this->docpan->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_CONTRACT);
+        $this->docpan->addfileform->adddescfile->setText('');
+        $this->updateFiles();
     }
 
-    public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $doc = $row->getDataItem();
-        $row->add(new Label("dnum", $doc->document_number));
-        $row->add(new Label("dtype", $doc->meta_desc));
-        $row->add(new Label("ddate", H::fd($doc->document_date)));
-        $row->add(new Label("dsumma", H::fa($doc->amount)));
+    // обновление  списка  прикрепленных файлов
+    private function updateFiles() {
+        $this->_fileslist = H::getFileList($this->_contract->contract_id, \App\Entity\Message::TYPE_CONTRACT);
+        $this->docpan->dw_files->Reload();
     }
 
-    public function paylistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $doc = $row->getDataItem();
-        $row->add(new Label("pmfname", $doc->mf_name));
-        $row->add(new Label("pnotes", $doc->notes));
-        $row->add(new Label("pdate", H::fd($doc->paydate)));
-        $row->add(new Label("psumma", H::fa($doc->amount)));
+    //вывод строки  прикрепленного файла
+    public function filelistOnRow(DataRow $row) {
+        $item = $row->getDataItem();
+
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
+        $file->setValue($item->filename);
+        $file->setAttribute('title', $item->description);
+        $user= \App\System::getUser() ;
+        $row->add(new ClickLink('delfile',$this, 'deleteFileOnClick'))->setVisible(   $item->user_id == $user->user_id || $user->rolename=='admins'  ); 
     }
 
+    //удаление прикрепленного файла
+    public function deleteFileOnClick($sender) {
+        $file = $sender->owner->getDataItem();
+        H::deleteFile($file->file_id);
+        $this->updateFiles();
+  
+    }
+
+    /**
+     * добавление коментария
+     *
+     * @param mixed $sender
+     */
+    public function OnMsgSubmit($sender) {
+        $msg = new \App\Entity\Message();
+        $msg->message = $this->docpan->addmsgform->addmsg->getText();
+        $msg->created = time();
+        $msg->user_id = \App\System::getUser()->user_id;
+        $msg->item_id = $this->_contract->contract_id;
+        $msg->item_type = \App\Entity\Message::TYPE_CONTRACT;
+        if (strlen($msg->message) == 0) {
+            return;
+        }
+        $msg->save();
+
+        $this->docpan->addmsgform->addmsg->setText('');
+        $this->updateMessages();
+    }
+
+    //список   комментариев
+    private function updateMessages() {
+        $this->_msglist = \App\Entity\Message::find('item_type = 7 and item_id=' . $this->_contract->contract_id, 'message_id');
+        $this->docpan->dw_msglist->Reload();
+    }
+
+    //вывод строки  коментария
+    public function msgListOnRow(DataRow $row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label("msgdata", nl2br($item->message)));
+        $row->add(new Label("msgdate", H::fdt($item->created)));
+        $row->add(new Label("msguser", $item->username));
+        $user = \App\System::getUser() ;
+        $row->add(new ClickLink('delmsg',$this, 'deleteMsgOnClick'))->setVisible( $item->user_id>0 &&( $item->user_id == $user->user_id || $user->rolename=='admins' ));
+    }
+
+    //удаление коментария
+    public function deleteMsgOnClick($sender) {
+        $msg = $sender->owner->getDataItem();
+        \App\Entity\Message::delete($msg->message_id);
+        $this->updateMessages();
+       
+    }
 }
 
 class ContractDataSource implements \Zippy\Interfaces\DataSource
@@ -262,14 +399,21 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
 
        
 
-        if ($showdis > 0) {
+        if ($showdis == 1) {
 
         } else {
-            $where = $where . " and disabled <> 1";
+             $where = $where . " and state <>  " . Contract::STATE_CLODED ;
+         
         }
         if (strlen($text) > 0) {
             $text = Contract::qstr('%' . $text . '%');
-            $where = $where . " and contract_number like {$text}   ";
+            $where =   " and contract_number like {$text}   ";
+        }
+        
+        $user=\App\System::getUser() ;
+        if($user->rolename!='admins') {
+           $where = $where .  " and (details like '%<creator_id>{$user->user_id}</creator_id>%' or  details like '%<user_id>{$user->user_id}</user_id>%' ) ";
+           
         }
         return $where;
     }
@@ -279,7 +423,7 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Contract::find($this->getWhere(), "contract_number", $count, $start);
+        return Contract::find($this->getWhere(), "state", $count, $start);
     }
 
     public function getItem($id) {

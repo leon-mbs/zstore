@@ -22,7 +22,7 @@ class DataItem implements \Zippy\Interfaces\DataItem
     }
 
     final public function __get($name) {
-        return $this->fields[$name];
+        return $this->fields[$name] ?? null;
     }
 
     public function getID() {

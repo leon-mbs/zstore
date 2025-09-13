@@ -19,7 +19,7 @@
                 <br>Повідомлення в загальному  випадку має вигляд:
                 <br>POST /api/{endpoint}
                 <br>content-type: application/json
-                <br>Authorization: Bearer <JWT токен>
+                <br>Authorization: Bearer &lt;JWT токен&gt;
                 <br>
                 <br><code>{"jsonrpc": "2.0", "method": "echo", "params": {"say": "Привіт"}, "id": 1}</code>
              </p>
@@ -85,6 +85,10 @@
                 Bearer та Basic аутентифікація відправляються стардартним чином в заголовку Authorization.
                 Для Bearer попередньо необхідно отримати JWT токен.
             </p>
+            
+            <br><b><a href="https://github.com/leon-mbs/zstore/blob/master/www/app/api/client.php">Приклад клієнту</a> для роботи з API</b>
+            
+            
             <h3>Перелік endpoints</h3>
             <ul style=" line-height: 1.4em;" class="list-unstyled text-bold">
                 <li><a class=" " href="#common">Загальні</a></li>

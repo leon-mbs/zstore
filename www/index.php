@@ -28,10 +28,10 @@ try {
         }
     }
 
-    $mainpage='\App\Pages\Main';
+    $mainpage='\App\Pages\Blank';
     $user=\App\System::getUser() ;
     if(strlen($user->mainpage)>0) {
-        $mainpage =  $user->mainpage;
+        $mainpage = $user->mainpage;
     }
 
     $app = new \App\Application();
@@ -45,12 +45,13 @@ try {
 
 
 } catch (Throwable $e) {
-    if ($e instanceof \ADODB_Exception) {
-
-        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
-    }
     $msg = $e->getMessage();
-    $logger->error($e);
+    $logger->error($msg);
+    if ($e instanceof \ADODB_Exception) {
+        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
+        $logger->debug($e->sql);        
+    }
+
     if ($e instanceof Throwable) {
         echo $e->getMessage() . '<br>';
         echo $e->getLine() . ' ';

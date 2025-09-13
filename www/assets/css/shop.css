@@ -191,3 +191,21 @@ a.clip {
     text-overflow: ellipsis;
     height:42px /* fallback */
 }
+
+@media (max-width: 991px) {
+  .navbar-collapse-absolute {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .mobile-gap {
+    gap: 10px;
+  }
+
+  .navbar-nav .dropdown-menu {
+    position: absolute;
+  }
+}

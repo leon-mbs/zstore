@@ -1,14 +1,14 @@
 <table class="ctable" border="0"   cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="3">
+        <td align="center" colspan="6">
             Неліквідні товари
         </td>
     </tr>
     {{#cust}}
     <tr>
 
-        <td colspan="3">
+        <td colspan="6">
             <b> Постачальник:</b> {{customer_name}}
         </td>
     </tr>

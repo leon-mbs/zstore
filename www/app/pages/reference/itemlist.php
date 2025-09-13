@@ -155,7 +155,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes(),Item::TYPE_TOVAR));
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
-        $this->itemdetail->add(new DropDownChoice('editisnds'))->onChange($this, 'onNds');;
+        $this->itemdetail->add(new DropDownChoice('editisnds',[],0))->onChange($this, 'onNds');;
         $this->itemdetail->add(new TextInput('editnds'))->setVisible(false);
   
 

@@ -54,10 +54,8 @@ class SalaryTypeList extends \App\Pages\Base
 
         $this->add(new Form('optform'));
         $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']??''));
-        $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']??''));
+
         $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']??''));
-        $this->optform->add(new DropDownChoice('optfine', SalType::getList(), $opt['codefine']??''));
-        $this->optform->add(new DropDownChoice('optbonus', SalType::getList(), $opt['codebonus']??''));
         $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
 
 
@@ -140,7 +138,7 @@ class SalaryTypeList extends \App\Pages\Base
 
         $sl = SalType::getList();
         $codebaseincom = $this->optform->optbaseincom->getValue();
-        $codeadvance = $this->optform->optadvance->getValue();
+
         $coderesult = $this->optform->optresult->getValue();
 
         if($codebaseincom==0) {
@@ -150,11 +148,10 @@ class SalaryTypeList extends \App\Pages\Base
         
         $this->optform->optbaseincom->setOptionList($sl);
         $this->optform->optresult->setOptionList($sl);
-        $this->optform->optadvance->setOptionList($sl);
+
         //восстанавливаем значение
         $this->optform->optbaseincom->setValue($codebaseincom);
         $this->optform->optresult->setValue($coderesult);
-        $this->optform->optadvance->setValue($codeadvance);
 
 
     }
@@ -166,11 +163,9 @@ class SalaryTypeList extends \App\Pages\Base
 
     public function onSaveOpt($sender) {
         $opt = System::getOptions("salary");
-        $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
+
         $opt['coderesult'] = $this->optform->optresult->getValue();
         $opt['codeadvance'] = $this->optform->optadvance->getValue();
-        $opt['codefine'] = $this->optform->optfine->getValue();
-        $opt['codebonus'] = $this->optform->optbonus->getValue();
         if($opt['codebaseincom']==0) {
            $this->addAjaxResponse("toastr.error('Не вказано поле  основної зарплати')");
            

@@ -10,11 +10,9 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "6.13.0";
-    public const PREV_VERSION = "6.12.2";
-    public const REQUIRED_DB  = "6.13.0";
-
-   
+    public const CURR_VERSION = "6.16.0";
+    public const PREV_VERSION = "6.15.2";
+    public const REQUIRED_DB  = "6.16.0";
    
 
     /**
@@ -76,7 +74,9 @@ class System
     public static function getOptions($group,$reload= false ) {
 
         $opp  = Session::getSession()->options ??[] ;
-       
+        if(!is_array($opp))  {
+            $opp=[];
+        }       
         if(isset($opp[$group]) && $reload==false  ) {
             return $opp[$group];
         }
@@ -104,6 +104,7 @@ class System
             
         }
 
+        return [];
         
     }
 
@@ -117,7 +118,7 @@ class System
 
         $options = self::getOptions($group);
 
-        return $options[$option];
+        return $options[$option] ??'';
     }
 
     /**
@@ -301,18 +302,22 @@ class System
     * 
     */
     public static function checkVersion() {
+        /*
         $phpv =   phpversion()  ;
         $phpv = substr(str_replace('.','',$phpv),0,2) ;
        
         $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
     
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php".$nocache);
+        $v = @file_get_contents("https://zippy.com.ua/update.php".$nocache);
         $data = @json_decode($v, true);
         if(!is_array($data)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json");
+            $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
             $data = @json_decode($v, true);
         }   
-        
+        */
+        $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
+        $data = @json_decode($v, true);
+   
         return $data;     
     }
 }

@@ -243,6 +243,14 @@ class IssueList extends \App\Pages\Base
             $issue->user_id = $post->user_id;
             $user = \App\Entity\User::load($issue->user_id) ;
             $desc="Завдання переведено на  <b>" . $user->username . "</b>";
+            
+            $n = new \App\Entity\Notify();
+            $n->user_id = $user->user_id;
+            $n->message =  " На вас переведено завдання  #{$issue->issue_id} {$issue->issue_name} ";
+            $n->sender_id = \App\Entity\Notify::SYSTEM;
+            $n->save();
+            
+            
         }
 
 

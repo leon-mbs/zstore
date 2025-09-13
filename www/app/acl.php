@@ -423,8 +423,8 @@ class ACL
         if ($id > 0) {
             return $id;
         }
-        \App\System::setErrorMsg('Для створення документа потрібно вибрати конкретну філію');
-        \App\Application::Redirect("\\App\\Pages\\Main");
+        \App\System::setErrorMsg('Для створення документу має бути вибрана філія');
+        \App\Application::Redirect("\\App\\Pages\\Blank");
     }
 
     public static function getCurrentBranch() {

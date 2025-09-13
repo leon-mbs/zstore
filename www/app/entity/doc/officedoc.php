@@ -28,15 +28,10 @@ class OfficeDoc extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $emp_id;
             $ua->amount = $bonus;
+            $ua->notes = "Бонус ";
             $ua->save();
             
-            if($user != null){
-                $n = new \App\Entity\Notify();
-                $n->user_id = $user->user_id;;;
-                $n->message = "Бонус {$bonus} ({$this->document_number})"    ;
-                $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                $n->save();   
-            }          
+                   
             
         }
         if ($fine > 0 && $emp > 0) {
@@ -45,14 +40,9 @@ class OfficeDoc extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $emp_id;
             $ua->amount = 0 - $fine;
+            $ua->notes = "Штраф " ;
             $ua->save();
-            if($user != null){
-                $n = new \App\Entity\Notify();
-                $n->user_id = $user->user_id;;;
-                $n->message = "Штраф {$fine} ({$this->document_number})"    ;
-                $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                $n->save();     
-            }          
+                     
         }
     }
 

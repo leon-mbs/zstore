@@ -27,6 +27,7 @@ class Service extends \ZCL\DB\Entity
         $this->noprice = (int)($xml->noprice[0]);
         $this->techcard = (string)($xml->techcard[0]);
         $this->notes = (string)($xml->notes[0]);
+        $this->nds = (string)($xml->nds[0]);
         $this->actionprice = doubleval($xml->actionprice[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
@@ -56,6 +57,7 @@ class Service extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
+        $this->detail .= "<nds>{$this->nds}</nds>";
      
         $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
@@ -161,4 +163,25 @@ class Service extends \ZCL\DB\Entity
         return  $list;
     }
 
+     /**
+    * коеффициоет НДС на  который  умножается  цена
+    * 
+    * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
+    */
+    public   function nds($revert = false) {
+        $nds = 0 ;
+      
+        if($this->nds>0){
+           
+            $nds = doubleval($this->nds) / 100;
+            if ($revert) {
+                $nds = 1 - 100 / (100 + doubleval($this->nds));
+            }           
+        }
+      
+        
+        return $nds;
+    }
+     
+    
 }

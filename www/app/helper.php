@@ -16,7 +16,7 @@ class Helper
     public const STAT_PROMO = 4;     //промо код
     public const STAT_NEW_SHOP = 5;     //уникальнных  посетителей
     public const STAT_CARD_SHOP = 6;     //позиций в  корзине
-
+    public const STAT_DOC_ISEDITED = 7;     //редактируется документ
 
     private static $meta = array(); //кеширует метаданные
 
@@ -363,10 +363,10 @@ class Helper
            // throw new \Exception('Розмір файлу більше 4M');
            return 0;
         }        
-        
+        $user=\App\System::getUser() ;
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
+        $sql = "insert  into files (item_id,filename,description,item_type,mime,user_id) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}',{$user->user_id}) ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
@@ -391,6 +391,7 @@ class Helper
         foreach($rs as $row) {
             $item = new \App\DataItem();
             $item->file_id = $row['file_id'];
+            $item->user_id = $row['user_id'];
             $item->filename = $row['filename'];
             $item->description = $row['description'];
             $item->mime = $row['mime'];
@@ -463,9 +464,18 @@ class Helper
      *
      * @param mixed $msg
      */
-    public static function log($msg) {
+    public static function logdebug($msg) {
         global $logger;
         $logger->debug($msg);
+    }
+    /**
+     * логгирование
+     *
+     * @param mixed $msg
+     */
+    public static function log($msg) {
+        global $logger;
+        $logger->info($msg);
     }
 
     /**
@@ -478,23 +488,7 @@ class Helper
         $logger->error($msg);
     }
 
-    /**
-     * Возвращает компанию  по  умолчанию
-     *
-     */
-    public static function getDefFirm() {
-        $user = System::getUser();
-        if($user->deffirm > 0) {
-            return $user->deffirm;
-        }
-        $st = \App\Entity\Firm::getList();
-
-        if(count($st) > 0) {
-            $keys = array_keys($st);
-            return $keys[count($keys) - 1];
-        }
-        return 0;
-    }
+ 
 
     /**
      * Возвращает склад  по  умолчанию
@@ -514,6 +508,18 @@ class Helper
     }
 
     /**
+     * Возвращает тип оплаты  по  умолчанию
+     *
+     */
+    public static function getDefPayType() {
+        $user = System::getUser();
+   
+        return intval($user->defpaytype);
+      
+
+     
+    }
+   /**
      * Возвращает расчетный счет  по  умолчанию
      *
      */
@@ -588,9 +594,10 @@ class Helper
      * Форматирование количества
      *
      * @param mixed $qty
+     * @param mixed $check    убрать нули после  запятой (для печати в  чеках)
      * @return mixed
      */
-    public static function fqty($qty) {
+    public static function fqty($qty,$check=false) {
         if(strlen('' . $qty) == 0) {
             return '';
         }
@@ -602,7 +609,17 @@ class Helper
 
         $common = System::getOptions("common");
         if($common['qtydigits'] > 0) {
-            return number_format(doubleval($qty), $common['qtydigits'], '.', '');
+            
+           $r = number_format(doubleval($qty), $common['qtydigits'], '.', '');
+           if($check) {
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'.') ;
+             
+           }
+           return $r;
+           
         } else {
             return intval($qty);
         }
@@ -675,8 +692,12 @@ class Helper
      * @return mixed
      */
     public static function fasell($am) {
-
-        $ret = self::fa($am);
+        $common = \App\System::getOptions("common");
+        $ret = self::fa($am); 
+        if ($common['sellcheck'] !=1   ) { 
+            return $ret;
+        }
+        
 
         $ret = doubleval($ret);
         $ret = number_format($ret, 2, '.', '');
@@ -734,22 +755,11 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($firm_id = 0, $branch_id = 0) {
-        $data = array();
-        if($firm_id > 0) {
-            $firm = \App\Entity\Firm::load($firm_id);
-            if($firm == null) {
-                $firm = \App\Entity\Firm::load(self::getDefFirm());
-            }
-            if($firm != null) {
-                $data = $firm->getData();
-            }
-        } else {
-            $firm = \App\Entity\Firm::load(self::getDefFirm());
-            if($firm != null) {
-                $data = $firm->getData();
-            }
-        }
+    public static function getFirmData(  $branch_id = 0) {
+        
+         
+        $data = System::getOptions("firm");
+ 
 
         if($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
@@ -761,7 +771,7 @@ class Helper
                 $data['phone'] = $branch->phone;
             }
         }
-
+      
         return $data;
     }
 
@@ -1161,6 +1171,10 @@ class Helper
 
 
             $printqty = intval($item->printqty);
+            if($printqty == 5) { //не печатать
+               continue;
+            }
+
             if($printqty == 0) {
                 $printqty = 1;
             }
@@ -1303,7 +1317,7 @@ class Helper
 
     /**
      * проверка  новой версии
-     *
+     * @deprecated
      */
     public static function checkVer() {
 
@@ -1344,6 +1358,7 @@ class Helper
         $conn = \ZDB\DB::getConnect();
 
         $vdb=\App\System::getOptions('version',true ) ;
+        $common=\App\System::getOptions('common' ) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
@@ -1502,7 +1517,26 @@ class Helper
             }  
         }
             
+        $migration6150 = \App\Helper::getKeyVal('migration6150'); 
+        if($migration6150 != "done" && version_compare($vdb,'6.15.0')>=0  ) {
+        //    Helper::log("Міграція 6150");
+         
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
+            if($cnt > 0){
+               $common['usefood'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
+            if($cnt > 0){
+               $common['useprod'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            Session::getSession()->menu = [];     
+         
+            \App\Helper::setKeyVal('migration6150', "done");           
         
+       
+        }       
     }
 
 

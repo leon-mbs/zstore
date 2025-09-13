@@ -182,8 +182,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
-        $row->add(new Label('pricends', H::fa($item->pricends)));
-
+      
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -243,7 +242,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $item->price = $this->editdetail->editprice->getText();
     
-        $item->pricends= $item->price + $item->price * $item->nds();
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
      
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
@@ -449,13 +448,17 @@ class ReturnIssue extends \App\Pages\Base
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-            if($item->pricends > $item->price) {
-                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            if($item->pricenonds < $item->price) {
+                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
             }
  
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
         if($nds>0) {
             $this->docform->totalnds->setText(H::fa($nds));            
         }

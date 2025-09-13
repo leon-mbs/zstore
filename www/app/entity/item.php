@@ -1145,7 +1145,8 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
     */
     public   function nds($revert = false) {
-        $nds = 1;
+        $nds = 0 ;
+      
         if($this->isnds==2){
            
             $nds = doubleval($this->nds) / 100;
@@ -1155,7 +1156,7 @@ class Item extends \ZCL\DB\Entity
         }
         if($this->isnds==0){
             
-           $cat= Category::load($this->item_cat); 
+           $cat= Category::load($this->cat_id); 
            if($cat != null) {
               $nds = doubleval($cat->nds) / 100;
               if ($revert) {
@@ -1167,6 +1168,7 @@ class Item extends \ZCL\DB\Entity
         
         return $nds;
     }
+ 
      /**
     * счет  учета  по типу
     *  
