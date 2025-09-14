@@ -672,16 +672,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.7.3",
+            "version": "2.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "3369dbb3ce671925bf0bc15512698e322bae26e1"
+                "reference": "cd93c72fffc6a44273ecc0f724a810b6ed032071"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/3369dbb3ce671925bf0bc15512698e322bae26e1",
-                "reference": "3369dbb3ce671925bf0bc15512698e322bae26e1",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/cd93c72fffc6a44273ecc0f724a810b6ed032071",
+                "reference": "cd93c72fffc6a44273ecc0f724a810b6ed032071",
                 "shasum": ""
             },
             "require": {
@@ -708,9 +708,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.7.3"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.7.5"
             },
-            "time": "2024-09-16T12:00:10+00:00"
+            "time": "2025-09-14T14:11:42+00:00"
         },
         {
             "name": "maennchen/zipstream-php",

@@ -34,7 +34,7 @@ class ManualEntry extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
                       
 
-        $list = Account::getList(true);
+        $list = Account::getList(true,true);
 
   
         $this->docform->add(new DropDownChoice('dt', $list, 0));
