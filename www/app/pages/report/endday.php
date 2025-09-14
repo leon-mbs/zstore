@@ -19,7 +19,7 @@ class EndDay extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (false == \App\ACL::checkShowReport('NoLiq')) {
+        if (false == \App\ACL::checkShowReport('EndDay')) {
             return;
         }
 
