@@ -561,18 +561,18 @@ class GoodsReceipt extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
-        $sellprice = $this->editdetail->editsellprice->getText();
-        $sellprice2 = $this->editdetail->editsellprice2->getText();
-        if (doubleval($sellprice) > 0) {
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
+        $sellprice = $this->editdetail->editsellprice->getDouble();
+        $sellprice2 = $this->editdetail->editsellprice2->getDouble();
+        if ( ($sellprice) > 0) {
             $olditem = Item::load($item->item_id);
             if ($olditem != null) {
                 $olditem->price1 = $sellprice;
                 $olditem->save();
             }
         }
-        if (doubleval($sellprice2) > 0) {
+        if ( ($sellprice2) > 0) {
             $olditem = Item::load($item->item_id);
             if ($olditem != null) {
                 $olditem->price2 = $sellprice2;
