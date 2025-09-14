@@ -69,19 +69,21 @@ class ObSaldo extends \App\Pages\Base
         $ect=0;
        
         $an = Account::getWithEntry();
-       
+        $acclist = Account::getList();
+        $acclist=array_keys($acclist)  ;
+   
        
         $detail=[];
          
-        foreach(Account::find("","iszab asc,acc_code asc") as $acc){
+        foreach($acclist as $acc){
             
-           $s=$acc->getSaldo($from); 
-           $o=$acc->getOb($from,$to); 
+           $s=Account::getSaldo($acc,$from); 
+           $o=Account::getOb($acc,$from,$to); 
            if($s['dt']==0 && $s['ct']==0 && $o['dt']==0 && $o['ct']==0 ) {
                continue;
            }
            $row =  [
-           'acc'=>$acc->acc_code,
+           'acc'=>$acc,
            'startdt'=>H::fa($s['dt']),
            'startct'=>H::fa($s['ct']),
            'amountdt'=>H::fa($o['dt']),
@@ -114,7 +116,7 @@ class ObSaldo extends \App\Pages\Base
            $row['endct'] = $endct;
                     
            $detail[]= $row;
-           if(in_array($acc->acc_code,$an)){
+           if(in_array($acc,$an)){
                $bdt +=$s['dt'];
                $bct +=$s['ct'];
                $edt +=$enddt;

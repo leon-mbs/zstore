@@ -91,10 +91,10 @@ class Account
     * @param mixed $date
     * @param mixed $ext   развернутое
     */
-    public function getSaldo($date, $ext=false) {
+    public static function getSaldo($acc,$date, $ext=false) {
         $conn = \ZDB\DB::getConnect();
  
-        $acc = $conn->qstr($this->acc_code.'%');
+        $acc = $conn->qstr($acc.'%');
         
         $date = $conn->DBDate($date)  ;
             

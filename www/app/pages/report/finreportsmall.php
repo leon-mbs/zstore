@@ -83,82 +83,46 @@ class FinReportSmall extends \App\Pages\Base
    
         
         $firm = \App\System::getOptions("firm");
-
-        $a10 = Account::load('10');
-        $a11 = Account::load('11');
-        $a12 = Account::load('12');
-        $a13 = Account::load('13');
-        $a15 = Account::load('15');
-        $a20 = Account::load('20');
-        $a22 = Account::load('22');
-        $a23 = Account::load('23');
-        $a26 = Account::load('26');
-        $a28 = Account::load('28');
-        $a30 = Account::load('30');
-        $a31 = Account::load('31');
-        $a36 = Account::load('36');
-        $a37 = Account::load('37');
-        $a40 = Account::load('40');
-        $a641 = Account::load('641');
-        $a642 = Account::load('642');
-        $a643 = Account::load('643');
-        $a644 = Account::load('644');
-        $a63 = Account::load('63');
-        $a66 = Account::load('66');
-        $a68 = Account::load('68');
-        $a70 = Account::load('70');
  
-        //  $a704 = Account::load(704);
-        $a71 = Account::load('71');
-
-        $a79 = Account::load('79');
-        $a90 = Account::load('90');
-        $a91 = Account::load('91');
-        $a92 = Account::load('92');
-        $a93 = Account::load('93');
-        $a94 = Account::load('94');
-        $a97 = Account::load('97');
-
-
                
         
         //актив
-        $b1011 = $a10->getSaldo($from)['dt'] + $a11->getSaldo($from)['dt'] + $a12->getSaldo($from)['dt'];
-        $e1011 = $a10->getSaldo($to)['dt'] + $a11->getSaldo($to)['dt'] + $a12->getSaldo($to)['dt'];
+        $b1011 = Account::getSaldo(10,$from)['dt'] + Account::getSaldo(11,$from)['dt'] + Account::getSaldo(12,$from)['dt'];
+        $e1011 = Account::getSaldo(10,$to)['dt'] + Account::getSaldo(11,$to)['dt'] + Account::getSaldo(12,$to)['dt'];
         
-        $b1012 = $a13->getSaldo($from)['dt'];
-        $e1012 = $a13->getSaldo($to)['dt'];
+        $b1012 = Account::getSaldo(13,$from)['dt'];
+        $e1012 = Account::getSaldo(13,$to)['dt'];
 
         $b1010 = $b1011 - $b1012;
         $e1010 = $e1011 - $e1012;
 
-        $b1005 = $a15->getSaldo($from)['dt'];
-        $e1005 = $a15->getSaldo($to)['dt'];
+        $b1005 = Account::getSaldo(15,$from)['dt'];
+        $e1005 = Account::getSaldo(15,$to)['dt'];
 
         $b1095 = $b1005 + $b1010;
         $e1095 = $e1005 + $e1010;
 
-        $b1100 = $a20->getSaldo($from)['dt'] + $a22->getSaldo($from)['dt'] + $a23->getSaldo($from)['dt'];
-        $e1100 = $a20->getSaldo($to)['dt'] + $a22->getSaldo($to)['dt'] + $a23->getSaldo($to)['dt'];
-        $b1103 = $a26->getSaldo($from)['dt'] + $a28->getSaldo($from)['dt'];
-        $e1103 = $a26->getSaldo($to)['dt'] + $a28->getSaldo($to)['dt'];
+        $b1100 = Account::getSaldo(20,$from)['dt'] + Account::getSaldo(22,$from)['dt'] + Account::getSaldo(23,$from)['dt'];
+        $e1100 = Account::getSaldo(20,$to)['dt'] + Account::getSaldo(22,$to)['dt'] + Account::getSaldo(23,$to)['dt'];
+        $b1103 = Account::getSaldo(26,$from)['dt'] + Account::getSaldo(28,$from)['dt'];
+        $e1103 = Account::getSaldo(26,$to)['dt'] + Account::getSaldo(28,$to)['dt'];
 
 
         $b1100 = $b1100 + $b1103;
         $e1100 = $e1100 + $e1103;
 
-        $b1125 = $a36->getSaldo($from)['dt'];
-        $e1125 = $a36->getSaldo($to)['dt'];
-        $b1135 = $a641->getSaldo($from)['dt'] + $a642->getSaldo($from)['dt'];
-        $e1135 = $a641->getSaldo($to)['dt'] + $a642->getSaldo($to)['dt'];
+        $b1125 =  Account::getSaldo(36,$from)['dt'];
+        $e1125 =  Account::getSaldo(36,$to)['dt'];
+        $b1135 = Account::getSaldo(241,$from)['dt'] + Account::getSaldo(242,$from)['dt'];
+        $e1135 = Account::getSaldo(241,$to)['dt'] + Account::getSaldo(242,$to)['dt'];
         // $b1136 = SubConto::getAmount($from,641,0,0,0,0,0,666);
         // $e1136 = SubConto::getAmount($to,641,0,0,0,0,0,666);
-        $b1155 = $a63->getSaldo($from)['dt'] + $a37->getSaldo($from)['dt'] + $a68->getSaldo($from)['dt'];
-        $e1155 = $a63->getSaldo($to)['dt'] + $a37->getSaldo($to)['dt'] + $a68->getSaldo($to)['dt'];
-        $b1165 = $a30->getSaldo($from)['dt'] + $a31->getSaldo($from)['dt'];
-        $e1165 = $a30->getSaldo($to)['dt'] + $a31->getSaldo($to)['dt'];
-        $b1190 = $a643->getSaldo($from)['dt'] + $a644->getSaldo($from)['dt'];
-        $e1190 = $a643->getSaldo($to)['dt'] + $a644->getSaldo($to)['dt'];
+        $b1155 = Account::getSaldo(63,$from)['dt'] + Account::getSaldo(37,$from)['dt'] + Account::getSaldo(68,$from)['dt'];
+        $e1155 = Account::getSaldo(63,$to)['dt'] + Account::getSaldo(37,$to)['dt'] + Account::getSaldo(68,$to)['dt'];
+        $b1165 = Account::getSaldo(30,$from)['dt'] + Account::getSaldo(31,$from)['dt'];
+        $e1165 = Account::getSaldo(30,$to)['dt'] + Account::getSaldo(31,$to)['dt'];
+        $b1190 = Account::getSaldo(643,$from)['dt'] + Account::getSaldo(644,$from)['dt'];
+        $e1190 = Account::getSaldo(643,$to)['dt'] + Account::getSaldo(644,$to)['dt'];
 
         $b1195 = $b1100 + $b1125 + $b1135 + $b1155 + $b1165 + $b1190;
         $e1195 = $e1100 + $e1125 + $e1135 + $e1155 + $e1165 + $e1190;
@@ -168,11 +132,11 @@ class FinReportSmall extends \App\Pages\Base
 
         //пассив
 
-        $b1400 = $a40->getSaldo($from)['ct'];
-        $e1400 = $a40->getSaldo($to)['ct'];
+        $b1400 = Account::getSaldo(40,$from)['ct'];
+        $e1400 = Account::getSaldo(40,$to)['ct'];
 
-        $b1420 = $a79->getSaldo($from)['ct'];
-        $e1420 = $a79->getSaldo($to)['ct'];
+        $b1420 = Account::getSaldo(79,$from)['ct'];
+        $e1420 = Account::getSaldo(79,$to)['ct'];
 
         $b1495 = $b1420;
         $e1495 = $e1420;
@@ -180,17 +144,17 @@ class FinReportSmall extends \App\Pages\Base
         $b1420 = $b1420 > 0 ? $b1420 : "({$b1420})";
         $e1420 = $e1420 > 0 ? $e1420 : "({$e1420})";
 
-        $b1615 = $a63->getSaldo($from)['ct'];
-        $e1615 = $a63->getSaldo($to)['ct'];
-        $b1620 = $a641->getSaldo($from)['ct'];
-        $e1620 = $a641->getSaldo($to)['ct'];
+        $b1615 = Account::getSaldo(63,$from)['ct'];
+        $e1615 = Account::getSaldo(63,$to)['ct'];
+        $b1620 = Account::getSaldo(641,$from)['ct'];
+        $e1620 = Account::getSaldo(641,$to)['ct'];
         // $b1621 = SubConto::getAmount($from,641,0,0,0,0,0,666);
         // $e1621 = SubConto::getAmount($to,641,0,0,0,0,0,666);
 
-        $b1630 = $a66->getSaldo($from)['ct'];
-        $e1630 = $a66->getSaldo($to)['ct'];
-        $b1690 = $a36->getSaldo($from)['ct'] + $a37->getSaldo($from)['ct'] + $a643->getSaldo($from)['ct'] + $a644->getSaldo($from)['ct'] + $a68->getSaldo($from)['ct'];
-        $e1690 = $a36->getSaldo($to)['ct'] + $a37->getSaldo($to)['ct'] + $a643->getSaldo($to)['ct'] + $a644->getSaldo($to)['ct'] + $a68->getSaldo($to)['ct'];
+        $b1630 = Account::getSaldo(66,$from)['ct'];
+        $e1630 = Account::getSaldo(66,$to)['ct'];
+        $b1690 = Account::getSaldo(36,$from)['ct'] + Account::getSaldo(37,$from)['ct'] + Account::getSaldo(643,$from)['ct'] + Account::getSaldo(644,$from)['ct'] + Account::getSaldo(68,$from)['ct'];
+        $e1690 = Account::getSaldo(36,$to)['ct'] + Account::getSaldo(37,$to)['ct'] + Account::getSaldo(643,$to)['ct'] + Account::getSaldo(644,$to)['ct'] + Account::getSaldo(68,$to)['ct'];
 
         $b1695 = $b1615 + $b1620 + $b1630 + $b1690;
         $e1695 = $e1615 + $e1620 + $e1630 + $e1690;
@@ -204,7 +168,7 @@ class FinReportSmall extends \App\Pages\Base
         $_to = strtotime('-1 year', $to);
 
 
-        $ob70 = $a70->getOb($from, $to);
+        $ob70 = Account::getOb(70,$from, $to);
         $b2000 = $ob70['ct']  ;
         $b2000 -= Account::getObBetweenAccount(70, 30, $from, $to);
         $b2000 -= Account::getObBetweenAccount(70, 31, $from, $to);
@@ -213,7 +177,7 @@ class FinReportSmall extends \App\Pages\Base
         $b2000 -= Account::getObBetweenAccount(70, 642, $from, $to);
         $b2000 -= Account::getObBetweenAccount(70, 643, $from, $to);
 
-        $ob71 = $a71->getOb($from, $to);
+        $ob71 = Account::getOb(71,$from, $to);
         $b2120 = $ob71['ct'];
         $b2120 -= Account::getObBetweenAccount(71, 641, $from, $to);
         $b2120 -= Account::getObBetweenAccount(71, 643, $from, $to);
@@ -223,12 +187,12 @@ class FinReportSmall extends \App\Pages\Base
         $b2240 = 0;
         $b2280 = $b2000 + $b2120 + $b2240;
 
-        $ob90 = $a90->getOb($from, $to);
-        $ob91 = $a91->getOb($from, $to);
-        $ob92 = $a92->getOb($from, $to);
-        $ob93 = $a93->getOb($from, $to);
-        $ob94 = $a94->getOb($from, $to);
-        $ob97 = $a97->getOb($from, $to);
+        $ob90 = Account::getOb(90,$from, $to);
+        $ob91 = Account::getOb(91,$from, $to);
+        $ob92 = Account::getOb(92,$from, $to);
+        $ob93 = Account::getOb(93,$from, $to);
+        $ob94 = Account::getOb(94,$from, $to);
+        $ob97 = Account::getOb(97,$from, $to);
         // $ob98 = $a98->getSaldoAndOb($from,$to);
         $b2050 = $ob90['dt'];
         $b2180 = $ob92['dt'] + $ob93['dt'] + $ob94['dt'];
@@ -239,7 +203,7 @@ class FinReportSmall extends \App\Pages\Base
         
         $b2350 = $b2290    ;
 
-        $ob70 = $a70->getOb($_from, $_to);
+        $ob70 = Account::getOb(70,$_from, $_to);
         $e2000 = $ob70['ct']  ;
         $e2000 -= Account::getObBetweenAccount(70, 30, $_from, $_to);
         $e2000 -= Account::getObBetweenAccount(70, 31, $_from, $_to);
@@ -248,7 +212,7 @@ class FinReportSmall extends \App\Pages\Base
         $e2000 -= Account::getObBetweenAccount(70, 642, $_from, $_to);
         $e2000 -= Account::getObBetweenAccount(70, 643, $_from, $_to);
 
-        $ob71 = $a71->getOb($_from, $_to);
+        $ob71 = Account::getOb(71,$_from, $_to);
         $e2120 = $ob71['ct'];
         $e2120 -= Account::getObBetweenAccount(71, 641, $_from, $_to);
         $e2120 -= Account::getObBetweenAccount(71, 643, $_from, $_to);
@@ -258,12 +222,12 @@ class FinReportSmall extends \App\Pages\Base
         $e2240 = 0;
         $e2280 = $e2000 + $e2120 + $e2240;
 
-        $ob90 = $a90->getOb($_from, $_to);
-        $ob91 = $a91->getOb($_from, $_to);
-        $ob92 = $a92->getOb($_from, $_to);
-        $ob93 = $a93->getOb($_from, $_to);
-        $ob94 = $a94->getOb($_from, $_to);
-        $ob97 = $a97->getOb($_from, $_to);
+        $ob90 = Account::getOb(90,$_from, $_to);
+        $ob91 = Account::getOb(91,$_from, $_to);
+        $ob92 = Account::getOb(92,$_from, $_to);
+        $ob93 = Account::getOb(93,$_from, $_to);
+        $ob94 = Account::getOb(94,$_from, $_to);
+        $ob97 = Account::getOb(97,$_from, $_to);
         // $ob98 = $a98->getSaldoAndOb($_from,$_to);
         $e2050 = $ob90['dt'];
         $e2180 = $ob92['dt'] + $ob93['dt'] + $ob94['dt'];
