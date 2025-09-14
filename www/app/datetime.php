@@ -30,6 +30,11 @@ class DateTime
         $this->time = strtotime(date('Y-m-01 00:00:00', $this->time));
         return $this;
     }
+    
+    public function startOfYear() {
+        $this->time = strtotime(date('Y-01-01 00:00:00', $this->time));
+        return $this;
+    }
 
     public function startOfDay() {
         $this->time = strtotime(date('Y-m-d 00:00:00', $this->time));
