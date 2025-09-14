@@ -120,7 +120,7 @@
 
                             <table class="table table-sm">
                                 <tr zippy="salesourceslist">
-                                    <td><input class="form-control" style="width:100%;" zippy="salesourcename"  ></td>
+                                    <td><input  required="on"  class="form-control" style="width:100%;" zippy="salesourcename"  ></td>
                                     <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
                                  </tr>   
                             </table>
@@ -171,9 +171,9 @@
                           <table class="table table-sm">
                              <tr><th>Код</th><th>Назва</th><th>Курс</th><th></th>
                              <tr zippy="vallist">
-                             <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required >  </td>
-                             <td><input zippy="valname"   class="form-control"  required >  </td>
-                             <td><input zippy="valrate" pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice"  required >  </td>
+                             <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required="on" >  </td>
+                             <td><input zippy="valname"   class="form-control"  required="on" >  </td>
+                             <td><input zippy="valrate" pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice"  required="on" >  </td>
                              <td><a  zippy="valdel"><i class="fa fa-trash"></i></a></td>
                             </tr>  
                             
@@ -203,7 +203,7 @@
                 
                              <div class="form-group  ">
                                 <label>Типи відпускних цін</label>
-                                <input class="form-control" type="text" zippy="price1"  required >
+                                <input class="form-control" type="text" zippy="price1"  required="on" >
                                 <input class="form-control" type="text" zippy="price2">
                                 <input class="form-control" type="text" zippy="price3">
                                 <input class="form-control" type="text" zippy="price4">
