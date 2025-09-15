@@ -44,6 +44,7 @@ class Admin extends \App\Pages\Base
         $form->add(new CheckBox('usefood',$options['usefood']??0));
         $form->add(new CheckBox('useprod',$options['useprod']??0));
         $form->add(new CheckBox('usends',$options['usends']??0));
+        $form->add(new CheckBox('useacc',$options['useacc']??0));
        
         $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
           
@@ -101,6 +102,7 @@ class Admin extends \App\Pages\Base
         $options['usefood']  =  $this->configform->usefood->isChecked() ? 1 : 0;
         $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
         $options['usends']  =  $this->configform->usends->isChecked() ? 1 : 0;
+        $options['useacc']  =  $this->configform->useacc->isChecked() ? 1 : 0;
           
         $conn = \ZDB\DB::getConnect();
       
@@ -127,8 +129,17 @@ class Admin extends \App\Pages\Base
             $sql="update metadata set  disabled=1";
         }
         $conn->Execute($sql.$where);
+     
+        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблiк');
+      
+        if($options['useacc']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
        
-        
+         
         System::setOptions("common",$options) ;
         
         Session::getSession()->menu = [];       
