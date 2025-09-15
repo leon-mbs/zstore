@@ -47,7 +47,7 @@ class OutcomeMoney extends Document
     public function generateReport() {
 
      
-        $pt = \App\Entity\IOState::getTypeList(2);
+        $pt = \App\Entity\IOState::getTypeListOutM();
         $header = array(
             'amount'          => H::fa($this->amount),
             'totalstr'        => \App\Util::money2str_ua($this->amount),

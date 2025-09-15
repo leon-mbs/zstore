@@ -48,7 +48,7 @@ class IncomeMoney extends Document
     public function generateReport() {
 
 
-        $pt = \App\Entity\IOState::getTypeList(1);
+        $pt = \App\Entity\IOState::getTypeListInM();
         $header = array(
             'amount'          => H::fa($this->amount),
             'totalstr'        => \App\Util::money2str_ua($this->amount),
