@@ -198,15 +198,21 @@
                        
                     <form zippy="optionsform">
                          <div class="form-group">
-                            <label for="compare">Шукати вiдповiдний ТМЦ в номенклатурi</label>
+                            <label for="compare">Шукати при iмпортi вiдповiдний ТМЦ в номенклатурi</label>
                             <select zippy="compare" class="form-control">
                                <option value="0">По артикулу+бренду</option>
                                <option value="1">По штрих коду</option>
                                <option value="2">Штрих код потiм артикул+бренд,</option>
                             </select>
-                             <small  >Для закупки або оновлення цiн. Якщо ТМЦ не знайдено вiн буде  створений. 
+                             <small  >Для закупки або оновлення цiн. 
                              В разi  активного  використання прайсiв рiзних постачальникiв слiд  вимкнути в  довiднику  ТМЦ автоматичне  
                              створення артикулу та/або перевiрку артикула  на  унiкальнiсть</small>                                  
+                             
+                        </div> 
+                         <div class="form-check mb-2">
+                            <input zippy="optcreateitem" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="optcreateitem">Створювати новий  ТМЦ якщо не  знайдено вiдповiдний</label>
+                           
                         </div>                     
                         <div class="form-group">
                             <label for="optclean">Очищати неактуальне за</label>

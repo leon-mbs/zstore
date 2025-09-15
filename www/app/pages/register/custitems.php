@@ -96,6 +96,7 @@ class CustItems extends \App\Pages\Base
      
         $this->add(new Form('optionsform'))->onSubmit($this, 'OnSaveOption');
         $this->optionsform->setVisible(false); 
+        $this->optionsform->add(new CheckBox("optcreateitem"))  ;
         $this->optionsform->add(new CheckBox("optupdate"))  ;
         $this->optionsform->add(new TextInput('optclean' ));
         $this->optionsform->add(new DropDownChoice('compare',[],0 ));
@@ -332,7 +333,7 @@ class CustItems extends \App\Pages\Base
             $this->setError('Не обрано файл');
             return;
         }
-
+        $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
 
         $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']);
 
@@ -396,7 +397,17 @@ class CustItems extends \App\Pages\Base
 
             $it =  $item->findItem();
             if($it != null) {
-                $item->item_id= $it->item_id; 
+                $item->item_id = $it->item_id; 
+            }  else {
+                if($ci_createitem==1) {
+                   $it = new Item();
+                   $it->itemname = $item->cust_name; 
+                   $it->bar_code = $item->bar_code; 
+                   $it->manufacturer = $item->brand; 
+                   $it->save(); 
+                   $item->item_id = $it->item_id;  
+                }
+                
             }
             $item->save();
             $cnt++;
@@ -416,6 +427,7 @@ class CustItems extends \App\Pages\Base
     public function onOption($sender) {
         $common = System::getOptions("common");
    
+        $this->optionsform->optcreateitem->setChecked($common['ci_createitem'] ??0) ;
         $this->optionsform->optupdate->setChecked($common['ci_update'] ??0) ;
         $this->optionsform->optclean->setText($common['ci_clean'] ??'') ;
         $this->optionsform->compare->setValue($common['ci_compare'] ?? 0) ;
@@ -430,6 +442,7 @@ class CustItems extends \App\Pages\Base
         $common = System::getOptions("common");
    
         $common['ci_update'] = $this->optionsform->optupdate->isChecked() ? 1:0 ;
+        $common['ci_createitem'] = $this->optionsform->optcreateitem->isChecked() ? 1:0 ;
         $common['ci_clean'] = $this->optionsform->optclean->getText()  ;
         $common['ci_compare'] = $this->optionsform->compare->getValue()  ;
         System::setOptions("common",$common)  ;
