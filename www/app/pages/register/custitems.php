@@ -609,6 +609,12 @@ class CustItems extends \App\Pages\Base
         $this->xmlp->editformx->setVisible(true);
        
         $this->xmlp->editformx->clean();
+        $this->xmlp->editformx->editcodex->setText(" function parseprice(xmldata){
+             ...
+             parsing  xml to json
+             ...     
+          return jsondata
+          }");
         
     }
     public function cancelXOnClick($sender) {
@@ -656,7 +662,6 @@ class CustItems extends \App\Pages\Base
       
        $code = strlen($c->custitemcode) > 0 ? base64_decode($c->custitemcode) :'';
        
-       $this->_tvars['import_func']  = $code  ;
        
        $this->xmlp->editformx->editcodex->setText($code);
        $this->xmlp->editformx->editcustx->setKey($c->customer_id);
@@ -677,21 +682,102 @@ class CustItems extends \App\Pages\Base
       
         $code = strlen($c->custitemcode) > 0 ? base64_decode($c->custitemcode) :'';
      
-              
+        $this->_tvars['import_func']  = $code  ;
+                 
      }
         
      public function OnSubmitIX($sender) {
-        $cid = $this->xmlp->importformxsend->imxcust->getText();
-        $json = $this->xmlp->importformxsend->imxjson->getText();
+        $cust = $this->xmlp->importformxsend->imxcust->getText();
+          
+        $json = trim( $this->xmlp->importformxsend->imxjson->getText() );
 
-        $this->itemtable->setVisible(true);
+        if($json=="") {
+            $this->setError("Нема даних") ;
+            return;
+        }
+        $json = str_replace("\n","",$json) ;
+        $json = str_replace("\r","",$json) ;
+        $data=json_decode($json,true) ;
+        if(!is_array($data)) {
+            $this->setError("Невiрний json") ;
+            return;
+        }
+        
+        $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
+    
+        $cnt=0;
+        foreach ($data as $row) {
+            $price = doubleval(str_replace(',', '.', trim($row["price"])))   ;
+            if($price==0) {
+                continue;
+            }
+            $qty = doubleval(str_replace(',', '.', trim($row["quantity"])))   ;
+            if($qty==0) {
+                $qty=null;
+            }
+            $custname =  trim($row["name"])   ;
+            $comment  =  trim($row["comment"])   ;
+            $brand    =  trim($row["brand"])   ;
+            $store    =  trim($row["store"])   ;
+            $custcode =  trim($row["cust_code"])   ;
+            $custbarcode =  trim($row["bar_code"])   ;
+         
+            if(strlen($custcode)==0) {
+                continue;
+            }
+
+
+            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode) )   ;
+
+            if($item == null) {
+                $item = new CustItem();
+            }
+              
+            $item->customer_id = $cust;
+            $item->cust_name = $custname;
+            $item->cust_code = $custcode;
+            $item->bar_code = $custbarcode;
+                    
+            $item->price = $price;
+            $item->quantity = $qty;
+            $item->comment =$comment;
+            $item->brand = $brand;
+            $item->store = $store;
+            $item->updatedon = time();
+
+            $it =  $item->findItem();
+            if($it != null) {
+                $item->item_id = $it->item_id; 
+            }  else {
+                if($ci_createitem==1) {
+                    
+                    
+                    
+                   $it = new Item();
+                   $it->itemname = $item->cust_name; 
+                   $it->bar_code = $item->bar_code; 
+                   $it->manufacturer = $item->brand; 
+                   $it->save(); 
+                   $item->item_id = $it->item_id;  
+                }
+                
+            }
+            $item->save();
+            $cnt++;
+
+        }
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ"); 
+         
         $this->xmlp->setVisible(false);
         $this->xmlp->importformx->setVisible(false);
         $this->xmlp->importformxsend->setVisible(false);
         $this->xmlp->tablepanx->setVisible(false);
-        
+      
+      
+        $this->itemtable->setVisible(true);
+           
         $this->updateFilter();   
-        $this->setSuccess('OK') ;     
+          
      }
         
      
