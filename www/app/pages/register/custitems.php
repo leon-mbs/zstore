@@ -50,6 +50,7 @@ class CustItems extends \App\Pages\Base
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->itemtable->add(new ClickLink('imports'))->onClick($this, 'onImport');
+        $this->itemtable->add(new ClickLink('importxml'))->onClick($this, 'onImportXml');
         $this->itemtable->add(new ClickLink('csv', $this, 'oncsv'));
         $this->itemtable->add(new ClickLink('options', $this, 'onOption'));
 
@@ -101,8 +102,33 @@ class CustItems extends \App\Pages\Base
         $this->optionsform->add(new TextInput('optclean' ));
         $this->optionsform->add(new DropDownChoice('compare',[],0 ));
         $this->optionsform->add(new Button('cancelo'))->onClick($this, 'cancelOnClick');
-                                            
-                                   
+     
+        $this->add(new Panel('xmlp'))->setVisible(false);
+        $this->xmlp->add(new Panel('tablepanx'))  ;
+        $this->xmlp->tablepanx->add(new ClickLink('cancelx'))->onClick($this, 'cancelOnClick');
+        $this->xmlp->tablepanx->add(new ClickLink('addnewx'))->onClick($this, 'addxlOnClick');
+   
+        $this->xmlp->tablepanx->add(new DataView('listx', new CustXItemDataSource( ), $this, 'listxOnRow'));
+     
+
+        $this->xmlp->add(new Form('editformx'))->setVisible(false);                                           
+        $this->xmlp->editformx->add(new AutocompleteTextInput('editcustx'))->onText($this, 'OnAutoCust');
+        $this->xmlp->editformx->add(new TextArea('editcodex'));
+        $this->xmlp->editformx->add(new SubmitButton('saveex'))->onClick($this, 'OnSubmitX');
+        $this->xmlp->editformx->add(new Button('cancelex'))->onClick($this, 'cancelXOnClick');
+        
+                                         
+        $this->xmlp->add(new Form('importformx'))->setVisible(false);                                           
+        $this->xmlp->importformx->add(new Button('cancelix'))->onClick($this, 'cancelXOnClick');
+        $this->xmlp->importformx->add(new Label('imxcustname')) ;
+      
+        $this->xmlp->importformx->add(new \Zippy\Html\Form\File('filenamex')) ;
+   
+        $this->xmlp->add(new Form('importformxsend'))->onSubmit($this, 'OnSubmitIX');  
+        $this->xmlp->importformxsend->setVisible(false);  
+        $this->xmlp->importformxsend->add(new TextInput('imxjson')) ;
+        $this->xmlp->importformxsend->add(new TextInput('imxcust')) ;
+                                          
         $this->itemtable->listform->itemlist->Reload();
     }
 
@@ -175,6 +201,7 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(false);
         $this->optionsform->setVisible(false);
+        $this->xmlp->setVisible(false);
         $this->updateFilter();
         $this->itemtable->listform->itemlist->Reload();
         
@@ -289,7 +316,7 @@ class CustItems extends \App\Pages\Base
         $text = trim($sender->getText());
         $stext = Customer::qstr('%' . $text . '%');
 
-        return Customer::findArray("customer_name", "  customer_name like {$stext}   ");
+        return Customer::findArray("customer_name", " status=0 and customer_name like {$stext}   ");
     }
 
     public function onImport($sender) {
@@ -556,8 +583,121 @@ class CustItems extends \App\Pages\Base
         H::exportExcel($data, $header, 'custitems.xlsx');
     }
 
+   
+   public function onImportXml($sender) {
+      
+        $this->xmlp->setVisible(true);
+        $this->xmlp->tablepanx->setVisible(true);
+        $this->itemtable->setVisible(false);
+        $this->xmlp->tablepanx->listx->Reload();
+    
+    }    
+  public function listxOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $item = $row->getDataItem();
+ 
+     
+        $row->add(new Label('custnamex', $item->customer_name));
+        $row->add(new ClickLink('editx'))->onClick($this, 'editxOnClick');
+        $row->add(new ClickLink('editi'))->onClick($this, 'imxOnClick');
+        $row->add(new ClickLink('delx'))->onClick($this, 'delxOnClick');
+   
+    }
 
+    public function addxlOnClick($sender) {
+      
+        $this->xmlp->tablepanx->setVisible(false);
+        $this->xmlp->editformx->setVisible(true);
+       
+        $this->xmlp->editformx->clean();
+        
+    }
+    public function cancelXOnClick($sender) {
+      
+        $this->xmlp->tablepanx->setVisible(true);
+        $this->xmlp->editformx->setVisible(false);
+        $this->xmlp->importformx->setVisible(false);
+        $this->xmlp->importformxsend->setVisible(false);
+ 
+    }
+
+
+
+    public function OnSubmitX($sender) {
+        $id=intval($this->xmlp->editformx->editcustx->getKey());
+        if($id==0)  {
+            $this->setError('Не вибрано контрагента') ;
+            return;
+        }   
+        $code = $this->xmlp->editformx->editcodex->getText();
+        $c = Customer::load($id) ;
+        $c->custitemcode = base64_encode($code) ;
+        $c->save();
+        $this->xmlp->tablepanx->listx->Reload();      
+        
+        $this->xmlp->tablepanx->setVisible(true);
+        $this->xmlp->editformx->setVisible(false);
+ 
+    }
+  
+    public function delxOnClick($sender) {
+      
+        $c = $sender->getOwner()->getDataItem();
+        $c->custitemcode = '';
+        $c->save();
+        $this->xmlp->tablepanx->listx->Reload();      
+     }
+ 
+ 
+     public function editxOnClick($sender) {
+        $this->xmlp->tablepanx->setVisible(false);
+        $this->xmlp->editformx->setVisible(true);
+        
+        $c = $sender->getOwner()->getDataItem();
+      
+       $code = strlen($c->custitemcode) > 0 ? base64_decode($c->custitemcode) :'';
+       
+       $this->_tvars['import_func']  = $code  ;
+       
+       $this->xmlp->editformx->editcodex->setText($code);
+       $this->xmlp->editformx->editcustx->setKey($c->customer_id);
+       $this->xmlp->editformx->editcustx->setText($c->customer_name);
+      
+              
+     }
+     
+     
+     public function imxOnClick($sender) {
+        $this->xmlp->tablepanx->setVisible(false);
+        $this->xmlp->importformx->setVisible(true);
+        $this->xmlp->importformxsend->setVisible(true);
+        
+        $c = $sender->getOwner()->getDataItem();
+        $this->xmlp->importformxsend->imxcust->setText($c->customer_id);
+        $this->xmlp->importformx->imxcustname->setText($c->customer_name);
+      
+        $code = strlen($c->custitemcode) > 0 ? base64_decode($c->custitemcode) :'';
+     
+              
+     }
+        
+     public function OnSubmitIX($sender) {
+        $cid = $this->xmlp->importformxsend->imxcust->getText();
+        $json = $this->xmlp->importformxsend->imxjson->getText();
+
+        $this->itemtable->setVisible(true);
+        $this->xmlp->setVisible(false);
+        $this->xmlp->importformx->setVisible(false);
+        $this->xmlp->importformxsend->setVisible(false);
+        $this->xmlp->tablepanx->setVisible(false);
+        
+        $this->updateFilter();   
+        $this->setSuccess('OK') ;     
+     }
+        
+     
+   
 }
+
 
 class CustItemDataSource implements \Zippy\Interfaces\DataSource
 {
@@ -613,8 +753,34 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItem($id) {
-        return Item::load($id);
+        return CustItem::load($id);
     }
 
 }
 
+class CustXItemDataSource implements \Zippy\Interfaces\DataSource
+{ 
+    private function getWhere( ) {
+
+     
+        $where = "status=0 and detail like '%<custitemcode>%'  and detail not like '%<custitemcode></custitemcode>%'  ";
+     
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+       
+        $l = Customer::find($this->getWhere(),'customer_name', $count, $start);
+
+        return $l;
+    }
+
+    public function getItem($id) {
+        return Customer::load($id);
+    }
+}
