@@ -354,9 +354,9 @@ class Document extends \ZCL\DB\Entity
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
           
-            if( System::getOption("common",'useacc')==1) {
-                $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-            }
+         //   if( System::getOption("common",'useacc')==1) {
+          //      $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+         //   }
  
     }
 
