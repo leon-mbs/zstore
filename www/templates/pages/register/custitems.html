@@ -395,14 +395,14 @@
                  <a zippy="cancelix" >До списку </a>
                         <div class="form-group  ">
                                 <label for="filenamex">Файл імпорту</label>
-                                <input type="file" zippy="filenamex" class="form-control  "/>
+                                <input onchange="readFile(this)" type="file" zippy="filenamex" class="form-control  "/>
                              </div>
-                          <div id="spinimx" style="display:none;"  class="form-group  ">
+                               <a class="btn btn-success" onclick="OnLoadFile()">Завантажити</a>
+                          <span id="spinimx" style="display:none;"   >
                               Завантаження...
                            <div class="spinner-border spinner-border-sm"  >
- 
-                            </div>
-                         </div>
+                            </span>    </div>  
+                         
                       
                  </form> 
                  <form zippy="importformxsend" >   
@@ -462,7 +462,10 @@ quantity - кiлькiсть  <br>
 brand - бренд, виробник  <br>
 store - склад у постачальника (якщо заданий)   <br>
 comment - примiтка <br>
-
+<br>
+<i class="fa fa-exclamation-circle"></i> 
+Якщо є готовий json, створений стороннiм засобом, функцiя  має просто повернути вхiдний параметр
+ 
 
           </div>
                     </div>
@@ -486,17 +489,13 @@ comment - примiтка <br>
         {{{import_func}}}  
    
                       
-                    
-    
-      $(document).on("change", "#filenamex", function(event) {
-        
-    //  });    
-    
-            
-     //   document.getElementById('filenamex').addEventListener('change', function(event) {
-      
-        const file = event.target.files[0]; // Get the selected file
-           $("#imxjson").val( "" )  ;
+   var file=null                 
+  function readFile(input) {
+       file = input.files[0];
+  }   
+   function OnLoadFile( ) {
+       
+     $("#imxjson").val( "" )  ;
         if (file) {
             $("#spinimx").show()  ;  
             const reader = new FileReader();
@@ -509,12 +508,14 @@ comment - примiтка <br>
                 $("#importformxsend").submit( )  ;
             };
            
-            // Read the file as text
+            reader.onerror = function() {
+              toastr.error(reader.error)   
+            };   
             reader.readAsText(file);
         } else {
-            
+           toastr.error("Не вибрано файл")  
         }
-    });
+    } 
        
   
   
