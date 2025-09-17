@@ -492,7 +492,7 @@ class Document extends \ZCL\DB\Entity
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
             
-                if($state >4 && System::getOption("common",'useacc')==1) {
+                if($state >4 ) {
                    $doc->DoAcc();   
                 }
                 
@@ -1344,9 +1344,7 @@ class Document extends \ZCL\DB\Entity
     }
     
     public   function DoAcc() {
-         $conn = \ZDB\DB::getConnect();
-         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
- 
+   
     } 
       
 }

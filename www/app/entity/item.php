@@ -1173,12 +1173,15 @@ class Item extends \ZCL\DB\Entity
     * счет  учета  по типу
     *  
     */
-    public  function getAccCode(){
-            if($this->item_type==Item::TYPE_TOVAR)  return '28';
-            if($this->item_type==Item::TYPE_MAT)  return '201';
-            if($this->item_type==Item::TYPE_MBP)  return '22';
-            if($item->item_type==Item::TYPE_PROD)  return '26';
-            if($this->item_type==Item::TYPE_HALFPROD)  return '25';
-         
-    }    
+    public static  function getAccCode(){
+            $list=[];
+            $list[0]='28'; 
+            $list[Item::TYPE_TOVAR]='28'; 
+            $list[Item::TYPE_MAT]='201'; 
+            $list[Item::TYPE_MBP]='22'; 
+            $list[Item::TYPE_PROD]='26'; 
+            $list[Item::TYPE_HALFPROD]='25'; 
+            return $list;
+    
+    } 
 }

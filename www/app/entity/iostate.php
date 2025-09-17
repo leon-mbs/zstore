@@ -220,5 +220,13 @@ class IOState extends \ZCL\DB\Entity
        return $list;
     }
     
-    
+     public static  function getAccCode(){
+            $list=[];
+            
+            $list[Item::TYPE_TOVAR]='28'; 
+       
+            return $list;
+        
+         
+    }   
 }

@@ -23,7 +23,7 @@ class ManualEntry extends Document
     } 
     public function generateReport() {
 
-        $list = Account::getList(true);
+        $list = Account::getList( );
 
         $header = array(
             'amount'          => H::fa($this->amount),
