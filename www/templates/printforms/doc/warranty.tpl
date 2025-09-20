@@ -21,10 +21,10 @@
     </tr>
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" width="230" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
+        <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Кіл.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Ціна</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Сума</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сер. номер</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Гар., міс.</th>
     </tr>
