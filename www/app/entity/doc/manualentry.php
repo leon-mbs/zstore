@@ -33,7 +33,7 @@ class ManualEntry extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
                  $detail[] = array(
                 "amount"          => H::fa($item->amount),
-                "notes"           => $item->notes,
+             
                 "dt"              => $list[$item->accdt] ??'',
                 "ct"              => $list[$item->accct] ??''  
                 
@@ -45,7 +45,7 @@ class ManualEntry extends Document
        }
         $header = array(
             "_detail"         => $detail,
-                            'amount'          => H::fa($this->amount),
+             "notes"           => $this->notes,
             'date'            => H::fd($this->document_date),
             "document_number" => $this->document_number
         );

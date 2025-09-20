@@ -17,7 +17,12 @@
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required >
                     </div>   
- 
+                     <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+                    </div>
                 </div>
                  <div class="col-12 col-md-4 col-xl-3">
                      <b>Генерацiя  проводок початкових залишкiв </b>
@@ -40,7 +45,7 @@
 
             </div>
           <div class="row">
-                <div class="col-12 col-md-8 col-xl-6">
+                <div class="col-12 col-md-7 col-xl-5">
                     <a zippy="addrow" class="btn btn-info  ">Додати  </a>
                     <table class="table table-sm">
                         <tr>
@@ -48,7 +53,7 @@
                             <th>Дебет</th>
                             <th>Кредит</th>
                             <th class="text-right">Сума</th>
-                            <th>Примітка </th>
+                         
 
                             <th  ></th>
                         </tr>
@@ -57,7 +62,7 @@
                             <td zippy="accdt"></td>
                             <td zippy="accct"></td>
                             <td zippy="amount" class="text-right"></td>
-                            <td zippy="notes"></td>
+                       
                             
                             <td>   <a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
@@ -98,12 +103,7 @@
                         <label for="editamount">Сума</label>
                         <input  style="width:120px" pattern="[0-9,\.\-]+" class="form-control qtyprice" type="text" zippy="editamount">
                     </div>
-                     <div class="form-group  ">
-                        <label for="editnotes">Примітка </label>
-
-                        <input class="form-control" type="text" zippy="editnotes">
-
-                    </div>
+                  
                     <div class="form-group">
                         <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary mr-2">
                         <input type="submit" zippy="submitrow" value="Додати" class="btn btn-outline-secondary ">

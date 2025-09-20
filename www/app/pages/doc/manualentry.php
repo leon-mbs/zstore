@@ -40,7 +40,7 @@ class ManualEntry extends \App\Pages\Base
         $this->docform->add(new CheckBox('reloaddoc'));
         $this->docform->add(new CheckBox('removedoc'));
         $this->docform->add(new Date('document_date', time()));
-                      
+        $this->docform->add(new TextInput('notes'));                 
 
         $list = Account::getList(true,true);
         $this->_acclist = Account::getList(true );
@@ -56,7 +56,7 @@ class ManualEntry extends \App\Pages\Base
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new DropDownChoice('editdt', $list, 0));
         $this->editdetail->add(new DropDownChoice('editct', $list, 0));
-        $this->editdetail->add(new TextInput('editnotes'));
+   
         $this->editdetail->add(new TextInput('editamount'));
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
@@ -68,6 +68,7 @@ class ManualEntry extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
+            $this->docform->notes->setText($this->_doc->notes);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->reloaddoc->setChecked($this->_doc->headerdata['reload']);
             $this->docform->removedoc->setChecked($this->_doc->headerdata['remove']);
@@ -93,7 +94,7 @@ class ManualEntry extends \App\Pages\Base
 
         $row->add(new Label('accdt', $this->_acclist[$item->accdt] ??'' ));
         $row->add(new Label('accct', $this->_acclist[$item->accct] ??''));
-        $row->add(new Label('notes', $item->notes));
+
         $row->add(new Label('amount', H::fa($item->amount )));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
@@ -127,7 +128,6 @@ class ManualEntry extends \App\Pages\Base
 
         $item->accdt = $this->editdetail->editdt->getValue();
         $item->accct = $this->editdetail->editct->getValue();
-        $item->notes = $this->editdetail->editnotes->getText();
         $item->amount = $this->editdetail->editamount->getDouble();
 
         if ($item->amount== 0) {
@@ -168,6 +168,7 @@ class ManualEntry extends \App\Pages\Base
         }
         $this->_doc->packDetails('detaildata', $this->_itemlist);
        
+        $this->_doc->notes = trim($this->docform->notes->getText());
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date =  $this->docform->document_date->getDate();
         $this->_doc->payment = 0;
@@ -260,15 +261,91 @@ class ManualEntry extends \App\Pages\Base
 
             $item->accdt = $ia[$row['item_type']] ?? '28';
             $item->accct = '40';
-            $item->notes = 'ТМЦ';
+            
             $item->amount = H::fa($row['am']);
             
             $this->_itemlist[] = $item;
              
          }         
          //каса
-         //контрагенты
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
+        $am = H::fa($conn->GetOne($sql));
+       
+        $item = new AccEntry();
+        $item->accdt = '30';
+        $item->accct = '40';
+         
+        $item->amount = H::fa($am);
+        $this->_itemlist[] = $item;   
+        
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
+        $am = H::fa($conn->GetOne($sql));
+        $item = new AccEntry();
+        $item->accdt = '31';
+        $item->accct = '40';
+  
+        $item->amount = H::fa($am);
+        $this->_itemlist[] = $item;   
+         
+      
+       $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
+       
+       $sap=0;
+       $spa=0;
+       $bap=0;
+       $bpa=0;
+       
+    //поставщики
+    $sql = "SELECT   c.customer_id,
+     COALESCE( sum(a.s_passive), 0) AS pas,
+     COALESCE( sum(a.s_active), 0) AS act
+FROM ({$cust_acc_view} ) a
+  JOIN customers c
+    ON a.customer_id = c.customer_id
+    AND c.status = 0 AND a.s_passive <> a.s_active 
+    group by  c.customer_id "; 
+     foreach($conn->Execute($sql) as $row) {
+        if($row['pas'] > $row['act']) {
+           $sap += H::fa($row['pas'] - $row['act']);  
+        }  
+        if($row['pas'] < $row['act']) {
+           $spa += H::fa($row['act'] - $row['pas']  );  
+        }  
+     }    
+     if($sap >0) {
+         
+     }
+     if($spa >0) {
+         
+     }
+     
+      
+      //покупатели
+    $sql = "SELECT    c.customer_id,
+     COALESCE( sum(a.b_passive), 0) AS pas,
+     COALESCE( sum(a.b_active), 0) AS act
+FROM ({$cust_acc_view} ) a
+  JOIN customers c
+    ON a.customer_id = c.customer_id
+    AND c.status = 0 AND a.b_passive <> a.b_active   
+    group by  c.customer_id  "; 
+    foreach($conn->Execute($sql) as $row) {
+        if($row['pas'] > $row['act']) {
+           $bap += H::fa($row['pas'] - $row['act']);  
+        }  
+        if($row['pas'] < $row['act']) {
+           $bpa += H::fa($row['act'] - $row['pas']  );  
+        }           
+     }     
+     if($bap >0) {
+         
+     }
+     if($bpa >0) {
+         
+     }
+           
          //сотрудники
+         
          //ОС
         
         $this->docform->detail->Reload();

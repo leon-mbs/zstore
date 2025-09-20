@@ -20,8 +20,9 @@ CREATE TABLE acc_entry (
   accct varchar(4)  NULL,
   amount decimal(11, 2) NOT NULL,
   document_id int NOT NULL,
-  notes varchar(255)  NULL,
-  tag int    NULL   ,
+  
+  tagdt int    NULL   ,
+  tagct int    NULL   ,
  
   PRIMARY KEY (id) ,
   KEY document_id (document_id),
@@ -41,12 +42,13 @@ SELECT
   e.accdt AS accdt,
   e.accct AS accct,
   e.amount AS amount,
-   case when e.createdon  is NULL  then d.document_date else e.createdon  end      AS createdon,
-   case when e.notes  is NULL  then d.notes else e.notes  end      AS notes,
-  
+  case when e.createdon  is NULL  then d.document_date else e.createdon  end      AS createdon,
+    
+  d.notes AS notes,
   e.document_id AS document_id,
   d.branch_id AS branch_id,
-  e.tag AS tag,
+  e.tagdt AS tagdt,
+  e.tagct AS tagct,
    
   d.document_number AS document_number
 FROM  acc_entry e
