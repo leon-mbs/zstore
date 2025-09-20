@@ -13,17 +13,30 @@
                         <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
-                    
+                     <div class="form-group">
+                        <label for="document_date"> Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  required >
+                    </div>   
  
                 </div>
                  <div class="col-12 col-md-4 col-xl-3">
-                    
+                     <b>Генерацiя  проводок початкових залишкiв </b>
                     <div class="form-group">
-                        <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date"  required >
+                       <input zippy="generate" type="submit" value="Згенерувати" class="btn   btn-primary ">
+                      
                     </div>
- 
+                    
+                 <div class="form-check">
+                    <input zippy="reloaddoc" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="reloaddoc">Перепровести  проводки, старшi дати </label>
+                    
                 </div>
+                 <div class="form-check">
+                    <input zippy="removedoc" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="removedoc">Видалити проводки до дати </label>
+                    
+                </div>
+               </div>
 
             </div>
           <div class="row">
@@ -102,7 +115,15 @@
             </div>
 
         </form>
- 
+
+  <script >
+    function check_generate(ele){
+     
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }
+  </script>
 
     </body>
 

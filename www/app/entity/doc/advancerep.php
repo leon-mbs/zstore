@@ -145,7 +145,7 @@ class AdvanceRep extends Document
  
          $ia = \App\Entity\Item::getAccCode();
  
-         $sql="select coalesce(sum(quantity * price ),0) as am, item_type from entrylist_view  where document_id=".$this->document_id." group by item_type ";
+         $sql="select coalesce(sum(e.quantity * e.partion ),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where document_id=".$this->document_id." group by item_type ";
          foreach($conn->Execute($sql) as $row) {
             
               \App\Entity\AccEntry::addEntry( $ia[$row['item_type']] ?? '28','371', $row['am'],$this->document_id)  ; 

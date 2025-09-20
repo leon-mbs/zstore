@@ -29,7 +29,7 @@ class ManualEntry extends Document
     } 
     public function generateReport() {
         $detail = array();
-        $list = Account::getList( true,true);
+        $list = Account::getList( true );
         foreach ($this->unpackDetails('detaildata') as $item) {
                  $detail[] = array(
                 "amount"          => H::fa($item->amount),
