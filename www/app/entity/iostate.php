@@ -12,13 +12,10 @@ namespace App\Entity;
 class IOState extends \ZCL\DB\Entity
 {
     //доход платежи
-    public const TYPE_BASE_INCOME  = 1;     //доходы реализации товаров  услцн
+    public const TYPE_BASE_INCOME  = 1;     //доходы реализации товаров  услуг
     public const TYPE_OTHER_INCOME = 2;     //прочие доходы
     public const TYPE_FIN          = 3;     //доходы от  фин.  деятельности
- //   public const TYPE_CANCEL_CUST  = 5;     //отмена  платежа  покупки
- //   public const TYPE_INEQ         = 6;     //ввод в  экплуатацию ОС
-  //  public const TYPE_INVEQ        = 7;     //ремонт и восстановдение ОС
-
+ 
     //внебалансовые доходы (для  статистики)
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
  
@@ -223,7 +220,8 @@ class IOState extends \ZCL\DB\Entity
      public static  function getAccCode(){
             $list=[];
             
-            $list[Item::TYPE_TOVAR]='28'; 
+            $list[self::TYPE_OTHER_INCOME]='28'; 
+            $list[self::TYPE_FIN]='28'; 
        
             return $list;
         

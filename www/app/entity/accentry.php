@@ -29,7 +29,7 @@ class AccEntry extends \ZCL\DB\Entity
    * @param mixed $doc_id
    * @param mixed $date   задается  если  отличается  от  документа
    */
-   public static function addEntry($dt,$ct,$amount,$doc_id,$date=0) {
+   public static function addEntry($dt,$ct,$amount,$doc_id,$notes='',$date=0) {
         if($amount==0) {
             return;
         } 
@@ -46,6 +46,7 @@ class AccEntry extends \ZCL\DB\Entity
         $en = new AccEntry();
         $en->document_id = $doc_id;
         $en->amount = $amount;
+        $en->notes = $notes;
         if(strlen($dt ?? '')>0) {
             $en->accdt = $dt;
         }

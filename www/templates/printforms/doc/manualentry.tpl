@@ -4,42 +4,25 @@
             <b> Ручна проводка № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
-
-
-    <tr>
-        <td  >
-            <b>Дебет:</b>  
-        </td>
-       <td  >
-              {{dt}}
-        </td>
-     <td  >
-              {{dtname}}
-        </td>
+  <tr style="font-weight: bolder;">
+      
+        <th    style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Дебет</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кредит</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сума</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  > </th>
+     
     </tr>
+    {{#_detail}}
     <tr>
-        <td  >
-            <b>Кредит:</b>  
-        </td>
-       <td  >
-              {{ct}}
-        </td>
-       <td  >
-              {{ctname}}
-        </td>
+ 
+        <td  >{{dt}}</td>
+        <td  >{{ct}}</td>
+     
+        <td align="right"  >{{amount}}</td>
+        <td  >{{notes}}</td>
+    
     </tr>
-    <tr>
-        <td colspan="3">
-            <b>Сума:</b> {{amount}}
-        </td>
-    </tr>
-
-
-    <tr>
-        <td colspan="3">
-            {{{notes}}}
-        </td>
-    </tr>
+    {{/_detail}}
 
 
 </table>

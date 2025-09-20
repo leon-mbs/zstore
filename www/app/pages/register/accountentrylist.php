@@ -76,8 +76,8 @@ class AccountEntryList extends \App\Pages\Base
         $row->add(new Label('date', H::fd($entry->createdon)));
         $row->add(new Label('amount', H::fa($entry->amount)));
         $row->add(new Label('notes', $entry->notes));
-        $row->add(new Label('dt', $entry->accdt));
-        $row->add(new Label('ct', $entry->accct));
+        $row->add(new Label('dt', $entry->accdt==0 ? '':$entry->accdt));
+        $row->add(new Label('ct', $entry->accct==0 ? '':$entry->accct));
         $row->add(new ClickLink('show', $this, 'showOnClick'));
 
     }
@@ -196,7 +196,7 @@ class AccEntryListDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  e.*,d.user_id,d.meta_id,d.branch_id,d.notes  from documents_view  d join acc_entry_view e on d.document_id = e.document_id where " . $this->getWhere() . " order  by  id desc   ";
+        $sql = "select  e.*,d.user_id,d.meta_id,d.branch_id,d.notes  from documents_view  d join acc_entry_view e on d.document_id = e.document_id where " . $this->getWhere() . " order  by e.createdon    ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
          

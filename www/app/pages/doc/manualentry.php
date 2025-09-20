@@ -5,6 +5,7 @@ namespace App\Pages\Doc;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Entity\Account;
+use App\Entity\AccEntry;
 
 use App\Helper as H;
 use Zippy\Html\Form\Button;
@@ -13,8 +14,10 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
- 
- 
+use Zippy\Html\Link\SubmitLink; 
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\DataList\DataView; 
 
 /**
  * Страница  ручная проводка
@@ -22,7 +25,9 @@ use Zippy\Html\Form\TextInput;
 class ManualEntry extends \App\Pages\Base
 {
     private $_doc;
-
+    private $_acclist;
+    public $_itemlist = array();
+ 
     /**
     * @param mixed $docid     редактирование
     */
@@ -34,26 +39,35 @@ class ManualEntry extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
                       
 
-        $list = Account::getList(true,true);
+        $this->_acclist = Account::getList(true,true);
 
   
-        $this->docform->add(new DropDownChoice('dt', $list, 0));
-        $this->docform->add(new DropDownChoice('ct', $list, 0));
-        $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('amount'));
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-
+        $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+   
+        $this->add(new Form('editdetail'))->setVisible(false);
+        $this->editdetail->add(new DropDownChoice('editdt', $this->_acclist, 0));
+        $this->editdetail->add(new DropDownChoice('editct', $this->_acclist, 0));
+        $this->editdetail->add(new TextInput('editnotes'));
+        $this->editdetail->add(new TextInput('editamount'));
+        $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
+        $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
+     
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'));
+          
+        
+        
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->dt->setValue($this->_doc->headerdata['dt']);
-            $this->docform->ct->setValue($this->_doc->headerdata['ct']);
-            $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->amount->setText($this->_doc->amount);
+ 
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            $this->docform->detail->Reload();            
+            
         } else {
             $this->_doc = Document::create('ManualEntry');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -65,18 +79,84 @@ class ManualEntry extends \App\Pages\Base
         }
     }
 
+    
+  public function detailOnRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('accdt', $this->_acclist[$item->accdt] ??'' ));
+        $row->add(new Label('accct', $this->_acclist[$item->accct] ??''));
+        $row->add(new Label('notes', $item->notes));
+        $row->add(new Label('amount', H::fa($item->amount )));
+        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+    }
+
+    public function deleteOnClick($sender) {
+        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+            return;
+        }
+        $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item, $this->_itemlist, true);
+
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+
+
+        $this->docform->detail->Reload();
+    }
+    public function addrowOnClick($sender) {
+        $this->editdetail->setVisible(true);
+        $this->docform->setVisible(false);
+        $this->_rowid = -1;
+        $this->editdetail->clean();
+        
+    }    
+    public function saverowOnClick($sender) {
+  
+        $item = new AccEntry();
+
+
+        $item->accdt = $this->editdetail->editdt->getValue();
+        $item->accct = $this->editdetail->editct->getValue();
+        $item->notes = $this->editdetail->editnotes->getText();
+        $item->amount = $this->editdetail->editamount->getDouble();
+
+        if ($item->amount== 0) {
+            $this->setError("Не введено суму");
+            return;
+        }        
+        if ($item->accdt== 0 && $item->accct== 0) {
+            $this->setError("Не введено рахунок");
+            return;
+        }        
+        if ($item->accdt==   $item->accct ) {
+            $this->setError("Однаковi рахунки");
+            return;
+        }        
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
+        }
+
+
+
+        $this->editdetail->setVisible(false);
+        $this->docform->setVisible(true);
+        $this->docform->detail->Reload();
+  
+    }
+
+    public function cancelrowOnClick($sender) {
+        $this->editdetail->setVisible(false);
+        $this->docform->setVisible(true);
+      
+    }
+    
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $this->_doc->notes = $this->docform->notes->getText();
-
-        $this->_doc->headerdata['dt'] = $this->docform->dt->getValue();
-        $this->_doc->headerdata['dtname'] = $this->docform->dt->getValueName();
-        $this->_doc->headerdata['ct'] = $this->docform->ct->getValue();
-        $this->_doc->headerdata['ctname'] = $this->docform->ct->getValueName();
-
-        $this->_doc->amount = H::fa($this->docform->amount->getText());
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
+       
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date =  $this->docform->document_date->getDate();
         $this->_doc->payment = 0;
@@ -134,15 +214,9 @@ class ManualEntry extends \App\Pages\Base
             }
         }
 
-        if (($this->_doc->amount > 0) == false) {
-            $this->setError("Не введено суму");
-        }
-
-        if ($this->_doc->headerdata['dt'] == 0 && $this->_doc->headerdata['ct'] == 0) {
-            $this->setError("Не обрано рахунок");
-        }
-        if ($this->_doc->headerdata['dt'] == $this->_doc->headerdata['ct']) {
-            $this->setError("Рахунки однакові");
+     
+        if (count($this->_itemlist)==0) {
+            $this->setError("Не введено проводки");
         }
 
         return !$this->isError();

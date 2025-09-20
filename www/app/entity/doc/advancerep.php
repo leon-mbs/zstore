@@ -23,6 +23,8 @@ class AdvanceRep extends Document
             $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true,0,$this->headerdata['storeemp']??0);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
+            $sc->tag=Entry::TAG_BAY;
+            
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
 
@@ -76,6 +78,8 @@ class AdvanceRep extends Document
                 $ua->save();
             }
         
+        
+           
 
         return true;
     }
@@ -139,8 +143,42 @@ class AdvanceRep extends Document
          $conn = \ZDB\DB::getConnect();
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
  
+         $ia = \App\Entity\Item::getAccCode();
  
-      
+         $sql="select coalesce(sum(quantity * price ),0) as am, item_type from entrylist_view  where document_id=".$this->document_id." group by item_type ";
+         foreach($conn->Execute($sql) as $row) {
+            
+              \App\Entity\AccEntry::addEntry( $ia[$row['item_type']] ?? '28','371', $row['am'],$this->document_id)  ; 
+            
+         }
+         
+         foreach(\App\Entity\IOState::find("document_id=".$this->document_id) as $is){
+             if($is->iotype==\App\Entity\IOState::TYPE_BASE_OUTCOME)  {
+                 //пойдет в  себестоимость
+             }
+ 
+             if($is->iotype==\App\Entity\IOState::TYPE_COMMON_OUTCOME)  {
+                 \App\Entity\AccEntry::addEntry( '91' ,'371',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_ADMIN_OUTCOME)  {
+                  \App\Entity\AccEntry::addEntry( '92' ,'371',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_SALE_OUTCOME)  {
+                   \App\Entity\AccEntry::addEntry( '93' ,'371',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_OTHER_OUTCOME)  {
+               \App\Entity\AccEntry::addEntry( '94' ,'371',$is->amount,$this->document_id)  ; 
+             }
+          
+         }
+
+        $pa = doubleval($conn->GetOne("select sum(amount) from paylist where document_id=".$this->document_id)) ;
+        $mf = \App\Entity\MoneyFund::load($this->headerdata['exmf']);
+        if($mf != null  && $pa > 0) {
+           \App\Entity\AccEntry::addEntry($mf->beznal==1 ? '31':'30' ,'371',$pa,$this->document_id)  ; 
+        }
+        
+                         
     } 
  
 }

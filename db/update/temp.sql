@@ -77,3 +77,11 @@ INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabl
 оставить с 64
 
 66
+
+
+миграция
+
+Item
+IOState
+отмена дока
+чекер  в  адмминке
