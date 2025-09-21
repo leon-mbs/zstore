@@ -35,6 +35,8 @@
 
                         <th></th>
                         <th></th>
+                        <th class="text-right">До сплати</th>
+                        <th class="text-right">В пiдзвiтi</th>
                       
                         <th></th>
                         <th></th>
@@ -48,6 +50,8 @@
                         {{/usebranch}}
                         <td zippy="position"></td>
                         <td zippy="department"></td>
+                        <td class="text-right" zippy="zarp" ></td>
+                        <td class="text-right" zippy="av" ></td>
                         <td><a zippy="contentlist"  ><i class="fa fa-eye"></i></a></td>
                         <td ><a zippy="edit" title="Редагування"><i class="fa fa-fa fa-edit"></i></a> 
                        &nbsp; &nbsp; <a  zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
@@ -148,7 +152,7 @@
 
    
                         </div> 
-    </div>                          
+                     </div>                          
                     <div class="row">
                        <div class="col-12   ">
                    <div class="form-group">
@@ -237,10 +241,7 @@
 
                     </form>
                    
-                   {{#az}}
-                  <span>Баланс по зарплатi   <b>{{z}}</b>,  в пiдзвiтi   <b>{{a}}</b>   </span>        {{dt}}
-                    {{/az}} 
-                    
+               
                  <table class="ctable mt-2">
                     {{#detacc}}
                       <tr>

@@ -27,8 +27,12 @@ class EmployeeList extends \App\Pages\Base
 {
     private $_employee;
     private $_blist;
-    public $_msglist         = array();
-    
+    public $_msglist    = array();
+    public $_fileslist  = array();
+   
+    private $_zlist=[];
+    private $_alist=[];
+      
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('EmployeeList')) {
@@ -74,8 +78,7 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new CheckBox('editcoworker'));
 
    
-        $this->employeetable->employeelist->Reload();
-
+ 
         $this->add(new Panel('contentview'))->setVisible(false);
         $this->contentview->add(new Label("accname"));
         $this->contentview->add(new ClickLink("accback"))->onClick($this, 'cancelOnClick');
@@ -98,9 +101,20 @@ class EmployeeList extends \App\Pages\Base
 
         $this->contentview->filters->add(new Date('from', $d->getTimestamp()));
         $this->contentview->filters->add(new Date('to' ));
-        
-        $this->_tvars['az'] = false;  
- 
+       
+        $conn = \ZDB\DB::getConnect();
+      
+        $sql = "select coalesce(sum(0-amount),0) as am, emp_id from empacc where  optype in(3,4)  group by emp_id "  ;
+        foreach($conn->Execute($sql) as $r){
+           $this->_zlist[$r['emp_id']]= H::fa($r['am']) ;
+        }
+        $sql = "select coalesce(sum(0-amount),0) as am, emp_id from empacc where  optype in(105)  group by emp_id   "  ;
+        foreach($conn->Execute($sql) as $r){
+           $this->_alist[$r['emp_id']]= H::fa($r['am']) ;
+        }
+           
+        $this->employeetable->employeelist->Reload();
+
     }
 
 
@@ -114,12 +128,23 @@ class EmployeeList extends \App\Pages\Base
     public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
+
         $row->add(new Label('position', $item->position));
         $row->add(new Label('department', $item->department));
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
 
+        $row->add(new Label('zarp',""));        
+        $row->add(new Label('av',""));        
+        
+        if(($this->_zlist[$item->employee_id] ?? 0 )>0){
+           $row->zarp->setText(H::fa($this->_zlist[$item->employee_id])); 
+        }
+        if(($this->_alist[$item->employee_id] ?? 0 )>0){
+           $row->av->setText(H::fa($this->_alist[$item->employee_id])); 
+        }
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
@@ -268,8 +293,48 @@ class EmployeeList extends \App\Pages\Base
       
         $this->updateMessages();
         $this->updateFiles();
-         
+            
+        $this->_tvars['detacc'] =[];       
    }
+   
+ //лицевой счет
+    public function OnSubmitS($sender) {
+
+
+        $emp_id =$this->_employee->employee_id ;
+        $from =  $this->contentview->filters->from->getDate();
+        $to =  $this->contentview->filters->to->getDate();
+
+        $conn = \ZDB\DB::getConnect();
+          
+         $sql = "select * from empacc_view where     emp_id = {$emp_id}   and createdon >= " . $conn->DBDate($from) ;
+         if($to > 0) {
+             $sql = $sql . "  and createdon <= " . $conn->DBDate($to)  ;
+         }
+         $sql = $sql ." order  by  ea_id ";
+        
+        $en=\App\Entity\EmpAcc::getNames();
+
+        $detail = array();
+        
+        foreach ($conn->Execute($sql) as $row) {
+              $detail[] = array(
+                'notes'    => $row['notes'],
+                'opname'    => $en[$row['optype']],
+                'dt'    => H::fd(strtotime($row['createdon'])),
+                'amount'    => H::fa($row['amount']),
+                'doc'   => $row['document_number'] 
+                
+            );
+
+
+             
+        }
+
+        $this->_tvars['detacc']  =  $detail;
+
+    }
+       
    
    public function OnMsgSubmit($sender) {
         $msg = new \App\Entity\Message();
@@ -352,51 +417,7 @@ class EmployeeList extends \App\Pages\Base
   
     }
 
-   //лицевой счет
-    public function OnSubmitS($sender) {
-
-
-        $emp_id =$this->_employee->employee_id ;
-        $from =  $this->contentview->filters->from->getDate();
-        $to =  $this->contentview->filters->to->getDate();
-
-        $conn = \ZDB\DB::getConnect();
-
-        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(3,4) and  emp_id = {$emp_id}   "  ;
-        $this->_tvars['z']  = 0-H::fa($conn->GetOne($sql) );
-        $sql = "select coalesce(sum(amount),0) from empacc where  optype in(105) and  emp_id = {$emp_id}  "  ;
-        $this->_tvars['a'] = 0-H::fa($conn->GetOne($sql) );
-    
-        $this->_tvars['az'] = true;
-         
-         $sql = "select * from empacc_view where     emp_id = {$emp_id}   and createdon >= " . $conn->DBDate($from) ;
-         if($to > 0) {
-             $sql = $sql . "  and createdon <= " . $conn->DBDate($to)  ;
-         }
-         $sql = $sql ." order  by  ea_id ";
-        
-        $en=\App\Entity\EmpAcc::getNames();
-
-        $detail = array();
-        
-        foreach ($conn->Execute($sql) as $row) {
-              $detail[] = array(
-                'notes'    => $row['notes'],
-                'opname'    => $en[$row['optype']],
-                'dt'    => H::fd(strtotime($row['createdon'])),
-                'amount'    => H::fa($row['amount']),
-                'doc'   => $row['document_number'] 
-                
-            );
-
-
-             
-        }
-
-        $this->_tvars['detacc']  =  $detail;
-
-    }
-    
+  
     
 }
 
