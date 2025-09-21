@@ -138,7 +138,7 @@ class AdvanceRep extends Document
         return 'АЗ-000000';
     }
     public   function DoAcc() {
-         if(System::getOption("common",'useacc')!=1 ) return;
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
         
          $conn = \ZDB\DB::getConnect();
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);

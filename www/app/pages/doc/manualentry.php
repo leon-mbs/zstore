@@ -248,7 +248,7 @@ class ManualEntry extends \App\Pages\Base
       
          $b= \App\system::getBranch()  ;
          if($b > 0){
-            $w="and document_id in (select document_id from documents where branch_id > {$b} ) and " ; 
+            $w="and document_id in (select document_id from documents where branch_id = {$b} ) and " ; 
          }
          //тмц
          $ia = \App\Entity\Item::getAccCode();
@@ -290,65 +290,121 @@ class ManualEntry extends \App\Pages\Base
       
        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
        
-       $sap=0;
-       $spa=0;
-       $bap=0;
-       $bpa=0;
+ 
        
     //поставщики
-    $sql = "SELECT   c.customer_id,
+    $sql = "SELECT  
      COALESCE( sum(a.s_passive), 0) AS pas,
      COALESCE( sum(a.s_active), 0) AS act
 FROM ({$cust_acc_view} ) a
   JOIN customers c
     ON a.customer_id = c.customer_id
     AND c.status = 0 AND a.s_passive <> a.s_active 
-    group by  c.customer_id "; 
+      "; 
      foreach($conn->Execute($sql) as $row) {
         if($row['pas'] > $row['act']) {
-           $sap += H::fa($row['pas'] - $row['act']);  
+            $am = H::fa($row['pas'] - $row['act']);  
+            $item = new AccEntry();
+            $item->accdt = '63';
+            $item->accct = '40';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;       
         }  
         if($row['pas'] < $row['act']) {
-           $spa += H::fa($row['act'] - $row['pas']  );  
-        }  
+           $am = H::fa($row['act'] - $row['pas']  );  
+            $item = new AccEntry();
+            $item->accdt = '40';
+            $item->accct = '63';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;       
+         }  
      }    
-     if($sap >0) {
-         
-     }
-     if($spa >0) {
-         
-     }
+  
      
       
       //покупатели
-    $sql = "SELECT    c.customer_id,
+    $sql = "SELECT    
      COALESCE( sum(a.b_passive), 0) AS pas,
      COALESCE( sum(a.b_active), 0) AS act
 FROM ({$cust_acc_view} ) a
   JOIN customers c
     ON a.customer_id = c.customer_id
     AND c.status = 0 AND a.b_passive <> a.b_active   
-    group by  c.customer_id  "; 
+      "; 
     foreach($conn->Execute($sql) as $row) {
         if($row['pas'] > $row['act']) {
-           $bap += H::fa($row['pas'] - $row['act']);  
+           $am = H::fa($row['pas'] - $row['act']); 
+            $item = new AccEntry();
+            $item->accdt = '36';
+            $item->accct = '40';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;              
         }  
         if($row['pas'] < $row['act']) {
-           $bpa += H::fa($row['act'] - $row['pas']  );  
+           $am = H::fa($row['act'] - $row['pas']  );  
+           $item = new AccEntry();
+            $item->accdt = '40';
+            $item->accct = '36';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;             
         }           
      }     
-     if($bap >0) {
-         
-     }
-     if($bpa >0) {
-         
-     }
-           
+       $w="";
+       if($b > 0){
+            $w="  and branch_id = {$b}  " ; 
+         }         
          //сотрудники
-         
+         $sql = "select coalesce(sum(0-amount),0) from empacc where emp_id in (select employee_id  from employees where disabled<>1 {$w}) and  optype = 105 " ;   
+         $am=doubleval($conn->GetOne($sql))  ;
+         if($am >0) {
+            $item = new AccEntry();
+            $item->accdt = '372';  
+            $item->accct = '40';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;              
+         }
+         $sql = "select coalesce(sum(amount),0) from empacc where emp_id in (select employee_id  from employees where disabled<>1 {$w}) and  optype in (3,4)  " ;   
+         $am=doubleval($conn->GetOne($sql))  ;
+         if($am >0) {
+            $item = new AccEntry();
+            $item->accdt = '40';  
+            $item->accct = '66';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;              
+         }
+       
          //ОС
-        
-        $this->docform->detail->Reload();
+         $sql = "select coalesce(sum(amount),0) from eqentry where eq_id in (select eq_id  from equipments where disabled<>1 {$w}) and  optype in (1,4)  " ;   
+         $am=doubleval($conn->GetOne($sql))  ;
+         if($am >0) {
+            $item = new AccEntry();
+            $item->accdt = '10';  
+            $item->accct = '40';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;              
+         }      
+  
+         $sql = "select coalesce(sum(amount),0) from eqentry where eq_id in (select eq_id  from equipments where disabled<>1 {$w}) and  optype in (3)  " ;   
+         $am=doubleval($conn->GetOne($sql))  ;
+         if($am >0) {
+            $item = new AccEntry();
+            $item->accdt = '13';  
+            $item->accct = '40';
+      
+            $item->amount = H::fa($am);
+            $this->_itemlist[] = $item;              
+         }      
+  
+  
+  
+         $this->docform->detail->Reload();
         
     }    
     

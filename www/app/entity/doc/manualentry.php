@@ -17,11 +17,27 @@ class ManualEntry extends Document
         return true;
     }
     public   function DoAcc() {
-       parent::DoAcc()  ;
        
+       $conn = \ZDB\DB::getConnect(); 
+       if($this->headerdata['remove']==1) {
+           $dt=$conn->DBDate($this->document_date);
+           $sql="delete from acc_entry where  ( createdon is not null and createdon<={$dt} ) || document_id in(select document_id from documents where document_date <={$dt} )  ";
+           $conn->Execute($sql);
+       }   
+           
        foreach ($this->unpackDetails('detaildata') as $item) {
            AccEntry::addEntry($item->accdt,$item->accct,H::fa($item->amount),$this->document_id);
          
+       }
+
+      
+       if($this->headerdata['reload']==1) {
+           foreach(Document::findYield("document_date > {$dt}  and state > 4 ") as $doc){
+               $doc = $doc->cast();
+               $doc->DoAcc();
+               
+               unset($doc);
+           }
        }
       
        
