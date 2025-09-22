@@ -148,7 +148,7 @@ class AdvanceRep extends Document
          $sql="select coalesce(sum(e.quantity * e.partion ),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where document_id=".$this->document_id." group by item_type ";
          foreach($conn->Execute($sql) as $row) {
             
-              \App\Entity\AccEntry::addEntry( $ia[$row['item_type']] ?? '28','371', $row['am'],$this->document_id)  ; 
+              \App\Entity\AccEntry::addEntry( $ia[$row['item_type']] ?? '28','372', $row['am'],$this->document_id)  ; 
             
          }
          
@@ -158,16 +158,16 @@ class AdvanceRep extends Document
              }
  
              if($is->iotype==\App\Entity\IOState::TYPE_COMMON_OUTCOME)  {
-                 \App\Entity\AccEntry::addEntry( '91' ,'371',$is->amount,$this->document_id)  ; 
+                 \App\Entity\AccEntry::addEntry( '91' ,'372',$is->amount,$this->document_id)  ; 
              }
              if($is->iotype==\App\Entity\IOState::TYPE_ADMIN_OUTCOME)  {
-                  \App\Entity\AccEntry::addEntry( '92' ,'371',$is->amount,$this->document_id)  ; 
+                  \App\Entity\AccEntry::addEntry( '92' ,'372',$is->amount,$this->document_id)  ; 
              }
              if($is->iotype==\App\Entity\IOState::TYPE_SALE_OUTCOME)  {
-                   \App\Entity\AccEntry::addEntry( '93' ,'371',$is->amount,$this->document_id)  ; 
+                   \App\Entity\AccEntry::addEntry( '93' ,'372',$is->amount,$this->document_id)  ; 
              }
              if($is->iotype==\App\Entity\IOState::TYPE_OTHER_OUTCOME)  {
-               \App\Entity\AccEntry::addEntry( '94' ,'371',$is->amount,$this->document_id)  ; 
+               \App\Entity\AccEntry::addEntry( '94' ,'372',$is->amount,$this->document_id)  ; 
              }
           
          }
@@ -175,7 +175,7 @@ class AdvanceRep extends Document
         $pa = doubleval($conn->GetOne("select sum(amount) from paylist where document_id=".$this->document_id)) ;
         $mf = \App\Entity\MoneyFund::load($this->headerdata['exmf']);
         if($mf != null  && $pa > 0) {
-           \App\Entity\AccEntry::addEntry($mf->beznal==1 ? '31':'30' ,'371',$pa,$this->document_id)  ; 
+           \App\Entity\AccEntry::addEntry($mf->beznal==1 ? '31':'30' ,'372',$pa,$this->document_id)  ; 
         }
         
                          

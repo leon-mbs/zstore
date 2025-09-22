@@ -12,10 +12,13 @@ namespace App\Entity;
 class IOState extends \ZCL\DB\Entity
 {
     //доход платежи
-    public const TYPE_BASE_INCOME  = 1;     //доходы реализации товаров  услуг
+    public const TYPE_BASE_INCOME  = 1;     //доходы реализации товаров  услцн
     public const TYPE_OTHER_INCOME = 2;     //прочие доходы
     public const TYPE_FIN          = 3;     //доходы от  фин.  деятельности
- 
+ //   public const TYPE_CANCEL_CUST  = 5;     //отмена  платежа  покупки
+ //   public const TYPE_INEQ         = 6;     //ввод в  экплуатацию ОС
+  //  public const TYPE_INVEQ        = 7;     //ремонт и восстановдение ОС
+
     //внебалансовые доходы (для  статистики)
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
  
@@ -115,7 +118,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_PROD] = "Витрати на виробьництво";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
-            $list[self::TYPE_SALARY_OUTCOME] = "Виплата зарплати";
+            $list[self::TYPE_SALARY_OUTCOME] = "Витрати на зарплату";
             $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
             $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
             $list[self::TYPE_TAX_OUTCOME] =  "Інші податки та збори";
@@ -217,14 +220,5 @@ class IOState extends \ZCL\DB\Entity
        return $list;
     }
     
-     public static  function getAccCode(){
-            $list=[];
-            
-            $list[self::TYPE_OTHER_INCOME]='28'; 
-            $list[self::TYPE_FIN]='28'; 
-       
-            return $list;
-        
-         
-    }   
+    
 }

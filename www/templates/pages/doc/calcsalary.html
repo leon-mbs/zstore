@@ -15,11 +15,11 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" v-model="doc.document_number"  required > 
+                        <input class="form-control" type="text" v-model="doc.document_number"  required="on" > 
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="date" v-model="doc.document_date"  required >
+                        <input class="form-control" type="date" v-model="doc.document_date"  required="on" >
                     </div>
                      <div class="form-group  ">
                         <label for="department">Вiддiл </label>
@@ -28,6 +28,7 @@
                              <option v-for="dep in deps"  v-bind:label="dep"  v-bind:value="dep" >
                          </datalist>                                  
                     </div>
+                   {|#hideblock|}
                      <div class="form-group  ">
                         <label for="iostate">Тип витрат</label>
                         <select   class="form-control" v-model="doc.iostate">
@@ -35,7 +36,7 @@
                              <option v-for="ios in iostates "  v-bind:value="ios.key">{{ios.value}}</option>
                         </select>
                     </div>
-               
+                   {|/hideblock|}
 
                 </div>
                 <div id="formd" class="col-12 col-md-4 col-xl-3">
@@ -53,7 +54,7 @@
                     </div>
                     <div class="form-group  ">
                         <label for="daysmon">Кiл. роб. днiв </label>
-                        <input v-on:change="hch()" style="width:100px;"  type="number"  required   class="form-control" v-model="doc.daysmon">
+                        <input v-on:change="hch()" style="width:100px;"  type="number"  required="on"   class="form-control" v-model="doc.daysmon">
                         <small>Кiлькiсть робочих днiв в  мiсяцi</small>
                     </div>
                      <div class="form-group  ">
@@ -227,8 +228,8 @@
              tocalc:  function ( ){
                if(checkFormInput('docform')==false) return;
                if(this.doc.iostate==0) {
-                   toastr.error("Не вибраний тип витрат")  
-                   return;
+                  // toastr.error("Не вибраний тип витрат")  
+                //   return;
                } 
                  
                  this.showheader = false

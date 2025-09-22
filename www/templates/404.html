@@ -127,5 +127,29 @@ Leon1967       leon12345678*     20.186.18.39
 
  ALTER TABLE Content ADD [ShowDate] [datetime] NULL;
  
+ CREATE TABLE [dbo].[AskHelp](
+    [id] [int] IDENTITY(1,1) NOT NULL,
+    [Status] [smallint] NOT NULL ,
+    [Payrollid] [nvarchar](255) NOT NULL,
+    [FirstName] [nvarchar](255) NOT NULL,
+    [LastName] [nvarchar](255) NOT NULL,
+    [Site] [nvarchar](255)   NULL,
+    [Message] ntext NOT NULL,
+    
+    [CreatedDate] [datetime] NOT NULL 
+   
+ CONSTRAINT [PK_AskHelp] PRIMARY KEY CLUSTERED 
+(
+    [id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
  
  
+
+
+
+
+
+
+  

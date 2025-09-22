@@ -51,16 +51,16 @@
                 <form class="col-6 col-md-6 col-xl-4" zippy="editform">
                     <div class="form-group">
                         <label for="editstname">Найменування</label>
-                        <input autofocus="on"    required  class="form-control" zippy="editstname"/>
+                        <input autofocus="on"    required="on"  class="form-control" zippy="editstname"/>
                     </div>
                     <div class="form-group">
                         <label for="editshortname">Скорочене позначення</label>
-                        <input maxlength="10"  style="width:200px;"  required  class="form-control" zippy="editshortname"/>
+                        <input maxlength="10"  style="width:200px;"  required="on"  class="form-control" zippy="editshortname"/>
                         <small>До 10 символів. Використовується для заголовків таблиць у документах та звітах</small>
                     </div>
                     <div class="form-group">
                         <label for="editcode">Код                        </label>
-                        <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required  class="form-control" zippy="editcode"/>
+                        <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required="on"  class="form-control" zippy="editcode"/>
                         <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.
                          </small>
                     </div>
@@ -176,6 +176,16 @@
      
      
       
+             <div class="form-group">
+                <label for="optall">Всього нараховано</label>
+                <select  class="form-control" zippy="optall" >
+                
+                </select>
+                <small>Обов'язкове поле, значення якого відноситься до  витрат . </small>
+                
+             </div> 
+     
+       
              <div class="form-group">
                 <label for="optresult">До видачi</label>
                 <select  class="form-control" zippy="optresult" >
