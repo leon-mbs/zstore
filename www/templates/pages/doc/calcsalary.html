@@ -28,6 +28,7 @@
                              <option v-for="dep in deps"  v-bind:label="dep"  v-bind:value="dep" >
                          </datalist>                                  
                     </div>
+                   {|#hideblock|}
                      <div class="form-group  ">
                         <label for="iostate">Тип витрат</label>
                         <select   class="form-control" v-model="doc.iostate">
@@ -35,7 +36,7 @@
                              <option v-for="ios in iostates "  v-bind:value="ios.key">{{ios.value}}</option>
                         </select>
                     </div>
-               
+                   {|/hideblock|}
 
                 </div>
                 <div id="formd" class="col-12 col-md-4 col-xl-3">
@@ -227,8 +228,8 @@
              tocalc:  function ( ){
                if(checkFormInput('docform')==false) return;
                if(this.doc.iostate==0) {
-                   toastr.error("Не вибраний тип витрат")  
-                   return;
+                  // toastr.error("Не вибраний тип витрат")  
+                //   return;
                } 
                  
                  this.showheader = false

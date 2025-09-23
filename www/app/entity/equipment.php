@@ -109,7 +109,7 @@ class Equipment extends \ZCL\DB\Entity
          return $ret;
     }    
 
-    public  function getBalance($tm=0) {
+    public  function getBalance( ) {
         $conn = \ZDB\DB::getConnect();
         $sql = "  select sum(amount)  from  eqentry where   eq_id =   {$this->eq_id}   ";
         return doubleval( $conn->GetOne($sql) );

@@ -672,16 +672,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.7.5",
+            "version": "2.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "cd93c72fffc6a44273ecc0f724a810b6ed032071"
+                "reference": "273aa182f4ef26eec4b80779658f7e17a2d3c359"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/cd93c72fffc6a44273ecc0f724a810b6ed032071",
-                "reference": "cd93c72fffc6a44273ecc0f724a810b6ed032071",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/273aa182f4ef26eec4b80779658f7e17a2d3c359",
+                "reference": "273aa182f4ef26eec4b80779658f7e17a2d3c359",
                 "shasum": ""
             },
             "require": {
@@ -708,9 +708,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.7.5"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.7.7"
             },
-            "time": "2025-09-14T14:11:42+00:00"
+            "time": "2025-09-20T17:04:10+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -1772,12 +1772,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "662d5ecfaab913d8ce0de4521fc40ce92aa14e75"
+                "reference": "f48b3e601515b060334744b4b495f0d6b3cc2e6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/662d5ecfaab913d8ce0de4521fc40ce92aa14e75",
-                "reference": "662d5ecfaab913d8ce0de4521fc40ce92aa14e75",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/f48b3e601515b060334744b4b495f0d6b3cc2e6b",
+                "reference": "f48b3e601515b060334744b4b495f0d6b3cc2e6b",
                 "shasum": ""
             },
             "conflict": {
@@ -2453,7 +2453,7 @@
                 "slim/slim": "<2.6",
                 "slub/slub-events": "<3.0.3",
                 "smarty/smarty": "<4.5.3|>=5,<5.1.1",
-                "snipe/snipe-it": "<8.1",
+                "snipe/snipe-it": "<8.1.18",
                 "socalnick/scn-social-auth": "<1.15.2",
                 "socialiteproviders/steam": "<1.1",
                 "solspace/craft-freeform": ">=5,<5.10.16",
@@ -2734,7 +2734,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-16T20:05:44+00:00"
+            "time": "2025-09-19T18:07:33+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

@@ -55,6 +55,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->add(new Form('optform'));
         $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']??''));
 
+        $this->optform->add(new DropDownChoice('optall', SalType::getList(), $opt['codeall']??''));
         $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']??''));
         $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
 
@@ -139,6 +140,7 @@ class SalaryTypeList extends \App\Pages\Base
         $sl = SalType::getList();
         $codebaseincom = $this->optform->optbaseincom->getValue();
 
+        $codeall = $this->optform->optall->getValue();
         $coderesult = $this->optform->optresult->getValue();
 
         if($codebaseincom==0) {
@@ -148,10 +150,12 @@ class SalaryTypeList extends \App\Pages\Base
         
         $this->optform->optbaseincom->setOptionList($sl);
         $this->optform->optresult->setOptionList($sl);
+        $this->optform->optall->setOptionList($sl);
 
         //восстанавливаем значение
         $this->optform->optbaseincom->setValue($codebaseincom);
         $this->optform->optresult->setValue($coderesult);
+        $this->optform->optresult->setValue($codeall);
 
 
     }
@@ -164,11 +168,19 @@ class SalaryTypeList extends \App\Pages\Base
     public function onSaveOpt($sender) {
         $opt = System::getOptions("salary");
 
+        $opt['codeall'] = $this->optform->optall->getValue();
         $opt['coderesult'] = $this->optform->optresult->getValue();
-        $opt['codeadvance'] = $this->optform->optadvance->getValue();
+        $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         if($opt['codebaseincom']==0) {
            $this->addAjaxResponse("toastr.error('Не вказано поле  основної зарплати')");
-           
+           return;
+        }
+        if($opt['coderesult']==0) {
+           $this->addAjaxResponse("toastr.error('Не вказано поле до видачi')");
+           return;
+        }
+        if($opt['codeall']==0) {
+           $this->addAjaxResponse("toastr.error('Не вказано поле всього нараховано')");
            return;
         }
         System::setOptions('salary', $opt);
