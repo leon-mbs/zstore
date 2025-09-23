@@ -251,7 +251,7 @@ class ManualEntry extends \App\Pages\Base
             $w="and document_id in (select document_id from documents where branch_id = {$b} ) and " ; 
          }
          //тмц
-         $ia = \App\Entity\Item::getAccCode();
+         $ia =   Account::getAccCode();
        
          $sql="select coalesce(sum(e.quantity * e.partion ),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where {$w} and i.disabled<>1 group by i.item_type ";
          foreach($conn->Execute($sql) as $row) {

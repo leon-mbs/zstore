@@ -55,17 +55,11 @@ class Account
          $ret[68]='Розрахунки за iншми операцiями';
          $ret[681]='Розрахунки за отриманими авансами';
          $ret[70]='Доходи від реалізації';
-         $ret[701]='Дохід від реалізації готової продукції';
-         $ret[702]='Дохід від реалізації товарів';
-         $ret[703]='Дохід від реалізації робіт і послуг';
-         $ret[704]='Iншi доходи від реалізації';
+ 
          $ret[71]='Доходи операційної діяльності';
          $ret[79]='Фінансові результати';
          $ret[90]='Собівартість реалізації';
-         $ret[901]='Собівартість реалізованої готової продукції';
-         $ret[902]='Собівартість реалізованих товарів';
-         $ret[903]='Собівартість реалізованих робіт і послуг';
-         $ret[904]='Iнша собівартість реалізації';
+ 
          $ret[91]='Загальновиробничі витрати';
          $ret[92]='Адміністративні витрати';
          $ret[93]='Витрати на збут';
@@ -263,6 +257,40 @@ class Account
            $list[$acc]=$acc; 
         } 
         return array_keys($list);
+    }    
+ 
+ 
+     /**
+    * счет  учета  ТМЦ по типу
+    *  
+    */
+    public static  function getAccCode(){
+            $list=[];
+            $list[0]='28'; 
+            $list[\App\Entity\Item::TYPE_TOVAR]='28'; 
+            $list[\App\Entity\Item::TYPE_MAT]='201'; 
+            $list[\App\Entity\Item::TYPE_MBP]='22'; 
+            $list[\App\Entity\Item::TYPE_PROD]='26'; 
+            $list[\App\Entity\Item::TYPE_HALFPROD]='25'; 
+            return $list;
+    
+    }
+   
+    public  static function getItemsEntry($document_id,$tag,$outprice=false) {
+         $ac = self::getAccCode();
+         $conn = \ZDB\DB::getConnect();
+         $ret=[];
+         $p="e.partion";
+         if($outprice) $p="e.outprice";
+         $sql="select coalesce(abs(sum(e.quantity * {$p} )),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where e.document_id={$document_id} and tag={$tag}  group by i.item_type ";
+         foreach($conn->Execute($sql) as $row) {
+             $am=doubleval($row['am']) ;  
+             if($am==0) continue;
+             $a= $ac[$row['item_type']]; 
+             $ret[$a]=$am;
+         }
+         
+         return $ret;
     }    
    
 }

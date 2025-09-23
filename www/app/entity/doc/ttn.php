@@ -166,7 +166,7 @@ class TTN extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-       $lost = 0;
+    
       
 
         if ($this->headerdata['nostore'] == 1) {
@@ -383,5 +383,33 @@ class TTN extends Document
             }
              
     }
+    
+  public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+        
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+ 
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry( '23',$a, $am,$this->document_id)  ; 
+         }       
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
+         }       
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         foreach($ia as $a=>$am){
+   
+             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
+             \App\Entity\AccEntry::addEntry('79','90', $am,$this->document_id)  ; 
+         }
+         
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL,true) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('36', '70', $am,$this->document_id)  ; 
+             \App\Entity\AccEntry::addEntry('70', '79', $am,$this->document_id)  ; 
+         }        
+  }
 
 }

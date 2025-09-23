@@ -1169,19 +1169,5 @@ class Item extends \ZCL\DB\Entity
         return $nds;
     }
  
-     /**
-    * счет  учета  по типу
-    *  
-    */
-    public static  function getAccCode(){
-            $list=[];
-            $list[0]='28'; 
-            $list[Item::TYPE_TOVAR]='28'; 
-            $list[Item::TYPE_MAT]='201'; 
-            $list[Item::TYPE_MBP]='22'; 
-            $list[Item::TYPE_PROD]='26'; 
-            $list[Item::TYPE_HALFPROD]='25'; 
-            return $list;
-    
-    } 
+     
 }

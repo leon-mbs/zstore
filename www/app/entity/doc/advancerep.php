@@ -143,7 +143,7 @@ class AdvanceRep extends Document
          $conn = \ZDB\DB::getConnect();
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
  
-         $ia = \App\Entity\Item::getAccCode();
+         $ia = \App\Entity\Account::getAccCode();
  
          $sql="select coalesce(sum(e.quantity * e.partion ),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where document_id=".$this->document_id." group by item_type ";
          foreach($conn->Execute($sql) as $row) {
