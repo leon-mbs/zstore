@@ -13,7 +13,8 @@ use App\Helper as H;
 class ManualEntry extends Document
 {
     public function Execute() {
-         
+        $this->DoAcc();  
+        
         return true;
     }
     public   function DoAcc() {

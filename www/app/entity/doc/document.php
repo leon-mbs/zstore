@@ -493,7 +493,7 @@ class Document extends \ZCL\DB\Entity
                 $doc->onState($state, $oldstate);
             
                 if($state >4 ) {
-                   $doc->DoAcc();   
+                  // $doc->DoAcc();   
                 }
                 
             }

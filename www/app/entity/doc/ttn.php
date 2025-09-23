@@ -255,7 +255,8 @@ class TTN extends Document
  
         
         $this->DoBalans() ;
-
+        $this->DoAcc();  
+        
         return true;
     }
 

@@ -79,7 +79,8 @@ class AdvanceRep extends Document
             }
         
         
-           
+        $this->DoAcc();  
+            
 
         return true;
     }
