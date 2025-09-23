@@ -34,19 +34,9 @@ class EQ extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $ops=[];
-        $ops[1]='Ввод в эксплуатацію';
-        $ops[2]='Ввод в эксплуатацію (закупка)';
-        $ops[3]='Ввод в эксплуатацію (зі складу)';
-        $ops[10]='Ввод в эксплуатацію (з виробництва)';
-        $ops[4]='Переміщення';
-        $ops[5]='Нарахування амортизації';
-        $ops[6]='Ремонт та відновлення';
-        $ops[7]='Списання';
-        $ops[8]='Списання (продажа)';
-        $ops[9]='Списання (на  склад)';
+ 
         
-        $this->docform->add(new DropDownChoice('optype',$ops,0 ))->onChange($this,'onType');
+        $this->docform->add(new DropDownChoice('optype',EqEntry::getOpList(),0 ))->onChange($this,'onType');
 
         $this->docform->add(new DropDownChoice('store',\App\Entity\Store::findArray('storename','disabled<>1','storename'),H::getDefStore() ))->onChange($this,"onStore");
         $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
@@ -111,41 +101,80 @@ class EQ extends \App\Pages\Base
          $this->docform->tip->setText("");
          
          $op=intval($sender->getValue());
+ 
+         $this->docform->amount->setVisible(true);
+         $this->docform->amount->setAttribute('readonly',"on");
+         $this->docform->amount->setText('');
          
-         if($op==1 || $op==5 || $op==6  || $op==7 ){
-            $this->docform->amount->setVisible(true);
-            $this->docform->amount->setAttribute('readonly',null);
+         if($op==EqEntry::OP_INCOME){
+            $this->docform->parea->setVisible(true);
+            $this->docform->emp->setVisible(true);
+            $this->docform->amount->setVisible(false);
+        
+             
          }
-         if($op==2){
-            $this->docform->amount->setVisible(true);
-            $this->docform->amount->setAttribute('readonly',null);
-            $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахункiв з постачальниками");
-            
+         if($op==EqEntry::OP_OUTCOME){
+   
+            $this->docform->amount->setAttribute('readonly',"on");
+            $this->docform->amount->setText();
+              
          }
-         if($op==3){
+         if($op==EqEntry::OP_AMOR){
             $this->docform->amount->setVisible(true);
-            $this->docform->amount->setAttribute('readonly','on');
-            $this->docform->store->setVisible(true);
-            $this->docform->item->setVisible(true);
+            $this->docform->amount->setAttribute('readonly' );
+        
          }
-         if($op==4){
+         if($op==EqEntry::OP_REPAIR){
+          
+            $this->docform->amount->setVisible(true);
+            $this->docform->amount->setAttribute('readonly' );
+         }
+         if($op==EqEntry::OP_MOVE){
+            $this->docform->amount->setVisible(false);
             $this->docform->parea->setVisible(true);
             $this->docform->emp->setVisible(true);
          }
-         if($op==8){
+         if($op==EqEntry::OP_BUY){
+            $this->docform->amount->setAttribute('readonly' );
+       
+            $this->docform->customer->setVisible(true);
+            $this->docform->tip->setText("Оплата через журнал розрахункiв  ");
+         }
+         if($op==EqEntry::OP_PROD){
+           $this->docform->amount->setAttribute('readonly' );
+     
+         }
+         if($op==EqEntry::OP_STORE){
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly',null);
-            $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахункiв з покупцями");
+            $this->docform->store->setVisible(true);
+            $this->docform->item->setVisible(true);            
+
          }
-         if($op==9){
+         if($op==EqEntry::OP_SELL){
+            $this->docform->amount->setVisible(true);
+            $this->docform->amount->setAttribute('readonly' );
+            $this->docform->customer->setVisible(true);
+            $this->docform->tip->setText("Оплата через журнал розрахункiв  ");
+       
+         }
+         if($op==EqEntry::OP_TOSTORE){
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly','on');
             $this->docform->store->setVisible(true);
             $this->docform->item->setVisible(true);
          }
+         if($op==EqEntry::OP_LOST){
+            $this->docform->amount->setVisible(true);
+            $this->docform->amount->setAttribute('readonly','on');
            
+         }
+        
+         $eq=  Equipment::load($this->docform->eq->getKey());         
+         if(in_array($op,[2,9,10,11]) && $eq != null) {
+    
+           $this->docform->amount->setText(H::fa($eq->getBalance()));
+         }          
     }
     
     public function savedocOnClick($sender) {
@@ -217,6 +246,7 @@ class EQ extends \App\Pages\Base
             }
             $conn->CommitTrans();
             App::Redirect("\\App\\Pages\\Reference\\EqList",$eq_id);
+            return;
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -238,19 +268,23 @@ class EQ extends \App\Pages\Base
              $this->setError('Не вибрано ОЗ') ;
              return false;
          }        
-         $isoutcome = intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_OUTCOME) );
-         if($isoutcome>0)  {
-             $this->setError('Вже виведено з експлуатації') ;
-             return false;
-         }           
-         $isincome = intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_INCOME) );
+         $isincome = 0< intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_INCOME) ); // введен в эксплуатацию
+         $isoutcome =0< intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_OUTCOME) ); //снят
+    
+                 
          $op = intval($this->docform->optype->getValue() );
          
-         if($op < 4 && $isincome>0){
+         if(!in_array($op,[1,6,7,8 ]) && !$isincome ){
+             $this->setError('Не введено в експлуатацію')  ;
+         }
+         if(in_array($op,[1,6,7,8]) && $isincome  ){
              $this->setError('Вже введено в експлуатацію')  ;
          }
-         if($op>3 && $isincome==0 ){
-             $this->setError('Не введено в експлуатацію')  ;
+         if( in_array($op,[  9,10,11]) && !$isoutcome  ){
+             $this->setError('Не виведено з експлуатації')  ;
+         }
+         if(!in_array($op,[  9,10,11 ]) && $isoutcome  ){
+             $this->setError('Вже виведено з експлуатації')  ;
          }
           
          $amount = doubleval($this->docform->amount->getText() );
@@ -258,14 +292,14 @@ class EQ extends \App\Pages\Base
          $item = intval($this->docform->item->getKey() );
 
       
-         if($op==2 || $op==8){
+         if($op==6 || $op==9){
              if($c==0)  {
                  $this->setError('Не вибрано контрагента') ;
              }
      
  
          }
-         if($op==3 ||$op==9   ){
+         if($op==8 ||$op==10   ){
              if($item==0)  {
                  $this->setError('Не вибрано ТМЦ') ;
              }
@@ -280,7 +314,7 @@ class EQ extends \App\Pages\Base
             }
              
          }
-         if($op==1 ||  $op==2 || $op==5 || $op==6 || $op==8  ){
+         if(in_array($op,[3,4,6.7] )){
              if($amount==0)  {
                  $this->setError('Не вказано суму  ') ;
              }
@@ -307,9 +341,9 @@ class EQ extends \App\Pages\Base
     }
     public function onEQSelect($sender) {
         
-        $op = $this->docform->optype->getValue();
+        $op = intval($this->docform->optype->getValue());
      
-        if($op>6) {
+        if(in_array($op,[2,9,10,11])) {
            $eq=  Equipment::load($sender->getKey());
            $this->docform->amount->setText(H::fa($eq->getBalance()));
         }
@@ -319,10 +353,10 @@ class EQ extends \App\Pages\Base
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
         $op = $this->docform->optype->getValue();
-        if($op==3) {
+        if($op==EqEntry::OP_STORE) {
            return   \App\Entity\Stock::findArrayAC($store_id,$text) ;
         }
-        if($op==9) {
+        if($op==EqEntry::OP_TOSTORE) {
             return \App\Entity\Item::findArrayAC($text, $store_id);            
         }
         

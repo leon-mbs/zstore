@@ -27,6 +27,7 @@ class EqList extends \App\Pages\Base
     private $_item;
  
     private $_blist;
+    private $_oplist;
 
     public function __construct($id=0) {
         parent::__construct();
@@ -34,6 +35,7 @@ class EqList extends \App\Pages\Base
             return;
         }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
+        $this->_oplist = EqEntry::getOpList()  ;
 
         $types=[];
         $types[Equipment::IYPR_EQ] = Equipment::getTypeName(Equipment::IYPR_EQ)  ;
@@ -242,7 +244,7 @@ class EqList extends \App\Pages\Base
              'opdate'=>  Helper::fd($ee->document_date) , 
              'number'=>   $ee->document_number , 
              'amount'=>  Helper::fa($ee->amount) , 
-             'opname'=> EqEntry::getOpName($ee->optype) , 
+             'opname'=>  $this->_oplist[$ee->optype]  , 
              'det'=> $det,   
              'notes'=> $ee->notes   
            ) ;
