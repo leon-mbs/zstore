@@ -20,17 +20,17 @@ class EQ extends Document
         $entry = new EqEntry( );
         $entry->document_id = $this->document_id;
         $entry->eq_id = $eq->eq_id;
+        $entry->optype = $optype;
         
-        if($optype==1  )  {
-           $entry->optype = EqEntry::OP_INCOME;
-           $entry->amount = $this->amount ;
-           IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_OTHER_INCOME) ;
+        if($optype==EqEntry::OP_INCOME  )  {
+     
+           $entry->amount = 0 ;
+
         }
-        if($optype==2  )  {   //закупка                                                      
-           $entry->optype = EqEntry::OP_INCOME;
+        if($optype==EqEntry::OP_BUY  )  {   //закупка                                                      
+            
            $entry->amount = $this->amount ;
-        //   IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_INEQ) ;
- 
+         
            $b = new \App\Entity\CustAcc();
            $b->customer_id = $this->customer_id;
            $b->document_id = $this->document_id;
@@ -40,11 +40,10 @@ class EQ extends Document
            $b->save();           
  
         }
-        if($optype==3  )  {   // сл  склада
-           $entry->optype = EqEntry::OP_INCOME;
+        if($optype==EqEntry::OP_STORE  )  {   // со  склада
+          
            $entry->amount = $this->amount ;
-       //    IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_INEQ) ;
-
+     
            $stock = \App\Entity\Stock::load($this->headerdata['item_id'] );
 
            $sc = new \App\Entity\Entry($this->document_id, $stock->partion, -1);
@@ -54,47 +53,38 @@ class EQ extends Document
            
         }
         
-        if($optype==10  )  {    // с  производства
-           $entry->optype = EqEntry::OP_INCOME;
+        if($optype==EqEntry::OP_PROD )  {    // с  производства
+     
            $entry->amount = $this->amount ;
-        //   IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_INEQ) ;
-
-                     
-           
+    
         }
         
         
         
-        if($optype==4   )  {     
-           $entry->optype= EqEntry::OP_MOVE;
+        if($optype==EqEntry::OP_MOVE   )  {     
+           
            $entry->amount = 0   ;
         }
-        if($optype==5   )  {
-           $entry->optype = EqEntry::OP_AMOR;
+        if($optype==EqEntry::OP_AMOR   )  {
+          
            $entry->amount = 0-$this->amount   ;
-        //   IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_AMOR) ;
-           
+     
         }
-        if($optype==6   )  {
-           $entry->optype = EqEntry::OP_REM;
+        if($optype==EqEntry::OP_REPAIR   )  {
+ 
            $entry->amount = $this->amount   ;
-        //   IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_INVEQ) ;
         }
   
-       if($optype==7 )  {
-           $entry->optype= EqEntry::OP_OUTCOME;
+       if($optype==EqEntry::OP_OUTCOME )  {
+       
            $entry->amount = 0-$eq->getBalance() ;
-           IOState::addIOState($entry->document_id, 0-$entry->amount,IOState::TYPE_OUTEQ) ;
-       }
-       if($optype==8 )  {    //продажа
-           $entry->optype= EqEntry::OP_OUTCOME;
-        
-           $entry->amount = $this->amount;
-           
-           IOState::addIOState($entry->document_id, 0-$eq->getBalance() ,IOState::TYPE_OUTEQ) ;
-      
-           IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_OTHER_INCOME) ;
           
+       }
+       if($optype==EqEntry::OP_SELL )  {    //продажа
+         
+        
+           $entry->amount = 0-$this->amount  ;
+        
            $b = new \App\Entity\CustAcc();
            $b->customer_id = $this->customer_id;
            $b->document_id = $this->document_id;
@@ -105,19 +95,21 @@ class EQ extends Document
      
        
        }
-       if($optype==9 )  {    // на  склад
-           $entry->optype = EqEntry::OP_OUTCOME;
-           $entry->amount = 0-$eq->getBalance() ;
-           IOState::addIOState($entry->document_id, $entry->amount,IOState::TYPE_OUTEQ) ;
-            
-           $stock = \App\Entity\Stock::getStock($this->headerdata['store_id'], $this->headerdata['item_id'], 0-$entry->amount);
+       if($optype==EqEntry::OP_TOSTORE )  {    // на  склад
+            $entry->amount = 0-$this->amount ; 
+         
+         
+           $stock = \App\Entity\Stock::getStock($this->headerdata['store_id'], $this->headerdata['item_id'], 0-$this->amount);
 
            $sc = new \App\Entity\Entry($this->document_id, $stock->partion, 1);
            $sc->setStock($stock->stock_id);
  
            $sc->save();            
        }
-       
+       if($optype==EqEntry::OP_LOST )  {     
+          $entry->amount = 0-$this->amount   ;
+    
+       }   
        $entry->save();
         
        return true;
