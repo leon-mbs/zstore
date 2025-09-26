@@ -23,6 +23,8 @@ class IncomeItem extends Document
             $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true,0,$this->headerdata['storeemp']??0);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
+            $sc->tag=Entry::TAG_IN;
+         
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
 

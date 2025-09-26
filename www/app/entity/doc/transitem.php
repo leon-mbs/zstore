@@ -22,7 +22,8 @@ class TransItem extends Document
      
             $sc = new Entry($this->document_id, 0 - ($st->qty * $st->partion), 0 - $st->qty);
             $sc->setStock($st->stock_id);
-
+            $sc->tag=Entry::TAG_OUT;
+         
             $sc->save();
         }
         
@@ -32,6 +33,7 @@ class TransItem extends Document
             $stockto = Stock::getStock($this->headerdata['tostore'], $item->item_id, $item->price, "", "", true);
             $sc = new Entry($this->document_id, $item->qty * $item->price, $item->qty);
             $sc->setStock($stockto->stock_id);
+            $sc->tag=Entry::TAG_IN;
             $sc->save();
         }
   
