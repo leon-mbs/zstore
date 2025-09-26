@@ -22,7 +22,8 @@ class TransItem extends Document
      
             $sc = new Entry($this->document_id, 0 - ($st->qty * $st->partion), 0 - $st->qty);
             $sc->setStock($st->stock_id);
-
+            $sc->tag=Entry::TAG_OUT;
+         
             $sc->save();
         }
         
@@ -32,6 +33,7 @@ class TransItem extends Document
             $stockto = Stock::getStock($this->headerdata['tostore'], $item->item_id, $item->price, "", "", true);
             $sc = new Entry($this->document_id, $item->qty * $item->price, $item->qty);
             $sc->setStock($stockto->stock_id);
+            $sc->tag=Entry::TAG_IN;
             $sc->save();
         }
   
@@ -44,7 +46,8 @@ class TransItem extends Document
         if($diff > 0)  {
             \App\Entity\IOState::addIOState($this->document_id, $diff, \App\Entity\IOState::TYPE_OTHER_OUTCOME);
         }
-       
+        $this->DoAcc();  
+         
         return true;
     }
 
@@ -91,4 +94,30 @@ class TransItem extends Document
         return 'ПФ-000000';
     }
 
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+        
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+ 
+         $in=0; 
+         $out=0; 
+ 
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
+         foreach($ia as $a=>$am){
+             $out +=$am; 
+             \App\Entity\AccEntry::addEntry( null,$a, $am,$this->document_id)  ; 
+         }       
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_IN) ;
+         foreach($ia as $a=>$am){
+            $in +=$am; 
+            \App\Entity\AccEntry::addEntry(  $a,null, $am,$this->document_id)  ; 
+         }       
+         if($in > $out) {
+             \App\Entity\AccEntry::addEntry( '947',null, $in - $out,$this->document_id)  ; 
+         }
+         if($out > $in) {
+             \App\Entity\AccEntry::addEntry( null, '71', $out - $in,$this->document_id)  ; 
+         }
+    }
 }

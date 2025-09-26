@@ -29,6 +29,7 @@ class OutcomeItem extends Document
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
+                $sc->tag=Entry::TAG_OUT;
                 $sc->save();
 
            

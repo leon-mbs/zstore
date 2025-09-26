@@ -403,13 +403,11 @@ class TTN extends Document
          foreach($ia as $a=>$am){
    
              \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
-             \App\Entity\AccEntry::addEntry('79','90', $am,$this->document_id)  ; 
-         }
+        }
          
          $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL,true) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('36', '70', $am,$this->document_id)  ; 
-             \App\Entity\AccEntry::addEntry('70', '79', $am,$this->document_id)  ; 
          }        
   }
 
