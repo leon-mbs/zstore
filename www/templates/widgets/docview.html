@@ -172,7 +172,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-auto ">
+                        <div class="col-auto" v-show="docdata.paylist.length >0">
                             <h5>Оплати</h5>
                             <table class="table table-sm">
                                 <tr>
@@ -194,7 +194,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-auto ">
+                        <div class="col-auto" v-show="docdata.entrylist.length >0">
                             <h5>Проводки по складу</h5>
                             <table class="table table-sm">
                                 <tr>

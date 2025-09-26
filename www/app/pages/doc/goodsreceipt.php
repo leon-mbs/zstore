@@ -700,7 +700,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
 
 
-        $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->payamount = doubleval($this->docform->payamount->getText());
         $this->_doc->headerdata['payamount'] = $this->_doc->payamount;
 
         $this->_doc->payed = doubleval( $this->docform->payed->getText());
