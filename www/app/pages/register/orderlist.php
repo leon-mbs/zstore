@@ -185,9 +185,8 @@ class OrderList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == ($this->_doc->document_id ?? 0)) {
-            $row->setAttribute('class', 'table-success');
-        }
+        $row->setAttribute('data-did', $doc->document_id);
+     
 
         $ch = $this->checkChat($doc);
         if($ch) {
@@ -588,7 +587,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
-        $this->listpanel->doclist->Reload(false);
+       // $this->listpanel->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
@@ -707,6 +706,9 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;
         $this->onBranch($this->statuspan->moveform->brmove);
         $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);
+        
+        $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-success') ",true)  ;
+ 
     }
 
     public function editOnClick($sender) {
