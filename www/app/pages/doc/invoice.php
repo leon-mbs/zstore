@@ -630,13 +630,13 @@ class Invoice extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $price = $item->getLastPartion(0, "", false);
-        $this->editdetail->pricestock->setText(H::fa($price));
-
         $store_id = $this->docform->store->getValue();
 
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $price = $item->getPartion($store_id);
+        $this->editdetail->pricestock->setText(H::fa($price));
+
+       
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
         $price = $item->getPriceEx(array(
@@ -647,7 +647,7 @@ class Invoice extends \App\Pages\Base
 
 
         $this->editdetail->editprice->setText(H::fa($price));
-
+     
     }
 
     

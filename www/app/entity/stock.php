@@ -126,9 +126,9 @@ class Stock extends \ZCL\DB\Entity
                 $conn = \ZDB\DB::getConnect();
                 $where = "   stock_id = {$stock_id} and  document_date  <= " . $conn->DBDate($date);
                 $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
-                return $conn->GetOne($sql);
+                return \App\Helper::fqty(  $conn->GetOne($sql) );
             } else {
-                return $stock->qty;
+                return  \App\Helper::fqty($stock->qty);
             }
         }
     }
@@ -147,7 +147,7 @@ class Stock extends \ZCL\DB\Entity
         $stlist = self::find($where, ' stock_id   ');
 
 
-        $qty = $item->quantity;//необходимое  количество
+        $qty = \App\Helper::fqty($item->quantity);//необходимое  количество
         $last = null;
         foreach ($stlist as $st) {
             $last = $st;
@@ -191,6 +191,7 @@ class Stock extends \ZCL\DB\Entity
                     $last->partion = $lastpartion;
                     $last->snumber = $item->snumber;
                     $last->sdate = $item->sdate;
+                    $last->emp_id = $emp_id;
                     $last->save();
                 } else {
                     // $last->partion = $item->price;
@@ -204,3 +205,4 @@ class Stock extends \ZCL\DB\Entity
     }
 
 }
+ 

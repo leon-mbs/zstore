@@ -19,6 +19,8 @@ class Entry extends \ZCL\DB\Entity
     public const TAG_FROMPROD = -32;   //оприходование  с  производства
     public const TAG_RESERV   = -64;   //резервирование
     public const TAG_MOVE     = -128;  //перемещение
+    public const TAG_IN       = -256;  //оприходование
+    public const TAG_OUT      = -512;  //списание
 
 
 
