@@ -326,3 +326,131 @@ header("Content-Type: image/png");
 imagepng($image);
 imagedestroy($image);
 
+
+
+
+
+<?php
+
+class KohonenNetwork {
+    private int $width;
+    private int $height;
+    private int $inputDim;
+    private array $weights; // 3D массив: [x][y][dim]
+
+    public function __construct(int $width, int $height, int $inputDim) {
+        $this->width = $width;
+        $this->height = $height;
+        $this->inputDim = $inputDim;
+        $this->initializeWeights();
+    }
+
+    private function initializeWeights(): void {
+        $this->weights = [];
+        for ($x = 0; $x < $this->width; $x++) {
+            $this->weights[$x] = [];
+            for ($y = 0; $y < $this->height; $y++) {
+                $this->weights[$x][$y] = [];
+                for ($d = 0; $d < $this->inputDim; $d++) {
+                    $this->weights[$x][$y][$d] = mt_rand(0, 1000) / 1000.0; // Случайно от 0 до 1
+                }
+            }
+        }
+    }
+
+    public function train(array $data, int $epochs, float $initialLearningRate, float $initialRadius): void {
+        $numSamples = count($data);
+        for ($epoch = 0; $epoch < $epochs; $epoch++) {
+            // Уменьшаем learning rate и radius линейно
+            $learningRate = $initialLearningRate * (1 - $epoch / $epochs);
+            $radius = $initialRadius * (1 - $epoch / $epochs);
+
+            foreach ($data as $input) {
+                [$bmuX, $bmuY] = $this->findBMU($input);
+                $this->updateWeights($input, $bmuX, $bmuY, $learningRate, $radius);
+            }
+
+            echo "Epoch $epoch completed.\n"; // Для отладки
+        }
+    }
+
+    private function findBMU(array $input): array {
+        $minDist = INF;
+        $bmuX = 0;
+        $bmuY = 0;
+
+        for ($x = 0; $x < $this->width; $x++) {
+            for ($y = 0; $y < $this->height; $y++) {
+                $dist = $this->euclideanDistance($input, $this->weights[$x][$y]);
+                if ($dist < $minDist) {
+                    $minDist = $dist;
+                    $bmuX = $x;
+                    $bmuY = $y;
+                }
+            }
+        }
+
+        return [$bmuX, $bmuY];
+    }
+
+    private function updateWeights(array $input, int $bmuX, int $bmuY, float $learningRate, float $radius): void {
+        for ($x = 0; $x < $this->width; $x++) {
+            for ($y = 0; $y < $this->height; $y++) {
+                $gridDist = $this->gridDistance($bmuX, $bmuY, $x, $y);
+                if ($gridDist <= $radius) {
+                    $influence = exp(-($gridDist ** 2) / (2 * ($radius ** 2))); // Гауссова функция
+                    for ($d = 0; $d < $this->inputDim; $d++) {
+                        $this->weights[$x][$y][$d] += $learningRate * $influence * ($input[$d] - $this->weights[$x][$y][$d]);
+                    }
+                }
+            }
+        }
+    }
+
+    private function euclideanDistance(array $a, array $b): float {
+        $sum = 0.0;
+        for ($i = 0; $i < $this->inputDim; $i++) {
+            $sum += ($a[$i] - $b[$i]) ** 2;
+        }
+        return sqrt($sum);
+    }
+
+    private function gridDistance(int $x1, int $y1, int $x2, int $y2): float {
+        return sqrt(($x1 - $x2) ** 2 + ($y1 - $y2) ** 2);
+    }
+
+    public function getMap(): array {
+        return $this->weights;
+    }
+
+    public function mapInput(array $input): array {
+        return $this->findBMU($input);
+    }
+}
+
+// Пример использования
+$width = 5; // Ширина сетки
+$height = 5; // Высота сетки
+$inputDim = 3; // Размерность входных данных (например, RGB цвета)
+
+// Генерация случайных данных для обучения (100 образцов по 3 значения)
+$data = [];
+for ($i = 0; $i < 100; $i++) {
+    $data[] = [
+        mt_rand(0, 1000) / 1000.0,
+        mt_rand(0, 1000) / 1000.0,
+        mt_rand(0, 1000) / 1000.0
+    ];
+}
+
+$network = new KohonenNetwork($width, $height, $inputDim);
+$network->train($data, 100, 0.5, max($width, $height) / 2);
+
+// Тестирование: маппинг нового входа
+$testInput = [0.1, 0.2, 0.3];
+[$x, $y] = $network->mapInput($testInput);
+echo "BMU for test input: ($x, $y)\n";
+
+// Получение всей карты (весов)
+$map = $network->getMap();
+print_r($map); // Для просмотра
