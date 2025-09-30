@@ -539,6 +539,7 @@ class InvoiceCust extends \App\Pages\Base
         $this->wselitem->setVisible(true);
         $this->wselitem->Reload();
     }
+
     public function onSelectItem($item_id, $itemname, $price=null) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);

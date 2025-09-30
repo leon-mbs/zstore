@@ -219,7 +219,7 @@ class EQ extends \App\Pages\Base
        
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->amount = H::fa($this->docform->amount->getText());
+        $this->_doc->amount = H::fa($this->docform->amount->getDouble());
         
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date =   $this->docform->document_date->getDate();
