@@ -32,8 +32,10 @@ class StoreItems extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new CheckBox('fminus'));
         $this->filter->add(new CheckBox('fmin'));
+ 
+        $this->filter->add(new CheckBox('fcust'));
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
-        $this->filter->add(new TextInput('searchkey'));
+ 
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -57,16 +59,15 @@ class StoreItems extends \App\Pages\Base
     }
 
     private function generateReport() {
-
+        $common = \App\System::getOptions('common');
+   
         $fmin = $this->filter->fmin->isChecked();
         $fminus = $this->filter->fminus->isChecked();
+        $fcust = $this->filter->fcust->isChecked();
         $cat = $this->filter->searchcat->getValue();
-        $searchkey = trim($this->filter->searchkey->getText());
+
         $where = 'disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat : '') ;
-        if(strlen($searchkey)>0) {
-            $t = Item::qstr($searchkey)  ;
-            $where .= " and (itemname  like ". Item::qstr('%'.$searchkey.'%') ." or item_code=".Item::qstr($searchkey)." ) ";
-        }
+     
 
         $itemlist = Item::find($where, 'itemname asc') ;
         $storelist = Store::getList() ;
@@ -77,8 +78,17 @@ class StoreItems extends \App\Pages\Base
         }
         $siqty = array();
         $stlist = array();
+      
+        $cflist = $common['cflist']??[]   ;
+        if($fcust==false)  {
+            $cflist=[];
+        }
 
-
+        $cfnames=[];
+        foreach($cflist as $c)  {
+           $cfnames[]=$c->name; 
+        }
+        
         $conn = \ZDB\DB::getConnect();
 
 
@@ -99,10 +109,15 @@ class StoreItems extends \App\Pages\Base
             $r = array();
             $r['itemname']  =  $item->itemname;
             $r['item_code']  =  $item->item_code;
+            $r['brand']  =  $item->manufacturer;
             $r['minqty']  =  $item->minqty>0 ? H::fqty($item->minqty) : '';
 
+            
+            
+            
             $flag = true;
-            $r['stlist']  =  array() ;
+            $r['stlistcol']  =  array() ;
+           
             foreach($storelist as $store_id=>$storename) {
 
                 $qty =  $siqty[$store_id.'_'.$item->item_id] ?? 0;
@@ -131,7 +146,7 @@ class StoreItems extends \App\Pages\Base
 
 
                 }
-                $r['stlist'][]=array('qty'=>H::fqty($qty)) ;
+                $r['stlistcol'][]=array('qty'=>H::fqty($qty)) ;
 
 
             }
@@ -139,18 +154,33 @@ class StoreItems extends \App\Pages\Base
             if($flag) {
                 continue;
             } //все  нули
+            
+            
+            $r['cfcol']  =  array() ;
 
-
+            foreach($cfnames as $fn)  {
+              foreach($item->getcf() as $f)  {
+                 if($fn===$f->name)  {
+                     $r['cfcol'][]=array('val'=>$f->val) ;
+                 }
+              }
+            }
+            
+            
             $detail[] = $r;
 
         }
 
-
+        $colspan=4;
+        $colspan += count($storelist);
+        $colspan += count($cfnames);
+     
         $header = array(  
                          "date"=>H::fd(time()),
-                         "cols"=>count($storelist)+3 ,
+                         "colspan"=>$colspan ,
+                         "cfnames"=>\App\Util::tokv($cfnames) ,
                         "_detail"       => $detail,
-                        "stores"         => \App\Util::tokv($storelist)
+                        "storescol"         => \App\Util::tokv($storelist)
         );
 
         $report = new \App\Report('report/storeitems.tpl');
