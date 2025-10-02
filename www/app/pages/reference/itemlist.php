@@ -60,7 +60,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->add(new ClickLink('options'))->onClick($this, 'optionsfOnClick');
+        $this->itemtable->add(new ClickLink('options'))->onClick($this, 'optionsOnClick');
 
         $this->itemtable->add(new Form('listform'));
 
@@ -90,6 +90,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editmanufacturer'));
         $this->itemdetail->add(new TextInput('editcountry'));
         $this->itemdetail->add(new TextInput('editurl'));
+      
         $common = System::getOptions('common');
         if (strlen($common['price1']) > 0) {
             $this->itemdetail->editprice1->setVisible(true);
@@ -121,6 +122,11 @@ class ItemList extends \App\Pages\Base
         } else {
             $this->itemdetail->editprice5->setVisible(false);
         }
+        
+             
+        $this->_tvars['usecf'] = count($common['cflist']??[]) >0;
+             
+        
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editbarcode1'));
         $this->itemdetail->add(new TextInput('editbarcode2'));
@@ -242,7 +248,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
- 
+      
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         if($item->hasAction()) {
             $title="";
@@ -282,6 +288,19 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+        $row->add(new Label('cfval'))->setText("") ;
+        if($this->_tvars['usecf']) {
+           $cf="";
+           foreach($item->getcf() as $f){
+               if( strlen($f->val??'')>0){
+                    $cf=$cf. "<small style=\"display:block\">". $f->name.": ".$f->val."</small>" ; 
+               }
+           }
+           if(strlen($cf) >0) {
+               $row->cfval->setText($cf,true) ;
+           }
+        }
+         
 
     }
 
@@ -1270,7 +1289,7 @@ class ItemList extends \App\Pages\Base
         }        
     }
   
-    public function optionsfOnClick($sender) {
+    public function optionsOnClick($sender) {
         $options = System::getOptions('common');
         
         $this->optionsform->articleprefix->setText($options['articleprefix'] ?? "ID");
@@ -1335,7 +1354,7 @@ class ItemList extends \App\Pages\Base
         
         $options['cflist'] = $this->_cflist;
         System::setOptions('common', $options);        
-        
+        $this->_tvars['usecf'] = count($options['cflist']) >0;
         $this->itemtable->setVisible(true);
         $this->optionsform->setVisible(false);
         $this->Reload(false);

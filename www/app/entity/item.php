@@ -103,6 +103,7 @@ class Item extends \ZCL\DB\Entity
             $this->price3 = $this->brprice[$id]['price3'];
             $this->price4 = $this->brprice[$id]['price4'];
             $this->price5 = $this->brprice[$id]['price5'];
+            $this->cell   = $this->brprice[$id]['cell'] ?? $this->cell ;
         }
 
         $this->actionqty1 = doubleval($xml->actionqty1[0]);
@@ -135,13 +136,19 @@ class Item extends \ZCL\DB\Entity
        
         $fid = \App\System::getBranch();
         if ($fid > 0 && $branchprice==1) {
-            $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
+            $this->brprice[$fid] = array('price1' => $this->price1, 
+                                         'price2' => $this->price2,
+                                         'price3' => $this->price3, 
+                                         'price4' => $this->price4, 
+                                         'price5' => $this->price5,
+                                         'cell'   => $this->cell);
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
             $this->price1 = $prev->price1;
             $this->price2 = $prev->price2;
             $this->price3 = $prev->price3;
             $this->price4 = $prev->price4;
             $this->price5 = $prev->price5;
+            $this->cell = $prev->cell;
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
