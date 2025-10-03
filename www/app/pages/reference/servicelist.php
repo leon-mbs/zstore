@@ -166,9 +166,9 @@ class ServiceList extends \App\Pages\Base
         }
 
         $this->_service->service_name = $this->servicedetail->editservice_name->getText();
-        $this->_service->price = $this->servicedetail->editprice->getText();
+        $this->_service->price = $this->servicedetail->editprice->getDouble();
         $this->_service->category = $this->servicedetail->editcat->getText();
-        $this->_service->cost = $this->servicedetail->editcost->getText();
+        $this->_service->cost = $this->servicedetail->editcost->getDouble();
         $this->_service->hours = $this->servicedetail->edithours->getText();
         $this->_service->msr = $this->servicedetail->editmsr->getText();
         $this->_service->nds = $this->servicedetail->editnds->getText();

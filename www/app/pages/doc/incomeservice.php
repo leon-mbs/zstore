@@ -256,8 +256,8 @@ class IncomeService extends \App\Pages\Base
 
 
 
-        $service->price = $this->editdetail->editprice->getText();
-        $service->quantity = $this->editdetail->editqty->getText();
+        $service->price = $this->editdetail->editprice->getDouble();
+        $service->quantity = $this->editdetail->editqty->getDouble();
         $service->desc = $this->editdetail->editdesc->getText();
 
         if($this->_rowid == -1) {

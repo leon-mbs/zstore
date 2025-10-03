@@ -830,18 +830,18 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
 
     }
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getDouble()));
         $this->CalcPay();
 
     }
 
     public function onDelivery($sender) {
-        $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getText()));
+        $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getDouble()));
         $this->CalcPay();
 
     }
@@ -853,7 +853,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onRate($sender) {
-        $this->docform->rate->setText($this->docform->editrate->getText());
+        $this->docform->rate->setText($this->docform->editrate->getDouble());
         $this->CalcPay();
 
     }

@@ -227,8 +227,8 @@ class InvoiceCust extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
@@ -417,13 +417,13 @@ class InvoiceCust extends \App\Pages\Base
     }
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getDouble()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
 
     public function onNds($sender) {
-        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
+        $this->docform->nds->setText(H::fa($this->docform->editnds->getDouble()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }

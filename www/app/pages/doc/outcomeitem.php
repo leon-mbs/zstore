@@ -176,7 +176,7 @@ class OutcomeItem extends \App\Pages\Base
         $item = Item::load($id);
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->sum = H::fa($item->quantity * $item->getPartion());
         
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
