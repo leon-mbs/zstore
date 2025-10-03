@@ -353,9 +353,9 @@ class Order extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
 
 
         $item->disc = '';
@@ -898,18 +898,18 @@ class Order extends \App\Pages\Base
     }
 
     public function onBonus() {
-        $this->docform->bonus->setText($this->docform->editbonus->getText());
+        $this->docform->bonus->setText($this->docform->editbonus->getDouble());
         $this->calcPay();
         $this->goAnkor("tankor");
     }
     public function onPayed() {
-        $this->docform->payed->setText($this->docform->editpayed->getText());
+        $this->docform->payed->setText($this->docform->editpayed->getDouble());
      
         $this->goAnkor("tankor");
     }
 
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
+        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getDouble());
 
         $this->calcPay();
 

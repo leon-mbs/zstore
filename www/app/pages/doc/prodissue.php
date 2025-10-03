@@ -272,7 +272,7 @@ class ProdIssue extends \App\Pages\Base
         $item = Item::load($id);
 
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
         if ($item->quantity > $qstock) {

@@ -216,8 +216,8 @@ class OfficeDoc extends \App\Pages\Base
             return;
         }
         $this->_doc->packDetails('detaildata', array('data' => $data));
-        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
-        $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
+        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getDouble();
+        $this->_doc->headerdata['fine'] = $this->docform->fine->getDouble();
 
 
 

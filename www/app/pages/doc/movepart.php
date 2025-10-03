@@ -93,7 +93,7 @@ class MovePart extends \App\Pages\Base
         $this->_doc->headerdata['fromstockname'] = $this->docform->fromstock->getText();
         $this->_doc->headerdata['tostock'] = $this->docform->tostock->getkey();
         $this->_doc->headerdata['tostockname'] = $this->docform->tostock->getText();
-        $this->_doc->headerdata['qty'] = $this->docform->qty->getText();
+        $this->_doc->headerdata['qty'] = H::fa($this->docform->qty->getText());
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();

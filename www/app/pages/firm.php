@@ -41,7 +41,7 @@ class Firm extends \App\Pages\Base
         $this->firmform->add(new TextInput('tin',$firm['tin']));
         $this->firmform->add(new TextInput('phone',$firm['phone']));
         $this->firmform->add(new TextInput('address',$firm['address']));
-        $this->firmform->add(new TextInput('city',$firm['address']));
+        $this->firmform->add(new TextInput('city',$firm['city']));
         $this->firmform->add(new TextInput('vdoc',$firm['vdoc']));
       
         $this->firmform->add(new TextInput('sign',$firm['sign']));

@@ -54,12 +54,7 @@
               <div class="col-12 col-md-4 col-xl-3 "   >
                       
                                                                         
-                            <div class="form-group row">
-                                 <label class="col-3 col-form-label" for="inn">IПН </label>
-                              <div class="col-6">
-                                 <input class="form-control" type="text" zippy="inn">
-                              </div>
-                            </div>
+                           
                            
                             <div class="form-group row">
                                 <label class="col-3 col-form-label" for="tin">ЄДРПОУ </label>
@@ -67,7 +62,14 @@
                                  <input class="form-control" type="text" zippy="tin">
                               </div>
                             </div>
-                           
+                            <div class="form-group row">
+                                 <label class="col-3 col-form-label" for="inn">IПН </label>
+                              <div class="col-6">
+                                 <input class="form-control" type="text" zippy="inn">
+                                  <small>Якщо платник ПДВ</small>
+                              </div>
+                               
+                            </div> 
                             <div class="form-group row">
                                 <label class="col-3 col-form-label" for="koatuu">КОАТУУ</label>
                                <div class="col-6">
@@ -92,13 +94,14 @@
                                    <input class="form-control " zippy="kved">
                                 </div>
                             </div>
+                            {{#hideblock}}
                             <div class="form-group row">
                                 <label class="col-3 col-form-label" for="gni">Код ДПІ</label>
                                <div class="col-6">
                                  <input class="form-control " type="number" zippy="gni">
                                </div>
                             </div>
-                          
+                              {{/hideblock}}
 
                         </div>   
                           

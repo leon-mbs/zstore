@@ -206,8 +206,8 @@ class IncomeItem extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
@@ -253,7 +253,7 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
-     $this->editsnitem->setVisible(false);
+        $this->editsnitem->setVisible(false);
     
         $this->editdetail->editquantity->setText("1");
     }

@@ -180,7 +180,7 @@ class Inventory extends \App\Pages\Base
 
 
         $item->quantity = $item->getQuantity($store, $sn, $this->docform->document_date->getDate(0));
-        $item->qfact = $this->editdetail->editquantity->getText();
+        $item->qfact = $this->editdetail->editquantity->getDouble();
         $item->snumber = $sn;
 
         foreach($this->_itemlist as $i=> $it) {

@@ -121,6 +121,9 @@
                             <th>Артикул</th>
                             <th>Категорія</th>
                             <th>Бренд</th>
+                            {{#usecf}}
+                            <th>Каст. поля</th>
+                             {{/usecf}}
                             <th>Од.</th>
                               <th> </th>
                             {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
@@ -159,6 +162,9 @@
                             <td class="text-nowrap"  zippy="code"></td>
                             <td zippy="cat_name"></td>
                             <td zippy="manufacturer"></td>
+                                 {{#usecf}}
+                            <td zippy="cfval"> </td>
+                             {{/usecf}}  
                             <td zippy="msr"></td>
                             <td   ><i    zippy="hasaction" class="fa fa-gift"></i></td>
 
@@ -689,7 +695,7 @@
                                 <input zippy="usecattree" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="usecattree">Ієрархiя категорiй ТМЦ </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Можливість вибудовувати деревоподібну ієрархію категорій. Має сенс, якщо передбачається використання в онлайн каталозі "></i>
+                                   title=" Можливість вибудовувати  ієрархію категорій. Має сенс, якщо передбачається використання в онлайн каталозі "></i>
                             </div>                                                       
                              <div class="form-check">
                                 <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
@@ -713,7 +719,7 @@
                             {{#usebranch}}
                              <div class="form-check ">
                                 <input zippy="branchprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="branchprice"> Прив'язувати ціни до філій
+                                <label class="form-check-label" for="branchprice"> Прив'язувати ціни   до філій
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="При збереженні  ТМЦ відпускні  ціни будуть збережені окреемо для вибраної (вверху) філії"></i>
                             </div> 

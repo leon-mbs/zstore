@@ -227,9 +227,9 @@ class RetCustIssue extends \App\Pages\Base
         $item = Item::load($id);
 
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->pricends= $item->price + $item->price * $item->nds();
   
         if($this->_rowid == -1) {

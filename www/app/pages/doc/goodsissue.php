@@ -580,12 +580,12 @@ class GoodsIssue extends \App\Pages\Base
         $item = Item::load($id);
         $store_id = $this->docform->store->getValue();
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = trim($this->editdetail->editserial->getText());
         $qstock = $this->editdetail->qtystock->getText();
 
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $item->price) {
@@ -808,13 +808,13 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
+        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getDouble());
         $this->calcPay() ;
         $this->goAnkor("tankor");
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
         $payed = $this->docform->payed->getText();
         $payamount = $this->docform->payamount->getText();
         if ($payed > $payamount) {
@@ -861,9 +861,9 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $total = $this->docform->total->getText();
-        $totaldisc = $this->docform->totaldisc->getText();
-        $totalnds = $this->docform->totalnds->getText();
+        $total = doubleval($this->docform->total->getText());
+        $totaldisc = doubleval($this->docform->totaldisc->getText());
+        $totalnds = doubleval($this->docform->totalnds->getText());
 
         if($totaldisc > 0) {
             $total = $total - $totaldisc;

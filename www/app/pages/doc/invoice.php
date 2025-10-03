@@ -179,11 +179,12 @@ class Invoice extends \App\Pages\Base
                         
                         $this->docform->total->setText($basedoc->amount);
 
-                        $this->calcPay();
+               
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                     */
+                   
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -197,19 +198,12 @@ class Invoice extends \App\Pages\Base
 
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                       
-
-                        $this->docform->total->setText($basedoc->amount);
-
-                        $this->calcTotal();
-                        $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->_itemlist = array_merge($this->_itemlist, $basedoc->unpackDetails('detail2data'));
 
-
-                    }
-                    if ($basedoc->meta_name == 'GoodsIssue') {
+                      }
+                      if ($basedoc->meta_name == 'GoodsIssue') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
@@ -221,12 +215,10 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $this->docform->fop->setValue($basedoc->headerdata['fop']);
-                     
-                        $this->docform->total->setText($basedoc->amount);
-
-                        $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+   
+                                        
                     }  
                     if ($basedoc->meta_name == 'Order') {
 
@@ -239,13 +231,13 @@ class Invoice extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                     
-                        $this->docform->total->setText($basedoc->amount);
-
-                        $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                                        
                     }  
+                  
+                    $this->calcTotal();
+                    $this->calcPay();                    
                 }
             }
         }
@@ -344,9 +336,9 @@ class Invoice extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
     
         $item->pricenonds= $item->price - $item->price * $item->nds(true);
  
@@ -544,7 +536,7 @@ class Invoice extends \App\Pages\Base
     }
  
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
+        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getDouble()));
         $this->calcPay() ;
     }
   

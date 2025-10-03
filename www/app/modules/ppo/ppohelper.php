@@ -115,18 +115,20 @@ class PPOHelper
      * @param mixed $open true- открыть,  false - закрыть
      */
     public static function shift($posid, $open) {
-
+        
         $pos = \App\Entity\Pos::load($posid);
 
         $firm = \App\Helper::getFirmData( );
-
-        if(strlen($pos->firmname ??'')=='') {
+        if($firm== null){
+            return array('success' => false, 'data' => 'Не вказанi данi компанiї');
+        }
+        if( ($pos->firmname ??"")=="") {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??"")=="") {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??"")=="") {
             $pos->tin = $firm['tin']  ;
         } 
 
@@ -150,12 +152,10 @@ class PPOHelper
         $report = new \App\Report('shift.xml');
 
         $xml = $report->generate($header);
-
+     
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
           
-        if($firm== null){
-            return array('success' => false, 'data' => 'Не вказана  компанiя в POS термiналi');
-        }
+       
         
         
         return self::send($xml, 'doc', $pos);

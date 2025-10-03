@@ -119,7 +119,7 @@ class ServiceAct extends Document
         }
         
         if ($state == self::STATE_FINISHED) {
-
+            $this->DoBalans() ; 
           //  $this->DoStore() ;
 
             $dd =      doubleval($this->headerdata['totaldisc'])   ;

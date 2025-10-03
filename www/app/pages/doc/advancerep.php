@@ -206,8 +206,8 @@ class AdvanceRep extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
@@ -280,8 +280,8 @@ class AdvanceRep extends \App\Pages\Base
         $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
         $this->_doc->headerdata['spenttype'] = $this->docform->spenttype->getValue();
         $this->_doc->headerdata['spenttypename'] = $this->docform->spenttype->getValueName();
-        $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
-        $this->_doc->headerdata['spentamount'] = $this->docform->spentamount->getText();
+        $this->_doc->headerdata['examount'] = $this->docform->examount->getDouble();
+        $this->_doc->headerdata['spentamount'] = $this->docform->spentamount->getDouble();
         $this->_doc->headerdata['total'] = $this->docform->total->getText();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);

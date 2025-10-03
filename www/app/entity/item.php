@@ -97,12 +97,17 @@ class Item extends \ZCL\DB\Entity
         }
 
         $id = \App\System::getBranch();
-        if ($id > 0 && is_array($this->brprice[$id]??null)) {
-            $this->price1 = $this->brprice[$id]['price1'];
-            $this->price2 = $this->brprice[$id]['price2'];
-            $this->price3 = $this->brprice[$id]['price3'];
-            $this->price4 = $this->brprice[$id]['price4'];
-            $this->price5 = $this->brprice[$id]['price5'];
+        if ($id > 0 && is_array($this->brprice[$id]??null)) {  
+            $branchprice = \App\System::getOption('common','branchprice');
+            if($branchprice==1) { 
+                $this->price1 = $this->brprice[$id]['price1'];
+                $this->price2 = $this->brprice[$id]['price2'];
+                $this->price3 = $this->brprice[$id]['price3'];
+                $this->price4 = $this->brprice[$id]['price4'];
+                $this->price5 = $this->brprice[$id]['price5'];   
+            }
+    
+            $this->cell   = $this->brprice[$id]['cell'] ?? $this->cell ;
         }
 
         $this->actionqty1 = doubleval($xml->actionqty1[0]);
@@ -134,14 +139,29 @@ class Item extends \ZCL\DB\Entity
         $branchprice = \App\System::getOption('common','branchprice');
        
         $fid = \App\System::getBranch();
-        if ($fid > 0 && $branchprice==1) {
-            $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
+        if ($fid > 0 ) {
+           $a=[];
+           $a['cell'] = $this->cell;
+           if ( $branchprice==1) {
+              $a['price1'] = $this->price1;
+              $a['price2'] = $this->price2;
+              $a['price3'] = $this->price3;
+              $a['price4'] = $this->price4;
+              $a['price5'] = $this->price5;
+           
+              
+           }
+            $this->brprice[$fid] =$a;   
+                                                     
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
             $this->price1 = $prev->price1;
             $this->price2 = $prev->price2;
             $this->price3 = $prev->price3;
             $this->price4 = $prev->price4;
             $this->price5 = $prev->price5;
+            $this->cell = $prev->cell;
+        
+            
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
@@ -1018,9 +1038,9 @@ class Item extends \ZCL\DB\Entity
      }
      /**
      * вернуть  значения кастомных  полей
-     * 
+     *  $onlyval  только  созначениями
      */
-     public function getcf(){
+     public function getcf($onlyval=false){
         $cfv = []  ;
         if(strlen($this->cflist)>0) {
           $cfv=unserialize($this->cflist)   ;   
@@ -1035,7 +1055,7 @@ class Item extends \ZCL\DB\Entity
                 $ls->code = $k;
                 $ls->name = $v;
                
-              $cflist[$i++] = $ls;          
+                $cflist[$i++] = $ls;          
                     
             }
         }
@@ -1053,8 +1073,11 @@ class Item extends \ZCL\DB\Entity
                        $it->val= $v;
                     }
                   }
-                  $ret[$it->code]=$it;
-             
+              
+                  if($onlyval==false || strlen($it->val)>0) {
+                      $ret[$it->code] = $it;
+                  }
+                 
          
         }  
        

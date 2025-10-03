@@ -7,12 +7,18 @@
         <div class="row">
             <div class="col-12   ">
                 <h3>Стан складiв</h3>
-                <small>Кiлькiсть по складам</small>
+                <small>Кiлькiсть ТМЦ на складах</small>
                 <div class="card">
                     <form zippy="filter" class="form-inline">
-                         <input autocomplete="off" placeholder="Iм'я або код..." class="form-control mr-sm-2" type="text"
-                               onkeydown="onSearch()" zippy="searchkey">
+                        
                        <div class="form-check   mr-2">
+                            <input class="form-check-input" type="checkbox" zippy="fcust">
+                            <label class="form-check-label" for="fcust">
+                               Кастомнi поля
+                            </label>
+                        </div>
+                    
+                         <div class="form-check   mr-2">
                             <input class="form-check-input" type="checkbox" zippy="fminus">
                             <label class="form-check-label" for="fminus">
                                В мiнусi
@@ -21,7 +27,7 @@
                        <div class="form-check   mr-2">
                             <input class="form-check-input" type="checkbox" zippy="fmin">
                             <label class="form-check-label" for="fmin">
-                                Менше мiнiмального
+                                Менше мiн.
                             </label>
                         </div>
                         <label for="searchcat">категорiя</label>

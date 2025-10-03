@@ -210,7 +210,7 @@ class ProdMove extends \App\Pages\Base
         $item = Item::load($id);
 
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = $this->editdetail->editserial->getText();
 
 

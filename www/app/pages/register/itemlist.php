@@ -35,7 +35,8 @@ class ItemList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('ItemList')) {
             \App\Application::RedirectHome() ;
         }
-
+        $common = System::getOptions('common');
+    
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
 
@@ -130,7 +131,8 @@ class ItemList extends \App\Pages\Base
         }    
          
         $this->OnFilter(null);
-          
+        $this->_tvars['usecf'] = count($common['cflist']??[]) >0;
+               
 
     }
 
@@ -192,8 +194,20 @@ class ItemList extends \App\Pages\Base
             $row->imagelistitem->setVisible(false);
         }
         
-        $store = $this->filter->searchstore->getValue();
-           
+      //  $store = $this->filter->searchstore->getValue();
+        
+        $row->add(new Label('cfval'))->setText("") ;
+        if($this->_tvars['usecf']) {
+           $cf="";
+           foreach($item->getcf() as $f){
+               if( strlen($f->val??'')>0){
+                  $cf=$cf. "<small style=\"display:block\">". $f->name.": ".$f->val."</small>" ; 
+               }
+           }
+           if(strlen($cf) >0) {
+               $row->cfval->setText($cf,true) ;
+           }
+        }          
 
     }
 
