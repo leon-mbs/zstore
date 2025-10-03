@@ -86,28 +86,27 @@ class items extends JsonRPC
                 'cat_id'       => $item->cat_id
             );
 
-           // $it = array_merge($it, $item->getData());
-
-           // unset($it['detail']);
-           // unset($it['disabled']);
+          
 
 
-            if (strlen($item->price1) > 0) {
+            if ( ($item->price1 ?? 0) > 0) {
                 $it['price1'] = $item->price1;
             }
-            if (strlen($item->price2) > 0) {
+            if ( ($item->price2 ?? 0) > 0) {
                 $it['price2'] = $item->price2;
             }
-            if (strlen($item->price3) > 0) {
+            if ( ($item->price3 ?? 0) > 0) {
                 $it['price3'] = $item->price3;
             }
-            if (strlen($item->price4) > 0) {
+            if ( ($item->price4 ?? 0) > 0) {
                 $it['price4'] = $item->price4;
             }
-            if (strlen($item->price5) > 0) {
+            if ( ($item->price5 ?? 0) > 0) {
                 $it['price5'] = $item->price5;
             }
-         
+            foreach($item->getcf(true) as $cf)  {
+                $it[''.$cf->code] = $item->val;
+            }
             $list[] = $it;
         }
 
