@@ -34,7 +34,8 @@ if ($size > 0) {
     header('Pragma: public');
     header('Content-Length: ' . $size);
 
-    flush();
+    
     echo $file['filedata'];
+    flush();
 }
 die;

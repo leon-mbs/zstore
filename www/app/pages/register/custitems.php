@@ -560,27 +560,39 @@ class CustItems extends \App\Pages\Base
     
     
     public function oncsv($sender) {
-        $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
-        $header = array();
-        $data = array();
+ 
+        $tempDir = sys_get_temp_dir(); // Get the system's temporary directory
+        $prefix = 'zstore_tmp_';
+        $tempFilePath = tempnam($tempDir, $prefix);
 
-        $i = 0;
-        foreach ($list as $item) {
-            $i++;
-
-            $data['A' . $i] = $item->customer_name;
-            $data['B' . $i] = $item->custname;
-            $data['C' . $i] = $item->cust_code;
-            $data['D' . $i] = $item->bar_code;
-            $data['E' . $i] = $item->brand;
-            $data['F' . $i] = $item->store;
-            $data['G' . $i] = $item->quantity;
-            $data['H' . $i] = $item->price;
-            $data['I' . $i] = $item->comment;
+       $fh = fopen($tempFilePath, 'w');
+      
+      
+       $line ="Постачальник;Найменування;Код;Штрих-клд;Бренд;Склад;Кiл.;Цiна;Примiтка;";
+       $line = mb_convert_encoding($line, "windows-1251", "utf-8");
+       fwrite($fh, $line . PHP_EOL);      
        
-        }
+       $ds = new CustItemDataSource($this);
+      
+       foreach(CustItem::findYield($ds->getWhere(), "cust_name asc", -1, -1) as $item){
+            $line ="";
+            $line .= $item->customer_name.';';
+            $line .= $item->custname.';';
+            $line .= $item->cust_code.';';
+            $line .= $item->bar_code.';';
+            $line .= $item->brand.';';
+            $line .= $item->store.';';
+            $line .= $item->quantity.';';
+            $line .= $item->price.';';
+            $line .= str_replace(';','.', $item->comment) .';';
+            $line = mb_convert_encoding($line, "windows-1251", "utf-8");
+     
+            fwrite($fh, $line . PHP_EOL);                
+       }
+    
 
-        H::exportExcel($data, $header, 'custitems.xlsx');
+        H::exportCSV($tempFilePath, 'custitems.csv');
+ 
     }
 
    
@@ -793,7 +805,7 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $this->page = $page;
     }
 
-    private function getWhere( ) {
+    public function getWhere( ) {
 
         $form = $this->page->filter;
         $where = "1=1 ";

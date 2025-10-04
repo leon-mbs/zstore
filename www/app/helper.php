@@ -960,7 +960,20 @@ class Helper
 
     }
 
+    public static function exportCSV($csvfile,$filename) {
 
+        $size = filesize($csvfile);
+      
+        header('Content-Type: text/csv');
+        header('Content-Length: '.$size);
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        readfile($csvfile);
+        flush() ;
+        unlink($csvfile);
+        die;
+
+
+    }
     /**
      * Получение  данных с  таблицы ключ-значение
      *
