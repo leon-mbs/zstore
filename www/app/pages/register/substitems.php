@@ -299,6 +299,18 @@ class SubstItems extends \App\Pages\Base
            
          
             $item->save();
+            $item = new SubstItem();
+            
+            $item->itemname = $name;
+            $item->origcode = $substcode;
+            $item->origbrand = $substbrand;
+            $item->substcode = $origcode;
+            $item->substbrand = $origbrand;
+           
+         
+            $item->save();
+            
+            
             $cnt++;
 
         }
