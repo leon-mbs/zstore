@@ -211,6 +211,90 @@
                 }
                 </td>
              </tr>
+             
+             
+      <tr>
+                <td><b>substitemlist</b></td>
+                <td>перелік  замін і аналогів ТМЦ   <br>
+               
+                <br>
+                <span>Параметри:</span><br>
+                  searchkey -  стока  пошуку (необов`язково)<br>
+                </td>
+                <td>
+                "params": { }
+                </td>
+             </tr>
+             
+       <tr>
+                <td><b>custitemadd</b></td>
+                <td>додати замiну <br>
+                 <br>
+                <span>Параметри:</span><br>
+                <br>itemname - назва (обов'язкове поле)
+                <br>origcode - артикул-оригiнал (обов'язкове поле)
+                <br>origbrand - бренд-оригiнал
+                <br>substcode - артикул-замiна   (обов'язкове поле)
+                <br>substbrand - бренд -замiна
+          
+                </td>
+                <td>
+                 "params":   {
+                "itemname":"Деталь",
+                "origcode":"К001",
+                "origbrand":"OOO",
+                "substcode":"Е234",
+                "substbrand":"" 
+                
+                }
+                </td>
+             </tr>
+               
+             
+  <tr>
+                <td><b>custitemlist</b></td>
+                <td>перелік   ТМЦ у постачальникiв <br>
+               
+                <br>
+                <span>Параметри:</span><br>
+                customer_id - id постачальника (необов`язково)<br>
+                searchkey -  стока  пошуку (необов`язково)<br>
+                </td>
+                <td>
+                "params": { }
+                </td>
+             </tr>             
+             
+         <tr>             
+        <tr>
+                <td><b>custitemadd</b></td>
+                <td>додати ТМЦ у постачальника <br>
+                 <br>
+                <span>Параметри:</span><br>
+                <br>customer_id - id постачальника (обов'язкове поле)
+                <br>cust_name - назва у постачальника (обов'язкове поле)
+                <br>cust_code - артикул у постачальника (обов'язкове поле)
+                <br>brand - бренд 
+                <br>bar_code - штрих-код 
+                <br>store - склад у постачальника
+                <br>quantity - кiлькiсть
+                <br>price - цiна
+          
+                </td>
+                <td>
+                 "params":   {
+                "customer_id":1,
+                "cust_name":"Запчасть",
+                "brand":"OOO",
+                "cust_code":"Е234",
+                "store":"Одеса" ,
+                "quantity":45 ,
+                "price":200.00 
+                
+                }
+                </td>
+             </tr>
+          
              <tr>
                 <td><b>service</b></td>
                 <td>Роботи, послуги</td>
