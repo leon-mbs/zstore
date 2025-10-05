@@ -6,7 +6,6 @@ namespace App\Entity;
  * Класс-сущность замена товара
  *
  * @table=substitems
- * @view=substitems_view
  * @keyfield=id
  */
 class SubstItem extends \ZCL\DB\Entity

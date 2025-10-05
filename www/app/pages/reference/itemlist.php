@@ -289,7 +289,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
         $row->add(new Label('cfval'))->setText("") ;
-        if($this->_tvars['usecf']) {
+        if($this->_tvars['usecf'] ?? false) {
            $cf="";
            foreach($item->getcf() as $f){
                if( strlen($f->val??'')>0){

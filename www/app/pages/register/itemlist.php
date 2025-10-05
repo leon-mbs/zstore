@@ -197,7 +197,7 @@ class ItemList extends \App\Pages\Base
       //  $store = $this->filter->searchstore->getValue();
         
         $row->add(new Label('cfval'))->setText("") ;
-        if($this->_tvars['usecf']) {
+        if($this->_tvars['usecf'] ?? false) {
            $cf="";
            foreach($item->getcf() as $f){
                if( strlen($f->val??'')>0){

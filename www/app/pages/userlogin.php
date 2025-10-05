@@ -98,7 +98,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 
                 $modules = \App\System::getOptions("modules");
 
-                if ($modules['shop'] == 1) {
+                if (($modules['shop'] ?? 0)== 1) {
                     App::Redirect('\App\Pages\Main');
                 } else {
                     App::RedirectHome();

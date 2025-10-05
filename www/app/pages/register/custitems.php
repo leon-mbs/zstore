@@ -313,7 +313,7 @@ class CustItems extends \App\Pages\Base
         $text = trim($sender->getText());
         $stext = Customer::qstr('%' . $text . '%');
 
-        return Customer::findArray("customer_name", " status=0 and customer_name like {$stext}   ");
+        return Customer::findArray("customer_name", " status=0 and detail not like '%<type>1</type>%' and  customer_name like {$stext}   ");
     }
 
     public function onImport($sender) {

@@ -4,6 +4,8 @@ namespace App\Pages\Register;
 
  
 use App\Entity\SubstItem ;
+use App\Entity\Item ;
+use App\Entity\CustItem ;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -81,7 +83,7 @@ class SubstItems extends \App\Pages\Base
         $this->importform->add(new CheckBox("passfirst"));
         $this->importform->add(new CheckBox("preview"));
                                             
-        $this->itemtable->listform->itemlist->Reload();
+     //   $this->itemtable->listform->itemlist->Reload();
 
     }
 
@@ -96,24 +98,37 @@ class SubstItems extends \App\Pages\Base
         $row->add(new Label('substbrand', $item->substbrand));
         $row->add(new Label('initems', ''));
         $row->add(new Label('incust', ''));
-        if($item->item_id >0) {
-            $it = \App\Entity\Item::load($item->item_id);
+       
+        $it =  Item::getFirst("  item_code= ".Item::qstr($item->substcode) ."  and  coalesce(manufacturer,'') = coalesce( ".Item::qstr($item->substbrand) .",'') ");
+          
+        if($it != null) {
             $qty = $it->getQuantity() ;
-            
-            $t=$it->itemname.". Кiл. ".H::fqty($qty);
+            $t="<small>";
+            $t = $t . $it->itemname.". Кiл. ".H::fqty($qty);
             if($qty>0) {
                $price = $it->getPrice() ;
                $t .= ". Цiна. ".H::fa($price)  ;
             }
-            $row->initems->setText($t);
+            $t.="</small>";
+            $row->initems->setText($t,true);
         }  
-        if($item->custitem_id >0) {
-            $it = \App\Entity\CustItem::load($item->custitem_id);
-            $t=$it->cust_name.". Кiл. ".H::fqty($it->quantity);
-            if($it->quantity <0) {
-               $t .= ". Цiна. ".H::fa($it->price)  ;  
+        
+        $ci =  CustItem::find("  cust_code= ".Item::qstr($item->substcode) ."  and  coalesce(brand,'') = coalesce( ".Item::qstr($item->substbrand) .",'') ");
+      
+      
+        if(count($ci) >0) {
+            $t="";
+            foreach($ci as $c) {
+                $t.="<small style=\"display:block\">";  
+                $t=$t . $c->cust_name.". Кiл. ".H::fqty($c->quantity);
+                if($c->quantity <0) {
+                   $t .= ". Цiна. ".H::fa($c->price)  ;  
+                }  
+                $t.="</small>";
             }
-            $row->incust->setText($t);
+           
+           
+            $row->incust->setText($t,true);
         }
     }
 

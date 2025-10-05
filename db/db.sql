@@ -34,7 +34,9 @@ CREATE TABLE custitems (
   details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
   PRIMARY KEY (custitem_id),
+  KEY customer_id (customer_id),
   KEY item_id (item_id)
+ 
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE customers (
@@ -1448,7 +1450,19 @@ CREATE TABLE shop_articles (
   isactive tinyint NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;   
-  
+
+CREATE TABLE  substitems (
+  id bigint NOT NULL AUTO_INCREMENT,
+  itemname varchar(255) NOT NULL ,
+  origcode varchar(255) NOT NULL ,
+  origbrand varchar(255) DEFAULT NULL ,
+  substcode varchar(255) NOT NULL ,
+  substbrand varchar(255) DEFAULT NULL ,
+  customer_id int DEFAULT NULL,
+   
+  KEY (origcode) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;    
   
   
 INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', 'admin', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
@@ -1569,7 +1583,7 @@ INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(8,
 
 
 INSERT INTO options (optname, optvalue) VALUES('api', 'YTozOntzOjM6ImV4cCI7czowOiIiO3M6Mzoia2V5IjtzOjQ6InRlc3QiO3M6NToiYXR5cGUiO3M6MToiMSI7fQ==');
-INSERT INTO options (optname, optvalue) VALUES('common', 'YTo0Mjp7czo5OiJxdHlkaWdpdHMiO3M6MToiMCI7czo4OiJhbWRpZ2l0cyI7czoxOiIwIjtzOjEwOiJkYXRlZm9ybWF0IjtzOjU6ImQubS5ZIjtzOjExOiJwYXJ0aW9udHlwZSI7czoxOiIxIjtzOjY6InBob25lbCI7czoyOiIxMCI7czo2OiJwcmljZTEiO3M6MTg6ItCg0L7Qt9C00YDRltCx0L3QsCI7czo2OiJwcmljZTIiO3M6MTI6ItCe0L/RgtC+0LLQsCI7czo2OiJwcmljZTMiO3M6MDoiIjtzOjY6InByaWNlNCI7czowOiIiO3M6NjoicHJpY2U1IjtzOjA6IiI7czo4OiJkZWZwcmljZSI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MDoiIjtzOjg6InRzX2JyZWFrIjtzOjI6IjYwIjtzOjg6InRzX3N0YXJ0IjtzOjU6IjA5OjAwIjtzOjY6InRzX2VuZCI7czo1OiIxODowMCI7czoxMToiY2hlY2tzbG9nYW4iO3M6MDoiIjtzOjExOiJhdXRvYXJ0aWNsZSI7aToxO3M6MTA6InVzZXNudW1iZXIiO3M6MToiMCI7czoxMDoidXNlc2Nhbm5lciI7aTowO3M6MTY6InVzZW1vYmlsZXNjYW5uZXIiO2k6MDtzOjk6InVzZWltYWdlcyI7aTowO3M6MTQ6InByaW50b3V0cXJjb2RlIjtpOjA7czoxNDoibm9jaGVja2FydGljbGUiO2k6MDtzOjE1OiJzaG93YWN0aXZldXNlcnMiO2k6MDtzOjg6InNob3djaGF0IjtpOjA7czoxMDoidXNlY2F0dHJlZSI7aTowO3M6OToidXNlYnJhbmNoIjtpOjA7czoxMDoibm9hbGxvd2ZpeiI7aTowO3M6MTA6ImFsbG93bWludXMiO2k6MDtzOjY6InVzZXZhbCI7aTowO3M6NjoiY2FwY2hhIjtpOjA7czo5OiJudW1iZXJ0dG4iO2k6MDtzOjk6InBheXR5cGVpbiI7czoxOiIwIjtzOjEwOiJwYXl0eXBlb3V0IjtzOjE6IjAiO3M6MTI6ImFsbG93bWludXNtZiI7aTowO3M6NzoiY2FzaGllciI7czowOiIiO3M6MTA6ImFjdHVhbGRhdGUiO2k6MTcwNDA2MDAwMDtzOjE0OiJzcHJlYWRkZWxpdmVyeSI7aTowO3M6MTE6ImJheWRlbGl2ZXJ5IjtpOjA7czo4OiJub3VwZGF0ZSI7aTowO3M6NzoiY2hlY2tpcCI7aTowO3M6NjoiaXBsaXN0IjtzOjA6IiI7fQ==');
+INSERT INTO options (optname, optvalue) VALUES('common', 'YTo0Mzp7czo5OiJxdHlkaWdpdHMiO3M6MToiMCI7czo4OiJhbWRpZ2l0cyI7czoxOiIwIjtzOjEwOiJkYXRlZm9ybWF0IjtzOjU6ImQubS5ZIjtzOjExOiJwYXJ0aW9udHlwZSI7czoxOiIxIjtzOjY6InBob25lbCI7czoyOiIxMCI7czo2OiJwcmljZTEiO3M6MTg6ItCg0L7Qt9C00YDRltCx0L3QsCI7czo2OiJwcmljZTIiO3M6MTI6ItCe0L/RgtC+0LLQsCI7czo2OiJwcmljZTMiO3M6MDoiIjtzOjY6InByaWNlNCI7czowOiIiO3M6NjoicHJpY2U1IjtzOjA6IiI7czo4OiJkZWZwcmljZSI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MDoiIjtzOjg6InRzX2JyZWFrIjtzOjI6IjYwIjtzOjg6InRzX3N0YXJ0IjtzOjU6IjA5OjAwIjtzOjY6InRzX2VuZCI7czo1OiIxODowMCI7czoxMToiY2hlY2tzbG9nYW4iO3M6MDoiIjtzOjExOiJhdXRvYXJ0aWNsZSI7aToxO3M6MTA6InVzZXNudW1iZXIiO3M6MToiMCI7czoxMDoidXNlc2Nhbm5lciI7aTowO3M6MTY6InVzZW1vYmlsZXNjYW5uZXIiO2k6MDtzOjk6InVzZWltYWdlcyI7aTowO3M6MTQ6InByaW50b3V0cXJjb2RlIjtpOjA7czoxNDoibm9jaGVja2FydGljbGUiO2k6MDtzOjE1OiJzaG93YWN0aXZldXNlcnMiO2k6MDtzOjg6InNob3djaGF0IjtpOjA7czoxMDoidXNlY2F0dHJlZSI7aTowO3M6OToidXNlYnJhbmNoIjtpOjA7czoxMDoibm9hbGxvd2ZpeiI7aTowO3M6MTA6ImFsbG93bWludXMiO2k6MDtzOjY6InVzZXZhbCI7aTowO3M6NjoiY2FwY2hhIjtpOjA7czo5OiJudW1iZXJ0dG4iO2k6MDtzOjk6InBheXR5cGVpbiI7czoxOiIwIjtzOjEwOiJwYXl0eXBlb3V0IjtzOjE6IjAiO3M6MTI6ImFsbG93bWludXNtZiI7aTowO3M6NzoiY2FzaGllciI7czowOiIiO3M6MTA6ImFjdHVhbGRhdGUiO2k6MTcwNDA2MDAwMDtzOjE0OiJzcHJlYWRkZWxpdmVyeSI7aTowO3M6MTE6ImJheWRlbGl2ZXJ5IjtpOjA7czo4OiJub3VwZGF0ZSI7aTowO3M6NzoiY2hlY2tpcCI7aTowO3M6NjoiaXBsaXN0IjtzOjA6IiI7czo4OiJzdG9yZWVtcCI7aTowO30=');
 INSERT INTO options (optname, optvalue) VALUES('discount', 'YToxODp7czo4OiJmaXJzdGJheSI7czoyOiIxMSI7czo2OiJib251czEiO3M6MzoiMS4xIjtzOjY6ImxldmVsMiI7czowOiIiO3M6NjoiYm9udXMyIjtzOjM6IjEuNCI7czo2OiJzdW1tYTEiO3M6MzoiMTAwIjtzOjY6InN1bW1hMiI7czo0OiIxMDAwIjtzOjY6ImJvbnVzMyI7czoxOiIzIjtzOjY6InN1bW1hMyI7czo0OiIzMDAwIjtzOjY6ImJvbnVzNCI7czoxOiI0IjtzOjY6InN1bW1hNCI7czo0OiI0MDAwIjtzOjU6ImRpc2MxIjtzOjE6IjEiO3M6MTA6ImRpc2NzdW1tYTEiO3M6MToiMCI7czo1OiJkaXNjMiI7czoxOiIzIjtzOjEwOiJkaXNjc3VtbWEyIjtzOjE6IjAiO3M6NToiZGlzYzMiO3M6MToiNyI7czoxMDoiZGlzY3N1bW1hMyI7czoxOiIwIjtzOjU6ImRpc2M0IjtzOjA6IiI7czoxMDoiZGlzY3N1bW1hNCI7czowOiIiO30=');
 INSERT INTO options (optname, optvalue) VALUES('food', 'YToxNTp7czo4OiJ3b3JrdHlwZSI7czoxOiIyIjtzOjk6InByaWNldHlwZSI7czo2OiJwcmljZTEiO3M6ODoiZGVsaXZlcnkiO2k6MTtzOjY6InRhYmxlcyI7aToxO3M6NDoicGFjayI7aToxO3M6NDoibWVudSI7aToxO3M6NDoibmFtZSI7czo2OiJkZGRkZGQiO3M6NToicGhvbmUiO3M6ODoiNTU1NTU1NTUiO3M6NjoidGltZXBuIjtzOjI6IjExIjtzOjY6InRpbWVzYSI7czowOiIiO3M6NjoidGltZXN1IjtzOjA6IiI7czoxMjoiZm9vZGJhc2VtZW51IjtzOjE6IjAiO3M6MTY6ImZvb2RiYXNlbWVudW5hbWUiO3M6MDoiIjtzOjk6ImZvb2RtZW51MiI7czoxOiIwIjtzOjEyOiJmb29kbWVudW5hbWUiO3M6MDoiIjt9');
 INSERT INTO options (optname, optvalue) VALUES('printer', 'YTo3OntzOjg6InBtYXhuYW1lIjtzOjE6IjciO3M6OToicHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czoxMToiYmFyY29kZXR5cGUiO3M6NDoiQzEyOCI7czo2OiJwcHJpY2UiO2k6MTtzOjU6InBjb2RlIjtpOjE7czo4OiJwYmFyY29kZSI7aToxO3M6NzoicHFyY29kZSI7aTowO30=');
@@ -1577,7 +1591,7 @@ INSERT INTO options (optname, optvalue) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0
 INSERT INTO options (optname, optvalue) VALUES('sms', 'YToxMTp7czoxMjoic21zY2x1YnRva2VuIjtzOjA6IiI7czoxMjoic21zY2x1YmxvZ2luIjtzOjA6IiI7czoxMToic21zY2x1YnBhc3MiO3M6MDoiIjtzOjk6InNtc2NsdWJhbiI7czowOiIiO3M6MTA6InNtc2NsdWJ2YW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15dG9rZW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15ZGV2aWQiO3M6MDoiIjtzOjExOiJmbHlzbXNsb2dpbiI7czowOiIiO3M6MTA6ImZseXNtc3Bhc3MiO3M6MDoiIjtzOjg6ImZseXNtc2FuIjtzOjA6IiI7czo3OiJzbXN0eXBlIjtzOjE6IjAiO30=');
 INSERT INTO options (optname, optvalue) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
 INSERT INTO options (optname, optvalue) VALUES('salary', 'YTo3OntzOjQ6ImNhbGMiO3M6MjE2OiIgLy/QstGB0YzQvtCz0L4g0L3QsNGA0LDRhdC+0LLQsNC90L4NCiAgdjIwMCA9ICB2MTA1DQoNCiAvL9C/0L7QtNCw0YLQutC4DQp2MjIwID0gIHYyMDAgKiAwLjE4DQp2MzAwID0gIHYyMDAgKiAwLjIyDQovL9Cy0YHRjNC+0LPQviDRg9GC0YDQuNC80LDQvdC+DQp2NjAwID12MjAwICAtIHYyMjAtIHYzMDANCi8v0L3QsCDRgNGD0LrQuA0KdjkwMCA9djIwMCAgLSB2NjAwLXY4NTAiO3M6ODoiY2FsY2Jhc2UiO3M6NjE6Ii8v0L7RgdC90L7QstC90LAgINC30LDRgNC/0LvQsNGC0LANCiB2MTA1PXRhc2tzdW0rc2VsbHZhbHVlDQoiO3M6MTM6ImNvZGViYXNlaW5jb20iO3M6MzoiMTA1IjtzOjEwOiJjb2RlcmVzdWx0IjtzOjM6IjkwMCI7czoxMToiY29kZWFkdmFuY2UiO3M6MToiMCI7czo4OiJjb2RlZmluZSI7czoxOiIwIjtzOjk6ImNvZGVib251cyI7czoxOiIwIjt9');
-INSERT INTO options (optname, optvalue) VALUES('version', '6.16.0');
+INSERT INTO options (optname, optvalue) VALUES('version', '6.17.0');
 
 
 
