@@ -58,7 +58,7 @@ class CustItems extends \App\Pages\Base
 
         $this->itemtable->listform->add(new DataView('itemlist', new CustItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
-        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
 
 
@@ -134,9 +134,6 @@ class CustItems extends \App\Pages\Base
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-
-        
      
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('cust_name', $item->cust_name));
@@ -561,14 +558,14 @@ class CustItems extends \App\Pages\Base
     
     public function oncsv($sender) {
  
-        $tempDir = sys_get_temp_dir(); // Get the system's temporary directory
+        $tempDir = sys_get_temp_dir(); 
         $prefix = 'zstore_tmp_';
         $tempFilePath = tempnam($tempDir, $prefix);
 
        $fh = fopen($tempFilePath, 'w');
       
       
-       $line ="Постачальник;Найменування;Код;Штрих-клд;Бренд;Склад;Кiл.;Цiна;Примiтка;";
+       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кiл.;Цiна;Примiтка;";
        $line = mb_convert_encoding($line, "windows-1251", "utf-8");
        fwrite($fh, $line . PHP_EOL);      
        
@@ -808,7 +805,7 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
     public function getWhere( ) {
 
         $form = $this->page->filter;
-        $where = "1=1 ";
+        $where = "1=1";
         $key = $form->searchkey->getText();
         $brand = $form->searchbrand->getText();
         $store = $form->searchstore->getText();
@@ -844,7 +841,8 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $sortfield = "cust_name asc";
-
+        $w=trim($this->getWhere() );
+        if($w=='1=1') $sortfield='';
         $l = CustItem::find($this->getWhere(), $sortfield, $count, $start);
 
         return $l;
