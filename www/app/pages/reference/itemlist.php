@@ -1163,7 +1163,9 @@ class ItemList extends \App\Pages\Base
 
     
    public function OnPriceAll($sender) {
-      
+       if (false == \App\ACL::checkEditRef('ItemList')) {
+            return;
+       }   
         $this->_itemca = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -1195,9 +1197,7 @@ class ItemList extends \App\Pages\Base
    } 
    
     public function saveall($sender) {
-       if (false == \App\ACL::checkEditRef('ItemList')) {
-            return;
-       }
+    
        foreach( $this->_itemca as $it) {
            $item = Item::load($it->id) ;
            $item->price1 = $it->price;
