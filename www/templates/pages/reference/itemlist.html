@@ -199,11 +199,12 @@
                         </tr>
                         <tr><td colspan="9">
                                 <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
-                                <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  &nbsp;&nbsp;
-                                перемiстити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
+                                <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  
+                                <a zippy="priceall">Змiнити цiни</a>&nbsp;&nbsp;
+                                Перемiстити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
                             </td> </tr>                 
                     </table>
-                    <div style="width:50%" zippy="pag"></div>   
+                    <div class="w-50" zippy="pag"></div>   
                 </form>
             </div>
 
@@ -596,6 +597,28 @@
                 </form>
 
             </div>
+
+          <div class="col-12 col-md-6 col-xl-4 ">
+                <form zippy="changeall"  >
+                             <table>
+                             <tr zippy="itemcalist">
+                             <td zippy="editallname">
+                              <td>
+                             <td>
+                               <input style="width: 130px" pattern="[0-9,\.\%]+" class="form-control" zippy="editallprice"/>
+                                      
+                              <td>
+                              </tr>
+                             </table>             
+                            <div class="form-group">
+                                <input zippy="cancelca" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
+                                <input zippy="saveca" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                
+                            </div>
+                                 
+                </form>   
+          </div>       
+            
         </div>
 
         <div class="row">
@@ -947,7 +970,18 @@
 
             return confirm("Видалити?")
 
-            }       
+        }   
+        
+        function check_saveca() {
+
+            document.getElementById('dialogwait').showModal()
+          
+            return true;
+               
+
+        }   
+        
+            
         </script>
 
     

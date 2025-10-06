@@ -33,6 +33,7 @@ class ItemList extends \App\Pages\Base
     public $_tag = '' ; 
     public $_cflist = array();
     public $_cflistv = array();
+    public $_itemca = array();
   
     public function __construct($add = false) {
         parent::__construct();
@@ -70,15 +71,14 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
+        $this->itemtable->listform->add(new SubmitLink('priceall'))->onClick($this, 'OnPriceAll' );
 
         $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
         $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
-
-        
-   
+       
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
@@ -170,10 +170,12 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \ZCL\BT\Tags("edittags"));
         $this->itemdetail->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
 
-        
+        $this->add(new Form('changeall'))->setVisible(false);
+        $this->changeall->add(new SubmitButton('saveca'))->onClick($this, 'saveall');
+        $this->changeall->add(new Button('cancelca'))->onClick($this, 'cancelOnClick');
+        $this->changeall->add(new DataView('itemcalist', new ArrayDataSource(new Bind($this, '_itemca')), $this, 'caOnRow'));
+
         $this->add(new Panel('setpanel'))->setVisible(false);
-        
-        
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform')) ;
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
@@ -432,6 +434,7 @@ class ItemList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
+        $this->changeall->setVisible(false);
         $this->optionsform->setVisible(false);
         
     }
@@ -454,6 +457,7 @@ class ItemList extends \App\Pages\Base
           
     }    
     
+
     public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
@@ -689,6 +693,8 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
     }
 
+    
+   
     //комплекты
     public function onback($sender) {
         $this->setpanel->setVisible(false);
@@ -1155,6 +1161,58 @@ class ItemList extends \App\Pages\Base
 
     }
 
+    
+   public function OnPriceAll($sender) {
+      
+        $this->_itemca = array();
+        foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                
+                $it = new \App\DataItem(intval($item->item_id)) ;
+                $it->name = $item->itemname;
+                $it->price = $item->price1;
+              
+                $this->_itemca[] = $it;
+            }
+        }
+        if (count($this->_itemca) == 0) {
+            return;
+        }      
+      
+       $this->changeall->itemcalist->Reload(); 
+       $this->itemtable->setVisible(false);
+       $this->changeall->setVisible(true);        
+ 
+ 
+   }    
+   
+   public function caOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('editallname', $item->name));
+        $row->add(new TextInput('editallprice', new \Zippy\Binding\PropertyBinding($item, 'price')));
+         
+   } 
+   
+    public function saveall($sender) {
+       if (false == \App\ACL::checkEditRef('ItemList')) {
+            return;
+       }
+       foreach( $this->_itemca as $it) {
+           $item = Item::load($it->id) ;
+           $item->price1 = $it->price;
+           $item->save();
+       }
+       
+       
+        $this->_itemca=[];
+        $this->Reload(false);
+
+        $this->itemtable->setVisible(true);
+        $this->changeall->setVisible(false);        
+    }    
+       
+    
     public function  shownotesOnClick($sender){
         $item = $sender->getOwner()->getDataItem();
         $desc = str_replace("'","`",$item->description);
