@@ -22,7 +22,7 @@ class ShowDoc extends \Zippy\Html\WebPage
 
         $doc = Document::load($docid);
         if ($doc == null) {
-            echo "Не задан  документ";
+           http_response_code(404);
             die;
         }
 
@@ -136,6 +136,7 @@ class ShowDoc extends \Zippy\Html\WebPage
 
             // echo $zip;
         }
+        flush()  ;
         die;
     }
 

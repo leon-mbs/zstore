@@ -46,7 +46,7 @@ abstract class JsonRPC
     }
 
     protected function checkAcess() {
-        $api = \App\System::getOptions('api');
+        $api = \App\System::getOptions('api',true);
         $user = null;
 
 

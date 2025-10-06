@@ -1,0 +1,303 @@
+<html>
+    <head>
+        <title> Заміни та аналоги </title>
+   </head>
+
+    <body>
+        <div class="row">
+
+            <div class="col-12  col-xl-11" zippy="itemtable">
+                <h3>Заміни та аналоги ТМЦ               </h3>
+
+                <div class="card" >
+
+                    <form zippy="filter" class="form-inline">
+
+                        <label for="searchkey">Пошук</label>
+                        <input required="on" class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
+                         
+   
+                        <input class="btn btn-success mr-4 " type="submit" value="ОК">
+                        
+
+                    </form>
+                </div>
+                <div class="navbar nav justify-content-start" >
+               
+                <a zippy="addnew" class="btn btn-success mr-4 ml-2" >   Додати</a>
+                <a zippy="csv" class="mr-4 "><i  class="fa fa-upload" ></i> Експорт в CSV</a>   
+                <a zippy="imports" class="mr-4"><i  class="fa fa-download" ></i> Iмпорт з Excel</a>
+                  </div>
+                <form zippy="listform">
+
+                    <table class="table    table-sm ">
+                        <tr>
+                            <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i></th>                    
+                         
+                            <th>Найменування </th>
+                            <th>Код оригiнала  </th>
+                            <th>Бренд оригiнала  </th>
+                            <th>Код замiни</th>
+                            <th>Бренд замiни</th>
+                            <th>Номенклатура</th>
+                            <th>У постачальника</th>
+                         
+                            
+                           
+                        </tr>
+                        <tr zippy="itemlist">
+                            <td><input  zippy="seldel" class="seldel" type="checkbox"></td>
+                
+                            <td zippy="itemname"></td>
+                            <td zippy="origcode"></td>
+                            <td zippy="origbrand"></td>
+                            <td zippy="substcode"></td>
+                            <td zippy="substbrand"></td>
+                            <td zippy="initems" > </td>
+                            <td zippy="incust" > </td>
+                           
+                        </tr>
+                        <tr>
+                        <td  >
+                                <a   zippy="deleteall" title="Видалити"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
+                              </td>
+                        <td colspan="7">
+                                
+                              </td>
+                        </tr>                 
+                    </table>
+                    <div class="w-50"><div zippy="pag"></div> </div>   
+                </form>
+            </div>
+
+
+            <div class="col-12  ">
+                <form zippy="itemdetail"  >
+                    <h4>Редагування   </h4>
+                    <div class="row">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+     
+                          
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editname">Найменування</label>
+                                <div class="col-7">
+                                   <input required="on"     class="form-control" zippy="editname"/>
+                                 
+                                </div>
+                            </div>
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editorigcode">Код оригiнала  </label>
+                                <div class="col-7">
+                                   <input required="on"     class="form-control" zippy="editorigcode"/>
+                                 
+                                </div>
+                            </div>
+                         
+                           <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editorigbrand">Бренд оригiнала</label>
+                                <div class="col-7">
+                                   <input       class="form-control" zippy="editorigbrand"/>
+                                 
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editsubstcode">Код замiни</label>
+                                <div class="col-7">
+                                   <input   required="on"   class="form-control" zippy="editsubstcode"/>
+                                 
+                                </div>
+                            </div>
+
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editsubstbrand">Бренд замiни</label>
+                                <div class="col-7">
+                                   <input      class="form-control" zippy="editsubstbrand"/>
+                                 
+                                </div>
+                            </div>
+
+                                  
+                        </div>
+
+                        <div class="col-12  ">
+
+                            <div class="form-group">
+                                <input zippy="cancel" type="button" value="До переліку" class="btn btn-outline-secondary mr-4 "> 
+                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>     
+            
+          
+        
+            <div class="col-12  " >
+                
+                <form zippy="importform" enctype="multipart/form-data"  >
+                 
+                    <h4>Iмпорт з Excel</h4>
+                         <small>Строка  без артикулiв пропускається </small>
+                        <div class="row">
+                         <div class="col-12 col-md-4 col-xl-3">
+                          
+                          
+                        
+                             <div class="form-group  ">
+                                <label for="filename">Файл імпорту</label>
+                                <input type="file" zippy="filename" class="form-control  "/>
+                             </div>
+                             <div class="  form-check">
+                                <input zippy="passfirst" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                            </div>
+                            <div class="  form-check">
+                                <input zippy="preview" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="preview">Попереднiй перегляд (до 10 строк)</label>
+                            </div>
+                         </div> 
+                         
+                        <div class="col-12 col-md-4 col-xl-3">
+                      
+                             <div class="form-group  ">
+                                <label><b>Номери колонок Excel файлу</b> </label>
+
+                            </div>
+                             <div class="form-group row">
+                                <label  class="col-6 col-form-label" for="colname">Найменування  </label>
+                                <div class="col-3">
+                                    <select   zippy="colname" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                     
+                              <div class="form-group row">
+                                <label  class="col-6 col-form-label" for="colorigcode">Код оригiнала  </label>
+                                <div class="col-3">
+                                    <select   zippy="colorigcode" class="form-control  ">
+                                </select>   </div> 
+                            </div>                                                                                
+                             <div class="form-group row">
+                                <label  class="col-6 col-form-label" for="colorigbrand">Бренд оригiнала  </label>
+                                <div class="col-3">
+                                    <select   zippy="colorigbrand" class="form-control  ">
+                                </select>   </div> 
+                            </div>                                                                                
+                            <div class="form-group row">
+                                <label  class="col-6 col-form-label" for="colsubstcode">Код замiни</label>
+                                <div class="col-3">
+                                    <select   zippy="colsubstcode" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                     
+                            <div class="form-group row">
+                                <label  class="col-6 col-form-label" for="colsubstbrand">Бренд замiни</label>
+                                <div class="col-3">
+                                    <select   zippy="colsubstbrand" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                     
+                                                                             
+                                                                                                           
+                        </div> 
+                            
+                        {{#ispreview}}
+                       <div class="col-12">
+                       <table class="ctable ">
+                        <tr>
+                                       
+                         
+                            <th>Найменування </th>
+                            <th>Код оригiнала  </th>
+                            <th>Бренд оригiнала  </th>
+                            <th>Код замiни</th>
+                            <th>Бренд замiни</th>
+                           
+                        </tr>
+                          {{#preview}}
+                        <tr>
+                           <td>{{name}}</td>
+                           <td>{{origcode}}</td>
+                           <td>{{origbrand}}</td>
+                           <td>{{substcode}}</td>
+                           <td>{{substbrand}}</td>
+                        </tr> 
+                        {{/preview}}
+                        </table>
+                       </div>  
+                        {{/ispreview}}
+                       <div class="col-12">
+                       <a zippy="back" class="btn btn-secondary  mr-4 " >Скасувати</a>                          
+                            
+                        <input zippy="loadimport"    type="submit" value="Iмпортувати" class="btn btn-primary  "> 
+                     
+                       </div>
+                        </div>  
+                 
+                 
+                 </form>
+            
+            </div>
+            
+             
+         
+     </div>
+                          
+             
+            <script>
+
+            function check_loadimport() {
+               document.getElementById('dialogwait').showModal()
+          
+               return true;
+            }
+            function check_deleteall() {
+                return confirm("Видалити?")
+            }
+            function check_delx() {
+                return confirm("Видалити?")
+            }
+       
+        {{{import_func}}}  
+   
+                      
+   var file=null                 
+  function readFile(input) {
+       file = input.files[0];
+  }   
+   function OnLoadFile( ) {
+       
+     $("#imxjson").val( "" )  ;
+        if (file) {
+            $("#spinimx").show()  ;  
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                    
+                var j=parseprice(e.target.result)
+                
+                $("#imxjson").val( j )  ;
+                $("#importformxsend").submit( )  ;
+            };
+           
+            reader.onerror = function() {
+              toastr.error(reader.error)   
+            };   
+            reader.readAsText(file);
+        } else {
+           toastr.error("Не вибрано файл")  
+        }
+    } 
+       
+  
+  
+            
+        </script>  
+
+
+
+    </body>
+</html>

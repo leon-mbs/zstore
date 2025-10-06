@@ -58,7 +58,7 @@ class Options extends \App\Pages\Base
         $this->common->add(new TextInput('ts_end'));
 
 
-        $common = System::getOptions("common");
+        $common = System::getOptions("common",true);
         if (!is_array($common)) {
             $common = array();
         }
@@ -161,7 +161,7 @@ class Options extends \App\Pages\Base
 
         $this->valform->add(new CheckBox('valprice'));
 
-        $val = System::getOptions("val");
+        $val = System::getOptions("val",true);
         if (!is_array($val)) {
             $val = array();
         }
@@ -191,7 +191,7 @@ class Options extends \App\Pages\Base
         $this->printer->add(new CheckBox('pqrcode'));
         $this->printer->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
 
-        $printer = System::getOptions("printer");
+        $printer = System::getOptions("printer",true);
         if (!is_array($printer)) {
             $printer = array();
         }
@@ -215,7 +215,7 @@ class Options extends \App\Pages\Base
   
         $this->api->add(new TextInput('aexp'));
         $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
-        $api = System::getOptions("api");
+        $api = System::getOptions("api",true);
         if (!is_array($api)) {
             $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
         }
@@ -246,7 +246,7 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('flysmspass'));
         $this->sms->add(new TextInput('flysmsan'));
         $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",  '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
-        $sms = System::getOptions("sms");
+        $sms = System::getOptions("sms",true);
 
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
         $this->sms->smssemydevid->setText($sms['smssemydevid']);
@@ -291,7 +291,7 @@ class Options extends \App\Pages\Base
 
 
     public function saveCommonOnClick($sender) {
-        $common = System::getOptions("common");
+        $common = System::getOptions("common",true);
         if (!is_array($common)) {
             $common = array();
         }
@@ -320,7 +320,7 @@ class Options extends \App\Pages\Base
     }
 
     public function saveBusinessOnClick($sender) {
-        $common = System::getOptions("common");
+        $common = System::getOptions("common",true);
         if (!is_array($common)) {
             $common = array();
         }
@@ -366,7 +366,7 @@ class Options extends \App\Pages\Base
     public function onBot($sender) {
 
 
-        $common = System::getOptions("common");
+        $common = System::getOptions("common",true);
         if (!is_array($common)) {
             $common = array();
         }
@@ -519,7 +519,7 @@ class Options extends \App\Pages\Base
 
     public function OnSaveSaleSource($sender) {
 
-        $common = System::getOptions('common');
+        $common = System::getOptions('common',true);
         $common['salesources']  = $this->_salesourceslist;
         System::setOptions("common", $common);
 

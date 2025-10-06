@@ -27,6 +27,7 @@ if (isset($_REQUEST['id']) > 0) {
         header('Content-Length: ' . filesize($file));
         readfile($file);
     }
-    exit;
+    flush();
+    die;
 
 }

@@ -55,7 +55,8 @@ class NoLiq extends \App\Pages\Base
         $this->data = array();
         $date = strtotime('-' . $mqty . ' month');
 
-        $sql = "select  st.item_id from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
+        $sql = "select  st.item_id,st.storename,coalesce(sum(st.qty)) as qty from  store_stock_view  st 
+               where st.itemdisabled <> 1  and  st.qty >0 
                {$cstr} and   st.stock_id not  in(select   stock_id    
                from  entrylist_view  
                where    document_date >" . $conn->DBDate($date) . "  and  quantity < 0  AND stock_id  IS  NOT  null) 
@@ -63,29 +64,31 @@ class NoLiq extends \App\Pages\Base
                from  entrylist_view  
                where    document_date <" . $conn->DBDate($date) . "  and  quantity > 0  AND stock_id  IS  NOT  null) 
                 
-               group by st.item_id
-               order by st.itemname
+               group by st.item_id,st.storename
+               order by st.storename,st.itemname
                  ";
 
         $detail = array();
         $res = $conn->Execute($sql);
         foreach ($res as $_it) {
-
-            $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock  where item_id = {$_it['item_id']} ";
-
-            
+            $qty=doubleval($_it['qty']);
+            if($qty <=0){
+                continue;
+            }
+           
+            $i = Item::load($_it['item_id']) ;
             
             $item=[];
-            $item['qty'] = H::fqty($conn->GetOne($sql));
-            if($item['qty']  >0) {
-                $i = Item::load($_it['item_id']) ;
-                $item['itemname']  = $i->itemname;
-                $item['item_code']  = $i->item_code;
-                $item['bar_code']  = $i->bar_code;
-                $item['msr']  = $i->msr;
-                $item['brand']  = $i->manufacturer;
-                $detail[] = $item;
-            }
+            $item['qty'] = H::fqty($qty);
+            $item['store'] = $_it['storename'];
+            
+            $item['itemname']  = $i->itemname;
+            $item['item_code']  = $i->item_code;
+            $item['cat_name']  = $i->cat_name;
+            $item['price']  = H::fa($i->getPrice() );
+            $item['brand']  = $i->manufacturer;
+            $detail[] = $item;
+      
 
         }
 

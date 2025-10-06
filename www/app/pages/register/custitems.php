@@ -58,7 +58,7 @@ class CustItems extends \App\Pages\Base
 
         $this->itemtable->listform->add(new DataView('itemlist', new CustItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
-        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
 
 
@@ -134,9 +134,6 @@ class CustItems extends \App\Pages\Base
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-
-        
      
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('cust_name', $item->cust_name));
@@ -316,7 +313,7 @@ class CustItems extends \App\Pages\Base
         $text = trim($sender->getText());
         $stext = Customer::qstr('%' . $text . '%');
 
-        return Customer::findArray("customer_name", " status=0 and customer_name like {$stext}   ");
+        return Customer::findArray("customer_name", " status=0 and detail not like '%<type>1</type>%' and  customer_name like {$stext}   ");
     }
 
     public function onImport($sender) {
@@ -560,27 +557,39 @@ class CustItems extends \App\Pages\Base
     
     
     public function oncsv($sender) {
-        $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
-        $header = array();
-        $data = array();
+ 
+        $tempDir = sys_get_temp_dir(); 
+        $prefix = 'zstore_tmp_';
+        $tempFilePath = tempnam($tempDir, $prefix);
 
-        $i = 0;
-        foreach ($list as $item) {
-            $i++;
-
-            $data['A' . $i] = $item->customer_name;
-            $data['B' . $i] = $item->custname;
-            $data['C' . $i] = $item->cust_code;
-            $data['D' . $i] = $item->bar_code;
-            $data['E' . $i] = $item->brand;
-            $data['F' . $i] = $item->store;
-            $data['G' . $i] = $item->quantity;
-            $data['H' . $i] = $item->price;
-            $data['I' . $i] = $item->comment;
+       $fh = fopen($tempFilePath, 'w');
+      
+      
+       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кiл.;Цiна;Примiтка;";
+       $line = mb_convert_encoding($line, "windows-1251", "utf-8");
+       fwrite($fh, $line . PHP_EOL);      
        
-        }
+       $ds = new CustItemDataSource($this);
+      
+       foreach(CustItem::findYield($ds->getWhere(), "cust_name asc", -1, -1) as $item){
+            $line ="";
+            $line .= $item->customer_name.';';
+            $line .= $item->custname.';';
+            $line .= $item->cust_code.';';
+            $line .= $item->bar_code.';';
+            $line .= $item->brand.';';
+            $line .= $item->store.';';
+            $line .= $item->quantity.';';
+            $line .= $item->price.';';
+            $line .= str_replace(';','.', $item->comment) .';';
+            $line = mb_convert_encoding($line, "windows-1251", "utf-8");
+     
+            fwrite($fh, $line . PHP_EOL);                
+       }
+    
 
-        H::exportExcel($data, $header, 'custitems.xlsx');
+        H::exportCSV($tempFilePath, 'custitems.csv');
+ 
     }
 
    
@@ -793,10 +802,10 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $this->page = $page;
     }
 
-    private function getWhere( ) {
+    public function getWhere( ) {
 
         $form = $this->page->filter;
-        $where = "1=1 ";
+        $where = "1=1";
         $key = $form->searchkey->getText();
         $brand = $form->searchbrand->getText();
         $store = $form->searchstore->getText();
@@ -832,7 +841,8 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $sortfield = "cust_name asc";
-
+        $w=trim($this->getWhere() );
+        if($w=='1=1') $sortfield='';
         $l = CustItem::find($this->getWhere(), $sortfield, $count, $start);
 
         return $l;
