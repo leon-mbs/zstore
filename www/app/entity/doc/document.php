@@ -480,7 +480,7 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
      
-
+        //todo
         $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
@@ -519,41 +519,9 @@ class Document extends \ZCL\DB\Entity
     }
 
     public function getPriorytyByState($state) {
-        if($state == self::STATE_NEW) {
-            return 100;
-        }
+       
         if($state == self::STATE_CLOSED) {
             return 1;
-        }
-        if($state == self::STATE_EXECUTED) {
-            return 10;
-        }
-        if($state == self::STATE_FINISHED) {
-            return 20;
-        }
-        if($state == self::STATE_DELIVERED) {
-            return 30;
-        }
-        if($state == self::STATE_INPROCESS) {
-            return 50;
-        }
-        if($state == self::STATE_SHIFTED) {
-            return 40;
-        }
-        if($state == self::STATE_INSHIPMENT) {
-            return 50;
-        }
-        if($state == self::STATE_WA) {
-            return 90;
-        }
-        if($state == self::STATE_APPROVED) {
-            return 80;
-        }
-        if($state == self::STATE_CANCELED) {
-            return 70;
-        }
-        if($state == self::STATE_EDITED) {
-            return 80;
         }
         if($state == self::STATE_REFUSED) {
             return 3;
@@ -563,17 +531,52 @@ class Document extends \ZCL\DB\Entity
         }
         if($state == self::STATE_FAIL) {
             return 3;
-        }
-        if($state == self::STATE_READYTOSHIP) {
-            return 50;
-        }
-        if($state == self::STATE_WP) {
-            return 75;
+        }        
+        if($state == self::STATE_EXECUTED) {
+            return 10;
         }
         if($state == self::STATE_PAYED) {
             return 15;
+        }        
+        if($state == self::STATE_FINISHED) {
+            return 20;
         }
-
+        if($state == self::STATE_DELIVERED) {
+            return 30;
+        }
+        if($state == self::STATE_SHIFTED) {
+            return 40;
+        }        
+        if($state == self::STATE_INPROCESS) {
+            return 50;
+        }
+  
+        if($state == self::STATE_INSHIPMENT) {
+            return 50;
+        }
+        if($state == self::STATE_READYTOSHIP) {
+            return 50;
+        }        
+        if($state == self::STATE_CANCELED) {
+            return 70;
+        }        
+        if($state == self::STATE_WP) {
+            return 75;
+        }  
+        if($state == self::STATE_APPROVED) {
+            return 80;
+        }
+     
+        if($state == self::STATE_EDITED) {
+            return 80;
+        }
+        if($state == self::STATE_WA) {
+            return 90;
+        }        
+       
+        if($state == self::STATE_NEW) {
+            return 100;
+        }
         return 0;
     }
 

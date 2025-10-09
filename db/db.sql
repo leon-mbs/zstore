@@ -107,7 +107,7 @@ CREATE TABLE documents (
   KEY customer_id (customer_id),
   KEY user_id (user_id),
   KEY branch_id (branch_id),
-  KEY parent_id (parent_id),
+  
   KEY document_number (document_number),
   KEY state (state),
   CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (user_id)
