@@ -33,8 +33,18 @@
 
 
         <form zippy="setupform">
-            <h3>АРМ касира</h3>
-
+        <div class="row">
+                <div class="col-auto">
+                      <h3>АРМ касира</h3>
+                    </div>
+                <div class="col-auto pt-2 lt-4">
+                     {{#isadmins}}
+                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
+                       {{/isadmins}}
+               </div>    
+             </div>    
+           
+        
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="form-group row ">
@@ -74,9 +84,7 @@
 
 
                     <div class="form-group   ">
-                       {{#isadmins}}
-                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
-                       {{/isadmins}}
+                      
                         <input type="submit" value="До замовлень >"   class="btn btn-success">
                     </div>
                 </div>
@@ -778,6 +786,7 @@
                             </div>
                             
                             <div class="col-12">
+                                <a zippy="cancelopt" class="btn btn-secondary"  >Скасувати</a>
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                                
                             </div>
