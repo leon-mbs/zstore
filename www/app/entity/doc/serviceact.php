@@ -366,7 +366,7 @@ class ServiceAct extends Document
 
     
   public   function DoAcc() {
-        s if(\App\System::getOption("common",'useacc')!=1 ) return;
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
          //тмц
