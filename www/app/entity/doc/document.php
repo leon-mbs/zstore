@@ -1343,8 +1343,15 @@ class Document extends \ZCL\DB\Entity
  
     }
     
+    /**
+    * бухгалтерские проводки
+    * 
+    */
     public   function DoAcc() {
-   
+  
+        
+            
     } 
+  
       
 }

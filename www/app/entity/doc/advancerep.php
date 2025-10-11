@@ -140,10 +140,8 @@ class AdvanceRep extends Document
     }
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
-        
-         $conn = \ZDB\DB::getConnect();
-         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
- 
+         parent::DoAcc()  ;
+    
          $ia = \App\Entity\Account::getAccCode();
  
          $sql="select coalesce(sum(e.quantity * e.partion ),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where document_id=".$this->document_id." group by item_type ";
@@ -173,12 +171,12 @@ class AdvanceRep extends Document
           
          }
 
-        $pa = doubleval($conn->GetOne("select sum(amount) from paylist where document_id=".$this->document_id)) ;
-        $mf = \App\Entity\MoneyFund::load($this->headerdata['exmf']);
-        if($mf != null  && $pa > 0) {
-           \App\Entity\AccEntry::addEntry($mf->beznal==1 ? '31':'30' ,'372',$pa,$this->document_id)  ; 
-        }
-        
+   
+         foreach(\App\Entity\Pay::find("  mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $am=abs($p->amount);
+             \App\Entity\AccEntry::addEntry( $mf->beznal ?'31':'30',  '372', $am,$this->document_id,$p->paydate)  ; 
+         }         
                          
     } 
  

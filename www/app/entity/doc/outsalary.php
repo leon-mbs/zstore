@@ -71,4 +71,22 @@ class OutSalary extends Document
         return 'ВЗ-000000';
     }
 
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+     
+        $pa = doubleval($conn->GetOne("select sum(amount) from paylist where document_id=".$this->document_id)) ;
+        $mf = \App\Entity\MoneyFund::load($this->headerdata['exmf']);
+        if($mf != null  && $pa > 0) {
+           \App\Entity\AccEntry::addEntry('66',$mf->beznal==1 ? '31':'30' ,$pa,$this->document_id)  ; 
+        }
+  
+         foreach(\App\Entity\Pay::find("paytype <=1000 and mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $am=abs($p->amount);
+             \App\Entity\AccEntry::addEntry( '66',$mf->beznal ?'31':'30',  $am,$this->document_id,$p->paydate)  ; 
+         } 
+        
+    } 
+ 
 }

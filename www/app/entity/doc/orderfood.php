@@ -258,6 +258,8 @@ class OrderFood extends Document
                 }
             }
         }
+        $this->DoAcc() ;    
+
     }
 
     public function DoStore() {
@@ -377,7 +379,8 @@ class OrderFood extends Document
             $io->save();
 
       }          
-        
+      $this->DoAcc() ;    
+       
     }
 
     //есть  ли  невыданные  блюда
@@ -424,6 +427,42 @@ class OrderFood extends Document
             $b->save();
         }
         
+        $this->DoAcc() ;    
         
     }
+    
+      public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+        
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+         
+      
+         
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('23',$a, $am,$this->document_id)  ; 
+         }   
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'23', $am,$this->document_id)  ; 
+         }   
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
+         }   
+
+
+  
+         \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
+        
+         foreach(\App\Entity\Pay::find("paytype <=1000 and mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $am=abs($p->amount);
+ 
+             \App\Entity\AccEntry::addEntry( $mf->beznal ?'31':'30',  '36', $am,$this->document_id,$p->paydate)  ; 
+         }      
+                 
+  }
+ 
 }

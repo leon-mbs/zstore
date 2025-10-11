@@ -366,15 +366,15 @@ class ServiceAct extends Document
 
     
   public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-        
-         $conn = \ZDB\DB::getConnect();
+        s if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
- 
+         //тмц
          $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
-         }       
+         }    
+         //услуги
          $sql="select   coalesce(abs(sum(quantity * cost )),0) as am   from entrylist_view   where service_id >0 and document_id={$document_id} and tag=   ".Entry::TAG_SELL;
          $am=H::fa($conn->GetOne($sql));   
          \App\Entity\AccEntry::addEntry('90','23', $am,$this->document_id)  ; 
@@ -382,15 +382,12 @@ class ServiceAct extends Document
        
          \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
         
-        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and document_id=".$this->document_id;
-        $am = H::fa($conn->GetOne($sql));
-      
-        $mf=  \App\Entity\MoneyFund::load($this->headerdata['payment']) ;
-        if($mf != null && $am >0){
-           \App\Entity\AccEntry::addEntry( $mf->beznal ?'31':'30',  '36', $am,$this->document_id)  ; 
-           
-        }
-                 
+   
+         foreach(\App\Entity\Pay::find("paytype <=1000 and mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $am=abs($p->amount);
+             \App\Entity\AccEntry::addEntry( '66',$mf->beznal ?'31':'30',  $am,$this->document_id,$p->paydate)  ; 
+         }                 
   }
     
 }
