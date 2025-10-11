@@ -1602,3 +1602,4 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbalans','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration12','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6171','done');
