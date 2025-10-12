@@ -62,15 +62,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
-        $this->docform->add(new CheckBox('spreaddelivery'));
-        $this->docform->add(new CheckBox('baydelivery'));
-        if($common['spreaddelivery'] ==1) {
-            $this->docform->spreaddelivery->setChecked(1)  ;
-        }
-        if($common['baydelivery'] ==1) {
-            $this->docform->baydelivery->setChecked(1)  ;
-        }
-        
+      
+      
         
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -98,7 +91,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
         $this->docform->add(new TextInput('editdelivery', "0"));
         $this->docform->add(new SubmitButton('bdelivery'))->onClick($this, 'onDelivery');
-
+        $this->docform->add(new DropDownChoice('editdeliverytype'))->setValue($common['deliverytype'] ?? 1);
+     
 
         $this->docform->add(new Label('nds', 0));
         $this->docform->add(new Label('disc', 0));
@@ -171,8 +165,6 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->spreaddelivery->setChecked($this->_doc->headerdata['spreaddelivery']);
-            $this->docform->baydelivery->setChecked($this->_doc->headerdata['baydelivery']);
             $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -186,6 +178,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
+            $this->docform->editdeliverytype->setValue( $this->_doc->headerdata['editdeliverytype']) ;
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
      
  
@@ -683,8 +676,8 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['spreaddelivery'] = $this->docform->spreaddelivery->isChecked() ? 1 : 0;
-        $this->_doc->headerdata['baydelivery'] = $this->docform->baydelivery->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['deliverytype'] = $this->docform->editdeliverytype->getValue() ;
+        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getText();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -692,7 +685,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
-        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getText();
         $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
@@ -896,8 +888,8 @@ class GoodsReceipt extends \App\Pages\Base
 
         $total = doubleval($total) + $nds - doubleval($disc)  ;
         
-        if($this->docform->baydelivery->isChecked() ==false) {
-           $total +=  $delivery;    //если патит  поставщик
+        if($this->docform->editdeliverytype->getValue()==3 ) {
+           $total +=  $delivery;    //если заплатил поставщик
         }
         
         

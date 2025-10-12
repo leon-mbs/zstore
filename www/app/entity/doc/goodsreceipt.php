@@ -111,7 +111,7 @@ class GoodsReceipt extends Document
 
 
 
-        if($this->headerdata['delivery'] > 0  &&    $this->headerdata['spreaddelivery'] ==1) {
+        if( $this->headerdata['deliverytype']   ==2  && $this->headerdata['delivery'] > 0) {
             $total = $total + $this->headerdata["delivery"];  // распределяем накладные  затраты  на  себестоимость
         }
 
@@ -136,7 +136,7 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
-            // $sc->setExtCode($iprice); //Для АВС
+             
             $sc->setOutPrice($iprice);
             $sc->tag=Entry::TAG_BAY;
 
@@ -163,11 +163,11 @@ class GoodsReceipt extends Document
         $this->DoBalans() ;
 
         if($this->headerdata['delivery'] > 0) {
-           if($this->headerdata['spreaddelivery']== 0) { //если  не  распределяем на  цену
-               \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+           if($this->headerdata['deliverytype']== 1) { 
+               \App\Entity\IOState::addIOState($this->document_id,  $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
            }
-           if($this->headerdata['baydelivery']== 1) { //если платит  покупатель
+           if($this->headerdata['deliverytype']== 3) {  
                 $pay = new \App\Entity\Pay();
                 $pay->mf_id = $this->headerdata['payment'];
                 $pay->document_id = $this->document_id;
@@ -180,15 +180,11 @@ class GoodsReceipt extends Document
                 \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
                 
            }
-           
-            
-            
-        } else {
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
-        }
+        }  
 
-        
-        if(($common['ci_update'] ?? 0 )==1) {
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+       
+        if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;
@@ -222,10 +218,7 @@ class GoodsReceipt extends Document
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-     //   $list['TaxInvoiceIncome'] = self::getDesc('TaxInvoiceIncome');
-      //  $list['MoveItem'] = self::getDesc('MoveItem');
   
-
         return $list;
     }
     /**
@@ -239,7 +232,7 @@ class GoodsReceipt extends Document
             return;
         }
    
-        //тмц
+        // к оплате
         if($this->payamount >0) {
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
