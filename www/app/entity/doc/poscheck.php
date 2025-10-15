@@ -534,9 +534,13 @@ class POSCheck extends Document
         
  
         
-        foreach(\App\Entity\Pay::find("paytype <=1000 and mf_id >0 and document_id=".$this->document_id) as $p) {
+        foreach(\App\Entity\Pay::find("  mf_id >0 and document_id=".$this->document_id) as $p) {
              $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
              $am=abs($p->amount);
+             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
+                \App\Entity\AccEntry::addEntry('949', $mf->beznal ?'31':'30',   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
              \App\Entity\AccEntry::addEntry(  $mf->beznal ?'31':'30','36',  $am,$this->document_id,$p->paydate)  ; 
          }           
         

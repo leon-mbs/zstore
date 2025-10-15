@@ -82,7 +82,7 @@ class RetCustIssue extends Document
  
         \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_OUTCOME,true);
 
-       $this->DoBalans() ;
+        $this->DoBalans() ;
 
 
 
@@ -121,6 +121,34 @@ class RetCustIssue extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
+        $this->DoAcc();  
 
     }
+    
+    
+    
+ public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'63', 0-$am,$this->document_id)  ; 
+         } 
+   
+         foreach(\App\Entity\Pay::find("  and   mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $am=abs($p->amount);
+             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
+                \App\Entity\AccEntry::addEntry('949', $mf->beznal ?'31':'30',  0-$am,$this->document_id )  ; 
+                 continue;
+             }  
+             \App\Entity\AccEntry::addEntry('63', $mf->beznal ?'31':'30',   0-$am,$this->document_id,$p->paydate)  ; 
+         }         
+   
+  
+ }    
+    
+    
 }

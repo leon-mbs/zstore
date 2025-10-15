@@ -143,14 +143,12 @@ class AdvanceRep extends Document
          parent::DoAcc()  ;
     
          $ia = \App\Entity\Account::getAccCode();
- 
-         $sql="select coalesce(sum(e.quantity * e.partion ),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where document_id=".$this->document_id." group by item_type ";
-         foreach($conn->Execute($sql) as $row) {
-            
-              \App\Entity\AccEntry::addEntry( $ia[$row['item_type']] ?? '28','372', $row['am'],$this->document_id)  ; 
-            
-         }
-         
+    
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'372', $am,$this->document_id)  ; 
+         }   
+              
          foreach(\App\Entity\IOState::find("document_id=".$this->document_id) as $is){
              if($is->iotype==\App\Entity\IOState::TYPE_BASE_OUTCOME)  {
                  //пойдет в  себестоимость
@@ -172,10 +170,15 @@ class AdvanceRep extends Document
          }
 
    
-         foreach(\App\Entity\Pay::find("  mf_id >0 and document_id=".$this->document_id) as $p) {
+         foreach(\App\Entity\Pay::find("    mf_id >0 and document_id=".$this->document_id) as $p) {
              $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
              $am=abs($p->amount);
-             \App\Entity\AccEntry::addEntry( $mf->beznal ?'31':'30',  '372', $am,$this->document_id,$p->paydate)  ; 
+             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
+                \App\Entity\AccEntry::addEntry('949', $mf->beznal ?'31':'30',   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
+                 
+           \App\Entity\AccEntry::addEntry( $mf->beznal ?'31':'30',  '372', $am,$this->document_id,$p->paydate)  ; 
          }         
                          
     } 

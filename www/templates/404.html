@@ -116,7 +116,22 @@ GO
  
 mysql -uroot -proot   --skip-comments  market < market.sql
  
+ 
+  string text = "пример: !%текст 'в кавычках' внутри%! и снаружи 'без изменений'";
+
+        string result = Regex.Replace(
+            text,
+            @"(?<=!%[^!%]*)'(?=[^!%]*%!)",
+            "\""
+        );
+ 
+
+
 
  
 
+
+
+
+ 
   

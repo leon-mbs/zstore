@@ -11,6 +11,8 @@ namespace App\Entity;
  */
 class AccEntry extends \ZCL\DB\Entity
 {
+    public const TAG_NDS = 1;
+
     protected function init() {
        $this->id=0;
     }
@@ -29,7 +31,7 @@ class AccEntry extends \ZCL\DB\Entity
    * @param mixed $doc_id
    * @param mixed $date   задается  если  отличается  от  документа
    */
-   public static function addEntry($dt,$ct,$amount,$doc_id, $date=0) {
+   public static function addEntry($dt,$ct,$amount,$doc_id, $date=0, $tagdt=0, $tagct=0) {
         if($amount==0) {
             return;
         } 
@@ -41,7 +43,16 @@ class AccEntry extends \ZCL\DB\Entity
         if($dt==$ct) {
             return;
         } 
-              
+        
+        $acclist= Account::getList();
+        $numlist = array_keys($acclist) ;
+   
+        if(!in_array(intval($dt),$numlist) ) {
+            throw new \Exception("Невiрний рахунок ".$dt);
+        }            
+        if(!in_array(intval($ct),$numlist) ) {
+            throw new \Exception("Невiрний рахунок ".$ct);
+        }            
               
         $en = new AccEntry();
         $en->document_id = $doc_id;
@@ -55,6 +66,12 @@ class AccEntry extends \ZCL\DB\Entity
         }
         if($date>0) {
             $en->createdon = $date;
+        }
+        if($tagdt>0) {
+            $en->tagdt = $tagdt;
+        }
+        if($tagdt>0) {
+            $en->tagct = $tagct;
         }
         $en->save();
     }

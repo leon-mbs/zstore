@@ -105,6 +105,8 @@ class IncomeService extends Document
                 $stockto = Stock::getStock($store, $item->item_id, $item->price, $item->snumber, $item->sdate, true);
                 $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
                 $sc->setStock($stockto->stock_id);
+                $sc->tag=Entry::TAG_BAY;
+
                 $sc->save();
                 $amount = $amount + $item->quantity * $item->price;
                           
@@ -174,6 +176,37 @@ class IncomeService extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
+        $this->DoAcc();  
 
     }
+     
+     public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+         $conn = \ZDB\DB::getConnect();         
+         
+         //тмц
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'63', $am,$this->document_id)  ; 
+         }    
+         //услуги
+         $sql="select   coalesce(abs(sum(quantity * price )),0) as am   from entrylist_view   where service_id >0 and document_id={$document_id} and tag=   ".Entry::TAG_SELL;
+         $am=H::fa($conn->GetOne($sql));   
+         \App\Entity\AccEntry::addEntry('23','942', $am,$this->document_id)  ; 
+ 
+      
+   
+         foreach(\App\Entity\Pay::find("   mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $am=abs($p->amount);
+             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
+                \App\Entity\AccEntry::addEntry('949', $mf->beznal ?'31':'30',   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
+                 
+             \App\Entity\AccEntry::addEntry('63', $mf->beznal ?'31':'30',   $am,$this->document_id,$p->paydate)  ; 
+         }                        
+  }
+     
 }
