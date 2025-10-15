@@ -1354,25 +1354,65 @@ class Document extends \ZCL\DB\Entity
             
     } 
   
+    /**
+    * проводки  по касе
+    * 
+    * @param mixed $acc  корреспондирующий счет
+    * @param mixed $storno
+    */
     protected   function DoAccPay($acc,$storno=false) {
         foreach(\App\Entity\Pay::find("    mf_id >0 and document_id=".$this->document_id) as $p) {
              $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $n=  $mf->beznal ?'31':'30' ;
+         
              $am=$p->amount;  
              if($p->paytype == \App\Entity\Pay::PAY_DELIVERY ){
-                \App\Entity\AccEntry::addEntry('941', $mf->beznal ?'31':'30',   $this->headerdata['delivery'],$this->document_id )  ; 
+                \App\Entity\AccEntry::addEntry('941', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
                  continue;
              }  
              if($p->paytype == \App\Entity\Pay::PAY_BANK ){
-                \App\Entity\AccEntry::addEntry('949', $mf->beznal ?'31':'30',   $this->headerdata['delivery'],$this->document_id )  ; 
+                \App\Entity\AccEntry::addEntry('949', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
                  continue;
              }  
              if($am>0) {
-                 \App\Entity\AccEntry::addEntry(  $mf->beznal ?'31':'30', $acc, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
+                 \App\Entity\AccEntry::addEntry(  $n, $acc, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
              } else {
-                 \App\Entity\AccEntry::addEntry($acc, $mf->beznal ?'31':'30', $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
+                 \App\Entity\AccEntry::addEntry($acc, $n, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
                
              }
               
-    } 
+        } 
+    }
+  
+   /**
+    * проводки  по складу
+    * 
+    * @param mixed $acc  корреспондирующий счет
+    * @param mixed $storno
+    */
+    
+    protected   function DoAccItem($acc='',$storno=false) {
       
+         $ac = Account::getAccCode();
+         $conn = \ZDB\DB::getConnect();
+  
+         $sql="select coalesce(sum(e.quantity * e.partion ),0) as partsum,coalesce(sum(e.quantity * e.outprice ),0) as outsum, item_type,tag,document_date from entrylist_view e join items i on e.item_id=i.item_id  where e.document_id={$document_id}   group by i.item_type,tag,document_date ";
+         foreach($conn->Execute($sql) as $row) {
+             $am=doubleval($row['am']) ;  
+             if($am==0) continue; 
+             
+             $date = strtotime($row['document_date']);
+             if($date==0) $date = $this->document_date ;
+             
+             
+             $tag= intval($row['tag'] ); 
+             $aitem= $ac[$row['item_type']]; 
+
+             
+             \App\Entity\AccEntry::addEntry($a,'372', $am,$this->document_id,$date)  ; 
+                
+             
+         }      
+      
+    }      
 }

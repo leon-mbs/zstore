@@ -142,8 +142,7 @@ class AdvanceRep extends Document
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     
-         $ia = \App\Entity\Account::getAccCode();
-    
+       
          $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry($a,'372', $am,$this->document_id)  ; 
@@ -169,17 +168,8 @@ class AdvanceRep extends Document
           
          }
 
-   
-         foreach(\App\Entity\Pay::find("    mf_id >0 and document_id=".$this->document_id) as $p) {
-             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
-             $am=abs($p->amount);
-             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
-                \App\Entity\AccEntry::addEntry('949', $mf->beznal ?'31':'30',   $this->headerdata['delivery'],$this->document_id )  ; 
-                 continue;
-             }  
-                 
-           \App\Entity\AccEntry::addEntry( $mf->beznal ?'31':'30',  '372', $am,$this->document_id,$p->paydate)  ; 
-         }         
+         $this->DoAccPay('372');      
+         
                          
     } 
  

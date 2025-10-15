@@ -277,21 +277,6 @@ class Account
     
     }
    
-    public  static function getItemsEntry($document_id,$tag,$outprice=false) {
-         $ac = self::getAccCode();
-         $conn = \ZDB\DB::getConnect();
-         $ret=[];
-         $p="e.partion";
-         if($outprice) $p="e.outprice";
-         $sql="select coalesce(abs(sum(e.quantity * {$p} )),0) as am, item_type from entrylist_view e join items i on e.item_id=i.item_id  where e.document_id={$document_id} and tag={$tag}  group by i.item_type ";
-         foreach($conn->Execute($sql) as $row) {
-             $am=doubleval($row['am']) ;  
-             if($am==0) continue;
-             $a= $ac[$row['item_type']]; 
-             $ret[$a]=$am;
-         }
-         
-         return $ret;
-    }    
+    
    
 }
