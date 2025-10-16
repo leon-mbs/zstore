@@ -92,7 +92,7 @@ class OutcomeItem extends Document
          parent::DoAcc()  ;
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
       
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('97',$a, $am,$this->document_id)  ; 
          }   

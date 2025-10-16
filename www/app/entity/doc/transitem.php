@@ -101,12 +101,12 @@ class TransItem extends Document
          $in=0; 
          $out=0; 
  
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
          foreach($ia as $a=>$am){
              $out +=$am; 
              \App\Entity\AccEntry::addEntry( null,$a, $am,$this->document_id)  ; 
          }       
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_IN) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_IN) ;
          foreach($ia as $a=>$am){
             $in +=$am; 
             \App\Entity\AccEntry::addEntry(  $a,null, $am,$this->document_id)  ; 

@@ -371,7 +371,7 @@ class ServiceAct extends Document
          $conn = \ZDB\DB::getConnect();         
          
          //тмц
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
          }    

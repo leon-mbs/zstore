@@ -1384,35 +1384,5 @@ class Document extends \ZCL\DB\Entity
         } 
     }
   
-   /**
-    * проводки  по складу
-    * 
-    * @param mixed $acc  корреспондирующий счет
-    * @param mixed $storno
-    */
-    
-    protected   function DoAccItem($acc='',$storno=false) {
-      
-         $ac = Account::getAccCode();
-         $conn = \ZDB\DB::getConnect();
-  
-         $sql="select coalesce(sum(e.quantity * e.partion ),0) as partsum,coalesce(sum(e.quantity * e.outprice ),0) as outsum, item_type,tag,document_date from entrylist_view e join items i on e.item_id=i.item_id  where e.document_id={$document_id}   group by i.item_type,tag,document_date ";
-         foreach($conn->Execute($sql) as $row) {
-             $am=doubleval($row['am']) ;  
-             if($am==0) continue; 
-             
-             $date = strtotime($row['document_date']);
-             if($date==0) $date = $this->document_date ;
-             
-             
-             $tag= intval($row['tag'] ); 
-             $aitem= $ac[$row['item_type']]; 
-
-             
-             \App\Entity\AccEntry::addEntry($a,'372', $am,$this->document_id,$date)  ; 
-                
-             
-         }      
-      
-    }      
+ 
 }

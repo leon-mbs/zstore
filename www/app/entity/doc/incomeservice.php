@@ -186,7 +186,7 @@ class IncomeService extends Document
          $conn = \ZDB\DB::getConnect();         
          
          //тмц
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry($a,'63', $am,$this->document_id)  ; 
          }    
@@ -195,7 +195,7 @@ class IncomeService extends Document
          $am=H::fa($conn->GetOne($sql));   
          \App\Entity\AccEntry::addEntry('23','942', $am,$this->document_id)  ; 
  
-        s
+        
    
          $this->DoAccPay('63');      
                        

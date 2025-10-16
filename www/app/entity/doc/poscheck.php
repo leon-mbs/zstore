@@ -510,17 +510,17 @@ class POSCheck extends Document
          parent::DoAcc()  ;
        //тмц
          
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('23',$a, $am,$this->document_id)  ; 
          }   
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry($a,'23', $am,$this->document_id)  ; 
          }   
           
          
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
          }   

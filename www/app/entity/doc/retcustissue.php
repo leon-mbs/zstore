@@ -132,12 +132,12 @@ class RetCustIssue extends Document
          parent::DoAcc()  ;
     
     
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_RBAY) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry($a,'63', 0-$am,$this->document_id)  ; 
          } 
    
-         $this->DoAccPay('63'.true);      
+         $this->DoAccPay('63',true);      
          
    
   
