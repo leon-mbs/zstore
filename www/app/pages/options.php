@@ -114,7 +114,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('usescanner'));
 
    
-        $this->business->add(new DropDownChoice('deliverytype'));
+        $this->business->add(new DropDownChoice('deliverytype',[],1));
     
 
         $this->business->add(new TextInput('cashier'));

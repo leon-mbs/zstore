@@ -45,6 +45,7 @@ class PayList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
+        $this->filter->add(new DropDownChoice('fiostate', \App\Entity\IOState::getTypeList(2), 0));
         $this->filter->add(new DropDownChoice('fsort', [], 0));
         $this->filter->add(new Date('from', strtotime('-1 week')));
         $this->filter->add(new Date('to', time()));
@@ -481,6 +482,7 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
         $cust = $this->page->filter->fcustomer->getKey();
         $mf = $this->page->filter->fmfund->getValue();
+        $iostate = $this->page->filter->fiostate->getValue();
 
 
         if ($cust > 0) {
@@ -493,6 +495,9 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         if ($author > 0) {
             $where .= " and p.user_id=" . $author;
         }
+        if ($iostate > 0) {
+            $where .= " and d.document_id in(select document_id from iostate where iotype={$iostate} ) " ;
+        }
 
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
@@ -501,10 +506,8 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
         if ($user->rolename != 'admins') {
             if ($user->onlymy == 1) {
-
                 $where .= " and d.user_id  = " . $user->user_id;
             }
-
             $where .= " and d.meta_id in({$user->aclview}) ";
         }
         return $where;
