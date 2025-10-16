@@ -220,6 +220,7 @@ class ARMFood extends \App\Pages\Base
         $this->optionsform->add(new Textinput('timepn', $food['timepn']));
         $this->optionsform->add(new Textinput('timesa', $food['timesa']));
         $this->optionsform->add(new Textinput('timesu', $food['timesu']));
+        $this->optionsform->add(new ClickLink('cancelopt', $this,"OnCancelOpt"));
         $this->optionsform->setVisible(false) ;
 
         $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and coalesce(parent_id,0)=0",'cat_name')  ;
@@ -2109,6 +2110,10 @@ class ARMFood extends \App\Pages\Base
      public function onOptions($sender){
          $this->optionsform->setVisible(true) ;
          $this->setupform->setVisible(false);
+     }
+     public function OnCancelOpt($sender){
+         $this->optionsform->setVisible(false) ;
+         $this->setupform->setVisible(true);
      }
     
      public function saveOptions($sender){

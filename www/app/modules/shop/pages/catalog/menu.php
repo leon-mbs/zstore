@@ -83,7 +83,7 @@ class Menu extends \Zippy\Html\WebPage
             $iw="disabled<>1 and cat_id=".$cat->cat_id;
       
             $items = [];
-            foreach(Item::findYield($iw) as $item) {
+            foreach(Item::findYield($iw,"itemname") as $item) {
                 if($item->noshop ==1)  continue;
             
                 $it=array(
