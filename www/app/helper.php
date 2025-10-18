@@ -1530,26 +1530,37 @@ class Helper
             }  
         }
             
-        $migration6150 = \App\Helper::getKeyVal('migration6150'); 
-        if($migration6150 != "done" && version_compare($vdb,'6.15.0')>=0  ) {
-        //    Helper::log("Міграція 6150");
-         
-            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
-            if($cnt > 0){
-               $common['usefood'] = 1;
-               System::setOptions("common",$common) ;
-            }
-            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
-            if($cnt > 0){
-               $common['useprod'] = 1;
-               System::setOptions("common",$common) ;
-            }
-            Session::getSession()->menu = [];     
-         
-            \App\Helper::setKeyVal('migration6150', "done");           
+    
         
+        $migration6171 = \App\Helper::getKeyVal('migration6171'); 
+        if($migration6171 != "done"  ) {
+            Helper::log("Міграція 6171");
+         
+            \App\Helper::setKeyVal('migration6171', "done");           
+        
+            try {
+          
+      
        
-        }       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                           
+                 foreach($w as $e){
+                     if($e['Key_name']=='parent_id'){
+                          $conn->Execute("ALTER TABLE documents DROP INDEX `parent_id` ");
+                     }             
+      
+                 }
+              
+                       
+            } catch(\Throwable $ee) {
+         
+                $logger->error($ee->getMessage());
+               
+            }           
+           
+        }
+              
+              
     }
 
 

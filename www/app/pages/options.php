@@ -114,8 +114,8 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('usescanner'));
 
    
-        $this->business->add(new CheckBox('spreaddelivery'));
-        $this->business->add(new CheckBox('baydelivery'));
+        $this->business->add(new DropDownChoice('deliverytype',[],1));
+    
 
         $this->business->add(new TextInput('cashier'));
         $this->business->add(new TextArea('checkslogan'));
@@ -143,9 +143,8 @@ class Options extends \App\Pages\Base
   
 
 
-        $this->business->spreaddelivery->setChecked($common['spreaddelivery']);
-        $this->business->baydelivery->setChecked($common['baydelivery']);
-
+        $this->business->deliverytype->setValue($common['deliverytype'] ?? 1);
+       
         $this->business->cashier->setText($common['cashier']);
         $this->business->checkslogan->setText($common['checkslogan']);
         $this->business->actualdate->setDate($common['actualdate'] ??  strtotime( date('Y'). '-01-01') );
@@ -348,10 +347,8 @@ class Options extends \App\Pages\Base
  
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
         
-        $common['spreaddelivery'] = $this->business->spreaddelivery->isChecked() ? 1 : 0;
-        $common['baydelivery'] = $this->business->baydelivery->isChecked() ? 1 : 0;
-
-
+        $common['deliverytype'] = $this->business->deliverytype->getValue() ;
+ 
 
         System::setOptions("common", $common);
         $this->_tvars["useval"] = $common['useval'] == 1;

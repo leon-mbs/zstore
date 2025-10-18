@@ -245,7 +245,17 @@
                                 <small>Має бути  встановлено прапорець в  довіднику  ТМЦ </small>
 
                             </div>
-                            
+                          
+                        
+                             <div class="form-group">
+                                <label   for="deliverytype">Доставка (в закупці) за замовчанням</label>
+                                 <select class="form-control" zippy="deliverytype">
+                                    <option value="1">Вiднести до загальних витрат</i> </option>
+                                    <option value="2">Розподiлити на собiвартiсть</i> </option>
+                                    <option value="3">Компенсувати постачальнику</option>
+                                    <option value="4">Оплата стороннiй службi </option>
+                                </select>
+                            </div>  
                             <div class="form-check">    
                                 <input zippy="usescanner" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="usescanner">Підтримка сканера штрих       кодів </label>
@@ -297,21 +307,8 @@
                             
 
                            
-                       
                         
-                             <div class="form-check">
-                                <input zippy="spreaddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="spreaddelivery">Доставка на собiвартiсть</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Розподiлити доставку на собiвартiсть в ПН за замовчанням"></i>
-                            </div>
-                             <div class="form-check">
-                                <input zippy="baydelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="baydelivery">Оплата  доставки  покупцем</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Оплата  доставки  покупцем в ПН за замовчанням"></i>
-                            </div>
-                       
+                            
                                                                                         
                              <div class="form-group">
                                 <label for="cashier">Касир в чеку за замовчанням</label>

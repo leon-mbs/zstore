@@ -492,11 +492,11 @@
                             <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                             <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
                             &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
-                          {{#isadmins}}
+                            {{^noshowpartion}}
                            <br>
                             На складі: <span zippy="qtystock"></span>
                              &nbsp;На інших складах: <span zippy="qtystockex"></span>
-                            {{/isadmins}}
+                             {{/noshowpartion}}
                         </div>
                         {{#usesnumber}}
                         <div class="form-group">
