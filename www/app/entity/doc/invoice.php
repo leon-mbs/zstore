@@ -201,6 +201,20 @@ class Invoice extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-             
+        $this->DoAcc();  
+           
     }
+    
+    
+   public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $this->DoAccPay('36'); 
+      
+                       
+    } 
+    
+    
 }

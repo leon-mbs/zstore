@@ -288,6 +288,10 @@ class GoodsReceipt extends Document
                 \App\Entity\AccEntry::addEntry('941',  '23',   $this->headerdata['delivery'],$this->document_id )  ; 
         
            }
+           if($this->headerdata['deliverytype']== 2) { 
+                \App\Entity\AccEntry::addEntry(null,  '941',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
            
         }  
         

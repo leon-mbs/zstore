@@ -92,9 +92,11 @@ Leon1967       leon12345678*     20.186.18.39
 (новый) leonmbs-ip
 
  ALTER TABLE Content ADD [ShowDate] [datetime] NULL;
+
  ALTER TABLE Bots ADD [Type] [nvarchar](255) NULL;
+ GO
  ALTER TABLE Bots ADD [Settings] ntext NULL;
- 
+ GO 
  CREATE TABLE [dbo].[AskHelp](
     [id] [int] IDENTITY(1,1) NOT NULL,
     [Status] [smallint] NOT NULL ,

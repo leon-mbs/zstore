@@ -110,6 +110,17 @@ class InvoiceCust extends Document
             $b->save();
         }
 
-
+        $this->DoAcc();  
+  
     }
+    
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $this->DoAccPay('63'); 
+      
+                       
+    }     
 }

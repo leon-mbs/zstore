@@ -75,13 +75,8 @@ class OutSalary extends Document
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
      
-        $pa = doubleval($conn->GetOne("select sum(amount) from paylist where document_id=".$this->document_id)) ;
-        $mf = \App\Entity\MoneyFund::load($this->headerdata['exmf']);
-        if($mf != null  && $pa > 0) {
-           \App\Entity\AccEntry::addEntry('66',$mf->beznal==1 ? '31':'30' ,$pa,$this->document_id)  ; 
-        }
-  
-        $this->DoAccPay('66');      
+     
+         $this->DoAccPay('66');      
 
         
     } 
