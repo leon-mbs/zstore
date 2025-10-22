@@ -392,7 +392,30 @@ class GoodsIssue extends Document
             $b->createdon = strtotime($p['paydate']);
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
-        }        
+        } 
+        $this->DoAcc();        
     }
-    
+   
+   
+     public   function DoAcc() {
+             if(\App\System::getOption("common",'useacc')!=1 ) return;
+             parent::DoAcc()  ;
+      
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry( '23',$a, $am,$this->document_id)  ; 
+             }       
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
+             }       
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
+             }
+             
+             $this->DoAccPay('36');   
+             
+             // todo nds       
+      }    
 }

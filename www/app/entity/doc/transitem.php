@@ -110,12 +110,13 @@ class TransItem extends Document
          foreach($ia as $a=>$am){
             $in +=$am; 
             \App\Entity\AccEntry::addEntry(  $a,null, $am,$this->document_id)  ; 
-         }       
+         }  
+              
          if($in > $out) {
-             \App\Entity\AccEntry::addEntry( '947',null, $in - $out,$this->document_id)  ; 
+             \App\Entity\AccEntry::addEntry( '949',null, $in - $out,$this->document_id)  ; 
          }
          if($out > $in) {
              \App\Entity\AccEntry::addEntry( null, '71', $out - $in,$this->document_id)  ; 
-         }
+         } 
     }
 }

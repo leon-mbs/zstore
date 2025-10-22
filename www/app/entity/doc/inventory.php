@@ -38,6 +38,8 @@ class Inventory extends Document
 
                 $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
                 $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_IN;
+          
                 $sc->save();
 
                 //записываем  в доход
@@ -62,6 +64,8 @@ class Inventory extends Document
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $qty * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
+                    $sc->tag=Entry::TAG_OUT;
+                              
                     $sc->save();
 
                     //записываем  в потери
@@ -76,7 +80,7 @@ class Inventory extends Document
                 }
             }
         }
-
+        $this->DoAcc();
         return true;
     }
 
@@ -161,5 +165,21 @@ class Inventory extends Document
     protected function getNumberTemplate() {
         return 'ІН-000000';
     }
-
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+      
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('97',$a, $am,$this->document_id)  ; 
+         } 
+         
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_IN) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'71', $am,$this->document_id)  ; 
+         } 
+         
+           
+    }
 }

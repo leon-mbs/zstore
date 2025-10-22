@@ -457,7 +457,8 @@ class OrderFood extends Document
          \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
         
          $this->DoAccPay('36');      
-                 
+
+         //отходы идут как  недоплученая  прибыл        
   }
  
 }

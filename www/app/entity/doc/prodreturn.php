@@ -77,11 +77,11 @@ class ProdReturn extends Document
             $sc = new Entry($this->document_id, $item->quantity * $st->partion, $item->quantity);
             $sc->setStock($st->stock_id);
             $sc->setOutPrice($st->partion);
-            $sc->tag=Entry::TAG_TOPROD;
+            $sc->tag=Entry::TAG_FROMPROD;
             $sc->save();
         
         }
-
+        $this->DoAcc();  
         return true;
     }
 
@@ -95,4 +95,14 @@ class ProdReturn extends Document
         return $list;
     }
 
+    public   function DoAcc() {
+             if(\App\System::getOption("common",'useacc')!=1 ) return;
+             parent::DoAcc()  ;
+      
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
+             }            
+  
+    }
 }

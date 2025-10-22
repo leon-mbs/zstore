@@ -15,7 +15,7 @@ class MoveMoney extends Document
 
         Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['paymentfrom'], $this->notes, true);
         Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['paymentto'], $this->notes, true);
-
+        $this->DoAcc();  
         return true;
     }
 
@@ -41,4 +41,11 @@ class MoveMoney extends Document
         return 'ПК-000000';
     }
 
+    public   function DoAcc() {
+       if(\App\System::getOption("common",'useacc')!=1 ) return;
+       parent::DoAcc()  ;
+  
+       $this->DoAccPay(null)  ;
+  
+    }
 }

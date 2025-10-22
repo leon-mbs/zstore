@@ -111,7 +111,8 @@ class EQ extends Document
     
        }   
        $entry->save();
-        
+    
+       $this->DoAcc();        
        return true;
     }
 
@@ -169,4 +170,10 @@ class EQ extends Document
         return 'ОС-000000';
     }
 
+    public   function DoAcc() {
+             if(\App\System::getOption("common",'useacc')!=1 ) return;
+             parent::DoAcc()  ;
+      
+             //todo
+    }
 }

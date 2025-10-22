@@ -92,6 +92,10 @@ class CalcSalary extends Document
            */  
         }
         \App\Entity\IOState::addIOState($this->document_id, 0 - $iostate, \App\Entity\IOState::TYPE_SALARY_OUTCOME );
+        
+        $this->DoAcc();  
+    
+    
         return true;
     }
 
@@ -145,5 +149,10 @@ class CalcSalary extends Document
     protected function getNumberTemplate() {
         return 'НЗ-000000';
     }
-
+    public   function DoAcc() {
+             if(\App\System::getOption("common",'useacc')!=1 ) return;
+             parent::DoAcc()  ;
+      
+             //todo
+    }
 }
