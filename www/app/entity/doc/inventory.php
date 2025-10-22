@@ -38,6 +38,8 @@ class Inventory extends Document
 
                 $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
                 $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_IN;
+          
                 $sc->save();
 
                 //записываем  в доход
@@ -62,6 +64,8 @@ class Inventory extends Document
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $qty * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
+                    $sc->tag=Entry::TAG_OUT;
+          
                     $sc->save();
 
                     //записываем  в потери

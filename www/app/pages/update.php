@@ -64,7 +64,7 @@ class Update extends \App\Pages\Base
     
          
         if(!is_array($data)){
-            $this->setError('Помилка завантаження version.json') ;
+            $this->setErrorTopPage('Помилка завантаження version.json') ;
             return  ;
         }
    
