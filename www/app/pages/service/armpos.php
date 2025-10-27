@@ -93,6 +93,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->add(new Panel('checklistpan'))->setVisible(false);
         $this->checklistpan->add(new ClickLink('newcheck', $this, 'newdoc'));
+        $this->checklistpan->add(new ClickLink('newcheckback', $this, 'newcheckback'));
         $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
         $this->checklistpan->add(new \Zippy\Html\DataList\Paginator('pag', $this->checklistpan->checklist));
         $this->checklistpan->checklist->setPageSize(H::getPG());
@@ -281,7 +282,15 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->setVisible(false);
 
         $this->checklistpan->setVisible(true);
-        $this->checklistpan->statuspan->setVisible(true);
+        $this->checklistpan->statuspan->setVisible(false);
+        
+        $this->checklistpan->searchform->clean();
+        $c=$this->docpanel->form2->customer->getKey();
+        if($c > 0){
+            $this->checklistpan->searchform->searchcust->setKey($c) ;
+            $this->checklistpan->searchform->searchcust->setText($this->docpanel->form2->customer->getText()) ;
+        }
+        
         $this->updatechecklist(null);
     }
 
@@ -359,6 +368,16 @@ class ARMPos extends \App\Pages\Base
         $this->newdoc(null);
     }
 
+    public function newcheckback($sender) {
+        $this->docpanel->setVisible(true);
+
+        $this->docpanel->form2->setVisible(true);
+ 
+        $this->checklistpan->setVisible(false);
+        $this->checklistpan->searchform->clean();
+      
+    }
+    
     public function newdoc($sender) {
         $this->docpanel->setVisible(true);
 
@@ -1583,40 +1602,8 @@ class ARMPos extends \App\Pages\Base
 
         $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id)));
         $row->checkreturn->setVisible($doc->state > 4);
-        if ($doc->document_id == $this->_doc->document_id) {
-           // $row->setAttribute('class', 'table-success');
-        }
-
-
-        $row->add(new Label('rtlist'));
-        $t ="<table   style=\"font-size:smaller\"> " ;
-
-        $tlist=  $doc->unpackDetails('detaildata')  ;
-
-        foreach($tlist as $prod) {
-            $t .="<tr> " ;
-            $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fqty($prod->quantity) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
-
-            $t .="</tr> " ;                                                
-        }
-        $tlist=  $doc->unpackDetails('services')  ;
-
-        foreach($tlist as $prod) {
-            $t .="<tr> " ;
-            $t .="<td style=\"padding:2px\" >{$prod->service_name} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
-
-            $t .="</tr> " ;
-        }
-
-        $t .="</table> " ;
-
-        $row->rtlist->setText($t, true);
+      
+ 
         $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
 
         if($doc->state <5) {
@@ -1820,7 +1807,7 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->statuspan->setVisible(true);
 
         $this->checklistpan->statuspan->docview->setDoc($this->_doc);
-        $this->checklistpan->checklist->Reload(false);
+    //    $this->checklistpan->checklist->Reload(false);
         //      $this->updateStatusButtons();
         $this->goAnkor('dankor');
     }

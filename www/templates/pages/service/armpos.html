@@ -583,21 +583,21 @@
         </div>  
         <div class="row" zippy="checklistpan"  >
 
-            <div class="col-12 col-md-10 xl-8" >
+            <div class="col-12 col-md-8 xl-6" >
                 <h4>Список чекiв</h4>
+                <a  class="btn btn-success mr-2" zippy="newcheckback">&lt; Назад</a>   
                 <a  class="btn btn-success" zippy="newcheck">Новий чек</a>   
 
 
                 <div class="row"  >       
-                    <div class="card">
-                        <div class="card-body">
+              
                             <div class="navbar nav">
                                 <form zippy="searchform" class="form-inline ">
                                     <label for="searchnumber"> № </label>
 
                                     <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
 
-                                    <label for="searchcust"> Клiєнт </label>
+                                    <label for="searchcust"> Покупець </label>
 
                                     <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
@@ -607,18 +607,17 @@
                                 </form>
                             </div>
                         </div>
-                    </div>
-                </div>
-
+               
 
 
 
                 <table class="table  table-sm">
-                    <tr>
+                    <tr> 
+                     <th>Номер</th>
                         <th>Дата</th>
-                        <th>Номер</th>
+                       
                         <th>Автор</th>
-                         <th >Товари</th>
+                       
 
                         <th class="text-right">Сума</th>
                     
@@ -631,10 +630,11 @@
 
                     </tr>
                     <tr zippy="checklist">
-                        <td zippy="rowdate"> </td>
+                       
                         <td ><a zippy="rownumber"></a></td>
+                        <td zippy="rowdate"> </td>
                         <td zippy="rowauthor"></td>
-                        <td  zippy="rtlist">   </td>
+                           </td>
                      
                         <td class="text-right" zippy="rowamount"> </td>
 

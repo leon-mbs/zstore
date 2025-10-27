@@ -71,7 +71,11 @@
                        <a href="tel:{{phone}}">  <i class="fa fa-phone text-success"></i>  {{phone}} </a>
                     </div>
                      {{/phone}}
-                  
+                     <!--
+                     <div class="col-12  mb-2  ">
+                        <small> <i class="fa fa-pepper-hot  ml-2"></i> Гостре <i class="fa fa-seedling ml-2"></i> Вегетарiанське  </small> 
+                    </div>
+                      -->
                     {{^list}}
                     <div class="col-12  text-center">
                          <h4  > <a class="btn btn-secondary w-50" href="/menu/1"> {{bmname}} </a> </h4>    
@@ -130,13 +134,16 @@
                           </tr>
                           <tr>
                             <td  >  <span class="textprice"> {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
-                            <td class="textval"  align="right" >  {{customsize}} </td>
+                            <td class="textval"  align="right" >    {{customsize}} </td>
                           </tr>
                       
                         
                          <tr>
-                            <td  valign="top"    > <small> {{desc}} </small> </td>
-                            <td  ><img class="img" src="{{imglink}}" > </td>
+                            <td  valign="top"    > 
+                             <small style="display:block">   {{desc}} </small>  
+                            
+                            </td>
+                            <td style="width:130px" align="right"  ><img class="img" src="{{imglink}}" > </td>
                           </tr>
                       
                       
