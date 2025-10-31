@@ -47,7 +47,7 @@
 
             <form zippy="orderform" method="post" class="row">
      
-              <div class="col-12 col-md-8 col-lg-6    col-xl-5  ">
+              <div class="col-12 col-md-8 col-lg-6    col-xl-4  ">
                     <div class="form-group  row">
                        
                      <label class="col-5 col-form-label" for="firstname" >Iм'я (Назва для  компанiй) </label>
@@ -81,27 +81,27 @@
                      {{#usepayment}}
                     <div class="form-group  row">
                     
-                            <label class="col-5 col-form-label" for="payment"  >Оплата</label>
+                            <label class="col-5 col-form-label" for="paytype"  >Оплата</label>
                       
                        <div class="col-7">
-                       <select class="form-control" zippy="payment">
+                       <select class="form-control" zippy="paytype">
                             <option value="0">Обрати</option>                       
                             <option value="2">Готiвкою при  отриманнi</option>
                             <option value="1">Онлайн оплата</option>
                         </select>
                       </div>
                     </div> 
-                     {{/usepayment}}
+                   {{/usepayment}}    
                
                     </div> 
                
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5     ">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-4     ">
                
                     <div class="form-group  row">
                     
-                       <label class="col-3 col-form-label" for="delivery">Доставка</label>
+                       <label class="col-5 col-form-label" for="delivery">Доставка</label>
                       
-                       <div class="col-9">
+                       <div class="col-7">
                        <select class="form-control" zippy="delivery">
                             <option value="0">Обрати</option>
                         </select>

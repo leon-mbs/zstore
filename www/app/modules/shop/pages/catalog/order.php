@@ -45,7 +45,7 @@ class Order extends Base
 
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-        $form->add(new DropDownChoice('payment', array(), 0)) ;
+        $form->add(new DropDownChoice('paytype', array(), 2)) ;
 
 
         if ($this->_tvars["isfood"]) {
@@ -169,7 +169,7 @@ class Order extends Base
         $firstname = trim($this->orderform->firstname->getText());
         $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
-        $payment = intval($this->orderform->payment->getValue());
+        $paytype = intval($this->orderform->paytype->getValue());
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
@@ -182,10 +182,8 @@ class Order extends Base
             $this->setError("Введіть адресу");
             return;
         }
-        if($shop["paysystem"]==0) {
-            $payment = 2;
-        }
-        if ($payment == 0) {
+    
+        if ($paytype == 0) {
 
             $this->setError("Виберіть оплату");
             return;
@@ -252,7 +250,7 @@ class Order extends Base
                 'ship_address'  => $address,
                 'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
-                'paytype'       => 2,
+                'paytype'       => $paytype,
                 'totaldisc'     => $this->disc,
                 'total'         => $amount
             );
@@ -292,13 +290,19 @@ class Order extends Base
             if($shop['defmf']>0) {
                 $order->headerdata['payment'] = $shop['defmf'];
             }
+            if($shop['defmf']>0) {
+                $order->headerdata['payment'] = $shop['defmf'];
+            }
+            if ($paytype == 1) {
 
+               $order->headerdata['payment'] = $shop['mf_id'];
+         
+            }
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->payamount = $amount - $this->disc;
 
-         //   $order->branch_id = $shop["defbranch"] ?? 0;
-          
+        
             $order->user_id = intval($shop["defuser"]??0) ;
             if($order->user_id==0) {
                 $user = \App\Entity\User::getByLogin('admin') ;
@@ -346,12 +350,6 @@ class Order extends Base
                 $n->save();
             }
 
-
-
-            //   $this->setSuccess("Створено замовлення " . $order->document_number);
-
-
-         //   \App\Entity\Subscribe::sendSMS($phone, "Ваше замовлення номер " . $order->document_id);
             $conn->CommitTrans();
 
         } catch(\Exception $ee) {
@@ -377,7 +375,7 @@ class Order extends Base
         setcookie("shop_email",$email) ;
         
         
-        if($payment == 1) {
+        if($paytype == 1) {
 
             App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
             return;
