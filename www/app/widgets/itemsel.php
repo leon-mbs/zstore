@@ -232,6 +232,7 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
+        if($sortfield==null)  $sortfield='itemname';
         $list = array();
         foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $item) {
 
