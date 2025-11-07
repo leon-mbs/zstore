@@ -676,7 +676,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->navbar->setVisible(false);
         $this->_editrow =  false;
         
-        $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;
+      //  $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;
     }
 
     public function addserOnClick($sender) {
