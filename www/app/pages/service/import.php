@@ -181,6 +181,7 @@ class Import extends \App\Pages\Base
 
     public function onImport($sender) {
         $t = $this->iform->itype->getValue();
+        $this->_tvars['isstore']  = $t==1;
         $cmp = $this->iform->icompare->getValue();
         $store = $this->iform->store->getValue();
         $item_type = $this->iform->item_type->getValue();
@@ -319,13 +320,13 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $price1 = str_replace(',', '.', trim($row[$colprice1] ?? ''));
-            $price2 = str_replace(',', '.', trim($row[$colprice2] ?? ''));
-            $price3 = str_replace(',', '.', trim($row[$colprice3] ?? ''));
-            $price4 = str_replace(',', '.', trim($row[$colprice4] ?? ''));
-            $price5 = str_replace(',', '.', trim($row[$colprice5] ?? ''));
+            $price1 =doubleval( str_replace(',', '.', trim($row[$colprice1] ?? ''))) ;
+            $price2 =doubleval( str_replace(',', '.', trim($row[$colprice2] ?? '')));
+            $price3 =doubleval( str_replace(',', '.', trim($row[$colprice3] ?? '')));
+            $price4 =doubleval( str_replace(',', '.', trim($row[$colprice4] ?? '')));
+            $price5 =doubleval( str_replace(',', '.', trim($row[$colprice5] ?? '')));
             
-            $itemcode = trim($row[$colcode] ?? '');
+            $itemcode = ''.trim($row[$colcode] ?? '');
             $brand = trim($row[$colbrand] ?? '');
             $itemname = trim($row[$colname] ?? '');
             $itembarcode = trim($row[$colbarcode] ?? '');
@@ -339,8 +340,8 @@ class Import extends \App\Pages\Base
             $notes = trim($row[$colnotes]);
             $shortname = trim($row[$colshortname] ?? '');
             $minqty = trim($row[$colminqty] ?? '');
-            $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
-            $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
+            $inprice = doubleval( str_replace(',', '.', trim($row[$colinprice] ?? '')) );
+            $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')));
 
                
             
@@ -435,7 +436,7 @@ class Import extends \App\Pages\Base
 
 
         }
-        if (count($newitems) > 0) {
+        if (count($newitems) > 0 && $t==1) {
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {

@@ -13,7 +13,8 @@
                        data-placement="bottom" data-content="Імпорт ТМЦ з Excel файлу.
                        Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
                        Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад, створюється документ Оприбуткування товару.
-                       Також є можливість попереднього перегляду даних. "></i>
+                       Також є можливість попереднього перегляду даних. Рекомендуется  всi дані в  Ексель виставити як строковий  тип"></i>
+                       Також є можливість попереднього перегляду даних. Рекомендується  всi дані в  Екселі виставити як строковий  тип"></i>
                 </h3>
          <small><i class="fa fa-exclamation-triangle"></i> 
          Якщо при імпорті великих файлів виникає помилка 500 або просто порожня сторінка, це означає недостатній об'єм пам'яті .
@@ -244,14 +245,16 @@
                                 <th>Категорія</th>
                                 <th>Бренд</th>
                                 <th>Од.</th>
+                                {{#isstore}}
                                 <th class="text-right">Кіл.</th>
                                 <th class="text-right">Обл. ціна</th>
+                                 {{/isstore}}
                                 <th class="text-right">Мін. кіл.</th>
-                                <th class="text-right">Вiдп. ціна1</th>
-                                <th class="text-right">Вiдп. ціна2</th>
-                                <th class="text-right">Вiдп. ціна3</th>
-                                <th class="text-right">Вiдп. ціна4</th>
-                                <th class="text-right">Вiдп. ціна5</th>
+                                <th class="text-right">Прод. ціна1</th>
+                                <th class="text-right">Прод. ціна2</th>
+                                <th class="text-right">Прод. ціна3</th>
+                                <th class="text-right">Прод. ціна4</th>
+                                <th class="text-right">Прод. ціна5</th>
 
                             </tr>
                             {{#list}}
@@ -261,8 +264,10 @@
                                 <td>{{colcat}}</td>
                                 <td>{{colbrand}}</td>
                                 <td>{{colmsr}}</td>
+                                 {{#isstore}}
                                 <td class="text-right">{{colqty}}</td>
                                 <td class="text-right">{{colinprice}}</td>
+                                 {{/isstore}}
                                 <td class="text-right">{{colminqty}}</td>
                                 <td class="text-right">{{colprice1}}</td>
                                 <td class="text-right">{{colprice2}}</td>

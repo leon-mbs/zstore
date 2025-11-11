@@ -607,7 +607,7 @@ class Document extends \ZCL\DB\Entity
             case Document::STATE_WA:
                 return "Очікує затвердження";
             case Document::STATE_INSHIPMENT:
-                return "На доставці";
+                return "В доставці";
             case Document::STATE_FINISHED:
                 return "Виконаний";
             case Document::STATE_DELIVERED:
