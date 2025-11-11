@@ -77,7 +77,7 @@ class ProdReturn extends Document
             $sc = new Entry($this->document_id, $item->quantity * $st->partion, $item->quantity);
             $sc->setStock($st->stock_id);
             $sc->setOutPrice($st->partion);
-            $sc->tag=Entry::TAG_TOPROD;
+            $sc->tag=Entry::TAG_FROMPROD;
             $sc->save();
         
         }

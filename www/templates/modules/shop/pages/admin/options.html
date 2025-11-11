@@ -47,7 +47,7 @@
                     </div>
                     
                 <div class="form-group row  ">
-                        <label class="col-6 col-form-label" for="defstore">Склад</label>
+                        <label class="col-6 col-form-label" for="defstore">Склад за замовчанням<</label>
                        <div class="col-6">
                         <select class="form-control" zippy="defstore">
                             <option value="0">Не вказаний</option>
@@ -196,71 +196,22 @@
                                           
             </div>
            
-          {{#hideblock}}
+         
            
             <div class="col-12 col-md-4 col-xl-3    ">
                  <h4>Онлайн оплата</h4>
                 <form zippy="pay" >
-                   <div class="form-group   ">
-                        <label   for="paysystem">Тип системи </label>
-                            <select class="form-control" zippy="paysystem">
-                                <option value="0">Не використовувати</option>
-                                <option value="1">WayForPay</option>
-                                <option value="2">Liqpay</option>
-                                <option value="3">Оплата по  QR коду</option>
-                            </select>
-                   </div>
-
-                   
-                 <div class="form-group   ">         
-                        <label data-label="lqpriv" for="lqpublic">  Приватний ключ</label>
-                  
-                            <input required="required" class="form-control " zippy="lqpriv"/>
-                       
-                    </div>
-                   <div class="form-group   ">
-                        <label data-label="lqpublic" for="lqpriv">  Публiчний ключ</label>
-                  
-                            <input required="required" class="form-control " zippy="lqpublic"/>
-                       
-                    </div>
-                     <div class="form-group   ">
-                        <label data-label="wpsecret" for="wpsecret">Секретний ключ</label>
-                  
-                            <input required="required" class="form-control " zippy="wpsecret"/>
-                       
-                    </div>
-                    <div class="form-group   ">
-                        <label data-label="wpmacc" for="wpmacc">Merchant аккаунт</label>
-                  
-                            <input required="required" class="form-control " zippy="wpmacc"/>
-                       
-                    </div>
-                 <div class="form-group   ">
-                        <label data-label="wpsite" for="wpsite">Merchant домен (адреса  сайту)</label>
-                  
-                            <input required="required" class="form-control " zippy="wpsite"/>
-                       
-                    </div>
-                    
+                 
                     
                    <div class="form-group   ">
-                        <label data-label="mf"  for="mf">Банкiвський рахунок  </label>
-                            <select class="form-control" zippy="mf">
+                        <label data-label="mfqr"  for="mf">Рахунок для оплати по QR  </label>
+                            <select class="form-control" zippy="mfqr">
                               <option value="0">Не обрано</option>
                               
                             </select>
                    </div>
-       <div class="form-check">
-                        <input zippy="addqr" type="checkbox" class="form-check-input">
-                        <label data-label="addqr" class="form-check-label" for="addqr">Додатково  оплата по  QR </label>
-                          
-                          
-                        
-                    </div>               
-                                       
-                    
-                   <div class="form-group mt-2  ">
+                
+                 <div class="form-group mt-2  ">
                         <div class="col-sm-4">
                             <button class="btn btn-primary" type="submit">Зберегти</button>
                        
@@ -269,8 +220,7 @@
                 </form>
              </div>
            
-             {{/hideblock}}
-       
+           
             
         </div>
         

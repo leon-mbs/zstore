@@ -670,7 +670,7 @@ class Subscribe extends \ZCL\DB\Entity
                              'msr'          => $item->msr,
                              'qty'          => \App\Helper::fqty($item->quantity),
                              'price'        => \App\Helper::fa($item->price),
-                             'summa'        => \App\Helper::fa($item->price * $item->quantity)
+                             'summa'        => \App\Helper::fa(doubleval($item->price) * doubleval($item->quantity))
             );
         }
 

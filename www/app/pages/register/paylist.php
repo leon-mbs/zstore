@@ -47,8 +47,8 @@ class PayList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new DropDownChoice('fiostate', \App\Entity\IOState::getTypeList(2), 0));
         $this->filter->add(new DropDownChoice('fsort', [], 0));
-        $this->filter->add(new Date('from', strtotime('-1 week')));
-        $this->filter->add(new Date('to', time()));
+        $this->filter->add(new Date('from', strtotime('-2 week')));
+        $this->filter->add(new Date('to' ));
 
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
@@ -474,8 +474,12 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-        $where = "p.paytype<>1001 and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
+        $where = "p.paytype<>1001 and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) ;
+        
+        $to=$this->page->filter->to->getDate();
+        if($to > 0){
+          $where .=  " and  date(paydate) <= " . $conn->DBDate($to);  
+        }
         //        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
 
         $author = $this->page->filter->fuser->getValue();

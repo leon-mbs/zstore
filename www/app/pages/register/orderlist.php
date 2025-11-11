@@ -64,6 +64,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('brec'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bsent'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bscan'))->onClick($this, 'statusOnSubmit');
 
 
@@ -347,6 +349,12 @@ class OrderList extends \App\Pages\Base
             if ($sender->id == "brd") {
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             }
+            if ($sender->id == "brec") {
+                $this->_doc->updateStatus(Document::STATE_DELIVERED);
+            }
+            if ($sender->id == "bsent") {
+                $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+            }
 
             if ($sender->id == "bref") {
                 $this->_doc->setHD('waitpay',0) ;
@@ -406,6 +414,8 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
+        $this->statuspan->statusform->brec->setVisible(false);
+        $this->statuspan->statusform->bsent->setVisible(false);
         $this->statuspan->statusform->bscan->setVisible(false);
         $this->statuspan->moveform->setVisible(false);
 
@@ -429,6 +439,8 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->brec->setVisible(false);
+            $this->statuspan->statusform->bsent->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
         } else {
 
@@ -451,6 +463,7 @@ class OrderList extends \App\Pages\Base
         }
 
         if ($state == Document::STATE_INPROCESS) {
+            $this->statuspan->statusform->bsent->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(true);
             $this->statuspan->statusform->bscan->setVisible(true);
 
@@ -459,8 +472,20 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(true);
             $this->statuspan->statusform->bginv->setVisible(true);
         }
+        if ($state == Document::STATE_READYTOSHIP) {
+            $this->statuspan->statusform->bsent->setVisible(true);
+            $this->statuspan->statusform->brec->setVisible(true);
+            $this->statuspan->statusform->bscan->setVisible(true);
+
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->bpos->setVisible(true);
+            $this->statuspan->statusform->bgi->setVisible(true);
+            $this->statuspan->statusform->bginv->setVisible(true);      
+        }
+      
         if ($state == Document::STATE_INSHIPMENT) {
 
+            $this->statuspan->statusform->brec->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -496,6 +521,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->bsent->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
         }
 

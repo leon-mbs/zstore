@@ -665,9 +665,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $text = Item::qstr($text);
                 $text_ = trim($text,"'") ;
                 
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text}   or detail like '%<bar_code1><![CDATA[{$text_}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$text_}]]></bar_code2>%'  or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text}   or detail like '%<bar_code1><![CDATA[{$text_}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$text_}]]></bar_code2>%'  or item_id in (select item_id from store_stock where snumber like {$text} ) or item_id in (select item_id from taglist where  tag_type=3 and tag_name={$text}  ) )   ";
             }
-
+    
 
         }
         $brand = $form->searchbrand->getText();

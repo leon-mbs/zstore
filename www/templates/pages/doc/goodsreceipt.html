@@ -89,12 +89,14 @@
                         <input class="form-control" type="text" zippy="outnumber">
 
                     </div>
+                     {{^useval}} 
                      {{^usends}} 
                     <div class="form-check">
                         <input zippy="comission" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="comission">Товари на комісію</label> 
                     </div>                 
                      {{/usends}} 
+                     {{/useval}} 
                 </div>
                 <div class="col-12 col-md-3">
                    <div class="form-group  ">

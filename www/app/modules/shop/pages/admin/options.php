@@ -63,14 +63,8 @@ class Options extends \App\Pages\Base
 
 
         $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
-        $this->pay->add(new DropDownChoice('paysystem', array()))->onChange($this, 'onPaySystem');
-        $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2)));
-        $this->pay->add(new TextInput('lqpublic'));
-        $this->pay->add(new TextInput('lqpriv'));
-        $this->pay->add(new TextInput('wpsecret'));
-        $this->pay->add(new TextInput('wpmacc'));
-        $this->pay->add(new TextInput('wpsite'));
-        $this->pay->add(new CheckBox('addqr'));
+        $this->pay->add(new DropDownChoice('mfqr',\App\Entity\MoneyFund::getList(2), 0 )) ;
+     
 
 
 
@@ -109,15 +103,8 @@ class Options extends \App\Pages\Base
         $this->shop->phone->setText($shop['phone']);
         $this->shop->pagesize->setText($shop['pagesize'] ?? 25);
 
-        $this->pay->paysystem->setValue($shop['paysystem']??0);
-        $this->pay->mf->setValue($shop['mf_id']??0);
-        $this->pay->lqpublic->setText($shop['lqpublic']??false);
-        $this->pay->lqpriv->setText($shop['lqpriv']??'');
-        $this->pay->wpsecret->setText($shop['wpsecret']??'');
-        $this->pay->wpmacc->setText($shop['wpmacc']??'');
-        $this->pay->wpsite->setText($shop['wpsite']??'');
-        $this->pay->addqr->setChecked($shop['addqr']??'');
-        $this->onPaySystem(null);
+        $this->pay->mfqr->setValue($shop['mf_id']??0);
+  
 
 
 
@@ -128,37 +115,16 @@ class Options extends \App\Pages\Base
         if (!is_array($shop)) {
             $shop = array();
         }
-        $shop['paysystem'] = $sender->paysystem->getValue();
-        $shop['mf_id'] =  intval($sender->mf->getValue());
-        if($shop['mf_id']==0 && $shop['paysystem'] > 0) {
-            $this->setError('Не обрано касу');
-            return;
-        }
-        $shop['lqpriv'] =  $sender->lqpriv->getText() ;
-        $shop['lqpublic'] = $sender->lqpublic->getText() ;
-        $shop['wpsecret'] = $sender->wpsecret->getText() ;
-        $shop['wpmacc'] = $sender->wpmacc->getText() ;
-        $shop['wpsite'] = $sender->wpsite->getText() ;
-        $shop['addqr'] = $sender->addqr->isChecked() ? 1 : 0;
-
+   
+        $shop['mf_id'] =  intval($sender->mfqr->getValue());
+       
+     
         System::setOptions("shop", $shop);
         $this->setSuccess('Збережено');
 
     }
 
-    public function onPaySystem($sender) {
-
-        $ps = intval($this->pay->paysystem->getValue()) ;
-        $this->pay->mf->setVisible($ps>0);
-        $this->pay->lqpriv->setVisible($ps==2);
-        $this->pay->lqpublic->setVisible($ps==2);
-        $this->pay->wpsecret->setVisible($ps==1);
-        $this->pay->wpmacc->setVisible($ps==1);
-        $this->pay->wpsite->setVisible($ps==1);
-        $this->pay->addqr->setVisible($ps==1 || $ps==2);
-
-    }
-
+    
     public function saveShopOnClick($sender) {
         $shop = System::getOptions("shop");
         if (!is_array($shop)) {
