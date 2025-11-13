@@ -1058,13 +1058,11 @@
             
             
             function sendSendMsg( ){
-                var f = document.getElementById('sendmsgform')  ;
-                   
-                let formdata = new FormData(f);
+                
                
                 $('#modalsendmsg').modal('hide') 
                    
-                callPageMethod('sendMsg',null,formdata,(data)=> 
+                callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
                          
                      toastr.success('Вiдправлено','',{'timeOut':'2000'})     
@@ -1219,7 +1217,7 @@
         
         //инфо о  контрагенте
         function customerInfo(id){
-                callPageMethod('getCustomerInfo',[id],null,(data)=> 
+                callPM('getCustomerInfo',[id],null,(data)=> 
                 {
                     
                     $('#modalcinfo').modal('show')  
@@ -1232,7 +1230,7 @@
         
       //инфо о  ТМЦ
         function itemInfo(id){
-                callPageMethod('getItemInfo',[id],null,(data)=> 
+                callPM('getItemInfo',[id],null,(data)=> 
                 {
                     
                     $('#modalitinfo').modal('show')  
@@ -1245,7 +1243,7 @@
         
        //ТМЦ в закупку
        function addItemToCO(id,qty=0){
-                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
+                callPM('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {
@@ -1260,7 +1258,7 @@
 
         function sendSMSCust(phone,code) {
             
-                callPageMethod('sendSMSCode',[phone,code],null,(data)=> 
+                callPM('sendSMSCode',[phone,code],null,(data)=> 
                 {
                     
                     

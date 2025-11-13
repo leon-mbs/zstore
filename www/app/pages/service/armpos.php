@@ -1831,7 +1831,7 @@ class ARMPos extends \App\Pages\Base
         $args[1] = str_replace(',', '.', $args[1]) ;
         $price = $item->getActionPriceByQuantity($args[1]);
 
-        return  $price;
+        return  $this->jsonOK($price);
 
     }
 

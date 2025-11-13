@@ -1297,9 +1297,8 @@ class ItemList extends \App\Pages\Base
 
             $html =  $report->generate($header);
             $html = str_replace("'", "`", $html);
-            
-            return json_encode(array('data'=>$html,"printer"=>0), JSON_UNESCAPED_UNICODE);
-          
+            return $this->jsonOK(array('data'=>$html,"printer"=>0),) ;
+           
         }
        
         try {
@@ -1311,8 +1310,8 @@ class ItemList extends \App\Pages\Base
                 $html =  $report->generate($header);              
                    
                 $buf = \App\Printer::xml2comm($html);
-               
-                return json_encode(array('data'=>$buf,"printer"=>1), JSON_UNESCAPED_UNICODE);
+                return $this->jsonOK(array('data'=>$buf,"printer"=>1)); 
+                
             
             }
             if(intval($user->prtypelabel) == 2) {
@@ -1334,8 +1333,8 @@ class ItemList extends \App\Pages\Base
                 }           
                 
                 $buf = \App\Printer::arr2comm($rows);
-           
-                return json_encode(array('data'=>$buf,"printer"=>2), JSON_UNESCAPED_UNICODE);
+                return $this->jsonOK(array('data'=>$buf,"printer"=>2));
+               
           }
      
 

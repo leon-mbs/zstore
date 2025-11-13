@@ -394,6 +394,7 @@ class Base extends \Zippy\Html\WebPage
         $n->sender_id = System::getUser()->user_id;
         $n->save();
 
+        $this->jsonOK() ;
     }
 
     public function getCustomerInfo($args, $post) {
@@ -401,7 +402,7 @@ class Base extends \Zippy\Html\WebPage
 
         $c = \App\Entity\Customer::load($args[0]);
         if($c==null) {
-            return  "N/A";
+            return $this->jsonOK("N/A");  
         }
 
          $header = [];
@@ -473,7 +474,7 @@ class Base extends \Zippy\Html\WebPage
         //  $data = str_replace("\"","`",$data)  ;
 
   
-        return $data;
+        return $this->jsonOK($data);
 
     }
 
@@ -482,7 +483,7 @@ class Base extends \Zippy\Html\WebPage
 
         $it = \App\Entity\Item::load($args[0]);
         if($it==null) {
-            return  "N/A";
+               return $this->jsonOK("N/A"); 
         }
 
         
@@ -507,7 +508,7 @@ class Base extends \Zippy\Html\WebPage
         $data = str_replace("'", "`", $data)  ;
         //  $data = str_replace("\"","`",$data)  ;
  
-        return $data;
+         return $this->jsonOK($data);
 
     }
 
@@ -515,7 +516,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         $ret = \App\Entity\Subscribe::sendSMS($args[0], $args[1])  ;
-        return $ret ?? "";
+        return $this->jsonOK($ret ?? "") ;
 
     }
 
@@ -769,7 +770,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['mfs'] =  \App\Util::tokv($mfs) ;
         }
 
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK($ret) ;
     }
 
     public function vLoadContracts($args, $post) {
