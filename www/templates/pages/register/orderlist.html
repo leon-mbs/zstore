@@ -453,13 +453,13 @@
                      callPM('sendMessage',[this.doc_id ],this.message,(data)=> 
                       {
                          this.showntnsend = true;
-                         if(checkPMAnswer(data) ){
-                              this.message = ""
-                              callPM('getCChatMessages',[this.doc_id],null,(data)=> 
-                              {
-                                  this.msglist = data.msglist        
-                              })         
-                         }     
+                      
+                          this.message = ""
+                          callPM('getCChatMessages',[this.doc_id],null,(data)=> 
+                          {
+                              this.msglist = data.msglist        
+                          })         
+                            
                        
                       })                 
                  },

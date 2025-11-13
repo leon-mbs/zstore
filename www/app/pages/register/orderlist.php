@@ -935,7 +935,8 @@ class OrderList extends \App\Pages\Base
             ) ;
 
         }
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+      
+        $this->jsonOK($ret) ;
 
     }
 
@@ -969,9 +970,8 @@ class OrderList extends \App\Pages\Base
 
         }
 
-
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
-
+       $this->jsonOK($ret) ;
+   
     }
     /**
     * отправка сообшения заказчику
@@ -984,7 +984,7 @@ class OrderList extends \App\Pages\Base
 
         $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;
         if($issms == 0) {
-            return json_encode(array('error'=>"Не знайдений сервіс смс"), JSON_UNESCAPED_UNICODE);
+            $this->jsonError("Не знайдений сервіс смс") ;
         }
 
         $phone= $doc->headerdata['phone'] ??'';
@@ -993,7 +993,8 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-            return json_encode(array('error'=>"Не знайдений телефон"), JSON_UNESCAPED_UNICODE);
+            $this->jsonError("Не знайдений телефон") ;
+
         }
 
         $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];
@@ -1004,7 +1005,7 @@ class OrderList extends \App\Pages\Base
 
         $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
         if($r!="") {
-            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
+            $this->jsonError($r) ;
         }
 
         $msg = new \App\Entity\Message() ;
@@ -1014,8 +1015,8 @@ class OrderList extends \App\Pages\Base
         $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
         $msg->save() ;
 
+        $this->jsonOK() ;
 
-        return json_encode("", JSON_UNESCAPED_UNICODE);
 
     }
 

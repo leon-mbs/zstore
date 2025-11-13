@@ -124,15 +124,13 @@
 
                      
                        <div data-label="promocode" class="col-auto">
-                            Промо-код 
+                            Промо-код  <i class="fa fa-exclamation" title="Промо вводиться  пiсля  вводу  всiх позицiй"></i>
                             </div>    
-                      
-                            
                             
                             <div class="col-auto">
                                 <div class="form-group  ">
 
-                                     <input  style="width:150px"  zippy="promocode" class="form-control">
+                                     <input  style="width:150px"  zippy="promocode" class="form-control"> 
                                
                                 </div>  
                             </div>     
@@ -208,8 +206,9 @@
                                 <th class="text-right"><i class="fa fa-gift"></i>,%</th>
                                 <th class="text-right">Ціна</th>
 
-                                <th class="text-right">Сума</th>
+                                <th style=" width:75px" class="text-right">Сума</th>
                                 <th  ></th>
+                                 
                                 <th  ></th>
                             </tr>
 
@@ -231,12 +230,13 @@
                                 <td zippy="amount" class="text-right"></td>
                                 <td> 
                                 {{^simplemode}}
-                                 <a zippy="edit" ><i class="fa fa-edit"></i></a>
+                                 <a zippy="edit" ><i class="fa fa-edit"></i></a> &nbsp;
                                 {{/simplemode}}
-                                </td>
-                                <td><a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                                
+                                <a zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                             </tr>
+                            
                             <tr zippy="detailser">
                                 <td zippy="service"></td>
                                 <td></td>
@@ -825,7 +825,7 @@
             function onBarCode(ele) {
 
                 if (event.key === 'Enter' || event.keyCode == 13) {
-                    // alert($('#barcode').val());
+                  
                     $('#addcode').click()
                 }
             }
@@ -838,15 +838,17 @@
                      
                       callPM('checkPromo',[promodode], null,(data)=> 
                       {
-                         if(checkPMAnswer(data))   {
-
-                           $('#totaldisc').val(data.disc)                             
-                         }  else {
-                            $('#totaldisc').val('0')                                                          
-                            $('#promocode').val('')                                                          
-                         }
+                         
+                            $('#totaldisc').val(data.disc)                             
                           
-                      });             
+                          
+                      },
+                       (error)=>{
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')         
+                            toastr.error( error,'',{'timeOut':'8000'} )          
+                       }
+                      );             
                 });             
             
             

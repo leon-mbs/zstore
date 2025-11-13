@@ -1614,14 +1614,18 @@ class ARMFood extends \App\Pages\Base
 
 
         if($cntorder>0) {
-           return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);    
+           return $this->jsonOK(array( 'cntorder' => $cntorder));               
+
+          
         }
         if(count($tables) > 0 ) {
            $msg = implode(', ',$tables)  ;
-             
-           return json_encode(array( 'tableno' => $msg), JSON_UNESCAPED_UNICODE);    
+           return $this->jsonOK(array( 'tableno' => $msg));               
+
         }
-        
+        return $this->jsonOK();  
+
+      
     }
 
     public function getProdItems($args, $post=null) {
@@ -1643,8 +1647,8 @@ class ARMFood extends \App\Pages\Base
             }
         }
 
-
-        return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK($itemlist);  
+        
     }
 
     public function OnPrint($sender) {
@@ -2070,11 +2074,11 @@ class ARMFood extends \App\Pages\Base
      public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
-            return json_encode([], JSON_UNESCAPED_UNICODE);             
+            return $this->jsonOK();  
         }
         $r = \App\Entity\PromoCode::check($code,$this->docpanel->listsform->customer->getKey())  ;
         if($r != ''){
-            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);                
+            return $this->jsonError($r);                
         }
         $total = 0;
 
@@ -2088,8 +2092,7 @@ class ARMFood extends \App\Pages\Base
         if($disc >0)  {
             $td = H::fa( $total * ($p->disc/100) );
             $ret=array('disc'=>$td) ;
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);
-             
+            return $this->jsonOK($ret);
         }        
         
         if($discf >0)  {
@@ -2098,11 +2101,11 @@ class ARMFood extends \App\Pages\Base
                $discf =  $total;
             }
             $ret=array('disc'=>$discf) ;
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);
+            return $this->jsonOK($ret);
              
         }        
         
-        return json_encode([], JSON_UNESCAPED_UNICODE);             
+        return $this->jsonOK();            
        
 
     }   

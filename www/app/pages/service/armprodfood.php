@@ -99,12 +99,11 @@ class ArmProdFood extends \App\Pages\Base
 
             $logger->error(" Арм  кухни " . $ee->getMessage());
 
-            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
-
+            return $this->jsonError($ee->getMessage())  ;
 
         }
 
-        return json_encode([], JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK() ;
 
 
     }
@@ -137,13 +136,13 @@ class ArmProdFood extends \App\Pages\Base
 
             $logger->error(" Арм  кухни " . $ee->getMessage());
 
-            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
+            return $this->jsonError($ee->getMessage())  ;
 
 
         }
+        return $this->jsonOK() ;
 
-        return json_encode([], JSON_UNESCAPED_UNICODE);
-
+    
 
     }
 
@@ -190,12 +189,12 @@ class ArmProdFood extends \App\Pages\Base
 
             $logger->error(" Арм  кухни " . $ee->getMessage());
 
-            return json_encode(['error'=>$ee->getMessage() ], JSON_UNESCAPED_UNICODE);
+             return $this->jsonError($ee->getMessage())  ;
 
 
         }
 
-        return json_encode([], JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK() ;
 
 
     }
@@ -250,9 +249,9 @@ class ArmProdFood extends \App\Pages\Base
         }
 
 
+        return $this->jsonOK($itemlist) ;
 
-
-        return json_encode($itemlist, JSON_UNESCAPED_UNICODE);
+       
     }
 
     public function getMessages($args, $post) {
@@ -267,8 +266,9 @@ class ArmProdFood extends \App\Pages\Base
             if ($msg['cmd'] == 'update') {
                 $n->checked = 1;
                 $n->save();
-                return json_encode(array("update" => true), JSON_UNESCAPED_UNICODE);
-            }
+                return $this->jsonOK(array("update" => true)) ;
+  
+             }
 
             $doc = Document::load(intval($msg['document_id']));
 
@@ -282,8 +282,9 @@ class ArmProdFood extends \App\Pages\Base
         }
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOODPROD);
+        return $this->jsonOK(array("cnt" => $cnt)) ;
 
-        return json_encode(array("cnt" => $cnt), JSON_UNESCAPED_UNICODE);
+       
     }
 
 
