@@ -596,42 +596,24 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    /*
-    protected function addToastrInfo($text,$ajax=false) {
-        $text = str_replace('`',"'",$text) ;
-        $text = str_replace('`',"\"",$text) ;
-                
-        $js=" $(document).Toasts('create', {
-                    icon: 'fa fa-info-circle text-info',
-                            position:'bottomRight',
-                            title:'{$text}'
-
-                    }) ";
-        if($ajax) {
-            $this->addJavaScript($js,true) ;    
-        }else {
-          $this->addAjaxResponse($js) ; 
-        }           
-        
-    }
-    protected function addToastrWarn($text,$ajax=false) {
-        $text = str_replace('`',"'",$text) ;
-        $text = str_replace('`',"\"",$text) ;
-                
-        $js=" $(document).Toasts('create', {
-                    icon: 'fa fa-exclamation-triangle text-warning',
-                            position:'bottomRight',
-                            title:'{$text}'
-
-                    }) ";
-        if($ajax) {
-            $this->addJavaScript($js,true) ;    
-        }else {
-          $this->addAjaxResponse($js) ; 
-        }
-    }
-    */
-    //callPM
+ 
+    //методы возврата для  callPM
+      public function jsonOK($data=null){
+         if($data===null) {
+             return json_encode([]) ;  
+         }
+          
+         return json_encode(['data'=>$data], JSON_UNESCAPED_UNICODE)   ;
+      }
+      public function jsonError($error){  
+         return json_encode(['error'=>$error], JSON_UNESCAPED_UNICODE) ;  
+      }
+           
+      public function jsonWarn($warn){
+         return json_encode(['warning'=>$warn], JSON_UNESCAPED_UNICODE)  ; 
+      }
+           
+    //методы для vue
 
     public function vonTextCust($args, $post=null) {
 

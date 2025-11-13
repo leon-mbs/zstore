@@ -823,11 +823,10 @@
           
             function onNewOrder() {
                   
-                callPageMethod('getMessages',null,null,(data)=> 
+                callPM('getMessages',null,null,(answer)=> 
                 {
                  
-                    var  answer = JSON.parse(data)  
-                 
+                  
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
                         $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
@@ -872,24 +871,27 @@
                      
                       callPM('checkPromo',[promodode], null,(data)=> 
                       {
-                         if(checkPMAnswer(data))   {
-
-                           $('#totaldisc').val(data.disc)                             
-                         }  else {
-                            $('#totaldisc').val('0')                                                          
-                            $('#promocode').val('')                                                          
-                         }
+                         
+                            $('#totaldisc').val(data.disc)                             
                           
-                      });             
+                          
+                      },
+                       (error)=>{
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')         
+                            toastr.error( error,'',{'timeOut':'8000'} )          
+                       }
+                      
+                      );             
                 });     
              
           
        function updateReadyItems() {
         
-          callPageMethod('getProdItems',[],null,(data)=> 
+                  callPM('getProdItems',[],null,(itemlist)=> 
                   {
                            
-                     var itemlist= JSON.parse(data)  
+                 
                      if(itemlist.length >0) {
                          $("#ireadyp").show()
                          $("#ireadyc").text(itemlist.length)

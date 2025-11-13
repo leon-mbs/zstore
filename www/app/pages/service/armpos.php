@@ -244,9 +244,12 @@ class ARMPos extends \App\Pages\Base
         $this->_tvars["colspan"] = 6; 
         if($common['usesnumber'] >0) {
             $this->_tvars["colspan"] = 7;
+            $this->_tvars["usesnumber"] = true;
+            $this->docpanel->navbar->tosimple->setVisible(false) ;
         }
         if($common['usesnumber'] ==2) {
             $this->_tvars["colspan"] = 8;
+            $this->_tvars["usesnumberdate"] = true;
         }
          
         if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
@@ -260,15 +263,11 @@ class ARMPos extends \App\Pages\Base
     public function onModeOn($sender) {
         $this->_tvars['simplemode']  = $sender->id == 'tosimple';
         if($this->_tvars['simplemode'] == true) {
-            $this->_tvars['usesnumber']  = false;
+        
             $this->docpanel->form2->qtysm->setText("");
             $this->docpanel->form2->storeqtysm->setText("");
             
-        } else {
-            $options = System::getOptions('common');
-            $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
-
-        }
+        }  
         H::setKeyVal('issimple_'.System::getUser()->user_id,$sender->id);
     }
 
@@ -1839,31 +1838,32 @@ class ARMPos extends \App\Pages\Base
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
-            return json_encode([], JSON_UNESCAPED_UNICODE);             
+            return $this->jsonOK();   
         }
         $r = \App\Entity\PromoCode::check($code,$this->docpanel->form2->customer->getKey())  ;
         if($r != ''){
-            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);                
+            return $this->jsonError($r);   
         }
         $total=$this->_calcTotal();
         $p = \App\Entity\PromoCode::findByCode($code);
         $disc = doubleval($p->disc );
+        $discf = doubleval($p->discf );
         if($disc >0)  {
             $td = H::fa( $total * ($p->disc/100) );
             $ret=array('disc'=>$td) ;
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);
-             
+         
+            return $this->jsonOK($ret);   
         }        
-        if($disc >0)  {
+        if($discf >0)  {
           
-            if($total < $disc)  {
-               $disc =  $total;
+            if($total < $discf)  {
+               $discf =  $total;
             }
-            $ret=array('disc'=>$disc) ;
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);
-             
+            $ret=array('disc'=>$discf) ;
+            return $this->jsonOK($ret);
+              
         }        
-        return json_encode([], JSON_UNESCAPED_UNICODE);             
+        return $this->jsonOK();             
        
 
     }

@@ -41,8 +41,8 @@ class MoveItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore())) 
+        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore())) ;
         $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
         $this->docform->add(new DropDownChoice('tostoreemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
  
@@ -369,13 +369,7 @@ class MoveItem extends \App\Pages\Base
 
     }
 
-    public function OnChangeStore($sender) {
-        if ($sender->id == 'store') {
-            //очистка  списка  товаров
-            $this->_itemlist = array();
-            $this->docform->detail->Reload();
-        }
-    }
+ 
 
     public function OnItemType($sender) {
         $this->editdetail->edititem->setKey(0);
