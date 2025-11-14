@@ -1119,11 +1119,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
-
+   
         return  $price;
 
     }

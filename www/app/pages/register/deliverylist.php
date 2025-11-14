@@ -204,6 +204,6 @@ class DeliveryList extends \App\Pages\Base
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::DELIV);
 
-        return json_encode(array("cnt" => $cnt), JSON_UNESCAPED_UNICODE);
+        return  $this->jsonOK(array("cnt" => $cnt)) ;
     }
 }

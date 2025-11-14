@@ -584,13 +584,13 @@
                        </div>
                         {{/cflist}}
                        
-                        <div class="col-12  ">
+                        <div class="col-8 mt-4   ">
 
-                            <div class="form-group">
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 "> 
+                           
+                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary mr-4 "> 
                                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 
-                            </div>
+                           
                         </div>
                     </div>
                 </form>
@@ -926,17 +926,12 @@
         
             
          function getSticker( ){
-                var f = document.getElementById('formsticker')  ;
+              
                    
-                let formdata = new FormData(f);
-               
-          
-                   
-                callPageMethod('getSticker',null,formdata,(data)=> 
+                callPMForm('getSticker',null,'formsticker',(data)=> 
                 {
                      
-                    var data =  JSON.parse(data)  ;
-                   
+                 
                      
                     if(data.printer == 0) {
                        $('#tagsticker').html(data.data);
