@@ -60,8 +60,8 @@ class TimeSheet extends \App\Pages\Base
         $ret["end"] = $common['ts_end'] ;
         $ret["break"] = $common['ts_break'] ;
 
-
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK($ret) ;
+     
 
     }
 
@@ -190,8 +190,8 @@ class TimeSheet extends \App\Pages\Base
         }
 
 
-
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK($ret) ;
+     
 
     }
     public function save($args, $post) {
@@ -212,8 +212,9 @@ class TimeSheet extends \App\Pages\Base
         $time->t_type = $post->type;
 
         if ($time->t_type == 0) {
-
-            return "Не обрано тип";
+            return $this->jsonError("Не обрано тип";) ;
+     
+           
         }
 
 
@@ -242,7 +243,9 @@ class TimeSheet extends \App\Pages\Base
 
         $time->save();
 
-        return "";
+       return $this->jsonOK() ;
+     
+     
 
     }
 
@@ -250,7 +253,8 @@ class TimeSheet extends \App\Pages\Base
 
 
         TimeItem::delete($args[0]);
-
+        return $this->jsonOK() ;
+     
 
     }
 }

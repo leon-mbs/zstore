@@ -196,7 +196,7 @@ var calendar
            methods: {
                   init:function(){
                       
-                  callPageMethod('init',[], null,(data)=> 
+                  callPM('init',[], null,(data)=> 
                   {
                        let tmp =   JSON.parse(data)  
                        this.empid = tmp.empid; 
@@ -229,7 +229,7 @@ var calendar
                } ,    
                del:function(id){
                 
-                  callPageMethod('del',[id], null,(data)=> 
+                  callPM('del',[id], null,(data)=> 
                   {
                        this.loaddata() ;  
                   
@@ -303,14 +303,12 @@ var calendar
                      
                   } 
                      
-                  callPageMethod('save',[this.edited], JSON.stringify(body),(data)=> 
+                  callPM('save',[this.edited], body,(data)=> 
                   {
-                         if(data=="") {
+                          
                             this.loaddata() ;                               
                             $('#editmodal').modal('hide')   
-                         } else {
-                             toastr.error(data,'',{'timeOut':'5000'})
-                         }
+                          
                          
                       
 
@@ -328,9 +326,9 @@ var calendar
                      to:this.to 
                   } 
                      
-                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  callPM('loaddata',[],  body,(data)=> 
                   {
-                       let tmp =   JSON.parse(data)  
+
                        this.stat = tmp.stat 
                        this.times = tmp.times 
  
