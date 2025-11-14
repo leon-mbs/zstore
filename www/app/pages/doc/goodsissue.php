@@ -1120,7 +1120,6 @@ class GoodsIssue extends \App\Pages\Base
 
 
    
-        return  $price;
-
-    }
+         
+    
 }
