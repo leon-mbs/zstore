@@ -1826,14 +1826,7 @@ class ARMPos extends \App\Pages\Base
         return $this->_pt;
     }
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
 
-        return  $this->jsonOK($price);
-
-    }
 
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;

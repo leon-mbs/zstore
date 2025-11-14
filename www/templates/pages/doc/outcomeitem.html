@@ -129,16 +129,16 @@
 
 
     </form>
-    <form zippy="editdetail">
-        <h4>Введення товару </h4>
+   
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
-
+             <form zippy="editdetail">
+        <h4>Введення товару </h4>
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
                     <input     class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
-
-
+                   <a zippy="openitemsel">Відкрити довідник</a>
+                    <br>
                     Наявність: <span zippy="qtystock"></span>
 
 
@@ -169,10 +169,16 @@
                     <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
                     
                 </div>
+                  </form>
             </div>
+             <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+
+
+            </div>  
         </div>
 
-    </form>
+  
     <script>
         $(document).ready(function () {
       

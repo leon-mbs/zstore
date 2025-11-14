@@ -478,7 +478,7 @@
                    var q = $('#editquantity').val()
                    
                    $('#submitrow').attr('disabled','disabled')                     
-                      callPageMethod('getPriceByQty',[id,q], null,(data)=> 
+                      callPM('getPriceByQty',[id,q], null,(data)=> 
                       {
                                if(parseVal(data)){
                                   $('#editprice').val(data)

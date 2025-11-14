@@ -784,19 +784,15 @@ class Base extends \Zippy\Html\WebPage
     }
 
    
-    public function vgetPriceByQty($args, $post) {
-        $post = json_decode($post) ;
+    public function getPriceByQty($args, $post=null) {
+        $item = \App\Entity\Item::load($args[0]) ;
+        $args[1] = str_replace(',', '.', $args[1]) ;
+        $price = $item->getActionPriceByQuantity($args[1]);
 
-        $item =  \App\Entity\Item::load($post->item) ;
-
-        $price = $item->getActionPriceByQuantity($post->qty);
-
-        $ret=[];
-        $ret['price'] = $price;
-
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return  $this->jsonOK($price);
 
     }
+   
     public function vLoadCust($args, $post) {
 
         $ret=[];

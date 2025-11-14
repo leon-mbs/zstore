@@ -786,15 +786,7 @@ class Invoice extends \App\Pages\Base
         }
     }
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
-
-
-        return $price;
-
-    }
+  
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
