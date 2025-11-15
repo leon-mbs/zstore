@@ -204,9 +204,7 @@ class PayList extends \App\Pages\Base
                $doc->save();
             }
             
-            //todo доходы расходы
-            
-            
+              
             $conn->CommitTrans();
 
 

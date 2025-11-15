@@ -1,6 +1,13 @@
+миграция
+
+Item
+IOState
+отмена дока
+чекер  в  адмминке
+счета  в  зарплате
+приоритеты  
   
- alter
-VIEW documents_view
+ALTER VIEW documents_view
 AS
 SELECT
   d.document_id AS document_id,
@@ -28,7 +35,7 @@ SELECT
     when d.state=18 then 20  
     when d.state=14 then 30  
     when d.state=16 then 40  
-    when d.state in(7,11,20) then 40  
+    when d.state in(7,11,20) then 45  
     when d.state =3  then 70  
     when d.state = 21 then 75  
  
@@ -51,19 +58,6 @@ FROM documents d
   LEFT JOIN branches b
     ON d.branch_id = b.branch_id ;
  
- priory 
-  
-  
-INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  3, 'Реєстр ПН', 'TaxInvoiceList', '',    0);
-INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  1, 'Податкова накладна', 'TaxInvoice', 'Продажі',    0);
-INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  1, 'Додаток2 до ПН', 'TaxInvoice2', 'Продажі',    0);
-INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  1, 'Вхідна ПН', 'TaxInvoiceIncome', 'Закупівлі',     0);
-
- 
- 
-******************************************* 
- 
- 
  
  
 CREATE TABLE acc_entry (
@@ -73,8 +67,9 @@ CREATE TABLE acc_entry (
   accct varchar(4)  NULL,
   amount decimal(11, 2) NOT NULL,
   document_id int NOT NULL,
-  notes varchar(255)  NULL,
-  tag int    NULL   ,
+  
+  tagdt int    NULL   ,
+  tagct int    NULL   ,
  
   PRIMARY KEY (id) ,
   KEY document_id (document_id),
@@ -94,12 +89,13 @@ SELECT
   e.accdt AS accdt,
   e.accct AS accct,
   e.amount AS amount,
-   case when e.createdon  is NULL  then d.document_date else e.createdon  end      AS createdon,
-   case when e.notes  is NULL  then d.notes else e.notes  end      AS notes,
-  
+  case when e.createdon  is NULL  then d.document_date else e.createdon  end      AS createdon,
+    
+  d.notes AS notes,
   e.document_id AS document_id,
   d.branch_id AS branch_id,
-  e.tag AS tag,
+  e.tagdt AS tagdt,
+  e.tagct AS tagct,
    
   d.document_number AS document_number
 FROM  acc_entry e
@@ -115,18 +111,10 @@ INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabl
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Ручна проводка', 'ManualEntry', 'Бухоблiк',   0);
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Оборотно-сальдова вiдомiсть', 'ObSaldo', 'Бухоблiк',     0);
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Шахматна вiдомiсть', 'Shahmatka', 'Бухоблiк',   0 );
-INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблiк',  0, 0);
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблiк',  0 );
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Закриття перiоду', 'FinResult', 'Бухоблiк',   0);
+ 
 
-30 31
-36 63
 
-20 по  складу
-26 28 24 22
-23  по  списанию и оприходованию
-
-10 15 13
-
-оставить с 64
-
-66
+delete from options where  optname='version' ;
+insert into options (optname,optvalue) values('version','6.18.0'); 
