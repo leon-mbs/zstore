@@ -66,24 +66,11 @@ INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabl
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Шахматна вiдомiсть', 'Shahmatka', 'Бухоблiк',   0 );
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблiк',  0 );
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Закриття перiоду', 'FinResult', 'Бухоблiк',   0);
-
-30 31
-36 63
-
-20 по  складу
-26 28 24 22
-23  по  списанию и оприходованию
-
-10 15 13
-
-оставить с 64
-
-66
-
-
+ 
 миграция
 
 Item
 IOState
 отмена дока
 чекер  в  адмминке
+счета  в  зарплате

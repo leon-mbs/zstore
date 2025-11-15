@@ -416,6 +416,16 @@ class GoodsIssue extends Document
              
              $this->DoAccPay('36');   
              
-             // todo nds       
+            if ($this->getHD('nds',0) > 0){
+               $date= $this->document_date;
+               if($this->parent_id > 0 ){  //первое  событиен
+                   foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
+                       $date = $pay->paydate;
+                       break;
+                   }
+               }             
+                \App\Entity\AccEntry::addEntry('641','36',$this->getHD('nds' ),$this->document_id,$date,\App\Entity\AccEntry::TAG_NDS )  ; 
+               
+            }    
       }    
 }

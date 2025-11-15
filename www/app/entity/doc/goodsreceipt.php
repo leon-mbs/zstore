@@ -302,8 +302,15 @@ class GoodsReceipt extends Document
            \App\Entity\AccEntry::addEntry('63', '71',   $am,$this->document_id,$p->paydate)  ; 
         }
         if ($this->headerdata["nds"] > 0) {
-           //todo  если  предоплата то дата первого события
-           \App\Entity\AccEntry::addEntry('641', '63',   $this->headerdata["nds"],$this->document_id,0,\App\Entity\AccEntry::TAG_NDS)  ; 
+           //   если  предоплата то дата первого события
+           $date= $this->document_date;
+           if($this->parent_id >0){
+               foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
+                   $date = $pay->paydate;
+                   break;
+               }
+           }
+           \App\Entity\AccEntry::addEntry('63','641',    $this->headerdata["nds"],$this->document_id,$date,null,\App\Entity\AccEntry::TAG_NDS  )  ; 
         }                    
     } 
     

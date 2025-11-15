@@ -183,7 +183,9 @@ class ReturnIssue extends Document
           
         $this->DoAccPay('36',true);      
           
-        //todo  НДС         
+        if ($this->getHD('nds',0) > 0){
+             \App\Entity\AccEntry::addEntry('641','36',0-$this->getHD('nds' ),$this->document_id,0,\App\Entity\AccEntry::TAG_NDS )  ; 
+        } 
   }
 
 }

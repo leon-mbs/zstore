@@ -202,10 +202,7 @@ class PayList extends \App\Pages\Base
                $doc->setHD('waitpay',1); 
                $doc->save();
             }
-            
-            //todo доходы расходы
-            
-            
+          
             $conn->CommitTrans();
 
 

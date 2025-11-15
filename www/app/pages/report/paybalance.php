@@ -246,7 +246,7 @@ class PayBalance extends \App\Pages\Base
 
         foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {
            // if ($oc->getBalance($to) > 0) {
-             //todo   $inv += $oc->getBalance($to);
+             //    $inv += $oc->getBalance($to);
           //  }
         }
         $sql = " 
