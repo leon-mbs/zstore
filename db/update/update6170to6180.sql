@@ -1,12 +1,4 @@
-миграция
-
-Item
-IOState
-отмена дока
-чекер  в  адмминке
-счета  в  зарплате
-приоритеты  
-  
+ 
 ALTER VIEW documents_view
 AS
 SELECT
@@ -58,18 +50,19 @@ FROM documents d
   LEFT JOIN branches b
     ON d.branch_id = b.branch_id ;
  
+ALTER TABLE saltypes ADD acccode varchar(4) DEFAULT NULL;
  
  
 CREATE TABLE acc_entry (
   id bigint NOT NULL AUTO_INCREMENT,
   createdon DATE DEFAULT NULL,
-  accdt varchar(4)  NULL,
-  accct varchar(4)  NULL,
+  accdt varchar(4) DEFAULT NULL,
+  accct varchar(4) DEFAULT NULL,
   amount decimal(11, 2) NOT NULL,
   document_id int NOT NULL,
   
-  tagdt int    NULL   ,
-  tagct int    NULL   ,
+  tagdt int  DEFAULT  NULL   ,
+  tagct int  DEFAULT  NULL   ,
  
   PRIMARY KEY (id) ,
   KEY document_id (document_id),

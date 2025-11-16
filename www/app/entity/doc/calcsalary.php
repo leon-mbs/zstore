@@ -28,10 +28,10 @@ class CalcSalary extends Document
         if($this->document_date > $dt && $this->document_date < $to   ) {
             $to = $this->document_date;
         }
-        $iostate=0;
+         
         foreach ($this->unpackDetails('detaildata') as $emp) {
             $am = $emp->{$code};
-            $iostate += doubleval($emp->{$code}) ;
+          
             $eacc = new  EmpAcc();
             $eacc->emp_id = $emp->employee_id;
             $eacc->document_id = $this->document_id;
@@ -91,7 +91,7 @@ class CalcSalary extends Document
             }
            */  
         }
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $iostate, \App\Entity\IOState::TYPE_SALARY_OUTCOME );
+
         return true;
     }
 
