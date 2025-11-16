@@ -35,7 +35,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = -1;
     private $_rownumber = 1;
     private $_orderid   = 0;
-    private $_fops =[];
+ 
     private $_changedpos  = false;
 
     /**
@@ -88,11 +88,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
-        $this->_fops=[];
+        $fops=[];
         foreach(($firm['fops']??[]) as $fop) {
-          $this->_fops[$fop->id]=$fop->name ; 
+          $fops[$fop->id]=$fop->name ; 
         }
-        $this->docform->add(new DropDownChoice('fop', $this->_fops,0))->setVisible(count($this->_fops)>0) ;
+        $this->docform->add(new DropDownChoice('fop', $fops,0))->setVisible(count($fops)>0) ;
 
         $cp = \App\Session::getSession()->clipboard;
         $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);

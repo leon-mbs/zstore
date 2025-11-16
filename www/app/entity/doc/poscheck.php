@@ -93,6 +93,15 @@ class POSCheck extends Document
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment']);
             $header['nal']  = $mf->beznal!=1;
         }
+        
+        if ( $this->getHD("fop",0)  > 0) {
+               
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->getHD("fop")] ;
+            $header["firm_name"] = $fop->name ??'';
+            $header["tin"] = $fop->edrpou ??'';
+        }        
+        
         $report = new \App\Report('doc/poscheck.tpl');
 
         $html = $report->generate($header);
@@ -218,7 +227,14 @@ class POSCheck extends Document
             $header['promo']  = false;
         }
         
-        
+        if ( $this->getHD("fop",0)  > 0) {
+               
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->getHD("fop")] ;
+            $header["firm_name"] = $fop->name ??'';
+            $header["tin"] = $fop->edrpou ??'';
+        }        
+         
         $header['form1']  = false;
         $header['form2']  = false;
         $header['form3']  = false;
