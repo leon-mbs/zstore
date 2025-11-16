@@ -43,6 +43,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usefood"] = $options['usefood'] == 1;
         $this->_tvars["useprod"] = $options['useprod'] == 1;
         $this->_tvars["usends"] = $options['usends'] == 1;
+        $this->_tvars["useacc"] = $options['useacc'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
         $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;

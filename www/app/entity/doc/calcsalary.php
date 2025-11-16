@@ -31,7 +31,7 @@ class CalcSalary extends Document
         $iostate=0;
         foreach ($this->unpackDetails('detaildata') as $emp) {
             $am = $emp->{$code};
-            $iostate += doubleval($emp->{$all}) ;
+            $iostate += doubleval($emp->{$code}) ;
             $eacc = new  EmpAcc();
             $eacc->emp_id = $emp->employee_id;
             $eacc->document_id = $this->document_id;

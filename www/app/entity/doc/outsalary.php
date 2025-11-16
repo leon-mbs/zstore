@@ -32,8 +32,9 @@ class OutSalary extends Document
         }
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, 0 - $this->amount, $this->headerdata['payment'], $this->notes);
     
-    //    \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_SALARY_OUTCOME);
-
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_SALARY_OUTCOME);
+        $this->DoAcc() ;
+ 
         return true;
     }
 
@@ -70,5 +71,11 @@ class OutSalary extends Document
     protected function getNumberTemplate() {
         return 'ВЗ-000000';
     }
+    public   function DoAcc() {
+             if(\App\System::getOption("common",'useacc')!=1 ) return;
+             parent::DoAcc()  ;
 
+             $this->DoAccPay('66');
+               
+    }
 }
