@@ -1,0 +1,66 @@
+<html>
+   <head>
+        <title>  Фiнансовий звiт малого пiдприємства   </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12   ">
+                <h3> Фiнансовий звiт малого пiдприємства</h3>
+                <div class="card">
+                    <form zippy="filter" class="form-inline">
+
+                       <label for="yr">Рік</label>
+                        <select zippy="yr" class="form-control  mr-sm-2">
+
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                        </select>
+
+
+                        <label for="qw">квартал</label>
+                        <select zippy="qw" class="form-control mr-sm-2">
+
+                            <option value="1">I</option>
+                            <option value="2">II</option>
+                            <option value="3">III</option>
+                            <option value="4">IV</option>
+                        </select>          
+                         
+
+                        <input zippy="show" class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/balanssmall" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/balanssmall" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                         &nbsp; &nbsp;&nbsp;&nbsp;
+                        <a zippy="exml"  target="_blank" title="Експорт у XML"> Експорт в ДПА  XML </a>
+                                                                          
+
+                    </div>
+
+                     <div zippy="preview" class="table-responsive-sm" >                    </div>
+                  
+
+                </div>
+            </div>
+        </div>
+   <script>      
+        function check_show(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }                  
+        </script>        
+    </body>
+</html>

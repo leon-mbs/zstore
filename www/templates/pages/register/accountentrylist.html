@@ -1,0 +1,99 @@
+<html>
+     <head>
+        <title> Журнал проводок  </title>
+
+    </head>
+  <body>
+        <div class="row">
+            <div class="col-12  ">
+
+                <h3>Журнал проводок</h3>
+
+
+                <div class="card">
+                    <form zippy="filter" class="form-inline ">
+
+                  <label for="from"> З </label>
+                        <input type="text" class="form-control    " zippy="from" style="width:110px">
+                        <label for="to"> По </label>
+                        <input type="text" class="form-control    " zippy="to" style="width:110px">
+                    
+
+                        <label for="facc"> Рахунок </label>
+                        <select class="form-control mr-2" zippy="facc">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <label for="ftype"> Вибрати </label>
+                        <select class="form-control mr-2" zippy="ftype">
+                            <option value="0">Все</option>
+                            <option value="1">По дебету</option>
+                            <option value="2">По кредиту</option>
+                        </select>
+
+
+                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-6 col-xl-4">
+
+
+                <br><a zippy="csv">Експорт у Excel</a>
+
+                <table class="table   table-sm   ">
+                    <tr>
+
+                        <th>Дата</th>
+                        <th>Дебет</th>
+                        <th>Кредит</th>
+                        <th class="text-right">Сума</th>
+                        <th>Документ</th>
+                        <th></th>
+                        <th></th>
+
+
+                    </tr>
+                    <tr zippy="entrylist">
+
+                        <td class="text-nowrap" zippy="date"></td>
+
+                       
+                        <td zippy="dt"></td>
+                        <td zippy="ct"></td>
+                        <td zippy="amount" class="text-right"></td>
+                        <td zippy="number"></td>
+                        <td ><small zippy="notes"></small></td>
+                        <td  >
+
+                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+
+
+                        </td>
+
+
+                    </tr>
+
+                </table>
+
+                <div class="col-12 col-lg-8 mb-2" zippy="pag"></div>
+
+              
+
+            </div>
+
+            <div class="col-12">
+                <div zippy="docview"></div>
+            </div>
+
+        </div>
+
+
+
+
+
+    </body>
+</html>
