@@ -40,6 +40,7 @@ class ARMPos extends \App\Pages\Base
     private $_doc        = null;
     private $_rowid      = -1;
     private $_pt         = 0;
+    private $_fop        = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
     private $_mfbeznal = 0;
@@ -68,6 +69,7 @@ class ARMPos extends \App\Pages\Base
         $filter = \App\Filter::getFilter("armpos");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
+            $filter->fop = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
             $filter->salesource =  strlen($ss) > 0 ? $ss : H::getDefSaleSource();
@@ -76,6 +78,7 @@ class ARMPos extends \App\Pages\Base
 
 
         }
+        $firm = H::getFirmData(  $this->branch_id);
         
         //обшие настройки
         $this->add(new Form('form1'));
@@ -87,7 +90,13 @@ class ARMPos extends \App\Pages\Base
         $this->form1->add(new DropDownChoice('salesource', H::getSaleSources(), $filter->salesource));
         $this->form1->add(new DropDownChoice('mfnal', \App\Entity\MoneyFund::getList(1), $filter->mfnal));
         $this->form1->add(new DropDownChoice('mfbeznal', \App\Entity\MoneyFund::getList(2), $filter->mfbeznal));
-
+        $fops=[];
+        foreach(($firm['fops']??[]) as $fop) {
+          $fops[$fop->id]=$fop->name ; 
+        }
+        $this->form1->add(new DropDownChoice('fop', $fops, $filter->fop))  ;
+        $this->_tvars['usefops']  = count($fops) > 0;
+   
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
 
@@ -310,6 +319,7 @@ class ARMPos extends \App\Pages\Base
     public function next1docOnClick($sender) {
         $this->pos = \App\Entity\Pos::load($this->form1->pos->getValue());
 
+        $this->_fop = $this->form1->fop->getValue();
         $this->_store_id = $this->form1->store->getValue();
         $this->_salesource = $this->form1->salesource->getValue();
         $this->_pt = $this->form1->pricetype->getValue();
@@ -349,6 +359,7 @@ class ARMPos extends \App\Pages\Base
 
 
 
+        $filter->fop = $this->_fop;
         $filter->store = $this->_store_id;
         $filter->pricetype = $this->_pt;
         $filter->salesource = $this->_salesource;
@@ -1204,6 +1215,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
  
+        $this->_doc->headerdata['fop'] = $this->_fop;
         $this->_doc->headerdata['pos'] = $this->pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
