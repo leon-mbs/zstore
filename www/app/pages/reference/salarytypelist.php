@@ -38,6 +38,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->editform->add(new TextInput('editstname'));
         $this->editform->add(new TextInput('editshortname'));
         $this->editform->add(new TextInput('editcode'));
+        $this->editform->add(new DropDownChoice('editacc',[],0));
 
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -68,6 +69,7 @@ class SalaryTypeList extends \App\Pages\Base
         $row->add(new Label('stname', $item->salname));
         $row->add(new Label('shortname', $item->salshortname));
         $row->add(new Label('code', $item->salcode));
+        $row->add(new Label('acccode', $item->acccode ?? ''));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         
@@ -97,6 +99,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->editform->editshortname->setText($this->_st->salshortname);
         $this->editform->editdisabled->setChecked($this->_st->disabled);
         $this->editform->editcode->setText($this->_st->salcode);
+        $this->editform->editacc->setValue($this->_st->acccode ?? 0);
     }
 
     public function addOnClick($sender) {
@@ -117,6 +120,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->_st->salname = $this->editform->editstname->getText();
         $this->_st->salshortname = $this->editform->editshortname->getText();
         $this->_st->salcode = $this->editform->editcode->getText();
+        $this->_st->acccode = $this->editform->editacc->getValue();
         $this->_st->disabled = $this->editform->editdisabled->ischecked() ? 1 : 0;
 
         $code = intval($this->_st->salcode);

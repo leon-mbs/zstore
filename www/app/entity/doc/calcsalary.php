@@ -91,7 +91,7 @@ class CalcSalary extends Document
             }
            */  
         }
-
+        $this->DoAcc();  
         return true;
     }
 
@@ -145,5 +145,43 @@ class CalcSalary extends Document
     protected function getNumberTemplate() {
         return 'НЗ-000000';
     }
+    public   function DoAcc() {
+        if(\App\System::getOption("common",'useacc')!=1 ) return;
+        parent::DoAcc()  ;
+      
+        $opt = System::getOptions("salary");
 
+        $codeall      = "_c" . $opt['codeall'];
+  
+        $all=0;
+         
+        $accs=[];
+        
+        $st=\App\Entity\SalType::find("disabled<>1" );
+        foreach($st as $v){
+          if($v->acccode >0) $accs[$v->acccode]=0; 
+        }
+        foreach ($this->unpackDetails('detaildata') as $emp) {
+            $all += doubleval( $emp->{$codeall} );
+            foreach($st as $v){
+              if($v->acccode >0) {
+                 $code = "_c" . $v->salcode;
+                 $accs[$v->acccode] += doubleval( $emp->{$code}); 
+              }
+              
+            }      
+             
+        }
+        
+        
+        \App\Entity\AccEntry::addEntry( $this->getHD('acccode','91'),'66' ,$all,$this->document_id)  ; 
+        foreach($accs as $k=>$v)
+        {
+            if($v > 0) {
+               \App\Entity\AccEntry::addEntry( '66' ,$k ,$v,$this->document_id)  ; 
+            }
+        }
+                    
+                
+    }
 }

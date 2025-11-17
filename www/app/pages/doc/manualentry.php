@@ -241,7 +241,7 @@ class ManualEntry extends \App\Pages\Base
          $this->docform->removedoc->setChecked(true)   ;
         
          $this->_itemlist =[] ;
-         
+         $brf="";
          $conn = \ZDB\DB::getConnect();
          $date=$conn->DBDate($this->docform->document_date->getDate());
          $w="document_id in (select document_id from documents where document_date<={$date} )   " ; 

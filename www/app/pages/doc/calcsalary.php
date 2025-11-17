@@ -131,7 +131,7 @@ class CalcSalary extends \App\Pages\Base
         $this->_doc->headerdata['daysmon'] = $post->doc->daysmon;
         $this->_doc->headerdata['year'] = $post->doc->year;
         $this->_doc->headerdata['month'] = $post->doc->month;
-        $this->_doc->headerdata['iostate'] = $post->doc->iostate;
+        $this->_doc->headerdata['acccode'] = $post->doc->acccode;
         $this->_doc->headerdata['department'] = $post->doc->department;
         $mlist = \App\Util::getMonth();
         $this->_doc->headerdata['monthname'] = $mlist[$post->doc->month] ;
@@ -370,7 +370,7 @@ class CalcSalary extends \App\Pages\Base
          
 
             foreach($this->_stlist as $st) {
-          //      $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
+                $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
             }
             $e['_baseval'] = $emp->_baseval  ??0 ;
     
@@ -411,10 +411,7 @@ class CalcSalary extends \App\Pages\Base
     
         $pd = Employee::getDP() ;
         $ret['deps'] = $pd['d'] ;
-        $ret['iostates'] = [] ; 
-        foreach(IOState::getTypeListSal() as $k=>$v) {
-            $ret['iostates'][]=['key'=>$k,'value'=>$v];
-        }    
+       
         
         $ret['doc'] = [] ;
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
@@ -424,7 +421,7 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
-        $ret['doc']['iostate']   =   $this->_doc->headerdata['iostate'] ??0;
+        $ret['doc']['acccode']   =   $this->_doc->headerdata['acccode'] ?? 91;
         $ret['doc']['department']   =   $this->_doc->headerdata['department'] ??'';
 
 

@@ -153,16 +153,18 @@
  <div class="tab-pane  " id="thist">
              <div class="row" style="font-size:smaller">
 
-                        <div class="col-auto ">
+                        <div class="col-auto  ">
                             <h5>Iсторiя статусiв</h5>
                             <table class="table table-sm">
+                             
                                 <tr>
                                     <th>Статус</th>
                                     <th>Дата</th>
                                     <th>Змiнив</th>
 
 
-                                </tr>
+                                </tr> 
+                            
                                 <tr  v-for="item   in docdata.loglist"  >
                                     <td >{{item.statename}}</td>
                                     <td class="text-nowrap "  >{{item.statedate}}</td>
@@ -172,7 +174,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-auto" v-show="docdata.paylist.length >0">
+                        <div class="col-auto  " v-show="docdata.paylist.length >0">
                             <h5>Оплати</h5>
                             <table class="table table-sm">
                                 <tr>
@@ -194,7 +196,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-auto" v-show="docdata.entrylist.length >0">
+                        <div class="col-auto  " v-show="docdata.entrylist.length >0">
                             <h5>Проводки по складу</h5>
                             <table class="table table-sm">
                                 <tr>
@@ -222,6 +224,27 @@
                                 </tr>
                             </table>
                         </div>
+                    <div class="col-auto   " v-show="docdata.acclist.length >0">
+                            <h5>Бух. проводки</h5>
+                            <table class="table table-sm">
+                                 <tr>
+                                    <th>Дт</th>
+                                    <th>Кт</th>
+                        
+                                    <th class="text-right">Сума</th>
+
+                                </tr>
+                                <tr v-for="acc   in docdata.acclist" >
+                                    <td  >{{acc.dt}}</td>
+                                    <td  >{{acc.ct}}</td>
+                                    <td class="text-right "  >{{acc.am}}</td>
+                                    
+
+
+                                </tr>
+                            </table>
+                        </div>      
+                        
                     </div>
   </div>
   <div class="tab-pane  " id="tscan" v-show="docdata.isscan">
