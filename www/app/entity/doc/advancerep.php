@@ -77,7 +77,8 @@ class AdvanceRep extends Document
                 $ua->save();
             }
         
-
+        $this->DoAcc();  
+   
         return true;
     }
 
@@ -139,4 +140,39 @@ class AdvanceRep extends Document
       
     } 
  
+   public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+       
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'372', $am,$this->document_id)  ; 
+         }   
+              
+         foreach(\App\Entity\IOState::find("document_id=".$this->document_id) as $is){
+             if($is->iotype==\App\Entity\IOState::TYPE_BASE_OUTCOME)  {
+                 //пойдет в  себестоимость
+             }
+ 
+             if($is->iotype==\App\Entity\IOState::TYPE_COMMON_OUTCOME)  {
+                 \App\Entity\AccEntry::addEntry( '91' ,'372',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_ADMIN_OUTCOME)  {
+                  \App\Entity\AccEntry::addEntry( '92' ,'372',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_SALE_OUTCOME)  {
+                   \App\Entity\AccEntry::addEntry( '93' ,'372',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_OTHER_OUTCOME)  {
+               \App\Entity\AccEntry::addEntry( '94' ,'372',$is->amount,$this->document_id)  ; 
+             }
+          
+         }
+
+         $this->DoAccPay('372');      
+         
+                         
+    } 
+  
 }

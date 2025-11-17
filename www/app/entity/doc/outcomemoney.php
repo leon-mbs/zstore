@@ -111,5 +111,88 @@ class OutcomeMoney extends Document
                 $b->save();
             }
        }
-    }    
+       $this->DoAcc();
+       
+    }   
+    
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+      
+         $mf=  \App\Entity\MoneyFund::load($this->headerdata['payment']) ;
+         $n=  $mf->beznal ?'31':'30' ;
+         
+        if ($this->headerdata['detail'] == 1)  {    // возврат  покупателю
+             $this->DoAccPay('36',true);
+        }  else   
+        if ($this->headerdata['detail'] == 2)  {    // оплата  поставщику
+             $this->DoAccPay('63' );
+        } else  
+        if ($this->headerdata['detail'] == 3)  {    // подотчет
+            $this->DoAccPay('372',$n);
+        } else {
+             $acc='';
+             
+             switch($this->headerdata['type'])  {
+                 case \App\Entity\IOState::TYPE_COMMON_OUTCOME:  
+                   $acc='91';
+                   break;
+                 case \App\Entity\IOState::TYPE_ADMIN_OUTCOME:  
+                   $acc='92';
+                   break;
+                 case \App\Entity\IOState::TYPE_SALE_OUTCOME:  
+                   $acc='93';
+                   break;
+                 case \App\Entity\IOState::TYPE_TAX_NDS:  
+                 case \App\Entity\IOState::TYPE_TAX_OUTCOME:  
+                   $acc='641';
+                   break;
+                 case \App\Entity\IOState::TYPE_TAX_CARE:  
+                   $acc='645';
+                   break;
+                 case \App\Entity\IOState::TYPE_BILL_OUTCOME:  
+                   $acc='943';
+                   break;
+                 case \App\Entity\IOState::TYPE_BILL_RENT:  
+                   $acc='944';
+                   break;
+                 case \App\Entity\IOState::TYPE_DIVIDEND_OUTCOME:  
+                   $acc='44';
+                   break;
+                 case \App\Entity\IOState::TYPE_INV:  
+                   $acc='15';
+                   break;
+                 case \App\Entity\IOState::TYPE_NAKL:  
+                   $acc='941';
+                   break;
+               case \App\Entity\IOState::TYPE_ADS:  
+                   $acc='93';
+                   break;
+               case \App\Entity\IOState::TYPE_BANK:  
+                   $acc='949';
+                   break;
+               case \App\Entity\IOState::TYPE_SALARY_OUTCOME:  
+                   $acc='66';
+                   break;
+               case \App\Entity\IOState::TYPE_OTHER_OUTCOME:  
+                   $acc='97';
+                   break;
+//               case \App\Entity\IOState::TYPE_OTHER_OUTCOME:  
+//                   $acc='99';
+//                   break;
+                 
+             }
+ 
+     
+  
+             if($acc !='') {
+                 \App\Entity\AccEntry::addEntry( $acc, $n, $this->amount,$this->document_id )  ; 
+             }
+        }        
+        
+            
+                         
+    } 
+     
+}     
 }

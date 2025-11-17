@@ -32,6 +32,7 @@ class IncomeItem extends Document
 
         }
  
+        $this->DoAcc() ;
      
         return true;
     }
@@ -81,4 +82,14 @@ class IncomeItem extends Document
         return 'ОТ-000000';
     }
 
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+      
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_IN) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'40', $am,$this->document_id)  ; 
+         }   
+    }    
 }

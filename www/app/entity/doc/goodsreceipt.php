@@ -204,6 +204,8 @@ class GoodsReceipt extends Document
              }
         }
 
+        $this->DoAcc();  
+        
         return true;
     }
 
@@ -251,7 +253,8 @@ class GoodsReceipt extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
-        
+        $this->DoAcc();  
+      
     }
     
     
@@ -268,5 +271,49 @@ class GoodsReceipt extends Document
             }
       }
    }
+   
+ public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'63', $am,$this->document_id)  ; 
+         } 
+   
+         $this->DoAccPay('63'); 
+               
+         if($this->headerdata['delivery'] > 0) {
+           if($this->headerdata['deliverytype']== 1) { 
+                \App\Entity\AccEntry::addEntry('941',  '23',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
+           if($this->headerdata['deliverytype']== 2) { 
+                \App\Entity\AccEntry::addEntry(null,  '941',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
+           
+        }  
+        
+        
+   
+        
+        if ($this->headerdata["disc"] > 0) {
+           \App\Entity\AccEntry::addEntry('63', '71',   $am,$this->document_id,$p->paydate)  ; 
+        }
+        if ($this->headerdata["nds"] > 0) {
+           //   если  предоплата то дата первого события
+           $date= $this->document_date;
+           if($this->parent_id >0){
+               foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
+                   $date = $pay->paydate;
+                   break;
+               }
+           }
+           \App\Entity\AccEntry::addEntry('63','641',    $this->headerdata["nds"],$this->document_id,$date,null,\App\Entity\AccEntry::TAG_NDS  )  ; 
+        }                    
+    } 
+    
 }
 
