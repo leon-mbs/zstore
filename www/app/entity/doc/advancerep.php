@@ -135,10 +135,8 @@ class AdvanceRep extends Document
     protected function getNumberTemplate() {
         return 'АЗ-000000';
     }
-    public   function DoAcc() {
-        parent:: DoAcc() ;
-      
-    } 
+     
+  
  
    public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;

@@ -194,5 +194,5 @@ class OutcomeMoney extends Document
                          
     } 
      
-}     
+      
 }

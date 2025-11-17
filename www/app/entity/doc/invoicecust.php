@@ -119,5 +119,5 @@ class InvoiceCust extends Document
     
     
          $this->DoAccPay('63'); 
-      
+   }    
 }

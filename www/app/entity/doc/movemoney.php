@@ -48,5 +48,5 @@ class MoveMoney extends Document
        $this->DoAccPay(null)  ;
   
     }
-}
+ 
 }
