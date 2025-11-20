@@ -536,12 +536,20 @@ class Item extends \ZCL\DB\Entity
     }
 
 
-    //последняя  партия true по  приходу  false по расходу
-    public function getLastPartion($store = 0, $snumber = "", $in = true) {
+    /**
+    * последняя  партия
+    * 
+    * @param mixed $store       склад
+    * @param mixed $snumber     серийный  номер
+    * @param mixed $in          приход/расход
+    * @param mixed $doctype     брать с документа (например  'GoodsReceipt' или  '*' если для  любого) а не  складских  проводок
+    * @return mixed
+    */
+    public function getLastPartion($store = 0, $snumber = "", $in = true,$doctype="") {
         $conn = \ZDB\DB::getConnect();
         $q = $in == true ? "e.quantity >0" : "e.quantity < 0";
 
-        $sql = "  select coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+        $sql = "  select document_id,coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . intval($store);
@@ -549,11 +557,25 @@ class Item extends \ZCL\DB\Entity
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
+        if (strlen($doctype) > 0 && $doctype != '*' ) {
+            $sql .= " and  document_id in (select document_id from documents_view where  meta_name= '{$doctype}'  )  " ;
+        }
+     
      
         $sql = $sql . " order  by  e.entry_id desc  "  ;
-
+         
         foreach($conn->Execute($sql) as $r) {
-           return doubleval($r['p']);            
+            if (strlen($doctype) == 0) {
+               return doubleval($r['p']);             
+            }         
+            
+            $doc = \App\Entity\Doc\Document::load($r['document_id']);
+            if($doc != null)  {
+                foreach ($doc->unpackDetails('detaildata') as $item) {
+                   return doubleval($item->price);             
+                    
+                }
+            }
         }
         
         return 0;

@@ -540,16 +540,13 @@ class InvoiceCust extends \App\Pages\Base
         $this->wselitem->Reload();
     }
 
-    public function onSelectItem($item_id, $itemname, $price=null) {
+    public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
         $item = Item::load($item_id);
 
-        if($price==null) {
-        //    $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
-
-        }
-        
+        $price = $item->getLastPartion(0, "", true,'GoodsReceipt');
+     
         $this->editdetail->editprice->setText(H::fa($price));
         
     }
