@@ -95,11 +95,11 @@ class Item extends \ZCL\DB\Entity
         if (!is_array($this->brprice)) {
             $this->brprice = array();
         }
-
+    
         $id = \App\System::getBranch();
-        if ($id > 0 && is_array($this->brprice[$id]??null)) {  
+        if ($id > 0 ) {  
             $branchprice = \App\System::getOption('common','branchprice');
-            if($branchprice==1) { 
+            if($branchprice==1  && is_array($this->brprice[$id]??null)) { 
                 $this->price1 = $this->brprice[$id]['price1'];
                 $this->price2 = $this->brprice[$id]['price2'];
                 $this->price3 = $this->brprice[$id]['price3'];
@@ -109,7 +109,7 @@ class Item extends \ZCL\DB\Entity
     
             $this->cell   = $this->brprice[$id]['cell'] ?? $this->cell ;
         }
-
+       
         $this->actionqty1 = doubleval($xml->actionqty1[0]);
         $this->actionprice1 = doubleval($xml->actionprice1[0]);
         $this->actionqty2 = doubleval($xml->actionqty2[0]);
@@ -150,7 +150,7 @@ class Item extends \ZCL\DB\Entity
               $a['price5'] = $this->price5;
            
               
-           }
+          
             $this->brprice[$fid] =$a;   
                                                      
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
@@ -160,7 +160,7 @@ class Item extends \ZCL\DB\Entity
             $this->price4 = $prev->price4;
             $this->price5 = $prev->price5;
             $this->cell = $prev->cell;
-        
+         }
             
         }
         $this->detail = "<detail>";
