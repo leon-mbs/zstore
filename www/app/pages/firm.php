@@ -73,6 +73,7 @@ class Firm extends \App\Pages\Base
         $firm['tin'] = $this->firmform->tin->getText();
         $firm['phone'] = $this->firmform->phone->getText();
         $firm['address'] = $this->firmform->address->getText();
+        $firm['city'] = $this->firmform->city->getText();
         $firm['vdoc'] = $this->firmform->vdoc->getText();
   
         $firm['sign'] = $this->firmform->sign->getText();

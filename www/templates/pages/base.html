@@ -30,7 +30,7 @@
         <script src="/assets/js/app.js?t=1"></script>     
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
-        <script src="/assets/fontawesome/js/all.js"></script>     
+        
 
 
        
@@ -1036,12 +1036,15 @@
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
                     };
-            $(function () {
+        
+            
+            $(document).ready(function (){
                 $('[data-toggle="popover"]').popover();
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.select2').select2({theme:'bootstarp4'});
-  
-            });
+     
+            })              
+ 
             $(window).scroll(function () {
                 if ($(this).scrollTop() > 600) {
                 if ($('#upbutton').is(':hidden')) {
