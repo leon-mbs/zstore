@@ -107,6 +107,7 @@ CREATE TABLE documents (
   KEY customer_id (customer_id),
   KEY user_id (user_id),
   KEY branch_id (branch_id),
+  KEY parent_id (parent_id),
   
   KEY document_number (document_number),
   KEY state (state),
@@ -1672,4 +1673,3 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbalans','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration12','done');
-INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6171','done');

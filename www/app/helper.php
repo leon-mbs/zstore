@@ -1531,36 +1531,7 @@ class Helper
         }
             
     
-        
-        $migration6171 = \App\Helper::getKeyVal('migration6171'); 
-        if($migration6171 != "done"  ) {
-            Helper::log("Міграція 6171");
-         
-            \App\Helper::setKeyVal('migration6171', "done");           
-        
-            try {
           
-      
-       
-                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
-                           
-                 foreach($w as $e){
-                     if($e['Key_name']=='parent_id'){
-                          $conn->Execute("ALTER TABLE documents DROP INDEX `parent_id` ");
-                     }             
-      
-                 }
-              
-                       
-            } catch(\Throwable $ee) {
-         
-                $logger->error($ee->getMessage());
-               
-            }           
-           
-        }
-              
-              
     }
 
 
