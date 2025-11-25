@@ -1157,23 +1157,37 @@ class Document extends \ZCL\DB\Entity
             return false;
         }
  
-   
+        $firm = Helper::getFirmData(  $this->branch_id);
+ 
         $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
         
       
         if($mf == null) {
             return false;
         }
- 
-        $payee= $mf->payname ??'' ;
-      
+        
+        $payee  =  $firm['firm_name'] ;//плательщик 
+        $tin =  $firm['tin']  ;//едрпоу 
+        
+        if(strlen($mf->payname ??'') > 0)  $payee  = $mf->payname;
+        if(strlen($mf->tin ??'') > 0) $tin  = $mf->tin;
+          
         $iban = $mf->iban??'';
-        if(  strlen($iban) == 0|| strlen($payee) == 0) {
+        if(  strlen($iban) == 0|| strlen($tin) == 0) {
             return false;
         }
 
          
         
+/*
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $tin = $fop->edrpou ??'';
+            $payee = $fop->name ??'';
+        }       
+*/
+
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
             $number  =    $this->headerdata['outnumber']  ;
@@ -1192,7 +1206,7 @@ class Document extends \ZCL\DB\Entity
         $url = $url .  $payee ."\n";
         $url = $url .  $iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
-        $url = $url .  $kod."\n\n\n";
+        $url = $url .  $tin."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
         $url = base64_encode($url);
