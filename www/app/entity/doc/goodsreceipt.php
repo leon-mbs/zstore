@@ -163,10 +163,8 @@ class GoodsReceipt extends Document
         $this->DoBalans() ;
 
         if($this->headerdata['delivery'] > 0) {
-           if($this->headerdata['deliverytype']== 1) { 
-               \App\Entity\IOState::addIOState($this->document_id,  $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
-               \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-           }
+           \App\Entity\IOState::addIOState($this->document_id, 0- $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
            if($this->headerdata['deliverytype']== 3) {  
                 $pay = new \App\Entity\Pay();
                 $pay->mf_id = $this->headerdata['payment'];
@@ -177,12 +175,12 @@ class GoodsReceipt extends Document
                 $pay->notes = 'Доставка';
                 $pay->user_id = \App\System::getUser()->user_id;
                 $pay->save();
-                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+             
                 
            }
         }  
 
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + doubleval($this->headerdata["delivery"]), \App\Entity\IOState::TYPE_BASE_OUTCOME);
        
         if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
              foreach ($this->unpackDetails('detaildata') as $item) {
