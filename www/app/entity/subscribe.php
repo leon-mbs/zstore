@@ -310,7 +310,15 @@ class Subscribe extends \ZCL\DB\Entity
         $list = self::find('disabled <> 1 and sub_type= ' . self::EVENT_ENDDAY);
         foreach ($list as $sub) {
             $options=[];
-         
+            $options['phone'] = '';
+            $options['viber'] = '';
+            $options['email'] = '';
+            $options['chat_id'] = '';
+            $options['notifyuser'] = '';
+            $options['chat_id'] = '';
+            $options['email'] = '';
+            
+       
             $u=null;
           
             if ($sub->reciever_type == self::RSV_USER) {

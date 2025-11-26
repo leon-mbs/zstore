@@ -176,7 +176,7 @@ class EQ extends Document
         
         $optype= $this->headerdata['optype'] ;
     
-        $eq_id= intval($this->headerdata['eq_id']) ;//todo
+        $eq_id= intval($this->headerdata['eq_id']) ;
         if($optype==EqEntry::OP_INCOME  )  {
              \App\Entity\AccEntry::addEntry( '10' ,'15',$this->amount,$this->document_id)  ; 
         }

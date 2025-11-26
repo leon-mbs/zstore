@@ -593,7 +593,6 @@ CREATE TABLE saltypes (
   salcode int(11) NOT NULL,
   salname varchar(255) NOT NULL,
   salshortname varchar(255) DEFAULT NULL,
-  salshortname varchar(255) DEFAULT NULL,
   acccode varchar(4) DEFAULT NULL,
   disabled tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (st_id)
