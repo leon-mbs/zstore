@@ -174,7 +174,7 @@ class ReturnIssue extends Document
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
     
          //сторно
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_RSELL) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_RSELL) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry('90',$a, 0-$am,$this->document_id)  ; 
          }       

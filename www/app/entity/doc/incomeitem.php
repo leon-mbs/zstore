@@ -87,7 +87,7 @@ class IncomeItem extends Document
          parent::DoAcc()  ;
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
       
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_IN) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_IN) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry($a,'40', $am,$this->document_id)  ; 
          }   

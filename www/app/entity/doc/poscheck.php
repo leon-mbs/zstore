@@ -526,6 +526,8 @@ class POSCheck extends Document
   public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
+         $conn = \ZDB\DB::getConnect();
+
        //тмц
          
          $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
@@ -543,7 +545,7 @@ class POSCheck extends Document
              \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
          }   
           //услуги    
-         $sql="select   coalesce(abs(sum(quantity * cost )),0) as am   from entrylist_view   where service_id >0 and document_id={$document_id} and tag=   ".Entry::TAG_SELL;
+         $sql="select   coalesce(abs(sum(quantity * cost )),0) as am   from entrylist_view   where service_id >0 and document_id={$this->document_id} and tag=   ".Entry::TAG_SELL;
          $am=H::fa($conn->GetOne($sql));   
          \App\Entity\AccEntry::addEntry('90','23', $am,$this->document_id)  ; 
  
