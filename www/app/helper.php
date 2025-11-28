@@ -1328,40 +1328,7 @@ class Helper
     }
 
 
-    /**
-     * проверка  новой версии
-     * @deprecated
-     */
-    public static function checkVer() {
-
-        $phpv = phpversion();
-        $conn = \ZDB\DB::getConnect();
-
-        $nocache = "?t=" . time() . "&s=" . Helper::getSalt() . '&phpv=' . $phpv . '_' . \App\System::CURR_VERSION;
-
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php" . $nocache);
-        $v = @json_decode($v, true);
-        if(!is_array($v)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json" . $nocache);
-            $v = @json_decode($v, true);
-
-        }
-        if(strlen($v['version']) > 0) {
-            $c = str_replace("v", "", \App\System::CURR_VERSION);
-            $n = str_replace("v", "", $v['version']);
-
-            $ca = explode('.', $c);
-            $na = explode('.', $n);
-
-            if($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
-                return $v['version'];
-            }
-
-        }
-
-        return '';
-    }
-
+ 
     /**
      * выполняет перенос  данных на  новой  версии
      *

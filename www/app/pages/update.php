@@ -47,6 +47,7 @@ class Update extends \App\Pages\Base
         $this->_sql['6.14.0']='update6140to6150.sql';
         $this->_sql['6.15.0']='update6150to6160.sql';
         $this->_sql['6.16.0']='update6160to6170.sql';
+        $this->_sql['6.17.0']='update6170to6180.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;

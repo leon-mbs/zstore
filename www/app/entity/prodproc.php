@@ -50,7 +50,7 @@ class ProdProc extends \ZCL\DB\Entity
             $st->pp_id = $proc->pp_id;
             $st->startdateplan = $st->startdateplan + $diff;
             $st->enddateplan = $st->enddateplan + $diff;
-            //todo emps
+         
             $st->save();
         }
 

@@ -354,9 +354,9 @@ class Document extends \ZCL\DB\Entity
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
           
-         //   if( System::getOption("common",'useacc')==1) {
-          //      $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-         //   }
+            if( System::getOption("common",'useacc')==1) {
+                $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+            }
  
     }
 
@@ -480,8 +480,7 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
      
-        //todo
-        $this->priority = $this->getPriorytyByState($this->state) ;
+   //     $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
 
@@ -577,7 +576,7 @@ class Document extends \ZCL\DB\Entity
         if($state == self::STATE_NEW) {
             return 100;
         }
-        return 0;
+        return 50;
     }
 
     /**
@@ -1225,7 +1224,7 @@ class Document extends \ZCL\DB\Entity
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
-   
+     
 
     /**
     *    возвращает ссылку  на чек в  налоговой
@@ -1360,8 +1359,48 @@ class Document extends \ZCL\DB\Entity
  
     }
     
+    
+    /**
+    * бухгалтерские проводки
+    * 
+    */
     public   function DoAcc() {
-   
+       $conn = \ZDB\DB::getConnect();
+       $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+          
+            
     } 
+  
+    /**
+    * проводки  по касе
+    * 
+    * @param mixed $acc  корреспондирующий счет
+    * @param mixed $storno
+    */
+    protected   function DoAccPay($acc,$storno=false) {
+        foreach(\App\Entity\Pay::find("    mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $n=  $mf->beznal ?'31':'30' ;
+         
+             $am=$p->amount;  
+             if($p->paytype == \App\Entity\Pay::PAY_DELIVERY ){
+                \App\Entity\AccEntry::addEntry('941', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
+             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
+                \App\Entity\AccEntry::addEntry('949', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
+             if($am>0) {
+                 \App\Entity\AccEntry::addEntry(  $n, $acc, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
+             } else {
+                 \App\Entity\AccEntry::addEntry($acc, $n, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
+               
+             }
+              
+        } 
+    }
+  
+ 
       
 }

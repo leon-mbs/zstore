@@ -16,12 +16,12 @@ class User extends \ZCL\DB\Entity
      */
     protected function init() {
         $this->userlogin = "Гость";
+        $this->rolename = "Гость";
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
         $this->defpaytype = 0;
         $this->defsalesource = 0;
-        $this->deffirm = 0;
         $this->hidesidebar = 0;
         $this->usebotfornotify = 0;
         $this->prturn = 0;
@@ -97,7 +97,7 @@ class User extends \ZCL\DB\Entity
             $options = array();
         }
 
-        $this->deffirm = (int)$options['deffirm'];
+
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
         $this->defpaytype = $options['defpaytype']??0;
@@ -148,7 +148,7 @@ class User extends \ZCL\DB\Entity
         $options = array();
 
         $options['defstore'] = $this->defstore;
-        $options['deffirm'] = $this->deffirm;
+
 
         $options['defpaytype'] = $this->defpaytype;
         $options['defmf'] = $this->defmf;

@@ -167,6 +167,16 @@ class DocView extends \Zippy\Html\PageFragment
         }
         $ret['reldocs'] = array();
 
+        
+        $ret["acclist"] =[]   ;
+        if($common["useacc"]==1) {
+           foreach( \App\Entity\AccEntry::find('document_id='.$doc->document_id,'id') as $acc) {
+              $ret["acclist"][]=['dt'=>$acc->accdt,'ct'=>$acc->accct,'am'=> H::fa($acc->amount)]  ; 
+           }
+        
+        }            
+        
+        
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
     }

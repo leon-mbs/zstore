@@ -888,10 +888,11 @@ class GoodsReceipt extends \App\Pages\Base
 
         $total = doubleval($total) + $nds - doubleval($disc)  ;
         
-        if($this->docform->editdeliverytype->getValue()==3 ) {
-           $total +=  $delivery;    //если заплатил поставщик
+    
+        $dt =$this->docform->editdeliverytype->getValue();
+        if($dt==2 || $dt==3) {
+           $total += $delivery;    
         }
-        
         
 
         $this->docform->editpayamount->setText(H::fa($total));

@@ -162,28 +162,21 @@ class GoodsReceipt extends Document
       
         $this->DoBalans() ;
 
-        if($this->headerdata['delivery'] > 0) {
-           if($this->headerdata['deliverytype']== 1) { 
-               \App\Entity\IOState::addIOState($this->document_id,  $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
-               \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-           }
-           if($this->headerdata['deliverytype']== 3) {  
-                $pay = new \App\Entity\Pay();
-                $pay->mf_id = $this->headerdata['payment'];
-                $pay->document_id = $this->document_id;
-                $pay->amount = 0-$this->headerdata['delivery'];
-                $pay->paytype = \App\Entity\Pay::PAY_DELIVERY;
-                $pay->paydate = time();
-                $pay->notes = 'Доставка';
-                $pay->user_id = \App\System::getUser()->user_id;
-                $pay->save();
-                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-                
-           }
+         $io= $this->payamount;
+         $del = $this->headerdata['delivery'] * $rate;
+         if($del > 0) {
+           if($this->headerdata['deliverytype']  < 4 ) { 
+               \App\Entity\IOState::addIOState($this->document_id, 0- $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+           }  
+           if($this->headerdata['deliverytype'] ==2 || $this->headerdata['deliverytype'] == 4 ) { 
+               $io = $io - $del;   //вычитаем из общих расходов  (по оплате)
+           }  
+       
         }  
 
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $io, \App\Entity\IOState::TYPE_BASE_OUTCOME);
        
+     
         if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
@@ -204,6 +197,8 @@ class GoodsReceipt extends Document
              }
         }
 
+        $this->DoAcc();  
+        
         return true;
     }
 
@@ -251,7 +246,8 @@ class GoodsReceipt extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
-        
+        $this->DoAcc();  
+      
     }
     
     
@@ -268,5 +264,49 @@ class GoodsReceipt extends Document
             }
       }
    }
+   
+ public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'63', $am,$this->document_id)  ; 
+         } 
+   
+         $this->DoAccPay('63'); 
+               
+         if($this->headerdata['delivery'] > 0) {
+           if($this->headerdata['deliverytype']== 1) { 
+                \App\Entity\AccEntry::addEntry('941',  '23',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
+           if($this->headerdata['deliverytype']== 2) { 
+                \App\Entity\AccEntry::addEntry(null,  '941',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
+           
+        }  
+        
+        
+   
+        
+        if ($this->headerdata["disc"] > 0) {
+           \App\Entity\AccEntry::addEntry('63', '71',   $am,$this->document_id,$p->paydate)  ; 
+        }
+        if ($this->headerdata["nds"] > 0) {
+           //   если  предоплата то дата первого события
+           $date= $this->document_date;
+           if($this->parent_id >0){
+               foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
+                   $date = $pay->paydate;
+                   break;
+               }
+           }
+           \App\Entity\AccEntry::addEntry('63','641',    $this->headerdata["nds"],$this->document_id,$date,null,\App\Entity\AccEntry::TAG_NDS  )  ; 
+        }                    
+    } 
+    
 }
 

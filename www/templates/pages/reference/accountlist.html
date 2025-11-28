@@ -1,0 +1,35 @@
+<html>
+    <head>
+            <title> План рахунків </title>
+
+    </head>
+
+    <body>
+
+
+        <div class="row"  >
+            <div class="col-12 col-md-6 col-xl-4">
+                <h2>План рахунків</h2>
+
+                <table class="table    table-sm">
+                    <tr>
+                        <th>Код</th>
+                        <th>Назва</th>
+                      
+                    </tr>
+                    {{#acclist}}
+                    <tr  >
+                        <td  >{{acc_code}}</td>
+                        <td  >{{acc_name}}</td>
+                    </tr>
+                    {{/acclist}}
+                 </table>
+
+
+            </div>
+        </div>
+  
+
+
+    </body>
+</html>

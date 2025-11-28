@@ -310,6 +310,7 @@ class Order extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
+       $this->DoAcc() ;
              
     }
     /**
@@ -343,4 +344,14 @@ class Order extends \App\Entity\Doc\Document
      
          return $notsendqty;
     }    
+    
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+     
+     
+         $this->DoAccPay('36');      
+
+        
+    }       
 }

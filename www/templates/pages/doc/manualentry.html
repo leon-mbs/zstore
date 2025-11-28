@@ -1,0 +1,133 @@
+<html>
+    <head>
+          <title> Ручна проводка</title>
+    </head>
+    <body>
+
+
+        <form zippy="docform">
+            <h3> Ручна проводка</h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа</label>
+                        <input class="form-control" type="text" zippy="document_number">
+                    </div>
+                     <div class="form-group">
+                        <label for="document_date"> Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  required >
+                    </div>   
+                     <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+                    </div>
+                </div>
+                 <div class="col-12 col-md-4 col-xl-3">
+                     <b>Генерацiя  проводок початкових залишкiв </b>
+                     <br><small>Слiд виконовати на  кiнець звiтного перiоду з закритими розрахунками, завершеним  виробництвом тощо</small>
+                    <div class="form-group">
+                       <input zippy="generate" type="submit" value="Згенерувати" class="btn   btn-primary ">
+                      
+                    </div>
+                    
+                 <div class="form-check">
+                    <input zippy="reloaddoc" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="reloaddoc">Перепровести  проводки, старшi дати документа </label>
+                    
+                </div>
+                 <div class="form-check">
+                    <input zippy="removedoc" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="removedoc">Видалити проводки до дати документа </label>
+                    
+                </div>
+                 <small> <i class="fa fa-exclamation-triangle"></i> Данi операцiї не вiдмiняються  при  скасуваннi документу</small>
+                   
+               </div>
+
+            </div>
+          <div class="row">
+                <div class="col-12 col-md-7 col-xl-5">
+                    <a zippy="addrow" class="btn btn-info  ">Додати  </a>
+                    <table class="table table-sm">
+                        <tr>
+
+                            <th>Дебет</th>
+                            <th>Кредит</th>
+                            <th class="text-right">Сума</th>
+                         
+
+                            <th  ></th>
+                        </tr>
+                        <tr zippy="detail">
+
+                            <td zippy="accdt"></td>
+                            <td zippy="accct"></td>
+                            <td zippy="amount" class="text-right"></td>
+                       
+                            
+                            <td>   <a zippy="delete"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6  ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+
+                </div>
+            </div>
+
+
+        </form>
+ <form zippy="editdetail">
+            <h4>Нова  проводка </h4>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+           
+                    <div class="form-group  ">
+                        <label for="editdt">Дебет</label>
+                        <select class="form-control" zippy="editdt">
+                          <option value="0">Не вказано</option>
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label for="editct">Кредит</label>
+                        <select class="form-control" zippy="editct">
+                          <option value="0">Не вказано</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editamount">Сума</label>
+                        <input  style="width:120px" pattern="[0-9,\.\-]+" class="form-control qtyprice" type="text" zippy="editamount">
+                    </div>
+                  
+                    <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-outline-secondary mr-2">
+                        <input type="submit" zippy="submitrow" value="Додати" class="btn btn-outline-secondary ">
+                        
+                    </div>
+
+
+                </div>
+            </div>
+
+        </form>
+
+  <script >
+    function check_generate(ele){
+     
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }
+  </script>
+
+    </body>
+
+</html>

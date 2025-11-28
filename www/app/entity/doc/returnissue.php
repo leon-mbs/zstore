@@ -163,5 +163,30 @@ class ReturnIssue extends Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
+      $this->DoAcc();          
+         
     }
+    
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+      //   parent::DoAcc()  ;
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+    
+         //сторно
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_RSELL) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('90',$a, 0-$am,$this->document_id)  ; 
+         }       
+     
+       
+        \App\Entity\AccEntry::addEntry('36', '70', 0-$this->payamount,$this->document_id)  ; 
+          
+        $this->DoAccPay('36',true);      
+          
+        if ($this->getHD('nds',0) > 0){
+             \App\Entity\AccEntry::addEntry('641','36',0-$this->getHD('nds' ),$this->document_id,0,\App\Entity\AccEntry::TAG_NDS )  ; 
+        } 
+  }
+    
 }
