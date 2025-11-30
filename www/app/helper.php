@@ -1496,8 +1496,32 @@ class Helper
                
             }  
         }
+         
             
-    
+        $migration6180 = \App\Helper::getKeyVal('migration6180'); 
+        if($migration6180 != "done"  ) {
+            Helper::log("Міграція 6180");
+         
+            \App\Helper::setKeyVal('migration6180', "done");           
+        
+            try {
+       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                 $is=false;          
+                 foreach($w as $e){
+                     if($e['Key_name']=='parent_id'){
+                          $is=true;      
+                     }             
+                 }
+                 if($is==false) {
+                     $conn->Execute("ALTER TABLE documents ADD INDEX parent_id (parent_id) ");                     
+                 }
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
           
     }
 
