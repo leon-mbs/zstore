@@ -232,10 +232,13 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["darkmode"] = $user->darkmode == 1;
 
         //для скрытия блока разметки  в  шаблоне страниц
+        $this->_tvars["usescale"] = $user->usescale == 1;
+        $this->_tvars["scalescript"] = $user->scalescript  ;
+
+
+
         $this->_tvars["hideblock"] = false;
 
-  
-  
      
     //    $duration =  Session::getSession()->duration() ;
      //   $this->_tvars['showver'] = $duration < 60   ;

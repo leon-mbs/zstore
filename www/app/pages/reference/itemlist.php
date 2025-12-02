@@ -222,8 +222,6 @@ class ItemList extends \App\Pages\Base
             $this->addOnClick(null);
         }
         
-        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
-        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
