@@ -351,6 +351,11 @@ class ARMPos extends \App\Pages\Base
  
         $this->_tvars['fiscaltestmode']  = $this->pos->testing==1;
 
+        $this->_tvars['passfisc']  =  $this->_tvars['fiscal'] ;        
+        if($this->_tvars['freg'] == true)  {
+              $this->_tvars['passfisc']  = true; 
+        }      
+        
         $filter = \App\Filter::getFilter("armpos");
 
         $filter->pos = $this->form1->pos->getValue();

@@ -144,6 +144,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
+        $this->_tvars["freg"] = $modules['freg'] == 1;
        
 
 
@@ -194,7 +195,7 @@ class Base extends \Zippy\Html\WebPage
         }
        
 
-        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
+        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"] ;
 
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||

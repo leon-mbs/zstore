@@ -459,13 +459,13 @@
                         <div class="form-group  ">
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-info">
-                            {{#fiscal}}
+                            {{#passfisc}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
                                               
-                            {{/fiscal}}
+                            {{/passfisc}}
                         </div>
 
                     </div>
@@ -846,14 +846,7 @@
                 });             
             
             
-            function check_save(ele) {
-               if(false == checkFormInput('form3') ){
-                   return false;
-               }  
-               document.getElementById('dialogwait').showModal()
-
-                return true;
-            }
+        
             function check_openshift(ele) {
                 
                       document.getElementById('dialogwait').showModal()
@@ -891,6 +884,27 @@
                
             }
 
+            
+            function check_save(ele) {
+               if(false == checkFormInput('form3') ){
+                   return false;
+               }  
+               document.getElementById('dialogwait').showModal()
+
+               {{#freg}}
+               
+           //    if(  $("#passfisc").is(':checked') )  return true
+               
+               
+               
+               
+               
+               {{/freg}}
+               
+               
+               return true;
+            }
+            
         </script>
 
     </body>
