@@ -141,7 +141,7 @@ class UserProfile extends \App\Pages\Base
      
      
         $form = new Form('scaleform');
-        $form->add(new CheckBox('usescale', $this->user->usescale));
+
         $form->add(new TextArea('scalescript', $this->user->scalescript));
         $form->onSubmit($this, 'saveScaleOnClick');
         $this->add($form);     
@@ -328,7 +328,7 @@ class UserProfile extends \App\Pages\Base
     }
 
     public function saveScaleOnClick($sender) {
-        $this->user->usescale = $sender->usescale->isChecked() ? 1:0;
+
         $this->user->scalescript = $sender->scalescript->getText() ;
         $this->user->save();
         $this->setSuccess('Збережено');

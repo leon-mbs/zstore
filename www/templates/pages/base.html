@@ -1276,13 +1276,22 @@
         }
  
  
- 
+       //  обраьрччмк весов
         {{#usescale}}
             function callScale(callback) {
                 {{{scalescript}}}   
             }
      
         {{/usescale}}
+ 
+
+      //  фискальный регистратор
+        {{#freg}}
+            function callFR(check,callback) {
+                {{{frscript}}}   
+            }
+     
+        {{/freg}}
  
  
  {{#cron}}

@@ -37,6 +37,7 @@ class Base extends \Zippy\Html\WebPage
 
         //опции
         $this->_tvars["usescanner"] = $options['usescanner'] == 1  ;
+        $this->_tvars["usescale"] = $options['usescale'] == 1  ;
 
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
@@ -232,12 +233,12 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars["darkmode"] = $user->darkmode == 1;
 
-        //для скрытия блока разметки  в  шаблоне страниц
-        $this->_tvars["usescale"] = $user->usescale == 1;
+      
         $this->_tvars["scalescript"] = $user->scalescript  ;
 
 
 
+        //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
 
      

@@ -112,6 +112,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('printoutqrcode'));
         $this->business->add(new CheckBox('storeemp'));
         $this->business->add(new CheckBox('usescanner'));
+        $this->business->add(new CheckBox('usescale'));
 
    
         $this->business->add(new DropDownChoice('deliverytype',[],1));
@@ -140,6 +141,7 @@ class Options extends \App\Pages\Base
 
         $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->usescanner->setChecked($common['usescanner']);
+        $this->business->usescale->setChecked($common['usescale']);
   
 
 
@@ -344,6 +346,7 @@ class Options extends \App\Pages\Base
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->business->usescanner->isChecked() ? 1 : 0;
+        $common['usescale'] = $this->business->usescale->isChecked() ? 1 : 0;
  
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
         

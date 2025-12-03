@@ -262,8 +262,8 @@
                            
                           
                 </div>
-                
-                <div class="col-10  col-md-4 col-xl-3">
+                  {{#usescale}}   
+                <div class="col-10  col-md-4 col-xl-2">
                    <div class="card">
                           
                          <h4>Електронні ваги</h4>
@@ -271,29 +271,25 @@
                    
                   
                          <form zippy="scaleform">
-                            <div class="form-check">
-                                <input zippy="usescale" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usescale">Активно </label>
-
-                            </div>
+                           
                              <div class="form-group  ">
-                                <label   for="scalescript">Адреса POS серверу</label>
-                                <textarea style="height:200px]" class="form-control" zippy="scalescript"></textarea>
+                                <label   for="scalescript">Скрипт</label>
+                                <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
                                  
                             </div>
                               <div class="form-group">
                                 <input   class="btn btn-primary" type="submit" value="Зберегти">
                             </div>     
-                             {{#usescale}}                       
+                                               
                              <div class="form-group">
                                 <a id="testscale" href="#"    >Тест </a>
                             </div> 
-                             {{/usescale}}                                                 
+                                                                         
                         </form>       
 
                   </div>
                 </div>
-          
+                {{/usescale}}    
         </div>
        <script>
          $(document).ready(function () {

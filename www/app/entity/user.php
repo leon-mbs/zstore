@@ -125,7 +125,7 @@ class User extends \ZCL\DB\Entity
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
-        $this->usescale = $options['usescale']?? false;
+
         $this->scalescript = base64_decode( $options['scalescript']?? '');
 
         parent::afterLoad();
@@ -177,7 +177,7 @@ class User extends \ZCL\DB\Entity
          
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
-        $options['usescale'] = $this->usescale   ;
+
         $options['scalescript'] = base64_encode($this->scalescript )   ;
 
         $this->options = serialize($options);
