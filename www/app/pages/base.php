@@ -339,16 +339,16 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
+            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:8000})        ", true);
         }
         if (strlen(System::getWarnMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
+            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{timeOut:4000})        ", true);
         }
         if (strlen(System::getSuccesMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
+            $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{timeOut:2000})        ", true);
         }
         if (strlen(System::getInfoMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
+            $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{timeOut:3000})        ", true);
         }
       
         
@@ -603,6 +603,33 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    /**
+    * документ для отправки на  фискальный регистратор
+    * 
+    * @param mixed $args
+    * @param mixed $post
+    */
+    public function loadDocFR($args, $post=null) {
+        
+        return $this->jsonOK("") ;
+    }
+
+    /**
+    * запись фискального номера
+    * 
+    * @param mixed $args
+    * @param mixed $post
+    */
+    public function saveDocFR($args, $post=null) {
+        $doc = \App\Entity\Doc\Document::load($args[0]);
+        if($doc != null){
+            $doc->headerdata["passfisc"] = 0;
+            $doc->headerdata["fiscalnumber"] = $args[1];
+            $doc->save() ;
+        }
+        return $this->jsonOK("") ;
+    }
+
  
     //методы возврата для  callPM
       public function jsonOK($data=null){
@@ -612,6 +639,7 @@ class Base extends \Zippy\Html\WebPage
           
          return json_encode(['data'=>$data], JSON_UNESCAPED_UNICODE)   ;
       }
+  
       public function jsonError($error){  
          return json_encode(['error'=>$error], JSON_UNESCAPED_UNICODE) ;  
       }

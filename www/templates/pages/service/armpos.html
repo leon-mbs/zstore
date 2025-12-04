@@ -476,9 +476,9 @@
                 <div class="row">
                     <div class="col-6">
                            <div class="form-group  ">
-                          
+                             {{^freg}}
                            <input   zippy="print" type="button" value="Друк " class="btn  btn-primary">
-                                     
+                              {{/freg}}         
                            <button zippy="qrpaybtn" title="Оплата по QR коду" onclick=" $('#modalqr').modal('show')  " class="btn btn-success ml-2"><i class="fa fa-qrcode"></i></button>
                    
                             &nbsp;&nbsp;<input type="button" value="Новий чек " zippy="newdoc" class="btn  btn-info">
@@ -637,6 +637,7 @@
                         <th ></th>
                         <th ></th>
                    {{#fiscal}}      <th ></th>     {{/fiscal}}
+                   {{#usefreg}}      <th ></th>     {{/usefreg}}
 
 
                     </tr>
@@ -655,6 +656,10 @@
                          {{#fiscal}}
                         <td  ><a zippy="checkfisc" >Фiскалiзувати</a></td>
                          {{/fiscal}}
+                         {{#freg}}
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
+                         {{/freg}}
+                         
                     </tr>
 
                 </table> 
@@ -840,7 +845,7 @@
                        (error)=>{
                             $('#totaldisc').val('0')                                                          
                             $('#promocode').val('')         
-                            toastr.error( error,'',{'timeOut':'8000'} )          
+                            toastr.error( error,'',{timeOut:8000} )          
                        }
                       );             
                 });             

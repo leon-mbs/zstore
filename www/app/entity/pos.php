@@ -46,6 +46,8 @@ class Pos extends \ZCL\DB\Entity
        
         $this->details .= "<ppokeyid>{$this->ppokeyid}</ppokeyid>";
         $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
+        $this->details .= "<usefreg>{$this->usefreg}</usefreg>";
+        $this->details .= "<scriptfreg>".base64_encode($this->scriptfreg) ."</scriptfreg>";
         
         $this->details .= "</details>";
 
@@ -84,7 +86,9 @@ class Pos extends \ZCL\DB\Entity
         $this->ppopassword = (string)($xml->ppopassword[0]);
         $this->ppoisjks = (int)($xml->ppoisjks[0]);
         $this->ppokeyid = (string)($xml->ppokeyid[0]);
-  
+        $this->usefreg = (int)($xml->usefreg[0]);
+        $this->scriptfreg =    base64_decode( ( (string)($xml->scriptfreg[0])  )  ?? '') ;
+   
         
         parent::afterLoad();
     }

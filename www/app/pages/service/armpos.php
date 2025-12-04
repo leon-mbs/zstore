@@ -348,6 +348,11 @@ class ARMPos extends \App\Pages\Base
         if($this->pos->usefisc != 1) {
             $this->_tvars['fiscal']  = false;
         }
+        if($this->pos->usefreg != 1) {
+            $this->_tvars['freg']  = false;
+        } else {
+            $this->_tvars['scriptfreg']  = $this->pos->scriptfreg;
+        }
  
         $this->_tvars['fiscaltestmode']  = $this->pos->testing==1;
 
@@ -1293,7 +1298,12 @@ class ARMPos extends \App\Pages\Base
             }            
             
 
-            if($this->pos->usefisc == 1) {
+            if($this->pos->usefreg == 1) {
+                $this->_doc->headerdata["passfisc"]  = $this->docpanel->form3->passfisc->isChecked() ? 1:0;   
+                $this->_doc->save();             
+            }   
+            
+         if($this->pos->usefisc == 1) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
@@ -1619,7 +1629,8 @@ class ARMPos extends \App\Pages\Base
       
  
         $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
-
+        $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
+        $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
         }
@@ -1632,7 +1643,7 @@ class ARMPos extends \App\Pages\Base
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
 
-        $where = "meta_name='PosCheck' and  document_date  >= " . $conn->DBDate(strtotime('-1 month'))    ;
+        $where = "meta_name='PosCheck' and  document_date  >= " . $conn->DBDate(strtotime('-14 day'))    ;
 
 
         if ($sender instanceof Form) {

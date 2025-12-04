@@ -187,13 +187,13 @@ class Base extends \Zippy\Html\WebPage
 
     protected function afterRender() {
         if (strlen(System::getErrorMsg()) > 0) {
-            App::$app->getResponse()->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'6000'})        ", true);
+            App::$app->getResponse()->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:6000})        ", true);
         }
         if (strlen(System::getWarnMsg()) > 0) {
-            App::$app->getResponse()->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'3000'})        ", true);
+            App::$app->getResponse()->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{timeOut:3000})        ", true);
         }
         if (strlen(System::getSuccesMsg()) > 0) {
-            App::$app->getResponse()->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'1000'})        ", true);
+            App::$app->getResponse()->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{timeOut:1000})        ", true);
         }
         if (strlen(System::getInfoMsg()) > 0) {
             App::$app->getResponse()->addJavaScript("toastr.info('" . System::getInfoMsg() . "')        ", true);
