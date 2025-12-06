@@ -172,7 +172,7 @@ class POSCheck extends Document
                         "phone"         => $firm["phone"],
                         "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
                         "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
-                        "checkslogan"   => $common["checkslogan"],
+                      
                         "customer_name" => strlen($this->headerdata["customer_name"]?? null) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]?? null) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
@@ -190,6 +190,7 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
+                        "checkslogan"          => strlen($this->headerdata["checkslogan"]??'') > 0 ? $this->headerdata["checkslogan"] : false,
                         "payeq"           => strlen($pos->payeq ) > 0 ? $pos->payeq : false,
                         "isdocqrcode"     =>  $common['printoutqrcode']==1,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
@@ -202,14 +203,7 @@ class POSCheck extends Document
             $header['tin'] = false;
         }
 
-        $frases = explode(PHP_EOL, $header['checkslogan']) ;
-        if(count($frases) >0) {
-            $i=  rand(0, count($frases) -1)  ;
-            $header['checkslogan']   =   $frases[$i];
-        }
-        if(strlen($header['checkslogan'] ??'') ==0) {
-            $header['checkslogan']  = false;
-        }
+     
 
         //промокод        
         $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1  and coalesce(enddate,now()) >=now()' ,'id desc') ;

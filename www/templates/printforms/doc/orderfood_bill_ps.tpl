@@ -108,7 +108,9 @@
  
     {{/allbonus}}
     
-
+{{#promo}}
+<text> Промокод {{promo}}</text>  
+{{/promo}}  
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
@@ -117,9 +119,7 @@
 <text>  {{checkslogan}}</text>
 {{/checkslogan}}
 
-{{#promo}}
-<text>  {{promo}}</text>  
-{{/promo}}  
+
 
     {{#ischeck}} 
 

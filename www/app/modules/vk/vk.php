@@ -527,10 +527,7 @@ class VK
             }
             return $cname;            
         }
-        $common = \App\System::getOptions("common");
-        if(strlen($common['cashier'])>0) {
-            $cname = $common['cashier'] ;
-        }       
+      
         return $cname;
     }   
     

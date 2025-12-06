@@ -610,12 +610,136 @@ class Base extends \Zippy\Html\WebPage
     * @param mixed $post
     */
     public function loadDocFR($args, $post=null) {
+        $doc = \App\Entity\Doc\Document::load($args[0]);
+        $doc = $doc->cast();
+                   
+        $ret=[];
+        $ret['type']  = 'C';
+        if($doc->meta_name=='ReturnIssue')   $ret['type']  = 'R';
+ 
+        $ret['number']  = $doc->document_number;
+        $ret['cashier']  = $doc->getCashier();
+        $ret['totalamount']  = Helper::fa($doc->amount); //сумма  по документу
+        $ret['payamount']  = Helper::fa($doc->payamount);  //к оплате
+        $ret['bonus']  = 0;
+        $ret['discount']  = 0;
+        $ret['rest']  = 0;
+        $ret['nal']  = 0;
+        $ret['beznal']  = 0;
+        $ret['prepaid']  = 0;
+        $ret['credit']  = 0;
+        $ret['slogan']  =  $doc->headerdata["checkslogan"]??'';  
+         
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']??0);
+     
+        $ret['payed']  = Helper::fa($payed);
+        $delbonus = $doc->getBonus(false) ;
+        if($delbonus >0) {
+           $ret['bonus']  = Helper::fa($delbonus); //списано  бонусов
+        }
+        if($doc->headerdata["totaldisc"] >0) {
+           $ret['discount']  = Helper::fa($doc->headerdata["totaldisc"]); //общая  скидка
+        }
+        if($doc->headerdata["exchange"] >0) {
+           $ret['rest']  = Helper::fa($doc->headerdata["exchange"]??0); //сдача
+        }
+       
+          
         
-        return $this->jsonOK("") ;
+        if($ret['type']  == 'R') {
+           $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+           if ($mf->beznal == 1) {
+              $ret['beznal']  = Helper::fa($doc->payed);
+           } else {
+              $ret['nal']  = Helper::fa($doc->payed);
+           }
+    
+        } else {
+        
+            if(($doc->headerdata['payment']??0)  >0) {
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+     
+                if ($mf->beznal == 1) {
+                    
+                    $ret['beznal']  = Helper::fa($payed);
+                    // в долг
+                    if ($payed < $doc->payamount) {
+                         $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                    }
+                } else {
+                    $ret['nal']  = Helper::fa($payed);
+               
+                    
+                    //сдача
+                    if ($doc->headerdata["exchange"] > 0) {
+                        $ret['rest']  = Helper::fa($payed- $doc->headerdata["exchange"]);
+                    }
+                    // в долг
+                    if ($payed < $doc->payamount) {
+                        $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                    }
+
+                     
+                }
+            } else {
+                if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+     
+                    $ret['nal']  = Helper::fa($doc->headerdata['payed']);
+               
+                    //сдача
+                    if ($doc->headerdata["exchange"] > 0) {
+                        $ret['rest']  = Helper::fa($payed- $doc->headerdata["exchange"]);
+                    }
+            
+                }
+                if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+           
+                    $ret['beznal']  = Helper::fa($doc->headerdata['payedcard']);
+               
+                 
+                }
+
+            }
+
+            // в долг
+            if ($payed < $doc->payamount) {
+                $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                
+              
+            }
+            // предоплата
+            if ($doc->headerdata['prepaid']>0) {
+                $ret['prepaid']  = Helper::fa($doc->headerdata['prepaid']);
+            }        
+        }
+        
+        
+        $ret['items']  = [];
+        foreach ($doc->unpackDetails('detaildata') as $item) {
+           $it= array(
+                'id'  => $item->item_id,
+                'article'  => $item->item_code,
+                'name'  => $item->itemname,  
+                'qty'   => Helper::fqty($item->quantity) ,
+                'price'   => Helper::fa($item->price) 
+               
+            );
+            if(strlen($item->shortname) >0)  $it['name'] =  $item->shortname;
+            if(strlen($item->bar_code) >0)  $it['bar_code'] =  $item->bar_code;
+            if(strlen($item->uktz) >0)  $it['uktz'] =  $item->uktz;
+      
+            $ret['items'][] = $it;
+
+
+        }   
+        
+    
+        
+        return $this->jsonOK($ret) ;
     }
 
     /**
-    * запись фискального номера
+    * запись фискального номера с  фискального регистратора
     * 
     * @param mixed $args
     * @param mixed $post
@@ -623,8 +747,12 @@ class Base extends \Zippy\Html\WebPage
     public function saveDocFR($args, $post=null) {
         $doc = \App\Entity\Doc\Document::load($args[0]);
         if($doc != null){
-            $doc->headerdata["passfisc"] = 0;
-            $doc->headerdata["fiscalnumber"] = $args[1];
+            if(strlen($args[1] ??'')>0) {
+               $doc->headerdata["passfisc"] = 0;
+               $doc->headerdata["fiscalnumber"] = $args[1];
+            } else {     //если  была ошибка
+               $doc->headerdata["passfisc"] = 1;  
+            }
             $doc->save() ;
         }
         return $this->jsonOK("") ;

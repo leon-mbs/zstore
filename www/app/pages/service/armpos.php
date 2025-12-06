@@ -356,10 +356,7 @@ class ARMPos extends \App\Pages\Base
  
         $this->_tvars['fiscaltestmode']  = $this->pos->testing==1;
 
-        $this->_tvars['passfisc']  =  $this->_tvars['fiscal'] ;        
-        if($this->_tvars['freg'] == true)  {
-              $this->_tvars['passfisc']  = true; 
-        }      
+         
         
         $filter = \App\Filter::getFilter("armpos");
 
@@ -418,6 +415,12 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->document_number = $this->_doc->nextNumber();
         
       
+        $frases = explode(PHP_EOL,  \App\System::getOption('common','checkslogan')  ) ;
+        if(count($frases) >0) {
+            $i=  rand(0, count($frases) -1)  ;
+            $this->_doc->headerdata['checkslogan']   =   $frases[$i];
+        }
+          
 
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
@@ -1294,16 +1297,16 @@ class ARMPos extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
             if (H::fa($this->_doc->payamount) > H::fa($this->_doc->payed)) {
-                $this->_doc->updateStatus(Document::STATE_WP);
+                $this->_doc->updateStatus(Document::STATE_WP); 
             }            
             
 
             if($this->pos->usefreg == 1) {
-                $this->_doc->headerdata["passfisc"]  = $this->docpanel->form3->passfisc->isChecked() ? 1:0;   
-                $this->_doc->save();             
-            }   
-            
-         if($this->pos->usefisc == 1) {
+                $this->_doc->headerdata["passfisc"] = 1;
+                $this->_doc->save();
+            }    
+                
+            if($this->pos->usefisc == 1) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
@@ -1404,7 +1407,9 @@ class ARMPos extends \App\Pages\Base
             $this->qrimg->setText($qr['qr'], true);
         }
   
-
+        if($this->pos->usefreg == 1   ) {
+           $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
+        } 
     }
 
     public function OnOpenShift($sender) {
@@ -1624,26 +1629,30 @@ class ARMPos extends \App\Pages\Base
         $row->add(new ClickLink('checkedit'))->onClick($this, "onEdit");
         $row->checkedit->setVisible($doc->state < 4);
 
-        $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id)));
+        $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id,$this->pos->pos_id)));
         $row->checkreturn->setVisible($doc->state > 4);
-      
+        if($doc->meta_name=='ReturnIssue')   $row->checkreturn->setVisible(false);
  
         $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
         $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
         $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
+           $row->checkfr->setVisible(false);
         }
         if($this->pos->usefisc != 1) {
            $row->checkfisc->setVisible(false);
         }
-
+        if($this->pos->usefreg != 1) {
+           $row->checkfr->setVisible(false);
+        }
+       
     }
 
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
 
-        $where = "meta_name='PosCheck' and  document_date  >= " . $conn->DBDate(strtotime('-14 day'))    ;
+        $where = "(meta_name='PosCheck' ||  ( meta_name='ReturnIssue' and parent_id  in (select document_id from documents_view where meta_name='PosCheck' ) ) ) and  document_date  >= " . $conn->DBDate(strtotime('-14 day'))    ;
 
 
         if ($sender instanceof Form) {

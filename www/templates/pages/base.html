@@ -27,7 +27,7 @@
         <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-        <script src="/assets/js/app.js?t=2"></script>     
+        <script src="/assets/js/app.js?t=1"></script>     
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
         
@@ -57,7 +57,11 @@
           
           return   Number.parseFloat( _v.toFixed(d) )
          
-     }      
+     }  
+     
+function isNonEmptyString(variable) {
+  return variable !== null && variable !== undefined && typeof variable === 'string' && variable.length > 0;
+}         
       </script>
       
       
@@ -1301,6 +1305,7 @@
                        
                        if(isNonEmptyString(res.error)) {
                            toastr.error(res.error,"",{timeOut:5000})
+                           callPM('saveDocFR',[docid]) ;
                            return;
                        }
                        

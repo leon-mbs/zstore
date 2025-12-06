@@ -965,5 +965,6 @@ class POSCheck extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
+   
+    
 }

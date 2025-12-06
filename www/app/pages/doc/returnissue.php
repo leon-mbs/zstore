@@ -35,7 +35,7 @@ class ReturnIssue extends \App\Pages\Base
     * @param mixed $docid     редактирование
     * @param mixed $basedocid  создание на  основании
     */
-    public function __construct($docid = 0, $basedocid = 0) {
+    public function __construct($docid = 0, $basedocid = 0,$pos_id=0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
@@ -53,7 +53,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
 
-        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
+        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' or details like '%<usefreg>1</usefreg>%'  "), 0))->setVisible($this->_tvars['fiscal']==1 || $this->_tvars['freg']==1 );
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -145,6 +145,9 @@ class ReturnIssue extends \App\Pages\Base
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->pos->setValue($basedoc->headerdata['pos']);
+                        if($pos_id >0) {
+                            $this->docform->pos->setValue($pos_id);                            
+                        }
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
@@ -341,7 +344,10 @@ class ReturnIssue extends \App\Pages\Base
             
             if ($pos_id > 0 && $sender->id == 'execdoc') {
                 $pos = \App\Entity\Pos::load($pos_id);
-
+                if($pos->usefreg == 1) {
+                    $this->_doc->headerdata["passfisc"] = 1;
+                    $this->_doc->save();
+                }    
                 if($pos->usefisc == 1)  {
                      
                     if( $this->_tvars['checkbox'] == true) {
@@ -435,6 +441,12 @@ class ReturnIssue extends \App\Pages\Base
             $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
+        if($pos !=null) {
+            if( $pos->usefreg == 1) {
+               $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
+            }         
+        }         
+        
     }
 
     /**

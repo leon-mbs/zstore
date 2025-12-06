@@ -497,7 +497,9 @@
 
                         <div zippy="checktext"></div> 
                         <br>
+                         {{^freg}}
                         <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
+                         {{/freg}}
                         <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
 
                     </div>
@@ -594,10 +596,13 @@
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
                         <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
                         <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
-        {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a></td>
+                    {{#fiscal}}
+                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a>
+                        </td>
                          {{/fiscal}}                        
-                        
+                   {{#freg}}
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
+                         {{/freg}}                        
                     </tr>
 
                 </table> 

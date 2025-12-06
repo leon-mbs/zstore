@@ -4,7 +4,7 @@
     <tr>
         <td></td>
         <td valign="top"><b>Покупець</b></td>
-     <td><b>Покупець</b></td>
+ 
         <td colspan="6"> {{customer_name}}</b> 
           {{#phone}} Тел. {{phone}}  {{/phone}} 
         </td>

@@ -118,7 +118,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new DropDownChoice('deliverytype',[],1));
     
 
-        $this->business->add(new TextInput('cashier'));
+
         $this->business->add(new TextArea('checkslogan'));
         $this->business->add(new \Zippy\Html\Form\Date('actualdate'));
 
@@ -147,7 +147,7 @@ class Options extends \App\Pages\Base
 
         $this->business->deliverytype->setValue($common['deliverytype'] ?? 1);
        
-        $this->business->cashier->setText($common['cashier']);
+
         $this->business->checkslogan->setText($common['checkslogan']);
         $this->business->actualdate->setDate($common['actualdate'] ??  strtotime( date('Y'). '-01-01') );
 
@@ -341,7 +341,7 @@ class Options extends \App\Pages\Base
         $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
         $common['allowminusmf'] = $this->business->allowminusmf->isChecked() ? 1 : 0;
         $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;
-        $common['cashier'] = trim($this->business->cashier->getText());
+
         $common['checkslogan'] = trim($this->business->checkslogan->getText());
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;

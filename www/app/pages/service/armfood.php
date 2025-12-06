@@ -259,7 +259,11 @@ class ARMFood extends \App\Pages\Base
         if($this->_pos->usefisc != 1) {
             $this->_tvars['fiscal']  = false;
         }
- 
+        if($this->_pos->usefreg != 1) {
+            $this->_tvars['freg']  = false;
+        } else {
+            $this->_tvars['scriptfreg']  = $this->_pos->scriptfreg;
+        }
         $this->_tvars['fiscaltestmode']  = $this->_pos->testing==1;
 
 
@@ -509,16 +513,23 @@ class ARMFood extends \App\Pages\Base
 
         }
 
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? "") == 1) ;
+        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
+        $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
+        $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
+           
+      
+      
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
+           $row->checkfr->setVisible(false);
         }
         if($this->_pos->usefisc != 1) {
            $row->checkfisc->setVisible(false);
         }
-        
  
-        
+        if($this->_pos->usefreg != 1) {
+           $row->checkfr->setVisible(false);
+        }       
 
     }
 
@@ -1318,7 +1329,10 @@ class ARMFood extends \App\Pages\Base
            
             
             if ($this->_doc->payamount <= $this->_doc->payed) {
-              
+                 if($this->_pos->usefreg == 1) {
+                    $this->_doc->headerdata["passfisc"] = 1;
+                    $this->_doc->save();
+                 }       
                     
                 if($this->_pos->usefisc == 1){
                     if( $this->docpanel->payform->passfisc->isChecked()) {
@@ -1402,6 +1416,9 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->checktext->setText($check, true);
         $this->docpanel->checkpan->setVisible(true);
         $this->docpanel->payform->setVisible(false);
+        if($this->_pos->usefreg == 1   ) {
+           $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
+        }         
     }
 
     public function backItemsOnClick($sender) {
@@ -1432,6 +1449,7 @@ class ARMFood extends \App\Pages\Base
             }
         }
 
+          
         $execuser = $this->docpanel->listsform->execuser->getValue() ;
         if($execuser >0) {
             $this->_doc->user_id = $execuser;
@@ -1455,7 +1473,11 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->_store;
         $this->_doc->headerdata['pricetype'] = $this->_pricetype;
 
-       
+        $frases = explode(PHP_EOL,  \App\System::getOption('common','checkslogan')  ) ;
+        if(count($frases) >0) {
+            $i=  rand(0, count($frases) -1)  ;
+            $this->_doc->headerdata['checkslogan']   =   $frases[$i];
+        }      
         $this->_doc->username = System::getUser()->username;
 
         $firm = H::getFirmData( );
