@@ -1252,6 +1252,9 @@ class Document extends \ZCL\DB\Entity
         if(strlen($this->headerdata["fiscalnumber"]??'')==0) {
             return "";
         }
+        if(strlen($this->headerdata["fiscalnumberpos"]??'')==0) {
+            return "";
+        }
 
         $pos = \App\Entity\Pos::load($this->headerdata['pos']);
 

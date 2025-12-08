@@ -334,7 +334,7 @@
         
 
             </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
+            <div class="col-12  col-md-4 col-xl-3  ">
             
        
                 <div class="card">
@@ -419,18 +419,19 @@
 
              
                 <div class="card">
-                    <div class="card-body">
+                    
                         <h4>Налаштування SMS сервiсу    </h4>
                         <form zippy="sms">    
-
+                           
                             <div class="form-group  ">
                                 <label for="smstype">Сервiс</label>
                                 <select class="form-control" zippy="smstype">
-                                    <option value="0">Не обрано</option>
+                                    <option value="0">Не використовується</option>
                                 </select>
-                                <span zippy="semysmssite"><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
-                                <span zippy="smsclubsite"><a href="https://smsclub.mobi/" target="_blank">https://smsclub.mobi/</a></span>
-                                <span zippy="smsflysite"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                                <span data-label="smssemytoken" ><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
+                                <span data-label="smscluban" ><a href="https://smsclub.mobi/" target="_blank">https://smsclub.mobi/</a></span>
+                                <span data-label="flysmsan"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                            
                             </div>
                             <div class="form-group">
                                 <label data-label="smssemytoken" for="smssemytoken">Токен</label>
@@ -483,18 +484,47 @@
              
                             </div>
 
-
+                             <div class="form-group  ">
+                                <label for="smscustlang">Мова скрипта</label>
+                                <select class="form-control" zippy="smscustlang">
+                          
+                                </select>
+                                  <small data-label="smscustlang">JS не пiдходить для вiдправки в  фоновому  режимi, наприклад з планувальника</small>
+                            </div>
+                              <div class="form-group  ">
+                                <label for="smscustscript">Код скрипта</label>
+                                <textarea style="height:400px" class="form-control" zippy="smscustscript">
+                          
+                                </textarea>
+                               
+                                 <small data-label="smscustscript" >
+                                   <details >
+                        <summary  >Опис</summary>
+                                   <b>JS</b><br>
+                                   Скрипт, що виконує  запит  до  вибраного  SMS сервiсу, має реалiзувати 
+                                   тiло вбудованої функцiї яка буде викликатись системою з двома  строковими параметрами: phone i sms. 
+                                   Третiй параметр - функцiя callback що приймає  строковий параметр. В  callback можна передати  строку помилки, якщо така  виникне.
+                                   Якщо помилок  нема  callback викликається  з  пустою  строкою.
+                                   <br>  <b>PHP</b><br>
+                                   Для PHP скрипта на  входi автоматично  створяться  змiннi $phonе i $sms з данними. 
+                                   Скрипт  має повернути пусту  строку  або  текст  помилки, якщо така  виникла 
+                                   <br><br>Технiчно пiд виглядом  SMS  вiдправки  може бути реалiзований будь який  сервiс  повiдомлень що має  вiдповiдний API
+                                 </details>
+                                 </small>     
+                                 
+                            </div>
+                               
                             <div class="form-group">
                                 <button zippy="smssubmit" class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                             <div class="form-group">
-                                <span><i class="fa fa-exclamation-triangle"></i> Перед перевiркою збережiть налаштування    </span> 
+                                <span data-label="smstestphone"><i class="fa fa-exclamation-triangle"></i> Перед перевiркою збережiть налаштування    </span> 
                             </div>
                             <div class="form-group">
                                 <label   for="smstestphone">Телефон</label>
                                 <input zippy="smstestphone"   class="form-control"  >
 
-                            </div>
+                            </div> 
                             <div class="form-group">
                                 <label   for="smstesttext">Повiдомлення</label>
                                 <input zippy="smstesttext"   class="form-control"  >

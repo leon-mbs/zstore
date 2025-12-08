@@ -157,7 +157,12 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["printserverlabel"] = $user->prtypelabel == 1;
 
 
-
+        $this->_tvars["smsscript"] = false;
+        $sms = System::getOptions('sms');
+        if($sms['smstype']==4 && $sms['smscustlang']=='js') {
+           $this->_tvars["smsscript"] =base64_decode( $sms['smscustscript']);
+            
+        }
         //доступы к  модулям
         if (strpos(System::getUser()->modules ?? '', 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -236,7 +241,7 @@ class Base extends \Zippy\Html\WebPage
       
         $this->_tvars["scalescript"] = $user->scalescript  ;
 
-
+       
 
         //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
@@ -400,7 +405,7 @@ class Base extends \Zippy\Html\WebPage
         $n->sender_id = System::getUser()->user_id;
         $n->save();
 
-        $this->jsonOK() ;
+       return $this->jsonOK() ;
     }
 
     public function getCustomerInfo($args, $post) {
