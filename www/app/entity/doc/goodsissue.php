@@ -124,7 +124,8 @@ class GoodsIssue extends Document
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
         }
-
+        $header["address"] = $firm['address'];        
+    
         if ( ($this->headerdata["fop"] ??0) > 0) {
             $header["isfirm"] = false;
             $header["isfop"] = true;
@@ -133,6 +134,7 @@ class GoodsIssue extends Document
             $fop = $fops[$this->headerdata["fop"]] ;
             $header["fop_name"] = $fop->name ??'';
             $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';            
         }
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);

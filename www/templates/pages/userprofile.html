@@ -8,7 +8,8 @@
 
         <div class="row ">
             <div class="col-10  col-md-8 col-lg-6 col-xl-5">
-
+            <div class="card">
+             
                 <h4>Мій профіль</h4>
                 <form role="form" zippy="profileform">
                     <div class="row ">
@@ -134,9 +135,12 @@
                         </div>
                     </div>            
                 </form>
+            
             </div>
-            <div class="col-10 col-lg-3 col-md-4 col-xl-3">
-
+            </div>
+            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
+               <div class="card">
+               
                 <h4>Зміна пароля</h4>
                 <form role="form" zippy="passwordform">
 
@@ -154,11 +158,17 @@
                     <button type="submit"   class="btn btn-primary">Зберегти</button>
                 </form>
               
+            
             </div>
-            <div class="col-10  col-md-4 col-xl-3">
-            <small>  <a href="/index.php?p=App/Pages/Options#printer"><i class="fa fa-link"></i> Параметри для етикеток і цінників</a> </small>
+            </div>
+            <div class="col-10  col-md-4 col-xl-2">
+                         <div class="card">
+                       
+                        
+                          
+                         <small>  <a href="/index.php?p=App/Pages/Options#printer">Параметри для етикеток і цінників</a> </small>
                          <h4>Принтер чеків</h4>
-                         <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
+                          <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
                          <form zippy="printer">
                             <div class="form-group  ">
                                 <label for="prtype">Тип підключення</label>
@@ -195,8 +205,13 @@
                              <div class="form-group">
                                 <a    zippy="pstest" >Тест принтера</a>
                             </div>                            
-                         </form>   
-                             <h4>Принтер етикеток</h4>
+                         </form> 
+                       
+                         
+                         
+         
+                         <h4>Принтер етикеток</h4>     
+                          <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small> 
                              <small>Кількість на позицiю, задається в довіднику ТМЦ </small>
                          <form zippy="printerlabel">
                             <div class="form-group  ">
@@ -243,25 +258,38 @@
                                 <a   zippy="pstestlabel" >Тест принтера</a>
                             </div>                            
                          </form>   
+                          </div>
+                           
+                          
+                </div>
+                  {{#usescale}}   
+                <div class="col-10  col-md-4 col-xl-2">
+                   <div class="card">
+                          
                          <h4>Електронні ваги</h4>
-                       
-                        <small>Мають бути реалізовані в  POS сервері. Опис <a  href="https://zippy.com.ua/ext#id10">тут</a> </small>
+                          <small><a href="https://zippy.com.ua/ext#id17">Опис</a></small>
+                   
                   
                          <form zippy="scaleform">
+                           
                              <div class="form-group  ">
-                                <label   for="scaleserver">Адреса POS серверу</label>
-                                <input   required="on" class="form-control" zippy="scaleserver">
+                                <label   for="scalescript">Скрипт</label>
+                                <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
                                  
                             </div>
                               <div class="form-group">
                                 <input   class="btn btn-primary" type="submit" value="Зберегти">
-                            </div>                            
+                            </div>     
+                                               
                              <div class="form-group">
                                 <a id="testscale" href="#"    >Тест </a>
-                            </div>                           
+                            </div> 
+                                                                         
                         </form>       
-        </div>
-          
+
+                  </div>
+                </div>
+                {{/usescale}}    
         </div>
        <script>
          $(document).ready(function () {
@@ -269,32 +297,16 @@
             $('#testscale').click(function(event) {
                 event.preventDefault();
                 
-                var url = $("#scaleserver").val() 
+                callScale( (val)=>
+                {
+                    toastr.success("Вага "+ val )    
+                })
 
-           var opt={
-               method: 'GET'  
-           };              
-                    
-            fetch(url+"/scale",opt)                                            
-  
-              .then((response) => {
-                  return response.json();
-              })
-              .then((data) => {
-                 if(data.success == true){
-                     toastr.success("Вага "+ data.weight )   
-                 }   else {
-                     toastr.error(data.error )        
-                 }
-              })
-               .catch(function (error) {
-                    toastr.error(error )       
-                });  
-            
-                
                
             });   
-  });                
+  });          
+  
+        
         </script> 
 
     </body>

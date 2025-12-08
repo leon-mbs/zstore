@@ -173,13 +173,13 @@ class PPOHelper
 
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
 
@@ -322,13 +322,13 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
         
@@ -422,7 +422,7 @@ class PPOHelper
  
 
   //$doc->headerdata['payed']   += 0.03;
-        if($doc->headerdata['payment']  >0) {
+        if(($doc->headerdata['payment']??0)  >0) {
             if ($mf->beznal == 1) {
                 $pay = array(
                     'formname' => self::FORM_CARD,
@@ -590,13 +590,13 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($pos_id);
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
         $mf = \App\Entity\MoneyFund::load($payment);
@@ -667,13 +667,13 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
@@ -1024,10 +1024,7 @@ class PPOHelper
             }
             return $cname;            
         }
-        $common = \App\System::getOptions("common");
-        if(strlen($common['cashier'])>0) {
-            $cname = $common['cashier'] ;
-        }       
+        
         return $cname;
     }
 

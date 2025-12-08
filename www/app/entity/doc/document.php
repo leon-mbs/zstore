@@ -920,7 +920,21 @@ class Document extends \ZCL\DB\Entity
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
     }
 
+    /**
+    * Кассир (для чеков)
+    * 
+    */
+    public function getCashier() {
 
+        $cname = \App\System::getUser()->username;
+        if(strlen($this->headerdata['cashier']) >0) {
+            $cname = $this->headerdata['cashier'];
+        } else {
+            $cname = $this->username;
+        }
+       
+        return $cname;
+    } 
     /* public function hasEntry() {
          $conn = \ZDB\DB::getConnect();
 
@@ -1236,6 +1250,9 @@ class Document extends \ZCL\DB\Entity
         }
 
         if(strlen($this->headerdata["fiscalnumber"]??'')==0) {
+            return "";
+        }
+        if(strlen($this->headerdata["fiscalnumberpos"]??'')==0) {
             return "";
         }
 

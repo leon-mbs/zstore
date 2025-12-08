@@ -73,6 +73,7 @@ class Invoice extends \App\Entity\Doc\Document
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+ 
         $header["nds"] = false;
         $header["phone"] = false;
         $header["fphone"] = false;
@@ -98,6 +99,9 @@ class Invoice extends \App\Entity\Doc\Document
         if (strlen($firm['phone']) > 0) {
             $header["fphone"] = $firm['phone'];
         }
+                                           
+        $header["address"] = $firm['address'];        
+        
         if ( ($this->headerdata["fop"] ??0) > 0) {
             $header["isfirm"] = false;
             $header["isfop"] = true;
@@ -106,6 +110,7 @@ class Invoice extends \App\Entity\Doc\Document
             $fop = $fops[$this->headerdata["fop"]] ;
             $header["fop_name"] = $fop->name ??'';
             $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';
         }
      
 

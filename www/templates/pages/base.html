@@ -27,7 +27,7 @@
         <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-        <script src="/assets/js/app.js?t=1"></script>     
+        <script src="/assets/js/app.js?t=2"></script>     
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
         
@@ -57,10 +57,10 @@
           
           return   Number.parseFloat( _v.toFixed(d) )
          
-     }      
-      </script>
-      
-      
+     }  
+        
+     </script>
+
   
     </head>
     <body class="{{hidesidebar}} ">
@@ -1068,7 +1068,7 @@
                 callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
                          
-                     toastr.success('Вiдправлено','',{'timeOut':'2000'})     
+                     toastr.success('Вiдправлено','',{timeOut:2000})     
                     
          
                 } )
@@ -1276,6 +1276,68 @@
         }
  
  
+       //  обработчмк весов
+        {{#usescale}}
+            function callScale(callback) {
+                {{{scalescript}}}   
+            }
+     
+        {{/usescale}}
+ 
+
+      //  фискальный регистратор
+        {{#freg}}
+            function callFR(check,callback) {
+                {{{scriptfreg}}}   
+            }
+     
+            function fiscFR(docid) {
+                toastr.info("Відправка на фіскальний реєстратор","",{timeOut:2000}) 
+                
+                callPM('loadDocFR',[docid],null,(data)=> 
+                {
+                    
+                   callFR(data,(res)=>{
+                       
+                       if(isNonEmptyString(res.error)) {
+                           toastr.error(res.error,"",{timeOut:5000})
+                           callPM('saveDocFR',[docid]) ;
+                           return;
+                       }
+                       
+                       
+                        callPM('saveDocFR',[docid,res.fn],null,(data)=> 
+                        {
+                             $("#searchform").submit();
+                        } )
+                        
+                   })
+         
+                } )       
+                
+            }
+     
+        {{/freg}}
+  
+  
+    {{#smsscript}}
+    
+    function sendSMSCust(phone,sms ) {
+    
+           callSMSCust(phone,sms,(res)=>{
+              if(isNonEmptyString(res)) {
+                   toastr.error(res,"",{timeOut:5000})
+              }     
+              
+           })  
+    }   
+    function callSMSCust(phone,sms,callback) {
+              
+              
+                {{{smsscript}}}   
+    }   
+    
+    {{/smsscript}}
  
  {{#cron}}
  

@@ -603,8 +603,8 @@ class Invoice extends \App\Pages\Base
             $this->setError("Не введено товар");
         }
 
-        if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+        if (($this->docform->payment->getValue() > 0) == false) {
+            $this->setError("Не вказано банк");
         }
 
         $c = $this->docform->customer->getKey();

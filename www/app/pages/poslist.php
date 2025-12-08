@@ -42,6 +42,7 @@ class PosList extends \App\Pages\Base
        
         $this->posdetail->add(new TextInput('editpos_name'));
 
+
         $this->posdetail->add(new CheckBox('edittesting'));
         $this->posdetail->add(new CheckBox('editusefisc'));
         $this->posdetail->add(new TextInput('editposinner'));
@@ -59,6 +60,9 @@ class PosList extends \App\Pages\Base
         $this->posdetail->add(new DropDownChoice('editautoshift'));
         $this->posdetail->add(new TextArea('editcomment'));
 
+        $this->posdetail->add(new CheckBox('editusefreg'));
+        $this->posdetail->add(new TextArea('editscriptfreg'));
+             
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->posdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
         
@@ -135,7 +139,9 @@ class PosList extends \App\Pages\Base
         $this->posdetail->editipn->setText($this->_pos->ipn);
         $this->posdetail->edittesting->setChecked($this->_pos->testing);
         $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
-
+        $this->posdetail->editusefreg->setChecked($this->_pos->usefreg);
+        $this->posdetail->editscriptfreg->setText($this->_pos->scriptfreg);
+    
         $this->posdetail->editcomment->setText($this->_pos->comment);
     }
 
@@ -176,7 +182,9 @@ class PosList extends \App\Pages\Base
         $this->_pos->ipn = $this->posdetail->editipn->getText();
         $this->_pos->testing = $this->posdetail->edittesting->isChecked() ? 1 : 0;
         $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
-
+        $this->_pos->usefreg = $this->posdetail->editusefreg->isChecked() ? 1 : 0;
+        $this->_pos->scriptfreg = $this->posdetail->editscriptfreg->getText();
+  
         if ($this->_pos->pos_name == '') {
             $this->setError("Не введено назву");
             return;

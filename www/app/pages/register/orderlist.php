@@ -984,7 +984,7 @@ class OrderList extends \App\Pages\Base
 
         $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;
         if($issms == 0) {
-            $this->jsonError("Не знайдений сервіс смс") ;
+           return  $this->jsonError("Не знайдений сервіс смс") ;
         }
 
         $phone= $doc->headerdata['phone'] ??'';
@@ -993,19 +993,19 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-            $this->jsonError("Не знайдений телефон") ;
+           return  $this->jsonError("Не знайдений телефон") ;
 
         }
 
         $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];
-        //  H::log($link);
+       
         $fn = (\App\System::getOption('common', 'shopname')??'')  ;
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
 
         $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
         if($r!="") {
-            $this->jsonError($r) ;
+          return  $this->jsonError($r) ;
         }
 
         $msg = new \App\Entity\Message() ;
@@ -1015,8 +1015,8 @@ class OrderList extends \App\Pages\Base
         $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
         $msg->save() ;
 
-        $this->jsonOK() ;
-
+        return $this->jsonOK() ;
+             
 
     }
 

@@ -112,12 +112,13 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('printoutqrcode'));
         $this->business->add(new CheckBox('storeemp'));
         $this->business->add(new CheckBox('usescanner'));
+        $this->business->add(new CheckBox('usescale'));
 
    
         $this->business->add(new DropDownChoice('deliverytype',[],1));
     
 
-        $this->business->add(new TextInput('cashier'));
+
         $this->business->add(new TextArea('checkslogan'));
         $this->business->add(new \Zippy\Html\Form\Date('actualdate'));
 
@@ -140,12 +141,13 @@ class Options extends \App\Pages\Base
 
         $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->usescanner->setChecked($common['usescanner']);
+        $this->business->usescale->setChecked($common['usescale']);
   
 
 
         $this->business->deliverytype->setValue($common['deliverytype'] ?? 1);
        
-        $this->business->cashier->setText($common['cashier']);
+
         $this->business->checkslogan->setText($common['checkslogan']);
         $this->business->actualdate->setDate($common['actualdate'] ??  strtotime( date('Y'). '-01-01') );
 
@@ -229,9 +231,7 @@ class Options extends \App\Pages\Base
 
         $this->sms->add(new SubmitButton('smssubmit'))->onClick($this, 'saveSMSOnClick');
         $this->sms->add(new SubmitButton('smstest'))->onClick($this, 'testSMSOnClick');
-        $this->sms->add(new Label('semysmssite'));
-        $this->sms->add(new Label('smsclubsite'));
-        $this->sms->add(new Label('smsflysite'));
+ 
         $this->sms->add(new TextInput('smsclubtoken'));
         $this->sms->add(new TextInput('smsclublogin'));
         $this->sms->add(new TextInput('smsclubpass'));
@@ -244,7 +244,12 @@ class Options extends \App\Pages\Base
         $this->sms->add(new TextInput('flysmslogin'));
         $this->sms->add(new TextInput('flysmspass'));
         $this->sms->add(new TextInput('flysmsan'));
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",  '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
+
+        $this->sms->add(new TextArea('smscustscript'));
+        $this->sms->add(new DropDownChoice('smscustlang', array('js' => "JavaScript",  'php' => "PHP"), 'js')) ;
+
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",   '3' => 'SMS-Fly', '4' => 'Кастомний скрипт'), 0))->onChange($this, 'onSMSType');
+       
         $sms = System::getOptions("sms",true);
 
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
@@ -257,6 +262,9 @@ class Options extends \App\Pages\Base
         $this->sms->smsclubpass->setText($sms['smsclubpass']);
         $this->sms->smscluban->setText($sms['smscluban']);
         $this->sms->smsclubvan->setText($sms['smsclubvan']);
+
+        $this->sms->smscustlang->setValue($sms['smscustlang']);
+        $this->sms->smscustscript->setText( base64_decode($sms['smscustscript'] ));
 
         $this->sms->smstype->setValue($sms['smstype']);
 
@@ -287,7 +295,6 @@ class Options extends \App\Pages\Base
 
         
     }
-
 
     public function saveCommonOnClick($sender) {
         $common = System::getOptions("common",true);
@@ -339,11 +346,12 @@ class Options extends \App\Pages\Base
         $common['allowminus'] = $this->business->allowminus->isChecked() ? 1 : 0;
         $common['allowminusmf'] = $this->business->allowminusmf->isChecked() ? 1 : 0;
         $common['useval'] = $this->business->useval->isChecked() ? 1 : 0;
-        $common['cashier'] = trim($this->business->cashier->getText());
+
         $common['checkslogan'] = trim($this->business->checkslogan->getText());
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->business->usescanner->isChecked() ? 1 : 0;
+        $common['usescale'] = $this->business->usescale->isChecked() ? 1 : 0;
  
         $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
         
@@ -397,7 +405,6 @@ class Options extends \App\Pages\Base
         $this->setSuccess('Збережено');
 
     }
-   
 
     public function savePrinterOnClick($sender) {
         $printer = array();
@@ -438,24 +445,32 @@ class Options extends \App\Pages\Base
         $type = $this->sms->smstype->getValue();
         $this->sms->smssemytoken->setVisible($type == 1);
         $this->sms->smssemydevid->setVisible($type == 1);
+   
         $this->sms->smsclubtoken->setVisible($type == 2);
         $this->sms->smsclublogin->setVisible($type == 2);
         $this->sms->smsclubpass->setVisible($type == 2);
         $this->sms->smscluban->setVisible($type == 2);
         $this->sms->smsclubvan->setVisible($type == 2);
+     
         $this->sms->flysmslogin->setVisible($type == 3);
         $this->sms->flysmspass->setVisible($type == 3);
         $this->sms->flysmsan->setVisible($type == 3);
 
-        $this->sms->semysmssite->setVisible($type == 1);
-        $this->sms->smsclubsite->setVisible($type == 2);
-        $this->sms->smsflysite->setVisible($type == 3);
+     
+        $this->sms->smscustlang->setVisible($type == 4);
+        $this->sms->smscustscript->setVisible($type == 4);
 
-        //  $this->goAnkor('atype');
+        $this->sms->smstestphone->setVisible($type >0 );
+        $this->sms->smstesttext->setVisible($type >0 );
+        $this->sms->smstest->setVisible($type >0 );
+
+      //  $this->goAnkor('smstype');
     }
 
     public function saveSMSOnClick($sender) {
         $sms = array();
+        $sms['smstype'] = $this->sms->smstype->getValue();
+
         $sms['smsclubtoken'] = $this->sms->smsclubtoken->getText();
         $sms['smsclublogin'] = $this->sms->smsclublogin->getText();
         $sms['smsclubpass'] = $this->sms->smsclubpass->getText();
@@ -466,18 +481,18 @@ class Options extends \App\Pages\Base
         $sms['flysmslogin'] = $this->sms->flysmslogin->getText();
         $sms['flysmspass'] = $this->sms->flysmspass->getText();
         $sms['flysmsan'] = $this->sms->flysmsan->getText();
-        $sms['smstype'] = $this->sms->smstype->getValue();
+        $sms['smscustlang'] = $this->sms->smscustlang->getValue();
+        $sms['smscustscript'] = base64_encode($this->sms->smscustscript->getText() );
 
         System::setOptions("sms", $sms);
         $this->setSuccess('Збережено');
     }
 
-
     public function testSMSOnClick($sender) {
-
+     
         $res = \App\Entity\Subscribe::sendSMS($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
         if (strlen($res) == 0) {
-            $this->setSuccess('success');
+           
             $res = \App\Entity\Subscribe::sendViber($this->sms->smstestphone->getText(), $this->sms->smstesttext->getText());
 
         } else {
@@ -485,10 +500,7 @@ class Options extends \App\Pages\Base
         }
 
     }
-
-
-   
-
+  
     public function OnAddSaleSource($sender) {
         $ls = new \App\DataItem();
         $ls->name = '';
@@ -497,7 +509,6 @@ class Options extends \App\Pages\Base
         $this->salesourcesform->salesourceslist->Reload();
         $this->goAnkor('salesourcesform');
     }
-
 
     public function salesourceListOnRow($row) {
         $item = $row->getDataItem();
@@ -523,7 +534,6 @@ class Options extends \App\Pages\Base
 
         $this->setSuccess('Збережено');
     }
-
 
     public function onValRow($row) {
         $val = $row->getDataitem();
@@ -556,6 +566,7 @@ class Options extends \App\Pages\Base
         $this->goAnkor('valform') ;
         
     }
+
     public function onValDel($sender) {
         $val = $sender->getOwner()->getDataItem() ;
         $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
@@ -564,6 +575,7 @@ class Options extends \App\Pages\Base
         $this->goAnkor('valform') ;
 
     }
+
     public function onValAdd($sender) {
         $val=new  \App\DataItem() ;
         $val->code='';

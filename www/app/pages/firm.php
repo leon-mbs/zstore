@@ -104,6 +104,7 @@ class Firm extends \App\Pages\Base
         $fp = new \App\DataItem();
         $fp->name = '';
         $fp->edrpou = '';
+        $fp->address = '';
         $fp->id = time();
         $this->_fops[$fp->id] = $fp;
         $this->firmform->fopslist->Reload() ;
@@ -115,6 +116,7 @@ class Firm extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new TextInput('fopname', new Bind($item, 'name')));
         $row->add(new TextInput('fopedrpou', new Bind($item, 'edrpou')));
+        $row->add(new TextInput('fopaddress', new Bind($item, 'address')));
         $row->add(new ClickLink('delfop', $this, 'onDelFop'));
     }
 

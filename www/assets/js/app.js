@@ -210,3 +210,7 @@ function formatDate(date) {
 
   return  '20'+yy  + '-' + mm + '-' + dd
 }  
+
+function isNonEmptyString(variable) {
+  return variable !== null && variable !== undefined && typeof variable === 'string' && variable.length > 0;
+}

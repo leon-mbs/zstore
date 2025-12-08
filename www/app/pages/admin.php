@@ -90,6 +90,7 @@ class Admin extends \App\Pages\Base
         if($modules['ppo']==1) $fisctype=1;
         if($modules['checkbox']==1) $fisctype=2;
         if($modules['vkassa']==1) $fisctype=3;
+        if($modules['freg']==1) $fisctype=4;
         $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
 
    
@@ -318,6 +319,7 @@ class Admin extends \App\Pages\Base
         $modules['ppo']   = $fisctype == 1 ? 1:0;
         $modules['checkbox']   = $fisctype == 2 ? 1:0;
         $modules['vkassa']   = $fisctype == 3 ? 1:0;
+        $modules['freg']   = $fisctype == 4 ? 1:0;
  
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
