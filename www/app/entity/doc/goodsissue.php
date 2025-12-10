@@ -76,6 +76,7 @@ class GoodsIssue extends Document
                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                          "stamp"           => _BASEURL . $firm['stamp'],
                         "isstamp"         => strlen($firm['stamp']) > 0,
+                       "iscustaddress"    => false,
 
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
@@ -105,14 +106,15 @@ class GoodsIssue extends Document
             if (strlen($cust->phone) > 0) {
                 $header["phone"] = $cust->phone;
             }
-            if (strlen($cust->address) > 0) {
-                $header["address"] = $cust->address;
-            }
+       
             if (strlen($cust->edrpou) > 0) {
                 $header["edrpou"] = $cust->edrpou;
             }
 
-
+            if (strlen($cust->address) > 0) {
+                $header["iscustaddress"] = true;
+                $header["custaddress"] = $cust->address;
+            }
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];

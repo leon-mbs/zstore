@@ -41,6 +41,7 @@ class CheckBox
             CURLOPT_POSTFIELDS => json_encode($body),
             CURLOPT_HTTPHEADER => [
                 "Content-Type: application/json",
+                "X-Client-Name: Zippy CRM",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
@@ -95,6 +96,7 @@ class CheckBox
             CURLOPT_POSTFIELDS => "",
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
@@ -151,6 +153,7 @@ class CheckBox
             CURLOPT_POSTFIELDS => "",
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
@@ -588,6 +591,7 @@ class CheckBox
             CURLOPT_POSTFIELDS => "",
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
