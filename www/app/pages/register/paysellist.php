@@ -348,8 +348,9 @@ GROUP BY c.customer_name,
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pdate) {
-            return  "Не можна додавати оплату раніше  " .date('Y-m-d', $da);
-        }
+             $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d', $da);
+            return;
+       }
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 

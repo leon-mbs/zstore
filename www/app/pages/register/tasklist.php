@@ -219,7 +219,7 @@ class TaskList extends \App\Pages\Base
             $d = $this->_task->getChildren('ProdReceipt');
             if (count($d) > 0) {
 
-                $this->setWarn('Вже існує документ Оприбуткування і виробництво');
+                $this->setWarn('Вже існує документ Оприбуткування з виробництво');
             }
             Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, $this->_task->document_id);
             return;

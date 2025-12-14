@@ -1,3 +1,4 @@
+SET NAMES 'utf8';
 
 ALTER TABLE custitems ADD INDEX  (customer_id) ; 
 

@@ -1,4 +1,5 @@
- 
+SET NAMES 'utf8'; 
+
 ALTER VIEW documents_view
 AS
 SELECT

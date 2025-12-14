@@ -62,7 +62,9 @@ class GoodsReceipt extends Document
             $header['storeemp'] = $this->headerdata["storeempname"];
         }
 
-
+        $header['payreq'] = $this->getHD('payreq');
+        $header['ispayreq'] = strlen($header['payreq']) > 0;
+ 
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
         $header['isprep'] = $this->headerdata["prepaid"] > 0;

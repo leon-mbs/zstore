@@ -122,7 +122,7 @@ class Admin extends \App\Pages\Base
             $sql="update metadata set  disabled=1";
         }
         $conn->Execute($sql.$where);
-        
+        /*
         $where = " where meta_name in('TaxInvoiceIncome','TaxInvoice2','TaxInvoice','TaxInvoiceList' )   " ;
         if($options['usends']==1) {
             $sql="update metadata set  disabled=0 ";
@@ -130,7 +130,7 @@ class Admin extends \App\Pages\Base
             $sql="update metadata set  disabled=1";
         }
         $conn->Execute($sql.$where);
-     
+        */
         $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблiк');
       
         if($options['useacc']==1) {

@@ -198,7 +198,7 @@ class ARMFood extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
-        $this->editcust->add(new TextInput('editaddress'));
+
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -1195,7 +1195,7 @@ class ARMFood extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setError("У  контрагента  вього {$b} бонусів на рахунку");                
+                $this->setError("У  контрагента  всього {$b} бонусів на рахунку");                
                 return;
             }
            
@@ -1515,7 +1515,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
-        $this->editcust->editaddress->setText('');
+
         $this->editcust->editphone->setText('');
     }
 
@@ -1527,7 +1527,7 @@ class ARMFood extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->address = $this->editcust->editaddress->getText();
+
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 

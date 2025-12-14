@@ -97,7 +97,7 @@ class ArmProdFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
 
-            $logger->error(" Арм  кухни " . $ee->getMessage());
+            $logger->error(" Арм  кухнi " . $ee->getMessage());
 
             return $this->jsonError($ee->getMessage())  ;
 
@@ -134,7 +134,7 @@ class ArmProdFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
 
-            $logger->error(" Арм  кухни " . $ee->getMessage());
+            $logger->error(" Арм  кухнi " . $ee->getMessage());
 
             return $this->jsonError($ee->getMessage())  ;
 
@@ -187,7 +187,7 @@ class ArmProdFood extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
 
-            $logger->error(" Арм  кухни " . $ee->getMessage());
+            $logger->error(" Арм  кухнi " . $ee->getMessage());
 
              return $this->jsonError($ee->getMessage())  ;
 

@@ -193,7 +193,7 @@ class Roles extends \App\Pages\Base
         $role = UserRole::getFirst('rolename=' . UserRole::qstr($this->role->rolename));
         if ($role instanceof UserRole) {
             if ($role->role_id != $this->role->role_id) {
-                $this->setError('Неуникальное имя');
+                $this->setError('Неунiкальна назва');
                 return;
             }
         }

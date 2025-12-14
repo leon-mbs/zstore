@@ -492,7 +492,7 @@ class ProdProcList extends \App\Pages\Base
            $empids[] =  $emp->employee_id;       
         } 
         if($ktu != 1 && count($this->_emplist) >0) {
-            $this->setError('Сумма  КТУ повинна дорiвнювати 1 ') ;
+            $this->setError('Сума  КТУ повинна дорiвнювати 1 ') ;
             return;
         }
 
