@@ -268,7 +268,8 @@ class PayList extends \App\Pages\Base
 
         $header = array();
         $header['document_number'] = $doc->document_number;
-        $header['firm_name'] = $doc['firm_name'] ;
+        $header['firm_name'] = $doc->headerdata['firm_name'] ;
+ 
         $header['customer_name'] = $doc->customer_name;
         $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
         $all = 0;
