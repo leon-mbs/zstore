@@ -155,8 +155,8 @@ class Update extends \App\Pages\Base
              $this->_tvars['reinstall']  = false;
          } 
           $phpv =   phpversion()  ;
-          $this->_tvars['oldphpv']  = $phpv;    
-        
+          $this->_tvars['currphpv']  = $phpv;    
+         
  
           $b= version_compare("8.1.0" , $phpv);
           if($b==1)   {
@@ -231,7 +231,8 @@ class Update extends \App\Pages\Base
             if($b==1) {
                 @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
             }   else {
-                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor74.zip")) ;
+                $this->setError('Тiльки для версiй PHP > 8.1.0');
+                return;  
             }
  
      

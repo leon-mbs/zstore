@@ -38,7 +38,7 @@ class Invoice extends \App\Entity\Doc\Document
               );
         }
 
-        $totalstr =  \App\Util::money2str_ua($this->payamount);
+        $totalstr =  \App\Util::money2str($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -53,6 +53,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "issign"          => strlen($firm['sign']) > 0,
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "iscustaddress"    => false,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
@@ -88,6 +89,10 @@ class Invoice extends \App\Entity\Doc\Document
         }
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
+        }
+        if (strlen($cust->address) > 0) {
+            $header["iscustaddress"] = true;
+            $header["custaddress"] = $cust->address;
         }
      
         if (strlen($cust->edrpou) > 0) {

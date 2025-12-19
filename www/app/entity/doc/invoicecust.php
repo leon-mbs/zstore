@@ -46,6 +46,8 @@ class InvoiceCust extends Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+        $header['payreq'] = $this->getHD('payreq');
+        $header['ispayreq'] = strlen($header['payreq']) > 0;
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
 

@@ -6,15 +6,6 @@
         <td><b>Постачальник</b></td>
         <td colspan="6">{{customer_name}}</td>
     </tr>
-    {{#isfirm}}
-    <tr>
-        <td></td>
-
-        <td valign="top"><b>Покупець</b></td>
-        <td colspan="6">{{firm_name}}</td>
-
-    </tr>
-    {{/isfirm}}
     {{#iscontract}}
     <tr>
 
@@ -25,7 +16,16 @@
 
 
     </tr>
-    {{/iscontract}}
+    {{/iscontract}}    
+    {{#ispayreq}}
+    <tr>
+
+        <td></td>
+
+        <td colspan="7"> Платiжнi реквiзити:<br>  {{payreq}}  </td>
+
+    </tr>
+    {{/ispayreq}}      
    {{#outnumber}}
     <tr>
         <td></td>
@@ -34,7 +34,18 @@
         <td colspan="6">{{outnumber}}</td>
 
     </tr>
-    {{/outnumber}}
+    {{/outnumber}}    
+    {{#isfirm}}
+    <tr>
+        <td></td>
+
+        <td valign="top"><b>Покупець</b></td>
+        <td colspan="6">{{firm_name}}</td>
+
+    </tr>
+    {{/isfirm}}
+
+ 
     <tr>
         <td></td>
 

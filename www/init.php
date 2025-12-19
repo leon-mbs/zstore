@@ -77,7 +77,7 @@ function app_autoload($className) {
         if (file_exists($file)) {
             require_once $file;
         } else {
-            die('Невiрний класс ' . $className);
+            die('Невiрний клас ' . $className);
         }
     }
 }

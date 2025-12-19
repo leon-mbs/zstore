@@ -440,7 +440,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПТ00001";
+                $doc->document_number = "ПТ-00001";
             }
             $doc->document_date = time();
 
@@ -713,7 +713,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('GoodsReceipt');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПН00001";
+                $doc->document_number = "ПН-00001";
             }
             $doc->document_date = time();
 
@@ -853,7 +853,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('Order');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "З00001";
+                $doc->document_number = "З-00001";
             }
             $doc->document_date = time();
 

@@ -571,6 +571,7 @@
                         <th ></th>
                         <th > </th>
                        {{#fiscal}}      <th ></th>     {{/fiscal}}
+                        {{#freg}}      <th ></th>     {{/freg}}
                         
                     </tr>
                     <tr zippy="orderlist">
@@ -640,10 +641,7 @@
                         <label for="editphone">Телефон</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
-                    <div class="form-group">
-                        <label for="editaddress">Адреса</label>
-                        <input class="form-control" type="text" zippy="editaddress"/>
-                    </div>
+                   
 
 
                     <div class="form-group">
@@ -754,7 +752,7 @@
                                 <label  >Розклад роботи</label>
                                 
                                 <table class="ctable">
-                                  <tr><td>Пн. </td><td><input zippy="timepn" style="width:100px" class="form-control"  > </td> 
+                                  <tr><td>Пн-Пт. </td><td><input zippy="timepn" style="width:100px" class="form-control"  > </td> 
                                    <td>Сб. </td><td><input zippy="timesa" style="width:100px" class="form-control"  > </td> 
                                   <td>Нд. </td><td><input zippy="timesu" style="width:100px" class="form-control"  > </td></tr>
                                 </table>

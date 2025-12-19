@@ -403,7 +403,7 @@
 {{#_type12}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Товари по брендам  {{brand}}<br> <br>
+        Продажі по брендам  {{brand}}<br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">

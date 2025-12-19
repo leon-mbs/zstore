@@ -19,7 +19,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextArea;se Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
@@ -62,6 +62,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
+        $this->docform->add(new TextArea('payreq'));
       
       
         
@@ -180,7 +181,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdeliverytype->setValue( $this->_doc->headerdata['editdeliverytype']) ;
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
-     
+            $this->docform->payreq->setText($this->_doc->getHD('payreq'));
+  
  
             $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
             $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
@@ -256,7 +258,8 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->editnds->setText($invoice->headerdata['nds']);
                         $this->docform->val->setValue($invoice->headerdata['val']);
                         $this->docform->rate->setText($invoice->headerdata['rate']);
-                        
+                        $this->docform->payreq->setText($invoice->getHD('payreq'));
+     
                         $this->OnCustomerFirm($this->docform->customer);
 
                         $this->docform->contract->setValue($invoice->headerdata['contract_id']);
@@ -690,6 +693,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+        $this->_doc->headerdata['payreq'] = $this->docform->payreq->getText();
 
 
         $this->_doc->payamount = doubleval($this->docform->payamount->getText());
@@ -1146,6 +1150,14 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
+        $prev= Document::getFirst("meta_name='InvoiceCust' and  customer_id={$c} and  state >4 ","document_id desc" ) ;
+        if($prev != null){
+            $pr=$prev->getHD('payreq');
+            if(strlen($pr)>0) {
+                $this->docform->payreq->setText($pr)  ;
+            }
+        }
+                
     }
 
     public function OnChangeItem($sender) {

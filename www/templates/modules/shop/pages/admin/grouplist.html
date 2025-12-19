@@ -28,7 +28,7 @@
                     <div class="col-12    col-xl-10 ">
                         <h4>Перелік атрибутiв</h4>
                         <a zippy="addattr" class="btn btn-sm  btn-primary mr-4">Новий атрибут</a>
-                        <a zippy="addcustom" class="btn btn-sm  btn-primary">Додати кастомнi поля</a><br>
+                       
                         <table class="   table    table-sm ">
                             <tr>
                                 <th>Назва</th>
@@ -59,6 +59,12 @@
                             <select zippy="attrtype" class="form-control"></select>
                             <span zippy="attrtypename" class="form-control"></span>
                         </div>
+                         <div class="form-group" zippy="cfpanel">
+                            <label for="attrcf">Поле:</label>
+                            <select   zippy="attrcf" class="form-control"  >
+                                <option value="0">Не вибрано</option>
+                            </select>
+                         </div>                        
                         <div class="form-group">
                             <label for="attrname">Назва:</label>
                             <input type="text" zippy="attrname" class="form-control" required="required"/>
@@ -72,6 +78,7 @@
                             <label for="meashure">Од. вим.:</label>
                             <input type="text" zippy="meashure" class="form-control" style="width:50px;"/>
                         </div>
+                        
 
 
 

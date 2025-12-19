@@ -90,7 +90,7 @@ class RetCustIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВП-000000';
+        return 'ПП-000000';
     }
     /**
     * @override

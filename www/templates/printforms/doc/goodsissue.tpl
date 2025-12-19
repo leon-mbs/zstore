@@ -21,7 +21,14 @@
     </tr>
      {{/edrpou}}       
       
-      
+      {{#iscustaddress}}
+    
+      <tr>
+        <td></td>
+        <td valign="top">Адреса</td>
+        <td colspan="6">{{custaddress}}</td>
+    </tr>    
+    {{/iscustaddress}}      
       
       
     {{#isfirm}}
