@@ -12,10 +12,8 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 
-/**
- *  прогноз  продаж
- */
-class PredSell extends \App\Pages\Base
+ 
+class Toc extends \App\Pages\Base
 {
     private $_cci = array();
 
@@ -23,7 +21,7 @@ class PredSell extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (false == \App\ACL::checkShowReport('PredSell')) {
+        if (false == \App\ACL::checkShowReport('Toc')) {
             return;
         }
 
@@ -183,7 +181,7 @@ class PredSell extends \App\Pages\Base
         $header = array("_detail" => array_values($detail),
                         "tovar"   => $type == 0
         );
-        $report = new \App\Report('report/predsell.tpl');
+        $report = new \App\Report('report/toc.tpl');
 
         $html = $report->generate($header);
 

@@ -212,7 +212,7 @@ class TimeSheet extends \App\Pages\Base
         $time->t_type = $post->type;
 
         if ($time->t_type == 0) {
-            return $this->jsonError("Не обрано тип";) ;
+            return $this->jsonError("Не обрано тип") ;
      
            
         }
