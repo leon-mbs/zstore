@@ -379,7 +379,7 @@ class Helper
     }
 
     /**
-     * список  файдов  пррепленных  к  объекту
+     * список  файлов  прикрепленных  к  объекту
      *
      * @param mixed $item_id
      * @param mixed $item_type
