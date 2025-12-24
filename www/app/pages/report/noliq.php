@@ -85,6 +85,7 @@ class NoLiq extends \App\Pages\Base
             $item['itemname']  = $i->itemname;
             $item['item_code']  = $i->item_code;
             $item['cat_name']  = $i->cat_name;
+            $item['cell']  = $i->cell;
             $item['price']  = H::fa($i->getPrice() );
             $item['brand']  = $i->manufacturer;
             $detail[] = $item;

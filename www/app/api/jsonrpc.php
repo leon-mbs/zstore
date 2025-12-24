@@ -20,6 +20,8 @@ abstract class JsonRPC
 
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
             echo json_encode(self::error(0, -1015, "Method  must  be POST"), JSON_UNESCAPED_UNICODE);
+            http_response_code(400);
+
             return;
         }
         try {
@@ -34,12 +36,13 @@ abstract class JsonRPC
             if ($response != null) {
                 header("Content-type: application/json");
                 echo json_encode($response, JSON_UNESCAPED_UNICODE);
-            } else {
-                http_response_code(200);
-            }
+            }  
+            http_response_code(200);
+             
 
         } catch(\Exception $e) {
             echo json_encode(self::error(0, -1016, $e->getMessage()), JSON_UNESCAPED_UNICODE);
+            http_response_code(400);
             return;
 
         }
