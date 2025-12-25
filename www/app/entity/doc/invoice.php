@@ -213,7 +213,8 @@ class Invoice extends \App\Entity\Doc\Document
         }
         $this->DoAcc();             
     }
-   public   function DoAcc() {
+
+    public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     

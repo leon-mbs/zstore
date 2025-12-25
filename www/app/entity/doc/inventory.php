@@ -106,7 +106,7 @@ class Inventory extends Document
             $name = $item->itemname;
             $code = $item->item_code;
             $q = H::fqty($item->quantity);
-            if (round($item->qfact) == round($q)) {
+            if (doubleval($item->qfact) == doubleval($q)) {
                 $detail[] = array("no"        => $i++,
                                   "item_name" => $name,
                                   "item_code" => $code,
@@ -115,7 +115,7 @@ class Inventory extends Document
                                   "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
-            if (round($item->qfact) < round($q)) {
+            if (doubleval($item->qfact) < doubleval($q)) {
                
                 $summinus += $b;
                 $detaillost[] = array("no"        => $i++,
@@ -126,7 +126,7 @@ class Inventory extends Document
                                       "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
-            if (round($item->qfact) > round($q)) {
+            if (doubleval($item->qfact) > doubleval($q)) {
                 $sumplus += $b;
 
                 $detailover[] = array("no"        => $i++,
@@ -166,6 +166,15 @@ class Inventory extends Document
     protected function getNumberTemplate() {
         return 'ІН-000000';
     }
+ 
+    public function getRelationBased() {
+        $list = array();
+        $list['GoodsIssue'] = self::getDesc('GoodsIssue');
+     
+        return $list;
+    }
+ 
+ 
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;

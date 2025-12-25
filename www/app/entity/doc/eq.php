@@ -38,7 +38,7 @@ class EQ extends Document
            $b->createdon = $this->document_date;
            $b->optype = \App\Entity\CustAcc::SELLER;
            $b->save();           
- 
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INEQ)  ;
         }
         if($optype==EqEntry::OP_STORE  )  {   // со  склада
           
@@ -50,13 +50,14 @@ class EQ extends Document
            $sc->setStock($stock->stock_id);
  
            $sc->save();          
-           
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INEQ)  ;      
         }
         
         if($optype==EqEntry::OP_PROD )  {    // с  производства
      
            $entry->amount = $this->amount ;
-    
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INEQ)  ;      
+   
         }
         
         
@@ -68,17 +69,21 @@ class EQ extends Document
         if($optype==EqEntry::OP_AMOR   )  {
           
            $entry->amount = 0-$this->amount   ;
-     
+           IOState::addIOState($this->document_id,0-$this->amount,IOState::TYPE_AMOR)  ;      
+    
         }
         if($optype==EqEntry::OP_REPAIR   )  {
  
            $entry->amount = $this->amount   ;
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INVEQ)  ;      
+               
         }
   
        if($optype==EqEntry::OP_OUTCOME )  {
        
            $entry->amount = 0-$eq->getBalance() ;
-          
+           IOState::addIOState($this->document_id,$entry->amount,IOState::TYPE_INEQ)  ;
+         
        }
        if($optype==EqEntry::OP_SELL )  {    //продажа
          
@@ -104,7 +109,8 @@ class EQ extends Document
            $sc = new \App\Entity\Entry($this->document_id, $stock->partion, 1);
            $sc->setStock($stock->stock_id);
  
-           $sc->save();            
+           $sc->save();  
+                         
        }
        if($optype==EqEntry::OP_LOST )  {     
           $entry->amount = 0-$this->amount   ;

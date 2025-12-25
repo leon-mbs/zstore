@@ -343,6 +343,21 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcPay();
                     }
                     
+                      if ($basedoc->meta_name == 'Inventory') {
+
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                    
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            if (doubleval($item->qfact) < doubleval($item->quantity)) {
+                                $item->price = $item->getLastPartion($basedoc->headerdata['store']);
+                                $this->_itemlist[] = $item; 
+                            }
+                                     
+                        }
+                        $this->calcTotal();
+                        $this->calcPay();
+                    }
+                    
                     
                     $ch = $basedoc->getChildren('GoodsIssue');
                     
