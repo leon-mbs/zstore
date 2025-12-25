@@ -1,40 +1,38 @@
 <table class="ctable" cellspacing="0" cellpadding="1">
     <tr    >
         <td align="center" colspan="5">
-            <h4  >Прогноз  продаж </h4>
+            <h4  >Обмеження системи </h4>
         </td>
     </tr>
-    <tr style="font-weight: bolder;">
+ 
+    {{#isdetail1}}
+  <tr    >
+        <td  >
+            <b  >Актуальність складів  </b>   
+        </td>
+    </tr>    
+ <tr  >
+        <td  >
+            <small  > Товари, яких не виявилось на складі на момент замовлення </small>   
+        </td>
+    </tr>  
+   <tr>
+       
+        <td   style="border: solid black 1px"  >Товар </td>
+ 
+        <td   style="border: solid black 1px" align="right">На суму </td>
 
-        <th   style="border-bottom:1px #000 solid;">Товар</th>
-        <th   style="border-bottom:1px #000 solid;">Артикул</th>
-        <th   style="border-bottom:1px #000 solid;" align="right">Прогноз </th>
-        <th   style="border-bottom:1px #000 solid;" align="right">На складі</th>
-        <th   style="border-bottom:1px #000 solid;" align="right">
-        
-       {{#tovar}}
-        Закупити
-       {{/tovar}}
-       {{^tovar}}
-       Виробити
-       {{/tovar}}
-        
-        </th>
-
-    </tr>
-    {{#_detail}}
+    </tr>      
+    {{#_detail1}}
     <tr>
-
-        <td   style="background-color: {{color}} ;">{{itemname}}</td>
-        <td   style="background-color: {{color}} ;">{{item_code}}</td>
-        <td   style="background-color: {{color}} ;" align="right">{{qty}} </td>
-        <td   style="background-color: {{color}} ;" align="right">{{onstore}} </td>
-
-        <td   style="background-color: {{color}} ;" align="right">{{tobay}} </td>
-
+       
+        <td    >{{item_name}} </td>
+        <td    align="right">{{days}} </td>
 
     </tr>
-    {{/_detail}}
+    {{/_detail1}}
+    
+    {{/isdetail1}}
  
 
 </table>
