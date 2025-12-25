@@ -44,6 +44,13 @@
 
                         <label for="docnumber"> Документ </label>
                         <input required="on" placeholder="Номер документа" class="form-control  mr-2  " zippy="docnumber"  >
+                         <label for="docio"> Тип </label>
+                        <select class="form-control mr-2" zippy="docio">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <label for="docamount"> Сума </label>
+                        <input required="on"   class="form-control  mr-2  " zippy="docamount"  >
+                   
                         <input type="submit" class="  btn btn-outline-success  " value="Додати">
                       
                     </form>       
@@ -59,7 +66,13 @@
             <div class="col-12 col-md-8 col-xl-6">
 
 
-                <br><a zippy="csv">Експорт у Excel</a>
+                <br>
+                  {{^bmode}} 
+                <a zippy="csv">Експорт у Excel</a>
+                 {{/bmode}} 
+                  {{#bmode}} 
+                <a zippy="viewbook">Перегляд Книги</a>
+                  {{/bmode}} 
 
                 <table class="table   table-sm   ">
                     <tr>
@@ -68,7 +81,7 @@
                         <th>Номер</th>
                         <th class="text-right">Доход</th>
                         <th class="text-right">Витрата</th>
-                      {{^bmode}}     <th>Автор</th>    {{/bmode}}
+                        <th>Автор</th>     
                         <th>Тип прибутку/видатку</th>
                         <th></th>
                         
@@ -83,7 +96,7 @@
                         <td zippy="amountin"  class="text-right"> </td>
                         <td zippy="amountout"  class="text-right"> </td>
                         
-                  {{^bmode}}       <td zippy="username"></td>     {{/bmode}}
+                        <td zippy="username"></td>     
                         <td zippy="iotype"></td>
                       
                         <td class="text-nowrap">
@@ -107,9 +120,7 @@
 
             </div>
 
-            <div class="col-12">
-                <div zippy="docview"></div>
-            </div>
+          
             <div class="col-12">
                 <table   class="ctanle">
                   
@@ -119,13 +130,28 @@
 
                 </table>
             </div>
-
+            <div class="col-12">
+                <div zippy="docview"></div>
+            </div>
+             <br><br>
+             <div zippy="bookrep" class="col-12  ">
+                 <h5>Книга облiку прибуткiв та видаткiв</h5> 
+                 <a href="/index.php?p=App/Pages/ShowReport&arg=xls/iobook" target="_blank"  >Експорт у Excel</a>
+                  
+                 <div zippy="bookrephtml"></div> 
+            </div>
+            
+            
         </div>
 
 
      <script>
             function check_delete() {
                 return confirm("Видалити документ?")
+            }
+            function check_viewbook() {
+               document.getElementById('dialogwait').showModal()
+               return true;
             }
        </script>
     </body>
