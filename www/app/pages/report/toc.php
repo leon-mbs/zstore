@@ -56,7 +56,7 @@ class Toc extends \App\Pages\Base
 
         $period = (int)$this->filter->period->getValue();
         $period= 24;
-        $end=strtotime('-7 day') ;
+        $end=strtotime('+7 day') ;
         $start=strtotime("-{$period} month",$end) ;
       
         $from = $conn->DBDate($start); 
@@ -66,6 +66,10 @@ class Toc extends \App\Pages\Base
         
            //актуальность складов
         $detail1=[] ;
+        $detail2=[] ;
+        $detail3=[] ;
+        $detail4=[] ;
+        
         $items=[];
         $itemsd=[];
         
@@ -84,6 +88,7 @@ class Toc extends \App\Pages\Base
                  
                  
              }
+                 //товары с задерэкой после  заказа
              $logs = $order->getLogList([9,11,14,20]);
              if(count($logs)>0) {
                  $last= array_shift($logs);
@@ -100,8 +105,6 @@ class Toc extends \App\Pages\Base
                          }
                          
                          $itemsd[$item->item_id]['days'][]=$days ; 
-                        
-                         
                          
                      }
                  }
@@ -112,23 +115,93 @@ class Toc extends \App\Pages\Base
            $item['amount'] = H::fa($item['amount']); 
            $detail1[]=$item; 
         }
+        
         foreach($itemsd as $item){
            $avg = array_sum($item['days'])/count($item['days']);  
             
            $item['days'] = number_format($avg, 1, '.', '') ; 
            $detail2[]=$item; 
         }
+        unset($itemsd);
+        unset($items);
+        $itemsd=[];
+       //задержка с заявки до получения     
+    
+        foreach(Document::findYield($dd." and meta_name='OrderCust' and state >4 ") as $order){
+             $logs = $order->getLogList([9]);
+             if(count($logs)>0) {
+                $last= array_shift($logs);
+           
+                $datetime1 = new \DateTime( date('Y-m-d',$order->document_date)  );
+                $datetime2 = new \DateTime( date('Y-m-d',$last->createdon));
+                $interval = $datetime1->diff($datetime2);
+                $days = $interval->days;
+                                               
+                if($days > 1) { // обрабатывался  больше двух дней
+                     foreach ($order->unpackDetails('detaildata') as $item) {
+                         if(!isset($itemsd[$item->item_id])) {
+                            $itemsd[$item->item_id] = ['name'=> $item->itemname,'code'=>$item->item_code??'','days'=>[]];
+                         }
+                         
+                         $itemsd[$item->item_id]['days'][]=$days ; 
+                         
+                     }
+                 }
+                 
+             }
+        } 
+        foreach($itemsd as $item){
+           $avg = array_sum($item['days'])/count($item['days']);  
+            
+           $item['days'] = number_format($avg, 1, '.', '') ; 
+           $detail3[]=$item; 
+        }      
        
+         
+         //задержки по  поставщиком  после  оплат        
+         $items=[];  
         
-         //товары с задерэкой после  заказа
-         //задержка с заявки до получения
-         //задерэеки по  поставщиком  после  оплат        
+         foreach(Document::findYield($dd." and meta_name='InvoiceCust' and state >4 and  payed >= payamount ") as $invoice){
+            $p=\App\Entity\Pay::getFirst("document_id=".$invoice->document_id) ;
+           
+            $datetime1 = new \DateTime( date('Y-m-d',$p->paydate)  );
+            
+            $gi= Document::getFirst("state > 4 and parent_id=".$invoice->document_id)  ;
+            if($gi==null)  continue;
+            
+            $datetime2 = new \DateTime( date('Y-m-d',$gi->document_date));
+            $interval = $datetime1->diff($datetime2);
+            $days = $interval->days;
+                   
+            
+            if($days > 1)  
+            { 
+               if(!isset($items[$invoice->customer_id])) {
+                    $items[$invoice->customer_id] = ['name'=> $invoice->customer_name, 'days'=>[]];
+               }              
+               $items[$invoice->customer_id]['days'][]=$days ; 
+               
+            }    
+         }   
+     
+        foreach($items as $item){
+           $avg = array_sum($item['days'])/count($item['days']);  
+            
+           $item['days'] = number_format($avg, 1, '.', '') ; 
+           
+           $detail4[]=$item; 
+        }
+     
               
         $header = array(
            "_detail1" => $detail1,
-           "isdetail1" => count($detail1) > 0 ,
+           "isdetail1" => count($detail1) > 0,
            "_detail2" => $detail2,
-           "isdetail2" => count($detail2) > 0 
+           "isdetail2" => count($detail2) > 0,
+          "_detail3" => $detail3,
+           "isdetail3" => count($detail3) > 0, 
+          "_detail4" => $detail4,
+           "isdetail4" => count($detail4) > 0 
 
 
                         

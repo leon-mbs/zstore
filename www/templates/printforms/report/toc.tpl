@@ -19,7 +19,7 @@
    <tr>
        
         <th   style="border: solid black 1px"  >Товар </th>
-        <th   style="border: solid black 1px"  >Код </th>
+        <th   style="border: solid black 1px"  >Артикул </th>
         <th   style="border: solid black 1px" align="right">На суму </th>
 
     </tr>      
@@ -50,7 +50,7 @@
    <tr>
        
         <th   style="border: solid black 1px"  >Товар </th>
-        <th   style="border: solid black 1px"  >Код </th>
+        <th   style="border: solid black 1px"  >Артикул </th>
         <th   style="border: solid black 1px" align="right">Дні </th>
 
     </tr>      
@@ -65,6 +65,71 @@
     {{/_detail2}}
     
     {{/isdetail2}}
+    
+    
+  {{#isdetail3}}
+  <tr    >
+        <td  colspan="3"  >
+           <br> <b  >Затримка поставок   </b>   
+        </td>
+    </tr>    
+ <tr  >
+        <td  colspan="3"  >
+            <small  >Середня затримка  поставки ТМЦ . Для заявок з різницею між датою створення і  <br>закриттям (створення вхідного рахунку або прибуткової накладної) <br> більше двох днів   </small>   
+        </td>
+    </tr>  
+   <tr>
+       
+        <th   style="border: solid black 1px"  >Товар </th>
+        <th   style="border: solid black 1px"  >Артикул </th>
+        <th   style="border: solid black 1px" align="right">Дні </th>
+
+    </tr>      
+    {{#_detail3}}
+    <tr>
+       
+        <td    >{{ name}} </td>
+        <td    >{{code}} </td>
+        <td    align="right">{{days}} </td>
+
+    </tr>
+    {{/_detail3}}
+    
+    {{/isdetail3}}    
+   
+   
+  {{#isdetail4}}
+  <tr    >
+        <td  colspan="3"  >
+           <br> <b  >Затримка поставок після оплати   </b>   
+        </td>
+    </tr>    
+ <tr  >
+        <td  colspan="3"  >
+            <small  >Середня затримка  поставки ТМЦ після оплати. Затримка  створення прибуткової накладної <br>більше двох днів псля оплати вхідного рахунку   </small>   
+        </td>
+    </tr>  
+   <tr>
+       
+        <th colspan="2"  style="border: solid black 1px"  >Назва </th>
+     
+        <th   style="border: solid black 1px" align="right">Дні </th>
+
+    </tr>      
+    {{#_detail4}}
+    <tr>
+       
+        <td colspan="2"   >{{ name}} </td>
+       
+        <td    align="right">{{days}} </td>
+
+    </tr>
+    {{/_detail4}}
+    
+    {{/isdetail4}}    
+       
+   
+    
 </table>
 
 
