@@ -111,7 +111,7 @@
     </tr>  
    <tr>
        
-        <th colspan="2"  style="border: solid black 1px"  >Назва </th>
+        <th colspan="2"  style="border: solid black 1px"  >Постачальник </th>
      
         <th   style="border: solid black 1px" align="right">Дні </th>
 

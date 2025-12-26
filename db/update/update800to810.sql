@@ -2,7 +2,7 @@ SET NAMES 'utf8';
 
 
 CREATE TABLE  excisestamps (
-  id bigint NOT NULL AUTO_INCREMENT,
+  id int NOT NULL AUTO_INCREMENT,
   stamp varchar(255) NOT NULL ,
   item_id int NOT NULL,
   document_id bigint NOT NULL,
@@ -15,6 +15,7 @@ CREATE TABLE  excisestamps (
 
  
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по акцизних марках', 'ExciseReport', 'Продажі', 0);
 
 
 UPDATE metadata set  disabled=1 where meta_name='PredSell';

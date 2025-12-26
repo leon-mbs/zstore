@@ -45,6 +45,7 @@ class Admin extends \App\Pages\Base
         $form->add(new CheckBox('useprod',$options['useprod']??0));
         $form->add(new CheckBox('usends',$options['usends']??0));
         $form->add(new CheckBox('useacc',$options['useacc']??0));
+        $form->add(new CheckBox('useexcise',$options['useexcise']??0));
        
         $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
           
@@ -104,6 +105,7 @@ class Admin extends \App\Pages\Base
         $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
         $options['usends']  =  $this->configform->usends->isChecked() ? 1 : 0;
         $options['useacc']  =  $this->configform->useacc->isChecked() ? 1 : 0;
+        $options['useexcise']  =  $this->configform->useexcise->isChecked() ? 1 : 0;
           
         $conn = \ZDB\DB::getConnect();
       

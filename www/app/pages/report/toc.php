@@ -55,8 +55,8 @@ class Toc extends \App\Pages\Base
  
 
         $period = (int)$this->filter->period->getValue();
-        $period= 24;
-        $end=strtotime('+7 day') ;
+         
+        $end=strtotime('-7 day') ;
         $start=strtotime("-{$period} month",$end) ;
       
         $from = $conn->DBDate($start); 
