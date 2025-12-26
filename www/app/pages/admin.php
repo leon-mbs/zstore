@@ -142,6 +142,17 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
        
+        $where = " where meta_name in( 'ExciseReport') "  ;
+      
+        if($options['useexcise']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+       
+      
+      
          
         System::setOptions("common",$options) ;
         

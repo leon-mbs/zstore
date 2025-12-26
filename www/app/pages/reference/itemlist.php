@@ -132,6 +132,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editbarcode2'));
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
+        $this->itemdetail->add(new TextInput('editexcise'));
         $this->itemdetail->add(new TextInput('editcostprice'));
         $this->itemdetail->add(new TextInput('editweight'));
         $this->itemdetail->add(new TextInput('editmaxsize'));
@@ -365,6 +366,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fa($this->_item->zarp));
+        $this->itemdetail->editexcise->setText(\App\Helper::fa($this->_item->excise));
         $this->itemdetail->editcostprice->setText(\App\Helper::fa($this->_item->costprice));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
@@ -516,6 +518,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
+        $this->_item->excise = $this->itemdetail->editexcise->getText();
         $this->_item->costprice = $this->itemdetail->editcostprice->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;

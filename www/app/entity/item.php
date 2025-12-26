@@ -73,6 +73,7 @@ class Item extends \ZCL\DB\Entity
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
+        $this->excise = (string)$xml->excise[0];
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
         $this->bar_code1 = (string)$xml->bar_code1[0];
@@ -205,6 +206,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<excise>{$this->excise}</excise>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
         $this->detail .= "<cflist>{$this->cflist}</cflist>";
