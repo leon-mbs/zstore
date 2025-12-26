@@ -848,9 +848,13 @@ class Document extends \ZCL\DB\Entity
      * список записей   в  логе   состояний
      *
      */
-    public function getLogList() {
+    public function getLogList(array $filter=[]) {
         $conn = \ZDB\DB::getConnect();
-        $rc = $conn->Execute("select * from docstatelog_view where document_id={$this->document_id} order  by  log_id");
+        $f="";
+        if(count($filter) >0) {
+            $f= " docstate in(". implode(',',$filter)  .") and ";
+        }
+        $rc = $conn->Execute("select * from docstatelog_view where {$f}  document_id={$this->document_id} order  by  log_id");
         $states = array();
         $i=0;
         foreach ($rc as $row) {

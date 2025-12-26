@@ -1,41 +1,33 @@
 <html>
 
     <head>
-        <title>  Прогноз  продаж  </title>
+        <title>  Обмеження системи  </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-11  col-xl-9">
-                <h3>Прогноз  продаж</h3>
-                 <small>На підставі продаж за два останні місяці. Враховується  також кількість на  складі,
-                 в заявках постачальнику та  мінімальна  кількість (якщо задано).
-                 <br>Для  готової продукції формується закупка  комплектуючих</small>
+                <h3>Обмеження системи</h3>
+                 <small>
+                 Отчет показывает возможные  узкие места и ограничения  системмы.
+                 </small>
+
+
+               
                 <div class="card">
 
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="cat">Категорія </label>
+                        <label for="period">Період </label>
 
-                        <select class="form-control mr-2" zippy="cat">
-                            <option value="0">Всі категорії</option>
-                             
-                 
+                        <select class="form-control mr-2" zippy="period">
+                            <option value="1">1 місяць</option>
+                            <option value="2">2 місяці</option>
+                            <option value="3">3 місяці</option>
+                            <option value="3">6 місяців</option>
                          </select>
-
-                      <label for="brand">Бренд </label>
-         
-                      <input autocomplete="off"   class="form-control mr-2" zippy="brand"/>
-
-                       <label for="type">Тип </label>
-
-                        <select class="form-control mr-2" zippy="type">
-                            <option value="0">Товар</option>
-                            <option value="1">Готова продукція</option>
-                        </select>
-                     
-                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+                        <input zippy="start" class="btn btn-primary  " type="submit" value="ОК">
 
                     </form>
 
@@ -59,12 +51,8 @@
         </div>
         
         <script >
-       function check_cci(ele){
-           
-            if(false ==confirm("Створити заявки постачальникам?")) {
-                return  false;
-            }
-           
+       function check_start(ele){
+     
            
             document.getElementById('dialogwait').showModal()
           

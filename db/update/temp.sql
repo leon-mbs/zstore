@@ -1,9 +1,18 @@
 SET NAMES 'utf8'; 
 
- товары при заказе  которых не  было на  складе
- товары с задерэкой после  заказа
- задержка с заявки до полчения
- задерэеки по  поставщиком  после  оплат
+
+CREATE TABLE  excisestamps (
+  id bigint NOT NULL AUTO_INCREMENT,
+  stamp varchar(255) NOT NULL ,
+  item_id int NOT NULL,
+  document_id bigint NOT NULL,
+   
+  KEY (stamp) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+
+
+
  
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);
 
