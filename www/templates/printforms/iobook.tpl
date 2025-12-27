@@ -1,15 +1,23 @@
  <table class="ctable" border="0"   cellpadding="2" cellspacing="0">
-   <tr>
-     <td colspan="11"> </td>
+   <tr style="font-size:larger; font-weight: bolder;">
+     <td colspan="11" align="center" > Книга облiку прибуткiв та видаткiв </td>
+   </tr>
+  <tr style=" font-weight: bolder;">
+     <td colspan="8"   > {{firmname}} </td>
+     <td colspan="3"   > {{firmcode}} </td>
+   </tr>
+ <tr style=" font-weight: bolder;">
+     <td colspan="11" align="center"  > Перiод з {{from}}  по {{to}}   </td>
+    
    </tr>
    <tr>
      <td valign="top"   style=" font-size: smaller;; border: solid black 1px" rowspan="2">Дата </td>
      <td valign="top"    style=" font-size: smaller; border: solid black 1px" rowspan="2">Сума доходу, отриманого від здійснення господарської діяльності або незалежної професійної діяльності </td>
-     <td valign="top"    style=" font-size: smaller; border: solid black 1px" rowspan="2">Сума повернутих покупцям (замовникам) коштів та /або передплати за товари (роботи, послуги) 
+     <td valign="top"    style=" font-size: smaller; border: solid black 1px" rowspan="2">Сума повернутих покупцям (замовникам) коштів та/або передплати за товари (роботи, послуги) 
 </td>
      <td  valign="top"   style=" font-size: smaller; border: solid black 1px" rowspan="2">Загальна сума отриманого доходу, яка підлягає декларуванню  (гр. 2 – гр. 3) 
 </td>
-     <td valign="top"   style=" font-size: smaller; border: solid black 1px" colspan="6">Витрати,  пов’язані з господарською діяльністю або провадженням незалежної професійної діяльності, які документально підтверджені</td>
+     <td valign="top"  align="center" style=" font-size: smaller; border: solid black 1px" colspan="6">Витрати, пов’язані з господарською діяльністю, які документально підтверджені</td>
  
      <td  valign="top"   style=" font-size: smaller; border: solid black 1px" rowspan="2"> Сума чистого оподаткованого доходу (гр. 4 – 6, 7, 8, 9, 10)
 </td>
@@ -60,3 +68,4 @@
     {{/rows}}
  
   </table>
+  <br>

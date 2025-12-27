@@ -8,13 +8,14 @@
             <div class="col-12  ">
 
                 <h3>Журнал прибуткiв та видаткiв</h3>
+                <b> <i class="fa fa-repeat"></i>
                   {{^bmode}}
                  <a zippy="bmode">Режим Книги облiку прибуткiв та видаткiв</a> <small data-label="bmode">Для системи загального оподаткування</small>
                   {{/bmode}}
                    {{#bmode}}
                  <a zippy="jmode">Режим повного журналу</a>
                   {{/bmode}}
-                 
+                </b> 
 
                 <div class="card">
                     <form zippy="filter" class="form-inline ">
@@ -133,9 +134,9 @@
             <div class="col-12">
                 <div zippy="docview"></div>
             </div>
-             <br><br>
+             <br><hr><br>
              <div zippy="bookrep" class="col-12  ">
-                 <h5>Книга облiку прибуткiв та видаткiв</h5> 
+                 
                  <a href="/index.php?p=App/Pages/ShowReport&arg=xls/iobook" target="_blank"  >Експорт у Excel</a>
                   
                  <div zippy="bookrephtml"></div> 
