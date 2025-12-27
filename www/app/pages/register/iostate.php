@@ -352,9 +352,21 @@ class IOState extends \App\Pages\Base
        
        unset($list) ; 
        
-       
-       
-       
+       $from = $this->filter->from->getDate();
+       $to = $this->filter->to->getDate();
+     
+       $firm = H::getFirmData() ;
+       $header['firmname']  = $firm['firm_name']  ;          
+       $header['firmcode']  = ''  ;   
+       if(strlen($firm['tin']??'')>0) {
+          $header['firmcode']  = "ЄДРПОУ ". $firm['tin']  ;   
+       }      
+       if(strlen($firm['inn']??'')>0) {
+          $header['firmcode']  = "IПН ". $firm['inn']  ;   
+       }      
+              
+       $header['from']  = H::fd($from) ;          
+       $header['to']  = H::fd($to)   ;          
        
        $report = new \App\Report('iobook.tpl');
 
