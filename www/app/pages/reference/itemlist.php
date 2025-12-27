@@ -1249,7 +1249,7 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          $price= H::fa($item->getPrice() );
-         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
       
     }
  
@@ -1270,11 +1270,13 @@ class ItemList extends \App\Pages\Base
 
         $header['code'] = $item->item_code;
        
+        $header['term'] =  $post["stdate"];
+        if(strlen($header['term'])==0)  $header['term']  = false;
+        $header['term'] =  $post["stdate"];
         $header['price'] = H::fa($post["stprice"]);
         $header['qty'] = H::fqty($post["stqty"]);
         $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
      
- 
         $price= str_replace(',','.',$header['price'] )  ;
         $qty= str_replace(',','.', $header['qty'] ) ;
    
