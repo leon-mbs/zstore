@@ -273,7 +273,7 @@ class IOState extends \App\Pages\Base
            $list[$d][]= $r;
        }
        
-       
+       $tc2=0;$tc3=0;$tc4=0;$tc6=0;$tc7=0;$tc8=0;$tc9=0;$tc10=0;$tc11=0;
        $header=[];
        $header['rows']=[];
        
@@ -296,6 +296,10 @@ class IOState extends \App\Pages\Base
               }
 
               if($doc->meta_name=='ReturnIssue') {  //возврат
+                 $c3 +=  abs( $io->amount ); 
+                 continue; 
+              }              
+              if($doc->meta_name=='InvoiceCust') {  //предоплата
                  $c3 +=  abs( $io->amount ); 
                  continue; 
               }              
@@ -342,15 +346,34 @@ class IOState extends \App\Pages\Base
            $row['c10']   = number_format($c10, 2, '.', '') ;
            $row['c11']   = number_format($c11, 2, '.', '') ;
            $row['dn']   = implode(', ',$docs) ;
-           
+          
+           $tc2 += doubleval($row['c2'] );
+           $tc3 += doubleval($row['c3'] );
+           $tc4 += doubleval($row['c4'] );
+           $tc6 += doubleval($row['c6'] );
+           $tc7 += doubleval($row['c7'] );
+           $tc8 += doubleval($row['c8'] );
+           $tc9 += doubleval($row['c9'] );
+           $tc10 += doubleval($row['c10'] );
+           $tc11 += doubleval($row['c11'] );
+
            $header['rows'][]=$row;
-           
-           
            
        }
        
        
        unset($list) ; 
+     
+       $header['tc2'] = number_format($tc2, 2, '.', '') ;
+       $header['tc3'] = number_format($tc3, 2, '.', '') ;
+       $header['tc4'] = number_format($tc4, 2, '.', '') ;
+       $header['tc6'] = number_format($tc6, 2, '.', '') ;
+       $header['tc7'] = number_format($tc7, 2, '.', '') ;
+       $header['tc8'] = number_format($tc8, 2, '.', '') ;
+       $header['tc9'] = number_format($tc9, 2, '.', '') ;
+       $header['tc10'] = number_format($tc10, 2, '.', '') ;
+       $header['tc11'] = number_format($tc11, 2, '.', '') ;
+
        
        $from = $this->filter->from->getDate();
        $to = $this->filter->to->getDate();
