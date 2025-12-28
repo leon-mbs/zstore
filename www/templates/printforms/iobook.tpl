@@ -52,7 +52,7 @@
  
  
    {{#rows}}
-    <tr> 
+    <tr > 
      <td valign="top"  >{{date}}</td>
      <td valign="top" style="text-align: right; ">{{c2}} </td>
      <td valign="top" style="text-align: right; ">{{c3}} </td>
@@ -66,6 +66,18 @@
      <td valign="top" style="text-align: right; ">{{c11}} </td>
    </tr>  
     {{/rows}}
- 
+      <tr style=" font-weight: bolder;"> 
+     <td valign="top" style="text-align: right; "  >Всього:</td>
+     <td valign="top" style="text-align: right; ">{{tc2}} </td>
+     <td valign="top" style="text-align: right; ">{{tc3}} </td>
+     <td valign="top" style="text-align: right; ">{{tc4}} </td>
+     <td valign="top"  >     </td>
+     <td valign="top" style="text-align: right; ">{{tc6}}  </td>
+     <td valign="top" style="text-align: right; ">{{tc7}} </td>
+     <td valign="top" style="text-align: right; ">{{tc8}} </td>
+     <td valign="top" style="text-align: right; ">{{tc9}} </td>
+     <td valign="top" style="text-align: right; ">{{tc10}} </td>
+     <td valign="top" style="text-align: right; ">{{tc11}} </td>
+   </tr> 
   </table>
   <br>
