@@ -6,12 +6,29 @@ CREATE TABLE  excisestamps (
   stamp varchar(255) NOT NULL ,
   item_id int NOT NULL,
   document_id bigint NOT NULL,
-   
+  anount decimal(11, 2) NOT NULL DEFAULT 0.00,   
   KEY (stamp) ,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
 
 
+CREATE VIEW excisestamps_view
+AS
+SELECT
+  s.id AS id,
+  s.stamp AS stamp,
+  s.item_id AS item_id,
+  s.anount AS anount,
+  s.document_id AS document_id,
+  i.itemname AS itemname,
+  i.item_code AS item_code,
+  d.document_number AS document_number,
+  d.document_date AS document_date
+FROM ((excisestamps s
+  JOIN documents d
+    ON ((d.document_id = s.document_id)))
+  JOIN items i
+    ON ((i.item_id = s.item_id)));
 
  
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);

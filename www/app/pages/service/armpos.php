@@ -26,6 +26,8 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
+use Zippy\Html\Link\RedirectLink;
+use Zippy\Html\Link\BookmarkableLink;
 use App\Application as App;
 
 /**
@@ -260,6 +262,9 @@ class ARMPos extends \App\Pages\Base
             $this->_tvars["colspan"] = 8;
             $this->_tvars["usesnumberdate"] = true;
         }
+        if($common['useexcise'] == 2) {
+            $this->_tvars["colspan"] += 1;
+        }                      
          
         if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
            $this->onModeOn($this->docpanel->navbar->tosimple); 
@@ -562,11 +567,7 @@ class ARMPos extends \App\Pages\Base
                 $half= H::fa($payamount/2);
                 $this->docpanel->form3->payed->setText($half);
                 $this->docpanel->form3->payedcard->setText($payamount - $half);
-
-
-
             }
-
         }
 
         //если  предоплата
@@ -580,18 +581,14 @@ class ARMPos extends \App\Pages\Base
         $bonus = intval($this->docpanel->form2->bonus->getText());
         $customer_id = $this->docpanel->form2->customer->getKey();
         
-        if ($bonus >0 && $customer_id > 0) {
+        if ($bonus > 0 && $customer_id > 0) {
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
                 $this->setError("У  контрагента  всього {$b} бонусів на рахунку");                
                 return;
             }
-
-           
         }
-
-
     }
 
     public function detailOnRow($row) {
@@ -603,7 +600,13 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
+       
+        
+        $row->add(new BookmarkableLink('editex'))->setText('Додати...') ;
+        $as='';
 
+        $row->editex->setAttribute('onclick','showakform('. $item->item_id .','."'{$as}'"  .')') ;
+     
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('disc', H::fa($item->disc)));
         $row->add(new Label('price', H::fa($item->price)));
