@@ -367,14 +367,26 @@
                     <div class="modal-dialog modal-dialog-centered  modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Оплата</h5>
+                                <h5 class="modal-title">Акцизні маркм</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                           
-                            <input type="submit" value="OK" zippy="saveak" class="ml-2 btn btn-info  ">
+                             <input  type="hidden" zippy="akitemid" >
+                             <div class="form-group">
+                                <label for="aklist">Перелiк</label>
+                                <textarea   class="form-control"   zippy="aklist"></textarea>
+                                <small>По однiй на строку по кiлькiстi в позицiї</small>
+
+                            </div>  
+                             <div class="form-check">
+                                <input zippy="akpass" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="akpass">Пропустити марки</label>
+                                <br> <small>Наприклад для алкоголю на розлив</small>
+
+                            </div> 
+                            <input type="submit" value="Зберегти" zippy="saveak" class="ml-2 btn btn-info  ">
           
                             </div>
 
@@ -940,8 +952,11 @@
 
             function showakform(item_id,stamps) {
                 
- 
+              stamps = stamps.replace(",","\n")
   
+              $("#akitemid").val(item_id)   
+              $("#aklist").text(stamps)   
+              
               $("#modalak").modal('show')   
             }            
             

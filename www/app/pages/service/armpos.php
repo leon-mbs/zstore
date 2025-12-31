@@ -133,6 +133,7 @@ class ARMPos extends \App\Pages\Base
 
         //  ввод товаров
 
+        $this->docpanel->form2->add(new SubmitButton('saveak'))->onClick($this, 'tosaveakOnClick');
         $this->docpanel->form2->add(new SubmitButton('tosave'))->onClick($this, 'tosaveOnClick');
         $this->docpanel->form2->add(new SubmitButton('topass'))->onClick($this, 'tosaveOnClick');
         $this->docpanel->form2->add(new Button('frompass'))->onClick($this, 'fromPass');
@@ -175,6 +176,9 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new TextInput('bonus'));
         $this->docpanel->form2->add(new TextInput('totaldisc'));
         $this->docpanel->form2->add(new TextInput('prepaid'));
+        $this->docpanel->form2->add(new TextInput('akitemid'));
+        $this->docpanel->form2->add(new TextArea('aklist'));
+        $this->docpanel->form2->add(new CheckBox('akpass'));
 
         //оплата
         $this->docpanel->add(new Form('form3'))->setVisible(false);
@@ -601,11 +605,15 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
        
-        
-        $row->add(new BookmarkableLink('editex'))->setText('Додати...') ;
-        $as='';
+        $stext='Додати...';
 
-        $row->editex->setAttribute('onclick','showakform('. $item->item_id .','."'{$as}'"  .')') ;
+        $list=$item->aklist ?? '';
+        if(strlen($list) > 0) {
+          $stext = str_replace(",", ", ",$list)  ;
+        }
+        if(doubleval($item->excise)==0) $stext='';
+        $row->add(new BookmarkableLink('editex'))->setText($stext) ;            
+        $row->editex->setAttribute('onclick','showakform('. $item->item_id .','."'{$list}'"  .')') ;
      
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('disc', H::fa($item->disc)));
@@ -899,6 +907,7 @@ class ARMPos extends \App\Pages\Base
 
         $total = 0;
         $disc = 0;
+        $stval = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
@@ -907,6 +916,11 @@ class ARMPos extends \App\Pages\Base
             }
 
             $total = $total + $item->amount;
+            
+            $excise = doubleval($item->excise??0) ;          
+            if($excise > 0) {
+                $stval +=  $item->excisek() * $item->amount; 
+            }
         }
         foreach ($this->_serlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
@@ -916,7 +930,9 @@ class ARMPos extends \App\Pages\Base
 
             $total = $total + $item->amount;
         }
-    
+        if($this->_doc != 0 && $stval > 0 ) {
+            $this->_doc->setHD('exciseval', H::fa($stval )); 
+        }
 
         return $total;
 
@@ -1108,7 +1124,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->customer->setKey($cust->customer_id);
 
         $this->editcust->setVisible(false);
-        $this->docpanel->form2->setVisible(true);
+       
         $this->docpanel->form2->custinfo->setVisible(false);
 
     }
@@ -1415,6 +1431,48 @@ class ARMPos extends \App\Pages\Base
         } 
     }
 
+    
+    public function tosaveakOnClick($sender) {
+        $id=$this->docpanel->form2->akitemid->getText() ;
+        $list=$this->docpanel->form2->aklist->getText() ;
+        $pass=$this->docpanel->form2->akpass->isChecked() ? 1:0 ;
+        if($pass==1)  $list="";
+        $this->docpanel->form2->akpass->setChecked(false) ;
+        foreach($this->_itemlist as $i=>$item) {
+           if($item->item_id== $id) {
+              $list= str_replace("\r","",str_replace("\n",",",$list))  ;
+              $this->_itemlist[$i]->aklist= $list ;
+              $this->_itemlist[$i]->akpass=$pass;
+              $this->docpanel->form2->detail->Reload();     
+              $stlst= explode(",",$list) ;
+              if(is_array($stlst) && count($stlst)>0) {
+                  foreach($stlst as $st) {
+                      if(trim($st)=='')  continue;
+                      if(\App\Entity\Excise::checkFormat($st) ==false){
+                         $this->setWarn("Невiрний формат марки " . $st);
+                         return; 
+                      }
+                      $exists=\App\Entity\Excise::checkUsed($st) ;
+                      if($exists != null){
+                         $this->setWarn("Марка вже використана в   " . $exists->document_number);
+                         return; 
+                      }
+                  }
+                  if(count($stlst)  !=  $item->quantity) {
+                     $this->setWarn("Кількість марок не  відповідае кількості в  позиції " );
+                     return;  
+                  }
+              }
+              
+              return;
+           }
+         
+        }
+               
+    }
+        
+    
+    
     public function OnOpenShift($sender) {
  
         if($this->_tvars['checkbox'] == true) {

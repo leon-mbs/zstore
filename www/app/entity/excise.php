@@ -31,10 +31,27 @@ class Excise extends \ZCL\DB\Entity
     * 
     * @param mixed $stamp
     */
-    public static function check($stamp) {
+    public static function checkFormat($stamp) {
         $pattern = '/^[A-Z]{4}\d{6}$/'; 
 
-        return (bool)   preg_match($pattern, $stamp)) ;
-   }
-       
+        return (bool)   preg_match($pattern, $stamp)  ;
+    }
+   
+    public static function checkUsed($stamp) {
+        $st=Excise::getFirst("stamp=". Excise::qstr($stamp) ) ;
+
+        return $st;
+    }
+   
+     public static function insert(string $st ,int $item_id,int $document_id) {
+        if(strlen(trim($st))==0) return;
+        
+        $stamp = new Excise();
+        $stamp->stamp =  $st  ;
+        $stamp->item_id = $item_id;
+        $stamp->document_id = $document_id;
+        $stamp->save();
+
+    
+    }      
 }

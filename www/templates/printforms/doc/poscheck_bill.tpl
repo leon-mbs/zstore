@@ -101,7 +101,20 @@
         <td    align="right">{{quantity}}</td>
         <td    align="right">{{price}}</td>
         <td    align="right">{{amount}}</td>
-    </tr>
+    </tr>                 {{#isstamps}}
+    <tr>
+        <td  colspan="3">Акцизнi марки:</td> 
+    </tr> 
+        {{#stamps}}
+        <tr>
+            <td  colspan="3">   {{name}}</td> 
+        </tr> 
+        {{/stamps}}
+    
+    {{/isstamps}}
+
+    
+    
     {{/_detail}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Всього:</td>
@@ -127,6 +140,12 @@
         <td align="right">{{prepaid}}</td>
     </tr>
     {{/prepaid}}
+    {{#exciseval}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">В т.ч. акциз:</td>
+        <td align="right">{{exciseval}}</td>
+    </tr>
+    {{/exciseval}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>

@@ -32,7 +32,7 @@ FROM ((excisestamps s
 
  
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по акцизних марках', 'ExciseReport', 'Продажі', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по акцизних марках', 'ExciseList', 'Продажі', 1);
 
 
 UPDATE metadata set  disabled=1 where meta_name='PredSell';

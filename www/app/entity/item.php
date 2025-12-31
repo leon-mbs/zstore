@@ -1216,5 +1216,23 @@ class Item extends \ZCL\DB\Entity
         return $nds;
     }
  
+   /**
+    * коеффициоет акциза
+    * 
+    * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
+    */
+    public   function excisek($revert = true) {
+        $k = 0 ;
+      
+        if(doubleval($this->excise)>0){
+           
+            $k = doubleval($this->excise) / 100;
+            if ($revert) {
+                $k = 1 - 100 / (100 +  doubleval($this->excise));
+            }           
+        }
+        
+        return $k;
+    }
        
 }

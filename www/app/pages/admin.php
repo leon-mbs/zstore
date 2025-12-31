@@ -142,7 +142,7 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
        
-        $where = " where meta_name in( 'ExciseReport') "  ;
+        $where = " where meta_name in( 'ExciseList') "  ;
       
         if($options['useexcise']==1) {
             $sql="update metadata set  disabled=0 ";
@@ -275,9 +275,9 @@ class Admin extends \App\Pages\Base
                    $tables[$t][]=$c['Field'];
                }        
            }
+                                  
          
-         
-      //     file_put_contents("z:/{$ver}.db",serialize($tables)) ;                  
+      //     file_put_contents(" z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
                         
            $origtables = unserialize($origtables) ;
       
