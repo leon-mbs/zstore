@@ -32,6 +32,7 @@ class StoreItems extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new CheckBox('fminus'));
         $this->filter->add(new CheckBox('fmin'));
+        $this->filter->add(new CheckBox('fver'));
  
         $this->filter->add(new CheckBox('fcust'));
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
@@ -49,8 +50,9 @@ class StoreItems extends \App\Pages\Base
 
 
         $this->detail->setVisible(true);
-
-        $html = $this->generateReport();
+        $fver = $this->filter->fver->isChecked();
+  
+        $html = $fver ? $this->generateReportVer() : $this->generateReport();
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $this->detail->preview->setText($html, true);
 
@@ -177,6 +179,7 @@ class StoreItems extends \App\Pages\Base
      
         $header = array(  
                          "date"=>H::fd(time()),
+                         "ver"=>false ,
                          "colspan"=>$colspan ,
                          "cfnames"=>\App\Util::tokv($cfnames) ,
                         "_detail"       => $detail,
@@ -190,14 +193,143 @@ class StoreItems extends \App\Pages\Base
         return $html;
     }
 
-    public function getData() {
+  
+  private function generateReportVer() {
+        $common = \App\System::getOptions('common');
+   
+        $fmin = $this->filter->fmin->isChecked();
+        $fminus = $this->filter->fminus->isChecked();
+        $fcust = $this->filter->fcust->isChecked();
+        $cat = $this->filter->searchcat->getValue();
+
+        $where = 'disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat : '') ;
+     
+
+        $itemlist = Item::find($where, 'itemname asc') ;
+        $storelist = Store::getList() ;
+
+        if(\App\System::getUser()->showotherstores) {
+            $storelist = Store::getListAll() ;
+
+        }
+        $siqty = array();
+        $stlist = array();
+      
+        $cflist = $common['cflist']??[]   ;
+        if($fcust==false)  {
+            $cflist=[];
+        }
+
+        $cfnames=[];
+        foreach($cflist as $c)  {
+           $cfnames[]=$c->name; 
+        }
+        
+        $conn = \ZDB\DB::getConnect();
 
 
-        $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+        $rs = $conn->Execute("select store_id, item_id, coalesce(sum(qty) ,0) as qty from store_stock_view where   itemdisabled<>1 group  by store_id,item_id    ") ;
+
+        foreach ($rs as $row) {
+            $qty = doubleval($row['qty']) ;
+
+            $siqty[$row['store_id'].'_'.$row['item_id']] = $qty;
+
+        }
+
+
+        $detail = array();
+
+        foreach ($storelist as   $store_id=>$storename) {
+          $detailitems = array();  
+          foreach ($itemlist as $item) {
+
+            $r = array();
+            $r['itemname']  =  $item->itemname;
+            $r['item_code']  =  $item->item_code;
+            $r['brand']  =  $item->manufacturer;
+            $r['minqty']  =  $item->minqty>0 ? H::fqty($item->minqty) : '';
+
+            
+            
+            
+            $flag = true;
+            $r['qty']  =  0 ;
+           
+           
+                $qty =  $siqty[$store_id.'_'.$item->item_id] ?? 0;
+                if(strlen($qty)==0) {
+                    $qty=0;
+                }
+
+                if($fminus) {
+                    if($qty <0) {
+                        $flag = false;
+                    }
+
+                }
+                if($fmin && $item->minqty>0) {
+                    if($qty < $item->minqty) {
+                        $flag = false;
+                    }
+
+
+                }
+
+                if(!$fminus && !$fmin) {
+                    if($qty >0) {
+                        $flag = false;
+                    }
+
+
+                }
+                $r['qty']= H::fqty($qty) ;
+
+
+            
+
+            if($flag) {
+                continue;
+            } //все  нули
+            
+            
+            $r['cfcol']  =  array() ;
+
+            foreach($cfnames as $fn)  {
+              foreach($item->getcf() as $f)  {
+                 if($fn===$f->name)  {
+                     $r['cfcol'][]=array('val'=>$f->val) ;
+                 }
+              }
+            }
+            
+            
+            $detailitems[] = $r;
+
+          }
+          $detail[] = ['items'=>$detailitems,'storename'=>$storename]; 
+          
+        }
+
+        $colspan=5;
+ 
+        $colspan += count($cfnames);
+     
+        $header = array(  
+                         "date"=>H::fd(time()),
+                         "ver"=>true ,
+                         "colspan"=>$colspan ,
+                         "cfnames"=>\App\Util::tokv($cfnames) ,
+                         "_detail"       => $detail,
+                         "storescol"       => []
+                        
+        );
+
+        $report = new \App\Report('report/storeitems.tpl');
+
+        $html = $report->generate($header);
 
         return $html;
-
     }
 
 
