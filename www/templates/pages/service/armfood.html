@@ -192,6 +192,7 @@
                                 <tr>
                                     <th>Назва</th>
                                     <th>Код</th>
+                                    <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
                                     <th class="text-center ">Кiл.</th>
                                     <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-right">Цiна</th>
@@ -210,6 +211,9 @@
 
                                     <td zippy="itemname"></td>
                                     <td zippy="item_code"></td>
+                                                                              
+                                <td > {{#useexcise}}  <a zippy="editex" href="javascript:void(0)"></a>  {{/useexcise}} </td>
+                               
                                     <td class="text-right text-nowrap">
                                          <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
@@ -230,13 +234,13 @@
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5" class="text-right text-bold">Всього:</td>
+                                    <td colspan="6" class="text-right text-bold">Всього:</td>
                                     <td zippy="totalamount" class="text-right text-bold"></td>
                                     <td ></td>
                                     <td ></td>
                                 </tr>
                               <tr>
-                                    <td colspan="5" class="text-right   ">Знижка:</td>
+                                    <td colspan="6" class="text-right   ">Знижка:</td>
                                     <td  class="text-right  ">
                                       <input style="width:100px" zippy="totaldisc" class="form-control qtyprice">
                                     </td>
@@ -244,7 +248,7 @@
                                     <td > </td>
                                 </tr>
                              <tr>
-                                    <td colspan="5" class="text-right   ">Списати  бонуси:</td>
+                                    <td colspan="6" class="text-right   ">Списати  бонуси:</td>
                                     <td  class="text-right  ">
                                       <input style="width:100px" zippy="bonus" class="form-control qtyprice">
                                     </td>
@@ -396,6 +400,39 @@
                     </div>
                 </div>
             </div>                               
+                    
+                    
+       <div id="modalak" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered  modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Акцизні маркм</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                             <input  type="hidden" zippy="akitemid" >
+                             <div class="form-group">
+                                <label for="aklist">Перелiк</label>
+                                <textarea   class="form-control"   zippy="aklist"></textarea>
+                                <small>По однiй на строку по кiлькiстi в позицiї</small>
+
+                            </div>  
+                             <div class="form-check">
+                                <input zippy="akpass" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="akpass">Пропустити марки</label>
+                                <br> <small>Наприклад для алкоголю на розлив</small>
+
+                            </div> 
+                            <input type="submit" value="Зберегти" zippy="saveak" class="ml-2 btn btn-info  ">
+          
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                     
                         
                     </form>  
                 </div>      
@@ -912,7 +949,19 @@
                   
                   });
        }        
-                    
+    
+    
+        function showakform(item_id,stamps) {
+                
+              stamps = stamps.replace(",","\n")
+  
+              $("#akitemid").val(item_id)   
+              $("#aklist").text(stamps)   
+              
+              $("#modalak").modal('show')   
+          }  
+            
+                                
         </script>
 
         {{#usescanner}} 

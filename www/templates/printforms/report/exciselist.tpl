@@ -22,7 +22,7 @@
       <tr>
 
         <td   colspan="5">
-         Акциз на суму: <b> {{amount}}</b>
+         Оборот: <b> {{totamount}}</b>  &nbsp; Акциз: <b> {{amount}}</b>
         </td>
     </tr>    
     <tr style="font-weight: bolder;">

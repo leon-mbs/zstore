@@ -66,10 +66,16 @@ class StoreItems extends \App\Pages\Base
         $fmin = $this->filter->fmin->isChecked();
         $fminus = $this->filter->fminus->isChecked();
         $fcust = $this->filter->fcust->isChecked();
-        $cat = $this->filter->searchcat->getValue();
+        $fcat = $this->filter->searchcat->getValue();
 
-        $where = 'disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat : '') ;
-     
+        $where = 'disabled<>1 '  ;
+        if($fcat > 0) {
+            $cat= \App\Entity\Category::load($fcat);
+            $cats= $cat->getChildren();
+            $cats[]= $fcat;
+            $where .= 'and cat_id in ('. implode(',',$cats)  .') '  ;
+                   
+        }
 
         $itemlist = Item::find($where, 'itemname asc') ;
         $storelist = Store::getList() ;
@@ -200,10 +206,16 @@ class StoreItems extends \App\Pages\Base
         $fmin = $this->filter->fmin->isChecked();
         $fminus = $this->filter->fminus->isChecked();
         $fcust = $this->filter->fcust->isChecked();
-        $cat = $this->filter->searchcat->getValue();
+        $fcat = $this->filter->searchcat->getValue();
 
-        $where = 'disabled<>1 ' . ($cat>0 ? ' and cat_id=' . $cat : '') ;
-     
+        $where = 'disabled<>1 '  ;
+        if($fcat > 0) {
+            $cat= \App\Entity\Category::load($fcat);
+            $cats= $cat->getChildren();
+            $cats[]= $fcat;
+            $where .= 'and cat_id in ('. implode(',',$cats)  .') '  ;
+                   
+        }    
 
         $itemlist = Item::find($where, 'itemname asc') ;
         $storelist = Store::getList() ;
@@ -307,7 +319,10 @@ class StoreItems extends \App\Pages\Base
             $detailitems[] = $r;
 
           }
-          $detail[] = ['items'=>$detailitems,'storename'=>$storename]; 
+          if(count($detailitems)>0) {
+              $detail[] = ['items'=>$detailitems,'storename'=>$storename];               
+          }
+
           
         }
 

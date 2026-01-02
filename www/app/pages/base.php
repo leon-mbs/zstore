@@ -610,7 +610,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     /**
-    * документ для отправки на  фискальный регистратор
+    * документ для отправки на  фискальный регистратор (через javascript)
     * 
     * @param mixed $args
     * @param mixed $post

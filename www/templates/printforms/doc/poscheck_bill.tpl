@@ -101,7 +101,8 @@
         <td    align="right">{{quantity}}</td>
         <td    align="right">{{price}}</td>
         <td    align="right">{{amount}}</td>
-    </tr>                 {{#isstamps}}
+    </tr>  
+       {{#isstamps}}
     <tr>
         <td  colspan="3">Акцизнi марки:</td> 
     </tr> 

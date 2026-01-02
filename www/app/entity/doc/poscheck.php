@@ -191,7 +191,7 @@ class POSCheck extends Document
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]?? null) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "notes"           => nl2br($this->notes),
                         "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
-                        "exciseval"         => $this->headerdata['exciseval'] > 0 ? H::fa($this->headerdata['exciseval']) : false   ,
+                        "exciseval"         => $this->getHD('exciseval',0) > 0 ? H::fa($this->getHD('exciseval')) : false   ,
 
 
                         "pos_name"        => $this->headerdata["pos_name"],

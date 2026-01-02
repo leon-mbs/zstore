@@ -606,7 +606,6 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
        
         $stext='Додати...';
-
         $list=$item->aklist ?? '';
         if(strlen($list) > 0) {
           $stext = str_replace(",", ", ",$list)  ;

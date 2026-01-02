@@ -115,17 +115,20 @@ class ExciseList extends \App\Pages\Base
 
 
         }
+        $totamount=0;
         $amount=0;
       
         
         $rs =  \App\Entity\Doc\Document::find("document_id in ( SELECT  document_id from excisestamps_view    where {$where} )");
         foreach($rs as $doc)  {
+            $totamount += $doc->amount;
             $amount += doubleval($doc->getHD('exciseval'));
         }
         
         $header = array('datefrom'      => \App\Helper::fd($from),
                         "_detail"       => $detail,
                         'dateto'        => \App\Helper::fd($to),
+                        "totamount"  => H::fa($totamount),
                         "amount"  => H::fa($amount),
                         "itemname"      => $itemid > 0 ? $itemname : false
         );

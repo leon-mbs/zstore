@@ -55,7 +55,7 @@ class OrderFood extends Document
         if (( $this->headerdata["delivery"] ??0) > 1) {
             $deliverydata = $deliverydata . ', ' . $this->headerdata["ship_address"];
         }
-        $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]);
+        $deliverydata = $deliverydata . ', ' . date("Y-m-d H:i", $this->headerdata["deltime"]??0);
         //   $delbonus = $this->getBonus(false) ;
 
         $header = array('date'         => H::fd($this->document_date),
@@ -64,7 +64,7 @@ class OrderFood extends Document
                         "shopname"     => $common["shopname"],
                         "isdelivery"   => $this->headerdata["delivery"] > 0,
                         "deliverydata" => $deliverydata,
-                        "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
+                        "fiscalnumber"  => strlen($this->getHD("fiscalnumber")) > 0 ? $this->headerdata["fiscalnumber"] : false,
 
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
                         "contact"   => $this->headerdata["contact"],
@@ -94,11 +94,20 @@ class OrderFood extends Document
 
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
 
-            $detail[] = array(
+            $row = array(
                 "tovar_name" => $name,
                 "quantity"   => H::fqty($item->quantity,true),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
+            $stamps= explode(",",$item->aklist??'') ;
+            if(count($stamps)>0) {
+               $row['stamps'] = [] ;
+               foreach($stamps  as $st){
+                   $row['stamps'][]=['name'=>$st];   
+               }
+               $row['isstamps'] = true;
+            }            
+            $detail[]  = $row;    
         }
         $i = 1;
 
@@ -133,7 +142,8 @@ class OrderFood extends Document
                         "phone"           => $firm["phone"],
                         "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
                         "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
-                     
+                        "exciseval"         => $this->getHD('exciseval',0) > 0 ? H::fa($this->getHD('exciseval')) : false   ,
+
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??'') > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]??'') > 0 ? $this->headerdata["fiscalnumberpos"] : false,
@@ -268,7 +278,7 @@ class OrderFood extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
-          $required = $item->quantity - $onstore;
+            $required = $item->quantity - $onstore;
          
 
             //оприходуем  с  производства
@@ -342,7 +352,7 @@ class OrderFood extends Document
             }
 
             //учитываем  отходы
-           $kl=0;
+            $kl=0;
             if ($item->lost > 0) {
                 $kl = 1 / (1 - $item->lost / 100);
                 $item->quantity = $item->quantity * $kl;
@@ -362,9 +372,15 @@ class OrderFood extends Document
                      $lost += abs($st->quantity * $st->partion  ) * ($item->lost / 100);
                 }                   
             }
+            
+            $stamps= explode(",",$item->aklist??'') ;
+            foreach($stamps as $st)  {
+                \App\Entity\Excise::insert($st,$item->item_id,$this->document_id) ;     
+            }            
+            
         }
         
-      if ($lost > 0) {
+        if ($lost > 0) {
             $io = new \App\Entity\IOState();
             $io->document_id = $this->document_id;
             $io->amount =  0 - abs($lost);
@@ -372,7 +388,7 @@ class OrderFood extends Document
 
             $io->save();
 
-      }          
+        }          
         $this->DoAcc() ;    
         
     }
