@@ -69,12 +69,13 @@ class Toc extends \App\Pages\Base
         $detail2=[] ;
         $detail3=[] ;
         $detail4=[] ;
+        $detail5=[] ;
         
         $items=[];
         $itemsd=[];
         
          
-        foreach(Document::findYield($dd." and meta_name='Order' and state >4 ") as $order){
+        foreach(Document::findYield("document_date >={$from}  and meta_name='Order' and state >4 ") as $order){
              foreach ($order->unpackDetails('detaildata') as $item) {
                  if(!isset($items[$item->item_id])) {
                     $items[$item->item_id] = ['name'=> $item->itemname,'code'=>$item->item_code??'','amount'=>0];
@@ -88,7 +89,7 @@ class Toc extends \App\Pages\Base
                  
                  
              }
-                 //товары с задерэкой после  заказа
+                 //товары с задержкой после  заказа
              $logs = $order->getLogList([9,11,14,20]);
              if(count($logs)>0) {
                  $last= array_shift($logs);
@@ -192,16 +193,48 @@ class Toc extends \App\Pages\Base
            $detail4[]=$item; 
         }
      
+        // неликвиды
+
+        $sql = "select  st.item_id,st.itemname, st.item_code, coalesce(sum(st.qty*st.partion)) as am from  store_stock_view  st 
+               where st.itemdisabled <> 1  and  st.qty >0 
+                and   st.stock_id not  in(select   stock_id    
+               from  entrylist_view  
+               where    document_date >={$from}   and  quantity < 0  AND stock_id  IS  NOT  null) 
+               and   st.stock_id    in(select   stock_id    
+               from  entrylist_view  
+               where    document_date < {$from}  and  quantity > 0  AND stock_id  IS  NOT  null) 
+                
+               group by st.item_id,st.item_code,st.itemname 
+               order by st.itemname
+                 ";
+
+        
+        $res = $conn->Execute($sql);
+        foreach ($res as $item) {
+            
+            if(doubleval($item['am']) <=0){
+                continue;
+            }
+            $item['amount']  = H::fa($item['am']) ;
               
+            $detai5[] = $item;
+      
+
+        }     
+     
+     
+        //todo убрать =  
         $header = array(
            "_detail1" => $detail1,
-           "isdetail1" => count($detail1) > 0,
+           "isdetail1" => count($detail1) >= 0,
            "_detail2" => $detail2,
-           "isdetail2" => count($detail2) > 0,
+           "isdetail2" => count($detail2) >= 0,
           "_detail3" => $detail3,
-           "isdetail3" => count($detail3) > 0, 
+           "isdetail3" => count($detail3) >= 0, 
           "_detail4" => $detail4,
-           "isdetail4" => count($detail4) > 0 
+           "isdetail4" => count($detail4) >= 0, 
+           "_detail5" => $detai5,
+           "isdetail5" => count($detail5) >= 0 
 
 
                         
