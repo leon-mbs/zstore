@@ -134,6 +134,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
+             
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -176,7 +177,8 @@ class GoodsIssue extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('GoodsIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
+            $this->_doc->headerdata['storepart'] = $common['storepart'] ?? 0 ;
+     
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {

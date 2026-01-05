@@ -403,6 +403,8 @@ class ARMPos extends \App\Pages\Base
     }
     
     public function newdoc($sender) {
+        $common = System::getOptions("common");
+  
         $this->docpanel->setVisible(true);
 
         $this->docpanel->form2->setVisible(true);
@@ -422,7 +424,8 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['time'] = time();
         $this->_doc->document_date = time();
         $this->_doc->document_number = $this->_doc->nextNumber();
-        
+        $this->_doc->headerdata['storepart'] = $common['storepart'] ?? 0 ;
+         
       
         $frases = explode(PHP_EOL,  \App\System::getOption('common','checkslogan')  ) ;
         if(count($frases) >0) {

@@ -336,8 +336,8 @@ class Import extends \App\Pages\Base
             $desc = trim($row[$coldesc] ?? '');
             $catname = trim($row[$colcat] ?? '');
             $image = trim($row[$colimage] ?? '');
-            $warranty = trim($row[$colwar]);
-            $notes = trim($row[$colnotes]);
+            $warranty = trim($row[$colwar]?? '');
+            $notes = trim($row[$colnotes]?? '');
             $shortname = trim($row[$colshortname] ?? '');
             $minqty = trim($row[$colminqty] ?? '');
             $inprice = doubleval( str_replace(',', '.', trim($row[$colinprice] ?? '')) );
@@ -452,7 +452,7 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = $amount;
+            $doc->payamount = 0;
           
             $doc->headerdata['payed'] = 0;
             $doc->notes = 'Импорт с Excel';

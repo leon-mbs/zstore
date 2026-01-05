@@ -1491,7 +1491,8 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function createdoc() {
-
+        $common = System::getOptions("common");
+  
         $idnew = $this->_doc->document_id == 0;
 
         if (count($this->_itemlist) == 0) {
@@ -1500,7 +1501,8 @@ class ARMFood extends \App\Pages\Base
         }
         if ($idnew) {
             $this->_doc->document_number = $this->_doc->nextNumber();
-
+            $this->_doc->headerdata['storepart'] = $common['storepart'] ?? 0 ;
+  
             if (false == $this->_doc->checkUniqueNumber()) {
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
