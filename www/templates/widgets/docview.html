@@ -9,7 +9,10 @@
 <ul class="nav nav-tabs">
   
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма для друку</a>
+    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма A4</a>
+  </li>
+  <li class="nav-item" v-show="docdata.exports.pos">
+    <a class="nav-link  " data-toggle="tab" href="#tprintpos"><i class="fa fa-print"></i> Чекова  форма</a>
   </li>
   
   <li class="nav-item">
@@ -43,19 +46,21 @@
         <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
         <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode mr-2"></i>  </a>
     
-        <span v-show="docdata.exports.pos">
-       
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-cash-register mr-1"></i> </a>
-         </span>            
+               
        
        <br>
                     
 
         <div id="preview" v-html="docdata.html" >  
         </div>
-        <div id="previewpos" style="display:none;" v-html="docdata.htmlpos" >
-        </div> 
+     
+  </div>
+   <div class="tab-pane      " id="tprintpos"> 
+        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print mr-1"></i> </a>
+       <br>    
+       <div id="previewpos"   v-html="docdata.htmlpos" >
+        </div>  
   </div>
   
   <div class="tab-pane  " id="tdocs">
@@ -294,14 +299,12 @@
             var _docid =0
         
             function printform() {
-                $('#previewpos').attr('style', 'display:none');
-                $('#preview').attr('style', 'display:block');
+      
                 $('#preview').printThis();
             }
 
             function printpos() {
-                $('#preview').attr('style', 'display:none');
-                $('#previewpos').attr('style', 'display:block');
+          
                 {{^printserver}}
                   $('#previewpos').printThis();
                 {{/printserver}}
