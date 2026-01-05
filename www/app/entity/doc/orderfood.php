@@ -68,7 +68,7 @@ class OrderFood extends Document
 
                         "notes"   => strlen($this->notes) > 0 ? $this->notes : false ,
                         "contact"   => $this->headerdata["contact"],
-                        "exchange"        => H::fasell($this->headerdata["exchange"]),
+                        "exchange"        => H::fasell($this->headerdata["exchange"]??''),
                         "pos_name"        => $this->headerdata["pos_name"],
                         "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
@@ -147,19 +147,19 @@ class OrderFood extends Document
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??'') > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]??'') > 0 ? $this->headerdata["fiscalnumberpos"] : false,
-                        "exchange"        => H::fasell($this->headerdata["exchange"]??0),
+                        "exchange"        => H::fasell($this->headerdata["exchange"]??null),
                         "pos_name"        => $this->headerdata["pos_name"],
-                        "form1"           => $this->headerdata["paytype"]==1,
-                        "form2"           => $this->headerdata["paytype"]==2,
+                        "form1"           => $this->getHD('paytype',0) ==1,
+                        "form2"           => $this->getHD('paytype',0) ==2,
                         
-                        "payeq"           => (strlen($pos->payeq ) > 0   && $this->headerdata["paytype"]==2) ? $pos->payeq : false,
+                        "payeq"           => (strlen($pos->payeq ) > 0   && $this->getHD('paytype',0)==2) ? $pos->payeq : false,
                       
                         "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
-                        "payed"           => H::fasell($this->headerdata['payed']),
-                        "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
+                        "payed"           => H::fasell($this->headerdata['payed']??0),
+                        "totaldisc"         => H::fasell($this->headerdata["totaldisc"]??0),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
-                        "trans"          => strlen($this->headerdata["trans"]) > 0 ? $this->headerdata["trans"] : false,
+                        "trans"          => strlen($this->headerdata["trans"]??'') > 0 ? $this->headerdata["trans"] : false,
                         "checkslogan"          => strlen($this->headerdata["checkslogan"]??'') > 0 ? $this->headerdata["checkslogan"] : false,
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
@@ -271,9 +271,9 @@ class OrderFood extends Document
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
         $conn->Execute("delete from iostate where iotype = 81 AND document_id=" . $this->document_id);
-        $lost = 0;
-        $lostq = 0;
-        $kl = 1;
+      
+      
+       
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
@@ -285,42 +285,8 @@ class OrderFood extends Document
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
-                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                    foreach ($set as $part) {
-                      
-                        $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null) {
-                            continue;
-                        }
-                        $itemp->quantity = $required * $part->qty;
-                        if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
-
-                        }
-
-                        //учитываем  отходы
-                        $kl=0;
-                        if ($itemp->lost > 0) {
-                            $kl = 1 / (1 - $itemp->lost / 100);
-                            $itemp->quantity = $itemp->quantity * $kl;
-                                              
-                        }
-
-                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
-
-                        foreach ($listst as $st) {
-                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                            $sc->setStock($st->stock_id);
-                            $sc->tag=Entry::TAG_TOPROD;
-
-                            $sc->save();
-                            
-                            if ($kl > 0) {
-                                 $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
-                            }  
-
-                        }
-                    }   //комплекты
+                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
+                
                 }
 
 
@@ -380,15 +346,7 @@ class OrderFood extends Document
             
         }
         
-        if ($lost > 0) {
-            $io = new \App\Entity\IOState();
-            $io->document_id = $this->document_id;
-            $io->amount =  0 - abs($lost);
-            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
-
-            $io->save();
-
-        }          
+               
         $this->DoAcc() ;    
         
     }

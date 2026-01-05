@@ -424,8 +424,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['time'] = time();
         $this->_doc->document_date = time();
         $this->_doc->document_number = $this->_doc->nextNumber();
-        $this->_doc->headerdata['storepart'] = $common['storepart'] ?? 0 ;
-         
+          
       
         $frases = explode(PHP_EOL,  \App\System::getOption('common','checkslogan')  ) ;
         if(count($frases) >0) {
@@ -1460,6 +1459,11 @@ class ARMPos extends \App\Pages\Base
                          return; 
                       }
                   }
+                   
+                  if(count($stlst)  !=  count(array_unique($stlst) ) ) {
+                     $this->setWarn("Марки дублюются" );
+                     return;  
+                  }           
                   if(count($stlst)  !=  $item->quantity) {
                      $this->setWarn("Кількість марок не  відповідае кількості в  позиції " );
                      return;  

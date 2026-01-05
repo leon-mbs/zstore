@@ -282,7 +282,7 @@ class POSCheck extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-        $lost = 0;
+      
       
         $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
         $k = 1;   //учитываем  скидку
@@ -356,33 +356,8 @@ class POSCheck extends Document
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
-                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                    foreach ($set as $part) {
-                       
-
-                        $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null) {
-                            continue;
-                        }
-                        $itemp->quantity = $required * $part->qty;
-
-                        if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
-
-                        }
-                       
-
-                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
-
-                        foreach ($listst as $st) {
-                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                            $sc->setStock($st->stock_id);
-                            $sc->tag=Entry::TAG_TOPROD;
-
-                            $sc->save();
-                            
-                       }
-                    }
+                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
+  
                 }
 
 

@@ -1234,5 +1234,66 @@ class Item extends \ZCL\DB\Entity
         
         return $k;
     }
-       
+  
+    /**
+    * списание  комплектов  в  производство
+    * 
+    * @param mixed $requires  количество
+    * @param mixed $store  со  склада
+    * @param mixed $document_id  документ
+    */
+    public   function setToProd($required,$store,$document_id) {
+        $common= \App\System::getOptions('common') ;
+        if( ($common['storepart'] ?? 0) > 0) {
+           $store = $common['storepart'] ;
+        }
+        $lost = 0;
+        $kl=0;
+  
+        $set = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
+        foreach ($set as $part) {
+          
+
+            $itemp = \App\Entity\Item::load($part->item_id);
+            if($itemp == null) {
+                continue;
+            }
+            $itemp->quantity = $required * $part->qty;
+           
+            //учитываем  отходы
+            $kl=0;
+            if ($itemp->lost > 0) {
+                $kl = 1 / (1 - $itemp->lost / 100);
+                $itemp->quantity = $itemp->quantity * $kl;
+                                  
+            }            
+
+            if (false == $itemp->checkMinus($itemp->quantity, $store)) {
+                throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($store))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+            }
+        
+            $listst = \App\Entity\Stock::pickup($store, $itemp);
+
+            foreach ($listst as $st) {
+                $sc = new \App\Entity\Entry($document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                $sc->tag=\App\Entity\Entry::TAG_TOPROD;
+
+                $sc->save();
+                if ($kl > 0) {
+                    $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
+                }   
+            }
+            
+        }
+        if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+            $io->save();
+       }             
+    }
+         
 }

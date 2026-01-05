@@ -1255,6 +1255,11 @@ class ARMFood extends \App\Pages\Base
                          return; 
                       }
                   }
+                  if(count($stlst)  !=  count(array_unique($stlst) ) ) {
+                     $this->setWarn("Марки дублюются" );
+                     return;  
+                  }           
+                  
                   if(count($stlst)  !=  $item->quantity) {
                      $this->setWarn("Кількість марок не  відповідае кількості в  позиції " );
                      return;  
@@ -1501,8 +1506,7 @@ class ARMFood extends \App\Pages\Base
         }
         if ($idnew) {
             $this->_doc->document_number = $this->_doc->nextNumber();
-            $this->_doc->headerdata['storepart'] = $common['storepart'] ?? 0 ;
-  
+           
             if (false == $this->_doc->checkUniqueNumber()) {
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
