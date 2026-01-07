@@ -1,6 +1,8 @@
 SET NAMES 'utf8'; 
 
-ALTER VIEW documents_view
+DROP VIEW if exists documents_view   ;
+
+CREATE VIEW documents_view
 AS
 SELECT
   d.document_id AS document_id,
