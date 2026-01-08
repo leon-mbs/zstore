@@ -394,6 +394,8 @@ GROUP BY c.customer_name,
         }
         if ($payed > 0) {
             $this->_doc->payed = $payed;
+            \App\Entity\IOState::addIOState($this->_doc->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+                
         }
   
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();

@@ -133,7 +133,7 @@ class Invoice extends \App\Pages\Base
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+            if ($this->_doc->payed == 0 && $this->_doc->getHD('payed',0) > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
 

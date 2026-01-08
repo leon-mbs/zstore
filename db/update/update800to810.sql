@@ -6,7 +6,7 @@ CREATE TABLE  excisestamps (
   stamp varchar(255) NOT NULL ,
   item_id int NOT NULL,
   document_id bigint NOT NULL,
-  anount decimal(11, 2) NOT NULL DEFAULT 0.00,   
+  anount decimal(11, 2)   NULL DEFAULT 0.00,   
   KEY (stamp) ,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
