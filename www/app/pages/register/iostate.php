@@ -314,7 +314,7 @@ class IOState extends \App\Pages\Base
               if( in_array($io->iotype,[55,70,71])   )  {   //налоги
                  $c8 +=  abs( $io->amount );
               }     
-              if(in_array($io->iotype,[53,60,63]))  {   
+              if(in_array($io->iotype,[53,57,60,63]))  {   
                  $c9 +=  abs($io->amount);
               }     
               
