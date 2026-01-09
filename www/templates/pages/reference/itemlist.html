@@ -322,7 +322,7 @@
                                 </div>
                             </div>
                          {{#usends}}      
-                            
+                          
                         <div class="form-group row">
                             <label class="col-5 col-form-label" for="editisnds">Використання ПДВ</label>
                             <div class="col-5">
@@ -339,7 +339,19 @@
                                <input style="width:75px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
                             </div>  
                         </div> 
-                         {{/usends}}     
+                         {{/usends}}  
+                       
+                        {{#useexcise}}   
+                             <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editexcise">Акциз,%                                    
+                                </label>  
+                                <div class="col-7">
+                                    <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editexcise"/>
+                                     <small>Залишити пустим якщо не пiдакцизний  а</small>
+                                </div>
+                            </div>
+                            {{/useexcise}}   
+                                                       
                               {{#useprod}}   
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editzarp">Сума оплати 
@@ -351,7 +363,7 @@
                                     
                                 </div>
                             </div>
-                            {{/useprod}}  
+                            {{/useprod}}    
                             {{#usesnumber}}
                             <div class="form-check">
                                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
@@ -359,7 +371,7 @@
                             </div>
 
 
-                            {{/usesnumber}}
+                            {{/usesnumber}}    
                             <div class="form-check">
                                 <input zippy="editnoprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
@@ -801,7 +813,7 @@
                       <div class="col-5">
                         <input id="stprice" name="stprice" class="form-control"   >
                      </div>
-                     </div>
+                    </div>
                     <div class="form-group row">
                       <label class="col-5 col-form-label" for="stsum">Сума</label>
                       <div class="col-7">
@@ -809,7 +821,12 @@
                      </div>
                      </div>
                       
-                     
+                     <div class="form-group row">
+                      <label class="col-5 col-form-label" for="stprice">Придатний до   </label>
+                      <div class="col-5">
+                        <input type="date" id="stdate" name="stdate" class="form-control"   >
+                     </div>
+                    </div>  
                       <div class="form-group  ">
                         <input onclick="getSticker()" type="button" class="btn btn-success" value="Друкувати"> 
                      </div>

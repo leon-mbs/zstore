@@ -45,6 +45,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useprod"] = $options['useprod'] == 1;
         $this->_tvars["usends"] = $options['usends'] == 1;
         $this->_tvars["useacc"] = $options['useacc'] == 1;
+        $this->_tvars["useexcise"] = $options['useexcise'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
         $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
@@ -609,7 +610,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     /**
-    * документ для отправки на  фискальный регистратор
+    * документ для отправки на  фискальный регистратор (через javascript)
     * 
     * @param mixed $args
     * @param mixed $post
@@ -634,7 +635,8 @@ class Base extends \Zippy\Html\WebPage
         $ret['prepaid']  = 0;
         $ret['credit']  = 0;
         $ret['slogan']  =  $doc->headerdata["checkslogan"]??'';  
-         
+        $ret['exciseval'] =   H::fa($doc->headerdata['exciseval']??0)  ;
+    
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']??0);
      
         $ret['payed']  = Helper::fa($payed);
@@ -732,6 +734,7 @@ class Base extends \Zippy\Html\WebPage
             if(strlen($item->shortname) >0)  $it['name'] =  $item->shortname;
             if(strlen($item->bar_code) >0)  $it['bar_code'] =  $item->bar_code;
             if(strlen($item->uktz) >0)  $it['uktz'] =  $item->uktz;
+            if(strlen($item->aklist??'') >0)  $it['excisestamps'] =  explode(",",$item->aklist ) ;
       
             $ret['items'][] = $it;
 

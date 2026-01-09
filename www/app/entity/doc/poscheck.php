@@ -28,7 +28,7 @@ class POSCheck extends Document
             }
 
 
-            $detail[] = array("no"         => $i++,
+            $row = array("no"         => $i++,
                               "tovar_name" => $name,
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
@@ -36,6 +36,8 @@ class POSCheck extends Document
                               "price"      => H::fasell($item->price),
                               "amount"     => H::fasell($item->quantity * $item->price)
             );
+            
+            $detail[] = $row;            
         }
         foreach ($this->unpackDetails('services') as $ser) {
             $detail[] = array("no"         => $i++,
@@ -116,13 +118,24 @@ class POSCheck extends Document
         foreach ($this->unpackDetails('detaildata') as $item) {
 
             $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
-
-            $detail[] = array(
+            
+            $row = array(
                 "tovar_name" => $name,
                 "quantity"   => H::fqty($item->quantity,true),
                 "price"   => H::fasell($item->price),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
+            
+            $stamps= explode(",",$item->aklist??'') ;
+            if(count($stamps)>0) {
+               $row['stamps'] = [] ;
+               foreach($stamps  as $st){
+                   $row['stamps'][]=['name'=>$st];   
+               }
+               $row['isstamps'] = true;
+            }
+            $detail[] = $row;
+            
         }
         $i = 1;
         foreach ($this->unpackDetails('services') as $ser) {
@@ -178,6 +191,7 @@ class POSCheck extends Document
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]?? null) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "notes"           => nl2br($this->notes),
                         "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
+                        "exciseval"         => $this->getHD('exciseval',0) > 0 ? H::fa($this->getHD('exciseval')) : false   ,
 
 
                         "pos_name"        => $this->headerdata["pos_name"],
@@ -268,7 +282,7 @@ class POSCheck extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-        $lost = 0;
+      
       
         $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
         $k = 1;   //учитываем  скидку
@@ -342,33 +356,8 @@ class POSCheck extends Document
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
-                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                    foreach ($set as $part) {
-                       
-
-                        $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null) {
-                            continue;
-                        }
-                        $itemp->quantity = $required * $part->qty;
-
-                        if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
-
-                        }
-                       
-
-                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
-
-                        foreach ($listst as $st) {
-                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                            $sc->setStock($st->stock_id);
-                            $sc->tag=Entry::TAG_TOPROD;
-
-                            $sc->save();
-                            
-                       }
-                    }
+                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
+  
                 }
 
 
@@ -404,6 +393,12 @@ class POSCheck extends Document
                 $sc->tag=Entry::TAG_SELL;
                 $sc->save();
             }
+            
+            $stamps= explode(",",$item->aklist??'') ;
+            foreach($stamps as $st)  {
+                \App\Entity\Excise::insert($st,$item->item_id,$this->document_id) ;     
+            }
+            
         }
         
         if(strlen($this->headerdata['promocode']) > 0){
@@ -429,7 +424,7 @@ class POSCheck extends Document
             }
         }
  
-          $this->DoAcc() ;    
+        $this->DoAcc() ;    
      
         return true;
     }

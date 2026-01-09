@@ -99,7 +99,7 @@ class IncomeItem extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']??0);
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -385,6 +385,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
+
     public function onOpensn($sender) {
         $this->docform->setVisible(false) ;
         $this->editsnitem->setVisible(true) ;
@@ -396,7 +397,7 @@ class IncomeItem extends \App\Pages\Base
 
     } 
     
-   public function savesnOnClick($sender) {
+    public function savesnOnClick($sender) {
         $common = \App\System::getOptions("common");
 
         $id = $this->editsnitem->editsnitemname->getKey();

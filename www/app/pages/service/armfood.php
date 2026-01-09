@@ -25,6 +25,7 @@ use Zippy\Html\Panel;
 use Zippy\Binding\PropertyBinding as Bind;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
+use Zippy\Html\Link\BookmarkableLink;
 
 /**
  * АРМ кассира общепита
@@ -137,7 +138,8 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->add(new Form('listsform'))->setVisible(false);
         $this->docpanel->listsform->add(new DataView('itemlist', new ArrayDataSource($this, '_itemlist'), $this, 'onItemRow'));
-
+        $this->docpanel->listsform->add(new SubmitButton('saveak'))->onClick($this, 'tosaveakOnClick');
+ 
         $this->docpanel->listsform->add(new SubmitButton('btosave'))->onClick($this, 'tosaveOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btopay'))->onClick($this, 'topayOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btoprod'))->onClick($this, 'toprodOnClick');
@@ -165,9 +167,12 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('editqtyi'));
         $this->docpanel->listsform->add(new TextInput('editqtyq'));
         $this->docpanel->listsform->add(new SubmitButton('beditqty'))->onClick($this, 'editqtyOnClick');
-
+        $this->docpanel->listsform->add(new TextInput('akitemid'));
+        $this->docpanel->listsform->add(new TextArea('aklist'));
+        $this->docpanel->listsform->add(new CheckBox('akpass'));
+ 
+ 
         $this->docpanel->add(new Form('payform'))->setVisible(false);
-
         $this->docpanel->payform->add(new TextInput('pfforpay'));
         $this->docpanel->payform->add(new TextInput('pfpayed'));
         $this->docpanel->payform->add(new TextInput('pfrest'));
@@ -826,6 +831,14 @@ class ARMFood extends \App\Pages\Base
         if ($item->foodstate ==1 ) {
             $row->removeitem->setVisible(true);
         }
+        $stext='Додати...';
+        $list=$item->aklist ?? '';
+        if(strlen($list) > 0) {
+          $stext = str_replace(",", ", ",$list)  ;
+        }
+        if(doubleval($item->excise)==0) $stext='';
+        $row->add(new BookmarkableLink('editex'))->setText($stext) ;            
+        $row->editex->setAttribute('onclick','showakform('. $item->item_id .','."'{$list}'"  .')') ;
 
     }
 
@@ -988,9 +1001,15 @@ class ARMFood extends \App\Pages\Base
 
     public function calcTotal() {
         $amount = 0;
+        $stval = 0;
 
         foreach ($this->_itemlist as $item) {
             $amount += H::fa($item->quantity * $item->price);
+            
+            $excise = doubleval($item->excise??0) ;          
+            if($excise > 0) {
+                $stval +=  $item->excisek() * $item->quantity * $item->price; 
+            }            
         }
         
         $code= trim($this->docpanel->navform->promocode->getText());
@@ -1016,6 +1035,9 @@ class ARMFood extends \App\Pages\Base
         
         $this->docpanel->listsform->totalamount->setText(H::fa($amount));
 
+        if($this->_doc != 0 && $stval > 0 ) {
+            $this->_doc->setHD('exciseval', H::fa($stval )); 
+        }
 
 
     }
@@ -1207,6 +1229,51 @@ class ARMFood extends \App\Pages\Base
         }
     }
 
+    public function tosaveakOnClick($sender) {
+        $id=$this->docpanel->listsform->akitemid->getText() ;
+        $list=$this->docpanel->listsform->aklist->getText() ;
+        $pass=$this->docpanel->listsform->akpass->isChecked() ? 1:0 ;
+        if($pass==1)  $list="";
+        $this->docpanel->listsform->akpass->setChecked(false) ;
+        foreach($this->_itemlist as $i=>$item) {
+           if($item->item_id== $id) {
+              $list= str_replace("\r","",str_replace("\n",",",$list))  ;
+              $this->_itemlist[$i]->aklist= $list ;
+              $this->_itemlist[$i]->akpass=$pass;
+              $this->docpanel->listsform->itemlist->Reload();    
+              $stlst= explode(",",$list) ;
+              if(is_array($stlst) && count($stlst)>0) {
+                  foreach($stlst as $st) {
+                      if(trim($st)=='')  continue;
+                      if(\App\Entity\Excise::checkFormat($st) ==false){
+                         $this->setWarn("Невiрний формат марки " . $st);
+                         return; 
+                      }
+                      $exists=\App\Entity\Excise::checkUsed($st) ;
+                      if($exists != null){
+                         $this->setWarn("Марка вже використана в   " . $exists->document_number);
+                         return; 
+                      }
+                  }
+                  if(count($stlst)  !=  count(array_unique($stlst) ) ) {
+                     $this->setWarn("Марки дублюются" );
+                     return;  
+                  }           
+                  
+                  if(count($stlst)  !=  $item->quantity) {
+                     $this->setWarn("Кількість марок не  відповідае кількості в  позиції " );
+                     return;  
+                  }
+              }
+              
+              return;
+           }
+         
+        }
+               
+    }
+    
+    
     public function editqtyOnClick($sender) {
         $qty =  $this->docpanel->listsform->editqtyq->getText();
         $id  =  $this->docpanel->listsform->editqtyi->getText();
@@ -1429,7 +1496,8 @@ class ARMFood extends \App\Pages\Base
     }
 
     public function createdoc() {
-
+        $common = System::getOptions("common");
+  
         $idnew = $this->_doc->document_id == 0;
 
         if (count($this->_itemlist) == 0) {
@@ -1438,7 +1506,7 @@ class ARMFood extends \App\Pages\Base
         }
         if ($idnew) {
             $this->_doc->document_number = $this->_doc->nextNumber();
-
+           
             if (false == $this->_doc->checkUniqueNumber()) {
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;

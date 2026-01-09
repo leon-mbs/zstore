@@ -211,6 +211,9 @@
                                {{#usesnumberdate}}           
                                 <th>Дата</th>
                                 {{/usesnumberdate}}
+                               {{#useexcise}}           
+                                <th>Ак. марки</th>
+                                {{/useexcise}}
 
 
                                 <th  style="width:40px" class="text-right">Кіл.</th>
@@ -233,6 +236,9 @@
                                {{#usesnumberdate}}                                           
                                 <td zippy="sdate"></td>
                                {{/usesnumberdate}}           
+                               {{#useexcise}}                                           
+                                <td > <a zippy="editex" href="javascript:void(0)"></a> </td>
+                               {{/useexcise}}           
 
                                 <td zippy="quantity" class="text-right  "> </td>
                                 <td zippy="disc" class="text-right"></td>
@@ -258,6 +264,9 @@
                                 {{#usesnumberdate}}
                                 <td></td>
                                 {{/usesnumberdate}}
+                                {{#useexcise}}
+                                <td> </td>
+                                {{/useexcise}}
 
 
                                 <td zippy="serquantity" class="text-right"></td>
@@ -354,7 +363,37 @@
                     
                 </div>
              
-       
+                <div id="modalak" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered  modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Акцизні марки</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                             <input  type="hidden" zippy="akitemid" >
+                             <div class="form-group">
+                                <label for="aklist">Перелiк</label>
+                                <textarea   class="form-control"   zippy="aklist"></textarea>
+                                <small>По однiй на строку по кiлькiстi в позицiї</small>
+
+                            </div>  
+                             <div class="form-check">
+                                <input zippy="akpass" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="akpass">Пропустити марки</label>
+                                <br> <small>Наприклад для алкоголю на розлив</small>
+
+                            </div> 
+                            <input type="submit" value="Зберегти" zippy="saveak" class="ml-2 btn btn-info  ">
+          
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+ 
 
             </form>
             <form zippy="form3">
@@ -850,6 +889,7 @@
             
             
         
+       
             function check_openshift(ele) {
                 
                       document.getElementById('dialogwait').showModal()
@@ -907,6 +947,19 @@
                
                return true;
             }
+            
+            
+
+            function showakform(item_id,stamps) {
+                
+              stamps = stamps.replace(",","\n")
+  
+              $("#akitemid").val(item_id)   
+              $("#aklist").text(stamps)   
+              
+              $("#modalak").modal('show')   
+            }            
+            
             
         </script>
 

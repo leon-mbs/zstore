@@ -254,11 +254,11 @@ class GoodsReceipt extends \App\Pages\Base
                         $invoice = $basedoc->cast();
                         $this->docform->basedoc->setText($invoice->document_number);
 
-                        $this->docform->nds->setText($invoice->headerdata['nds']);
-                        $this->docform->editnds->setText($invoice->headerdata['nds']);
-                        $this->docform->val->setValue($invoice->headerdata['val']);
-                        $this->docform->rate->setText($invoice->headerdata['rate']);
-                        $this->docform->payreq->setText($invoice->getHD('payreq'));
+                        $this->docform->nds->setText($invoice->headerdata['nds']??'');
+                        $this->docform->editnds->setText($invoice->headerdata['nds']??'');
+                        $this->docform->val->setValue($invoice->headerdata['val']??'');
+                        $this->docform->rate->setText($invoice->headerdata['rate']??'');
+                        $this->docform->payreq->setText($invoice->getHD('payreq')??'');
      
                         $this->OnCustomerFirm($this->docform->customer);
 

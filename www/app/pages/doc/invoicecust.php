@@ -143,7 +143,8 @@ class InvoiceCust extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $order = $basedoc->cast();
-
+                        $order->updateStatus(Document::STATE_CLOSED);
+                        
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                         $this->CalcTotal();

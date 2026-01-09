@@ -236,7 +236,14 @@
                                 <small>Дата, раніше якої заборонено виконувати проводки</small>
 
                             </div> 
-                                             
+                            <div class="form-group  ">
+                                <label for="storepart">Склад  комплектуючих i матерiалiв  </label>
+                                <select class="form-control" zippy="storepart"> 
+                                    <option value="0">Не вказано</option>
+                                </select>
+                                <small class="compact">Для автосписання в комплектах. Якщо не вказано береться  склад  з документу.</small>
+
+                            </div>                    
                            <div class="form-group  ">
                                 <label for="usesnumber">Облік ТМЦ за серіями  </label>
                                 <select class="form-control" zippy="usesnumber"> 
@@ -317,7 +324,7 @@
                                <div class="form-group">
                                 <label for="checkslogan">Фраза в кiнцi чеку</label>
                                 <textarea   class="form-control"   zippy="checkslogan"></textarea>
-                                <small>Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
+                                <small  class="compact">Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
                                  Якщо бiльш нiж одна - буде вибиратись випадково.</small>
 
                             </div>                            

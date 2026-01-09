@@ -45,6 +45,7 @@ class Admin extends \App\Pages\Base
         $form->add(new CheckBox('useprod',$options['useprod']??0));
         $form->add(new CheckBox('usends',$options['usends']??0));
         $form->add(new CheckBox('useacc',$options['useacc']??0));
+        $form->add(new CheckBox('useexcise',$options['useexcise']??0));
        
         $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
           
@@ -104,6 +105,7 @@ class Admin extends \App\Pages\Base
         $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
         $options['usends']  =  $this->configform->usends->isChecked() ? 1 : 0;
         $options['useacc']  =  $this->configform->useacc->isChecked() ? 1 : 0;
+        $options['useexcise']  =  $this->configform->useexcise->isChecked() ? 1 : 0;
           
         $conn = \ZDB\DB::getConnect();
       
@@ -140,6 +142,17 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
        
+        $where = " where meta_name in( 'ExciseList') "  ;
+      
+        if($options['useexcise']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+       
+      
+      
          
         System::setOptions("common",$options) ;
         
@@ -262,10 +275,10 @@ class Admin extends \App\Pages\Base
                    $tables[$t][]=$c['Field'];
                }        
            }
+                                  
          
-         
-      //     file_put_contents("z:/{$ver}.db",serialize($tables)) ;                  
-                        
+        //   file_put_contents("z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
+                         
            $origtables = unserialize($origtables) ;
       
                

@@ -82,12 +82,16 @@
 
                             <td zippy="amount" class="text-right"></td>
 
-                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a></td>
+                            <td class="text-center"><a title="Перемістити" zippy="move"><i class="fa fa-arrow-right"></i> <i class="fa fa-file"></i></a>  </td>
+                            <td class="text-center"><a title="Редагувати" zippy="edit"><i class="fa fa-edit"></i></a>  </td>
+                            <td class="text-center"><a title="Видалити" zippy="delete"><i class="fa fa-trash"></i></a></td>
 
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="7" class="text-right">Всього:</td>
                             <td   class="text-right" zippy="total" > </td>
+                            <td></td>
+                            <td></td>
                             <td></td>
                         </tr>
 
@@ -105,7 +109,31 @@
 
                
                </div>  
-               
+          <div id="modalmove" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered  modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Перемiщення</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                             <input  type="hidden" zippy="moveitemid" >
+                             <div class="form-group">
+                                <label for="movecust">Постачальник</label>
+                                <input   class="form-control"   zippy="movecust"> 
+
+                            </div>  
+                          
+                            <input type="submit" value="Перемiстити" zippy="savemove" class="ml-2 btn btn-info  ">
+          
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+         
           </form>
               
      <div class="row">
@@ -248,11 +276,21 @@
        
         
    <script>
-            function check_apprdoc(ele){
-               document.getElementById('dialogwait').showModal()
-            return true;
-       
+        function check_apprdoc(ele){
+           document.getElementById('dialogwait').showModal()
+           return true;
+   
         }
+        
+        
+        function showmoveform(item_id) {
+              
+              $("#moveitemid").val(item_id)   
+             
+              
+              $("#modalmove").modal('show')   
+            }         
+        
    </script> 
     
     </body>

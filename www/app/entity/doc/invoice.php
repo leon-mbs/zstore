@@ -135,7 +135,7 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function Execute() {
         //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0) {
+        if (($this->headerdata['paydisc'] ?? 0) > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->getDiscount() > 0) {
                 return; //процент

@@ -116,6 +116,7 @@ class Options extends \App\Pages\Base
 
    
         $this->business->add(new DropDownChoice('deliverytype',[],1));
+        $this->business->add(new DropDownChoice('storepart',\App\Entity\Store::getList(),0));
     
 
 
@@ -139,6 +140,7 @@ class Options extends \App\Pages\Base
         $this->business->useval->setChecked($common['useval']);
         $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
 
+        $this->business->storepart->setValue($common['storepart']??0);
         $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->usescanner->setChecked($common['usescanner']);
         $this->business->usescale->setChecked($common['usescale']);
@@ -353,7 +355,8 @@ class Options extends \App\Pages\Base
         $common['usescanner'] = $this->business->usescanner->isChecked() ? 1 : 0;
         $common['usescale'] = $this->business->usescale->isChecked() ? 1 : 0;
  
-        $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
+        $common['storepart'] = $this->business->storepart->getValue() ;
+        $common['usesnumber'] = $this->business->usesnumber->getValue() ;
         
         $common['deliverytype'] = $this->business->deliverytype->getValue() ;
  

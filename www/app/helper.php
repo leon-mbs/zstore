@@ -878,8 +878,12 @@ class Helper
         }
 
         foreach($data as $k => $v) {
-
+             
             if(is_array($v)) {
+                $v['format']   = $v['format'] ??'';
+                $v['bold']     = $v['bold'] ??'';
+                $v['align']    = $v['align'] ??'';
+   
                 $c = $sheet->getCell($k);
                 $style = $sheet->getStyle($k);
                 if($v['format'] == 'date') {

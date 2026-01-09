@@ -161,22 +161,24 @@ class GoodsReceipt extends Document
 
 
         $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
       
         $this->DoBalans() ;
 
-         $io= $this->payamount;
+         
          $del = $this->headerdata['delivery'] * $rate;
          if($del > 0) {
-           if($this->headerdata['deliverytype']  < 4 ) { 
+           if($this->headerdata['deliverytype']  == 3 ) { 
                \App\Entity\IOState::addIOState($this->document_id, 0- $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
            }  
            if($this->headerdata['deliverytype'] ==2 || $this->headerdata['deliverytype'] == 4 ) { 
-               $io = $io - $del;   //вычитаем из общих расходов  (по оплате)
+                //вычитаем (сторно) из общих расходов  (по оплате)
+              // \App\Entity\IOState::addIOState($this->document_id, $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+                      
            }  
        
         }  
 
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $io, \App\Entity\IOState::TYPE_BASE_OUTCOME);
        
      
         if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
@@ -267,7 +269,7 @@ class GoodsReceipt extends Document
       }
    }
    
- public   function DoAcc() {
+   public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     

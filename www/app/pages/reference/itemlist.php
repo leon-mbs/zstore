@@ -132,6 +132,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editbarcode2'));
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
+        $this->itemdetail->add(new TextInput('editexcise'));
         $this->itemdetail->add(new TextInput('editcostprice'));
         $this->itemdetail->add(new TextInput('editweight'));
         $this->itemdetail->add(new TextInput('editmaxsize'));
@@ -365,6 +366,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fa($this->_item->zarp));
+        $this->itemdetail->editexcise->setText(\App\Helper::fa($this->_item->excise));
         $this->itemdetail->editcostprice->setText(\App\Helper::fa($this->_item->costprice));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
@@ -516,6 +518,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
+        $this->_item->excise = $this->itemdetail->editexcise->getText();
         $this->_item->costprice = $this->itemdetail->editcostprice->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
@@ -1246,7 +1249,7 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          $price= H::fa($item->getPrice() );
-         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
       
     }
  
@@ -1267,11 +1270,13 @@ class ItemList extends \App\Pages\Base
 
         $header['code'] = $item->item_code;
        
+        $header['term'] =  $post["stdate"];
+        if(strlen($header['term'])==0)  $header['term']  = false;
+        $header['term'] =  $post["stdate"];
         $header['price'] = H::fa($post["stprice"]);
         $header['qty'] = H::fqty($post["stqty"]);
         $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
      
- 
         $price= str_replace(',','.',$header['price'] )  ;
         $qty= str_replace(',','.', $header['qty'] ) ;
    

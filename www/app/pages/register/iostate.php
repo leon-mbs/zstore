@@ -439,7 +439,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
              $where .= " and ( coalesce(iotype,0) in ({$ids})  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
             
         } else {
-            $where .= " and coalesce(iotype,0) not in (30,31,80,81,82)  ";
+            $where .= " and coalesce(iotype,0) not in (30,31,80,81,82,0)  ";
     
             $author = $this->page->filter->fuser->getValue();
             $type = $this->page->filter->ftype->getValue();
