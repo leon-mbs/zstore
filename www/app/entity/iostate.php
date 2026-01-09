@@ -233,7 +233,8 @@ class IOState extends \ZCL\DB\Entity
           
         
         $list[self::TYPE_BASE_OUTCOME] = "Витрати на закупку";
-     
+        $list[self::TYPE_OTHER_OUTCOME] = "Інші витрати";
+            
 
         $list[self::TYPE_TAX_NDS] =  "Розрахунки з ПДВ";
         $list[self::TYPE_TAX_CARE] =  "Розрахунки з страхування";
