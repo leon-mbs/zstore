@@ -356,7 +356,9 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        
+        if (in_array($this->_doc->meta_name, array( 'GoodsReceipt','InvoiceCust'))) {
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        }    
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
            
@@ -389,9 +391,9 @@ GROUP BY c.customer_name,
         }
         if ($payed > 0) {
             $this->_doc->payed = $payed;
-            \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
-            
+             
         }
+  
   
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
         $doc->DoBalans();

@@ -362,7 +362,9 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-     
+        if (in_array($this->_doc->meta_name, array( 'GoodsIssue','Invoice','ServiceAct','Order'))) {
+            \App\Entity\IOState::addIOState($this->_doc->document_id,  $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        }       
         if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
 
             $options=\App\System::getOptions('common')  ;
