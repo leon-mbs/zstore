@@ -256,8 +256,8 @@ class IncomeService extends \App\Pages\Base
 
 
 
-        $service->price = $this->editdetail->editprice->getText();
-        $service->quantity = $this->editdetail->editqty->getText();
+        $service->price = $this->editdetail->editprice->getDouble();
+        $service->quantity = $this->editdetail->editqty->getDouble();
         $service->desc = $this->editdetail->editdesc->getText();
 
         if($this->_rowid == -1) {
@@ -474,6 +474,7 @@ class IncomeService extends \App\Pages\Base
     public function addcustOnClick($sender) {
         $this->editcust->setVisible(true);
         $this->docform->setVisible(false);
+        $this->setpanel->setVisible(false);
 
         $this->editcust->editcustname->setText('');
         $this->editcust->editphone->setText('');
@@ -503,18 +504,20 @@ class IncomeService extends \App\Pages\Base
                 return;
             }
         }
-
+        $cust->type = Customer::TYPE_SELLER;
         $cust->save();
         $this->docform->customer->setText($cust->customer_name);
         $this->docform->customer->setKey($cust->customer_id);
         $this->OnCustomerFirm(null);
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
+        $this->setpanel->setVisible(true);
     }
 
     public function cancelcustOnClick($sender) {
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
+        $this->setpanel->setVisible(true);
     }
 
     public function onPayDisc() {

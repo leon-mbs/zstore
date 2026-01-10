@@ -65,7 +65,7 @@
 
                             <div class="form-group">
                                 <label for="editpos_name">Назва, номер</label>
-                                <input  required  class="form-control" zippy="editpos_name"/>
+                                <input  required="on"  class="form-control" zippy="editpos_name"/>
                             </div>
                       
                             {{#usebranch}}
@@ -127,21 +127,21 @@
                             <div class="form-group">
                                 <label for="editfirmname"  >Власник ключа ЕЦП</label>
                                 <input class="form-control" type="text" zippy="editfirmname">
-                                <br><small> Якщо відрізняється від назви фірми</small>
+                                <br><small> Якщо відрізняється від назви компанії</small>
                             </div>                    
                              <div class="form-group row">
                                     <label  class="col-6 col-form-label"  for="edittin"  >ЄДРПОУ</label>
                                    <div class="col-6 col">
                                       <input class="form-control" type="text" zippy="edittin">
                                   </div>             
-                                   <small> Якщо відрізняється від ЄДРПОУ фірми</small>
+                                   <small> Якщо відрізняється від ЄДРПОУ компанії</small>
                             </div>             
                             <div class="form-group row">
                                     <label  class="col-6 col-form-label"  for="editipn" data-label="editpayname">IПН</label>
                                      <div class="col-6 col">
                                        <input class="form-control" type="text" zippy="editipn">
                                     </div>    
-                                     <small> Якщо відрізняється від IПН фірми</small>
+                                     <small> Якщо платник ПДВ i якщо відрізняється від IПН компанії</small>
                             </div>             
                             <div class="form-group row">
                                 <label class="col-6 col-form-label"  for="editfisc">Фiскальний номер</label>
@@ -193,9 +193,23 @@
                                     <option value="23">23:00</option>
                                 </select>
                             </div>
-                            <small>Повинен бути активований  <a target="_blank" href="https://zippy.com.ua/zstoreusage#cron" >планувальник</a> </small>
+                            <small>Має бути активований  <a target="_blank" href="https://zippy.com.ua/zstoreusage#cron" >планувальник</a> </small>
                             {{/fiscal}}                            
                    
+                            {{#freg}}
+                                <div class="form-check">
+                                    <input zippy="editusefreg" type="checkbox" class="form-check-input">
+                                    <label class="form-check-label text-bold" for="editusefreg">Використовувати фіскальний реєстратор</label>
+                                    <br> <small><a href="https://zippy.com.ua/ext#id17">Опис</a></small>
+                   
+                                </div> 
+                                 <div class="form-group">
+                                    <label for="editscriptfreg">Скрипт</label>
+                                    <textarea style="height:500px" class="form-control" zippy="editscriptfreg">
+                                    </textarea>
+                                </div>    
+                            {{/freg}}
+                               
                          </div>
                     
                  <div class="col-12">
@@ -216,7 +230,7 @@
                              
                 <div class="form-group">
                     <label for="password">Пароль </label>
-                    <input  required  class="form-control" type="password" zippy="password">
+                    <input  required="on"  class="form-control" type="password" zippy="password">
                     <small>Пароль не буде записаний в системi</small>
                 </div>
                 <div class="form-group">

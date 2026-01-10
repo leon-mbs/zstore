@@ -390,7 +390,7 @@ class POSCheck extends \App\Pages\Base
         }
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
 
@@ -965,5 +965,6 @@ class POSCheck extends \App\Pages\Base
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
     }
-
+   
+    
 }

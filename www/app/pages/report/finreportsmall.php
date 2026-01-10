@@ -115,8 +115,8 @@ class FinReportSmall extends \App\Pages\Base
         $e1125 =  Account::getSaldo(36,$to)['dt'];
         $b1135 = Account::getSaldo(241,$from)['dt'] + Account::getSaldo(242,$from)['dt'];
         $e1135 = Account::getSaldo(241,$to)['dt'] + Account::getSaldo(242,$to)['dt'];
-        // $b1136 = SubConto::getAmount($from,641,0,0,0,0,0,666);
-        // $e1136 = SubConto::getAmount($to,641,0,0,0,0,0,666);
+        $b1136 = 0;//SubConto::getAmount($from,641,0,0,0,0,0,666);
+        $e1136 = 0;//SubConto::getAmount($to,641,0,0,0,0,0,666);
         $b1155 = Account::getSaldo(63,$from)['dt'] + Account::getSaldo(37,$from)['dt'] + Account::getSaldo(68,$from)['dt'];
         $e1155 = Account::getSaldo(63,$to)['dt'] + Account::getSaldo(37,$to)['dt'] + Account::getSaldo(68,$to)['dt'];
         $b1165 = Account::getSaldo(30,$from)['dt'] + Account::getSaldo(31,$from)['dt'];
@@ -249,8 +249,8 @@ class FinReportSmall extends \App\Pages\Base
             'kopfg' => (string) sprintf("%10d", $firm['kopfg']),
             'kodu' => (string) sprintf("%10d", $firm['kodu']),
             'kved' => (string) sprintf("%10s", $firm['kved']),
-            'address' => $firm['address'] . ' ' . $firm['city'] . ', ' . $firm['phone'],
-            'firmname' => $firm['firmname'],
+            'address' => $firm['address']??'' . ' ' . $firm['city']??'' . ', ' . $firm['phone']??'',
+            'firmname' => $firm['firm_name'],
             'b1005' => H::fa($b1005),
             'e1005' => H::fa($e1005),
             'b1010' => H::fa($b1010),
@@ -291,8 +291,8 @@ class FinReportSmall extends \App\Pages\Base
             'e1615' => H::fa($e1615),
             'b1620' => H::fa($b1620),
             'e1620' => H::fa($e1620),
-            'b1621' => H::fa($b1621),
-            'e1621' => H::fa($e1621),
+          //  'b1621' => H::fa($b1621),
+          //  'e1621' => H::fa($e1621),
             'b1630' => H::fa($b1630),
             'e1630' => H::fa($e1630),
             'b1690' => H::fa($b1690),
@@ -319,8 +319,8 @@ class FinReportSmall extends \App\Pages\Base
             'e2285' => H::fa($e2285),
             'b2290' => H::fa($b2290),
             'e2290' => H::fa($e2290),
-            'b2300' => H::fa($b2300),
-            'e2300' => H::fa($e2300),
+          //  'b2300' => H::fa($b2300),
+          //  'e2300' => H::fa($e2300),
             'b2350' => H::fa($b2350),
             'e2350' => H::fa($e2350)
         );

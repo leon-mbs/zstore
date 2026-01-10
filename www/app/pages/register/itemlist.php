@@ -35,7 +35,8 @@ class ItemList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('ItemList')) {
             \App\Application::RedirectHome() ;
         }
-
+        $common = System::getOptions('common');
+    
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
 
@@ -130,7 +131,8 @@ class ItemList extends \App\Pages\Base
         }    
          
         $this->OnFilter(null);
-          
+        $this->_tvars['usecf'] = count($common['cflist']??[]) >0;
+               
 
     }
 
@@ -192,8 +194,20 @@ class ItemList extends \App\Pages\Base
             $row->imagelistitem->setVisible(false);
         }
         
-        $store = $this->filter->searchstore->getValue();
-           
+      //  $store = $this->filter->searchstore->getValue();
+        
+        $row->add(new Label('cfval'))->setText("") ;
+        if($this->_tvars['usecf'] ?? false) {
+           $cf="";
+           foreach($item->getcf() as $f){
+               if( strlen($f->val??'')>0){
+                  $cf=$cf. "<small style=\"display:block\">". $f->name.": ".$f->val."</small>" ; 
+               }
+           }
+           if(strlen($cf) >0) {
+               $row->cfval->setText($cf,true) ;
+           }
+        }          
 
     }
 
@@ -651,9 +665,9 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $text = Item::qstr($text);
                 $text_ = trim($text,"'") ;
                 
-                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text}   or detail like '%<bar_code1><![CDATA[{$text_}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$text_}]]></bar_code2>%'  or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text}   or detail like '%<bar_code1><![CDATA[{$text_}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$text_}]]></bar_code2>%'  or item_id in (select item_id from store_stock where snumber like {$text} ) or item_id in (select item_id from taglist where  tag_type=3 and tag_name={$text}  ) )   ";
             }
-
+    
 
         }
         $brand = $form->searchbrand->getText();

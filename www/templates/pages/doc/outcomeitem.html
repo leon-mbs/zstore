@@ -15,7 +15,7 @@
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата <small class="text-danger">*</small></label>
-                        <input style="width:150px" class="form-control"   zippy="document_date"  required >
+                        <input style="width:150px" class="form-control"   zippy="document_date"  required="on" >
                     </div>
 
 
@@ -129,16 +129,16 @@
 
 
     </form>
-    <form zippy="editdetail">
-        <h4>Введення товару </h4>
+   
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
-
+             <form zippy="editdetail">
+        <h4>Введення товару </h4>
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
                     <input     class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
-
-
+                   <a zippy="openitemsel">Відкрити довідник</a>
+                    <br>
                     Наявність: <span zippy="qtystock"></span>
 
 
@@ -160,7 +160,7 @@
                     <label for="editquantity">Кількість</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
-                            required  pattern="[0-9,\.]+"/>
+                            required="on"  pattern="[0-9,\.]+"/>
 
                 </div>
 
@@ -169,10 +169,16 @@
                     <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
                     
                 </div>
+                  </form>
             </div>
+             <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+
+
+            </div>  
         </div>
 
-    </form>
+  
     <script>
         $(document).ready(function () {
       

@@ -25,57 +25,130 @@
   }
   
   //сокращенный  вызов callPageMethod
-  function  callPM(method,params,postdata,callback =null   , callerror=null     )
+  function  callPM(method,params,postdata=null,callback =null   , callerror=null     )
   {
-      try{
-      
-          if(postdata){
-             postdata =    JSON.stringify(postdata)
-          }
+ 
+       var url = getMethodUrl(method,params)  
           
-          callPageMethod(method,params,postdata,(datad)=>
-          {
-//               console.log(datad) 
+       var opt={
+           method: 'GET'  
+                 
+       };
+       if(postdata !=null) {
+          opt.method = "POST"
+          opt.body =   JSON.stringify(postdata) 
+          opt.headers = {
+            "Content-Type": "application/json" 
+          }    
+           
+       }
+        fetch(url,opt)                                            
+          .then((response) => {
+              
+            return response.json();
+          })
+          .then((answer) => {
                
-               try{
-                  var data = JSON.parse(datad)
-                  if(callback) {
-                     callback(data)                      
-                  }
-                  
-               }
-               catch(error) {
-                   console.log(error)           
-                   console.log(data)           
-               }           
-               
+
+               if(answer.error)  {
+                    if(callerror ){
+                        callerror(answer.error);  
+                        return;
+                    }
+                   
+                    toastr.error(answer.error,'',{'timeOut':'8000'} )   
+                    return   
+                }
+                if(answer.warning)  {
+                    toastr.warning(answer.warning,'',{'timeOut':'4000'} )   
+                    
+                }
+          
+          
+          
+                if(callback  ){
+                   callback(answer.data ) 
+                }          
+
             
-          } , (error)=> 
-          {
-               console.log(method+" "+error) 
-               if(callerror) {
-                   callerror(error)
-               }
-            
-          });
+          })
+          .catch(function (error) {
+            console.log('error '+error)
+            if(callerror != null){
+                callerror(error);  
+            }             
+          });  
       
-      }
-      catch(error) {
-           console.log(method+" "+error)           
-      }
+      
+  }     
+ 
+ 
+  //отправка  формы
+  function  callPMForm(method,params,formid,callback =null   , callerror=null     )
+  {
+       if(checkFormInput(formid) ==false) return
+       
+       var el = document.getElementById(formid) ;
+              
+       var opt={
+           method: 'POST',
+           body:  new  FormData(el)   
+                
+                 
+       };
+       var url = getMethodUrl(method,params)  
+   
+        fetch(url,opt)                                            
+          .then((response) => {
+              
+            return response.json();
+          })
+          .then((answer) => {
+              
+               if(answer.error)  {
+                    if(callerror ){
+                        callerror(answer.error);  
+                        return;
+                    }
+                   
+                    toastr.error(answer.error,'',{'timeOut':'8000'} )   
+                    return   
+                }
+                if(answer.warning)  {
+                    toastr.warning(answer.warning,'',{'timeOut':'4000'} )   
+                    
+                }
+          
+          
+          
+                if(callback && answer.data){
+                   callback(answer.data ) 
+                }          
+
+            
+          })
+          .catch(function (error) {
+            console.log('error '+error)
+            if(callerror != null){
+                callerror(error);  
+            }             
+          });  
+      
+      
   }     
      
         //проверка  ответа  на  ошибки
         function checkPMAnswer(ret){
             
             if(ret.error)  {
-                toastr.error(ret.error,{'timeOut':'5000'} )   
+                toastr.error(ret.error,'',{'timeOut':'8000'} )   
                 return  false;
             }
-            if(ret.success)  {
-                toastr.success(ret.success )   
-  
+            if(ret.warning)  {
+                toastr.warning(ret.warning,'',{'timeOut':'4000'} )   
+                
             }
+     
             return  true;
         }       
        
@@ -137,3 +210,7 @@ function formatDate(date) {
 
   return  '20'+yy  + '-' + mm + '-' + dd
 }  
+
+function isNonEmptyString(variable) {
+  return variable !== null && variable !== undefined && typeof variable === 'string' && variable.length > 0;
+}

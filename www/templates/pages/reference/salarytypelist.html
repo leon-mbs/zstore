@@ -32,15 +32,18 @@
 
                             <th> Скорочення</th>
                             <th> Код</th>
-                         
+                            {{#useacc}}
+                             <th>Бух. рахунок  </th>
+                            {{/useacc}}
                             <th> </th>
                         </tr>
                         <tr zippy="stlist">
                             <td zippy="stname"></td>
                             <td zippy="shortname"></td>
                             <td zippy="code"></td>
-                           
-              
+                            {{#useacc}}
+                             <td zippy="acccode"></td>
+                            {{/useacc}}
                             <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         </tr>
                     </table>
@@ -61,10 +64,19 @@
                     <div class="form-group">
                         <label for="editcode">Код                        </label>
                         <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required="on"  class="form-control" zippy="editcode"/>
-                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.
-                         </small>
+                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.                         </small>
                     </div>
-
+                    {{#useacc}}
+                     <div class="form-group">
+                        <label for="editacc">Бух. рахунок                        </label>
+                        <select   class="form-control" zippy="editacc">
+                            <option value="0">Не вказано</option>
+                            <option value="641">Розрахунки за податками</option>
+                            <option value="65">Розрахунки за страхуванням</option>
+                        </select>
+                        <small> Тільки для утримань   </small>
+                    </div>
+                    {{/useacc}}
                  
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">

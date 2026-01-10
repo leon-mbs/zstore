@@ -24,7 +24,6 @@ class AdvanceRep extends Document
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
             $sc->tag=Entry::TAG_BAY;
-            
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
 
@@ -78,10 +77,8 @@ class AdvanceRep extends Document
                 $ua->save();
             }
         
-        
         $this->DoAcc();  
-            
-
+   
         return true;
     }
 
@@ -138,7 +135,10 @@ class AdvanceRep extends Document
     protected function getNumberTemplate() {
         return 'АЗ-000000';
     }
-    public   function DoAcc() {
+     
+  
+ 
+   public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     
@@ -172,5 +172,5 @@ class AdvanceRep extends Document
          
                          
     } 
- 
+  
 }

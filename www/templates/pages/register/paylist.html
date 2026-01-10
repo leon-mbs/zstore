@@ -60,7 +60,19 @@
                        </div>
                       </div>     
                      </div>
-                    <div class="col-auto">
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
+                        
+                            <label class="col-auto mt-2" for="fiostate"> тип витрат  </label>
+                            <div class="col-auto">
+                               
+                              <select class="form-control" zippy="fiostate">
+                                <option value="0">Не обрано</option>
+                             </select>
+                            </div>
+                      </div>   
+                      </div>    
+                       <div class="col-auto">
                         <div class="  row no-gutters"> 
                         
                         <label class="col-auto mt-2" for="fsort"> сортувати </label>
@@ -83,7 +95,7 @@
 
         <div class="row" zippy="tpanel">
             <div class="col-12 col-xl-10">
-                <small>Скасування оплати виконується касовими ордерами   або перепроведенням  вiдповiдного документу</small>
+                <small>Скасування оплати виконується методом  сторно користувачами  ролi admins </small>
 
                 <br><a zippy="csv"><i  class="fa fa-upload" ></i> Експорт у Excel</a>
                 <a zippy="import" class="ml-4"><i  class="fa fa-download" ></i> Iмпорт виписок</a>
@@ -167,12 +179,12 @@
                             <div class="form-group">
                                 <label for="notes">Підстава скасування</label>
                                 <input type="hidden" zippy="pl_id"/>
-                                <input  required  class="form-control" zippy="notes"/>
+                                <input  required="on"  class="form-control" zippy="notes"/>
                             </div>
                             <div class="form-group">
 
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
-                                <input zippy="save" type="submit" value="Виконати" class="btn btn-primary  ">
+                                <input   type="submit" value="Виконати" class="btn btn-primary  ">
                             </div>
                         </form>
                     </div>

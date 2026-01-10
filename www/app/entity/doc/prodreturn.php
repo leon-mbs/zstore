@@ -81,7 +81,8 @@ class ProdReturn extends Document
             $sc->save();
         
         }
-        $this->DoAcc();  
+          $this->DoAcc();  
+  
         return true;
     }
 
@@ -94,7 +95,6 @@ class ProdReturn extends Document
   
         return $list;
     }
-
     public   function DoAcc() {
              if(\App\System::getOption("common",'useacc')!=1 ) return;
              parent::DoAcc()  ;

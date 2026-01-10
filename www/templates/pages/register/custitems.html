@@ -36,12 +36,13 @@
                
                 <a zippy="addnew" class="btn btn-success mr-4 ml-2" >   Додати</a>
                 <a zippy="csv" class="mr-4 "><i  class="fa fa-upload" ></i> Експорт у Excel</a>
-                <a zippy="imports" class="mr-4"><i  class="fa fa-download" ></i> Iмпорт</a>
+                <a zippy="imports" class="mr-4"><i  class="fa fa-download" ></i> Iмпорт з Excel</a>
+                <a zippy="importxml" class="mr-4"><i  class="fa fa-download" ></i> Iмпорт з XML</a>
                 <a zippy="options"  class="mr-4" ><i  class="fa fa-cog" ></i> Налаштування</a>
                   </div>
                 <form zippy="listform">
 
-                    <table class="table table-hover  table-sm  ">
+                    <table class="table table-hover  table-sm ">
                         <tr>
                             <th><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                                 style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
@@ -100,7 +101,7 @@
                               </td>
                         </tr>                 
                     </table>
-                    <div zippy="pag"></div>   
+                     <div class="w-50"><div zippy="pag"></div> </div>   
                 </form>
             </div>
 
@@ -198,15 +199,21 @@
                        
                     <form zippy="optionsform">
                          <div class="form-group">
-                            <label for="compare">Шукати вiдповiдний ТМЦ в номенклатурi</label>
+                            <label for="compare">Шукати при iмпортi вiдповiдний ТМЦ в номенклатурi</label>
                             <select zippy="compare" class="form-control">
                                <option value="0">По артикулу+бренду</option>
                                <option value="1">По штрих коду</option>
                                <option value="2">Штрих код потiм артикул+бренд,</option>
                             </select>
-                             <small  >Для закупки або оновлення цiн. Якщо ТМЦ не знайдено вiн буде  створений. 
+                             <small  >Для закупки або оновлення цiн. 
                              В разi  активного  використання прайсiв рiзних постачальникiв слiд  вимкнути в  довiднику  ТМЦ автоматичне  
                              створення артикулу та/або перевiрку артикула  на  унiкальнiсть</small>                                  
+                             
+                        </div> 
+                         <div class="form-check mb-2">
+                            <input zippy="optcreateitem" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="optcreateitem">Створювати новий  ТМЦ якщо не  знайдено вiдповiдний</label>
+                           
                         </div>                     
                         <div class="form-group">
                             <label for="optclean">Очищати неактуальне за</label>
@@ -268,33 +275,33 @@
                             </div>
                              <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colcustname">Назва у постачальника</label>
-                                <div class="col-4">
+                                <div class="col-2">
                                     <select   zippy="colcustname" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                     
                               <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colcustcode">Код  </label>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <select style="width:100px;" zippy="colcustcode" class="form-control  ">
                                 </select>   </div> 
                             </div>                                                                                
                              <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colcustbarcode">Штрих-код  </label>
-                                <div class="col-4">
-                                    <select style="width:100px;" zippy="colcustbarcode" class="form-control  ">
+                                <div class="col-3">
+                                    <select   zippy="colcustbarcode" class="form-control  ">
                                 </select>   </div> 
                             </div>                                                                                
                             <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colbrand">Бренд</label>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <select   zippy="colbrand" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                     
                           <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colstore">Склад у постачальника</label>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <select   zippy="colstore" class="form-control  ">
                                 </select>  
                                  </div> 
@@ -302,22 +309,22 @@
                                                                              
                             <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colprice">Цiна</label>
-                                <div class="col-4">
-                                    <select style="width:100px;" zippy="colprice" class="form-control  ">
+                                <div class="col-3">
+                                    <select   zippy="colprice" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                                                                                
                             <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colqty">Кiлькiсть</label>
-                                <div class="col-4">
-                                    <select style="width:100px;" zippy="colqty" class="form-control  ">
+                                <div class="col-3">
+                                    <select   zippy="colqty" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                                                                                
                             <div class="form-group row">
                                 <label  class="col-8 col-form-label" for="colcomment">Коментар</label>
-                                <div class="col-4">
-                                    <select style="width:100px;" zippy="colcomment" class="form-control  ">
+                                <div class="col-3">
+                                    <select   zippy="colcomment" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                                                                                
@@ -336,10 +343,134 @@
             
             </div>
             
-            
+             <div zippy="xmlp" class="col-12  " >
+                 <h4>Iмпорт з XML</h4>
+                
+                <div   class="row  " >
+                  <div    class="col-12 col-md-6 col-xl-4 " >
+                      <div zippy="tablepanx"    >
+                       <a zippy="cancelx">До списку</a>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    <a data-label="payed" href="javascript:void(0);" data-toggle="modal"
+                                   data-target="#modalimhelp"><b>Опис</b> <i class="fa fa-info-circle"></i></a> 
+                        <br>
+                       <a zippy="addnewx" class="btn btn-success mr-4 ml-2" >   Додати</a>
+                                 
+                        <table class="table    table-sm  ">
+                            <tr zippy="listx"> 
+                              <td zippy="custnamex">          </td>
+
+                              <td>  <a   zippy="editx">Редагувати код</a>       </td>
+                              <td>  <a   zippy="editi">Iмпорт</a>       </td>
+                              <td>  <a   zippy="delx"><i class="fa fa-trash"></i></a>       </td>
+                            </tr>   
+                        </table>  
+                     </div>    
+                 
+              
+                 <form zippy="editformx"    >
+                     <div class="form-group  ">
+                        <label    for="editcustx">Постачальник </label>
+                   
+                        <input placeholder="Почніть вводити..." class="form-control    " zippy="editcustx">
+                       
+                   </div>
+                    <div class="form-group  ">
+                        <label   for="editcodex">Код   </label>
+                   
+                        <textarea style="height:300px;" class="form-control" zippy="editcodex"></textarea>
+                  
+                    </div>       
+                       
+                     <div class="form-group">
+                        <input zippy="cancelex" type="button" value="Скасувати" class="btn btn-outline-secondary mr-4 "> 
+                        <input zippy="saveex" type="submit" value="Зберегти" class="btn btn-primary  ">
+
+                    </div>
+                                          
+             </form> 
+                 
+                     
+           
+                 <form zippy="importformx"    >
+                 <h6 zippy="imxcustname" ></h6>
+                 <a zippy="cancelix" >До списку </a>
+                        <div class="form-group  ">
+                                <label for="filenamex">Файл імпорту</label>
+                                <input onchange="readFile(this)" type="file" zippy="filenamex" class="form-control  "/>
+                             </div>
+                               <a class="btn btn-success" onclick="OnLoadFile()">Завантажити</a>
+                          <span id="spinimx" style="display:none;"   >
+                              Завантаження...
+                           <div class="spinner-border spinner-border-sm"  >
+                            </span>    </div>  
+                         
+                      
+                 </form> 
+                 <form zippy="importformxsend" >   
+                 <input type="hidden" zippy="imxcust" >
+                 <input type="hidden" zippy="imxjson" >
+           
+                </form>        
+                   
+             </div>     
+            </div>     
         </div>
+     </div>
    
-      
+               <div id="modalimhelp" class="modal fade  " tabindex="-1"   >
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                   
+                        <div class="modal-body">
+Для iмпорту прайсу необхiдно для файлу данного  постачальника  написати javascript функцiю 
+парсингу xml   перетворення данних в  json формат.
+<br>  Фц
+Функція має  називатись  "parseprice". На вхiд буде  передано змiст  вибраного файлу.
+Функцiя має  повернкти строку  json з данними.
+ 
+<pre>
+<code>
+    function parseprice(xmldata){
+      тут виймаємо данi з xml
+      return jsondata
+    }
+</code> 
+</pre> 
+JSON має мати таку  структуру
+<pre>
+<code>
+  [
+     {
+        "name":"",
+        "cust_code":"",
+        "bar_code":"",
+        "price":"",
+        "quantity":"",
+        "brand":"",
+        "store":"",
+        "comment":"" 
+     } ,
+     ...
+  ]    
+</code>     
+</pre>  
+name - назва товару  <br> 
+                  
+cust_code - код у постачальника <br>
+bar_code - штрих-код  <br>
+price - цiна   <br>
+quantity - кiлькiсть  <br>
+brand - бренд, виробник  <br>
+store - склад у постачальника (якщо заданий)   <br>
+comment - примiтка <br>
+<br>
+<i class="fa fa-exclamation-circle"></i> 
+Якщо є готовий json, створений стороннiм засобом, функцiя  має просто повернути вхiдний параметр
+ 
+
+          </div>
+                    </div>
+                </div>
+            </div>    
              
             <script>
 
@@ -351,7 +482,44 @@
             function check_deleteall() {
                 return confirm("Видалити?")
             }
+            function check_delx() {
+                return confirm("Видалити?")
+            }
+       
+        {{{import_func}}}  
+   
+                      
+   var file=null                 
+  function readFile(input) {
+       file = input.files[0];
+  }   
+   function OnLoadFile( ) {
+       
+     $("#imxjson").val( "" )  ;
+        if (file) {
+            $("#spinimx").show()  ;  
+            const reader = new FileReader();
 
+            reader.onload = function(e) {
+                    
+                var j=parseprice(e.target.result)
+                
+                $("#imxjson").val( j )  ;
+                $("#importformxsend").submit( )  ;
+            };
+           
+            reader.onerror = function() {
+              toastr.error(reader.error)   
+            };   
+            reader.readAsText(file);
+        } else {
+           toastr.error("Не вибрано файл")  
+        }
+    } 
+       
+  
+  
+            
         </script>  
 
 

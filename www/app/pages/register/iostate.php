@@ -15,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
+use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
 use App\Application as App;
@@ -24,8 +25,8 @@ use App\Application as App;
  */
 class IOState extends \App\Pages\Base
 {
-    private $_doc    = null;
-    private $_ptlist = null;
+    private ?Document $_doc    = null;
+    public array $_ptlist = [];
     
 
     /**
@@ -41,22 +42,30 @@ class IOState extends \App\Pages\Base
         $this->_tvars['totalin'] = "";
         $this->_tvars['totalout'] = "";
         $this->_tvars['totaldiff'] = "";
-        
-        $this->_ptlist = \App\Entity\IOState::getTypeList();
+          
+        $this->_ptlist = \App\Entity\IOState::getTypeListBook();
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
-        $this->filter->add(new Date('from',strtotime('-1 month')));
-        $this->filter->add(new Date('to'));
-
+      
+        $dt = new \App\DateTime();
+        $dt->subMonth(1)   ;
+        $from = $dt->startOfMonth()->getTimestamp();
+        $to = $dt->endOfMonth()->getTimestamp();
+        $this->filter->add(new Date('from',$from));
+        $this->filter->add(new Date('to',$to));
+              
         
         $this->add(new Form('docform'))->onSubmit($this, 'addOnSubmit');
         $this->docform->add(new TextInput('docnumber'));
-     
+        $this->docform->add(new TextInput('docamount'));
+        $this->docform->add(new DropDownChoice('docio', $this->_ptlist, 0));
+         
         
         $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
 
+        
         $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
@@ -65,10 +74,17 @@ class IOState extends \App\Pages\Base
        
         
         $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->add(new ClickLink('viewbook', $this, 'onviewbook'));
         $this->add(new ClickLink('bmode', $this, 'onmode')) ;
         $this->add(new ClickLink('jmode', $this, 'onmode')) ;
 
-        $this->_ptlist[0] = '';
+        
+        $this->add(new Panel('bookrep' ))->setVisible(false);
+       
+        $this->bookrep->add(new Label('bookrephtml' ));
+        
+        
+   //     $this->_ptlist[0] = '';
        
         $this->update(); 
     }
@@ -76,15 +92,7 @@ class IOState extends \App\Pages\Base
     public function onmode($sender) {
         
         $this->_tvars['bmode'] = $sender->id=='bmode';
-        if($this->_tvars['bmode'] ) {
-            $dt = new \App\DateTime();
-            $dt->subMonth(1)   ;
-            $from = $dt->startOfMonth()->getTimestamp();
-            $to = $dt->endOfMonth()->getTimestamp();
-            $this->filter->from->setDate($from); 
-            $this->filter->to->setDate($to); 
-             
-        }  
+      
         $this->update(); 
     }
    
@@ -94,46 +102,60 @@ class IOState extends \App\Pages\Base
     }
     
     public function addOnSubmit($sender) {
-        $dm = trim($this->docform->docnumber->getText() );
-        $doc = Document::getFirst("  document_number = ".Document::qstr($dm) )  ;
+        $dn = trim($this->docform->docnumber->getText() );
+        $da = doubleval($this->docform->docamount->getText() );
+        $type = intval($this->docform->docio->getValue());
+        $doc = Document::getFirst("  document_number = ".Document::qstr($dn) )  ;
         if($doc==null) {
             $this->setError('Документ не знайдено') ;
             return;
         }
+        if($type ==0) {
+            $this->setError('Не вказаний тип') ;
+            return;
+        }
+        if($da == 0) {
+            $this->setError('Не введена  сума') ;
+            return;
+        }
+        
         $doc->setHD('iniostate',1);
         $doc->setHD('outiostate',0);
+        $doc->setHD('iniostatetype',$type);
+        $doc->setHD('iniostateamount',$da);
         $doc->save();
         $this->setSuccess('Додано') ;
+        $this->docform->docamount->setText('');
         $this->docform->docnumber->setText('');
+        $this->docform->docio->setValue(0);
         $this->docview->setVisible(false);
         $this->update();
     }
 
     private function update( ) {
-     
-        $this->doclist->Reload(); 
-        
         $this->_tvars['totalin'] = 0;
         $this->_tvars['totalout'] = 0;
-        foreach($this->doclist->getDataSource()->getItems(-1, -1) as $doc) {
-           if($doc->iotype < 30) {
-               $this->_tvars['totalin']  += $doc->amount;   
-            }  else {
-               $this->_tvars['totalout'] += (0-$doc->amount);
-            }            
-        }
-   
+        $this->doclist->Reload(); 
+        
+  
         
   
         $this->_tvars['totalin']   = H::fa($this->_tvars['totalin']   );
         $this->_tvars['totalout']  = H::fa($this->_tvars['totalout']   );
         $this->_tvars['totaldiff'] = H::fa($this->_tvars['totalin'] - $this->_tvars['totalout'] );
-        
+        $this->bookrep->setVisible(false);  
+                                    
+          
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
-
+        $d=Document::load($doc->document_id)  ;
+             
+        if($d->getHD('iniostatetype') > 0) {
+             $doc->iotype = $d->getHD('iniostatetype') ;
+             $doc->amount = $d->getHD('iniostateamount') ;
+        }
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amountin', ''));
@@ -145,15 +167,17 @@ class IOState extends \App\Pages\Base
         
         if($doc->iotype < 30) {
            $row ->amountin->setText(H::fa($doc->amount));
+           $this->_tvars['totalin']  += $doc->amount;   
         } else {
            $row ->amountout->setText(H::fa(0-$doc->amount));
+           $this->_tvars['totalout'] += (0-$doc->amount);
         }
   
-        
+             
         
     }
 
-    //просмотр
+   
     public function deleteOnClick($sender) {
 
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
@@ -172,12 +196,16 @@ class IOState extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
-
+        $this->bookrep->setVisible(false);  
+        
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
     }
 
 
+
+  
+    
     public function oncsv($sender) {
         $list = $this->doclist->getDataSource()->getItems(-1, -1);
 
@@ -232,6 +260,151 @@ class IOState extends \App\Pages\Base
         
     }
 
+    
+    public function onviewbook($sender) {
+      
+       
+       $list=[];
+       foreach($this->doclist->getDataSource()->getItems(-1, -1)  as $r){
+          
+           $d= H::fd(  $r->document_date )  ;
+           if(!isset($list[$d])) $list[$d] =[];
+           
+           $list[$d][]= $r;
+       }
+       
+       $tc2=0;$tc3=0;$tc4=0;$tc6=0;$tc7=0;$tc8=0;$tc9=0;$tc10=0;$tc11=0;
+       $header=[];
+       $header['rows']=[];
+       
+       foreach($list as $d=>$iolist) {
+           $row=[];
+           $docs=[];
+           $row['date']  = $d;
+           $c2=0; $c3=0; $c4=0; $c5=0;$c6=0;$c7=0;$c8=0;$c9=0;$c10=0;$c11=0;
+           foreach($iolist as $io) {  
+              $doc=Document::load($io->document_id)  ;
+              if($doc->getHD('iniostatetype') > 0) {
+                 $io->iotype = $doc->getHD('iniostatetype') ;
+                 $io->amount = $doc->getHD('iniostateamount') ;
+              }
+               
+               
+              if($io->iotype == 1 || $io->iotype == 2 || $io->iotype == 3 )  { //доходы
+                 $c2 +=  abs( $io->amount );
+                 continue; 
+              }
+
+              if($doc->meta_name=='ReturnIssue') {  //возврат
+                 $c3 +=  abs( $io->amount ); 
+                 continue; 
+              }              
+              if($doc->meta_name=='InvoiceCust') {  //предоплата
+                 $c3 +=  abs( $io->amount ); 
+                 continue; 
+              }              
+              
+              //затраты
+              if($io->iotype == 50)  {   //закупка
+                 $c6 +=  abs( $io->amount );
+              }     
+              if($io->iotype == 54)  {   //зарплата
+                 $c7 +=  abs( $io->amount );
+              }     
+              if( in_array($io->iotype,[55,70,71])   )  {   //налоги
+                 $c8 +=  abs( $io->amount );
+              }     
+              if(in_array($io->iotype,[53,57,60,63]))  {   
+                 $c9 +=  abs($io->amount);
+              }     
+              
+                 
+              if($io->iotype == 67)  {  
+                 $c10 +=  abs( $io->amount );
+              }        
+              
+              $docs[]=  $io->document_number   ;
+  
+             
+    
+              
+              
+              
+                         
+           }
+           $c4 = $c2 - $c3;
+            
+           $c11 = $c4 - $c6 - $c7 - $c8 - $c9 - $c10 ;
+           
+           $row['c2']   = number_format($c2, 2, '.', '') ;
+           $row['c3']   = number_format($c3, 2, '.', '') ;
+           $row['c4']   = number_format($c4, 2, '.', '') ;
+           $row['c6']   = number_format($c6, 2, '.', '') ;
+           $row['c7']   = number_format($c7, 2, '.', '') ;
+           $row['c8']   = number_format($c8, 2, '.', '') ;
+           $row['c9']   = number_format($c9, 2, '.', '') ;
+           $row['c10']   = number_format($c10, 2, '.', '') ;
+           $row['c11']   = number_format($c11, 2, '.', '') ;
+           $row['dn']   = implode(', ',$docs) ;
+          
+           $tc2 += doubleval($row['c2'] );
+           $tc3 += doubleval($row['c3'] );
+           $tc4 += doubleval($row['c4'] );
+           $tc6 += doubleval($row['c6'] );
+           $tc7 += doubleval($row['c7'] );
+           $tc8 += doubleval($row['c8'] );
+           $tc9 += doubleval($row['c9'] );
+           $tc10 += doubleval($row['c10'] );
+           $tc11 += doubleval($row['c11'] );
+
+           $header['rows'][]=$row;
+           
+       }
+       
+       
+       unset($list) ; 
+     
+       $header['tc2'] = number_format($tc2, 2, '.', '') ;
+       $header['tc3'] = number_format($tc3, 2, '.', '') ;
+       $header['tc4'] = number_format($tc4, 2, '.', '') ;
+       $header['tc6'] = number_format($tc6, 2, '.', '') ;
+       $header['tc7'] = number_format($tc7, 2, '.', '') ;
+       $header['tc8'] = number_format($tc8, 2, '.', '') ;
+       $header['tc9'] = number_format($tc9, 2, '.', '') ;
+       $header['tc10'] = number_format($tc10, 2, '.', '') ;
+       $header['tc11'] = number_format($tc11, 2, '.', '') ;
+
+       
+       $from = $this->filter->from->getDate();
+       $to = $this->filter->to->getDate();
+     
+       $firm = H::getFirmData() ;
+       $header['firmname']  = $firm['firm_name']  ;          
+       $header['firmcode']  = ''  ;   
+       if(strlen($firm['tin']??'')>0) {
+          $header['firmcode']  = "ЄДРПОУ ". $firm['tin']  ;   
+       }      
+       if(strlen($firm['inn']??'')>0) {
+          $header['firmcode']  = "IПН ". $firm['inn']  ;   
+       }      
+              
+       $header['from']  = H::fd($from) ;          
+       $header['to']  = H::fd($to)   ;          
+       
+       $report = new \App\Report('iobook.tpl');
+
+       $html = $report->generate($header);
+  
+  
+       \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+
+       $this->bookrep->setVisible(true);  
+       $this->docview->setVisible(false);       
+       $this->bookrep->bookrephtml->setText($html,true);       
+       $this->goAnkor('bookrep') ;
+    }    
+  
+      
 }
 
 /**
@@ -250,7 +423,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
 
-        $where = "  iotype not in (30,31,80,81,82)  ";
+        $where = "  1=1 ";
         $from = $this->page->filter->from->getDate();
         $to = $this->page->filter->to->getDate();
 
@@ -262,13 +435,17 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
         }
 
         if($this->page->_tvars['bmode'] ==true) {
-             $where .= " and ( iotype in (1,3,50,51,54,59,60)  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
+             $ids= implode(',', array_keys($this->page->_ptlist) );
+             $where .= " and ( coalesce(iotype,0) in ({$ids})  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
+            
         } else {
+            $where .= " and coalesce(iotype,0) not in (30,31,80,81,82,0)  ";
+    
             $author = $this->page->filter->fuser->getValue();
             $type = $this->page->filter->ftype->getValue();
 
             if ($type > 0) {
-                $where .= " and iotype=" . $type;
+                $where .= " and coalesce(iotype,0)=" . $type;
             }
 
 
@@ -278,38 +455,33 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
          
         }
 
-        $c = \App\ACL::getBranchConstraint();
-        if (strlen($c) > 0) {
-            $where .= " and d." . $c;
-        }
+        
+        $id = \App\System::getBranch(); //если  выбран  конкретный
+        if ($id > 0) {
 
-        if ($user->rolename != 'admins') {
-            if ($user->onlymy == 1) {
-
-                $where .= " and d.user_id  = " . $user->user_id;
-            }
-
-            $where .= " and d.meta_id in({$user->aclview}) ";
-        }
+            return "d.branch_id = ".$id;
+        }        
+ 
         return $where;
     }
 
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(count(*),0) from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
+        $sql = "select coalesce(count(*),0) from documents_view  d left join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
+        H::log($sql);
         return $conn->GetOne($sql);
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  i.*,d.username,d.meta_id,d.document_number,d.document_date,i.amount  from documents_view  d join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by d.document_date   ";
+        $sql = "select  i.iotype,i.amount, d.username,  d.document_id,  d.document_number,d.document_date,i.amount  from documents_view  d left join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by d.document_date   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
             $sql .= $limit;
         }
      
-        $docs = \App\Entity\IOState::findBySql($sql);
+        $docs =  Document::findBySql($sql);
 
         return $docs;
     }

@@ -1,27 +1,22 @@
 <table class="ctable" border="0"   cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="6">
+        <td align="center" colspan="8">
             Неліквідні товари
         </td>
     </tr>
-    {{#cust}}
-    <tr>
-
-        <td colspan="6">
-            <b> Постачальник:</b> {{customer_name}}
-        </td>
-    </tr>
-    {{/cust}}
+ 
     <tr style="font-weight: bolder;">
 
 
         <th style="border: solid black 1px"> Найменування</th>
 
         <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Штри-код</th>
+        <th style="border: solid black 1px">Категорiя</th>
         <th style="border: solid black 1px">Бренд</th>
-        <th style="border: solid black 1px">Од.</th>
+        <th style="border: solid black 1px">Склад</th>
+        <th style="border: solid black 1px">Комiрка</th>
+        <th align="right" style="border: solid black 1px">Цiна</th>
         <th align="right" style="border: solid black 1px">На складi</th>
 
 
@@ -32,10 +27,12 @@
 
         <td>{{itemname}}</td>
         <td>{{item_code}}</td>
-        <td>{{bar_code}}</td>
+        <td>{{cat_name}}</td>
         <td>{{brand}}</td>
+        <td>{{store}}</td>
+        <td>{{cell}}</td>
 
-        <td>{{msr}}</td>
+        <td align="right">{{price}}</td>
         <td align="right">{{qty}}</td>
 
 
@@ -46,5 +43,5 @@
   
 
 </table>
-<br> <br>
+<br>  
 

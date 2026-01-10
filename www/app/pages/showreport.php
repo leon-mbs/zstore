@@ -11,12 +11,20 @@ class ShowReport extends \Zippy\Html\WebPage
         $common = \App\System::getOptions('common');
         $user = \App\System::getUser();
         if ($user->user_id == 0) {
+            http_response_code(401);
             die;
         }
 
         $filename = $filename . date('_Y_m_d');
         $html = \App\Session::getSession()->printform;
-
+        if (strlen($html) == 0) {
+            http_response_code(404);
+            die;
+        }    
+        
+        
+        \App\Session::getSession()->printform="";
+  
         if ($type == "preview") {
             header("Content-Type: text/html;charset=UTF-8");
         }
@@ -57,6 +65,7 @@ class ShowReport extends \Zippy\Html\WebPage
             header("Content-Disposition: attachment;Filename={$filename}.xml");
             header("Content-Transfer-Encoding: binary");
             $html = \App\Session::getSession()->printxml;
+            \App\Session::getSession()->printxml="";
         }
         if ($type == "pdf") {
             header("Content-type: application/pdf");
@@ -76,9 +85,9 @@ class ShowReport extends \Zippy\Html\WebPage
             // Output the generated PDF to Browser
             $html = $dompdf->output();
         }
-
+        header('Content-Length: '.strlen($html));
         echo $html;
-
+        flush()  ;
         die;
     }
 

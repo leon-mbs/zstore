@@ -22,7 +22,7 @@ class OutcomeMoney extends Document
         if ($this->headerdata['detail'] == 2)  {    // оплата  поставщику
              \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         } else  
-        if ($this->headerdata['detail'] == 3)  {    // подотчет
+        if ($this->headerdata['detail'] == 3)  {    // сотруднику в подотчет
       
         } else {
             \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata['type']);
@@ -47,10 +47,10 @@ class OutcomeMoney extends Document
     public function generateReport() {
 
      
-        $pt = \App\Entity\IOState::getTypeList(2);
+        $pt = \App\Entity\IOState::getTypeListOutM();
         $header = array(
             'amount'          => H::fa($this->amount),
-            'totalstr'        => \App\Util::money2str_ua($this->amount),
+            'totalstr'        => \App\Util::money2str($this->amount),
             'date'            => H::fd($this->document_date),
             "notes"           => nl2br($this->notes),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
@@ -111,12 +111,11 @@ class OutcomeMoney extends Document
                 $b->save();
             }
        }
+       $this->DoAcc();
        
-        $this->DoAcc();
-    }    
+    }   
     
-    
-public   function DoAcc() {
+    public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
       
@@ -195,4 +194,5 @@ public   function DoAcc() {
                          
     } 
      
+      
 }

@@ -99,7 +99,7 @@ class IncomeItem extends \App\Pages\Base
 
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']??0);
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -206,8 +206,8 @@ class IncomeItem extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
@@ -253,7 +253,7 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
-     $this->editsnitem->setVisible(false);
+        $this->editsnitem->setVisible(false);
     
         $this->editdetail->editquantity->setText("1");
     }
@@ -385,6 +385,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
+
     public function onOpensn($sender) {
         $this->docform->setVisible(false) ;
         $this->editsnitem->setVisible(true) ;
@@ -396,7 +397,7 @@ class IncomeItem extends \App\Pages\Base
 
     } 
     
-   public function savesnOnClick($sender) {
+    public function savesnOnClick($sender) {
         $common = \App\System::getOptions("common");
 
         $id = $this->editsnitem->editsnitemname->getKey();

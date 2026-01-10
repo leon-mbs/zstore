@@ -40,7 +40,12 @@
 
 
                     </div>
- 
+                    <div class="form-group  ">
+                        <label for="payreq">Реквізити для оплати </label>
+
+                        <textarea class="form-control"   zippy="payreq"></textarea>
+
+                    </div>
                 </div>
                 <div class="col-12 col-md-3">
 
@@ -89,12 +94,14 @@
                         <input class="form-control" type="text" zippy="outnumber">
 
                     </div>
+                     {{^useval}} 
                      {{^usends}} 
                     <div class="form-check">
                         <input zippy="comission" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="comission">Товари на комісію</label> 
                     </div>                 
                      {{/usends}} 
+                     {{/useval}} 
                 </div>
                 <div class="col-12 col-md-3">
                    <div class="form-group  ">
@@ -326,8 +333,8 @@
                                 <label for="editdeliverytype"  >Тип доставки</label>
                                 <select class="form-control" zippy="editdeliverytype">
                                     <option value="1">Вiднести до загальних витрат</i> </option>
-                                    <option value="2">Розподiлити на собiвартiсть</option>
-                                    <option value="3">Компенсувати постачальнику</option>
+                                    <option value="2">Розподiлити на собiвартiсть</i> </option>
+                                   <option value="3">Компенсувати постачальнику</option>
                                     <option value="4">Оплата стороннiй службi </option>
                                 </select>
                             </div>   

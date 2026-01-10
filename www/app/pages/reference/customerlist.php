@@ -671,7 +671,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     private function updateContrs() {
-        $this->_contrlist = \App\Entity\Contract::find(' disabled<> 1 and  customer_id=' . $this->_customer->customer_id,'contract_id desc');
+        $this->_contrlist = \App\Entity\Contract::find(' state = 6  and  customer_id=' . $this->_customer->customer_id,'contract_id desc');
         $this->contentview->dw_contr->Reload();
         $this->_tvars['iscontract'] = count($this->_contrlist) > 0; 
     }

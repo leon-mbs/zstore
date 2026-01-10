@@ -169,7 +169,7 @@ class TTN extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('TTN');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
+         
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -507,11 +507,11 @@ class TTN extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = $this->editdetail->editserial->getText();
         $qstock = $this->editdetail->qtystock->getText();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->quantity > $qstock) {
 

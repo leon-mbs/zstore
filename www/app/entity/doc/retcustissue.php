@@ -82,7 +82,7 @@ class RetCustIssue extends Document
  
         \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_OUTCOME,true);
 
-        $this->DoBalans() ;
+       $this->DoBalans() ;
 
 
 
@@ -90,7 +90,7 @@ class RetCustIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВП-000000';
+        return 'ПП-000000';
     }
     /**
     * @override
@@ -121,13 +121,10 @@ class RetCustIssue extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
-        $this->DoAcc();  
+       $this->DoAcc();  
 
     }
-    
-    
-    
- public   function DoAcc() {
+public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     
@@ -138,10 +135,7 @@ class RetCustIssue extends Document
          } 
    
          $this->DoAccPay('63',true);      
-         
-   
-  
+ 
  }    
-    
-    
+       
 }

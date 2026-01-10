@@ -12,22 +12,22 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number"  required >
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="customer">Покупець</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
 
                     </div>
-                    {{#fiscal}}
+                   
                     <div class="form-group  ">
-                        <label for="pos">POS термiнал</label>
+                        <label data-label="pos" for="pos">POS термiнал</label>
                         <select class="form-control  " zippy="pos">
                             <option value="0">Не обрано</option>
 
                         </select>
                     </div>
-                    {{/fiscal}}
+                     
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
 
@@ -40,7 +40,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date"  required >
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="store">На склад</label>
@@ -207,13 +207,13 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice"  required  pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.]+"
                                style="width: 100px;">
 
                     </div>

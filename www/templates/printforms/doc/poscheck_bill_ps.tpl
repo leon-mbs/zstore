@@ -64,9 +64,16 @@
  <row>
   <col align="right" length="14" >{{quantity}}</col>
   <col align="right" length="8" >{{price}}</col>
-  <col align="right" length="10" >{{amount}}</col>
+  <col align="right" length="10" >{{amount}}</col>     
 </row>
+     {{#isstamps}}
+       <text>Акцизнi марки:</text> 
  
+        {{#stamps}}
+          <text>{{name}}</text> 
+        {{/stamps}}
+    
+    {{/isstamps}}
     {{/_detail}}
 <separator>-</separator>
 <font bold="true">a</font>
@@ -89,6 +96,10 @@
  <text>Передплата: {{prepaid}}</text>
  
     {{/prepaid}}
+ {{#exciseval}}
+ <text>В т.ч. акциз: {{exciseval}}</text>
+ 
+    {{/exciseval}}
 
  <text>До сплати: {{payamount}}</text>
  <text>Оплата: {{payed}}</text>
@@ -110,6 +121,9 @@
  
     {{/allbonus}}
     
+{{#promo}}
+<text> Промокод {{promo}}</text>  
+{{/promo}}  
  
 <font bold="true">a</font>
 <align>center</align>
@@ -119,9 +133,7 @@
 <text>  {{checkslogan}}</text>
 {{/checkslogan}}
 
-{{#promo}}
-<text>  {{promo}}</text>  
-{{/promo}}  
+
 
 {{#isdocqrcode}}
 <font >a</font>

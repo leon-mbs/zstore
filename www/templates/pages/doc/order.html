@@ -12,7 +12,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number"  required >
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="customer">Покупець</label>
@@ -52,7 +52,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date"  required >
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
@@ -367,12 +367,12 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required                                pattern="[0-9,\.\s]+" style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on"                                pattern="[0-9,\.\s]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
 
                     </div>
 
@@ -406,7 +406,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname"  required />
+                        <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editcustphone">Телефон</label>
@@ -432,7 +432,7 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input class="form-control " zippy="editnewitemname"  required />
+                        <input class="form-control " zippy="editnewitemname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editnewitemcode">Код</label>
@@ -478,7 +478,7 @@
                    var q = $('#editquantity').val()
                    
                    $('#submitrow').attr('disabled','disabled')                     
-                      callPageMethod('getPriceByQty',[id,q], null,(data)=> 
+                      callPM('getPriceByQty',[id,q], null,(data)=> 
                       {
                                if(parseVal(data)){
                                   $('#editprice').val(data)

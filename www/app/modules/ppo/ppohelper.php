@@ -115,18 +115,20 @@ class PPOHelper
      * @param mixed $open true- открыть,  false - закрыть
      */
     public static function shift($posid, $open) {
-
+        
         $pos = \App\Entity\Pos::load($posid);
 
         $firm = \App\Helper::getFirmData( );
-
-        if(strlen($pos->firmname ??'')=='') {
+        if($firm== null){
+            return array('success' => false, 'data' => 'Не вказанi данi компанiї');
+        }
+        if( ($pos->firmname ??"")=="") {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??"")=="") {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??"")=="") {
             $pos->tin = $firm['tin']  ;
         } 
 
@@ -150,12 +152,10 @@ class PPOHelper
         $report = new \App\Report('shift.xml');
 
         $xml = $report->generate($header);
-
+     
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
           
-        if($firm== null){
-            return array('success' => false, 'data' => 'Не вказана  компанiя в POS термiналi');
-        }
+       
         
         
         return self::send($xml, 'doc', $pos);
@@ -173,13 +173,13 @@ class PPOHelper
 
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
 
@@ -322,13 +322,13 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
         
@@ -422,7 +422,7 @@ class PPOHelper
  
 
   //$doc->headerdata['payed']   += 0.03;
-        if($doc->headerdata['payment']  >0) {
+        if(($doc->headerdata['payment']??0)  >0) {
             if ($mf->beznal == 1) {
                 $pay = array(
                     'formname' => self::FORM_CARD,
@@ -590,13 +590,13 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($pos_id);
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
         $mf = \App\Entity\MoneyFund::load($payment);
@@ -667,13 +667,13 @@ class PPOHelper
         $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
         $firm = \App\Helper::getFirmData( );
 
-        if(strlen($pos->firmname ??'')=='') {
+        if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if(strlen($pos->inn ??'')=='') {
+        if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
-        if(strlen($pos->tin ??'')=='') {
+        if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
         $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
@@ -1024,10 +1024,7 @@ class PPOHelper
             }
             return $cname;            
         }
-        $common = \App\System::getOptions("common");
-        if(strlen($common['cashier'])>0) {
-            $cname = $common['cashier'] ;
-        }       
+        
         return $cname;
     }
 

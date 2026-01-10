@@ -181,6 +181,7 @@ class Import extends \App\Pages\Base
 
     public function onImport($sender) {
         $t = $this->iform->itype->getValue();
+        $this->_tvars['isstore']  = $t==1;
         $cmp = $this->iform->icompare->getValue();
         $store = $this->iform->store->getValue();
         $item_type = $this->iform->item_type->getValue();
@@ -319,13 +320,13 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $price1 = str_replace(',', '.', trim($row[$colprice1] ?? ''));
-            $price2 = str_replace(',', '.', trim($row[$colprice2] ?? ''));
-            $price3 = str_replace(',', '.', trim($row[$colprice3] ?? ''));
-            $price4 = str_replace(',', '.', trim($row[$colprice4] ?? ''));
-            $price5 = str_replace(',', '.', trim($row[$colprice5] ?? ''));
+            $price1 =doubleval( str_replace(',', '.', trim($row[$colprice1] ?? ''))) ;
+            $price2 =doubleval( str_replace(',', '.', trim($row[$colprice2] ?? '')));
+            $price3 =doubleval( str_replace(',', '.', trim($row[$colprice3] ?? '')));
+            $price4 =doubleval( str_replace(',', '.', trim($row[$colprice4] ?? '')));
+            $price5 =doubleval( str_replace(',', '.', trim($row[$colprice5] ?? '')));
             
-            $itemcode = trim($row[$colcode] ?? '');
+            $itemcode = ''.trim($row[$colcode] ?? '');
             $brand = trim($row[$colbrand] ?? '');
             $itemname = trim($row[$colname] ?? '');
             $itembarcode = trim($row[$colbarcode] ?? '');
@@ -335,12 +336,12 @@ class Import extends \App\Pages\Base
             $desc = trim($row[$coldesc] ?? '');
             $catname = trim($row[$colcat] ?? '');
             $image = trim($row[$colimage] ?? '');
-            $warranty = trim($row[$colwar]);
-            $notes = trim($row[$colnotes]);
+            $warranty = trim($row[$colwar]?? '');
+            $notes = trim($row[$colnotes]?? '');
             $shortname = trim($row[$colshortname] ?? '');
             $minqty = trim($row[$colminqty] ?? '');
-            $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
-            $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
+            $inprice = doubleval( str_replace(',', '.', trim($row[$colinprice] ?? '')) );
+            $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')));
 
                
             
@@ -400,11 +401,12 @@ class Import extends \App\Pages\Base
             if ($colprice3 !='0') $item->price3 = doubleval($price3) ;
             if ($colprice4 !='0') $item->price4 = doubleval($price4) ;
             if ($colprice5 !='0') $item->price5 = doubleval($price5) ;
+           
+            if($colinprice !='0')    $item->price = $inprice;
+            if($colminqty !='0')     $item->minqty = $minqty;
+            if($colqty !='0')        $item->quantity = $qty;
 
-            $item->price = $inprice >0 ? $inprice :0 ;
-            $item->quantity = $qty >0 ? $qty :0 ;
-            $item->minqty =  $minqty >0 ? $minqty :0;
- 
+           
 
             if ($cat_id > 0) {
                 $item->cat_id = $cat_id;
@@ -434,11 +436,11 @@ class Import extends \App\Pages\Base
 
 
         }
-        if (count($newitems) > 0) {
+        if (count($newitems) > 0 && $t==1) {
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПТ00001";
+                $doc->document_number = "ПТ-00001";
             }
             $doc->document_date = time();
 
@@ -450,7 +452,7 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = $amount;
+            $doc->payamount = 0;
           
             $doc->headerdata['payed'] = 0;
             $doc->notes = 'Импорт с Excel';
@@ -711,7 +713,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('GoodsReceipt');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПН00001";
+                $doc->document_number = "ПН-00001";
             }
             $doc->document_date = time();
 
@@ -851,7 +853,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('Order');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "З00001";
+                $doc->document_number = "З-00001";
             }
             $doc->document_date = time();
 

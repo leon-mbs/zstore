@@ -118,14 +118,14 @@
                     
                     <div class="form-group">
                         <label for="editdate">Дата</label>
-                        <input v-model="editdate"  required  class="form-control"  type="date" />
+                        <input v-model="editdate"  required="on"  class="form-control"  type="date" />
                     </div>
                     <div class="form-group row">
                          
                        <div class="col-auto pt-1"> <label for="editfrom">З</label> </div>
-                       <div class="col-auto"> <input v-model="editfrom"  required   class="form-control"  type="time" /></div>
+                       <div class="col-auto"> <input v-model="editfrom"  required="on"   class="form-control"  type="time" /></div>
                        <div class="col-auto pt-1"> <label for="editto">По</label></div>
-                       <div class="col-auto"> <input  v-model="editto"  required  type="time" class="form-control" /></div>
+                       <div class="col-auto"> <input  v-model="editto"  required="on"  type="time" class="form-control" /></div>
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>
@@ -136,7 +136,7 @@
                     </div>
                     <div class="form-group">
                         <label for="editbreak">Перерва, хв.</label>
-                        <input   v-model="editbreak"  required  style="width:75px;" pattern="[0-9]+" class="form-control" />
+                        <input   v-model="editbreak"  required="on"  style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="editnote">Примiтка</label>
@@ -196,7 +196,7 @@ var calendar
            methods: {
                   init:function(){
                       
-                  callPageMethod('init',[], null,(data)=> 
+                  callPM('init',[], null,(data)=> 
                   {
                        let tmp =   JSON.parse(data)  
                        this.empid = tmp.empid; 
@@ -229,7 +229,7 @@ var calendar
                } ,    
                del:function(id){
                 
-                  callPageMethod('del',[id], null,(data)=> 
+                  callPM('del',[id], null,(data)=> 
                   {
                        this.loaddata() ;  
                   
@@ -303,14 +303,12 @@ var calendar
                      
                   } 
                      
-                  callPageMethod('save',[this.edited], JSON.stringify(body),(data)=> 
+                  callPM('save',[this.edited], body,(data)=> 
                   {
-                         if(data=="") {
+                          
                             this.loaddata() ;                               
                             $('#editmodal').modal('hide')   
-                         } else {
-                             toastr.error(data,'',{'timeOut':'5000'})
-                         }
+                          
                          
                       
 
@@ -328,9 +326,9 @@ var calendar
                      to:this.to 
                   } 
                      
-                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  callPM('loaddata',[],  body,(data)=> 
                   {
-                       let tmp =   JSON.parse(data)  
+
                        this.stat = tmp.stat 
                        this.times = tmp.times 
  

@@ -50,6 +50,7 @@ class CustItems extends \App\Pages\Base
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->itemtable->add(new ClickLink('imports'))->onClick($this, 'onImport');
+        $this->itemtable->add(new ClickLink('importxml'))->onClick($this, 'onImportXml');
         $this->itemtable->add(new ClickLink('csv', $this, 'oncsv'));
         $this->itemtable->add(new ClickLink('options', $this, 'onOption'));
 
@@ -57,7 +58,7 @@ class CustItems extends \App\Pages\Base
 
         $this->itemtable->listform->add(new DataView('itemlist', new CustItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
-        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
 
 
@@ -96,20 +97,43 @@ class CustItems extends \App\Pages\Base
      
         $this->add(new Form('optionsform'))->onSubmit($this, 'OnSaveOption');
         $this->optionsform->setVisible(false); 
+        $this->optionsform->add(new CheckBox("optcreateitem"))  ;
         $this->optionsform->add(new CheckBox("optupdate"))  ;
         $this->optionsform->add(new TextInput('optclean' ));
         $this->optionsform->add(new DropDownChoice('compare',[],0 ));
         $this->optionsform->add(new Button('cancelo'))->onClick($this, 'cancelOnClick');
-                                            
-                                   
+     
+        $this->add(new Panel('xmlp'))->setVisible(false);
+        $this->xmlp->add(new Panel('tablepanx'))  ;
+        $this->xmlp->tablepanx->add(new ClickLink('cancelx'))->onClick($this, 'cancelOnClick');
+        $this->xmlp->tablepanx->add(new ClickLink('addnewx'))->onClick($this, 'addxlOnClick');
+   
+        $this->xmlp->tablepanx->add(new DataView('listx', new CustXItemDataSource( ), $this, 'listxOnRow'));
+     
+
+        $this->xmlp->add(new Form('editformx'))->setVisible(false);                                           
+        $this->xmlp->editformx->add(new AutocompleteTextInput('editcustx'))->onText($this, 'OnAutoCust');
+        $this->xmlp->editformx->add(new TextArea('editcodex'));
+        $this->xmlp->editformx->add(new SubmitButton('saveex'))->onClick($this, 'OnSubmitX');
+        $this->xmlp->editformx->add(new Button('cancelex'))->onClick($this, 'cancelXOnClick');
+        
+                                         
+        $this->xmlp->add(new Form('importformx'))->setVisible(false);                                           
+        $this->xmlp->importformx->add(new Button('cancelix'))->onClick($this, 'cancelXOnClick');
+        $this->xmlp->importformx->add(new Label('imxcustname')) ;
+      
+        $this->xmlp->importformx->add(new \Zippy\Html\Form\File('filenamex')) ;
+   
+        $this->xmlp->add(new Form('importformxsend'))->onSubmit($this, 'OnSubmitIX');  
+        $this->xmlp->importformxsend->setVisible(false);  
+        $this->xmlp->importformxsend->add(new TextInput('imxjson')) ;
+        $this->xmlp->importformxsend->add(new TextInput('imxcust')) ;
+                                          
         $this->itemtable->listform->itemlist->Reload();
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-
-        
      
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('cust_name', $item->cust_name));
@@ -174,6 +198,7 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(false);
         $this->optionsform->setVisible(false);
+        $this->xmlp->setVisible(false);
         $this->updateFilter();
         $this->itemtable->listform->itemlist->Reload();
         
@@ -288,7 +313,7 @@ class CustItems extends \App\Pages\Base
         $text = trim($sender->getText());
         $stext = Customer::qstr('%' . $text . '%');
 
-        return Customer::findArray("customer_name", "  customer_name like {$stext}   ");
+        return Customer::findArray("customer_name", " status=0 and detail not like '%<type>1</type>%' and  customer_name like {$stext}   ");
     }
 
     public function onImport($sender) {
@@ -332,7 +357,7 @@ class CustItems extends \App\Pages\Base
             $this->setError('Не обрано файл');
             return;
         }
-
+        $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
 
         $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']);
 
@@ -396,7 +421,17 @@ class CustItems extends \App\Pages\Base
 
             $it =  $item->findItem();
             if($it != null) {
-                $item->item_id= $it->item_id; 
+                $item->item_id = $it->item_id; 
+            }  else {
+                if($ci_createitem==1) {
+                   $it = new Item();
+                   $it->itemname = $item->cust_name; 
+                   $it->bar_code = $item->bar_code; 
+                   $it->manufacturer = $item->brand; 
+                   $it->save(); 
+                   $item->item_id = $it->item_id;  
+                }
+                
             }
             $item->save();
             $cnt++;
@@ -416,6 +451,7 @@ class CustItems extends \App\Pages\Base
     public function onOption($sender) {
         $common = System::getOptions("common");
    
+        $this->optionsform->optcreateitem->setChecked($common['ci_createitem'] ??0) ;
         $this->optionsform->optupdate->setChecked($common['ci_update'] ??0) ;
         $this->optionsform->optclean->setText($common['ci_clean'] ??'') ;
         $this->optionsform->compare->setValue($common['ci_compare'] ?? 0) ;
@@ -430,6 +466,7 @@ class CustItems extends \App\Pages\Base
         $common = System::getOptions("common");
    
         $common['ci_update'] = $this->optionsform->optupdate->isChecked() ? 1:0 ;
+        $common['ci_createitem'] = $this->optionsform->optcreateitem->isChecked() ? 1:0 ;
         $common['ci_clean'] = $this->optionsform->optclean->getText()  ;
         $common['ci_compare'] = $this->optionsform->compare->getValue()  ;
         System::setOptions("common",$common)  ;
@@ -520,31 +557,242 @@ class CustItems extends \App\Pages\Base
     
     
     public function oncsv($sender) {
-        $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
-        $header = array();
-        $data = array();
+ 
+        $tempDir = sys_get_temp_dir(); 
+        $prefix = 'zstore_tmp_';
+        $tempFilePath = tempnam($tempDir, $prefix);
 
-        $i = 0;
-        foreach ($list as $item) {
-            $i++;
-
-            $data['A' . $i] = $item->customer_name;
-            $data['B' . $i] = $item->custname;
-            $data['C' . $i] = $item->cust_code;
-            $data['D' . $i] = $item->bar_code;
-            $data['E' . $i] = $item->brand;
-            $data['F' . $i] = $item->store;
-            $data['G' . $i] = $item->quantity;
-            $data['H' . $i] = $item->price;
-            $data['I' . $i] = $item->comment;
+       $fh = fopen($tempFilePath, 'w');
+      
+      
+       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кiл.;Цiна;Примiтка;";
+       $line = mb_convert_encoding($line, "windows-1251", "utf-8");
+       fwrite($fh, $line . PHP_EOL);      
        
-        }
+       $ds = new CustItemDataSource($this);
+      
+       foreach(CustItem::findYield($ds->getWhere(), "cust_name asc", -1, -1) as $item){
+            $line ="";
+            $line .= $item->customer_name.';';
+            $line .= $item->custname.';';
+            $line .= $item->cust_code.';';
+            $line .= $item->bar_code.';';
+            $line .= $item->brand.';';
+            $line .= $item->store.';';
+            $line .= $item->quantity.';';
+            $line .= $item->price.';';
+            $line .= str_replace(';','.', $item->comment) .';';
+            $line = mb_convert_encoding($line, "windows-1251", "utf-8");
+     
+            fwrite($fh, $line . PHP_EOL);                
+       }
+    
 
-        H::exportExcel($data, $header, 'custitems.xlsx');
+        H::exportCSV($tempFilePath, 'custitems.csv');
+ 
+    }
+
+   
+   public function onImportXml($sender) {
+      
+        $this->xmlp->setVisible(true);
+        $this->xmlp->tablepanx->setVisible(true);
+        $this->itemtable->setVisible(false);
+        $this->xmlp->tablepanx->listx->Reload();
+    
+    }    
+  public function listxOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $item = $row->getDataItem();
+ 
+     
+        $row->add(new Label('custnamex', $item->customer_name));
+        $row->add(new ClickLink('editx'))->onClick($this, 'editxOnClick');
+        $row->add(new ClickLink('editi'))->onClick($this, 'imxOnClick');
+        $row->add(new ClickLink('delx'))->onClick($this, 'delxOnClick');
+   
+    }
+
+    public function addxlOnClick($sender) {
+      
+        $this->xmlp->tablepanx->setVisible(false);
+        $this->xmlp->editformx->setVisible(true);
+       
+        $this->xmlp->editformx->clean();
+        $this->xmlp->editformx->editcodex->setText(" function parseprice(xmldata){
+             ...
+             parsing  xml to json
+             ...     
+          return jsondata
+          }");
+        
+    }
+    public function cancelXOnClick($sender) {
+      
+        $this->xmlp->tablepanx->setVisible(true);
+        $this->xmlp->editformx->setVisible(false);
+        $this->xmlp->importformx->setVisible(false);
+        $this->xmlp->importformxsend->setVisible(false);
+ 
     }
 
 
+
+    public function OnSubmitX($sender) {
+        $id=intval($this->xmlp->editformx->editcustx->getKey());
+        if($id==0)  {
+            $this->setError('Не вибрано контрагента') ;
+            return;
+        }   
+        $code = $this->xmlp->editformx->editcodex->getText();
+        $c = Customer::load($id) ;
+        $c->custitemcode = base64_encode($code) ;
+        $c->save();
+        $this->xmlp->tablepanx->listx->Reload();      
+        
+        $this->xmlp->tablepanx->setVisible(true);
+        $this->xmlp->editformx->setVisible(false);
+ 
+    }
+  
+    public function delxOnClick($sender) {
+      
+        $c = $sender->getOwner()->getDataItem();
+        $c->custitemcode = '';
+        $c->save();
+        $this->xmlp->tablepanx->listx->Reload();      
+     }
+ 
+ 
+     public function editxOnClick($sender) {
+        $this->xmlp->tablepanx->setVisible(false);
+        $this->xmlp->editformx->setVisible(true);
+        
+        $c = $sender->getOwner()->getDataItem();
+      
+       $code = strlen($c->custitemcode) > 0 ? base64_decode($c->custitemcode) :'';
+       
+       
+       $this->xmlp->editformx->editcodex->setText($code);
+       $this->xmlp->editformx->editcustx->setKey($c->customer_id);
+       $this->xmlp->editformx->editcustx->setText($c->customer_name);
+      
+              
+     }
+     
+     
+     public function imxOnClick($sender) {
+        $this->xmlp->tablepanx->setVisible(false);
+        $this->xmlp->importformx->setVisible(true);
+        $this->xmlp->importformxsend->setVisible(true);
+        
+        $c = $sender->getOwner()->getDataItem();
+        $this->xmlp->importformxsend->imxcust->setText($c->customer_id);
+        $this->xmlp->importformx->imxcustname->setText($c->customer_name);
+      
+        $code = strlen($c->custitemcode) > 0 ? base64_decode($c->custitemcode) :'';
+     
+        $this->_tvars['import_func']  = $code  ;
+                 
+     }
+        
+     public function OnSubmitIX($sender) {
+        $cust = $this->xmlp->importformxsend->imxcust->getText();
+          
+        $json = trim( $this->xmlp->importformxsend->imxjson->getText() );
+
+        if($json=="") {
+            $this->setError("Нема даних") ;
+            return;
+        }
+        $json = str_replace("\n","",$json) ;
+        $json = str_replace("\r","",$json) ;
+        $data=json_decode($json,true) ;
+        if(!is_array($data)) {
+            $this->setError("Невiрний json") ;
+            return;
+        }
+        
+        $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
+    
+        $cnt=0;
+        foreach ($data as $row) {
+            $price = doubleval(str_replace(',', '.', trim($row["price"])))   ;
+            if($price==0) {
+                continue;
+            }
+            $qty = doubleval(str_replace(',', '.', trim($row["quantity"])))   ;
+            if($qty==0) {
+                $qty=null;
+            }
+            $custname =  trim($row["name"])   ;
+            $comment  =  trim($row["comment"])   ;
+            $brand    =  trim($row["brand"])   ;
+            $store    =  trim($row["store"])   ;
+            $custcode =  trim($row["cust_code"])   ;
+            $custbarcode =  trim($row["bar_code"])   ;
+         
+            if(strlen($custcode)==0) {
+                continue;
+            }
+
+
+            $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode) )   ;
+
+            if($item == null) {
+                $item = new CustItem();
+            }
+              
+            $item->customer_id = $cust;
+            $item->cust_name = $custname;
+            $item->cust_code = $custcode;
+            $item->bar_code = $custbarcode;
+                    
+            $item->price = $price;
+            $item->quantity = $qty;
+            $item->comment =$comment;
+            $item->brand = $brand;
+            $item->store = $store;
+            $item->updatedon = time();
+
+            $it =  $item->findItem();
+            if($it != null) {
+                $item->item_id = $it->item_id; 
+            }  else {
+                if($ci_createitem==1) {
+                    
+                    
+                    
+                   $it = new Item();
+                   $it->itemname = $item->cust_name; 
+                   $it->bar_code = $item->bar_code; 
+                   $it->manufacturer = $item->brand; 
+                   $it->save(); 
+                   $item->item_id = $it->item_id;  
+                }
+                
+            }
+            $item->save();
+            $cnt++;
+
+        }
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ"); 
+         
+        $this->xmlp->setVisible(false);
+        $this->xmlp->importformx->setVisible(false);
+        $this->xmlp->importformxsend->setVisible(false);
+        $this->xmlp->tablepanx->setVisible(false);
+      
+      
+        $this->itemtable->setVisible(true);
+           
+        $this->updateFilter();   
+          
+     }
+        
+     
+   
 }
+
 
 class CustItemDataSource implements \Zippy\Interfaces\DataSource
 {
@@ -554,10 +802,10 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $this->page = $page;
     }
 
-    private function getWhere( ) {
+    public function getWhere( ) {
 
         $form = $this->page->filter;
-        $where = "1=1 ";
+        $where = "1=1";
         $key = $form->searchkey->getText();
         $brand = $form->searchbrand->getText();
         $store = $form->searchstore->getText();
@@ -593,15 +841,42 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $sortfield = "cust_name asc";
-
+        $w=trim($this->getWhere() );
+        if($w=='1=1') $sortfield='';
         $l = CustItem::find($this->getWhere(), $sortfield, $count, $start);
 
         return $l;
     }
 
     public function getItem($id) {
-        return Item::load($id);
+        return CustItem::load($id);
     }
 
 }
 
+class CustXItemDataSource implements \Zippy\Interfaces\DataSource
+{ 
+    private function getWhere( ) {
+
+     
+        $where = "status=0 and detail like '%<custitemcode>%'  and detail not like '%<custitemcode></custitemcode>%'  ";
+     
+
+        return $where;
+    }
+
+    public function getItemCount() {
+        return Customer::findCnt($this->getWhere());
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+       
+        $l = Customer::find($this->getWhere(),'customer_name', $count, $start);
+
+        return $l;
+    }
+
+    public function getItem($id) {
+        return Customer::load($id);
+    }
+}

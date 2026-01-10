@@ -3,6 +3,8 @@
 namespace App\API;
 
 use App\Entity\Item;
+use App\Entity\CustItem;
+use App\Entity\SubstItem;
 use App\Helper as H;
 
 class items extends JsonRPC
@@ -86,28 +88,27 @@ class items extends JsonRPC
                 'cat_id'       => $item->cat_id
             );
 
-           // $it = array_merge($it, $item->getData());
-
-           // unset($it['detail']);
-           // unset($it['disabled']);
+          
 
 
-            if (strlen($item->price1) > 0) {
+            if ( ($item->price1 ?? 0) > 0) {
                 $it['price1'] = $item->price1;
             }
-            if (strlen($item->price2) > 0) {
+            if ( ($item->price2 ?? 0) > 0) {
                 $it['price2'] = $item->price2;
             }
-            if (strlen($item->price3) > 0) {
+            if ( ($item->price3 ?? 0) > 0) {
                 $it['price3'] = $item->price3;
             }
-            if (strlen($item->price4) > 0) {
+            if ( ($item->price4 ?? 0) > 0) {
                 $it['price4'] = $item->price4;
             }
-            if (strlen($item->price5) > 0) {
+            if ( ($item->price5 ?? 0) > 0) {
                 $it['price5'] = $item->price5;
             }
-         
+            foreach($item->getcf(true) as $cf)  {
+                $it[''.$cf->code] = $item->val;
+            }
             $list[] = $it;
         }
 
@@ -222,6 +223,123 @@ class items extends JsonRPC
         return array('item_code' => $item->item_code);
     }
 
+    //товары у поставщика
+    public function custitemlist($args) {
+
+        $list = array();
+        $w = '1=1';
+        if ($args['customer_id'] > 0) {
+            $w = $w . " and customer_id=" . $args['customer_id'];
+        }
+        if (strlen($args['searchkey'] ??'') > 0) {
+            $skey = CustItem::qstr('%' . $args['searchkey'] . '%');
+            $key = CustItem::qstr($args['searchkey']);
+            $w  = "   (cust_name like {$skey} or cust_code = {$key}  or bar_code = {$key} )  ";
+        }
+       
+        foreach ( CustItem::findYield($w, '') as $item) {
+            $plist = array();
+
+            $it = array(
+               
+                'customer_id'    => $item->customer_id,
+                'customer_name'     => $item->customer_name,
+                'custname'     => $item->custname,
+                'cust_code'     => $item->cust_code,
+                'comment'  =>   str_replace("'",'`', str_replace('"','`',$item->comment) )  ,
+                'brand'      => $item->brand,
+                'bar_code'    => $item->bar_code,
+                'store' =>    $item->store,
+                'quantity'     =>H::fqty($item->quantity),
+                'price'       => H::fa($item->price )
+            );
+
+       
+            $list[] = $it;
+        }
+
+
+         return $list;
+    }
+     public function custitemsave($args) {
+        if (strlen($args['cust_name']) == 0) {
+            throw new \Exception("Не задано назву");
+        }
+      
+        $item = new CustItem();
+        $item->customer_id = $args['customer_id'];
+        $item->cust_name = $args['cust_name'];
+        $item->cust_code = $args['cust_code'];
+        $item->brand = $args['brand'];
+        $item->bar_code = $args['bar_code'];
+        $item->store = $args['store'];
+        $item->quantity = doubleval($args['quantity']);
+        $item->price = doubleval($args['price']);
+        $item->save();
+        
+     
+
+        
+        return [];
+    }
+    
+    //замены  и аналоги
+    public function substitemlist($args) {
+
+        $list = array();
+        $w = '1=1';
  
+        if (strlen($args['searchkey'] ??'') > 0) {
+            $skey = SubstItem::qstr('%' . $args['searchkey'] . '%');
+            $key = SubstItem::qstr($args['searchkey']);
+            $w  = "   (itemname like {$skey} or origcode = {$key}  or coalesce(origbrand,'') = {$key} )  ";
+            
+        }
+       
+        foreach ( SubstItem::findYield($w, '') as $item) {
+            $plist = array();
+
+            $it = array(
+               
+                'itemname'    => $item->itemname,
+                'origcode'     => $item->origcode,
+                'origbrand'     => $item->origbrand,
+                'substcode'      => $item->substcode,
+                'substbrand'    => $item->substbrand 
+                 
+            );
+
+       
+            $list[] = $it;
+        }
+
+
+         return $list;
+    }
+     public function custitemadd($args) {
+        if (strlen($args['origcode']) == 0) {
+            throw new \Exception("Не задано артикул");
+        }
+      
+        $item = new SubstItem();
+        $item->itemname = $args['itemname'];
+        $item->origcode = $args['origcode'];
+        $item->origbrand = $args['origbrand'];
+        $item->substcode = $args['substcode'];
+        $item->substbrand = $args['substbrand'];
+        $item->save();
+        
+        $item = new SubstItem();
+        $item->itemname = $args['itemname'];
+        $item->origcode = $args['substcode'];
+        $item->origbrand = $args['substbrand'];
+        $item->substcode = $args['origcode'];
+        $item->substbrand = $args['origbrand'];
+        $item->save();
+
+        
+        return [];
+    }
+   
   
 }

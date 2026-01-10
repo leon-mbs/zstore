@@ -15,11 +15,11 @@
                 <div class="col-12 col-md-10 col-xl-8">
                 {{/usecattree}}    
                     <div zippy="categorytable">
-                        <h3>Категорії товарів
+                        <h3>Категорії (групи) товарів
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                                data-toggle="popover"
-                               data-placement="bottom" data-content="Категорії призначені для групування товарів в Прайс, а також для
-                               визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно"></i>
+                               data-placement="bottom" data-content="Категорії призначені для групування товарів в Прайсі, а також для
+                               визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно. Iєрархію категрій вминається  в довіднику ТМЦ"></i>
 
                         </h3>
                         <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
@@ -83,7 +83,7 @@
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="editcat_name">Назва</label>
-                            <input autofocus="on"    required  class="form-control" zippy="editcat_name"/>
+                            <input autofocus="on"    required="on"  class="form-control" zippy="editcat_name"/>
                         </div>
                        <div class="form-group">
                             <label for="editcat_desc">Примiтка</label>
@@ -173,7 +173,7 @@
                         </div>                     
                     <div class="form-group  ">
                          <label   for="editprice">Змiнити на  суму або процент</label>
-                             <input  required  style="width: 100px"   class="form-control" zippy="chprice"/>
+                             <input  required="on"  style="width: 100px"   class="form-control" zippy="chprice"/>
 
                              <small class="form-text text-muted">Наприклад  5, -2, 3%, -0.5%. </small>
 

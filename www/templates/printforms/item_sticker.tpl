@@ -18,13 +18,19 @@
                 <td  >{{price}}</td>
                 <td  ><b> {{sum}}</b></td>
             </tr>
-          
+             {{#term}}
+             <tr  >
+                <td     colspan="3">
+               Придатний до   {{term}}
+                 </td>
+                </tr> 
+           {{/term}}        
             <tr  >
                 <td style="padding:20px;" align="center" colspan="3">
                 <img style="width:80%" src="{{dataUri}}" >
                  </td>
                 </tr>
-           
+
           
      
             

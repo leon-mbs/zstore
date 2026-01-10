@@ -27,8 +27,12 @@ class EmployeeList extends \App\Pages\Base
 {
     private $_employee;
     private $_blist;
-    public $_msglist         = array();
-    
+    public $_msglist    = array();
+    public $_fileslist  = array();
+   
+    private $_zlist=[];
+    private $_alist=[];
+      
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('EmployeeList')) {
@@ -73,28 +77,44 @@ class EmployeeList extends \App\Pages\Base
         $this->employeedetail->add(new CheckBox('editinvalid'));
         $this->employeedetail->add(new CheckBox('editcoworker'));
 
-
-        $this->add(new Panel("accp"))->setVisible(false);
-        $this->accp->add(new Label("accname"));
-        $this->accp->add(new ClickLink("accback"))->onClick($this, 'cancelOnClick');
-
-        $this->accp->add(new Form('filters'))->onSubmit($this, 'OnSubmit');
-
-        $d = new \App\DateTime() ;
-        $d = $d->startOfMonth()->subMonth(1) ;
-
-        $this->accp->filters->add(new Date('from' ));
-        $this->accp->filters->add(new Date('to',  ));
-        
-        $this->employeetable->employeelist->Reload();
-
+   
+ 
         $this->add(new Panel('contentview'))->setVisible(false);
+        $this->contentview->add(new Label("accname"));
+        $this->contentview->add(new ClickLink("accback"))->onClick($this, 'cancelOnClick');
+        
+        
+        
         $this->contentview->add(new Form('addmsgform'))->onSubmit($this, 'OnMsgSubmit');
         $this->contentview->addmsgform->add(new TextArea('addmsg'));
         $this->contentview->add(new DataView('dw_msglist', new ArrayDataSource(new Bind($this, '_msglist')), $this, 'msgListOnRow'));
         
+        $this->contentview->add(new Form('addfileform'))->onSubmit($this, 'OnFileSubmit');
+        $this->contentview->addfileform->add(new \Zippy\Html\Form\File('addfile'));
+        $this->contentview->addfileform->add(new TextInput('adddescfile'));
+        $this->contentview->add(new DataView('dw_files', new ArrayDataSource(new Bind($this, '_fileslist')), $this, 'fileListOnRow'));
 
- 
+        $this->contentview->add(new Form('filters'))->onSubmit($this, 'OnSubmitS');
+
+        $d = new \App\DateTime() ;
+        $d = $d->startOfMonth()->subMonth(1) ;
+
+        $this->contentview->filters->add(new Date('from', $d->getTimestamp()));
+        $this->contentview->filters->add(new Date('to' ));
+       
+        $conn = \ZDB\DB::getConnect();
+      
+        $sql = "select coalesce(sum(0-amount),0) as am, emp_id from empacc where  optype in(3,4)  group by emp_id "  ;
+        foreach($conn->Execute($sql) as $r){
+           $this->_zlist[$r['emp_id']]= H::fa($r['am']) ;
+        }
+        $sql = "select coalesce(sum(0-amount),0) as am, emp_id from empacc where  optype in(105)  group by emp_id   "  ;
+        foreach($conn->Execute($sql) as $r){
+           $this->_alist[$r['emp_id']]= H::fa($r['am']) ;
+        }
+           
+        $this->employeetable->employeelist->Reload();
+
     }
 
 
@@ -108,29 +128,29 @@ class EmployeeList extends \App\Pages\Base
     public function employeelistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
 
+
         $row->add(new Label('position', $item->position));
         $row->add(new Label('department', $item->department));
         $row->add(new Label('emp_name', $item->emp_name));
         $row->add(new Label('login', $item->login));
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
 
+        $row->add(new Label('zarp',""));        
+        $row->add(new Label('av',""));        
+        
+        if(($this->_zlist[$item->employee_id] ?? 0 )>0){
+           $row->zarp->setText(H::fa($this->_zlist[$item->employee_id])); 
+        }
+        if(($this->_alist[$item->employee_id] ?? 0 )>0){
+           $row->av->setText(H::fa($this->_alist[$item->employee_id])); 
+        }
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
 
-        $conn = \ZDB\DB::getConnect();
-
-        $sql = "select coalesce(sum(amount),0) from empacc where     emp_id = ".$item->employee_id ;
-
-        $b = $conn->GetOne($sql);
-
-
-        $row->add(new ClickLink('acc',$this, 'accOnClick'))->setValue(''. H::fa($b));
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        
+     
         $row->add(new ClickLink('contentlist'))->onClick($this, 'viewContentOnClick');
-        if ($item->employee_id == ($this->_employee->employee_id ??0) ) {
-            $row->setAttribute('class', 'table-success');
-        }      
+             
     }
 
     public function deleteOnClick($sender) {
@@ -258,81 +278,63 @@ class EmployeeList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->employeetable->setVisible(true);
         $this->employeedetail->setVisible(false);
-        $this->accp->setVisible(false);
-    }
-
-    public function accOnClick($sender) {
-        $this->_employee = $sender->owner->getDataItem();
-        $this->employeetable->setVisible(false);
         $this->contentview->setVisible(false);
-        $this->accp->setVisible(true);
-        $this->accp->accname->setText($this->_employee->emp_name)  ;
-        $this->OnSubmit(null);
+        
     }
 
-    public function OnSubmit($sender) {
+ 
+   public function viewContentOnClick($sender) {
 
-        $emp_id = $this->_employee->employee_id ;
-        $from = intval( $this->accp->filters->from->getDate() );
-        $to = intval( $this->accp->filters->to->getDate() );
+        $this->employeetable->setVisible(false);
+        $this->contentview->setVisible(true);
+        $this->_employee = $sender->getOwner()->getDataItem();
+        $this->contentview->accname->setText($this->_employee->emp_name);
+
+      
+        $this->updateMessages();
+        $this->updateFiles();
+            
+        $this->_tvars['detacc'] =[];       
+   }
+   
+ //лицевой счет
+    public function OnSubmitS($sender) {
+
+
+        $emp_id =$this->_employee->employee_id ;
+        $from =  $this->contentview->filters->from->getDate();
+        $to =  $this->contentview->filters->to->getDate();
 
         $conn = \ZDB\DB::getConnect();
-
-        $sql = "select coalesce(sum(amount),0) from empacc_view where    emp_id = {$emp_id} and   createdon < " . $conn->DBDate($from);
-
-        $b = $conn->GetOne($sql);
-
-        $tosql ="";
-        if($to > 0) {
-           $tosql = " and createdon <= " . $conn->DBDate($to)  ;          
-        }
+          
+         $sql = "select * from empacc_view where     emp_id = {$emp_id}   and createdon >= " . $conn->DBDate($from) ;
+         if($to > 0) {
+             $sql = $sql . "  and createdon <= " . $conn->DBDate($to)  ;
+         }
+         $sql = $sql ." order  by  ea_id ";
         
-        $sql =    $sql = "select * from empacc_view where   emp_id = {$emp_id} and createdon >= " . $conn->DBDate($from) . " {$tosql} order  by  createdon ";
-        $rc = $conn->Execute($sql);
         $en=\App\Entity\EmpAcc::getNames();
 
         $detail = array();
-
-         
         
-        foreach ($rc as $row) {
-            $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
-            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
-            $detail[] = array(
+        foreach ($conn->Execute($sql) as $row) {
+              $detail[] = array(
                 'notes'    => $row['notes'],
                 'opname'    => $en[$row['optype']],
                 'dt'    => H::fd(strtotime($row['createdon'])),
-                'doc'   => $row['document_number'],
-                'begin' => H::fa($b),
-                'in'    => H::fa($in),
-                'out'   => H::fa($out),
-                'end'   => H::fa($b + $in - $out)
+                'amount'    => H::fa($row['amount']),
+                'doc'   => $row['document_number'] 
+                
             );
 
 
-            $b = H::fa($b + $in - $out);
+             
         }
 
-        $this->_tvars['mempacc']  =  $detail;
+        $this->_tvars['detacc']  =  $detail;
 
     }
-    public function OnFilter($sender) {
-
-        $this->employeetable->employeelist->Reload();
-
-    }
-
-   public function viewContentOnClick($sender) {
-
-    //    $this->employeetable->setVisible(false);
-        $this->contentview->setVisible(true);
-        $this->_employee = $sender->getOwner()->getDataItem();
-
-        $this->employeetable->employeelist->Reload(false);
- 
-        $this->updateMessages();
-         
-   }
+       
    
    public function OnMsgSubmit($sender) {
         $msg = new \App\Entity\Message();
@@ -377,7 +379,46 @@ class EmployeeList extends \App\Pages\Base
 
     }
 
+    public function OnFileSubmit($sender) {
 
+        $file = $this->contentview->addfileform->addfile->getFile();
+        if ($file['size'] > 10000000) {
+            $this->setError("Файл більше 10 МБ!");
+            return;
+        }
+
+        H::addFile($file, $this->_employee->employee_id, $this->contentview->addfileform->adddescfile->getText(), \App\Entity\Message::TYPE_EMP);
+        $this->contentview->addfileform->adddescfile->setText('');
+        $this->updateFiles();
+    }
+
+    // обновление  списка  прикрепленных файлов
+    private function updateFiles() {
+        $this->_fileslist = H::getFileList($this->_employee->employee_id, \App\Entity\Message::TYPE_EMP);
+        $this->contentview->dw_files->Reload();
+    }
+
+    //вывод строки  прикрепленного файла
+    public function filelistOnRow(DataRow $row) {
+        $item = $row->getDataItem();
+
+        $file = $row->add(new \Zippy\Html\Link\BookmarkableLink("filename", _BASEURL . 'loadfile.php?id=' . $item->file_id));
+        $file->setValue($item->filename);
+        $file->setAttribute('title', $item->description);
+        $user= \App\System::getUser() ;
+        $row->add(new ClickLink('delfile',$this, 'deleteFileOnClick'))->setVisible(   $item->user_id == $user->user_id || $user->rolename=='admins'  ); 
+    }
+
+    //удаление прикрепленного файла
+    public function deleteFileOnClick($sender) {
+        $file = $sender->owner->getDataItem();
+        H::deleteFile($file->file_id);
+        $this->updateFiles();
+  
+    }
+
+  
+    
 }
 
 

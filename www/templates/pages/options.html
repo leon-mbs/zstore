@@ -120,7 +120,7 @@
 
                             <table class="table table-sm">
                                 <tr zippy="salesourceslist">
-                                    <td><input class="form-control" style="width:100%;" zippy="salesourcename"  ></td>
+                                    <td><input  required="on"  class="form-control" style="width:100%;" zippy="salesourcename"  ></td>
                                     <td><a zippy="delsalesource"> <i class="fa fa-trash"></i></a></td>
                                  </tr>   
                             </table>
@@ -171,9 +171,9 @@
                           <table class="table table-sm">
                              <tr><th>Код</th><th>Назва</th><th>Курс</th><th></th>
                              <tr zippy="vallist">
-                             <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required >  </td>
-                             <td><input zippy="valname"   class="form-control"  required >  </td>
-                             <td><input zippy="valrate" pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice"  required >  </td>
+                             <td><input zippy="valcode" pattern="[A-Z]+" style="width:75px" class="form-control"  required="on" >  </td>
+                             <td><input zippy="valname"   class="form-control"  required="on" >  </td>
+                             <td><input zippy="valrate" pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice"  required="on" >  </td>
                              <td><a  zippy="valdel"><i class="fa fa-trash"></i></a></td>
                             </tr>  
                             
@@ -203,7 +203,7 @@
                 
                              <div class="form-group  ">
                                 <label>Типи відпускних цін</label>
-                                <input class="form-control" type="text" zippy="price1"  required >
+                                <input class="form-control" type="text" zippy="price1"  required="on" >
                                 <input class="form-control" type="text" zippy="price2">
                                 <input class="form-control" type="text" zippy="price3">
                                 <input class="form-control" type="text" zippy="price4">
@@ -236,7 +236,14 @@
                                 <small>Дата, раніше якої заборонено виконувати проводки</small>
 
                             </div> 
-                                             
+                            <div class="form-group  ">
+                                <label for="storepart">Склад  комплектуючих i матерiалiв  </label>
+                                <select class="form-control" zippy="storepart"> 
+                                    <option value="0">Не вказано</option>
+                                </select>
+                                <small class="compact">Для автосписання в комплектах. Якщо не вказано береться  склад  з документу.</small>
+
+                            </div>                    
                            <div class="form-group  ">
                                 <label for="usesnumber">Облік ТМЦ за серіями  </label>
                                 <select class="form-control" zippy="usesnumber"> 
@@ -245,12 +252,27 @@
                                 <small>Має бути  встановлено прапорець в  довіднику  ТМЦ </small>
 
                             </div>
-                            
+                          
+                        
+                             <div class="form-group">
+                                <label   for="deliverytype">Доставка (в закупці) за замовчанням</label>
+                                 <select class="form-control" zippy="deliverytype">
+                                    <option value="1">Вiднести до загальних витрат</i> </option>
+                                    <option value="2">Розподiлити на собiвартiсть</i> </option>
+                                    <option value="3">Компенсувати постачальнику</option>
+                                    <option value="4">Оплата стороннiй службi </option>
+                                </select>
+                            </div>  
                             <div class="form-check">    
                                 <input zippy="usescanner" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="usescanner">Підтримка сканера штрих       кодів </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Використання сканера штрих кодів для введення товарів в видаткову накладну "></i>
+                                   title="Використання сканера штрих кодів для долавання ТМЦ в документах "></i>
+                            </div>                                      
+                             <div class="form-check">    
+                                <input zippy="usescale" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usescale">Підтримка   електронних ваг </label>
+                                <a target="_blank" href="https://zippy.com.ua/ext#id17"><i class="fa fa-info-circle  "  title="Опис"></i></a>
                             </div>                                      
                              <div class="form-check">
                                 <input zippy="storeemp" type="checkbox" class="form-check-input">
@@ -264,7 +286,7 @@
                                 <input zippy="allowminus" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="allowminus">Дозволити списання ТМЦ в   мiнус </label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Дозвiл списувати  кiлькiсть бiльшу наявної. Увага! Це прриводить до неточного  облiку ТМЦ.   "></i>
+                                   title=" Дозвiл списувати  кiлькiсть бiльшу наявної.  Може привести до неточного  облiку ТМЦ.   "></i>
                             </div>
                             <div class="form-check">
                                 <input zippy="allowminusmf" type="checkbox" class="form-check-input">
@@ -283,7 +305,7 @@
                                 <input zippy="useval" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="useval">Валюта в закупiвлi</label>
                                 <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Можливiсть вводити накладну в валютi та перерахунку курсової рiзнимцi при продажі.  "></i>
+                                   title=" Можливiсть вводити накладну в валютi та перерахунку курсової рiзницi при продажі.  "></i>
                             </div>
                        
                               {{#fiscal}} 
@@ -297,35 +319,12 @@
                             
 
                            
-                       
-                        
-                             <div class="form-check">
-                                <input zippy="spreaddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="spreaddelivery">Доставка на собiвартiсть</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Розподiлити доставку на собiвартiсть в ПН за замовчанням"></i>
-                            </div>
-                             <div class="form-check">
-                                <input zippy="baydelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="baydelivery">Оплата  доставки  покупцем</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Оплата  доставки  покупцем в ПН за замовчанням"></i>
-                            </div>
-                       
-                                                                                        
-                             <div class="form-group">
-                                <label for="cashier">Касир в чеку за замовчанням</label>
-                                <input   class="form-control"   zippy="cashier">
-                                <small>Якщо не задано береться  поточний користувач</small>
-
-                            </div>                            
-                                 
                             
                                                                                         
                                <div class="form-group">
                                 <label for="checkslogan">Фраза в кiнцi чеку</label>
                                 <textarea   class="form-control"   zippy="checkslogan"></textarea>
-                                <small>Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
+                                <small  class="compact">Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
                                  Якщо бiльш нiж одна - буде вибиратись випадково.</small>
 
                             </div>                            
@@ -342,7 +341,7 @@
         
 
             </div>
-            <div class="col-12  col-md-5 col-xl-4  ">
+            <div class="col-12  col-md-4 col-xl-3  ">
             
        
                 <div class="card">
@@ -351,7 +350,7 @@
                       <small>  <a href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-link"></i> Налаштування  принтера</a> </small>
                        <details>
                             <summary>Перелік тегів шаблону</summary>
-                            <small>Файл шаблону этикеток /templates/printforms/item_tag.tpl. (item_tag_ps.tpl для  принт сервера)
+                            <small>Файл шаблону етикеток /templates/printforms/item_tag.tpl. (item_tag_ps.tpl для  принт сервера)
                             <br>Детально  про  роботу  з  принтерами  <a href="https://zippy.com.ua/ext#id10" target="_blank">тут</a></small>
                             <table class="ctable">
                               <tr><td><b>name</b></td><td>Назва ТМЦ</td></tr>
@@ -370,8 +369,8 @@
                               <tr><td><b>isqrcode</b></td><td>Друкувати QR код</td></tr>
                               <tr><td><b>isweight</b></td><td>Друкувати вагу</td></tr>
                               <tr><td colspan="2" align="center">Для  системного  принтера</td></tr>
-                              <tr><td><b>qrcodeattr</b></td><td>Вставляеться  в  тег img</td></tr>
-                              <tr><td><b>barcodeattr</b></td><td>Вставляеться  в  тег img</td></tr>
+                              <tr><td><b>qrcodeattr</b></td><td>Вставляється  в  тег img</td></tr>
+                              <tr><td><b>barcodeattr</b></td><td>Вставляється  в  тег img</td></tr>
                               <tr><td><b>barcodewide</b></td><td>Напис під штрих-кодом </td></tr>
                               <tr><td colspan="2" align="center">Для ESCPOS принтера (принт-сервера)</td></tr>
                               <tr><td><b>qrcode</b></td><td>Текст для  QR коду</td></tr>                              
@@ -427,18 +426,19 @@
 
              
                 <div class="card">
-                    <div class="card-body">
+                    
                         <h4>Налаштування SMS сервiсу    </h4>
                         <form zippy="sms">    
-
+                           
                             <div class="form-group  ">
                                 <label for="smstype">Сервiс</label>
                                 <select class="form-control" zippy="smstype">
-                                    <option value="0">Не обрано</option>
+                                    <option value="0">Не використовується</option>
                                 </select>
-                                <span zippy="semysmssite"><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
-                                <span zippy="smsclubsite"><a href="https://smsclub.mobi/" target="_blank">https://smsclub.mobi/</a></span>
-                                <span zippy="smsflysite"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                                <span data-label="smssemytoken" ><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
+                                <span data-label="smscluban" ><a href="https://smsclub.mobi/" target="_blank">https://smsclub.mobi/</a></span>
+                                <span data-label="flysmsan"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                            
                             </div>
                             <div class="form-group">
                                 <label data-label="smssemytoken" for="smssemytoken">Токен</label>
@@ -491,18 +491,47 @@
              
                             </div>
 
-
+                             <div class="form-group  ">
+                                <label for="smscustlang">Мова скрипта</label>
+                                <select class="form-control" zippy="smscustlang">
+                          
+                                </select>
+                                  <small data-label="smscustlang">JS не пiдходить для вiдправки в  фоновому  режимi, наприклад з планувальника</small>
+                            </div>
+                              <div class="form-group  ">
+                                <label for="smscustscript">Код скрипта</label>
+                                <textarea style="height:400px" class="form-control" zippy="smscustscript">
+                          
+                                </textarea>
+                               
+                                 <small data-label="smscustscript" >
+                                   <details >
+                        <summary  >Опис</summary>
+                                   <b>JS</b><br>
+                                   Скрипт, що виконує  запит  до  вибраного  SMS сервiсу, має реалiзувати 
+                                   тiло вбудованої функцiї яка буде викликатись системою з двома  строковими параметрами: phone i sms. 
+                                   Третiй параметр - функцiя callback що приймає  строковий параметр. В  callback можна передати  строку помилки, якщо така  виникне.
+                                   Якщо помилок  нема  callback викликається  з  пустою  строкою.
+                                   <br>  <b>PHP</b><br>
+                                   Для PHP скрипта на  входi автоматично  створяться  змiннi $phonе i $sms з данними. 
+                                   Скрипт  має повернути пусту  строку  або  текст  помилки, якщо така  виникла 
+                                   <br><br>Технiчно пiд виглядом  SMS  вiдправки  може бути реалiзований будь який  сервiс  повiдомлень що має  вiдповiдний API
+                                 </details>
+                                 </small>     
+                                 
+                            </div>
+                               
                             <div class="form-group">
                                 <button zippy="smssubmit" class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                             <div class="form-group">
-                                <span><i class="fa fa-exclamation-triangle"></i> Перед перевiркою збережiть налаштування    </span> 
+                                <span data-label="smstestphone"><i class="fa fa-exclamation-triangle"></i> Перед перевiркою збережiть налаштування    </span> 
                             </div>
                             <div class="form-group">
                                 <label   for="smstestphone">Телефон</label>
                                 <input zippy="smstestphone"   class="form-control"  >
 
-                            </div>
+                            </div> 
                             <div class="form-group">
                                 <label   for="smstesttext">Повiдомлення</label>
                                 <input zippy="smstesttext"   class="form-control"  >

@@ -39,7 +39,7 @@ class Stock extends \ZCL\DB\Entity
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
 
-        $entitylist = self::find($criteria, " sdate asc");
+        $entitylist = self::find($criteria, " itemname asc,sdate asc");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
@@ -49,7 +49,10 @@ class Stock extends \ZCL\DB\Entity
                 $name .= ', ' . $value->item_code ;
             }
             if (strlen($value->snumber) > 0) {
-                $name .= ', С/Н ' . $value->snumber . ' ' . \App\Helper::fd($value->sdate) ;
+                $name .= ', С/Н ' . $value->snumber    ;
+                if($value->sdate >0) {
+                    $name .= ' ' . \App\Helper::fd($value->sdate) ;
+                }
             }
              
             $name .= ', ц. ' . \App\Helper::fa($value->partion) ;
@@ -126,9 +129,9 @@ class Stock extends \ZCL\DB\Entity
                 $conn = \ZDB\DB::getConnect();
                 $where = "   stock_id = {$stock_id} and  document_date  <= " . $conn->DBDate($date);
                 $sql = " select coalesce(sum(quantity),0) AS quantity  from entrylist_view  where " . $where;
-                return $conn->GetOne($sql);
+                return \App\Helper::fqty(  $conn->GetOne($sql) );
             } else {
-                return $stock->qty;
+                return  \App\Helper::fqty($stock->qty);
             }
         }
     }
@@ -147,7 +150,7 @@ class Stock extends \ZCL\DB\Entity
         $stlist = self::find($where, ' stock_id   ');
 
 
-        $qty = $item->quantity;//необходимое  количество
+        $qty = \App\Helper::fqty($item->quantity);//необходимое  количество
         $last = null;
         foreach ($stlist as $st) {
             $last = $st;
@@ -191,6 +194,7 @@ class Stock extends \ZCL\DB\Entity
                     $last->partion = $lastpartion;
                     $last->snumber = $item->snumber;
                     $last->sdate = $item->sdate;
+                    $last->emp_id = $emp_id;
                     $last->save();
                 } else {
                     // $last->partion = $item->price;
@@ -204,3 +208,4 @@ class Stock extends \ZCL\DB\Entity
     }
 
 }
+ 

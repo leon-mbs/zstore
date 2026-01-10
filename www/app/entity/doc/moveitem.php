@@ -85,5 +85,4 @@ class MoveItem extends Document
         return 'ПТ-000000';
     }
 
-    
 }

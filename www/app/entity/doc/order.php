@@ -87,7 +87,7 @@ class Order extends \App\Entity\Doc\Document
                         "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,
-                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
+                        "payed"           => ($this->headerdata['payed'] ?? 0) > 0 ? H::fa($this->headerdata['payed'] ) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );                                                                               
         $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
@@ -153,7 +153,7 @@ class Order extends \App\Entity\Doc\Document
                         "firm_name"       => $firm["firm_name"],
                         "phone"           => $firm["phone"],
                         "delivery"        => $this->headerdata["delivery_name"],
-                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "customer_name"   => strlen($this->headerdata["customer_name"]??'') > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "style"           => $style,
                         "total"           => H::fa($this->amount)
@@ -188,30 +188,7 @@ class Order extends \App\Entity\Doc\Document
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
-                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                    foreach ($set as $part) {
-
-                        $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null) {
-                            continue;
-                        }
-                        $itemp->quantity = $required * $part->qty;
-
-                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
-                        }
-
-                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
-
-                        foreach ($listst as $st) {
-                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                            $sc->setStock($st->stock_id);
-                            $sc->tag=Entry::TAG_TOPROD;
-                            $sc->createdon=time();
-
-                            $sc->save();
-                        }
-                    }
+                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
                 }
 
 
@@ -310,7 +287,8 @@ class Order extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-        $this->DoAcc() ;
+       $this->DoAcc() ;
+             
     }
     /**
     * список  неотправленных позиций
@@ -344,7 +322,6 @@ class Order extends \App\Entity\Doc\Document
          return $notsendqty;
     }    
     
-    
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
@@ -353,5 +330,5 @@ class Order extends \App\Entity\Doc\Document
          $this->DoAccPay('36');      
 
         
-    }    
+    }       
 }

@@ -133,7 +133,7 @@ class Invoice extends \App\Pages\Base
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+            if ($this->_doc->payed == 0 && $this->_doc->getHD('payed',0) > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
 
@@ -179,11 +179,12 @@ class Invoice extends \App\Pages\Base
                         
                         $this->docform->total->setText($basedoc->amount);
 
-                        $this->calcPay();
+               
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                     */
+                   
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -197,19 +198,12 @@ class Invoice extends \App\Pages\Base
 
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                       
-
-                        $this->docform->total->setText($basedoc->amount);
-
-                        $this->calcTotal();
-                        $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                         $this->_itemlist = array_merge($this->_itemlist, $basedoc->unpackDetails('detail2data'));
 
-
-                    }
-                    if ($basedoc->meta_name == 'GoodsIssue') {
+                      }
+                      if ($basedoc->meta_name == 'GoodsIssue') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
@@ -221,12 +215,10 @@ class Invoice extends \App\Pages\Base
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
                         $this->docform->fop->setValue($basedoc->headerdata['fop']);
-                     
-                        $this->docform->total->setText($basedoc->amount);
-
-                        $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+   
+                                        
                     }  
                     if ($basedoc->meta_name == 'Order') {
 
@@ -239,13 +231,13 @@ class Invoice extends \App\Pages\Base
                         $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
 
                         $this->docform->notes->setText("Рахунок для ". $basedoc->document_number);
-                     
-                        $this->docform->total->setText($basedoc->amount);
-
-                        $this->calcPay();
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                                        
                     }  
+                  
+                    $this->calcTotal();
+                    $this->calcPay();                    
                 }
             }
         }
@@ -344,9 +336,9 @@ class Invoice extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
     
         $item->pricenonds= $item->price - $item->price * $item->nds(true);
  
@@ -544,7 +536,7 @@ class Invoice extends \App\Pages\Base
     }
  
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
+        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getDouble()));
         $this->calcPay() ;
     }
   
@@ -611,8 +603,8 @@ class Invoice extends \App\Pages\Base
             $this->setError("Не введено товар");
         }
 
-        if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+        if (($this->docform->payment->getValue() > 0) == false) {
+            $this->setError("Не вказано банк");
         }
 
         $c = $this->docform->customer->getKey();
@@ -630,13 +622,13 @@ class Invoice extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
-        $price = $item->getLastPartion(0, "", false);
-        $this->editdetail->pricestock->setText(H::fa($price));
-
         $store_id = $this->docform->store->getValue();
 
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $price = $item->getPartion($store_id);
+        $this->editdetail->pricestock->setText(H::fa($price));
+
+       
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
         $price = $item->getPriceEx(array(
@@ -647,7 +639,7 @@ class Invoice extends \App\Pages\Base
 
 
         $this->editdetail->editprice->setText(H::fa($price));
-
+     
     }
 
     
@@ -794,15 +786,7 @@ class Invoice extends \App\Pages\Base
         }
     }
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
-
-
-        return $price;
-
-    }
+  
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());

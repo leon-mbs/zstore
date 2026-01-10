@@ -63,7 +63,8 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+  
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -75,6 +76,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->add(new Label('qtystock'));
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
@@ -176,7 +178,7 @@ class OutcomeItem extends \App\Pages\Base
         $item = Item::load($id);
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->sum = H::fa($item->quantity * $item->getPartion());
         
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
@@ -204,7 +206,8 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->total();
-
+        $this->wselitem->setVisible(false);
+   
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
@@ -216,7 +219,8 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
-
+        $this->wselitem->setVisible(false);
+   
         $this->editdetail->editquantity->setText("1");
     }
 
@@ -464,4 +468,17 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->detail->Reload();
         $this->docform->amount->setText(H::fa( $this->_doc->amount)) ;
     }
+    
+  public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
+    }
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edititem);
+    }    
 }

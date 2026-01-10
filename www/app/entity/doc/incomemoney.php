@@ -41,17 +41,17 @@ class IncomeMoney extends Document
          //   $ua->save();  
 
         }
-        
+
         return true;
     }
 
     public function generateReport() {
 
 
-        $pt = \App\Entity\IOState::getTypeList(1);
+        $pt = \App\Entity\IOState::getTypeListInM();
         $header = array(
             'amount'          => H::fa($this->amount),
-            'totalstr'        => \App\Util::money2str_ua($this->amount),
+            'totalstr'        => \App\Util::money2str($this->amount),
             'date'            => H::fd($this->document_date),
             "notes"           => nl2br($this->notes),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
@@ -115,11 +115,9 @@ class IncomeMoney extends Document
                 $b->save();
             }
         }
-        
-        
           $this->DoAcc();
+ 
     }
-    
     
  public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
@@ -145,5 +143,5 @@ class IncomeMoney extends Document
             
                          
     } 
-     
+       
 }

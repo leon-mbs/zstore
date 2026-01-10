@@ -244,11 +244,11 @@ class OrderFood extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
 
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->pureprice = $this->editdetail->editpureprice->getText();
         $item->disc = $this->editdetail->editdisc->getText();
 

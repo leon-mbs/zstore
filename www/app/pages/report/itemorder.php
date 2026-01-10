@@ -16,18 +16,20 @@ use Zippy\Html\Panel;
  */
 class ItemOrder extends \App\Pages\Base
 {
+     
     public function __construct() {
         parent::__construct();
 
         if (false == \App\ACL::checkShowReport('ItemOrder')) {
             return;
         }
-
+   
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
         $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='Order'  and (state= " . Document::STATE_INPROCESS . " or state =" . Document::STATE_NEW . " or state =" . Document::STATE_WP . " ) )";
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
-
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "disabled <> 1 and user_id in (select user_id from documents_view  where  meta_name  in('Order' )    )", 'username'), 0));
+ 
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -54,28 +56,40 @@ class ItemOrder extends \App\Pages\Base
         if ($cust > 0) {
             $where .= " and customer_id=" . $cust;
         }
+        $emp = $this->filter->emp->getValue();
         
+        if ($emp > 0) {
+            $where .= " and user_id=" . $emp;
+        }
+       
         $total = 0;
         $items = array();
 
         foreach (Document::findYield($where) as $doc) {
 
             foreach ($doc->unpackDetails('detaildata') as $item) {
-                if (!isset($items[$item->itemname])) {
-                    $items[$item->itemname] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0);
+                
+                
+                if (!isset($items[$item->item_id])) {
+                    
+                    $items[$item->item_id] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0,'code'=>$item->item_code);
                 }
-                $items[$item->itemname]['qty'] += $item->quantity;
+                $items[$item->item_id]['qty'] += $item->quantity;
                 $total += ($item->price * $item->quantity);
             }
         }
 
-        $names = array_keys($items);
-        sort($names);  //сортируем по  алфавиту
+        
+        usort($items,  function ($a, $b) {
+            return $a['itemname'] > $b['itemname'];
+        });  
+        
+        foreach ($items as $item) {
+            
+            if( doubleval($item['qty']) > 0) {
+                $detail[] = array('name' => $item['itemname'], 'msr' => $item['msr'], 'code' => $item['code'], 'qty' => H::fqty($item['qty']));                
+            }
 
-        foreach ($names as $name) {
-            $item = $items[$name];
-
-            $detail[] = array('name' => $item['itemname'], 'msr' => $item['msr'], 'qty' => H::fqty($item['qty']));
         }
 
 

@@ -13,7 +13,7 @@ class Base extends \Zippy\Html\WebPage
     public function __construct( ) {
 
         \Zippy\Html\WebPage::__construct();
-        global $_config;
+     
         $modules = \App\System::getOptions("modules");
         if($modules['shop'] != 1) {
             http_response_code(404);
@@ -56,10 +56,14 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
-        $this->_tvars["usepayment"] = false;// ($shop["paysystem"]??0) > 0 ;
-        $this->_tvars["wp"] = ($shop["paysystem"]??0) == 1;
-        $this->_tvars["lp"] = ($shop["paysystem"]??0) == 2;
-        $this->_tvars["qr"] = (($shop["paysystem"]??0) == 3 || ($shop["addqr"]??0) ==1) ;
+
+        $this->_tvars["usepayment"] =  false ;
+        $this->_tvars["qr"] = ($shop["mf_id"]??0) > 0 ;
+        if($this->_tvars["qr"]) {
+           $this->_tvars["usepayment"] = true ;            
+        }
+        
+        
         $this->_tvars["np"] = ($modules['np']??0) == 1;
 
         $this->add(new \Zippy\Html\Form\Form('searchform'));
@@ -183,13 +187,13 @@ class Base extends \Zippy\Html\WebPage
 
     protected function afterRender() {
         if (strlen(System::getErrorMsg()) > 0) {
-            App::$app->getResponse()->addJavaScript("toastr.error('" . System::getErrorMsg() . "',{'timeOut':'5000'})        ", true);
+            App::$app->getResponse()->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:6000})        ", true);
         }
         if (strlen(System::getWarnMsg()) > 0) {
-            App::$app->getResponse()->addJavaScript("toastr.warning('" . System::getWarnMsg() . "',{'timeOut':'3000'})        ", true);
+            App::$app->getResponse()->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{timeOut:3000})        ", true);
         }
         if (strlen(System::getSuccesMsg()) > 0) {
-            App::$app->getResponse()->addJavaScript("toastr.success('" . System::getSuccesMsg() . "',{'timeOut':'1000'})        ", true);
+            App::$app->getResponse()->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{timeOut:1000})        ", true);
         }
         if (strlen(System::getInfoMsg()) > 0) {
             App::$app->getResponse()->addJavaScript("toastr.info('" . System::getInfoMsg() . "')        ", true);

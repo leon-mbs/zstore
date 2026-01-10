@@ -106,7 +106,7 @@ class AccEntry extends \ZCL\DB\Entity
      * @param mixed $outprice
      */
      static function getItemsEntry($document_id,$tag,$outprice=false) {
-         $ac = self::getAccCode();
+         $ac = Account::getAccCode();
          $conn = \ZDB\DB::getConnect();
          $ret=[];
          $p="e.partion";

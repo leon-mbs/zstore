@@ -163,6 +163,11 @@ a {
     cursor:pointer;
 }
 
+small.compact {
+   line-height: 1.2em;
+   display:block ;
+}
+
 @media print {
             @page {
               margin: 0!important;

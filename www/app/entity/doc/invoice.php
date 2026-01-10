@@ -38,7 +38,7 @@ class Invoice extends \App\Entity\Doc\Document
               );
         }
 
-        $totalstr =  \App\Util::money2str_ua($this->payamount);
+        $totalstr =  \App\Util::money2str($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -53,6 +53,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "issign"          => strlen($firm['sign']) > 0,
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "iscustaddress"    => false,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
@@ -73,6 +74,7 @@ class Invoice extends \App\Entity\Doc\Document
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+ 
         $header["nds"] = false;
         $header["phone"] = false;
         $header["fphone"] = false;
@@ -88,6 +90,10 @@ class Invoice extends \App\Entity\Doc\Document
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }
+        if (strlen($cust->address) > 0) {
+            $header["iscustaddress"] = true;
+            $header["custaddress"] = $cust->address;
+        }
      
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
@@ -98,6 +104,9 @@ class Invoice extends \App\Entity\Doc\Document
         if (strlen($firm['phone']) > 0) {
             $header["fphone"] = $firm['phone'];
         }
+                                           
+        $header["address"] = $firm['address'];        
+        
         if ( ($this->headerdata["fop"] ??0) > 0) {
             $header["isfirm"] = false;
             $header["isfop"] = true;
@@ -106,6 +115,7 @@ class Invoice extends \App\Entity\Doc\Document
             $fop = $fops[$this->headerdata["fop"]] ;
             $header["fop_name"] = $fop->name ??'';
             $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';
         }
      
 
@@ -125,7 +135,7 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function Execute() {
         //списываем бонусы
-        if ($this->headerdata['paydisc'] > 0) {
+        if (($this->headerdata['paydisc'] ?? 0) > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->getDiscount() > 0) {
                 return; //процент
@@ -201,12 +211,10 @@ class Invoice extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-        $this->DoAcc();  
-           
+        $this->DoAcc();             
     }
-    
-    
-   public   function DoAcc() {
+
+    public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     
@@ -215,6 +223,5 @@ class Invoice extends \App\Entity\Doc\Document
       
                        
     } 
-    
-    
+        
 }

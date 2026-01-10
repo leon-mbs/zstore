@@ -40,7 +40,7 @@ class ServiceAct extends Document
                               "amount"       => H::fa($item->price * $item->quantity)
             );
         }
-        $totalstr =  \App\Util::money2str_ua($this->payamount);
+        $totalstr =  \App\Util::money2str($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -119,7 +119,7 @@ class ServiceAct extends Document
         }
         
         if ($state == self::STATE_FINISHED) {
-
+            $this->DoBalans() ; 
           //  $this->DoStore() ;
 
             $dd =      doubleval($this->headerdata['totaldisc'])   ;
@@ -139,8 +139,7 @@ class ServiceAct extends Document
 
                 $sc->save();
             }
-              $this->DoAcc();  
-  
+
         }
 
     }
@@ -224,8 +223,6 @@ class ServiceAct extends Document
                     
            } 
        } 
-       $this->DoAcc();  
-  
     }
 
     public function supportedExport() {
@@ -359,13 +356,11 @@ class ServiceAct extends Document
                 $b->optype = \App\Entity\CustAcc::BUYER;
                 $b->save();
             } 
-            
-        $this->DoAcc();  
-              
+         $this->DoAcc();  
+               
     }
-
-    
-  public   function DoAcc() {
+   
+    public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
          $conn = \ZDB\DB::getConnect();         

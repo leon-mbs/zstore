@@ -45,9 +45,10 @@ class PayList extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('fmfund', \App\Entity\MoneyFund::getList(), 0));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
+        $this->filter->add(new DropDownChoice('fiostate', \App\Entity\IOState::getTypeList(2), 0));
         $this->filter->add(new DropDownChoice('fsort', [], 0));
-        $this->filter->add(new Date('from', strtotime('-1 week')));
-        $this->filter->add(new Date('to', time()));
+        $this->filter->add(new Date('from', strtotime('-2 week')));
+        $this->filter->add(new Date('to' ));
 
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
@@ -202,7 +203,8 @@ class PayList extends \App\Pages\Base
                $doc->setHD('waitpay',1); 
                $doc->save();
             }
-          
+            
+              
             $conn->CommitTrans();
 
 
@@ -266,7 +268,8 @@ class PayList extends \App\Pages\Base
 
         $header = array();
         $header['document_number'] = $doc->document_number;
-        $header['firm_name'] = $doc['firm_name'] ;
+        $header['firm_name'] = $doc->headerdata['firm_name'] ;
+ 
         $header['customer_name'] = $doc->customer_name;
         $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
         $all = 0;
@@ -470,14 +473,19 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-        $where = "p.paytype<>1001 and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
+        $where = "p.paytype<>1001 and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) ;
+        
+        $to=$this->page->filter->to->getDate();
+        if($to > 0){
+          $where .=  " and  date(paydate) <= " . $conn->DBDate($to);  
+        }
         //        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
 
         $author = $this->page->filter->fuser->getValue();
 
         $cust = $this->page->filter->fcustomer->getKey();
         $mf = $this->page->filter->fmfund->getValue();
+        $iostate = $this->page->filter->fiostate->getValue();
 
 
         if ($cust > 0) {
@@ -490,6 +498,9 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         if ($author > 0) {
             $where .= " and p.user_id=" . $author;
         }
+        if ($iostate > 0) {
+            $where .= " and d.document_id in(select document_id from iostate where iotype={$iostate} ) " ;
+        }
 
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
@@ -498,10 +509,8 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
 
         if ($user->rolename != 'admins') {
             if ($user->onlymy == 1) {
-
                 $where .= " and d.user_id  = " . $user->user_id;
             }
-
             $where .= " and d.meta_id in({$user->aclview}) ";
         }
         return $where;

@@ -348,14 +348,17 @@ GROUP BY c.customer_name,
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pdate) {
-            return  "Не можна додавати оплату раніше  " .date('Y-m-d', $da);
-        }
+             $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d', $da) );
+            return;
+       }
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
             $this->setWarn('Сума більше необхідної');
         }
-        
+        if (in_array($this->_doc->meta_name, array( 'GoodsReceipt','InvoiceCust'))) {
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        }    
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
            
@@ -388,7 +391,9 @@ GROUP BY c.customer_name,
         }
         if ($payed > 0) {
             $this->_doc->payed = $payed;
+             
         }
+  
   
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
         $doc->DoBalans();

@@ -47,7 +47,7 @@ class TransItem extends Document
             \App\Entity\IOState::addIOState($this->document_id, $diff, \App\Entity\IOState::TYPE_OTHER_OUTCOME);
         }
         $this->DoAcc();  
-         
+        
         return true;
     }
 
@@ -93,7 +93,7 @@ class TransItem extends Document
     protected function getNumberTemplate() {
         return 'ПФ-000000';
     }
-
+   
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;

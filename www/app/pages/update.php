@@ -46,6 +46,10 @@ class Update extends \App\Pages\Base
         $this->_sql['6.13.0']='update6130to6140.sql';
         $this->_sql['6.14.0']='update6140to6150.sql';
         $this->_sql['6.15.0']='update6150to6160.sql';
+        $this->_sql['6.16.0']='update6160to6170.sql';
+        $this->_sql['6.17.0']='update6170to6180.sql';
+        $this->_sql['6.18.0']='update6180to800.sql';
+        $this->_sql['8.0.0']='update800to810.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -63,7 +67,7 @@ class Update extends \App\Pages\Base
     
          
         if(!is_array($data)){
-            $this->setError('Помилка завантаження version.json') ;
+            $this->setErrorTopPage('Помилка завантаження version.json') ;
             return  ;
         }
    
@@ -153,8 +157,8 @@ class Update extends \App\Pages\Base
              $this->_tvars['reinstall']  = false;
          } 
           $phpv =   phpversion()  ;
-          $this->_tvars['oldphpv']  = $phpv;    
-        
+          $this->_tvars['currphpv']  = $phpv;    
+         
  
           $b= version_compare("8.1.0" , $phpv);
           if($b==1)   {
@@ -229,7 +233,8 @@ class Update extends \App\Pages\Base
             if($b==1) {
                 @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
             }   else {
-                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor74.zip")) ;
+                $this->setError('Тiльки для версiй PHP > 8.1.0');
+                return;  
             }
  
      

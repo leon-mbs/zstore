@@ -105,8 +105,6 @@ class IncomeService extends Document
                 $stockto = Stock::getStock($store, $item->item_id, $item->price, $item->snumber, $item->sdate, true);
                 $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
                 $sc->setStock($stockto->stock_id);
-                $sc->tag=Entry::TAG_BAY;
-
                 $sc->save();
                 $amount = $amount + $item->quantity * $item->price;
                           
@@ -176,11 +174,11 @@ class IncomeService extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
-        $this->DoAcc();  
+          $this->DoAcc();  
 
     }
-     
-     public   function DoAcc() {
+    
+   public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
          $conn = \ZDB\DB::getConnect();         
@@ -200,5 +198,5 @@ class IncomeService extends Document
          $this->DoAccPay('63');      
                        
   }
-     
+         
 }

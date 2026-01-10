@@ -35,7 +35,9 @@
 
                         <th></th>
                         <th></th>
-                        <th  class="text-right">Баланс</th>
+                        <th class="text-right">До сплати</th>
+                        <th class="text-right">В пiдзвiтi</th>
+                      
                         <th></th>
                         <th></th>
                     </tr>
@@ -48,17 +50,18 @@
                         {{/usebranch}}
                         <td zippy="position"></td>
                         <td zippy="department"></td>
-                        <td class="text-right"><a zippy="acc" title="Рух по особовому рахунку"></a></td>
-                        <td><a zippy="contentlist" title="Коментарі"><i class="fa fa-comment"></i></a></td>
-                        <td ><a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a> 
+                        <td class="text-right" zippy="zarp" ></td>
+                        <td class="text-right" zippy="av" ></td>
+                        <td><a zippy="contentlist"  ><i class="fa fa-eye"></i></a></td>
+                        <td ><a zippy="edit" title="Редагування"><i class="fa fa-fa fa-edit"></i></a> 
                        &nbsp; &nbsp; <a  zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
                 <div zippy="pag"></div>
 
             </div>
-
-            </div>
+          </div>
+         
     
                 <form zippy="employeedetail">
                     <div class="row">
@@ -66,7 +69,7 @@
                       
                             <div class="form-group">
                                 <label for="editemp_name">Прізвище ім'я</label>
-                                <input autofocus="on"    required  zippy="editemp_name" class="form-control">
+                                <input autofocus="on"    required="on"  zippy="editemp_name" class="form-control">
 
                             </div>
                             <div class="form-group">
@@ -149,7 +152,7 @@
 
    
                         </div> 
-    </div>                          
+                     </div>                          
                     <div class="row">
                        <div class="col-12   ">
                    <div class="form-group">
@@ -163,61 +166,15 @@
                   </div>
                 </form>
                 
-            <div   class="row">
-               <div zippy="accp" class="col-12 col-lg-8 col-xl-6">
-             <a zippy="accback"><i class="fa fa-arrow-alt-circle-left"></i> До переліку</a>
             
-              <h4 zippy="accname"></h4>
-                 <small>Внести данi на особовий рахунок можна за допомогою Офiсного документу </small>
-                <div class="card">
-                    <form zippy="filters" class="form-inline">
-                                        
-                        <label for="from">З</label>
-                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
-
-                        <label for="to">по</label>
-                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
-                   
-                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
-
-                    </form>
-                 </div>
-
-
-                   <table class="table table-sm">
-                   <tr>
-                     <th>Дата</th>
-                     <th>Тип</th>
-                     <th class="text-right">Поч.</th>
-                     <th class="text-right">Дебет </th>
-                     <th class="text-right">Кредит </th>
-                     <th class="text-right">Кiн.</th>
-                     <th>Документ</th>
-                     <th>Коментар</th>
-
-                   </tr>
-                   {{#mempacc}}
-                      <tr>
-                        <td >{{dt}}</td>
-                        <td >{{opname}}</td>
-                        <td class="text-right">{{begin}}</td>
-                        <td class="text-right">{{in}}</td>
-                        <td class="text-right">{{out}}</td>
-                        <td class="text-right">{{end}}</td>
-                        <td >{{doc}}</td>
-                        <td >{{notes}}</td>
-
-
-                      </tr>    
-                   {{/mempacc}}                 
-                   </table>
-     
-              
-                </div>
-           </div>
        
-         <div zippy="contentview" class="row">      
-            <div class="col-6  col-md-6 col-xl-4 card">
+         <div zippy="contentview" class="row">  
+   <div class="col-12 ">  
+                <h5 zippy="accname"></h5>
+                <a zippy="accback">До переліку</a>
+              
+            </div>             
+            <div class="col-12 col-md-8 col-xl-3 ">
                    <h5> Коментарі </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_msglist">
@@ -233,13 +190,75 @@
                         <form zippy="addmsgform">
                             <div class="form-group">
                                 <label for="addmsg">Коментар</label>
-                                <textarea  required  class="form-control" zippy="addmsg"
+                                <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
                             <input class="btn btn-outline-success  " type="submit" value="Додати">
                         </form>
             </div>       
-       
+      
+          <div class="col-12 col-md-8 col-xl-3  "> 
+                      <h5> Прикріплені файли </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_files">
+                                <td><a zippy="filename" target="_blank"></a></td>
+                                <td style="width: 30px;"><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addfileform" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="addfile">Вибрати файл</label>
+                                <input type="file" class="form-control"  required="on"  zippy="addfile">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adddescfile">Опис </label>
+                                <input class="form-control" zippy="adddescfile">
+                            </div>
+
+
+                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+
+                        </form>   
+            </div>
+      
+          <div class="col-12  col-lg-8 col-xl-6">
+                <h3>Особовий  рахунок</h3>   
+                   
+                    <form zippy="filters" class="form-inline">
+                                        
+                        <label for="from">З</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+
+                        <label for="to">По</label>
+                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+
+                   
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                   
+               
+                 <table class="ctable mt-2">
+                    {{#detacc}}
+                      <tr>
+                        <td >{{dt}}</td>
+                        <td >{{opname}}</td>
+                        <td  class="text-right">{{amount}}</td>
+                        <td >{{doc}}</td>
+                        <td >{{notes}}</td>
+
+
+                      </tr>    
+                   {{/detacc}}  
+                   
+                 </table>  
+                
+            </div>
+                 
          </div> 
        
               <script>               

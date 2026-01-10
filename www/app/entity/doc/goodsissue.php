@@ -48,7 +48,7 @@ class GoodsIssue extends Document
             );
         }
 
-        $totalstr =  \App\Util::money2str_ua($this->payamount);
+        $totalstr =  \App\Util::money2str($this->payamount);
 
         $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
@@ -76,6 +76,7 @@ class GoodsIssue extends Document
                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                          "stamp"           => _BASEURL . $firm['stamp'],
                         "isstamp"         => strlen($firm['stamp']) > 0,
+                       "iscustaddress"    => false,
 
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
@@ -105,14 +106,15 @@ class GoodsIssue extends Document
             if (strlen($cust->phone) > 0) {
                 $header["phone"] = $cust->phone;
             }
-            if (strlen($cust->address) > 0) {
-                $header["address"] = $cust->address;
-            }
+       
             if (strlen($cust->edrpou) > 0) {
                 $header["edrpou"] = $cust->edrpou;
             }
 
-
+            if (strlen($cust->address) > 0) {
+                $header["iscustaddress"] = true;
+                $header["custaddress"] = $cust->address;
+            }
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
@@ -124,7 +126,8 @@ class GoodsIssue extends Document
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
         }
-
+        $header["address"] = $firm['address'];        
+    
         if ( ($this->headerdata["fop"] ??0) > 0) {
             $header["isfirm"] = false;
             $header["isfop"] = true;
@@ -133,6 +136,7 @@ class GoodsIssue extends Document
             $fop = $fops[$this->headerdata["fop"]] ;
             $header["fop_name"] = $fop->name ??'';
             $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';            
         }
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
@@ -166,7 +170,7 @@ class GoodsIssue extends Document
         }
 
         $amount = 0;
-        foreach ($this->unpackDetails('detaildata') as $item) {
+        foreach ($this->unpackDetails('detaildata') as   $item) {
 
             $onstore = H::fqty($item->getQuantity($this->headerdata['store'],"",0,$this->headerdata['storeemp']??0)) ;
             $required = $item->quantity - $onstore;
@@ -176,32 +180,7 @@ class GoodsIssue extends Document
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) {    //комплекты
-                    $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
-                    foreach ($set as $part) {
-                      
-
-                        $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null) {
-                            continue;
-                        }
-                        $itemp->quantity = $required * $part->qty;
-
-                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
-                        }
-                    
-                        $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
-
-                        foreach ($listst as $st) {
-                            $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
-                            $sc->setStock($st->stock_id);
-                            $sc->tag=Entry::TAG_TOPROD;
-
-                            $sc->save();
-                           
-                            
-                        }
-                    }
+                   $item->setToProd($required,$this->headerdata['store'],$this->document_id);
                 }
 
 
@@ -392,12 +371,13 @@ class GoodsIssue extends Document
             $b->createdon = strtotime($p['paydate']);
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
-        } 
+        }   
+   
         $this->DoAcc();        
+              
     }
-   
-   
-     public   function DoAcc() {
+    
+    public   function DoAcc() {
              if(\App\System::getOption("common",'useacc')!=1 ) return;
              parent::DoAcc()  ;
       
@@ -427,5 +407,5 @@ class GoodsIssue extends Document
                 \App\Entity\AccEntry::addEntry('641','36',$this->getHD('nds' ),$this->document_id,$date,\App\Entity\AccEntry::TAG_NDS )  ; 
                
             }    
-      }    
+      }        
 }

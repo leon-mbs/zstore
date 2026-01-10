@@ -88,7 +88,7 @@ class CustAcc extends \ZCL\DB\Entity
 
         $bonus = 0;
 
-        if ($doc->headerdata['bonus'] > 0) { //списание
+        if (($doc->headerdata['bonus']??0 ) > 0) { //списание
 
 
             $b = new CustAcc();

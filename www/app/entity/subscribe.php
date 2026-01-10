@@ -310,7 +310,15 @@ class Subscribe extends \ZCL\DB\Entity
         $list = self::find('disabled <> 1 and sub_type= ' . self::EVENT_ENDDAY);
         foreach ($list as $sub) {
             $options=[];
-         
+            $options['phone'] = '';
+            $options['viber'] = '';
+            $options['email'] = '';
+            $options['chat_id'] = '';
+            $options['notifyuser'] = '';
+            $options['chat_id'] = '';
+            $options['email'] = '';
+            
+       
             $u=null;
           
             if ($sub->reciever_type == self::RSV_USER) {
@@ -532,7 +540,7 @@ class Subscribe extends \ZCL\DB\Entity
         }
 
 
-        if ($doc->headerdata['payment'] > 0) {
+        if ($doc->getHD('payment',0) > 0) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
             if(strlen($mf->bank)>0) {
@@ -670,7 +678,7 @@ class Subscribe extends \ZCL\DB\Entity
                              'msr'          => $item->msr,
                              'qty'          => \App\Helper::fqty($item->quantity),
                              'price'        => \App\Helper::fa($item->price),
-                             'summa'        => \App\Helper::fa($item->price * $item->quantity)
+                             'summa'        => \App\Helper::fa(doubleval($item->price) * doubleval($item->quantity))
             );
         }
 
@@ -958,7 +966,21 @@ class Subscribe extends \ZCL\DB\Entity
 
                 return $response;
             }
-
+            
+            if ($sms['smstype'] == 4) { //кастомный код
+                $text = str_replace("'","`",$text) ;
+                $text = str_replace("\"","`",$text) ;
+                if($sms['smscustlang'] == 'js') {
+                   \App\Application::$app->getResponse()->addJavaScript("sendSMSCust('{$phone}','{$text}')",true) ;
+                }
+                if($sms['smscustlang'] == 'php') {
+                   $code= ' $phone="'.$phone.'" ; $sms="'.$text.'" ; '  .  base64_decode(  $sms['smscustscript'] ) ;  
+                   $ret= eval($code);  
+                   if(strlen($ret??'')>0) {
+                       \App\System::setErrorMsg($ret)  ;
+                   }
+                }
+            }
 
         } catch(\Exception $e) {
 

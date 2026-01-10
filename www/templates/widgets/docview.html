@@ -9,7 +9,10 @@
 <ul class="nav nav-tabs">
   
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма для друку</a>
+    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма A4</a>
+  </li>
+  <li class="nav-item" v-show="docdata.exports.pos">
+    <a class="nav-link  " data-toggle="tab" href="#tprintpos"><i class="fa fa-print"></i> Чекова форма</a>
   </li>
   
   <li class="nav-item">
@@ -43,19 +46,21 @@
         <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
         <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode mr-2"></i>  </a>
     
-        <span v-show="docdata.exports.pos">
-       
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-cash-register mr-1"></i> </a>
-         </span>            
+               
        
        <br>
                     
 
         <div id="preview" v-html="docdata.html" >  
         </div>
-        <div id="previewpos" style="display:none;" v-html="docdata.htmlpos" >
-        </div> 
+     
+  </div>
+   <div class="tab-pane      " id="tprintpos"> 
+        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print mr-1"></i> </a>
+       <br>    
+       <div id="previewpos"   v-html="docdata.htmlpos" >
+        </div>  
   </div>
   
   <div class="tab-pane  " id="tdocs">
@@ -153,16 +158,18 @@
  <div class="tab-pane  " id="thist">
              <div class="row" style="font-size:smaller">
 
-                        <div class="col-auto ">
+                        <div class="col-auto  ">
                             <h5>Iсторiя статусiв</h5>
                             <table class="table table-sm">
+                             
                                 <tr>
                                     <th>Статус</th>
                                     <th>Дата</th>
                                     <th>Змiнив</th>
 
 
-                                </tr>
+                                </tr> 
+                            
                                 <tr  v-for="item   in docdata.loglist"  >
                                     <td >{{item.statename}}</td>
                                     <td class="text-nowrap "  >{{item.statedate}}</td>
@@ -172,7 +179,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-auto " v-show="docdata.paylist.length >0">
+                        <div class="col-auto  " v-show="docdata.paylist.length >0">
                             <h5>Оплати</h5>
                             <table class="table table-sm">
                                 <tr>
@@ -194,7 +201,7 @@
                                 </tr>
                             </table>
                         </div>
-                        <div class="col-auto " v-show="docdata.entrylist.length >0">
+                        <div class="col-auto  " v-show="docdata.entrylist.length >0">
                             <h5>Проводки по складу</h5>
                             <table class="table table-sm">
                                 <tr>
@@ -222,8 +229,7 @@
                                 </tr>
                             </table>
                         </div>
-                        
-                       <div class="col-auto " v-show="docdata.acclist.length >0">
+                    <div class="col-auto   " v-show="docdata.acclist.length >0">
                             <h5>Бух. проводки</h5>
                             <table class="table table-sm">
                                  <tr>
@@ -242,7 +248,7 @@
 
                                 </tr>
                             </table>
-                        </div>
+                        </div>      
                         
                     </div>
   </div>
@@ -293,14 +299,12 @@
             var _docid =0
         
             function printform() {
-                $('#previewpos').attr('style', 'display:none');
-                $('#preview').attr('style', 'display:block');
+      
                 $('#preview').printThis();
             }
 
             function printpos() {
-                $('#preview').attr('style', 'display:none');
-                $('#previewpos').attr('style', 'display:block');
+          
                 {{^printserver}}
                   $('#previewpos').printThis();
                 {{/printserver}}
@@ -341,6 +345,8 @@
                    path:'',
                    loaded:false,
                   docdata:{
+                      paylist:[] ,
+                      entrylist:[] ,
                       exports:{} ,
                       qr:{}
                   } ,
@@ -434,9 +440,9 @@
                   {    
                       var ret = JSON.parse(data) ;
                       if(ret.ok==true) {
-                           toastr.success('Вiдправлено','',{'timeOut':'2000'})   
+                           toastr.success('Вiдправлено','',{timeOut:2000})   
                       }  else {
-                           toastr.error(ret.error,'',{'timeOut':'5000'})                             
+                           toastr.error(ret.error,'',{timeOut:5000})                             
                       }
                                          
                        

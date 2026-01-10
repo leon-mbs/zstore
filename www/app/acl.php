@@ -349,7 +349,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg("Немає права відміни документа ". self::$_metasdesc[$doc->meta_name]);
+            System::setErrorMsg("Немає права скасування документа ". self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }

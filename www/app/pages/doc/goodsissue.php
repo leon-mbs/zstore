@@ -35,7 +35,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_rowid     = -1;
     private $_rownumber = 1;
     private $_orderid   = 0;
-    private $_fops =[];
+ 
     private $_changedpos  = false;
 
     /**
@@ -88,11 +88,11 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('order'));
 
         $this->docform->add(new TextInput('notes'));
-        $this->_fops=[];
+        $fops=[];
         foreach(($firm['fops']??[]) as $fop) {
-          $this->_fops[$fop->id]=$fop->name ; 
+          $fops[$fop->id]=$fop->name ; 
         }
-        $this->docform->add(new DropDownChoice('fop', $this->_fops,0))->setVisible(count($this->_fops)>0) ;
+        $this->docform->add(new DropDownChoice('fop', $fops,0))->setVisible(count($fops)>0) ;
 
         $cp = \App\Session::getSession()->clipboard;
         $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
@@ -134,6 +134,7 @@ class GoodsIssue extends \App\Pages\Base
 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
+             
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -176,7 +177,7 @@ class GoodsIssue extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('GoodsIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-
+         
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -338,6 +339,21 @@ class GoodsIssue extends \App\Pages\Base
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
                             $item->price = $item->getPrice(); //последние  цены
                             $this->_itemlist[ ] = $item;
+                        }
+                        $this->calcTotal();
+                        $this->calcPay();
+                    }
+                    
+                      if ($basedoc->meta_name == 'Inventory') {
+
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                    
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            if (doubleval($item->qfact) < doubleval($item->quantity)) {
+                                $item->price = $item->getLastPartion($basedoc->headerdata['store']);
+                                $this->_itemlist[] = $item; 
+                            }
+                                     
                         }
                         $this->calcTotal();
                         $this->calcPay();
@@ -580,12 +596,12 @@ class GoodsIssue extends \App\Pages\Base
         $item = Item::load($id);
         $store_id = $this->docform->store->getValue();
 
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->snumber = trim($this->editdetail->editserial->getText());
         $qstock = $this->editdetail->qtystock->getText();
 
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $item->price) {
@@ -710,7 +726,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
        
-        $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->payamount =  doubleval($this->docform->payamount->getText());
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
         $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
@@ -808,13 +824,13 @@ class GoodsIssue extends \App\Pages\Base
     }
 
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getText());
+        $this->docform->totaldisc->setText($this->docform->edittotaldisc->getDouble());
         $this->calcPay() ;
         $this->goAnkor("tankor");
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
         $payed = $this->docform->payed->getText();
         $payamount = $this->docform->payamount->getText();
         if ($payed > $payamount) {
@@ -861,9 +877,9 @@ class GoodsIssue extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $total = $this->docform->total->getText();
-        $totaldisc = $this->docform->totaldisc->getText();
-        $totalnds = $this->docform->totalnds->getText();
+        $total = doubleval($this->docform->total->getText());
+        $totaldisc = doubleval($this->docform->totaldisc->getText());
+        $totalnds = doubleval($this->docform->totalnds->getText());
 
         if($totaldisc > 0) {
             $total = $total - $totaldisc;
@@ -1119,12 +1135,7 @@ class GoodsIssue extends \App\Pages\Base
     }
 
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
-
-        return  $price;
-
-    }
+   
+         
+    
 }

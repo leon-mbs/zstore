@@ -269,11 +269,11 @@ class Subscribes extends \App\Pages\Base
             return;
         }
         if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->doctype == 0) {
-            $this->setError("Не вказано тип жокументу");
+            $this->setError("Не вказано тип документу");
             return;
         }
         if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->state == 0) {
-            $this->setError("Не вказано статус жокументу");
+            $this->setError("Не вказано статус документу");
             return;
         }
 

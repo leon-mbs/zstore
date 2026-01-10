@@ -28,16 +28,21 @@
                              <option v-for="dep in deps"  v-bind:label="dep"  v-bind:value="dep" >
                          </datalist>                                  
                     </div>
-                   {|#hideblock|}
-                     <div class="form-group  ">
-                        <label for="iostate">Тип витрат</label>
-                        <select   class="form-control" v-model="doc.iostate">
-                             <option value="0">Не вказано</option>
-                             <option v-for="ios in iostates "  v-bind:value="ios.key">{{ios.value}}</option>
+          
+                      {|#useacc|}
+                     <div class="form-group">
+                        <label for="acccode">Бух. рахунок                        </label>
+                        <select v-model="doc.acccode"  class="form-control"    >
+                            
+                            <option value="91">Загальновиробничі витрати</option>
+                            <option value="23">Виробництво</option>
+                            <option value="92">Адміністративні витрати</option>
+                            <option value="93">Витрати на збут</option>
+                            <option value="94">Інші витрати операційної діяльності</option>
                         </select>
+                        
                     </div>
-                   {|/hideblock|}
-
+                     {|/useacc|}
                 </div>
                 <div id="formd" class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
@@ -168,7 +173,7 @@
           years:[] ,
           emps : [] ,
           deleted : [] ,
-          iostates : [] ,
+         // iostates : [] ,
           deps : [] ,
           selectednewemp:0 ,
           opt:{},
@@ -179,7 +184,7 @@
               year:0 ,
               month:0 ,
               daysmon:1,
-              iostate:0,
+              acccode:91,
               department:""
           },
         
@@ -227,10 +232,7 @@
  
              tocalc:  function ( ){
                if(checkFormInput('docform')==false) return;
-               if(this.doc.iostate==0) {
-                  // toastr.error("Не вибраний тип витрат")  
-                //   return;
-               } 
+              
                  
                  this.showheader = false
                 this.showcalc = true
@@ -353,7 +355,7 @@
                            $('#formd').hide()
                        }
                         
-                       this.iostates = data.iostates 
+                       this.acccode = data.acccode 
                        this.deps = data.deps                 
                   });
               

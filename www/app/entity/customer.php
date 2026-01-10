@@ -74,6 +74,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<npcityname><![CDATA[{$this->npcityname}]]></npcityname>";
         $this->detail .= "<nppointref><![CDATA[{$this->nppointref}]]></nppointref>";
         $this->detail .= "<nppointname><![CDATA[{$this->nppointname}]]></nppointname>";
+        $this->detail .= "<custitemcode>{$this->custitemcode}</custitemcode>";
         $this->detail .= "</detail>";
 
   
@@ -117,6 +118,7 @@ class Customer extends \ZCL\DB\Entity
         $this->npcityname = (string)($xml->npcityname[0]);
         $this->nppointref = (string)($xml->nppointref[0]);
         $this->nppointname = (string)($xml->nppointname[0]);
+        $this->custitemcode = (string)($xml->custitemcode[0]);
 
         $this->createdon = strtotime($this->createdon ?? '');
         

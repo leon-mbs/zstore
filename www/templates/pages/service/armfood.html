@@ -33,8 +33,18 @@
 
 
         <form zippy="setupform">
-            <h3>АРМ касира</h3>
-
+        <div class="row">
+                <div class="col-auto">
+                      <h3>АРМ касира</h3>
+                    </div>
+                <div class="col-auto pt-2 lt-4">
+                     {{#isadmins}}
+                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
+                       {{/isadmins}}
+               </div>    
+             </div>    
+           
+        
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="form-group row ">
@@ -74,9 +84,7 @@
 
 
                     <div class="form-group   ">
-                       {{#isadmins}}
-                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
-                       {{/isadmins}}
+                      
                         <input type="submit" value="До замовлень >"   class="btn btn-success">
                     </div>
                 </div>
@@ -184,6 +192,7 @@
                                 <tr>
                                     <th>Назва</th>
                                     <th>Код</th>
+                                    <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
                                     <th class="text-center ">Кiл.</th>
                                     <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-right">Цiна</th>
@@ -202,6 +211,9 @@
 
                                     <td zippy="itemname"></td>
                                     <td zippy="item_code"></td>
+                                                                              
+                                <td > {{#useexcise}}  <a zippy="editex" href="javascript:void(0)"></a>  {{/useexcise}} </td>
+                               
                                     <td class="text-right text-nowrap">
                                          <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
@@ -222,13 +234,13 @@
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5" class="text-right text-bold">Всього:</td>
+                                    <td colspan="6" class="text-right text-bold">Всього:</td>
                                     <td zippy="totalamount" class="text-right text-bold"></td>
                                     <td ></td>
                                     <td ></td>
                                 </tr>
                               <tr>
-                                    <td colspan="5" class="text-right   ">Знижка:</td>
+                                    <td colspan="6" class="text-right   ">Знижка:</td>
                                     <td  class="text-right  ">
                                       <input style="width:100px" zippy="totaldisc" class="form-control qtyprice">
                                     </td>
@@ -236,7 +248,7 @@
                                     <td > </td>
                                 </tr>
                              <tr>
-                                    <td colspan="5" class="text-right   ">Списати  бонуси:</td>
+                                    <td colspan="6" class="text-right   ">Списати  бонуси:</td>
                                     <td  class="text-right  ">
                                       <input style="width:100px" zippy="bonus" class="form-control qtyprice">
                                     </td>
@@ -388,6 +400,39 @@
                     </div>
                 </div>
             </div>                               
+                    
+                    
+       <div id="modalak" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered  modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Акцизні маркм</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                             <input  type="hidden" zippy="akitemid" >
+                             <div class="form-group">
+                                <label for="aklist">Перелiк</label>
+                                <textarea   class="form-control"   zippy="aklist"></textarea>
+                                <small>По однiй на строку по кiлькiстi в позицiї</small>
+
+                            </div>  
+                             <div class="form-check">
+                                <input zippy="akpass" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="akpass">Пропустити марки</label>
+                                <br> <small>Наприклад для алкоголю на розлив</small>
+
+                            </div> 
+                            <input type="submit" value="Зберегти" zippy="saveak" class="ml-2 btn btn-info  ">
+          
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                     
                         
                     </form>  
                 </div>      
@@ -489,7 +534,9 @@
 
                         <div zippy="checktext"></div> 
                         <br>
+                         {{^freg}}
                         <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
+                         {{/freg}}
                         <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
 
                     </div>
@@ -561,6 +608,7 @@
                         <th ></th>
                         <th > </th>
                        {{#fiscal}}      <th ></th>     {{/fiscal}}
+                        {{#freg}}      <th ></th>     {{/freg}}
                         
                     </tr>
                     <tr zippy="orderlist">
@@ -586,10 +634,13 @@
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
                         <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
                         <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
-        {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a></td>
+                    {{#fiscal}}
+                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a>
+                        </td>
                          {{/fiscal}}                        
-                        
+                   {{#freg}}
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
+                         {{/freg}}                        
                     </tr>
 
                 </table> 
@@ -621,16 +672,13 @@
 
                     <div class="form-group">
                         <label for="editcustname">Ім'я </label>
-                        <input class="form-control " zippy="editcustname"  required />
+                        <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
-                    <div class="form-group">
-                        <label for="editaddress">Адреса</label>
-                        <input class="form-control" type="text" zippy="editaddress"/>
-                    </div>
+                   
 
 
                     <div class="form-group">
@@ -673,7 +721,7 @@
                                     <option value="2">Кафе</option>
 
                                 </select>
-                               <small>Кафе означає розрахунок офіціантом після винесення замовлення.
+                               <small class="compact"  >Кафе означає розрахунок офіціантом після винесення замовлення.
                                     Наявність кухні (виробництва) означає, що замовлення спочатку відправляється
                                     на виконання</small>  
                             </div>    
@@ -741,7 +789,7 @@
                                 <label  >Розклад роботи</label>
                                 
                                 <table class="ctable">
-                                  <tr><td>Пн. </td><td><input zippy="timepn" style="width:100px" class="form-control"  > </td> 
+                                  <tr><td>Пн-Пт. </td><td><input zippy="timepn" style="width:100px" class="form-control"  > </td> 
                                    <td>Сб. </td><td><input zippy="timesa" style="width:100px" class="form-control"  > </td> 
                                   <td>Нд. </td><td><input zippy="timesu" style="width:100px" class="form-control"  > </td></tr>
                                 </table>
@@ -778,6 +826,7 @@
                             </div>
                             
                             <div class="col-12">
+                                <a zippy="cancelopt" class="btn btn-secondary"  >Скасувати</a>
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                                
                             </div>
@@ -814,11 +863,10 @@
           
             function onNewOrder() {
                   
-                callPageMethod('getMessages',null,null,(data)=> 
+                callPM('getMessages',null,null,(answer)=> 
                 {
                  
-                    var  answer = JSON.parse(data)  
-                 
+                  
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
                         $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
@@ -863,24 +911,27 @@
                      
                       callPM('checkPromo',[promodode], null,(data)=> 
                       {
-                         if(checkPMAnswer(data))   {
-
-                           $('#totaldisc').val(data.disc)                             
-                         }  else {
-                            $('#totaldisc').val('0')                                                          
-                            $('#promocode').val('')                                                          
-                         }
+                         
+                            $('#totaldisc').val(data.disc)                             
                           
-                      });             
+                          
+                      },
+                       (error)=>{
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')         
+                            toastr.error( error,'',{timeOut:8000} )          
+                       }
+                      
+                      );             
                 });     
              
           
        function updateReadyItems() {
         
-          callPageMethod('getProdItems',[],null,(data)=> 
+                  callPM('getProdItems',[],null,(itemlist)=> 
                   {
                            
-                     var itemlist= JSON.parse(data)  
+                 
                      if(itemlist.length >0) {
                          $("#ireadyp").show()
                          $("#ireadyc").text(itemlist.length)
@@ -898,7 +949,19 @@
                   
                   });
        }        
-                    
+    
+    
+        function showakform(item_id,stamps) {
+                
+              stamps = stamps.replace(",","\n")
+  
+              $("#akitemid").val(item_id)   
+              $("#aklist").text(stamps)   
+              
+              $("#modalak").modal('show')   
+          }  
+            
+                                
         </script>
 
         {{#usescanner}} 

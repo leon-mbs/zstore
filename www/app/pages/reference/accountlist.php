@@ -32,7 +32,7 @@ class AccountList extends \App\Pages\Base
         $this->_tvars['acclist'] = [];
         
         foreach(Account::getList() as $c=>$n){
-           $this->_tvars['acclist'] = array('acc_code'=>$c,'acc_name'=>$n);  
+           $this->_tvars['acclist'][] = array('acc_code'=>$c,'acc_name'=>$n);  
         }
     }
 

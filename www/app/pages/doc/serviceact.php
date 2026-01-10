@@ -343,9 +343,9 @@ class ServiceAct extends \App\Pages\Base
         $item = Item::load($id);
 
         $item->snumber = $this->editdetail->editsnumber->getText();
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
@@ -436,10 +436,10 @@ class ServiceAct extends \App\Pages\Base
   
         $item = Service::load($id);
  
-        $item->quantity = $this->editserdetail->editserquantity->getText();
+        $item->quantity = $this->editserdetail->editserquantity->getDouble();
         $item->desc = $this->editserdetail->editserdesc->getText();
 
-        $price = $this->editserdetail->editserprice->getText();
+        $price = $this->editserdetail->editserprice->getDouble();
 
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
@@ -582,7 +582,7 @@ class ServiceAct extends \App\Pages\Base
     }
  
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
+        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getDouble()));
         $this->calcPay() ;
     }
   
@@ -826,15 +826,7 @@ class ServiceAct extends \App\Pages\Base
         }
     }
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
-
-
-        return $price;
-
-    }
+   
 
    
 }

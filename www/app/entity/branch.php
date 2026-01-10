@@ -80,7 +80,7 @@ class Branch extends \ZCL\DB\Entity
         if ($user_id > 0) {
             $user = \App\Entity\User::load($user_id);
             if ($user->rolename != 'admins') {
-                if (strlen($user->aclbranch) == 0) {
+                if (strlen($user->aclbranch ??'') == 0) {
                     return array();
                 } else {
                     $where .= " and branch_id in ({$user->aclbranch}) ";

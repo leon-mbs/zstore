@@ -18,7 +18,7 @@
                        
                             <div class="form-group">
                                 <label for="firm_name">Назва</label>
-                                <input  required  class="form-control" zippy="firm_name"/>
+                                <input  required="on"  class="form-control" zippy="firm_name"/>
                             </div>
 
                            
@@ -54,12 +54,7 @@
               <div class="col-12 col-md-4 col-xl-3 "   >
                       
                                                                         
-                            <div class="form-group row">
-                                 <label class="col-3 col-form-label" for="inn">IПН </label>
-                              <div class="col-6">
-                                 <input class="form-control" type="text" zippy="inn">
-                              </div>
-                            </div>
+                           
                            
                             <div class="form-group row">
                                 <label class="col-3 col-form-label" for="tin">ЄДРПОУ </label>
@@ -67,7 +62,14 @@
                                  <input class="form-control" type="text" zippy="tin">
                               </div>
                             </div>
-                           
+                            <div class="form-group row">
+                                 <label class="col-3 col-form-label" for="inn">IПН </label>
+                              <div class="col-6">
+                                 <input class="form-control" type="text" zippy="inn">
+                                  <small>Якщо платник ПДВ</small>
+                              </div>
+                               
+                            </div> 
                             <div class="form-group row">
                                 <label class="col-3 col-form-label" for="koatuu">КОАТУУ</label>
                                <div class="col-6">
@@ -92,13 +94,14 @@
                                    <input class="form-control " zippy="kved">
                                 </div>
                             </div>
+                            {{#hideblock}}
                             <div class="form-group row">
                                 <label class="col-3 col-form-label" for="gni">Код ДПІ</label>
                                <div class="col-6">
                                  <input class="form-control " type="number" zippy="gni">
                                </div>
                             </div>
-                          
+                              {{/hideblock}}
 
                         </div>   
                           
@@ -125,8 +128,11 @@
                     <b>Альтернативнi данi</b>  <br>                     
                     <small>Для вибору в продажних документах вiд рiзних ФОПiв</small> 
                     <table class="ctable">                      
-                      <tr><td>Назва, тел.</td><td>ЄДРПОУ</td><td></td></tr>
-                      <tr zippy="fopslist"><td><input required="on" class="form-control "   zippy="fopname"></td><td> <input  required="on" style="width:150px" class="form-control "   zippy="fopedrpou"></td><td><a zippy="delfop"><i class="fa fa-trash"></i></a></td></tr>
+                      <tr><td>Назва, тел.</td><td>ЄДРПОУ</td><td>Адреса</td><td></td></tr>
+                      <tr zippy="fopslist"><td><input required="on" class="form-control "   zippy="fopname"></td>
+                      <td> <input  required="on" style="width:150px" class="form-control "   zippy="fopedrpou"></td>
+                      <td> <input  required="on"  class="form-control "   zippy="fopaddress"></td>
+                      <td><a zippy="delfop"><i class="fa fa-trash"></i></a></td></tr>
                     </table>  
                      <button zippy="addfop" class="btn btn-success btn-sm" type="submit">Додати</button>
                                              

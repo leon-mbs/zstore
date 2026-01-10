@@ -64,6 +64,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('brec'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bsent'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bscan'))->onClick($this, 'statusOnSubmit');
 
 
@@ -185,9 +187,8 @@ class OrderList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == ($this->_doc->document_id ?? 0)) {
-            $row->setAttribute('class', 'table-success');
-        }
+        $row->setAttribute('data-did', $doc->document_id);
+     
 
         $ch = $this->checkChat($doc);
         if($ch) {
@@ -348,6 +349,12 @@ class OrderList extends \App\Pages\Base
             if ($sender->id == "brd") {
                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
             }
+            if ($sender->id == "brec") {
+                $this->_doc->updateStatus(Document::STATE_DELIVERED);
+            }
+            if ($sender->id == "bsent") {
+                $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+            }
 
             if ($sender->id == "bref") {
                 $this->_doc->setHD('waitpay',0) ;
@@ -407,6 +414,8 @@ class OrderList extends \App\Pages\Base
 
         $this->statuspan->statusform->btopay->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
+        $this->statuspan->statusform->brec->setVisible(false);
+        $this->statuspan->statusform->bsent->setVisible(false);
         $this->statuspan->statusform->bscan->setVisible(false);
         $this->statuspan->moveform->setVisible(false);
 
@@ -430,6 +439,8 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->brec->setVisible(false);
+            $this->statuspan->statusform->bsent->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
         } else {
 
@@ -452,6 +463,7 @@ class OrderList extends \App\Pages\Base
         }
 
         if ($state == Document::STATE_INPROCESS) {
+            $this->statuspan->statusform->bsent->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(true);
             $this->statuspan->statusform->bscan->setVisible(true);
 
@@ -460,8 +472,20 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(true);
             $this->statuspan->statusform->bginv->setVisible(true);
         }
+        if ($state == Document::STATE_READYTOSHIP) {
+            $this->statuspan->statusform->bsent->setVisible(true);
+            $this->statuspan->statusform->brec->setVisible(true);
+            $this->statuspan->statusform->bscan->setVisible(true);
+
+            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->bpos->setVisible(true);
+            $this->statuspan->statusform->bgi->setVisible(true);
+            $this->statuspan->statusform->bginv->setVisible(true);      
+        }
+      
         if ($state == Document::STATE_INSHIPMENT) {
 
+            $this->statuspan->statusform->brec->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
@@ -497,6 +521,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->bsent->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
         }
 
@@ -588,7 +613,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
-        $this->listpanel->doclist->Reload(false);
+       // $this->listpanel->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
@@ -707,6 +732,9 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;
         $this->onBranch($this->statuspan->moveform->brmove);
         $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);
+        
+        $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-success') ",true)  ;
+ 
     }
 
     public function editOnClick($sender) {
@@ -907,7 +935,8 @@ class OrderList extends \App\Pages\Base
             ) ;
 
         }
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+      
+        $this->jsonOK($ret) ;
 
     }
 
@@ -941,9 +970,8 @@ class OrderList extends \App\Pages\Base
 
         }
 
-
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
-
+       $this->jsonOK($ret) ;
+   
     }
     /**
     * отправка сообшения заказчику
@@ -956,7 +984,7 @@ class OrderList extends \App\Pages\Base
 
         $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;
         if($issms == 0) {
-            return json_encode(array('error'=>"Не знайдений сервіс смс"), JSON_UNESCAPED_UNICODE);
+           return  $this->jsonError("Не знайдений сервіс смс") ;
         }
 
         $phone= $doc->headerdata['phone'] ??'';
@@ -965,18 +993,19 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-            return json_encode(array('error'=>"Не знайдений телефон"), JSON_UNESCAPED_UNICODE);
+           return  $this->jsonError("Не знайдений телефон") ;
+
         }
 
         $link = _BASEURL . 'cchat/' . $args[0]. '/'. $doc->headerdata['hash'];
-        //  H::log($link);
+       
         $fn = (\App\System::getOption('common', 'shopname')??'')  ;
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
 
         $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
         if($r!="") {
-            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);
+          return  $this->jsonError($r) ;
         }
 
         $msg = new \App\Entity\Message() ;
@@ -986,8 +1015,8 @@ class OrderList extends \App\Pages\Base
         $msg->item_type=\App\Entity\Message::TYPE_CUSTCHAT;
         $msg->save() ;
 
-
-        return json_encode("", JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK() ;
+             
 
     }
 

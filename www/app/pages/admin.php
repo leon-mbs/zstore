@@ -45,6 +45,7 @@ class Admin extends \App\Pages\Base
         $form->add(new CheckBox('useprod',$options['useprod']??0));
         $form->add(new CheckBox('usends',$options['usends']??0));
         $form->add(new CheckBox('useacc',$options['useacc']??0));
+        $form->add(new CheckBox('useexcise',$options['useexcise']??0));
        
         $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
           
@@ -90,6 +91,7 @@ class Admin extends \App\Pages\Base
         if($modules['ppo']==1) $fisctype=1;
         if($modules['checkbox']==1) $fisctype=2;
         if($modules['vkassa']==1) $fisctype=3;
+        if($modules['freg']==1) $fisctype=4;
         $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
 
    
@@ -103,6 +105,7 @@ class Admin extends \App\Pages\Base
         $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
         $options['usends']  =  $this->configform->usends->isChecked() ? 1 : 0;
         $options['useacc']  =  $this->configform->useacc->isChecked() ? 1 : 0;
+        $options['useexcise']  =  $this->configform->useexcise->isChecked() ? 1 : 0;
           
         $conn = \ZDB\DB::getConnect();
       
@@ -121,7 +124,7 @@ class Admin extends \App\Pages\Base
             $sql="update metadata set  disabled=1";
         }
         $conn->Execute($sql.$where);
-        
+        /*
         $where = " where meta_name in('TaxInvoiceIncome','TaxInvoice2','TaxInvoice','TaxInvoiceList' )   " ;
         if($options['usends']==1) {
             $sql="update metadata set  disabled=0 ";
@@ -129,7 +132,7 @@ class Admin extends \App\Pages\Base
             $sql="update metadata set  disabled=1";
         }
         $conn->Execute($sql.$where);
-     
+        */
         $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблiк');
       
         if($options['useacc']==1) {
@@ -139,6 +142,17 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
        
+        $where = " where meta_name in( 'ExciseList') "  ;
+      
+        if($options['useexcise']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+       
+      
+      
          
         System::setOptions("common",$options) ;
         
@@ -261,10 +275,10 @@ class Admin extends \App\Pages\Base
                    $tables[$t][]=$c['Field'];
                }        
            }
+                                  
          
-         
-      //     file_put_contents("z:/{$ver}.db",serialize($tables)) ;                  
-                        
+        //   file_put_contents("z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
+                         
            $origtables = unserialize($origtables) ;
       
                
@@ -318,6 +332,7 @@ class Admin extends \App\Pages\Base
         $modules['ppo']   = $fisctype == 1 ? 1:0;
         $modules['checkbox']   = $fisctype == 2 ? 1:0;
         $modules['vkassa']   = $fisctype == 3 ? 1:0;
+        $modules['freg']   = $fisctype == 4 ? 1:0;
  
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');

@@ -73,6 +73,7 @@ class Item extends \ZCL\DB\Entity
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
+        $this->excise = (string)$xml->excise[0];
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
         $this->bar_code1 = (string)$xml->bar_code1[0];
@@ -95,16 +96,21 @@ class Item extends \ZCL\DB\Entity
         if (!is_array($this->brprice)) {
             $this->brprice = array();
         }
-
+    
         $id = \App\System::getBranch();
-        if ($id > 0 && is_array($this->brprice[$id]??null)) {
-            $this->price1 = $this->brprice[$id]['price1'];
-            $this->price2 = $this->brprice[$id]['price2'];
-            $this->price3 = $this->brprice[$id]['price3'];
-            $this->price4 = $this->brprice[$id]['price4'];
-            $this->price5 = $this->brprice[$id]['price5'];
+        if ($id > 0 ) {  
+            $branchprice = \App\System::getOption('common','branchprice');
+            if($branchprice==1  && is_array($this->brprice[$id]??null)) { 
+                $this->price1 = $this->brprice[$id]['price1'];
+                $this->price2 = $this->brprice[$id]['price2'];
+                $this->price3 = $this->brprice[$id]['price3'];
+                $this->price4 = $this->brprice[$id]['price4'];
+                $this->price5 = $this->brprice[$id]['price5'];   
+            }
+    
+            $this->cell   = $this->brprice[$id]['cell'] ?? $this->cell ;
         }
-
+       
         $this->actionqty1 = doubleval($xml->actionqty1[0]);
         $this->actionprice1 = doubleval($xml->actionprice1[0]);
         $this->actionqty2 = doubleval($xml->actionqty2[0]);
@@ -134,14 +140,29 @@ class Item extends \ZCL\DB\Entity
         $branchprice = \App\System::getOption('common','branchprice');
        
         $fid = \App\System::getBranch();
-        if ($fid > 0 && $branchprice==1) {
-            $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
+        if ($fid > 0 ) {
+           $a=[];
+           $a['cell'] = $this->cell;
+           if ( $branchprice==1) {
+              $a['price1'] = $this->price1;
+              $a['price2'] = $this->price2;
+              $a['price3'] = $this->price3;
+              $a['price4'] = $this->price4;
+              $a['price5'] = $this->price5;
+           
+              
+          
+            $this->brprice[$fid] =$a;   
+                                                     
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
             $this->price1 = $prev->price1;
             $this->price2 = $prev->price2;
             $this->price3 = $prev->price3;
             $this->price4 = $prev->price4;
             $this->price5 = $prev->price5;
+            $this->cell = $prev->cell;
+         }
+            
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
@@ -185,6 +206,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<excise>{$this->excise}</excise>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
         $this->detail .= "<cflist>{$this->cflist}</cflist>";
@@ -516,12 +538,20 @@ class Item extends \ZCL\DB\Entity
     }
 
 
-    //последняя  партия true по  приходу  false по расходу
-    public function getLastPartion($store = 0, $snumber = "", $in = true) {
+    /**
+    * последняя  партия
+    * 
+    * @param mixed $store       склад
+    * @param mixed $snumber     серийный  номер
+    * @param mixed $in          приход/расход
+    * @param mixed $doctype     брать с документа (например  'GoodsReceipt' или  '*' если для  любого) а не  складских  проводок
+    * @return mixed
+    */
+    public function getLastPartion($store = 0, $snumber = "", $in = true,$doctype="") {
         $conn = \ZDB\DB::getConnect();
         $q = $in == true ? "e.quantity >0" : "e.quantity < 0";
 
-        $sql = "  select coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+        $sql = "  select document_id,coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . intval($store);
@@ -529,11 +559,25 @@ class Item extends \ZCL\DB\Entity
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
+        if (strlen($doctype) > 0 && $doctype != '*' ) {
+            $sql .= " and  document_id in (select document_id from documents_view where  meta_name= '{$doctype}'  )  " ;
+        }
+     
      
         $sql = $sql . " order  by  e.entry_id desc  "  ;
-
+         
         foreach($conn->Execute($sql) as $r) {
-           return doubleval($r['p']);            
+            if (strlen($doctype) == 0) {
+               return doubleval($r['p']);             
+            }         
+            
+            $doc = \App\Entity\Doc\Document::load($r['document_id']);
+            if($doc != null)  {
+                foreach ($doc->unpackDetails('detaildata') as $item) {
+                   return doubleval($item->price);             
+                    
+                }
+            }
         }
         
         return 0;
@@ -1018,9 +1062,9 @@ class Item extends \ZCL\DB\Entity
      }
      /**
      * вернуть  значения кастомных  полей
-     * 
+     *  $onlyval  только  созначениями
      */
-     public function getcf(){
+     public function getcf($onlyval=false){
         $cfv = []  ;
         if(strlen($this->cflist)>0) {
           $cfv=unserialize($this->cflist)   ;   
@@ -1035,7 +1079,7 @@ class Item extends \ZCL\DB\Entity
                 $ls->code = $k;
                 $ls->name = $v;
                
-              $cflist[$i++] = $ls;          
+                $cflist[$i++] = $ls;          
                     
             }
         }
@@ -1053,8 +1097,11 @@ class Item extends \ZCL\DB\Entity
                        $it->val= $v;
                     }
                   }
-                  $ret[$it->code]=$it;
-             
+              
+                  if($onlyval==false || strlen($it->val)>0) {
+                      $ret[$it->code] = $it;
+                  }
+                 
          
         }  
        
@@ -1169,5 +1216,84 @@ class Item extends \ZCL\DB\Entity
         return $nds;
     }
  
-     
+   /**
+    * коеффициоет акциза
+    * 
+    * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
+    */
+    public   function excisek($revert = true) {
+        $k = 0 ;
+      
+        if(doubleval($this->excise)>0){
+           
+            $k = doubleval($this->excise) / 100;
+            if ($revert) {
+                $k = 1 - 100 / (100 +  doubleval($this->excise));
+            }           
+        }
+        
+        return $k;
+    }
+  
+    /**
+    * списание  комплектов  в  производство
+    * 
+    * @param mixed $requires  количество
+    * @param mixed $store  со  склада
+    * @param mixed $document_id  документ
+    */
+    public   function setToProd($required,$store,$document_id) {
+        $common= \App\System::getOptions('common') ;
+        if( ($common['storepart'] ?? 0) > 0) {
+           $store = $common['storepart'] ;
+        }
+        $lost = 0;
+        $kl=0;
+  
+        $set = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
+        foreach ($set as $part) {
+          
+
+            $itemp = \App\Entity\Item::load($part->item_id);
+            if($itemp == null) {
+                continue;
+            }
+            $itemp->quantity = $required * $part->qty;
+           
+            //учитываем  отходы
+            $kl=0;
+            if ($itemp->lost > 0) {
+                $kl = 1 / (1 - $itemp->lost / 100);
+                $itemp->quantity = $itemp->quantity * $kl;
+                                  
+            }            
+
+            if (false == $itemp->checkMinus($itemp->quantity, $store)) {
+                throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($store))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+            }
+        
+            $listst = \App\Entity\Stock::pickup($store, $itemp);
+
+            foreach ($listst as $st) {
+                $sc = new \App\Entity\Entry($document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                $sc->tag=\App\Entity\Entry::TAG_TOPROD;
+
+                $sc->save();
+                if ($kl > 0) {
+                    $lost += abs($st->quantity * $st->partion  ) * ($itemp->lost / 100);
+                }   
+            }
+            
+        }
+        if ($lost > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $document_id;
+            $io->amount =  0 - abs($lost);
+            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+
+            $io->save();
+       }             
+    }
+         
 }

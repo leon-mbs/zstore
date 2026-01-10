@@ -94,7 +94,9 @@ class ProdIssue extends Document
 
             $io->save();
        }
+       
        $this->DoAcc();        
+        
        return true;
     }
 
@@ -118,5 +120,5 @@ class ProdIssue extends Document
                  \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
              }       
   
-    }    
+    }  
 }

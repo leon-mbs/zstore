@@ -15,7 +15,11 @@
              <span>  Поточна версiя програми <b>{{curversion}}</b>. </span>
              {{#actual}}
              &nbsp; <span> Версiя   актуальна</span>
-             {{/actual}}       
+             {{/actual}}   
+             {{#show}} 
+             &nbsp; <span> Доступна       <a href="https://zippy.com.ua/update">нова версiя</a>   </span>
+             {{/show}}  
+                 
             </div>
             <div class="col-12  "  >
                 Поточна версiя БД <b>{{curversiondb}}</b> 
@@ -26,7 +30,7 @@
             </div>
             
           <div class="col-12  "  >
-                Поточна версiя PHP <b> {{oldphpv}}</b> 
+                Поточна версiя PHP <b> {{currphpv}}</b> 
                    
             </div>
             
@@ -132,7 +136,7 @@
        <div class="col-12  mt-2">
           {{#reinstall}}    
         <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
-        <br><small>Повторити оновлення коду, наприклад пiсля виходу виправлення (хотфiксу)</small>
+        <br><small>Повторити оновлення файлiв, наприклад пiсля виходу виправлення (хотфiксу)</small>
            {{/reinstall}}    
           {{#rollback}}
         <br>  <br> 

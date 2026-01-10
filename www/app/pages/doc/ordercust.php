@@ -20,6 +20,7 @@ use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\BookmarkableLink;
 use Zippy\Html\Link\SubmitLink;
 
 /**
@@ -53,21 +54,23 @@ class OrderCust extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
 
         $this->docform->add(new Label('total'));
+        $this->docform->add(new TextInput('moveitemid'));
+        $this->docform->add(new AutocompleteTextInput('movecust'))->onText($this, 'OnAutoCustomer');;
          
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('apprdoc'))->onClick($this, 'savedocOnClick');
-        
+        $this->docform->add(new SubmitButton('savemove'))->onClick($this, 'moveOnClick');
+       
         
            //добавление нового контрагента
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
-        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
-
+     
      
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -132,7 +135,8 @@ class OrderCust extends \App\Pages\Base
             return;
         }
     }
-   public function detailOnRow($row) {
+ 
+    public function detailOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('item', $item->itemname));
@@ -146,6 +150,9 @@ class OrderCust extends \App\Pages\Base
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        $row->add(new BookmarkableLink('move')) ;
+        $row->move->setAttribute('onclick','showmoveform('. $item->item_id .')' ) ;
+             
   }
 
     public function OnAutoCustomer($sender) {
@@ -305,8 +312,8 @@ class OrderCust extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
 
 
         if ($item->price == 0) {
@@ -364,7 +371,7 @@ class OrderCust extends \App\Pages\Base
     }  
     
     
-   private function checkForm() {
+    private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
             $this->setError('Введіть номер документа');
         }
@@ -405,7 +412,7 @@ class OrderCust extends \App\Pages\Base
         $this->docform->total->setText(H::fa($total));
     }
 
-  public function OnChangeItem($sender) {
+   public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
      
@@ -413,13 +420,13 @@ class OrderCust extends \App\Pages\Base
     
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
-        $price = $item->getLastPartion(0, "", true);
+        $price = $item->getLastPartion(0, "", true,'GoodsReceipt');
         $this->editdetail->editprice->setText(H::fa($price));
 
 
     }
 
-    public function OnAutoItem($sender) {
+   public function OnAutoItem($sender) {
 
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
@@ -517,8 +524,98 @@ class OrderCust extends \App\Pages\Base
     
 
 
+     public function moveOnClick($sender) {
+        $item_id = $this->docform->moveitemid->getInt() ;
+        $cust_id = $this->docform->movecust->getKey() ;
+        if($cust_id==0) {
+           $this->setError('Не заданий постачальний') ;
+           return; 
+        }
+        if($cust_id==$this->docform->customer->getKey() ) {
+         
+           $this->setError('Той самий  постачальний') ;
+           return; 
+        }
+        
+        try{
+            $rowid = -1;
+            
+            
+            foreach ($this->_itemlist as $i=> $it) {
+                 if($it->item_id == $item_id)  {
+                     $rowid = $i;
+                     $price = $it->price;
+                     $quantity = $it->quantity;
+                 }
+            }   
+            //ищем незакрытую заявку
+            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$cust_id}   and state=1 ","document_id desc") ;
+            
+            if($co==null) {
+                $co = \App\Entity\Doc\Document::create('OrderCust');
+                $co->document_number = $co->nextNumber();        
+                $co->customer_id = $cust_id;        
+                $co->save();
+                $co->updateStatus(1);
+            }  else {
+                $co->document_date = time(); 
+                $co->save();
+            }
+
+            $items=  $co->unpackDetails('detaildata');
+            $i=-1;
+            foreach($items as $k=>$v)  {
+                if($v->item_id == $item_id ) {
+                    $i=  $k;
+                    break;
+                }
+            }
+            if($i==-1)  {
+                $item = \App\Entity\Item::load($item_id);
+     
+                $item->quantity = $quantity;
+                $item->price = $price;
+                $item->rowid = $item->item_id;        
+                $items[$item->rowid]=$item;
+            }   else {
+                $items[$i]->quantity += $quantity;  
+            }
+            $total = 0;
+
+
+            foreach ($items as $item) {
+                $item->amount = \App\Helper::fa($item->price * $item->quantity);
+
+                $total = $total + $item->amount;
+            }
+            $co->amount= \App\Helper::fa($total);
+            
+            
+            $co->packDetails('detaildata',$items);
+            $co->save();
+            
+            $this->docform->movecust->setKey(0) ; 
+            $this->docform->movecust->setText('') ; 
+            
+            
+            $this->_itemlist = array_diff_key($this->_itemlist, array($rowid=> $this->_itemlist[$rowid]));
+       
+            $this->docform->detail->Reload();        
+            $this->calcTotal(); 
+            $this->setSuccess('Перемiщено в '.$co->document_number) ;
+                 
+        } catch(\Exception $e){
+   
+            $this->setError($e->getMessage()) ;
+              
+        }       
+         
+          
+     }
+
+
      public function backtolistOnClick($sender) {
         App::RedirectBack();
-    }
+     }
 
 }

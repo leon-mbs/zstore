@@ -1,0 +1,66 @@
+<html>
+
+    <head>
+        <title>  Обмеження системи  </title>
+
+    </head>
+
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-11  col-xl-9">
+                <h3>Обмеження системи</h3>
+                 <small>
+                   У звіті показано можливі вузькі місця та обмеження системи
+                 </small>
+
+
+               
+                <div class="card">
+
+                    <form zippy="filter" class="form-inline ">
+
+                        <label for="period">Період </label>
+
+                        <select class="form-control mr-2" zippy="period">
+                            <option value="1">1 місяць</option>
+                            <option value="2">2 місяці</option>
+                            <option value="3">3 місяці</option>
+                            <option value="3">6 місяців</option>
+                         </select>
+                        <input zippy="start" class="btn btn-primary  " type="submit" value="ОК">
+
+                    </form>
+
+                </div>
+
+                <div zippy="detail">
+                  
+                    <div class="mt-2">
+
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/predsell" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/predsell" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+
+                    </div>
+
+                    <div zippy="preview" class="table-responsive-sm">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <script >
+       function check_start(ele){
+     
+           
+            document.getElementById('dialogwait').showModal()
+          
+            return true;
+       
+        }         
+        </script>
+        
+    </body>
+
+</html>

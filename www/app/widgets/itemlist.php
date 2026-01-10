@@ -13,6 +13,8 @@ use Zippy\Html\Panel;
  */
 class ItemList extends \Zippy\Html\PageFragment
 {
+    private $_p         = null;
+
     /**
      *
      *
@@ -36,6 +38,7 @@ class ItemList extends \Zippy\Html\PageFragment
             $owner =  $owner->getOwner() ;
         }
         $this->_itemlist_->setAttribute('path', $path);
+        $this->_p = $this->getPageOwner()  ;
 
     }
 

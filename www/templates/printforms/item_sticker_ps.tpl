@@ -6,7 +6,9 @@
 <text>Код {{code}}</text>
 <text>Вага {{qty}} Ціна {{price}} </text>
 <text bold="true">Всього {{sum}}  </text>
- 
+ {{#term}}
+<text  >Придатний до   {{term}}  </text>      
+ {{/term}}  
 <align>center</align>
  
   <barcode type="code128" >{{barcode}}</barcode>

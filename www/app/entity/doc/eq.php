@@ -38,7 +38,7 @@ class EQ extends Document
            $b->createdon = $this->document_date;
            $b->optype = \App\Entity\CustAcc::SELLER;
            $b->save();           
- 
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INEQ)  ;
         }
         if($optype==EqEntry::OP_STORE  )  {   // со  склада
           
@@ -50,13 +50,14 @@ class EQ extends Document
            $sc->setStock($stock->stock_id);
  
            $sc->save();          
-           
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INEQ)  ;      
         }
         
         if($optype==EqEntry::OP_PROD )  {    // с  производства
      
            $entry->amount = $this->amount ;
-    
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INEQ)  ;      
+   
         }
         
         
@@ -68,17 +69,21 @@ class EQ extends Document
         if($optype==EqEntry::OP_AMOR   )  {
           
            $entry->amount = 0-$this->amount   ;
-     
+           IOState::addIOState($this->document_id,0-$this->amount,IOState::TYPE_AMOR)  ;      
+    
         }
         if($optype==EqEntry::OP_REPAIR   )  {
  
            $entry->amount = $this->amount   ;
+           IOState::addIOState($this->document_id,$this->amount,IOState::TYPE_INVEQ)  ;      
+               
         }
   
        if($optype==EqEntry::OP_OUTCOME )  {
        
            $entry->amount = 0-$eq->getBalance() ;
-          
+           IOState::addIOState($this->document_id,$entry->amount,IOState::TYPE_INEQ)  ;
+         
        }
        if($optype==EqEntry::OP_SELL )  {    //продажа
          
@@ -104,7 +109,8 @@ class EQ extends Document
            $sc = new \App\Entity\Entry($this->document_id, $stock->partion, 1);
            $sc->setStock($stock->stock_id);
  
-           $sc->save();            
+           $sc->save();  
+                         
        }
        if($optype==EqEntry::OP_LOST )  {     
           $entry->amount = 0-$this->amount   ;
@@ -112,7 +118,7 @@ class EQ extends Document
        }   
        $entry->save();
     
-       $this->DoAcc();        
+       $this->DoAcc();       
        return true;
     }
 
@@ -171,9 +177,49 @@ class EQ extends Document
     }
 
     public   function DoAcc() {
-             if(\App\System::getOption("common",'useacc')!=1 ) return;
-             parent::DoAcc()  ;
-      
-             //todo
-    }
+        if(\App\System::getOption("common",'useacc')!=1 ) return;
+        parent::DoAcc()  ;
+        
+        $optype= $this->headerdata['optype'] ;
+    
+        $eq_id= intval($this->headerdata['eq_id']) ;
+        if($optype==EqEntry::OP_INCOME  )  {
+             \App\Entity\AccEntry::addEntry( '10' ,'15',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_BUY  )  {
+             \App\Entity\AccEntry::addEntry( '15' ,'63',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_STORE  )  {
+             \App\Entity\AccEntry::addEntry( '15' ,'28',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_STORE  )  {
+             \App\Entity\AccEntry::addEntry( '15' ,'28',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_PROD  )  {
+             \App\Entity\AccEntry::addEntry( '15' ,'23',$this->amount,$this->document_id)  ; 
+             \App\Entity\AccEntry::addEntry( '10' ,'15',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_AMOR  )  {
+             \App\Entity\AccEntry::addEntry( '91' ,'13',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_REPAIR  )  {
+             \App\Entity\AccEntry::addEntry( '15' ,'23',$this->amount,$this->document_id)  ; 
+             \App\Entity\AccEntry::addEntry( '10' ,'15',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_OUTCOME  )  {
+             \App\Entity\AccEntry::addEntry( '13' ,'10',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_LOST  )  {
+             \App\Entity\AccEntry::addEntry( '97' ,'10',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_TOSTORE  )  {
+             \App\Entity\AccEntry::addEntry( '28' ,'10',$this->amount,$this->document_id)  ; 
+        }
+        if($optype==EqEntry::OP_SELL  )  {
+             \App\Entity\AccEntry::addEntry( '90' ,'10',$this->amount,$this->document_id)  ; 
+             \App\Entity\AccEntry::addEntry( '36' ,'70',$this->amount,$this->document_id)  ; 
+        }
+       
+         
+   }    
 }

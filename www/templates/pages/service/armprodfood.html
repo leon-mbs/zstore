@@ -80,9 +80,7 @@
                 
                   callPM('onReady',[document_id,rowid],null,(data)=> 
                   {
-                      if(false==checkPMAnswer(data) )   {
-                           return
-                      }
+                      
                       
                       this.updateItems() ;
                   });     
@@ -93,9 +91,7 @@
                 
                   callPM('onInprocess',[document_id,rowid],null,(data)=> 
                   {
-                      if(false==checkPMAnswer(data) )   {
-                           return
-                      }
+                      
                       
                       this.updateItems() ;
                   });     
@@ -106,9 +102,6 @@
                 
                   callPM('onSend',[document_id,rowid],null,(data)=> 
                   {
-                      if(false==checkPMAnswer(data) )   {
-                           return
-                      }
                       
                       this.updateItems() ;
                   });     
@@ -119,10 +112,10 @@
             
       
             
-              callPageMethod('getItems',[this.forbar],null,(data)=> 
+              callPM('getItems',[this.forbar],null,(data)=> 
               {
                        
-                  this.itemlist= JSON.parse(data)  
+                  this.itemlist=  data    
                   $('.popinfo').popover();            
               
               });
@@ -144,10 +137,10 @@
   
              function onNewOrder() {
                         
-                        callPageMethod('getMessages',null,null,(data)=> 
+                        callPM('getMessages',null,null,(answer)=> 
                         {
                                
-                                var  answer = JSON.parse(data)  
+                          
                                 
                                 if (answer.update==true ) {
                                   
@@ -158,7 +151,7 @@
                                 
                                 if(answer.cnt > 0){
 
-                                   toastr.info( 'Нових замовлень ' + answer.cnt +' ' ,'',{'timeOut':'5000'})
+                                   toastr.info( 'Нових замовлень ' + answer.cnt +' ' ,'',{timeOut:5000})
                                    beep()
                                    updateItems() 
                                 }

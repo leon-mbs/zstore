@@ -4,14 +4,14 @@ CREATE TABLE branches (
   branch_id int(11) NOT NULL AUTO_INCREMENT,
   branch_name varchar(255) NOT NULL,
   details longtext NOT NULL,
-  disabled tinyint(1) NOT NULL DEFAULT '0',
+  disabled tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (branch_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 
 CREATE TABLE contracts (
   contract_id int(11) NOT NULL AUTO_INCREMENT,
-  customer_id int(11) DEFAULT '0',
+  customer_id int(11) DEFAULT 0,
   
   createdon date NOT NULL,
   contract_number varchar(64) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE custitems (
   item_id int(11)   NULL,
   customer_id int(11) NOT NULL,
   quantity decimal(10, 3) DEFAULT NULL,
-  price decimal(10, 2) NOT NULL DEFAULT '0.00',
+  price decimal(10, 2) NOT NULL DEFAULT 0,
   cust_code varchar(255) NOT NULL,
   cust_name varchar(255) NOT NULL,
   brand varchar(255) NOT NULL,
@@ -34,7 +34,9 @@ CREATE TABLE custitems (
   details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
   PRIMARY KEY (custitem_id),
+  KEY customer_id (customer_id),
   KEY item_id (item_id)
+ 
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE customers (
@@ -43,7 +45,7 @@ CREATE TABLE customers (
   detail mediumtext NOT NULL,
   email varchar(64) DEFAULT NULL,
   phone varchar(64) DEFAULT NULL,
-  status smallint(4) NOT NULL DEFAULT '0',
+  status smallint(4) NOT NULL DEFAULT 0,
   city varchar(255) DEFAULT NULL,
   leadstatus varchar(255) DEFAULT NULL,
   leadsource varchar(255) DEFAULT NULL,
@@ -72,7 +74,7 @@ CREATE TABLE users (
   createdon date NOT NULL,
   email varchar(255) DEFAULT NULL,
   acl mediumtext NOT NULL,
-  disabled int(1) NOT NULL DEFAULT '0',
+  disabled int(1) NOT NULL DEFAULT 0,
   options longtext,
   role_id int(11) DEFAULT NULL,
   lastactive datetime DEFAULT NULL,
@@ -91,13 +93,13 @@ CREATE TABLE documents (
   meta_id int(11) NOT NULL,
   state tinyint(4) NOT NULL,
   notes varchar(1024)  NULL,
-  customer_id int(11) DEFAULT '0',
-  payamount decimal(11, 2) DEFAULT '0.00',
-  payed decimal(11, 2) DEFAULT '0.00',
-  branch_id int(11) DEFAULT '0',
-  parent_id bigint(20) DEFAULT '0',
+  customer_id int(11) DEFAULT 0,
+  payamount decimal(11, 2) DEFAULT 0,
+  payed decimal(11, 2) DEFAULT 0,
+  branch_id int(11) DEFAULT 0,
+  parent_id bigint(20) DEFAULT 0,
    
-  priority smallint(6) DEFAULT '100',
+ 
   lastupdate datetime DEFAULT NULL,
   PRIMARY KEY (document_id),
 
@@ -106,6 +108,7 @@ CREATE TABLE documents (
   KEY user_id (user_id),
   KEY branch_id (branch_id),
   KEY parent_id (parent_id),
+  
   KEY document_number (document_number),
   KEY state (state),
   CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (user_id)
@@ -120,8 +123,8 @@ CREATE TABLE items (
   bar_code varchar(64) DEFAULT NULL,
   cat_id int(11) NOT NULL,
   msr varchar(64) DEFAULT NULL,
-  disabled tinyint(1) DEFAULT '0',
-  minqty decimal(11, 3) DEFAULT '0.000',
+  disabled tinyint(1) DEFAULT 0,
+  minqty decimal(11, 3) DEFAULT 0,
   manufacturer varchar(355) DEFAULT NULL,
   item_type int(11) DEFAULT NULL,
   PRIMARY KEY (item_id),
@@ -134,8 +137,8 @@ CREATE TABLE stores (
   store_id int(11) NOT NULL AUTO_INCREMENT,
   storename varchar(64) DEFAULT NULL,
   description varchar(255) DEFAULT NULL,
-  branch_id int(11) DEFAULT '0',
-  disabled tinyint(1) DEFAULT '0',
+  branch_id int(11) DEFAULT 0,
+  disabled tinyint(1) DEFAULT 0,
   PRIMARY KEY (store_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -146,7 +149,7 @@ CREATE TABLE store_stock (
   store_id int(11) NOT NULL,
   customer_id int(11) DEFAULT NULL,
   emp_id int(11) DEFAULT NULL,
-  qty decimal(11, 3) DEFAULT '0.000',
+  qty decimal(11, 3) DEFAULT 0,
   snumber varchar(64) DEFAULT NULL,
   sdate date DEFAULT NULL,
   PRIMARY KEY (stock_id),
@@ -177,9 +180,9 @@ CREATE TABLE employees (
   employee_id int(11) NOT NULL AUTO_INCREMENT,
   login varchar(64) DEFAULT NULL,
   detail mediumtext,
-  disabled tinyint(1) DEFAULT '0',
+  disabled tinyint(1) DEFAULT 0,
   emp_name varchar(64) NOT NULL,
-  branch_id int(11) DEFAULT '0',
+  branch_id int(11) DEFAULT 0,
   KEY (login) ,
   PRIMARY KEY (employee_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -193,7 +196,7 @@ CREATE TABLE entrylist (
   service_id int(11) DEFAULT NULL,
   outprice decimal(10, 2) DEFAULT NULL,
   createdon DATE DEFAULT NULL,
-  tag int(11) DEFAULT '0',
+  tag int(11) DEFAULT 0,
   PRIMARY KEY (entry_id),
   KEY document_id (document_id),
   KEY stock_id (stock_id),
@@ -264,7 +267,7 @@ CREATE TABLE eventlist (
   description text NOT NULL,
   event_id int(11) NOT NULL AUTO_INCREMENT,
   customer_id int(11) DEFAULT NULL,
-  isdone tinyint(1) NOT NULL DEFAULT '0',
+  isdone tinyint(1) NOT NULL DEFAULT 0,
   event_type tinyint(4) DEFAULT NULL,
   createdby int(11) DEFAULT NULL,
   details text,
@@ -365,17 +368,17 @@ CREATE TABLE item_cat (
   cat_id int(11) NOT NULL AUTO_INCREMENT,
   cat_name varchar(255) NOT NULL,
   detail longtext,
-  parent_id int(11) DEFAULT '0',
+  parent_id int(11) DEFAULT 0,
   PRIMARY KEY (cat_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE item_set (
   set_id int(11) NOT NULL AUTO_INCREMENT,
-  item_id int(11) DEFAULT '0',
-  pitem_id int(11) NOT NULL DEFAULT '0',
-  qty decimal(11, 3) DEFAULT '0.000',
-  service_id int(11) DEFAULT '0',
-  cost decimal(10, 2) DEFAULT '0.00',
+  item_id int(11) DEFAULT 0,
+  pitem_id int(11) NOT NULL DEFAULT 0,
+  qty decimal(11, 3) DEFAULT 0,
+  service_id int(11) DEFAULT 0,
+  cost decimal(10, 2) DEFAULT 0 ,
   PRIMARY KEY (set_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -413,9 +416,9 @@ CREATE TABLE mfund (
   mf_id int(11) NOT NULL AUTO_INCREMENT,
   mf_name varchar(255) NOT NULL,
   description varchar(255) DEFAULT NULL,
-  branch_id int(11) DEFAULT '0',
+  branch_id int(11) DEFAULT 0,
   detail longtext,
-  disabled tinyint(1) DEFAULT '0',
+  disabled tinyint(1) DEFAULT 0,
   PRIMARY KEY (mf_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -432,7 +435,7 @@ CREATE TABLE note_nodes (
   title varchar(50) NOT NULL,
   mpath varchar(255) CHARACTER SET latin1 NOT NULL,
   user_id int(11) DEFAULT NULL,
-  ispublic tinyint(1) DEFAULT '0',
+  ispublic tinyint(1) DEFAULT 0,
   PRIMARY KEY (node_id),
   KEY user_id (user_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -459,7 +462,7 @@ CREATE TABLE note_topics (
   topic_id int(11) NOT NULL AUTO_INCREMENT,
   title varchar(255) NOT NULL,
   content longtext NOT NULL,
-  acctype smallint(4) DEFAULT '0',
+  acctype smallint(4) DEFAULT 0,
   user_id int(11) NOT NULL,
   ispublic   tinyint(1) DEFAULT 0 , 
   PRIMARY KEY (topic_id)
@@ -511,7 +514,7 @@ CREATE TABLE poslist (
   pos_id int(11) NOT NULL AUTO_INCREMENT,
   pos_name varchar(255) NOT NULL,
   details longtext NOT NULL,
-  branch_id int(11) DEFAULT '0',
+  branch_id int(11) DEFAULT 0,
   PRIMARY KEY (pos_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -590,7 +593,8 @@ CREATE TABLE saltypes (
   salcode int(11) NOT NULL,
   salname varchar(255) NOT NULL,
   salshortname varchar(255) DEFAULT NULL,
-  disabled tinyint(1) NOT NULL DEFAULT '0',
+  acccode varchar(4) DEFAULT NULL,
+  disabled tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (st_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -598,7 +602,7 @@ CREATE TABLE services (
   service_id int(11) NOT NULL AUTO_INCREMENT,
   service_name varchar(255) NOT NULL,
   detail text,
-  disabled tinyint(1) DEFAULT '0',
+  disabled tinyint(1) DEFAULT 0,
   category varchar(255) DEFAULT NULL,
   PRIMARY KEY (service_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -635,8 +639,8 @@ CREATE TABLE shop_prod_comments (
   author varchar(64) NOT NULL,
   comment text NOT NULL,
   created timestamp NOT NULL DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
-  rating tinyint(4) NOT NULL DEFAULT '0',
-  moderated tinyint(1) NOT NULL DEFAULT '0',
+  rating tinyint(4) NOT NULL DEFAULT 0,
+  moderated tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (comment_id),
   KEY product_id (item_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
@@ -677,7 +681,7 @@ CREATE TABLE subscribes (
   msg_type int(11) DEFAULT NULL,
   msgtext text,
   detail longtext,
-  disabled int(1) DEFAULT '0',
+  disabled int(1) DEFAULT 0,
   PRIMARY KEY (sub_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
@@ -687,8 +691,8 @@ CREATE TABLE timesheet (
   description varchar(255) DEFAULT NULL,
   t_start datetime DEFAULT NULL,
   t_end datetime DEFAULT NULL,
-  t_type int(11) DEFAULT '0',
-  t_break smallint(6) DEFAULT '0',
+  t_type int(11) DEFAULT 0,
+  t_break smallint(6) DEFAULT 0,
   branch_id int(11) DEFAULT NULL,
   PRIMARY KEY (time_id),
   KEY emp_id (emp_id)
@@ -742,9 +746,24 @@ SELECT
   d.parent_id AS parent_id,
   d.branch_id AS branch_id,
   b.branch_name AS branch_name,
-  
-  d.priority AS priority,
+    
+  case 
+    when d.state=9 then 1 
+    when d.state=15 then 3  
+    when d.state=22 then 15  
+    when d.state=18 then 20  
+    when d.state=14 then 30  
+    when d.state=16 then 40  
+    when d.state in(7,11,20) then 45  
+    when d.state =3  then 70  
+    when d.state = 21 then 75  
  
+    when d.state in(19,2) then 80  
+    when d.state = 8 then 90
+    when d.state = 1 then 100
+         
+    else 50 end  AS priority ,
+    
   d.lastupdate AS lastupdate,
   metadata.meta_name AS meta_name,
   metadata.description AS meta_desc
@@ -1448,7 +1467,96 @@ CREATE TABLE shop_articles (
   isactive tinyint NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;   
+
+CREATE TABLE  substitems (
+  id bigint NOT NULL AUTO_INCREMENT,
+  itemname varchar(255) NOT NULL ,
+  origcode varchar(255) NOT NULL ,
+  origbrand varchar(255) DEFAULT NULL ,
+  substcode varchar(255) NOT NULL ,
+  substbrand varchar(255) DEFAULT NULL ,
+  customer_id int DEFAULT NULL,
+   
+  KEY (origcode) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;    
+
+
+CREATE TABLE acc_entry (
+  id bigint NOT NULL AUTO_INCREMENT,
+  createdon DATE DEFAULT NULL,
+  accdt varchar(4) DEFAULT NULL,
+  accct varchar(4) DEFAULT NULL,
+  amount decimal(11, 2) NOT NULL,
+  document_id int NOT NULL,
   
+  tagdt int  DEFAULT  NULL   ,
+  tagct int  DEFAULT  NULL   ,
+ 
+  PRIMARY KEY (id) ,
+  KEY document_id (document_id),
+  KEY accdt (accdt),
+  KEY accct (accct),
+  CONSTRAINT accentrylist_ibfk_1 FOREIGN KEY (document_id) REFERENCES documents (document_id) 
+  
+) ENGINE = INNODB  DEFAULT CHARSET = utf8  ; 
+ 
+  
+
+CREATE VIEW acc_entry_view
+AS
+SELECT
+  e.id AS id,
+ 
+  e.accdt AS accdt,
+  e.accct AS accct,
+  e.amount AS amount,
+  case when e.createdon  is NULL  then d.document_date else e.createdon  end      AS createdon,
+    
+  d.notes AS notes,
+  e.document_id AS document_id,
+  d.branch_id AS branch_id,
+  e.tagdt AS tagdt,
+  e.tagct AS tagct,
+   
+  d.document_number AS document_number
+FROM  acc_entry e
+  JOIN documents d
+    ON  d.document_id = e.document_id ;
+
+
+
+
+CREATE TABLE  excisestamps (
+  id int NOT NULL AUTO_INCREMENT,
+  stamp varchar(255) NOT NULL ,
+  item_id int NOT NULL,
+  document_id bigint NOT NULL,
+  anount decimal(11, 2)   NULL DEFAULT 0.00,   
+  KEY (stamp) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+
+
+CREATE VIEW excisestamps_view
+AS
+SELECT
+  s.id AS id,
+  s.stamp AS stamp,
+  s.item_id AS item_id,
+  s.anount AS anount,
+  s.document_id AS document_id,
+  i.itemname AS itemname,
+  i.item_code AS item_code,
+  d.document_number AS document_number,
+  d.document_date AS document_date
+FROM ((excisestamps s
+  JOIN documents d
+    ON ((d.document_id = s.document_id)))
+  JOIN items i
+    ON ((i.item_id = s.item_id)));
+
+ 
   
   
 INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', 'admin', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
@@ -1507,12 +1615,12 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Імпорт', 'Import', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Рух ТМЦ', 'StockList', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Касовий чек', 'POSCheck', 'Продажі', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товари в дорозі', 'CustOrder', 'Закупівлі', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'ТМЦ в дорозі', 'CustOrder', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списання ТМЦ', 'OutcomeItem', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Оприбуткування ТМЦ', 'IncomeItem', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ касира', 'ARMPos', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Роботи, послуги', 'SerList', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Товари на складі', 'ItemList', 'Склад', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'ТМЦ на складі', 'ItemList', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Експорт', 'Export', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Виплата зарплати', 'OutSalary', 'Зарплата', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по зарплаті', 'SalaryRep', 'Каса та платежі', 0);
@@ -1541,22 +1649,34 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Повернення постачальникам', 'Returnbayed', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Отримані послуги', 'IncomeService', 'Послуги', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Стан складiв', 'StoreItems', 'Склад', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Товари у постачальників', 'CustItems', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Товари у постачальників', 'CustItems', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Акт звірки', 'CompareAct', 'Контрагенти', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Зарезервовані товари', 'Reserved', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'OLAP аналіз', 'OLAP', 'Аналітика', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Управлiнський баланс', 'Balance', '', 0);  
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Офiсний документ', 'OfficeDoc', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Офiс', 'OfficeList', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналітика', 0);
+
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товари на комісії', 'ItemComission', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платіжний календар', 'PayTable', 'Каса та платежі', 0);
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Авансовий звiт', 'AdvanceRep', 'Каса та платежі',   0);
-INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  2, 'Закриття дня', 'EndDay', '',     0);
-   
+INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  2, 'Закриття дня', 'EndDay', 'Каса та платежі',     0);
+INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  3, 'Замiни ТМЦ', 'SubstItems', 'Склад',     0);
+
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 4, 'План рахункiв', 'AccountList', 'Бухоблiк',   1 );
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 3, 'Журнал проводок', 'AccountEntryList', 'Бухоблiк',   1 );
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Рух по рахунку', 'AccountActivity', 'Бухоблiк',     1);
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Ручна проводка', 'ManualEntry', 'Бухоблiк',   1);
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Оборотно-сальдова вiдомiсть', 'ObSaldo', 'Бухоблiк',     1);
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Шахматна вiдомiсть', 'Shahmatka', 'Бухоблiк',   1 );
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблiк',  1 );
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Закриття перiоду', 'FinResult', 'Бухоблiк',   1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по акцизних марках', 'ExciseList', 'Продажі', 1);
+ 
    
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(2, 105, 'Основна зарплата', 'осн', 0);
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(3, 200, 'Всього нараховано', 'вс. нар', 0);
@@ -1568,7 +1688,7 @@ INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(8,
 
 
 INSERT INTO options (optname, optvalue) VALUES('api', 'YTozOntzOjM6ImV4cCI7czowOiIiO3M6Mzoia2V5IjtzOjQ6InRlc3QiO3M6NToiYXR5cGUiO3M6MToiMSI7fQ==');
-INSERT INTO options (optname, optvalue) VALUES('common', 'YTo0Mjp7czo5OiJxdHlkaWdpdHMiO3M6MToiMCI7czo4OiJhbWRpZ2l0cyI7czoxOiIwIjtzOjEwOiJkYXRlZm9ybWF0IjtzOjU6ImQubS5ZIjtzOjExOiJwYXJ0aW9udHlwZSI7czoxOiIxIjtzOjY6InBob25lbCI7czoyOiIxMCI7czo2OiJwcmljZTEiO3M6MTg6ItCg0L7Qt9C00YDRltCx0L3QsCI7czo2OiJwcmljZTIiO3M6MTI6ItCe0L/RgtC+0LLQsCI7czo2OiJwcmljZTMiO3M6MDoiIjtzOjY6InByaWNlNCI7czowOiIiO3M6NjoicHJpY2U1IjtzOjA6IiI7czo4OiJkZWZwcmljZSI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MDoiIjtzOjg6InRzX2JyZWFrIjtzOjI6IjYwIjtzOjg6InRzX3N0YXJ0IjtzOjU6IjA5OjAwIjtzOjY6InRzX2VuZCI7czo1OiIxODowMCI7czoxMToiY2hlY2tzbG9nYW4iO3M6MDoiIjtzOjExOiJhdXRvYXJ0aWNsZSI7aToxO3M6MTA6InVzZXNudW1iZXIiO3M6MToiMCI7czoxMDoidXNlc2Nhbm5lciI7aTowO3M6MTY6InVzZW1vYmlsZXNjYW5uZXIiO2k6MDtzOjk6InVzZWltYWdlcyI7aTowO3M6MTQ6InByaW50b3V0cXJjb2RlIjtpOjA7czoxNDoibm9jaGVja2FydGljbGUiO2k6MDtzOjE1OiJzaG93YWN0aXZldXNlcnMiO2k6MDtzOjg6InNob3djaGF0IjtpOjA7czoxMDoidXNlY2F0dHJlZSI7aTowO3M6OToidXNlYnJhbmNoIjtpOjA7czoxMDoibm9hbGxvd2ZpeiI7aTowO3M6MTA6ImFsbG93bWludXMiO2k6MDtzOjY6InVzZXZhbCI7aTowO3M6NjoiY2FwY2hhIjtpOjA7czo5OiJudW1iZXJ0dG4iO2k6MDtzOjk6InBheXR5cGVpbiI7czoxOiIwIjtzOjEwOiJwYXl0eXBlb3V0IjtzOjE6IjAiO3M6MTI6ImFsbG93bWludXNtZiI7aTowO3M6NzoiY2FzaGllciI7czowOiIiO3M6MTA6ImFjdHVhbGRhdGUiO2k6MTcwNDA2MDAwMDtzOjE0OiJzcHJlYWRkZWxpdmVyeSI7aTowO3M6MTE6ImJheWRlbGl2ZXJ5IjtpOjA7czo4OiJub3VwZGF0ZSI7aTowO3M6NzoiY2hlY2tpcCI7aTowO3M6NjoiaXBsaXN0IjtzOjA6IiI7fQ==');
+INSERT INTO options (optname, optvalue) VALUES('common', 'YTo0Mzp7czo5OiJxdHlkaWdpdHMiO3M6MToiMCI7czo4OiJhbWRpZ2l0cyI7czoxOiIwIjtzOjEwOiJkYXRlZm9ybWF0IjtzOjU6ImQubS5ZIjtzOjExOiJwYXJ0aW9udHlwZSI7czoxOiIxIjtzOjY6InBob25lbCI7czoyOiIxMCI7czo2OiJwcmljZTEiO3M6MTg6ItCg0L7Qt9C00YDRltCx0L3QsCI7czo2OiJwcmljZTIiO3M6MTI6ItCe0L/RgtC+0LLQsCI7czo2OiJwcmljZTMiO3M6MDoiIjtzOjY6InByaWNlNCI7czowOiIiO3M6NjoicHJpY2U1IjtzOjA6IiI7czo4OiJkZWZwcmljZSI7czowOiIiO3M6ODoic2hvcG5hbWUiO3M6MDoiIjtzOjg6InRzX2JyZWFrIjtzOjI6IjYwIjtzOjg6InRzX3N0YXJ0IjtzOjU6IjA5OjAwIjtzOjY6InRzX2VuZCI7czo1OiIxODowMCI7czoxMToiY2hlY2tzbG9nYW4iO3M6MDoiIjtzOjExOiJhdXRvYXJ0aWNsZSI7aToxO3M6MTA6InVzZXNudW1iZXIiO3M6MToiMCI7czoxMDoidXNlc2Nhbm5lciI7aTowO3M6MTY6InVzZW1vYmlsZXNjYW5uZXIiO2k6MDtzOjk6InVzZWltYWdlcyI7aTowO3M6MTQ6InByaW50b3V0cXJjb2RlIjtpOjA7czoxNDoibm9jaGVja2FydGljbGUiO2k6MDtzOjE1OiJzaG93YWN0aXZldXNlcnMiO2k6MDtzOjg6InNob3djaGF0IjtpOjA7czoxMDoidXNlY2F0dHJlZSI7aTowO3M6OToidXNlYnJhbmNoIjtpOjA7czoxMDoibm9hbGxvd2ZpeiI7aTowO3M6MTA6ImFsbG93bWludXMiO2k6MDtzOjY6InVzZXZhbCI7aTowO3M6NjoiY2FwY2hhIjtpOjA7czo5OiJudW1iZXJ0dG4iO2k6MDtzOjk6InBheXR5cGVpbiI7czoxOiIwIjtzOjEwOiJwYXl0eXBlb3V0IjtzOjE6IjAiO3M6MTI6ImFsbG93bWludXNtZiI7aTowO3M6NzoiY2FzaGllciI7czowOiIiO3M6MTA6ImFjdHVhbGRhdGUiO2k6MTcwNDA2MDAwMDtzOjE0OiJzcHJlYWRkZWxpdmVyeSI7aTowO3M6MTE6ImJheWRlbGl2ZXJ5IjtpOjA7czo4OiJub3VwZGF0ZSI7aTowO3M6NzoiY2hlY2tpcCI7aTowO3M6NjoiaXBsaXN0IjtzOjA6IiI7czo4OiJzdG9yZWVtcCI7aTowO30=');
 INSERT INTO options (optname, optvalue) VALUES('discount', 'YToxODp7czo4OiJmaXJzdGJheSI7czoyOiIxMSI7czo2OiJib251czEiO3M6MzoiMS4xIjtzOjY6ImxldmVsMiI7czowOiIiO3M6NjoiYm9udXMyIjtzOjM6IjEuNCI7czo2OiJzdW1tYTEiO3M6MzoiMTAwIjtzOjY6InN1bW1hMiI7czo0OiIxMDAwIjtzOjY6ImJvbnVzMyI7czoxOiIzIjtzOjY6InN1bW1hMyI7czo0OiIzMDAwIjtzOjY6ImJvbnVzNCI7czoxOiI0IjtzOjY6InN1bW1hNCI7czo0OiI0MDAwIjtzOjU6ImRpc2MxIjtzOjE6IjEiO3M6MTA6ImRpc2NzdW1tYTEiO3M6MToiMCI7czo1OiJkaXNjMiI7czoxOiIzIjtzOjEwOiJkaXNjc3VtbWEyIjtzOjE6IjAiO3M6NToiZGlzYzMiO3M6MToiNyI7czoxMDoiZGlzY3N1bW1hMyI7czoxOiIwIjtzOjU6ImRpc2M0IjtzOjA6IiI7czoxMDoiZGlzY3N1bW1hNCI7czowOiIiO30=');
 INSERT INTO options (optname, optvalue) VALUES('food', 'YToxNTp7czo4OiJ3b3JrdHlwZSI7czoxOiIyIjtzOjk6InByaWNldHlwZSI7czo2OiJwcmljZTEiO3M6ODoiZGVsaXZlcnkiO2k6MTtzOjY6InRhYmxlcyI7aToxO3M6NDoicGFjayI7aToxO3M6NDoibWVudSI7aToxO3M6NDoibmFtZSI7czo2OiJkZGRkZGQiO3M6NToicGhvbmUiO3M6ODoiNTU1NTU1NTUiO3M6NjoidGltZXBuIjtzOjI6IjExIjtzOjY6InRpbWVzYSI7czowOiIiO3M6NjoidGltZXN1IjtzOjA6IiI7czoxMjoiZm9vZGJhc2VtZW51IjtzOjE6IjAiO3M6MTY6ImZvb2RiYXNlbWVudW5hbWUiO3M6MDoiIjtzOjk6ImZvb2RtZW51MiI7czoxOiIwIjtzOjEyOiJmb29kbWVudW5hbWUiO3M6MDoiIjt9');
 INSERT INTO options (optname, optvalue) VALUES('printer', 'YTo3OntzOjg6InBtYXhuYW1lIjtzOjE6IjciO3M6OToicHJpY2V0eXBlIjtzOjY6InByaWNlMSI7czoxMToiYmFyY29kZXR5cGUiO3M6NDoiQzEyOCI7czo2OiJwcHJpY2UiO2k6MTtzOjU6InBjb2RlIjtpOjE7czo4OiJwYmFyY29kZSI7aToxO3M6NzoicHFyY29kZSI7aTowO30=');
@@ -1576,7 +1696,7 @@ INSERT INTO options (optname, optvalue) VALUES('shop', 'YToyMDp7czo3OiJkZWZjdXN0
 INSERT INTO options (optname, optvalue) VALUES('sms', 'YToxMTp7czoxMjoic21zY2x1YnRva2VuIjtzOjA6IiI7czoxMjoic21zY2x1YmxvZ2luIjtzOjA6IiI7czoxMToic21zY2x1YnBhc3MiO3M6MDoiIjtzOjk6InNtc2NsdWJhbiI7czowOiIiO3M6MTA6InNtc2NsdWJ2YW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15dG9rZW4iO3M6MDoiIjtzOjEyOiJzbXNzZW15ZGV2aWQiO3M6MDoiIjtzOjExOiJmbHlzbXNsb2dpbiI7czowOiIiO3M6MTA6ImZseXNtc3Bhc3MiO3M6MDoiIjtzOjg6ImZseXNtc2FuIjtzOjA6IiI7czo3OiJzbXN0eXBlIjtzOjE6IjAiO30=');
 INSERT INTO options (optname, optvalue) VALUES('val', 'YToyOntzOjc6InZhbGxpc3QiO2E6MTp7aToxNjQyNjc1OTU1O086MTI6IkFwcFxEYXRhSXRlbSI6Mjp7czoyOiJpZCI7aToxNjQyNjc1OTU1O3M6OToiACoAZmllbGRzIjthOjM6e3M6NDoiY29kZSI7czozOiJVU0QiO3M6NDoibmFtZSI7czoxMDoi0JTQvtC70LDRgCI7czo0OiJyYXRlIjtzOjI6IjYwIjt9fX1zOjg6InZhbHByaWNlIjtpOjE7fQ==');
 INSERT INTO options (optname, optvalue) VALUES('salary', 'YTo3OntzOjQ6ImNhbGMiO3M6MjE2OiIgLy/QstGB0YzQvtCz0L4g0L3QsNGA0LDRhdC+0LLQsNC90L4NCiAgdjIwMCA9ICB2MTA1DQoNCiAvL9C/0L7QtNCw0YLQutC4DQp2MjIwID0gIHYyMDAgKiAwLjE4DQp2MzAwID0gIHYyMDAgKiAwLjIyDQovL9Cy0YHRjNC+0LPQviDRg9GC0YDQuNC80LDQvdC+DQp2NjAwID12MjAwICAtIHYyMjAtIHYzMDANCi8v0L3QsCDRgNGD0LrQuA0KdjkwMCA9djIwMCAgLSB2NjAwLXY4NTAiO3M6ODoiY2FsY2Jhc2UiO3M6NjE6Ii8v0L7RgdC90L7QstC90LAgINC30LDRgNC/0LvQsNGC0LANCiB2MTA1PXRhc2tzdW0rc2VsbHZhbHVlDQoiO3M6MTM6ImNvZGViYXNlaW5jb20iO3M6MzoiMTA1IjtzOjEwOiJjb2RlcmVzdWx0IjtzOjM6IjkwMCI7czoxMToiY29kZWFkdmFuY2UiO3M6MToiMCI7czo4OiJjb2RlZmluZSI7czoxOiIwIjtzOjk6ImNvZGVib251cyI7czoxOiIwIjt9');
-INSERT INTO options (optname, optvalue) VALUES('version', '6.16.0');
+INSERT INTO options (optname, optvalue) VALUES('version', '8.1.0');
 
 
 
@@ -1587,3 +1707,4 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbalans','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration12','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration180','done');

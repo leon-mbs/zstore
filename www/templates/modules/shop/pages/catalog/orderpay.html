@@ -23,12 +23,7 @@
                        <td class="text-right"><b>{{total}}</b></td>
                     </tr>
              </table>
-            {{#wp}} 
-                 <button class="btn btn-success" type="button" onclick="pay();">Оплатити через WayForPay</button>
-                {{/wp}}    
-            {{#lp}} 
-                 <button class="btn btn-success" type="button" onclick="pay();">Оплатити через LiqPay</button>
-                {{/lp}}    
+               
                  
                  {{#qr}}         
                  <button class="btn btn-success" type="button" onclick="payqr();">Оплатити через QR код</button>         
@@ -38,118 +33,7 @@
 
         </div>
    
-      
-      {{#wp}} 
-   <script id="widget-wfp-script" src="https://secure.wayforpay.com/server/pay-widget.js"></script>
- 
-    <script type="text/javascript">
-        let wayforpay = new Wayforpay();
-
-        let pay = function () {
-               
-         callPageMethod('dataWP',null, null,(data)=> 
-                      {
-                         
-                       
-                            data =  JSON.parse(data)  
-            
-      
-                            wayforpay.run(data,
-                                function (response) {
-//console.log(JSON.stringify(response));
-                                   
-                                    
-                                callPageMethod('payWP',[], null,()=> 
-                                {
-                                    if(response.transactionStatus=="Approved") {
-                                     //  window.location = "/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"
-                                       
-                                       setTimeout(function() { 
-                                           window.location = "/shop"     
-                                       }, 2000);   
-                                        
-                                    }  
-                                    
-                                });                                      
-                                    
-                                },
-                                function (response) {
-                                    console.log(JSON.stringify(response));
-
-                                },
-                                function (response) {
-                                    console.log(JSON.stringify(response));
-                                }
-                            );       
-          
-                          
-     
-                          
-                      });         
-        }
   
-   
-   
-    </script>
-    
-        {{/wp}} 
-        {{#lp}} 
-      <script type="text/javascript">
-   
-          let pay = function(){};
-    
-        window.LiqPayCheckoutCallback = function() {
-               pay = function(){
-                 
-               callPageMethod('dataLP',null, null,(data)=> 
-                      {
-                                 
-
-                            data =  JSON.parse(data)  
-            
-                           LiqPayCheckout.init({
-                                data: data.data,
-                                signature: data.sign,
-                                language: "uk",
-                                mode: "popup"
-                            }).on("liqpay.callback", function(data){
-                               
-                                callPageMethod('payLP',[data.status,data.payment_id], null,()=> 
-                                {
-                                    if(data.status=="success") {
-                                     //  window.location = "/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"
-                                       
-                                       setTimeout(function() { 
-                                           window.location = "/shop"     
-                                       }, 2000);   
-                                        
-                                    }  
-                                    
-                                });  
-            
-                                
-                                
-                                
-                                
-                            }).on("liqpay.ready", function(data){
-                                console.log(JSON.stringify(data));
-
-                            }).on("liqpay.close", function(data){
-                                console.log(JSON.stringify(data));
-
-                            });  
-          
-                          
-     
-                          
-                      });  
-                
-            };
-        };
-      </script>   
-     <script src="https://static.liqpay.ua/libjs/checkout.js" async></script>
-      
-        {{/lp}} 
         
   {{#qr}} 
   
@@ -222,52 +106,4 @@
     </body>
 </html>
         
-<!--
-{ "currency_credit":"UAH",
-  "action":"pay",
-  "cmd":"liqpay.callback",
-  "sender_bonus":0,
-  "amount":2,
-  "amount_credit":2,
-  "commission_credit":0.03,
-  "amount_debit":2,
-  "result":"ok",
-  "mpi_eci":"7",
-  "sender_card_mask2":"536354*96",
-  "amount_bonus":0,
-  "sender_card_bank":"pb",
-  "currency":"UAH",
-  "liqpay_order_id":"W8WZQL891667320022128546",
-  "type":"buy",
-  "sender_commission":0,
-  "notify":
-     { 
-       "data":"eyJwYXltZW50X2lkIjoyMTI0MDM5Mjg3LCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzdWNjZXNzIiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJwcml2YXQyNCIsInB1YmxpY19rZXkiOiJzYW5kYm94X2kyMjE4OTY2MjA5IiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoi0KDQnTEyMzQ1Njc5IiwibGlxcGF5X29yZGVyX2lkIjoiVzhXWlFMODkxNjY3MzIwMDIyMTI4NTQ2IiwiZGVzY3JpcHRpb24iOiLQntC/0LvQsNGC0LAg0YLQvtCy0LDRgNGDIiwic2VuZGVyX3Bob25lIjoiMzgwOTczNzA3MDQ3Iiwic2VuZGVyX2NhcmRfbWFzazIiOiI1MzYzNTQqOTYiLCJzZW5kZXJfY2FyZF9iYW5rIjoicGIiLCJzZW5kZXJfY2FyZF90eXBlIjoibWMiLCJzZW5kZXJfY2FyZF9jb3VudHJ5Ijo4MDQsImFtb3VudCI6Mi4wLCJjdXJyZW5jeSI6IlVBSCIsInNlbmRlcl9jb21taXNzaW9uIjowLjAsInJlY2VpdmVyX2NvbW1pc3Npb24iOjAuMDMsImFnZW50X2NvbW1pc3Npb24iOjAuMCwiYW1vdW50X2RlYml0IjoyLjAsImFtb3VudF9jcmVkaXQiOjIuMCwiY29tbWlzc2lvbl9kZWJpdCI6MC4wLCJjb21taXNzaW9uX2NyZWRpdCI6MC4wMywiY3VycmVuY3lfZGViaXQiOiJVQUgiLCJjdXJyZW5jeV9jcmVkaXQiOiJVQUgiLCJzZW5kZXJfYm9udXMiOjAuMCwiYW1vdW50X2JvbnVzIjowLjAsIm1waV9lY2kiOiI3IiwiaXNfM2RzIjpmYWxzZSwibGFuZ3VhZ2UiOiJ1ayIsImNyZWF0ZV9kYXRlIjoxNjY3MzIwMDIyMTMwLCJlbmRfZGF0ZSI6MTY2NzMyMDAyMjQ4MSwidHJhbnNhY3Rpb25faWQiOjIxMjQwMzkyODd9",
-       "signature":"PDlstx+LsrnUZNJY40F/v+J1qao="
-       },
-   "acq_id":414963,
-   "timestamp":1667320022503,
-   "create_date":1667320022130,
-   "order_id":"РН12345679",
-   "is_3ds":false,
-   "status":"success",
-   "payment_id":2124039287,
-   "version":3,
-   "commission_debit":0,
-   "agent_commission":0,
-   "transaction_id":2124039287,
-   "end_date":1667320022481,
-   "sender_card_type":"mc",
-   "description":"Оплата товару",
-   "language":"uk",
-   "receiver_commission":0.03,
-   "public_key":"sandbox_i2218966209",
-   "sender_card_country":804,
-   "pagetoken":"page_1667319120043787_12822195_6SCfsmbtVX6m5MYxjTIq",
-   "paytype":"privat24",
-   "sender_phone":"380973707047",
-   "currency_debit":"UAH",
-   "data":"eyJwYXltZW50X2lkIjoyMTI0MDM5Mjg3LCJhY3Rpb24iOiJwYXkiLCJzdGF0dXMiOiJzdWNjZXNzIiwidmVyc2lvbiI6MywidHlwZSI6ImJ1eSIsInBheXR5cGUiOiJwcml2YXQyNCIsInB1YmxpY19rZXkiOiJzYW5kYm94X2kyMjE4OTY2MjA5IiwiYWNxX2lkIjo0MTQ5NjMsIm9yZGVyX2lkIjoi0KDQnTEyMzQ1Njc5IiwibGlxcGF5X29yZGVyX2lkIjoiVzhXWlFMODkxNjY3MzIwMDIyMTI4NTQ2IiwiZGVzY3JpcHRpb24iOiLQntC/0LvQsNGC0LAg0YLQvtCy0LDRgNGDIiwic2VuZGVyX3Bob25lIjoiMzgwOTczNzA3MDQ3Iiwic2VuZGVyX2NhcmRfbWFzazIiOiI1MzYzNTQqOTYiLCJzZW5kZXJfY2FyZF9iYW5rIjoicGIiLCJzZW5kZXJfY2FyZF90eXBlIjoibWMiLCJzZW5kZXJfY2FyZF9jb3VudHJ5Ijo4MDQsImFtb3VudCI6Mi4wLCJjdXJyZW5jeSI6IlVBSCIsInNlbmRlcl9jb21taXNzaW9uIjowLjAsInJlY2VpdmVyX2NvbW1pc3Npb24iOjAuMDMsImFnZW50X2NvbW1pc3Npb24iOjAuMCwiYW1vdW50X2RlYml0IjoyLjAsImFtb3VudF9jcmVkaXQiOjIuMCwiY29tbWlzc2lvbl9kZWJpdCI6MC4wLCJjb21taXNzaW9uX2NyZWRpdCI6MC4wMywiY3VycmVuY3lfZGViaXQiOiJVQUgiLCJjdXJyZW5jeV9jcmVkaXQiOiJVQUgiLCJzZW5kZXJfYm9udXMiOjAuMCwiYW1vdW50X2JvbnVzIjowLjAsIm1waV9lY2kiOiI3IiwiaXNfM2RzIjpmYWxzZSwibGFuZ3VhZ2UiOiJ1ayIsImNyZWF0ZV9kYXRlIjoxNjY3MzIwMDIyMTMwLCJlbmRfZGF0ZSI6MTY2NzMyMDAyMjQ4MSwidHJhbnNhY3Rpb25faWQiOjIxMjQwMzkyODd9","signature":"PDlstx+LsrnUZNJY40F/v+J1qao="
-     }  
-     
--->
+ 

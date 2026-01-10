@@ -62,7 +62,9 @@ class GoodsReceipt extends Document
             $header['storeemp'] = $this->headerdata["storeempname"];
         }
 
-
+        $header['payreq'] = $this->getHD('payreq');
+        $header['ispayreq'] = strlen($header['payreq']) > 0;
+ 
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
         $header['isprep'] = $this->headerdata["prepaid"] > 0;
@@ -159,31 +161,26 @@ class GoodsReceipt extends Document
 
 
         $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
       
         $this->DoBalans() ;
 
-        if($this->headerdata['delivery'] > 0) {
-           if($this->headerdata['deliverytype']== 1) { 
-               \App\Entity\IOState::addIOState($this->document_id,  $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
-               \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-           }
-           if($this->headerdata['deliverytype']== 3) {  
-                $pay = new \App\Entity\Pay();
-                $pay->mf_id = $this->headerdata['payment'];
-                $pay->document_id = $this->document_id;
-                $pay->amount = 0-$this->headerdata['delivery'];
-                $pay->paytype = \App\Entity\Pay::PAY_DELIVERY;
-                $pay->paydate = time();
-                $pay->notes = 'Доставка';
-                $pay->user_id = \App\System::getUser()->user_id;
-                $pay->save();
-                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-                
-           }
+         
+         $del = $this->headerdata['delivery'] * $rate;
+         if($del > 0) {
+           if($this->headerdata['deliverytype']  == 3 ) { 
+               \App\Entity\IOState::addIOState($this->document_id, 0- $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+           }  
+           if($this->headerdata['deliverytype'] ==2 || $this->headerdata['deliverytype'] == 4 ) { 
+                //вычитаем (сторно) из общих расходов  (по оплате)
+              // \App\Entity\IOState::addIOState($this->document_id, $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+                      
+           }  
+       
         }  
 
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
        
+     
         if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
@@ -203,8 +200,9 @@ class GoodsReceipt extends Document
                  
              }
         }
-        $this->DoAcc();  
 
+        $this->DoAcc();  
+        
         return true;
     }
 
@@ -276,7 +274,7 @@ class GoodsReceipt extends Document
          parent::DoAcc()  ;
     
     
-         $ia=\App\Entity\Account::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
          foreach($ia as $a=>$am){
              \App\Entity\AccEntry::addEntry($a,'63', $am,$this->document_id)  ; 
          } 

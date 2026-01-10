@@ -15,6 +15,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
+use App\Entity\User;
 
 class UserProfile extends \App\Pages\Base
 {
@@ -23,13 +24,13 @@ class UserProfile extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        $this->user = System::getUser();
+        $this->user = User::load(System::getUser()->user_id);
 
-        if ($this->user->user_id == 0) {
+        if ($this->user == null) {
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
+    
         $form = new Form('profileform');
         $form->onSubmit($this, 'onsubmit');
         $form->add(new Label('userlogin', $this->user->userlogin));
@@ -44,7 +45,7 @@ class UserProfile extends \App\Pages\Base
 
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
-        $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
+        $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100, 200 => 200), $this->user->pagesize));
         $form->add(new DropDownChoice('defpaytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $this->user->defpaytype ))  ;
 
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
@@ -99,11 +100,7 @@ class UserProfile extends \App\Pages\Base
         
         
              
-        $form = new Form('scaleform');
-        $form->add(new TextInput('scaleserver', $this->user->scaleserver));
-        $form->onSubmit($this, 'saveScaleOnClick');
-        $this->add($form);     
-
+     
         if(strlen($this->user->prtype) == 0) {
             $this->user->prtype = 0 ;
             $this->user->pserver   = "http://127.0.0.1:8080";
@@ -141,6 +138,14 @@ class UserProfile extends \App\Pages\Base
         $this->add($form);
 
         $this->onPSTypelabel(null);
+     
+     
+        $form = new Form('scaleform');
+
+        $form->add(new TextArea('scalescript', $this->user->scalescript));
+        $form->onSubmit($this, 'saveScaleOnClick');
+        $this->add($form);     
+     
         
         $this->_tvars['usebot'] = strlen($this->user->chat_id) > 0  ;
 
@@ -304,13 +309,7 @@ class UserProfile extends \App\Pages\Base
 
     }
 
-    public function saveScaleOnClick($sender) {
-        $this->user->scaleserver = $sender->scaleserver->getText() ;
-        $this->user->save();
-        $this->setSuccess('Збережено');
-        System::setUser($this->user);
-          
-    }
+
     public function savePrinterlabelOnClick($sender) {
 
 
@@ -328,5 +327,13 @@ class UserProfile extends \App\Pages\Base
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
- 
+    public function saveScaleOnClick($sender) {
+
+        $this->user->scalescript = $sender->scalescript->getText() ;
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+        App::Redirect("\\App\\Pages\\UserProfile");               
+         
+    }
 }

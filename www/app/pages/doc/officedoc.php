@@ -216,8 +216,8 @@ class OfficeDoc extends \App\Pages\Base
             return;
         }
         $this->_doc->packDetails('detaildata', array('data' => $data));
-        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
-        $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
+        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getDouble();
+        $this->_doc->headerdata['fine'] = $this->docform->fine->getDouble();
 
 
 
@@ -459,13 +459,13 @@ class OfficeDoc extends \App\Pages\Base
         $this->_accapprlist = [];
 
         $d = $this->_doc->unpackDetails('accessdata');
-        if (is_array($d['showlist'])) {
+        if (is_array($d['showlist']??null)) {
             $this->_accshowlist = $d['showlist'];
         }
-        if (is_array($d['editlist'])) {
+        if (is_array($d['editlist']??null)) {
             $this->_acceditlist = $d['editlist'];
         }
-        if (is_array($d['apprlist'])) {
+        if (is_array($d['apprlist']??null)) {
             $this->_accapprlist = $d['apprlist'];
         }
 

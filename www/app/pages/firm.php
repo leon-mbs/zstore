@@ -41,7 +41,7 @@ class Firm extends \App\Pages\Base
         $this->firmform->add(new TextInput('tin',$firm['tin']));
         $this->firmform->add(new TextInput('phone',$firm['phone']));
         $this->firmform->add(new TextInput('address',$firm['address']));
-        $this->firmform->add(new TextInput('city',$firm['address']));
+        $this->firmform->add(new TextInput('city',$firm['city']??''));
         $this->firmform->add(new TextInput('vdoc',$firm['vdoc']));
       
         $this->firmform->add(new TextInput('sign',$firm['sign']));
@@ -73,6 +73,7 @@ class Firm extends \App\Pages\Base
         $firm['tin'] = $this->firmform->tin->getText();
         $firm['phone'] = $this->firmform->phone->getText();
         $firm['address'] = $this->firmform->address->getText();
+        $firm['city'] = $this->firmform->city->getText();
         $firm['vdoc'] = $this->firmform->vdoc->getText();
   
         $firm['sign'] = $this->firmform->sign->getText();
@@ -103,6 +104,7 @@ class Firm extends \App\Pages\Base
         $fp = new \App\DataItem();
         $fp->name = '';
         $fp->edrpou = '';
+        $fp->address = '';
         $fp->id = time();
         $this->_fops[$fp->id] = $fp;
         $this->firmform->fopslist->Reload() ;
@@ -114,6 +116,7 @@ class Firm extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new TextInput('fopname', new Bind($item, 'name')));
         $row->add(new TextInput('fopedrpou', new Bind($item, 'edrpou')));
+        $row->add(new TextInput('fopaddress', new Bind($item, 'address')));
         $row->add(new ClickLink('delfop', $this, 'onDelFop'));
     }
 

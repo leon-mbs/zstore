@@ -84,6 +84,7 @@ class ProdReceipt extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('ProdReceipt');
             $this->docform->document_number->setText($this->_doc->nextNumber());
+                  
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -232,8 +233,8 @@ class ProdReceipt extends \App\Pages\Base
             
         }
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
         }

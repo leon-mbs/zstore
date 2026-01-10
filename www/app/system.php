@@ -10,9 +10,9 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "6.16.0";
-    public const PREV_VERSION = "6.15.2";
-    public const REQUIRED_DB  = "6.16.0";
+    public const CURR_VERSION = "8.1.0";
+    public const PREV_VERSION = "8.0.1";
+    public const REQUIRED_DB  = "8.1.0";
    
 
     /**

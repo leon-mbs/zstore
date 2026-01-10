@@ -16,6 +16,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -55,7 +56,7 @@ class GroupList extends \App\Pages\Base
         //$this->UpdateAttrList();
 
         $attrpanel->add(new ClickLink('addattr'))->onClick($this, 'OnAddAttribute');
-        $attrpanel->add(new ClickLink('addcustom'))->onClick($this, 'OnAddCustom');
+     
         $form = $attrpanel->add(new Form('attreditform'));
         $form->setVisible(false);
         $form->onSubmit($this, 'OnSaveAttribute');
@@ -63,7 +64,7 @@ class GroupList extends \App\Pages\Base
         $form->add(new TextInput('attrid'));
         $form->add(new \Zippy\Html\Form\DropDownChoice('attrtype', Helper::getAttributeTypes()))->onChange($this, 'OnAttrType');
         $form->add(new Label('attrtypename'));
-        $form->add(new Label('tt'))->setAttribute("title", "Атрибут 'Есть/Нет' указывает наличие или  отсутствие какойго либо параметра. Наприме FM-тюнер");
+        $form->add(new Label('tt'))->setAttribute("title", "Атрибут `Є/Немає` вказує на наявність або відсутність характеристики (наприклад, FM-тюнер)");
 
         $form->add(new Panel('attrvaluespanel'));
         $form->attrvaluespanel->add(new TextArea('attrvalues'));
@@ -72,6 +73,10 @@ class GroupList extends \App\Pages\Base
         $form->add(new Panel('meashurepanel'));
         $form->meashurepanel->add(new TextInput('meashure'));
         $form->meashurepanel->setVisible(false);
+    
+        $form->add(new Panel('cfpanel'));
+        $form->cfpanel->add(new DropDownChoice('attrcf'));
+        $form->cfpanel->setVisible(false);
     }
 
     public function OnGroupRow($row) {
@@ -88,6 +93,16 @@ class GroupList extends \App\Pages\Base
         $this->grouplist->Reload(false);
         $this->UpdateAttrList();
         $this->attrpanel->attreditform->setVisible(false);
+        
+        $cflist = [];
+        foreach($this->group->cflist as $c=>$n){
+             $cflist[$c]=$n;
+        }
+     
+         
+        $this->attrpanel->attreditform->cfpanel->attrcf->setOptionList($cflist);
+        
+        $this->attrpanel->attreditform->cfpanel->attrcf->setValue(0);
     }
 
     //обновить атрибуты
@@ -134,6 +149,7 @@ class GroupList extends \App\Pages\Base
         $type = $sender->getValue();
         $this->attrpanel->attreditform->attrvaluespanel->setVisible(false);
         $this->attrpanel->attreditform->meashurepanel->setVisible(false);
+        $this->attrpanel->attreditform->cfpanel->setVisible(false);
         if ($type == 2) {
             $this->attrpanel->attreditform->meashurepanel->setVisible(true);
         }
@@ -150,11 +166,16 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Перелік` передбачений для переліку, з якого можна вибрати тільки одне значення (наприклад, колір). Задається переліком через кому");
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Набір` передбачений для переліку, з якого можна вибрати кілька значень (наприклад, діапазони прийому сигнала). Задається переліком через кому. ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Набір` передбачений для переліку, з якого можна вибрати кілька значень (наприклад, типи живлення). Задається переліком через кому. ");
         }
         if ($type == 5) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовий параметр (наприклад тип процесора). Значення не  використовується  в  фільтрах. ");
         }
+        if ($type == 6) {
+            $this->attrpanel->attreditform->tt->setAttribute("title", " Атрибут для кастомних полiв (якщо задані для даної категорії). Задається  як код кастомного  поля  ");
+            $this->attrpanel->attreditform->cfpanel->setVisible(true);
+     
+        }        
     }
 
     public function OnEditAtribute($sender) {
@@ -223,8 +244,26 @@ class GroupList extends \App\Pages\Base
 
 
             $attr->valueslist = implode(",", $r);
-        }
+            
+            
+            if (strlen (trim($attr->valueslist)) == 0) {
+                $this->setError("Не введено значення");
 
+                return;
+            }            
+            
+        }
+        if ($attr->attributetype == 6) {
+           
+            $fcode = $form->cfpanel->attrcf->getValue();
+            if ( $fcode == "0") {
+                $this->setError("Не вибрано значення");
+
+                return;
+            }             
+            $attr->valueslist = $fcode;
+        }
+    
         $attr->save();
 
         if ($attrid == "0") {
@@ -279,40 +318,5 @@ class GroupList extends \App\Pages\Base
         }
     }
 
-    public function OnAddCustom($sender) {
-         $cat = Category::load($this->group->cat_id);
-         $conn = \ZCL\DB\DB::getConnect();
-       
-         foreach($cat->cflist as $c=>$n){
-             
-            $found= false; 
-            foreach($this->attrlist as $a){
-              if($a->attributetype == 6 && $a->valueslist == $c )  {
-                    $found=true;
-                    if($a->attributename !== $n)  {
-                        $a->attributename = $n;
-                        $a->save();  
-                    }
-              }
-                
-            } 
-            if($found) continue; 
-            
-            $attr = new ProductAttribute();
-            $attr->cat_id = $this->group->cat_id;
-            $attr->attributetype = 6;   
-            $attr->attributename  = $n;
-            $attr->valueslist   = $c;  //код           
-            $attr->save();              
-            
-            $no = $conn->GetOne("select coalesce(max(ordern),0)+1 from shop_attributes_order");
-            $conn->Execute("insert into shop_attributes_order (pg_id,attr_id,ordern)values({$attr->cat_id},{$attr->attribute_id},{$no} )");
-            
-            
-         }
-     
-         $this->UpdateAttrList();       
-         
-    }
     
 }

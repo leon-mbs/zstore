@@ -525,10 +525,11 @@
             }   ,       
             onUsers:function(){
 
-                  callPM('loadUsers',[this.selectedTopic.topic_id], null,(data)=> 
+                   callPageMethod('loadUsers',[this.selectedTopic.topic_id], null,(data)=> 
                    {    
                      
-                     
+                      data = JSON.parse(data)
+                        
                       this.allUsers = data.allUsers
                       this.accUsers = data.accUsers  
        
@@ -561,7 +562,7 @@
             onSaveUsers:function(){
                   $("#usersaccess").modal('hide')   
                  
-                   callPM('saveUsers',[this.selectedTopic.topic_id], this.accUsers,(data)=> 
+                   callPageMethod('saveUsers',[this.selectedTopic.topic_id],JSON.stringify( this.accUsers),(data)=> 
                    {    
                     
                    })             

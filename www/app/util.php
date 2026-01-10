@@ -123,8 +123,9 @@ class Util
 
 
 
+  
 
-    public static function money2str_ua($number) {
+    public static function money2str($number) {
 
         return mb_ucfirst( money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT) );
     }

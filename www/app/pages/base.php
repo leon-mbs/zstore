@@ -37,14 +37,16 @@ class Base extends \Zippy\Html\WebPage
 
         //опции
         $this->_tvars["usescanner"] = $options['usescanner'] == 1  ;
+        $this->_tvars["usescale"] = $options['usescale'] == 1  ;
 
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
         $this->_tvars["usefood"] = $options['usefood'] == 1;
         $this->_tvars["useprod"] = $options['useprod'] == 1;
         $this->_tvars["usends"] = $options['usends'] == 1;
+        $this->_tvars["useacc"] = $options['useacc'] == 1;
+        $this->_tvars["useexcise"] = $options['useexcise'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
-        $this->_tvars["useacc"] = $options['useacc'] == 1 ;
         $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["storeemp"] = $options['storeemp'] == 1;
@@ -144,6 +146,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
+        $this->_tvars["freg"] = $modules['freg'] == 1;
        
 
 
@@ -155,7 +158,12 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["printserverlabel"] = $user->prtypelabel == 1;
 
 
-
+        $this->_tvars["smsscript"] = false;
+        $sms = System::getOptions('sms');
+        if($sms['smstype']==4 && $sms['smscustlang']=='js') {
+           $this->_tvars["smsscript"] =base64_decode( $sms['smscustscript']);
+            
+        }
         //доступы к  модулям
         if (strpos(System::getUser()->modules ?? '', 'shop') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["shop"] = false;
@@ -194,7 +202,7 @@ class Base extends \Zippy\Html\WebPage
         }
        
 
-        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
+        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"] ;
 
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
@@ -231,11 +239,14 @@ class Base extends \Zippy\Html\WebPage
 
         $this->_tvars["darkmode"] = $user->darkmode == 1;
 
+      
+        $this->_tvars["scalescript"] = $user->scalescript  ;
+
+       
+
         //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
 
-  
-  
      
     //    $duration =  Session::getSession()->duration() ;
      //   $this->_tvars['showver'] = $duration < 60   ;
@@ -334,16 +345,16 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
+            $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:8000})        ", true);
         }
         if (strlen(System::getWarnMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
+            $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{timeOut:4000})        ", true);
         }
         if (strlen(System::getSuccesMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{'timeOut':'2000'})        ", true);
+            $this->addJavaScript("toastr.success('" . System::getSuccesMsg() . "','',{timeOut:2000})        ", true);
         }
         if (strlen(System::getInfoMsg() ?? '') > 0) {
-            $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
+            $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{timeOut:3000})        ", true);
         }
       
         
@@ -395,6 +406,7 @@ class Base extends \Zippy\Html\WebPage
         $n->sender_id = System::getUser()->user_id;
         $n->save();
 
+       return $this->jsonOK() ;
     }
 
     public function getCustomerInfo($args, $post) {
@@ -402,7 +414,7 @@ class Base extends \Zippy\Html\WebPage
 
         $c = \App\Entity\Customer::load($args[0]);
         if($c==null) {
-            return  "N/A";
+            return $this->jsonOK("N/A");  
         }
 
          $header = [];
@@ -474,7 +486,7 @@ class Base extends \Zippy\Html\WebPage
         //  $data = str_replace("\"","`",$data)  ;
 
   
-        return $data;
+        return $this->jsonOK($data);
 
     }
 
@@ -483,7 +495,7 @@ class Base extends \Zippy\Html\WebPage
 
         $it = \App\Entity\Item::load($args[0]);
         if($it==null) {
-            return  "N/A";
+               return $this->jsonOK("N/A"); 
         }
 
         
@@ -508,7 +520,7 @@ class Base extends \Zippy\Html\WebPage
         $data = str_replace("'", "`", $data)  ;
         //  $data = str_replace("\"","`",$data)  ;
  
-        return $data;
+         return $this->jsonOK($data);
 
     }
 
@@ -516,7 +528,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         $ret = \App\Entity\Subscribe::sendSMS($args[0], $args[1])  ;
-        return $ret ?? "";
+        return $this->jsonOK($ret ?? "") ;
 
     }
 
@@ -597,42 +609,182 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    /*
-    protected function addToastrInfo($text,$ajax=false) {
-        $text = str_replace('`',"'",$text) ;
-        $text = str_replace('`',"\"",$text) ;
-                
-        $js=" $(document).Toasts('create', {
-                    icon: 'fa fa-info-circle text-info',
-                            position:'bottomRight',
-                            title:'{$text}'
-
-                    }) ";
-        if($ajax) {
-            $this->addJavaScript($js,true) ;    
-        }else {
-          $this->addAjaxResponse($js) ; 
-        }           
-        
-    }
-    protected function addToastrWarn($text,$ajax=false) {
-        $text = str_replace('`',"'",$text) ;
-        $text = str_replace('`',"\"",$text) ;
-                
-        $js=" $(document).Toasts('create', {
-                    icon: 'fa fa-exclamation-triangle text-warning',
-                            position:'bottomRight',
-                            title:'{$text}'
-
-                    }) ";
-        if($ajax) {
-            $this->addJavaScript($js,true) ;    
-        }else {
-          $this->addAjaxResponse($js) ; 
-        }
-    }
+    /**
+    * документ для отправки на  фискальный регистратор (через javascript)
+    * 
+    * @param mixed $args
+    * @param mixed $post
     */
-    //callPM
+    public function loadDocFR($args, $post=null) {
+        $doc = \App\Entity\Doc\Document::load($args[0]);
+        $doc = $doc->cast();
+                   
+        $ret=[];
+        $ret['type']  = 'C';
+        if($doc->meta_name=='ReturnIssue')   $ret['type']  = 'R';
+ 
+        $ret['number']  = $doc->document_number;
+        $ret['cashier']  = $doc->getCashier();
+        $ret['totalamount']  = Helper::fa($doc->amount); //сумма  по документу
+        $ret['payamount']  = Helper::fa($doc->payamount);  //к оплате
+        $ret['bonus']  = 0;
+        $ret['discount']  = 0;
+        $ret['rest']  = 0;
+        $ret['nal']  = 0;
+        $ret['beznal']  = 0;
+        $ret['prepaid']  = 0;
+        $ret['credit']  = 0;
+        $ret['slogan']  =  $doc->headerdata["checkslogan"]??'';  
+        $ret['exciseval'] =   H::fa($doc->headerdata['exciseval']??0)  ;
+    
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']??0);
+     
+        $ret['payed']  = Helper::fa($payed);
+        $delbonus = $doc->getBonus(false) ;
+        if($delbonus >0) {
+           $ret['bonus']  = Helper::fa($delbonus); //списано  бонусов
+        }
+        if($doc->headerdata["totaldisc"] >0) {
+           $ret['discount']  = Helper::fa($doc->headerdata["totaldisc"]); //общая  скидка
+        }
+        if($doc->headerdata["exchange"] >0) {
+           $ret['rest']  = Helper::fa($doc->headerdata["exchange"]??0); //сдача
+        }
+       
+          
+        
+        if($ret['type']  == 'R') {
+           $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+           if ($mf->beznal == 1) {
+              $ret['beznal']  = Helper::fa($doc->payed);
+           } else {
+              $ret['nal']  = Helper::fa($doc->payed);
+           }
+    
+        } else {
+        
+            if(($doc->headerdata['payment']??0)  >0) {
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+     
+                if ($mf->beznal == 1) {
+                    
+                    $ret['beznal']  = Helper::fa($payed);
+                    // в долг
+                    if ($payed < $doc->payamount) {
+                         $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                    }
+                } else {
+                    $ret['nal']  = Helper::fa($payed);
+               
+                    
+                    //сдача
+                    if ($doc->headerdata["exchange"] > 0) {
+                        $ret['rest']  = Helper::fa($payed- $doc->headerdata["exchange"]);
+                    }
+                    // в долг
+                    if ($payed < $doc->payamount) {
+                        $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                    }
+
+                     
+                }
+            } else {
+                if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+     
+                    $ret['nal']  = Helper::fa($doc->headerdata['payed']);
+               
+                    //сдача
+                    if ($doc->headerdata["exchange"] > 0) {
+                        $ret['rest']  = Helper::fa($payed- $doc->headerdata["exchange"]);
+                    }
+            
+                }
+                if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+           
+                    $ret['beznal']  = Helper::fa($doc->headerdata['payedcard']);
+               
+                 
+                }
+
+            }
+
+            // в долг
+            if ($payed < $doc->payamount) {
+                $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                
+              
+            }
+            // предоплата
+            if ($doc->headerdata['prepaid']>0) {
+                $ret['prepaid']  = Helper::fa($doc->headerdata['prepaid']);
+            }        
+        }
+        
+        
+        $ret['items']  = [];
+        foreach ($doc->unpackDetails('detaildata') as $item) {
+           $it= array(
+                'id'  => $item->item_id,
+                'article'  => $item->item_code,
+                'name'  => $item->itemname,  
+                'qty'   => Helper::fqty($item->quantity) ,
+                'price'   => Helper::fa($item->price) 
+               
+            );
+            if(strlen($item->shortname) >0)  $it['name'] =  $item->shortname;
+            if(strlen($item->bar_code) >0)  $it['bar_code'] =  $item->bar_code;
+            if(strlen($item->uktz) >0)  $it['uktz'] =  $item->uktz;
+            if(strlen($item->aklist??'') >0)  $it['excisestamps'] =  explode(",",$item->aklist ) ;
+      
+            $ret['items'][] = $it;
+
+
+        }   
+        
+    
+        
+        return $this->jsonOK($ret) ;
+    }
+
+    /**
+    * запись фискального номера с  фискального регистратора
+    * 
+    * @param mixed $args
+    * @param mixed $post
+    */
+    public function saveDocFR($args, $post=null) {
+        $doc = \App\Entity\Doc\Document::load($args[0]);
+        if($doc != null){
+            if(strlen($args[1] ??'')>0) {
+               $doc->headerdata["passfisc"] = 0;
+               $doc->headerdata["fiscalnumber"] = $args[1];
+            } else {     //если  была ошибка
+               $doc->headerdata["passfisc"] = 1;  
+            }
+            $doc->save() ;
+        }
+        return $this->jsonOK("") ;
+    }
+
+ 
+    //методы возврата для  callPM
+      public function jsonOK($data=null){
+         if($data===null) {
+             return json_encode([]) ;  
+         }
+          
+         return json_encode(['data'=>$data], JSON_UNESCAPED_UNICODE)   ;
+      }
+  
+      public function jsonError($error){  
+         return json_encode(['error'=>$error], JSON_UNESCAPED_UNICODE) ;  
+      }
+           
+      public function jsonWarn($warn){
+         return json_encode(['warning'=>$warn], JSON_UNESCAPED_UNICODE)  ; 
+      }
+           
+    //методы для vue
 
     public function vonTextCust($args, $post=null) {
 
@@ -788,7 +940,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['mfs'] =  \App\Util::tokv($mfs) ;
         }
 
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return $this->jsonOK($ret) ;
     }
 
     public function vLoadContracts($args, $post) {
@@ -802,19 +954,15 @@ class Base extends \Zippy\Html\WebPage
     }
 
    
-    public function vgetPriceByQty($args, $post) {
-        $post = json_decode($post) ;
+    public function getPriceByQty($args, $post=null) {
+        $item = \App\Entity\Item::load($args[0]) ;
+        $args[1] = str_replace(',', '.', $args[1]) ;
+        $price = $item->getActionPriceByQuantity($args[1]);
 
-        $item =  \App\Entity\Item::load($post->item) ;
-
-        $price = $item->getActionPriceByQuantity($post->qty);
-
-        $ret=[];
-        $ret['price'] = $price;
-
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return  $this->jsonOK($price);
 
     }
+   
     public function vLoadCust($args, $post) {
 
         $ret=[];

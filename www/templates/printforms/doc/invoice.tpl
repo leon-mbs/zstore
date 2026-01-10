@@ -27,7 +27,14 @@
     </tr>
      {{/edrpou}}       
           
+     {{#iscustaddress}}
     
+      <tr>
+        <td></td>
+        <td valign="top">Адреса</td>
+        <td colspan="7">{{custaddress}}</td>
+    </tr>    
+    {{/iscustaddress}}   
     
     {{#isfirm}}
     <tr>
@@ -72,7 +79,11 @@
         <td colspan="7">{{fop_edrpou}}</td>
     </tr>       
    {{/isfop}}   
-    
+     <tr>
+        <td></td>
+        <td valign="top">Адреса</td>
+        <td colspan="7">{{address}}</td>
+    </tr>    
     {{#iscontract}}
     <tr>
 

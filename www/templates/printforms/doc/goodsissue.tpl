@@ -4,7 +4,7 @@
     <tr>
         <td></td>
         <td valign="top"><b>Покупець</b></td>
-     <td><b>Покупець</b></td>
+ 
         <td colspan="6"> {{customer_name}}</b> 
           {{#phone}} Тел. {{phone}}  {{/phone}} 
         </td>
@@ -21,7 +21,14 @@
     </tr>
      {{/edrpou}}       
       
-      
+      {{#iscustaddress}}
+    
+      <tr>
+        <td></td>
+        <td valign="top">Адреса</td>
+        <td colspan="6">{{custaddress}}</td>
+    </tr>    
+    {{/iscustaddress}}      
       
       
     {{#isfirm}}
@@ -65,7 +72,13 @@
         <td valign="top">ЄДРПОУ</td>
         <td colspan="7">{{fop_edrpou}}</td>
     </tr>       
-   {{/isfop}}      
+   {{/isfop}}    
+   
+     <tr>
+        <td></td>
+        <td valign="top">Адреса</td>
+        <td colspan="7">{{address}}</td>
+    </tr>      
     {{#isbank}}
     <tr>
 

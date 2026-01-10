@@ -181,7 +181,7 @@ class Task extends \App\Pages\Base
         }
         $service = Service::load($id);
 
-        $service->quantity = $this->editdetail->editqty->getText();
+        $service->quantity = $this->editdetail->editqty->getDouble();
         $service->desc = $this->editdetail->editdesc->getText();
         $service->price = $service->cost;
         if (strlen($service->price) == 0) {
@@ -232,7 +232,7 @@ class Task extends \App\Pages\Base
         }
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetailprod->editqtyprod->getText();
+        $item->quantity = $this->editdetailprod->editqtyprod->getDouble();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
         if ( doubleval($item->quantity) == 0) {
@@ -262,7 +262,7 @@ class Task extends \App\Pages\Base
             return;
         }
         $emp = Employee::load($id);
-        $emp->ktu = $this->editdetail3->editktu->getText();
+        $emp->ktu = $this->editdetail3->editktu->getDouble();
         $this->_emplist[$emp->employee_id] = $emp;
         $this->detail3->Reload();
         $this->editdetail3->clean();

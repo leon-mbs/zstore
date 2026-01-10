@@ -78,16 +78,7 @@ class Equipment extends \ZCL\DB\Entity
         return 'N/A' ;
     }
     
-
-    //todo
-    protected function beforeDelete() {
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "  select count(*)  from  eqentry where   eq_id =   {$this->eq_id}   ";
-        $cnt = intval( $conn->GetOne($sql) );
-        return ($cnt > 0) ? "Не можна  видаляти ОЗ з документами" : '';
-    }   
-    
+  
     
     public static function getList($search = '',$eq=false ) {
 

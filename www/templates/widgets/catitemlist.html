@@ -92,10 +92,9 @@
                 var path = $('#_catitemlist_').attr('path') 
                 
                 
-                callPageMethod(path +'::loaddata',[cat_id ], null,(data)=> 
+                  callPM(path +'::loaddata',[cat_id ], null,(data)=> 
                   {
-                      
-                       var data = JSON.parse(data)
+                       data = JSON.parse(data)
                        
                         
                        this.cats = data.cats

@@ -126,6 +126,9 @@
                         <th>Код</th>
                         <th>Категорія</th>
                         <th>Бренд</th>
+                          {{#usecf}}
+                            <th>Каст. поля</th>
+                             {{/usecf}}
                         <th>Од.</th>
                         <th> <i title="Комірка" class="fa fa-box"></i> </th>     
 
@@ -164,6 +167,9 @@
                         <td zippy="code" class=" text-nowrap"></td>
                         <td zippy="cat_name"></td>
                         <td zippy="brand"></td>
+                              {{#usecf}}
+                            <td zippy="cfval"> </td>
+                             {{/usecf}} 
                         <td zippy="msr"></td>
                         <td zippy="cell"></td>
 
@@ -280,7 +286,7 @@
                  
                      <form zippy="iformbay" class="form-inline mt-4">
                        <label>Кiл.</label> 
-                       <input  required  style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
+                       <input  required="on"  style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
                        <input title="Додати в заявку постачальнику"   type="submit" value="В закупку"  class="btn btn-info" >
                      </form>
                      

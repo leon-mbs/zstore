@@ -14,6 +14,7 @@ use Zippy\Html\Panel;
 class CatItemList extends \Zippy\Html\PageFragment
 {
     private $_food = false;
+    private $_p         = null;
 
     /**
      *
@@ -42,6 +43,7 @@ class CatItemList extends \Zippy\Html\PageFragment
             $owner =  $owner->getOwner() ;
         }
         $this->_catitemlist_->setAttribute('path', $path);
+        $this->_p = $this->getPageOwner()  ;
 
     }
 
@@ -89,7 +91,9 @@ class CatItemList extends \Zippy\Html\PageFragment
 
 
         }
-        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+        return $this->_p->jsonOK($ret);
+
+        
     }
 
     public function loaditems($args, $post=null) {

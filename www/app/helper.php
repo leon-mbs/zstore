@@ -379,7 +379,7 @@ class Helper
     }
 
     /**
-     * список  файдов  пррепленных  к  объекту
+     * список  файлов  прикрепленных  к  объекту
      *
      * @param mixed $item_id
      * @param mixed $item_type
@@ -878,8 +878,12 @@ class Helper
         }
 
         foreach($data as $k => $v) {
-
+             
             if(is_array($v)) {
+                $v['format']   = $v['format'] ??'';
+                $v['bold']     = $v['bold'] ??'';
+                $v['align']    = $v['align'] ??'';
+   
                 $c = $sheet->getCell($k);
                 $style = $sheet->getStyle($k);
                 if($v['format'] == 'date') {
@@ -960,7 +964,20 @@ class Helper
 
     }
 
+    public static function exportCSV($csvfile,$filename) {
 
+        $size = filesize($csvfile);
+      
+        header('Content-Type: text/csv');
+        header('Content-Length: '.$size);
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        readfile($csvfile);
+        flush() ;
+        unlink($csvfile);
+        die;
+
+
+    }
     /**
      * Получение  данных с  таблицы ключ-значение
      *
@@ -1315,40 +1332,7 @@ class Helper
     }
 
 
-    /**
-     * проверка  новой версии
-     * @deprecated
-     */
-    public static function checkVer() {
-
-        $phpv = phpversion();
-        $conn = \ZDB\DB::getConnect();
-
-        $nocache = "?t=" . time() . "&s=" . Helper::getSalt() . '&phpv=' . $phpv . '_' . \App\System::CURR_VERSION;
-
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php" . $nocache);
-        $v = @json_decode($v, true);
-        if(!is_array($v)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json" . $nocache);
-            $v = @json_decode($v, true);
-
-        }
-        if(strlen($v['version']) > 0) {
-            $c = str_replace("v", "", \App\System::CURR_VERSION);
-            $n = str_replace("v", "", $v['version']);
-
-            $ca = explode('.', $c);
-            $na = explode('.', $n);
-
-            if($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
-                return $v['version'];
-            }
-
-        }
-
-        return '';
-    }
-
+ 
     /**
      * выполняет перенос  данных на  новой  версии
      *
@@ -1516,27 +1500,33 @@ class Helper
                
             }  
         }
+         
             
-        $migration6150 = \App\Helper::getKeyVal('migration6150'); 
-        if($migration6150 != "done" && version_compare($vdb,'6.15.0')>=0  ) {
-        //    Helper::log("Міграція 6150");
+        $migration6180 = \App\Helper::getKeyVal('migration6180'); 
+        if($migration6180 != "done"  ) {
+            Helper::log("Міграція 6180");
          
-            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
-            if($cnt > 0){
-               $common['usefood'] = 1;
-               System::setOptions("common",$common) ;
-            }
-            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
-            if($cnt > 0){
-               $common['useprod'] = 1;
-               System::setOptions("common",$common) ;
-            }
-            Session::getSession()->menu = [];     
-         
-            \App\Helper::setKeyVal('migration6150', "done");           
+            \App\Helper::setKeyVal('migration6180', "done");           
         
+            try {
        
-        }       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                 $is=false;          
+                 foreach($w as $e){
+                     if($e['Key_name']=='parent_id'){
+                          $is=true;      
+                     }             
+                 }
+                 if($is==false) {
+                     $conn->Execute("ALTER TABLE documents ADD INDEX parent_id (parent_id) ");                     
+                 }
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+          
     }
 
 

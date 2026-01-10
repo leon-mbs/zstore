@@ -1,13 +1,13 @@
 <html>
     <head>
-          <title> Наряд на виконання робіт</title>
+          <title> Виробничий  наряд</title>
     </head>
 
     <body>
-
+ 
 
         
-            <h3> Наряд на виконання робіт
+            <h3> Виробничий  наряд
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
                     data-placement="bottom" data-content="Документ, що фіксує виконання виробничих завдань.
                    Для списання витратних матеріалів на підставі наряду, можна створити документ  
@@ -22,7 +22,7 @@
                      <div class="col-12">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_number"  required >
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
 
                     <div class="form-group  ">
@@ -37,9 +37,9 @@
                     <div class="form-group">
                         <label for="document_date"> Дата початку</label>
                         <div class="input-group">
-                            <input   class="form-control"   zippy="document_date"  required >
+                            <input   class="form-control"   zippy="document_date"  required="on" >
                             <span class="input-group-text">:</span>
-                            <input   class="form-control"   zippy="document_time"  required >
+                            <input   class="form-control"   zippy="document_time"  required="on" >
                         </div>                        
                     </div>
 
@@ -83,8 +83,8 @@
 
  
                         <label class="ml-2" for="editqty">Кіл.</label>
-                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9]+" value="1"
-                               style="width: 50px;">
+                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"
+                               style="width: 75px;">
  
                         <label for="editdesc">Коментар  </label>
                         <input class="form-control  mr-2" type="text" zippy="editdesc"                          >
@@ -128,8 +128,8 @@
                         </select>
  
                         <label class="ml-2" for="editqtyprod">Кіл.</label>
-                   <input class="form-control mr-2" type="text" zippy="editqtyprod" pattern="[0-9]+" value="1"
-                               style="width: 50px;">
+                   <input class="form-control mr-2" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"
+                               style="width: 75px;">
       
                         <label for="editdescprod">Коментар  </label>
                         <input class="form-control  mr-2" type="text" zippy="editdescprod"                          >

@@ -16,6 +16,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -54,7 +55,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-
+        $this->docform->add(new TextArea('payreq'));
+      
         $this->docform->add(new TextInput('editpayamount', "0"));
         $this->docform->add(new SubmitButton('bpayamount'))->onClick($this, 'onPayAmount');
         $this->docform->add(new TextInput('editpayed', "0"));
@@ -103,6 +105,7 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
+            $this->docform->payreq->setText($this->_doc->getHD('payreq'));
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
@@ -140,7 +143,8 @@ class InvoiceCust extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $order = $basedoc->cast();
-
+                        $order->updateStatus(Document::STATE_CLOSED);
+                        
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
                         $this->CalcTotal();
@@ -227,8 +231,8 @@ class InvoiceCust extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
@@ -283,6 +287,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
+        $this->_doc->headerdata['payreq'] = $this->docform->payreq->getText();
 
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
@@ -417,13 +422,13 @@ class InvoiceCust extends \App\Pages\Base
     }
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getDouble()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
 
     public function onNds($sender) {
-        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
+        $this->docform->nds->setText(H::fa($this->docform->editnds->getDouble()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
@@ -532,6 +537,17 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->contract->setVisible(false);
             $this->docform->contract->setValue(0);
         }
+        
+        $prev= Document::getFirst("meta_name='InvoiceCust' and  customer_id={$c} and  state >4 ","document_id desc" ) ;
+        if($prev != null){
+            $pr=$prev->getHD('payreq');
+            if(strlen($pr)>0) {
+                $this->docform->payreq->setText($pr)  ;
+            }
+        }
+        
+       
+        
     }
  
     public function onOpenItemSel($sender) {
@@ -539,16 +555,14 @@ class InvoiceCust extends \App\Pages\Base
         $this->wselitem->setVisible(true);
         $this->wselitem->Reload();
     }
-    public function onSelectItem($item_id, $itemname, $price=null) {
+
+    public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
         $item = Item::load($item_id);
 
-        if($price==null) {
-        //    $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
-
-        }
-        
+        $price = $item->getLastPartion(0, "", true,'GoodsReceipt');
+     
         $this->editdetail->editprice->setText(H::fa($price));
         
     }

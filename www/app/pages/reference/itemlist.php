@@ -33,6 +33,7 @@ class ItemList extends \App\Pages\Base
     public $_tag = '' ; 
     public $_cflist = array();
     public $_cflistv = array();
+    public $_itemca = array();
   
     public function __construct($add = false) {
         parent::__construct();
@@ -60,7 +61,7 @@ class ItemList extends \App\Pages\Base
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->add(new ClickLink('options'))->onClick($this, 'optionsfOnClick');
+        $this->itemtable->add(new ClickLink('options'))->onClick($this, 'optionsOnClick');
 
         $this->itemtable->add(new Form('listform'));
 
@@ -70,15 +71,14 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
+        $this->itemtable->listform->add(new SubmitLink('priceall'))->onClick($this, 'OnPriceAll' );
 
         $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
         $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
-
-        
-   
+       
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
@@ -90,6 +90,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editmanufacturer'));
         $this->itemdetail->add(new TextInput('editcountry'));
         $this->itemdetail->add(new TextInput('editurl'));
+      
         $common = System::getOptions('common');
         if (strlen($common['price1']) > 0) {
             $this->itemdetail->editprice1->setVisible(true);
@@ -121,11 +122,17 @@ class ItemList extends \App\Pages\Base
         } else {
             $this->itemdetail->editprice5->setVisible(false);
         }
+        
+             
+        $this->_tvars['usecf'] = count($common['cflist']??[]) >0;
+             
+        
         $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editbarcode1'));
         $this->itemdetail->add(new TextInput('editbarcode2'));
         $this->itemdetail->add(new TextInput('editminqty'));
         $this->itemdetail->add(new TextInput('editzarp'));
+        $this->itemdetail->add(new TextInput('editexcise'));
         $this->itemdetail->add(new TextInput('editcostprice'));
         $this->itemdetail->add(new TextInput('editweight'));
         $this->itemdetail->add(new TextInput('editmaxsize'));
@@ -164,10 +171,12 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \ZCL\BT\Tags("edittags"));
         $this->itemdetail->add(new DataView('cflistv', new ArrayDataSource(new Bind($this, '_cflistv')), $this, 'cfvOnRow'));
 
-        
+        $this->add(new Form('changeall'))->setVisible(false);
+        $this->changeall->add(new SubmitButton('saveca'))->onClick($this, 'saveall');
+        $this->changeall->add(new Button('cancelca'))->onClick($this, 'cancelOnClick');
+        $this->changeall->add(new DataView('itemcalist', new ArrayDataSource(new Bind($this, '_itemca')), $this, 'caOnRow'));
+
         $this->add(new Panel('setpanel'))->setVisible(false);
-        
-        
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
         $this->setpanel->add(new Form('setform')) ;
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
@@ -214,8 +223,6 @@ class ItemList extends \App\Pages\Base
             $this->addOnClick(null);
         }
         
-        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
-        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -242,7 +249,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
         $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
- 
+      
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
         if($item->hasAction()) {
             $title="";
@@ -282,6 +289,19 @@ class ItemList extends \App\Pages\Base
         }
 
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+        $row->add(new Label('cfval'))->setText("") ;
+        if($this->_tvars['usecf'] ?? false) {
+           $cf="";
+           foreach($item->getcf() as $f){
+               if( strlen($f->val??'')>0){
+                    $cf=$cf. "<small style=\"display:block\">". $f->name.": ".$f->val."</small>" ; 
+               }
+           }
+           if(strlen($cf) >0) {
+               $row->cfval->setText($cf,true) ;
+           }
+        }
+         
 
     }
 
@@ -346,6 +366,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fa($this->_item->zarp));
+        $this->itemdetail->editexcise->setText(\App\Helper::fa($this->_item->excise));
         $this->itemdetail->editcostprice->setText(\App\Helper::fa($this->_item->costprice));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
@@ -413,6 +434,7 @@ class ItemList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
+        $this->changeall->setVisible(false);
         $this->optionsform->setVisible(false);
         
     }
@@ -435,6 +457,7 @@ class ItemList extends \App\Pages\Base
           
     }    
     
+
     public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
@@ -495,6 +518,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
+        $this->_item->excise = $this->itemdetail->editexcise->getText();
         $this->_item->costprice = $this->itemdetail->editcostprice->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
@@ -670,6 +694,8 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
     }
 
+    
+   
     //комплекты
     public function onback($sender) {
         $this->setpanel->setVisible(false);
@@ -1136,6 +1162,58 @@ class ItemList extends \App\Pages\Base
 
     }
 
+    
+   public function OnPriceAll($sender) {
+       if (false == \App\ACL::checkEditRef('ItemList')) {
+            return;
+       }   
+        $this->_itemca = array();
+        foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                
+                $it = new \App\DataItem(intval($item->item_id)) ;
+                $it->name = $item->itemname;
+                $it->price = $item->price1;
+              
+                $this->_itemca[] = $it;
+            }
+        }
+        if (count($this->_itemca) == 0) {
+            return;
+        }      
+      
+       $this->changeall->itemcalist->Reload(); 
+       $this->itemtable->setVisible(false);
+       $this->changeall->setVisible(true);        
+ 
+ 
+   }    
+   
+   public function caOnRow(\Zippy\Html\DataList\DataRow $row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('editallname', $item->name));
+        $row->add(new TextInput('editallprice', new \Zippy\Binding\PropertyBinding($item, 'price')));
+         
+   } 
+   
+    public function saveall($sender) {
+    
+       foreach( $this->_itemca as $it) {
+           $item = Item::load($it->id) ;
+           $item->price1 = $it->price;
+           $item->save();
+       }
+       
+       
+        $this->_itemca=[];
+        $this->Reload(false);
+
+        $this->itemtable->setVisible(true);
+        $this->changeall->setVisible(false);        
+    }    
+       
+    
     public function  shownotesOnClick($sender){
         $item = $sender->getOwner()->getDataItem();
         $desc = str_replace("'","`",$item->description);
@@ -1171,7 +1249,7 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          $price= H::fa($item->getPrice() );
-         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
       
     }
  
@@ -1192,11 +1270,13 @@ class ItemList extends \App\Pages\Base
 
         $header['code'] = $item->item_code;
        
+        $header['term'] =  $post["stdate"];
+        if(strlen($header['term'])==0)  $header['term']  = false;
+        $header['term'] =  $post["stdate"];
         $header['price'] = H::fa($post["stprice"]);
         $header['qty'] = H::fqty($post["stqty"]);
         $header['sum'] = H::fa(doubleval($post["stprice"]) * doubleval( $post["stqty"] ) );
      
- 
         $price= str_replace(',','.',$header['price'] )  ;
         $qty= str_replace(',','.', $header['qty'] ) ;
    
@@ -1220,9 +1300,8 @@ class ItemList extends \App\Pages\Base
 
             $html =  $report->generate($header);
             $html = str_replace("'", "`", $html);
-            
-            return json_encode(array('data'=>$html,"printer"=>0), JSON_UNESCAPED_UNICODE);
-          
+            return $this->jsonOK(array('data'=>$html,"printer"=>0),) ;
+           
         }
        
         try {
@@ -1234,8 +1313,8 @@ class ItemList extends \App\Pages\Base
                 $html =  $report->generate($header);              
                    
                 $buf = \App\Printer::xml2comm($html);
-               
-                return json_encode(array('data'=>$buf,"printer"=>1), JSON_UNESCAPED_UNICODE);
+                return $this->jsonOK(array('data'=>$buf,"printer"=>1)); 
+                
             
             }
             if(intval($user->prtypelabel) == 2) {
@@ -1257,8 +1336,8 @@ class ItemList extends \App\Pages\Base
                 }           
                 
                 $buf = \App\Printer::arr2comm($rows);
-           
-                return json_encode(array('data'=>$buf,"printer"=>2), JSON_UNESCAPED_UNICODE);
+                return $this->jsonOK(array('data'=>$buf,"printer"=>2));
+               
           }
      
 
@@ -1270,7 +1349,7 @@ class ItemList extends \App\Pages\Base
         }        
     }
   
-    public function optionsfOnClick($sender) {
+    public function optionsOnClick($sender) {
         $options = System::getOptions('common');
         
         $this->optionsform->articleprefix->setText($options['articleprefix'] ?? "ID");
@@ -1335,7 +1414,7 @@ class ItemList extends \App\Pages\Base
         
         $options['cflist'] = $this->_cflist;
         System::setOptions('common', $options);        
-        
+        $this->_tvars['usecf'] = count($options['cflist']) >0;
         $this->itemtable->setVisible(true);
         $this->optionsform->setVisible(false);
         $this->Reload(false);
