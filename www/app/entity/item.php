@@ -1269,7 +1269,7 @@ class Item extends \ZCL\DB\Entity
             }            
 
             if (false == $itemp->checkMinus($itemp->quantity, $store)) {
-                throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($store))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складі всього ". \App\Helper::fqty($itemp->getQuantity($store))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
             }
         
             $listst = \App\Entity\Stock::pickup($store, $itemp);
