@@ -2054,7 +2054,7 @@ class ARMFood extends \App\Pages\Base
             $sc = \App\System::getSession()->shiftclose;
             if(strlen($sc)>0) {
                \App\System::getSession()->shiftclose="";
-               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
+               $this->setInfo("Зміна закрита. ".$sc );                               
             } else {
                $this->setSuccess("Зміна закрита");    
             }

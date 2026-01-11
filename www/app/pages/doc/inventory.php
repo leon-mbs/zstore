@@ -191,7 +191,7 @@ class Inventory extends \App\Pages\Base
         }
         $this->_itemlist[] = $item;
 
-        if($this->_showqty) $this->setInfoTopPage("На облiку {$item->quantity} по  факту {$item->qfact}");
+        if($this->_showqty) $this->setInfo("На облiку {$item->quantity} по  факту {$item->qfact}");
   
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -440,7 +440,7 @@ class Inventory extends \App\Pages\Base
                 $d= $this->_itemlist[$i]->qfact;
                 $qf= doubleval($d) ;
                 $this->_itemlist[$i]->qfact = $qf + 1;
-                if($this->_showqty) $this->setInfoTopPage("На облiку {$this->_itemlist[$i]->quantity} по  факту {$this->_itemlist[$i]->qfact}");
+                if($this->_showqty) $this->setInfo("На облiку {$this->_itemlist[$i]->quantity} по  факту {$this->_itemlist[$i]->qfact}");
   
                 // Издаем звук если всё ок
               //  App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
@@ -472,7 +472,7 @@ class Inventory extends \App\Pages\Base
         $d= $this->_itemlist[$item->item_id]->qfact;
         $qf= doubleval($d) ;
         $this->_itemlist[$item->item_id]->qfact = $qf + 1;
-        if($this->_showqty) $this->setInfoTopPage("На облiку {$this->_itemlist[$item->item_id]->quantity} по  факту {$this->_itemlist[$item->item_id]->qfact}");
+        if($this->_showqty) $this->setInfo("На облiку {$this->_itemlist[$item->item_id]->quantity} по  факту {$this->_itemlist[$item->item_id]->qfact}");
   
 
         $this->docform->detail->Reload();
