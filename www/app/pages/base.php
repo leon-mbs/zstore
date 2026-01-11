@@ -281,18 +281,20 @@ class Base extends \Zippy\Html\WebPage
 
     //вывод ошибки,  используется   в дочерних страницах
 
-    public function setError($msg ) {
+    public function setError($msg,$log=false ) {
+        if($log) {
+            \App\Helper::logerror($msg) ;
+        }
         $msg = str_replace("'", "`", $msg) ;
-
-
         System::setErrorMsg($msg);
     }
 
+    /**
+    * @deprecated
+    */
     public function setErrorTopPage($msg) {
-        $msg = str_replace("'", "`", $msg) ;
-        $msg = str_replace("\"", "`", $msg) ;
-
-        System::setErrorMsg($msg, true);
+        
+        System::setErrorMsg($msg,true );
     }
 
     public function setSuccess($msg ) {
@@ -313,12 +315,7 @@ class Base extends \Zippy\Html\WebPage
         System::setInfoMsg($msg);
     }
  
-    public function setInfoTopPage($msg) {
-        $msg = str_replace("'", "`", $msg) ;
-        $msg = str_replace("\"", "`", $msg) ;
-
-        System::setInfoMsg($msg, true);
-    }
+ 
 
     final protected function isError() {
         return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg()) > 0);
@@ -329,16 +326,8 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
-        $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
-            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-            $this->goAnkor('topankor');
-        }       
-        $this->_tvars['alertinfo'] = "";
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) {
-            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
-            $this->goAnkor('topankor');
-        }       
+            
+             
     }
 
     protected function afterRender() {
@@ -359,9 +348,6 @@ class Base extends \Zippy\Html\WebPage
       
         
         $this->setError('');
-        $this->setErrorTopPage('');
-        $this->setInfoTopPage('');
-     
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
