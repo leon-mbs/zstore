@@ -161,11 +161,9 @@ class System
     }
 
     public static function setErrorMsg($msg, $toppage=false) {
-        if($toppage) {
-            Session::getSession()->emsgtp = $msg;
-        } else {
-            Session::getSession()->emsg = $msg;
-        }
+  
+        Session::getSession()->emsg = $msg;
+     
     }
 
     public static function getErrorMsg() {
@@ -185,17 +183,10 @@ class System
     }
 
     public static function setInfoMsg($msg, $toppage=false) {
-
-        if($toppage) {
-            Session::getSession()->imsgtp = $msg;
-        } else {
-            Session::getSession()->imsg = $msg;
-        }
+       Session::getSession()->imsg = $msg;
     }
 
-    public static function getInfoMsgTopPage() {
-        return Session::getSession()->imsgtp;
-    }
+ 
    
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
