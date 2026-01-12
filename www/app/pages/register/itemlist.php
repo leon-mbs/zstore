@@ -58,10 +58,10 @@ class ItemList extends \App\Pages\Base
             $prices[$k] = $v ;
         }
 
-        $keys=array_keys($prices);
-        $p=array_shift($keys);
+       // $keys=array_keys($prices);
+     //   $p=array_shift($keys);
 
-        $this->filter->add(new DropDownChoice('searchprice', $prices, $p));
+        $this->filter->add(new DropDownChoice('searchprice', $prices, "price1"));
         $storelist = Store::getList() ;
 
         if(\App\System::getUser()->showotherstores) {
