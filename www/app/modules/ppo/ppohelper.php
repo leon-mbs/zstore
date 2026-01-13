@@ -250,8 +250,8 @@ class PPOHelper
             $n++;
         }
 
-       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Поаернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
-    
+       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
+       \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
         $n = 1;

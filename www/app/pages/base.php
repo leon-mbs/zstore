@@ -281,44 +281,56 @@ class Base extends \Zippy\Html\WebPage
 
     //вывод ошибки,  используется   в дочерних страницах
 
-    public function setError($msg ) {
+    public function setError($msg,$log=false ) {
+
+        if($log) {
+            \App\Helper::logerror($msg) ;
+        }
         $msg = str_replace("'", "`", $msg) ;
-
-
+        if($msg != "" && $this->isAjaxRequest()   ) {
+           $this->addAjaxResponse("toastr.error('" . $msg . "','',{timeOut:8000})        ", true);
+           return;
+        }       
         System::setErrorMsg($msg);
     }
 
+    /**
+    * @deprecated
+    */
     public function setErrorTopPage($msg) {
-        $msg = str_replace("'", "`", $msg) ;
-        $msg = str_replace("\"", "`", $msg) ;
-
-        System::setErrorMsg($msg, true);
+        
+        System::setErrorMsg($msg,true );
     }
 
     public function setSuccess($msg ) {
         $msg = str_replace("'", "`", $msg) ;
 
+        if($msg != "" && $this->isAjaxRequest()   ) {
+           $this->addAjaxResponse("toastr.success('" . $msg . "','',{timeOut:2000})        ", true);
+           return;
+        }
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        if($msg != "" && $this->isAjaxRequest()  ) {
+           $this->addAjaxResponse("toastr.warning('" . $msg . "','',{timeOut:4000})        ", true);
+           return;
+        }
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        if($msg != "" && $this->isAjaxRequest()   ) {
+           $this->addAjaxResponse("toastr.info('" . $msg . "','',{timeOut:3000})        ", true);
+           return;
+        }
         System::setInfoMsg($msg);
     }
  
-    public function setInfoTopPage($msg) {
-        $msg = str_replace("'", "`", $msg) ;
-        $msg = str_replace("\"", "`", $msg) ;
-
-        System::setInfoMsg($msg, true);
-    }
+ 
 
     final protected function isError() {
         return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg()) > 0);
@@ -329,16 +341,8 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
-        $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
-            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-            $this->goAnkor('topankor');
-        }       
-        $this->_tvars['alertinfo'] = "";
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) {
-            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
-            $this->goAnkor('topankor');
-        }       
+            
+             
     }
 
     protected function afterRender() {
@@ -359,9 +363,6 @@ class Base extends \Zippy\Html\WebPage
       
         
         $this->setError('');
-        $this->setErrorTopPage('');
-        $this->setInfoTopPage('');
-     
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
@@ -990,5 +991,18 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-
+   /**
+    * добавляет  яваскрипт  в  конец  ответа на ajax  запрос
+    *
+    * @param mixed $js
+    */
+    protected function addAjaxResponse($js) {
+        if (strlen($js) > 0) {
+            WebApplication::$app->getResponse()->addAjaxResponse($js);
+        }
+    }    
+  
+    protected function isAjaxRequest( ) {
+       return  \Zippy\WebApplication::$app->getRequest()->isAjaxRequest()   ;
+    }   
 }
