@@ -65,7 +65,7 @@ class ProdReceipt extends Document
                 $cost += doubleval($item->zarp * $item->quantity) ;
             }
             if ($item->autooutcome == 1) {  //списание  комплектующих
-                $item->setToProd($required,$this->headerdata['store'],$this->document_id);
+                $item->setToProd($item->quantity,$this->headerdata['store'],$this->document_id);
             }
 
 
