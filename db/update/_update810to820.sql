@@ -4,8 +4,7 @@ SET NAMES 'utf8';
 
 ALTER TABLE iostate ADD iodate DATE DEFAULT NULL;
 
-
-DROP VIEW iostate_view CASCADE;
+DROP VIEW iostate_view  ;
 
 CREATE VIEW iostate_view
 AS
