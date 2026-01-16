@@ -198,7 +198,7 @@ class CategoryList extends \App\Pages\Base
         
         $cat_id = $sender->owner->getDataItem()->cat_id;
         $cat = $this->getById($cat_id) ;
-        if ($cat->qty > 0) {
+        if ($cat->itemscnt > 0) {
             $this->setError('Не можна видалити категорію з ТМЦ');
             return;
         }

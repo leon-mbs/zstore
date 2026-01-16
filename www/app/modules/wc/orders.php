@@ -174,8 +174,12 @@ class Orders extends \App\Pages\Base
 
     public function onImport($sender) {
         $modules = System::getOptions("modules");
+        $i=0;
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
 
-        foreach ($this->_neworders as $shoporder) {
+        try{
+           foreach ($this->_neworders as $shoporder) {
 
             $shoporder->document_number = $shoporder->nextNumber();
             if (strlen($shoporder->document_number) == 0) {
@@ -200,19 +204,33 @@ class Orders extends \App\Pages\Base
                 }                
                 
             }
-
-            
-            $shoporder->save();
-            $shoporder->updateStatus(Document::STATE_NEW);
-            $shoporder->updateStatus(Document::STATE_INPROCESS);
-          
- 
+        
+                $shoporder->save();
+                $shoporder->updateStatus(Document::STATE_NEW);
+                $shoporder->updateStatus(Document::STATE_INPROCESS);
+                if($shoporder->headerdata['store']>0) {
+                    $shoporder->reserve();   //если задан  склад резервируем товары
+                }  
+        
+         
+            $i++;
 
         }
+           $conn->CommitTrans();
+          
+        } catch(\Throwable $ee){
+            global $logger;
+            $conn->RollbackTrans();
+           
+            $this->setError($ee->getMessage());
 
-        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень");
-
-
+            $logger->error( $ee->getMessage() . " WC " );
+                 
+           
+            return;
+        }  
+        $this->setInfo("Імпортовано {$i} замовлень");
+       
         $this->_neworders = array();
         $this->neworderslist->Reload();
     }
