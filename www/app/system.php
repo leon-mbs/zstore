@@ -170,9 +170,7 @@ class System
         return Session::getSession()->emsg;
     }
 
-    public static function getErrorMsgTopPage() {
-        return Session::getSession()->emsgtp;
-    }
+  
 
     public static function setWarnMsg($msg) {
         Session::getSession()->wmsg = $msg;
