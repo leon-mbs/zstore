@@ -1017,11 +1017,11 @@ class Base extends \Zippy\Html\WebPage
     */
     protected function addAjaxResponse($js) {
         if (strlen($js) > 0) {
-            WebApplication::$app->getResponse()->addAjaxResponse($js);
+            App::$app->getResponse()->addAjaxResponse($js);
         }
     }    
   
     protected function isAjaxRequest( ) {
-       return  \Zippy\WebApplication::$app->getRequest()->isAjaxRequest()   ;
+       return App::$app->getRequest()->isAjaxRequest()   ;
     }   
 }
