@@ -287,6 +287,10 @@ class Base extends \Zippy\Html\WebPage
             \App\Helper::logerror($msg) ;
         }
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+     
         if($msg != "" && $this->isAjaxRequest()   ) {
            $this->addAjaxResponse("toastr.error('" . $msg . "','',{timeOut:8000})        ", true);
            return;
@@ -298,13 +302,21 @@ class Base extends \Zippy\Html\WebPage
     * @deprecated
     */
     public function setErrorTopPage($msg) {
-        
+        $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+         
+ 
         System::setErrorMsg($msg,true );
     }
 
     public function setSuccess($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+ 
         if($msg != "" && $this->isAjaxRequest()   ) {
            $this->addAjaxResponse("toastr.success('" . $msg . "','',{timeOut:2000})        ", true);
            return;
@@ -314,7 +326,10 @@ class Base extends \Zippy\Html\WebPage
 
     public function setWarn($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-        if($msg != "" && $this->isAjaxRequest()  ) {
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+         if($msg != "" && $this->isAjaxRequest()  ) {
            $this->addAjaxResponse("toastr.warning('" . $msg . "','',{timeOut:4000})        ", true);
            return;
         }
@@ -323,6 +338,9 @@ class Base extends \Zippy\Html\WebPage
 
     public function setInfo($msg ) {
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
         if($msg != "" && $this->isAjaxRequest()   ) {
            $this->addAjaxResponse("toastr.info('" . $msg . "','',{timeOut:3000})        ", true);
            return;
@@ -349,6 +367,7 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
+           
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:8000})        ", true);
         }
         if (strlen(System::getWarnMsg() ?? '') > 0) {

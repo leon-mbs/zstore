@@ -200,7 +200,7 @@ class ZForm extends \App\Pages\Base
                 $this->setErrorTopPage($ret['data']);
             } else {
                 \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
-                $this->setSuccess('Смена  закрыта');
+                $this->setSuccess('Змiна закрита');
                 $this->stat->clean();
                 $this->OnRefresh($this->filter) ;
 
