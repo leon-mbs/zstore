@@ -1526,7 +1526,38 @@ class Helper
             }           
            
         }   
+    
+        $migration811 = \App\Helper::getKeyVal('migration811'); 
+        if($migration811 != "done"  ) {
+            Helper::log("Міграція 811");
+         
+            \App\Helper::setKeyVal('migration811', "done");           
+        
+            try {
+         
+              $conn->Execute("ALTER TABLE iostate ADD iodate DATE DEFAULT NULL");                     
+              $conn->Execute("DROP VIEW iostate_view ");   
+              $sql="CREATE VIEW iostate_view
+                    AS
+                    SELECT
+                      s.id AS id,
+                      s.document_id AS document_id,
+                      s.iotype AS iotype,
+                      s.amount AS amount,
+                      coalesce(s.iodate, d.document_date) AS document_date,
+                      d.branch_id AS branch_id
+                    FROM (iostate s
+                      JOIN documents d
+                        ON ((s.document_id = d.document_id)))";                  
           
+              $conn->Execute($sql);   
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+        
     }
 
 

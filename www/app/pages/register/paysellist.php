@@ -357,12 +357,12 @@ GROUP BY c.customer_name,
             $this->setWarn('Сума більше необхідної');
         }
         if (in_array($this->_doc->meta_name, array( 'GoodsReceipt','InvoiceCust'))) {
-            \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME,false,$pdate);
         }    
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
            
-            \App\Entity\IOState::addIOState($this->_doc->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true, $pdate);
             $amount = 0 - $amount;
    
         } else {
@@ -376,7 +376,7 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
-            \App\Entity\IOState::addIOState($this->_doc->document_id,  0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+           
         }
 
 

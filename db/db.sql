@@ -308,6 +308,7 @@ CREATE TABLE iostate (
   id int(11) NOT NULL AUTO_INCREMENT,
   document_id int(11) NOT NULL,
   iotype smallint(6) NOT NULL,
+  iodate DATE DEFAULT NULL,
   amount decimal(10, 2) NOT NULL,
   PRIMARY KEY (id),
   KEY document_id (document_id)
@@ -953,7 +954,7 @@ SELECT
   s.document_id AS document_id,
   s.iotype AS iotype,
   s.amount AS amount,
-  d.document_date AS document_date,
+  coalesce(s.iodate, d.document_date) AS document_date,
   d.branch_id AS branch_id
 FROM (iostate s
   JOIN documents d
@@ -1708,3 +1709,4 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migrationbonus','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration12','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration180','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration811','done');

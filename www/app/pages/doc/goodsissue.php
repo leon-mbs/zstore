@@ -789,7 +789,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'])) {
+                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid']??0)) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
                 
