@@ -95,14 +95,16 @@ class UserLogin extends \Zippy\Html\WebPage
              
                 \App\System::checkUpdate()  ;
                 
-                
+                App::RedirectHome();
+                /* 
                 $modules = \App\System::getOptions("modules");
 
                 if (($modules['shop'] ?? 0)== 1) {
                     App::Redirect('\App\Pages\Main');
                 } else {
                     App::RedirectHome();
-                }
+                }    
+                */
                 return;
             } else {
 
