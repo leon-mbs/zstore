@@ -29,7 +29,7 @@ class User extends \ZCL\DB\Entity
         $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
-        $this->mainpage = '\App\Pages\Main';
+        $this->mainpage = '\App\Pages\Blank';
     }
 
     /**

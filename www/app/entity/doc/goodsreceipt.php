@@ -256,13 +256,19 @@ class GoodsReceipt extends Document
     
     
    protected function onState($state, $oldstate) {
-        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+        if($state > 4 ) {
 
             if($this->parent_id > 0) {
                 $order = Document::load($this->parent_id)->cast();
-                if($order->meta_name == 'OrderCust'  ) {
+                if($order->state != Document::STATE_CLOSED && $order->meta_name == 'OrderCust'  ) {
                       $order = $order->cast() ;
-                      $order->updateStatus(Document::STATE_CLOSED);
+                   
+                      $oitems =  $order->unpackDetails('detaildata');
+                      $items =  $this->unpackDetails('detaildata');
+                      if(count($oitems)=== count($items) ){
+                          $order->updateStatus(Document::STATE_CLOSED);    
+                      }
+                      
                       
                 }    
             }

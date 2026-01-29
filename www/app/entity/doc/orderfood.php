@@ -99,8 +99,9 @@ class OrderFood extends Document
                 "quantity"   => H::fqty($item->quantity,true),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
-            $stamps= explode(",",$item->aklist??'') ;
-            if(count($stamps)>0) {
+            
+            if(strlen($item->aklist??'')>0) {
+               $stamps= explode(",",$item->aklist??'') ;
                $row['stamps'] = [] ;
                foreach($stamps  as $st){
                    $row['stamps'][]=['name'=>$st];   

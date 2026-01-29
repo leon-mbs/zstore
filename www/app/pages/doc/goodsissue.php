@@ -673,7 +673,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText("");
             $this->editdetail->editquantity->setText("1");
 
-            $this->editdetail->editprice->setText("");
+            $this->editdetail->editprice->setText("0");
         } else {
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
