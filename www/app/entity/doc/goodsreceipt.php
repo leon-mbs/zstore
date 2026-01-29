@@ -225,7 +225,7 @@ class GoodsReceipt extends Document
     */
     public function DoBalans() {
         $conn = \ZDB\DB::getConnect();
-         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
    
         if(($this->customer_id??0) == 0) {
             return;
