@@ -108,10 +108,9 @@ CREATE TABLE documents (
   KEY user_id (user_id),
   KEY branch_id (branch_id),
   KEY parent_id (parent_id),
-  
   KEY document_number (document_number),
-  KEY state (state),
-  CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (user_id)
+  KEY state (state)
+
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE items (
@@ -1532,8 +1531,8 @@ CREATE TABLE  excisestamps (
   id int NOT NULL AUTO_INCREMENT,
   stamp varchar(255) NOT NULL ,
   item_id int NOT NULL,
-  document_id bigint NOT NULL,
-  anount decimal(11, 2)   NULL DEFAULT 0.00,   
+  document_id bigint NOT NULL, 
+   
   KEY (stamp) ,
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
@@ -1545,7 +1544,7 @@ SELECT
   s.id AS id,
   s.stamp AS stamp,
   s.item_id AS item_id,
-  s.anount AS anount,
+ 
   s.document_id AS document_id,
   i.itemname AS itemname,
   i.item_code AS item_code,
@@ -1710,3 +1709,4 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migration6118','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration12','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration180','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration811','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration812','done');
