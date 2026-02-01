@@ -40,11 +40,15 @@ class ARMFood extends \App\Pages\Base
 
 
     private $_doc;
-    public $_itemlist = array();
-    public $_catlist  = array();
-    public $_prodlist = array();
-    public $_doclist  = array();
-
+    public $_itemlist = [];
+    public $_catlist  = [];
+    public $_prodlist = [];
+    public $_doclist  = [];
+    
+    public $_vblist  = [];
+    public $_vbdetlist  = [];
+    private $_vbitem;
+    
     public function __construct() {
         parent::__construct();
 
@@ -82,6 +86,7 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(1), $filter->nal));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(2), $filter->beznal));
         $this->setupform->add(new ClickLink('options', $this, 'onOptions'));
+        $this->setupform->add(new ClickLink('variations', $this, 'onVariations'));
    
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
@@ -235,7 +240,20 @@ class ARMFood extends \App\Pages\Base
         $this->optionsform->add(new DropDownChoice('foodmenu3',$menu,$food['foodmenu3']));
         $this->optionsform->add(new DropDownChoice('foodmenu4',$menu,$food['foodmenu4']));
         
-        
+        $this->add(new Panel('varpan'))->setVisible(false);
+        $this->varpan->add(new ClickLink('backvar', $this,"OnCancelOpt"));
+        $this->varpan->add(new Form('varbaseform'))->onSubmit($this, 'addVBItem');
+        $this->varpan->varbaseform->add(new DropDownChoice('varbaseitem'));
+        $this->varpan->add(new DataView('varbaselist', new ArrayDataSource($this, '_vblist'), $this, 'onVBRow'));
+         
+        $this->add(new Panel('varpandet'))->setVisible(false);
+        $this->varpandet->add(new ClickLink('backvardet', $this,"OnBackVbDet"));
+        $this->varpandet->add(new Label('vbbasename'));
+        $this->varpandet->add(new Form('vardetform'))->onSubmit($this, 'addVBItemDet');
+        $this->varpandet->vardetform->add(new DropDownChoice('vardetitem'));
+        $this->varpandet->add(new DataView('vardetlist', new ArrayDataSource($this, '_vbdetlist'), $this, 'onVBDetRow'));
+         
+
         
     }
 
@@ -399,9 +417,7 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->catpan->catlist->Reload();
     }
-
-    
-    
+     
     
     //список  заказов
     public function onDocRow($row) {
@@ -2069,7 +2085,7 @@ class ARMFood extends \App\Pages\Base
         return true;
     }
     
-  public function onFisc($sender) {
+    public function onFisc($sender) {
 
         $doc =  $sender->getOwner()->getDataItem();
            $conn = \ZDB\DB::getConnect();
@@ -2161,7 +2177,7 @@ class ARMFood extends \App\Pages\Base
     }
     
 
-     public function checkPromo($args, $post=null) {
+    public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
             return $this->jsonOK();  
@@ -2200,16 +2216,18 @@ class ARMFood extends \App\Pages\Base
 
     }   
 
-     public function onOptions($sender){
+    public function onOptions($sender){
          $this->optionsform->setVisible(true) ;
          $this->setupform->setVisible(false);
      }
-     public function OnCancelOpt($sender){
+ 
+    public function OnCancelOpt($sender){
          $this->optionsform->setVisible(false) ;
+         $this->varpan->setVisible(false) ;
          $this->setupform->setVisible(true);
      }
     
-     public function saveOptions($sender){
+    public function saveOptions($sender){
          
          
           $food = System::getOptions("food");
@@ -2246,6 +2264,129 @@ class ARMFood extends \App\Pages\Base
        \App\Application::Redirect("\\App\\Pages\\Service\\ARMFood");; 
      }
     
-    
-    
+    public function onVariations($sender){
+         $this->varpan->setVisible(true) ;
+         $this->setupform->setVisible(false);  
+         $this->varpandet->setVisible(false);  
+         
+         $this->_vblist =  Item::find( "disabled<>1   and detail   like '%<isbasevarfood>1</isbasevarfood>%'  ",'itemname'  ) ;
+         
+         $this->updateVB();    
+    }
+    public function updateVB( ){
+       
+     
+       $itlist =  Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and detail  not  like '%<isbasevarfood>1</isbasevarfood>%'  and detail  not  like '%<isvarfood>1</isvarfood>%'  and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') ",'itemname'  ) ;     
+       $this->varpan->varbaseform->varbaseitem->setOptionList($itlist);
+       $this->varpan->varbaseform->varbaseitem->setValue(0);
+
+       $this->varpan->varbaselist->Reload();
+       
+              
+    }
+    public function addVBItem($sender){
+         $it= Item::load($sender->varbaseitem->getValue());
+         if($it==null) return;
+         $it->isbasevarfood=1;
+         $it->foodvars=[];
+         $it->save();
+         $this->_vblist[$it->item_id] = $it;
+         
+         $this->updateVB();    
+    }
+    public function onVBRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('vbname', $item->itemname));
+        $row->add(new Label('vbcode', $item->item_code));
+        $row->add(new ClickLink('varlistedit', $this,'onVarEdit'));
+        $row->add(new ClickLink('vbdel', $this,'onVarDel'));
+
+    }
+    public function onVarDel($sender){
+         $it = Item::load($sender->getOwner()->getDataItem()->item_id);
+         $it->isbasevarfood=0;
+         $it->foodvars=[];
+         $it->save();
+
+         $tmp=[];
+         foreach($this->_vblist as $k=>$v){
+            if($k==$it->item_id) continue;
+            $tmp[$k]=$v; 
+         }
+         $this->_vblist = $tmp;
+         $this->updateVB();    
+    }
+    public function onVarEdit($sender){
+        $this->varpan->setVisible(false) ;
+        $this->varpandet->setVisible(true);
+        $this->_vbitem = Item::load($sender->getOwner()->getDataItem()->item_id);
+        $this->varpandet->vbbasename->setText($this->_vbitem->itemname);       
+        
+        $ids="0";
+        foreach( ( $this->_vbitem->foodvars ??[]) as $id){
+          $ids =  $ids . "," . $id;  
+        }
+        $this->_vbdetlist = Item::find("disabled<> 1 and item_id in ({$ids})","itemname");
+        
+        $this->updateVBDet(); 
+        
+    }
+    public function OnBackVbDet($sender){
+       $this->varpan->setVisible(true) ;
+       $this->varpandet->setVisible(false);  
+       
+       $this->_vbitem->foodvars = array_keys($this->_vbdetlist) ;
+       $this->_vbitem->save();
+       
+       $this->updateVB();    
+    }
+    public function addVBItemDet($sender){
+         $it= Item::load($sender->vardetitem->getValue());
+         if($it==null) return;
+         $it->isvarfood=1;
+         
+         $it->save();
+         $this->_vbdetlist[$it->item_id] = $it;
+         $this->updateVBDet();
+         
+              
+    }
+    public function onVBDetRow($row) {
+        $item = $row->getDataItem();
+
+        $row->add(new Label('vbdetname', $item->itemname));
+        $row->add(new Label('vbdetcode', $item->item_code));
+        $row->add(new Label('vbdetprice', H::fa($item->getPrice())  ));
+ 
+        $row->add(new ClickLink('vbdetdel', $this,'onVarDetDel'));
+
+    }
+    public function onVarDetDel($sender){
+         $it = Item::load($sender->getOwner()->getDataItem()->item_id);
+         $it->isvarfood=0;
+        
+         $it->save();
+
+         $tmp=[];
+         foreach($this->_vbdetlist as $k=>$v){
+            if($k==$it->item_id) continue;
+            $tmp[$k]=$v; 
+         }
+         $this->_vbdetlist = $tmp;
+         $this->updateVBDet();
+            
+    }
+    public function updateVBDet( ){
+       
+       $itlist =  Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and detail  not  like '%<isbasevarfood>1</isbasevarfood>%'  and detail  not  like '%<isvarfood>1</isvarfood>%'  and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') ",'itemname'  ) ;     
+   
+       $this->varpandet->vardetform->vardetitem->setOptionList($itlist);
+       $this->varpandet->vardetform->vardetitem->setValue(0);
+
+       $this->varpandet->vardetlist->Reload();
+       
+              
+    }
+     
 }
