@@ -45,6 +45,7 @@ class ARMFood extends \App\Pages\Base
     public $_prodlist = [];
     public $_doclist  = [];
     
+    public $_prodvarlist  = [];
     public $_vblist  = [];
     public $_vbdetlist  = [];
     private $_vbitem;
@@ -119,6 +120,10 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->add(new Panel('prodpan'))->setVisible(false);
         $this->docpanel->prodpan->add(new DataView('prodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
         $this->docpanel->prodpan->add(new ClickLink('stopprod', $this, 'onStopCat'));
+
+        $this->docpanel->add(new Panel('varprodpan'))->setVisible(false);
+        $this->docpanel->varprodpan->add(new DataView('varprodlist', new ArrayDataSource($this, '_prodvarlist'), $this, 'onProdVarRow'));
+        $this->docpanel->varprodpan->add(new ClickLink('stopvar', $this, 'onStopVar'));
 
         $this->docpanel->add(new Form('navbar'));
         $this->docpanel->navbar->add(new ClickLink('toorderlist', $this, 'onOrderList'));
@@ -397,7 +402,7 @@ class ARMFood extends \App\Pages\Base
         $text = trim($sender->getText());
         $like = Item::qstr('%' . $text . '%');
          
-        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') "  );        
+        return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%')  and detail  not  like '%<isbasevarfood>1</isbasevarfood>%' "  );        
         
 
     }
@@ -628,12 +633,23 @@ class ARMFood extends \App\Pages\Base
         $prod = $row->getDataItem();
 
         $prod = $this->calcitem($prod);
-        
+
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
         $row->prodbtn->add(new Image('prodimage', $prod->getImageUrl()));
     }
+    //вариации
+    public function onProdVarRow($row) {
+        
+        $prod = $row->getDataItem();
+
+        $prod = $this->calcitem($prod);
+
+        $row->add(new Label('prodvarname', $prod->itemname));
+        $row->add(new Label('prodvarprice', H::fa($prod->price)));
+        $row->add(new ClickLink('prodvaradd',$this,'onAddProdVar' ));
+     }
 
     //выбрана  группа
     public function onCatBtnClick($sender) {
@@ -643,7 +659,7 @@ class ARMFood extends \App\Pages\Base
             $this->_catlist = $catlist;
             $this->docpanel->catpan->catlist->Reload();
         } else {
-            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4,5 )  and cat_id=' . $cat->cat_id);
+            $this->_prodlist = Item::find("disabled<>1  and  item_type in (1,4,5 )  and detail  not  like '%<isvarfood>1</isvarfood>%' and cat_id=" . $cat->cat_id);
             $this->docpanel->catpan->setVisible(false);
             $this->docpanel->prodpan->setVisible(true);
             $this->docpanel->prodpan->prodlist->Reload();
@@ -688,8 +704,23 @@ class ARMFood extends \App\Pages\Base
         $this->calcTotal(); 
     }
     
+  
     public function onProdBtnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
+    
+        if( count($item->foodvars ??[]) >0 ){
+
+          $ids =  implode(',',$item->foodvars); 
+          $this->_prodvarlist = Item::find("disabled<> 1 and item_id in ({$ids})","itemname");
+         
+          $this->docpanel->prodpan->setVisible(false);        
+
+          $this->docpanel->varprodpan->setVisible(true);
+          $this->docpanel->varprodpan->varprodlist->Reload();
+  
+          return;   
+        }
+    
         
         $this->addItem($item);
 
@@ -704,7 +735,21 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->prodpan->setVisible(false);
    
     }
+    //добавить вариацию
+    public function onAddProdVar($sender) {
+        $item = $sender->getOwner()->getDataItem();
+      
+        $this->addItem($item);
 
+      
+        $this->docpanel->catpan->catlist->Reload();
+              
+        $this->docpanel->catpan->setVisible(true);
+        $this->docpanel->prodpan->setVisible(false);
+        $this->docpanel->varprodpan->setVisible(false);
+          
+        
+    }
     //закончить  добавление  товаров
     public function onStopCat($sender) {
 
@@ -714,6 +759,12 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->prodpan->setVisible(false);
         $this->docpanel->listsform->itemlist->Reload();
         $this->calcTotal();
+    }
+ 
+    public function onStopVar($sender) {
+        $this->docpanel->varprodpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(true);
+        
     }
 
     public function addcodeOnClick($sender) {
