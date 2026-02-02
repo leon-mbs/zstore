@@ -133,7 +133,7 @@
                             <td colspan="2" ><br><br><b> {{itemname}}</b></td>
                           </tr>
                           <tr>
-                            <td  >  <span class="textprice"> {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
+                            <td  >{{#hasvar}} Вiд {{/hasvar}}  <span class="textprice">   {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
                             <td class="textval"  align="right" >    {{customsize}} </td>
                           </tr>
                       

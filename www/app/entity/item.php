@@ -126,7 +126,7 @@ class Item extends \ZCL\DB\Entity
         $this->isnds = (int)$xml->isnds[0];
         $this->nds = (string)$xml->nds[0];
         $foodvars = (string)$xml->foodvars[0];
-         
+        $this->foodvars=[];
         if(strlen($foodvars)>0) {
            $this->foodvars = unserialize($foodvars) ;
         }

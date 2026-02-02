@@ -92,6 +92,7 @@ class Menu extends \Zippy\Html\WebPage
                     'desc'=>  $item->description ,
                     'price'=>$item->getPrice($options['pricetype']) ,
                     'priceout'=>false ,
+                    'hasvar'=>count($item->foodvars ??[]) > 0  ,
                     'customsize'=> $item->customsize 
                 );
                 if(strlen ($options['pricetypeout']??'')>1) {

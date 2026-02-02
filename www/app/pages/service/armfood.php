@@ -2269,12 +2269,12 @@ class ARMFood extends \App\Pages\Base
          $this->setupform->setVisible(false);  
          $this->varpandet->setVisible(false);  
          
-         $this->_vblist =  Item::find( "disabled<>1   and detail   like '%<isbasevarfood>1</isbasevarfood>%'  ",'itemname'  ) ;
          
          $this->updateVB();    
     }
     public function updateVB( ){
        
+       $this->_vblist =  Item::find( "disabled<>1   and detail   like '%<isbasevarfood>1</isbasevarfood>%'  ",'itemname'  ) ;
      
        $itlist =  Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and detail  not  like '%<isbasevarfood>1</isbasevarfood>%'  and detail  not  like '%<isvarfood>1</isvarfood>%'  and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%') ",'itemname'  ) ;     
        $this->varpan->varbaseform->varbaseitem->setOptionList($itlist);
@@ -2300,11 +2300,13 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Label('vbname', $item->itemname));
         $row->add(new Label('vbcode', $item->item_code));
         $row->add(new ClickLink('varlistedit', $this,'onVarEdit'));
-        $row->add(new ClickLink('vbdel', $this,'onVarDel'));
+        $row->add(new ClickLink('vbdel', $this,'onVarDel'))->setVisible(count($item->foodvars ??[]) ==0);
 
     }
     public function onVarDel($sender){
          $it = Item::load($sender->getOwner()->getDataItem()->item_id);
+          
+                 
          $it->isbasevarfood=0;
          $it->foodvars=[];
          $it->save();
@@ -2324,7 +2326,8 @@ class ARMFood extends \App\Pages\Base
         $this->varpandet->vbbasename->setText($this->_vbitem->itemname);       
         
         $ids="0";
-        foreach( ( $this->_vbitem->foodvars ??[]) as $id){
+ 
+        foreach(   $this->_vbitem->foodvars   as $id){
           $ids =  $ids . "," . $id;  
         }
         $this->_vbdetlist = Item::find("disabled<> 1 and item_id in ({$ids})","itemname");
@@ -2336,9 +2339,7 @@ class ARMFood extends \App\Pages\Base
        $this->varpan->setVisible(true) ;
        $this->varpandet->setVisible(false);  
        
-       $this->_vbitem->foodvars = array_keys($this->_vbdetlist) ;
-       $this->_vbitem->save();
-       
+        
        $this->updateVB();    
     }
     public function addVBItemDet($sender){
@@ -2348,6 +2349,10 @@ class ARMFood extends \App\Pages\Base
          
          $it->save();
          $this->_vbdetlist[$it->item_id] = $it;
+        
+         $this->_vbitem->foodvars = array_keys($this->_vbdetlist) ;
+         $this->_vbitem->save();
+         
          $this->updateVBDet();
          
               
@@ -2374,6 +2379,9 @@ class ARMFood extends \App\Pages\Base
             $tmp[$k]=$v; 
          }
          $this->_vbdetlist = $tmp;
+         $this->_vbitem->foodvars = array_keys($this->_vbdetlist) ;
+         $this->_vbitem->save();
+        
          $this->updateVBDet();
             
     }
