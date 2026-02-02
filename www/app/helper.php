@@ -1557,7 +1557,31 @@ class Helper
             }           
            
         }   
+      
+      
+        $migration812 = \App\Helper::getKeyVal('migration812'); 
+        if($migration812 != "done"  ) {
+            Helper::log("Міграція 812");
+         
+            \App\Helper::setKeyVal('migration812', "done");           
         
+            try {
+       
+                 $w=  $conn->Execute("SHOW CREATE  TABLE documents");
+                           
+                 foreach($w as $e){
+                     if( strpos($e['Create Table'],'documents_ibfk_1') >0 ){
+                         $conn->Execute("ALTER TABLE documents DROP FOREIGN KEY documents_ibfk_1 ");                     
+                     }             
+                 }
+                  
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }        
+  
     }
 
 

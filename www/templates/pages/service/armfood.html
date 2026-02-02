@@ -40,6 +40,7 @@
                 <div class="col-auto pt-2 lt-4">
                      {{#isadmins}}
                         <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
+                        <a   zippy="variations" class="  mr-4"><i class="fa fa-check-double"></i> Варіації</a>
                        {{/isadmins}}
                </div>    
              </div>    
@@ -163,7 +164,26 @@
                             </div>
 
                         </div >        
-                    </div >        
+                    </div > 
+                    <div   zippy="varprodpan" class="row  mt-4">
+                        <div    class="col-12 mb-2">
+                            <i class="fa fa-arrow-alt-circle-left"></i><a  zippy="stopvar">Назад</a>  
+                        </div>
+                         <div    class="col-12 col-xl-10 mb-2">
+                       
+                         <div class="card mb-2"  >
+                           
+                         <table class="table table-sm">
+                              <tr zippy="varprodlist">
+                                  <td class="  pt-2" zippy="prodvarname"></td>
+                                  <td class="text-right pt-2" zippy="prodvarprice"></td>
+                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success pl-2">Додати</a></td>
+                              </tr>
+                         </table>       
+                       </div>      
+                    </div > 
+                  </div>   
+                           
                 </div>   
 
                 <div class="col-12 col-md-10 col-xl-8  ">         
@@ -708,7 +728,7 @@
                 </div>
             </div>
         </div>      
-      <form zippy="optionsform"  >
+         <form zippy="optionsform"  >
                    
                   <div class="row">
                         <div class="col-12 col-md-4 col-xl-3">
@@ -831,7 +851,56 @@
                                
                             </div>
                         </div>
-                   </form>
+         </form>
+         
+         
+         <div zippy="varpan" >
+             <div class="col-12">
+                 <a zippy="backvar"    ><i class="fa fa-arrow-circle-left"></i> До АРМ</a>
+                 <h5>Товари з варіаціями</h5>
+                 <form zippy="varbaseform" class="form-inline"> 
+                      <select  zippy="varbaseitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
+                    <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                 </form>  
+                  
+               </div> 
+                <div class="col-12 col-md-6 col-xl-4">
+                   <table class="table table-sm">
+                       <tr zippy="varbaselist">
+                           <td zippy="vbname"></td> 
+                           <td zippy="vbcode"></td> 
+                           <td  ><a zippy="varlistedit">Варіації</a></td> 
+                       
+                           <td  ><a zippy="vbdel"><i class="fa fa-trash"></a></td> 
+                       </tr>
+                   </table>
+               </div> 
+               
+         </div>
+         <div zippy="varpandet" >
+             <div class="col-12">
+                 <a zippy="backvardet"    ><i class="fa fa-arrow-circle-left"></i> До переліку </a>
+                 <h5>Варіації для <span zippy="vbbasename"></span></h5>
+                 <form zippy="vardetform" class="form-inline"> 
+                    <select  zippy="vardetitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
+                    <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                 </form>  
+                  
+               </div> 
+                <div class="col-12 col-md-6 col-xl-4">
+                   <table class="table table-sm">
+                       <tr zippy="vardetlist">
+                           <td zippy="vbdetname"></td> 
+                           <td zippy="vbdetcode"></td> 
+                           <td class="text-right" zippy="vbdetprice" > </td> 
+                       
+                           <td  ><a zippy="vbdetdel"><i class="fa fa-trash"></a></td> 
+                       </tr>
+                   </table>
+               </div> 
+               
+         </div>
+         
         <script>
             $(document).ready(function () {
 
@@ -856,7 +925,7 @@
             function check_brefuse() {
                 return confirm("Анулювати замовлення?")
             }
-
+ 
 
             window.setInterval(onNewOrder, 5000);
 
@@ -960,6 +1029,13 @@
               
               $("#modalak").modal('show')   
           }  
+       
+          function check_vbdel() {
+                return confirm("Видалити?")
+          }
+          function check_vbdetdel() {
+                return confirm("Видалити?")
+          }
             
                                 
         </script>

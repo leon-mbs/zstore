@@ -121,9 +121,16 @@ class Item extends \ZCL\DB\Entity
         $this->fromdate = intval($xml->fromdate[0]);
         $this->printqty = intval($xml->printqty[0]);
       
+        $this->isbasevarfood = (int)$xml->isbasevarfood[0];
+        $this->isvarfood = (int)$xml->isvarfood[0];
         $this->isnds = (int)$xml->isnds[0];
         $this->nds = (string)$xml->nds[0];
-
+        $foodvars = (string)$xml->foodvars[0];
+        $this->foodvars=[];
+        if(strlen($foodvars)>0) {
+           $this->foodvars = unserialize($foodvars) ;
+        }
+        
        
         
         parent::afterLoad();
@@ -240,8 +247,11 @@ class Item extends \ZCL\DB\Entity
             $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
+        $this->detail .= "<isbasevarfood>{$this->isbasevarfood}</isbasevarfood>";
+        $this->detail .= "<isvarfood>{$this->isvarfood}</isvarfood>";
         $this->detail .= "<isnds>{$this->isnds}</isnds>";
         $this->detail .= "<nds>{$this->nds}</nds>";
+        $this->detail .= "<foodvars>". serialize($this->foodvars) ."</foodvars>";
 
 
         $this->detail .= "</detail>";
