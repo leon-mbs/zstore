@@ -40,11 +40,12 @@
        <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
     
         
-        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт у Word"><i class="fa fa-file-word mr-2"></i>   </a>
-        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
-        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт у PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
-        <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode mr-2"></i>  </a>
+        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
+        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
+        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
+        <a v-show="docdata.exports.xml"   :href="xml"  target="_blank" title="Експорт в XML"> <b class="  mr-2">XML</b>  </a>
+        
+        <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode ml-2 mr-2"></i>  </a>
     
                
        
@@ -373,8 +374,10 @@
               return '/index.php?p=App/Pages/ShowDoc&arg=xls/'+this.docid  
          } ,
          pdf:function(){
-            //  return '/showdoc/pdf/'+this.docid  
               return '/index.php?p=App/Pages/ShowDoc&arg=pdf/'+this.docid  
+         }  ,
+         xml:function(){
+              return '/index.php?p=App/Pages/ShowDoc&arg=xml/'+this.docid  
          }  ,
          showprintposmob:function(){
               return   docdata.pos== true && docdata.usemobileprinter== true
@@ -429,29 +432,7 @@
                             
                 }
                ,
-               sendmail:function(){
-
-                  if(confirm("Вiдправити?")==false) {
-                      return;
-                  }
-                   
-                   
-                  callPageMethod(this.path +'::onMail',[this.docid], null,(data)=> 
-                  {    
-                      var ret = JSON.parse(data) ;
-                      if(ret.ok==true) {
-                           toastr.success('Вiдправлено','',{timeOut:2000})   
-                      }  else {
-                           toastr.error(ret.error,'',{timeOut:5000})                             
-                      }
-                                         
-                       
-                  });           
-                   
-                   
-                  
-               } 
-               ,
+              
                qrpay:function( ){
                    
                  $('#modalqr').modal('show')  

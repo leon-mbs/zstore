@@ -187,7 +187,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_XML );    
     }
 
     /**
