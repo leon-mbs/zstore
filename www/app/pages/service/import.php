@@ -339,7 +339,7 @@ class Import extends \App\Pages\Base
             $warranty = trim($row[$colwar]?? '');
             $notes = trim($row[$colnotes]?? '');
             $shortname = trim($row[$colshortname] ?? '');
-            $minqty = trim($row[$colminqty] ?? '');
+            $minqty = doubleval( str_replace(',', '.', trim($row[$colminqty] ?? '')) );
             $inprice = doubleval( str_replace(',', '.', trim($row[$colinprice] ?? '')) );
             $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')));
 
@@ -686,8 +686,7 @@ class Import extends \App\Pages\Base
                 if (strlen($itemcode) > 0) {
                     $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
                 }
-
-
+ 
                 $price = doubleval( str_replace(',', '.', trim($row[$colprice] ?? '')) );
                 $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')) );
 
@@ -698,7 +697,7 @@ class Import extends \App\Pages\Base
                     $item->msr = trim($row[$colmsr]  ?? '');
                     $item->description = trim($row[$coldesc]  ?? '');
                     $item->manufacturer = trim($row[$colbrand]  ?? '');
-
+               
                     $item->save();
                 }
                 if ($qty > 0) {
@@ -728,6 +727,8 @@ class Import extends \App\Pages\Base
             $doc->payamount = $amount;
             $doc->headerdata['payamount'] = $amount;
 
+          
+            $doc->headerdata['delivery'] = 0;
             $doc->headerdata['payed'] = 0;
             $doc->notes = 'Імпорт з Excel';
             $doc->headerdata['store'] = $store;
