@@ -268,6 +268,9 @@ class Document extends \ZCL\DB\Entity
     * @param mixed $def
     */
     public function getHD(string $name, $def=null)  {    
+       if( is_integer($def)  && ($this->headerdata[$name] ?? "") === "" ) {
+          return $def; 
+       }
        return  $this->headerdata[$name] ?? $def ;
     }    
      

@@ -357,6 +357,7 @@ class TTN extends Document
             }
              
     }
+  
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
