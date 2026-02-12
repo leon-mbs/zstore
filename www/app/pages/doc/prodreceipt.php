@@ -59,7 +59,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new DropDownChoice('edititem', Item::findArray('itemname', 'disabled<>1 and  item_type in(4,5)', 'itemname')));
-        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true );
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -260,7 +260,7 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
     }

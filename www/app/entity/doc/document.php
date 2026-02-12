@@ -36,7 +36,8 @@ class Document extends \ZCL\DB\Entity
     public const EX_EXCEL = 2;    //  Excel
     public const EX_PDF   = 3;    //  PDF
     public const EX_POS   = 4;    //  POS терминал
-    public const EX_MAIL  = 5;    //  Отправка  email
+   // public const EX_MAIL  = 5;    //  Отправка  email
+    public const EX_XML = 6;    //  GNAU XML
 
     //доставка
     public const DEL_SELF    = 1;    //  самовывоз
@@ -267,6 +268,9 @@ class Document extends \ZCL\DB\Entity
     * @param mixed $def
     */
     public function getHD(string $name, $def=null)  {    
+       if( is_integer($def)  && ($this->headerdata[$name] ?? "") === "" ) {
+          return $def; 
+       }
        return  $this->headerdata[$name] ?? $def ;
     }    
      
@@ -1338,7 +1342,13 @@ class Document extends \ZCL\DB\Entity
    public function customExportPDF() { 
        return ''; 
    }   
-    
+   /**
+   * експорт в  XML 
+   * 
+   */
+   public function exportGNAU() { 
+       return ''; 
+   }       
     /**
     * открыт на  редактирование
     * 

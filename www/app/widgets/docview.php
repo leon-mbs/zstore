@@ -94,7 +94,7 @@ class DocView extends \Zippy\Html\PageFragment
         $ret['exports']['excel'] =  in_array(Document::EX_EXCEL, $exportlist) ;
         $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;
         $ret['exports']['pos']   =  in_array(Document::EX_POS, $exportlist) ;
-        $ret['exports']['email'] =  in_array(Document::EX_MAIL, $exportlist) ;
+        $ret['exports']['xml'] =  in_array(Document::EX_XML, $exportlist) ;
         $ret['qr']['img'] = '';
         $ret['qr']['url'] = '';
 

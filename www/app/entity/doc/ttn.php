@@ -345,18 +345,25 @@ class TTN extends Document
           if(($this->customer_id??0) == 0) {
               return;
           }
+      
+         $amount =  $this->amount;
+         
+         if($this->headerdata["payamount"] >0) {
+            $amount =  $this->headerdata["payamount"]; 
+         }
        
            //тмц
-            if($this->amount >0) {
+            if($amount >0) {
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;
                 $b->document_id = $this->document_id;
-                $b->amount = 0-$this->amount;
+                $b->amount = 0-$amount;
                 $b->optype = \App\Entity\CustAcc::BUYER;
                 $b->save();
             }
              
     }
+  
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
