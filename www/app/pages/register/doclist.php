@@ -108,7 +108,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates', Document::getStateListMan()));
         $this->statusform->add(new DropDownChoice('musers', array()));
-        $this->statusform->add(new CheckBox('print1'));
+
 
         $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels', true);
         $this->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'onCopy' );
@@ -746,7 +746,7 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        $one = $this->statusform->print1->isChecked() ? 1:0;
+        
         $items=[];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             if($this->_doc->meta_name=='GoodsReceipt') {
@@ -757,7 +757,7 @@ class DocList extends \App\Pages\Base
         }
 
         $user = \App\System::getUser() ;
-        $ret = H::printItems($items,$one);   
+        $ret = H::printItems($items  );   
            
         if(intval($user->prtypelabel) == 0) {
         

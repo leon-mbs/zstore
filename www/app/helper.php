@@ -1070,10 +1070,9 @@ class Helper
      * Печать  этикеток     
      *
      * @param array $items  ТМЦ
-     * @param mixed $pqty  явное  указание  количества копий
      * @param array $tags  дополнительные поля
      */
-    public static function printItems(array $items, $pqty = 0, array $tags = []) {
+    public static function printItems(array $items,   array $tags = []) {
         $user = \App\System::getUser();
 
         $printer = \App\System::getOptions('printer');
@@ -1211,9 +1210,7 @@ class Helper
             if(intval($item->quantity) > 0) {
                 $qty = intval($item->quantity);  //по  документу
             }
-            if($pqty > 0) {
-                $qty = $pqty;
-            }
+           
             if($item->isweight ==1) {
                 $qty = 1;  //весовой товар
             }

@@ -12,6 +12,7 @@ use Zippy\Html\Link\ClickLink;
 class Base extends \Zippy\Html\WebPage
 {
     public $branch_id = 0;
+    public $_pritems=[] ;
 
 
     public function __construct( ) {
@@ -786,6 +787,21 @@ class Base extends \Zippy\Html\WebPage
         return $this->jsonOK("") ;
     }
 
+    public function printLabelForm($items) {
+         $this->_pritems=$items  ;
+         
+         
+    }
+ 
+    public function saveLabelForm($sender) {
+  
+    }
+ 
+    public function printLabelm( ) {
+  
+    }
+ 
+ 
  
     //методы возврата для  callPM
       public function jsonOK($data=null){

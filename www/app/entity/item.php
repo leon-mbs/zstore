@@ -119,8 +119,7 @@ class Item extends \ZCL\DB\Entity
         $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
-        $this->printqty = intval($xml->printqty[0]);
-      
+       
         $this->isbasevarfood = (int)$xml->isbasevarfood[0];
         $this->isvarfood = (int)$xml->isvarfood[0];
         $this->isnds = (int)$xml->isnds[0];
@@ -240,7 +239,7 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
-        $this->detail .= "<printqty>{$this->printqty}</printqty>";
+      
         if(count($this->reclist) > 0) {
             $this->detail .= "<reclist>";
             $ss =    serialize($this->reclist) ;

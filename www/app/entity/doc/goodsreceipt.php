@@ -67,13 +67,13 @@ class GoodsReceipt extends Document
  
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
-        $header['isprep'] = $this->headerdata["prepaid"] > 0;
-        $header['isdisc'] = $this->headerdata["disc"] > 0;
+        $header['isprep'] = ($this->headerdata["prepaid"]??0) > 0;
+        $header['isdisc'] = ($this->headerdata["disc"] ??0) > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
         $header['isval'] = strlen($this->headerdata['val']) > 1;
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
-        $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
+        $header['prepaid'] = H::fa($this->headerdata["prepaid"]??0);
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['delivery'] = H::fa($this->headerdata["delivery"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
