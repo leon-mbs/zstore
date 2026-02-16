@@ -70,7 +70,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
-        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
+        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll' );
         $this->itemtable->listform->add(new SubmitLink('priceall'))->onClick($this, 'OnPriceAll' );
 
         $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
@@ -1009,60 +1009,17 @@ class ItemList extends \App\Pages\Base
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->seldel == true) {
+                $item->printqty = 1;
                 $items[] = $item;
             }
         }
         if (count($items) == 0) {
-           $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+           
+            return;
+        }
+        $this->printLabelForm($items);
           
-            return;
-        }
-        
-        $user = \App\System::getUser() ;
-        $ret = H::printItems($items);   
-      
-        if(intval($user->prtypelabel) == 0) {
-
-            if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $ret;
-
-                $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            } else {
-                $this->addAjaxResponse("  $('#tag').html('{$ret}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-
-            }
-            return;
-        }
-
-        try {
-
-         
-            if(intval($user->prtypelabel) == 1) {
-                if(strlen($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::xml2comm($ret);
-        
-            }            
-            if(intval($user->prtypelabel) == 2) {
-                if(count($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::arr2comm($ret);
-        
-            }            
-            $b = json_encode($buf) ;
-
-            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $message = str_replace("'", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
-
-        }
+  
 
     }
 

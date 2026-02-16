@@ -1187,30 +1187,12 @@ class Helper
 
 
             $printqty = intval($item->printqty);
-            if($printqty == 5) { //не печатать
+            if($printqty == 0) { //не печатать
                continue;
             }
 
-            if($printqty == 0) {
-                $printqty = 1;
-            }
-
-            if($printqty == 1) {
-                $qty = 1;
-            }
-            if($printqty == 2) {
-                $qty = 2;
-            }
-            if($printqty == 3) ;
-            if($printqty == 4) {
-                if($qty > 10) {
-                    $qty = 10;
-                }
-            }
-            if(intval($item->quantity) > 0) {
-                $qty = intval($item->quantity);  //по  документу
-            }
-           
+            $qty = $printqty;
+             
             if($item->isweight ==1) {
                 $qty = 1;  //весовой товар
             }
@@ -1224,10 +1206,10 @@ class Helper
             }
             
             if($user->prtypelabel == 2) {
-                $header['name'] = str_replace("\"", "`", $header['name']);
-                $header['description'] = str_replace("\"", "`", $header['description']);
-                $header['qrcode'] = str_replace("\"", "`", $header['qrcode']);
-                $header['brand'] = str_replace("\"", "`", $header['brand']);
+                $header['name'] = str_replace("\"", "`", $header['name']??'');
+                $header['description'] = str_replace("\"", "`", $header['description']??'');
+                $header['qrcode'] = str_replace("\"", "`", $header['qrcode']??'');
+                $header['brand'] = str_replace("\"", "`", $header['brand']??'');
 
                 if($user->pwsymlabel > 0) {
                     $header['name'] = mb_substr($header['name'], 0, $user->pwsymlabel);
