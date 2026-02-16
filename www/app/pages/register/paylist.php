@@ -285,7 +285,7 @@ class PayList extends \App\Pages\Base
 
             $html = $report->generate($header);
 
-            $this->addAjaxResponse("  $('#paysprint').html('{$html}') ; $('#pform').modal()") ;
+            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; $('#pr_items_pform').modal('show')") ;
             return;
         }
 
