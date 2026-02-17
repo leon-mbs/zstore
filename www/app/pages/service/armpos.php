@@ -1127,6 +1127,7 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->setVisible(false);
        
         $this->docpanel->form2->custinfo->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
 
     }
 
@@ -1326,7 +1327,7 @@ class ARMPos extends \App\Pages\Base
                 $this->_doc->save();
             }    
                 
-            if($this->pos->usefisc == 1) {
+            if($this->pos->usefisc == 1 && strlen($this->_doc->headerdata["fiscalnumber"] ??'') ==0 ) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
@@ -1378,7 +1379,7 @@ class ARMPos extends \App\Pages\Base
                             $this->setErrorTopPage($ret['data']);
                             throw new \Exception($ret['data']);
                         } else {
-                            //  $this->setSuccess("Выполнено") ;
+                            
                             if ($ret['docnumber'] > 0) {
                                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                                 $this->pos->save();
@@ -1401,7 +1402,7 @@ class ARMPos extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setErrorTopPage($ee->getMessage());
+            $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             if($isnew) {

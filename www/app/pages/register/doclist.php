@@ -108,9 +108,9 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates', Document::getStateListMan()));
         $this->statusform->add(new DropDownChoice('musers', array()));
-        $this->statusform->add(new CheckBox('print1'));
 
-        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels', true);
+
+        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels' );
         $this->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'onCopy' );
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
@@ -746,60 +746,18 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        $one = $this->statusform->print1->isChecked() ? 1:0;
+        
         $items=[];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             if($this->_doc->meta_name=='GoodsReceipt') {
                 $it->price=0;  //печатаем  продажную цену
             }
-            
+            $it->printqty  = intval($it->quantity);
             $items[]=$it;
         }
 
-        $user = \App\System::getUser() ;
-        $ret = H::printItems($items,$one);   
-           
-        if(intval($user->prtypelabel) == 0) {
-        
-           
-            if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $ret;
-                $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            } else {
-                $this->addAjaxResponse("  $('#tag').html('{$ret}') ; $('#pform').modal()");
-            }
-            return;
-        }
-        
-        
-        try {
-
-            if(intval($user->prtypelabel) == 1) {
-                if(strlen($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::xml2comm($ret);
-        
-            }            
-            if(intval($user->prtypelabel) == 2) {
-                if(count($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::arr2comm($ret);
-        
-            }            
-            $b = json_encode($buf) ;
-
-            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $message = str_replace("'", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
-
-        }        
+        $this->printLabelForm($items);
+         
         
         
     }

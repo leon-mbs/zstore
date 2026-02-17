@@ -333,7 +333,7 @@ class PPOHelper
         }
         
         
-        $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+        $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']??0);
 
         $header = array();
         //  $header['doctype'] = $doctype;

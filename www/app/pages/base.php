@@ -8,10 +8,17 @@ use App\Session;
 use App\System;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton  ;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Binding\PropertyBinding as Bind;
 
 class Base extends \Zippy\Html\WebPage
 {
     public $branch_id = 0;
+    public $_pritems=[] ;
 
 
     public function __construct( ) {
@@ -94,6 +101,10 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('loginname', $user->username));
+
+        $this->add(new Form('pr_itemsform' ))->onSubmit($this,'saveLabelForm');
+        $this->pr_itemsform->add(new DataView('pr_items', new ArrayDataSource(new Bind($this, '_pritems')), $this, 'pr_itemsOnRow'));
+        $this->add(new Label('pr_items_tag' ));
 
 
         //меню
@@ -308,7 +319,7 @@ class Base extends \Zippy\Html\WebPage
         $msg = str_replace("\r", " ", $msg) ;
          
  
-        System::setErrorMsg($msg,true );
+        System::setErrorMsg($msg  );
     }
 
     public function setSuccess($msg ) {
@@ -394,24 +405,6 @@ class Base extends \Zippy\Html\WebPage
     //например для  сброса  адресной строки  после  команды удаления
     final protected function resetURL() {
         \App\Application::$app->setReloadPage();
-    }
-
-    /**
-     * Вставляет  JavaScript  в  конец   выходного HTML потока
-     * @param string $js Код  скрипта
-     * @param mixed $docready Если  true  - вставка  после  загрузки  документа в  браузер
-     */
-    public function addJavaScript($js, $docready = false) {
-        App::$app->getResponse()->addJavaScript($js, $docready);
-    }
-    
-    /**
-    * Добавление  javascript в AJAX вызовах
-    * 
-    * @param mixed $js
-    */
-    public function addAjaxJavaScript($js) {
-         $this->addAjaxResponse($js) ; 
     }
 
     public function goDocView() {
@@ -786,6 +779,85 @@ class Base extends \Zippy\Html\WebPage
         return $this->jsonOK("") ;
     }
 
+    public function printLabelForm($items) {
+         $this->_pritems=$items  ;
+         
+         $this->pr_itemsform->pr_items->Reload();
+    
+         
+         $this->addJavaScript("$('#modalpritems').modal('show')",true)  ;
+    }
+ 
+    public function pr_itemsOnRow($row) {
+        $item= $row->getDataItem() ;
+        $row->add(new Label('pr_itemname',$item->itemname));
+        $row->add(new Label('pr_itemcode',$item->item_code));
+        $row->add(new TextInput('pr_itemqty', new Bind($item,'printqty') ));
+        
+    }
+ 
+    public function saveLabelForm($sender) {
+        $items=[];
+        foreach($this->_pritems as $it) {
+            if($it->printqty > 0) {
+               $items[] = $it; 
+            }
+        }
+        $this->_pritems=[]  ;
+        $this->pr_itemsform->pr_items->Reload();
+            
+       
+        $ret = \App\Helper::printItems($items  );   
+        $user = \App\System::getUser() ;         
+ 
+        
+        if(intval($user->prtypelabel) == 0) {
+        
+           
+            if($user->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $ret;
+                $this->addJavaScript("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->pr_items_tag->setText($ret,true);
+                $this->addJavaScript("    $('#pr_items_pform').modal()",true);
+            }
+            return;
+        }
+        
+        
+        try {
+
+            if(intval($user->prtypelabel) == 1) {
+                if(strlen($ret)==0) {
+                   $this->addJavaScript(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::xml2comm($ret);
+        
+            }            
+            if(intval($user->prtypelabel) == 2) {
+                if(count($ret)==0) {
+                   $this->addJavaScript(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::arr2comm($ret);
+        
+            }            
+            $b = json_encode($buf) ;
+
+            $this->addJavaScript(" sendPSlabel('{$b}') ",true);
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $message = str_replace("'", "`", $message)  ;
+            $this->addJavaScript(" toastr.error( '{$message}' )         ");
+
+        }               
+    }
+ 
+  
+ 
+ 
  
     //методы возврата для  callPM
       public function jsonOK($data=null){
@@ -1010,6 +1082,27 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    
+
+    /**
+     * Вставляет  JavaScript  в  конец   выходного HTML потока
+     * @param string $js Код  скрипта
+     * @param mixed $docready Если  true  - вставка  после  загрузки  документа в  браузер
+     */
+    public function addJavaScript($js, $docready = false) {
+        App::$app->getResponse()->addJavaScript($js, $docready);
+    }
+    
+    /**
+    * Добавление  javascript в AJAX вызовах
+    * 
+    * @param mixed $js
+    */
+    public function addAjaxJavaScript($js) {
+         $this->addAjaxResponse($js) ; 
+    }
+    
+    
    /**
     * добавляет  яваскрипт  в  конец  ответа на ajax  запрос
     *

@@ -100,7 +100,9 @@
               <div zippy="navbar" class="card justify-content-start">
                
                <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
+                  
                    {{#fiscal}}
+                   <div class="d-flex justify-content-center">
                           &nbsp;  &nbsp;
                             <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
                         &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
@@ -108,7 +110,7 @@
                         &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
                         {{/fiscaltestmode}}
                         
-             
+                           </div>
                            {{/fiscal}}              
 
              </div> 
@@ -555,9 +557,9 @@
                         <div zippy="checktext"></div> 
                         <br>
                          {{^freg}}
-                        <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
+                        <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                          {{/freg}}
-                        <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
+                        <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;  
 
                     </div>
                 </div> 
@@ -702,8 +704,8 @@
 
 
                     <div class="form-group">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Вiдмiнити" class="btn btn-outline-secondary ">
+                        <input type="button" zippy="cancelcust" value="Вiдмiнити" class="btn btn-outline-secondary  ml-2">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary ml-2">                        
                     </div>
                 </div>
             </div>

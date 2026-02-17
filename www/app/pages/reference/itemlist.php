@@ -70,7 +70,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
-        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
+        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll' );
         $this->itemtable->listform->add(new SubmitLink('priceall'))->onClick($this, 'OnPriceAll' );
 
         $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
@@ -161,7 +161,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes(),Item::TYPE_TOVAR));
-        $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
+
         $this->itemdetail->add(new DropDownChoice('editisnds',[],0))->onChange($this, 'onNds');;
         $this->itemdetail->add(new TextInput('editnds'))->setVisible(false);
   
@@ -357,8 +357,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
-        $this->itemdetail->editprintqty->setValue($this->_item->printqty);
-
+       
         $this->itemdetail->editimageurl->setText($this->_item->imageurl);
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
@@ -511,8 +510,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
-        $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
-
+       
         $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
@@ -877,7 +875,7 @@ class ItemList extends \App\Pages\Base
 
             $html =  $report->generate($header);                  
 
-            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; $('#pr_items_pform').modal('show')");
             return;
         }
        
@@ -1011,60 +1009,17 @@ class ItemList extends \App\Pages\Base
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->seldel == true) {
+                $item->printqty = 1;
                 $items[] = $item;
             }
         }
         if (count($items) == 0) {
-           $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+           
+            return;
+        }
+        $this->printLabelForm($items);
           
-            return;
-        }
-        
-        $user = \App\System::getUser() ;
-        $ret = H::printItems($items);   
-      
-        if(intval($user->prtypelabel) == 0) {
-
-            if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $ret;
-
-                $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            } else {
-                $this->addAjaxResponse("  $('#tag').html('{$ret}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-
-            }
-            return;
-        }
-
-        try {
-
-         
-            if(intval($user->prtypelabel) == 1) {
-                if(strlen($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::xml2comm($ret);
-        
-            }            
-            if(intval($user->prtypelabel) == 2) {
-                if(count($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::arr2comm($ret);
-        
-            }            
-            $b = json_encode($buf) ;
-
-            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $message = str_replace("'", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
-
-        }
+  
 
     }
 

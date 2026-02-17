@@ -319,6 +319,7 @@ class OrderFood extends Document
             }
 
             //учитываем  отходы
+            $lost=0;
             $kl=0;
             if ($item->lost > 0) {
                 $kl = 1 / (1 - $item->lost / 100);

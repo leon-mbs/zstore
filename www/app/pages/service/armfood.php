@@ -1468,7 +1468,7 @@ class ARMFood extends \App\Pages\Base
                     $this->_doc->save();
                  }       
                     
-                if($this->_pos->usefisc == 1){
+                if($this->_pos->usefisc == 1  && strlen($this->_doc->headerdata["fiscalnumber"] ??'') ==0){
                     if( $this->docpanel->payform->passfisc->isChecked()) {
                         $this->_doc->headerdata["passfisc"]  = 1;
                     } else {     

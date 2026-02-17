@@ -106,7 +106,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edititem->onChange($this, 'OnChangeItem' );
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem',true );
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->addnewitem->setVisible(       \App\ACL::checkEditRef('ItemList',false));
   

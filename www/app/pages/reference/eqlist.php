@@ -275,7 +275,7 @@ class EqList extends \App\Pages\Base
 
             $html =  $report->generate($header);                  
 
-            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; $('#pr_items_pform').modal()");
             return;
         }
        
