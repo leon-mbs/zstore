@@ -514,15 +514,22 @@
             </form>
             <form zippy="formcheck">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-6 col-md-3 col-xl-2">
                            <div class="form-group  ">
                              {{^freg}}
-                           <input   zippy="print" type="button" value="Друк " class="btn  btn-primary">
+                           <input   zippy="print" type="button" value="Друк чeка" class="btn  btn-primary">
                               {{/freg}}         
-                           <button zippy="qrpaybtn" title="Оплата по QR коду" onclick=" $('#modalqr').modal('show')  " class="btn btn-success ml-2"><i class="fa fa-qrcode"></i></button>
+                          &nbsp;&nbsp;  <button zippy="qrpaybtn" title="Оплата по QR коду" onclick=" $('#modalqr').modal('show')  " class="btn btn-success ml-2"><i class="fa fa-qrcode"></i></button>
                    
-                            &nbsp;&nbsp;<input type="button" value="Новий чек " zippy="newdoc" class="btn  btn-info">
+                           
                         </div>
+                        </div>
+                       <div class="col-6 col-md-3 col-xl-2">
+                           <input type="button" value="Новий чек " zippy="newdoc" class="btn  btn-info">
+                       
+                         </div>
+                      <div class="col-12">      </div>
+
                         <div zippy="showcheck">
 
                         </div>

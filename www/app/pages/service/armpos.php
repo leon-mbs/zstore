@@ -1326,7 +1326,7 @@ class ARMPos extends \App\Pages\Base
                 $this->_doc->save();
             }    
                 
-            if($this->pos->usefisc == 1) {
+            if($this->pos->usefisc == 1 && strlen($this->_doc->headerdata["fiscalnumber"] ??'') ==0 ) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
@@ -1378,7 +1378,7 @@ class ARMPos extends \App\Pages\Base
                             $this->setErrorTopPage($ret['data']);
                             throw new \Exception($ret['data']);
                         } else {
-                            //  $this->setSuccess("Выполнено") ;
+                            
                             if ($ret['docnumber'] > 0) {
                                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                                 $this->pos->save();
