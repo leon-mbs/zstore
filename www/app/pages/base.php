@@ -319,7 +319,7 @@ class Base extends \Zippy\Html\WebPage
         $msg = str_replace("\r", " ", $msg) ;
          
  
-        System::setErrorMsg($msg,true );
+        System::setErrorMsg($msg  );
     }
 
     public function setSuccess($msg ) {

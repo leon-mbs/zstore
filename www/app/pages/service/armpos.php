@@ -1127,6 +1127,7 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->setVisible(false);
        
         $this->docpanel->form2->custinfo->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
 
     }
 
@@ -1401,7 +1402,7 @@ class ARMPos extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setErrorTopPage($ee->getMessage());
+            $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             if($isnew) {
