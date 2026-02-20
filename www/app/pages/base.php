@@ -148,6 +148,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["shop"] = $modules['shop'] == 1;
         $this->_tvars["ocstore"] = $modules['ocstore'] == 1;
         $this->_tvars["woocomerce"] = $modules['woocomerce'] == 1;
+        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
         $this->_tvars["note"] = $modules['note'] == 1;
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
@@ -191,6 +192,9 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
+        if (strpos(System::getUser()->modules ?? '', 'horoshop') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["horoshop"] = false;
+        }
 
         if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
@@ -218,6 +222,7 @@ class Base extends \Zippy\Html\WebPage
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
+            $this->_tvars["horoshop"] ||
             $this->_tvars["note"] ||
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||

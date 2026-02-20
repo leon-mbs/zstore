@@ -80,6 +80,7 @@ class Admin extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnote', $modules['note']));
         $this->modules->add(new CheckBox('modissue', $modules['issue']));
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
+        $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
 
@@ -318,6 +319,7 @@ class Admin extends \App\Pages\Base
         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
         $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
+        $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
         $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
 
