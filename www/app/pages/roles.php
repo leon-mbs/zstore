@@ -58,6 +58,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
         $this->editpan->editform->add(new CheckBox('editwoocomerce'));
+        $this->editpan->editform->add(new CheckBox('edithoroshop'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
         $this->editpan->editform->add(new CheckBox('editppo'));
@@ -154,6 +155,9 @@ class Roles extends \App\Pages\Base
         }
         if (strpos($this->role->modules, 'woocomerce') !== false) {
             $this->editpan->editform->editwoocomerce->setChecked(true);
+        }
+       if (strpos($this->role->modules, 'horoshop') !== false) {
+            $this->editpan->editform->edithoroshop->setChecked(true);
         }
         if (strpos($this->role->modules, 'shop') !== false) {
             $this->editpan->editform->editshop->setChecked(true);
@@ -285,6 +289,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editwoocomerce->isChecked()) {
             $modules = $modules . ',woocomerce';
+        }
+       if ($this->editpan->editform->edithoroshop->isChecked()) {
+            $modules = $modules . ',horoshop';
         }
         if ($this->editpan->editform->editissue->isChecked()) {
             $modules = $modules . ',issue';

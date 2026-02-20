@@ -67,7 +67,7 @@ class IncomeItem extends Document
             "document_number" => $this->document_number
         );
      
-        if ($this->headerdata["storeemp"] > 0  ) {
+        if ($this->getHD("storeemp",0) > 0  ) {
             $header['storeemp'] = $this->headerdata["storeempname"];
         }
 
