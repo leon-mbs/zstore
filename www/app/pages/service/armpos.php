@@ -1187,8 +1187,13 @@ class ARMPos extends \App\Pages\Base
     //оплатить
     public function savedocOnClick($sender) {
 
+        if($this->_doc->document_id >0) {
+            if($this->_doc->hasStore() || $this->_doc->hasPayments()) {
+               $this->setError("Чек вже був проведений. Створiть новий чек")  ;
+               return;
+            }
+        }
         $this->_doc->document_number = $this->docpanel->form3->document_number->getText();
-
         $doc = Document::getFirst(" document_id <> {$this->_doc->document_id}  and   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
             $this->_doc->document_number = $this->_doc->nextNumber();

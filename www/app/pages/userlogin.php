@@ -81,6 +81,8 @@ class UserLogin extends \Zippy\Html\WebPage
                 $user->lastactive = time();
                 $user->save();
                 System::setUser($user);
+                Helper::log('Login: '.$user->username);
+                
                 $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
                 //App::$app->getResponse()->toBack();

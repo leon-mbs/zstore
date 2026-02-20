@@ -712,6 +712,11 @@ class DocList extends \App\Pages\Base
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = 0;
+        $doc->payed = 0;
+        $doc->parent_id=0  ;
+        $doc->headerdata['outnumber'] = '';
+        $doc->headerdata['fiscalnumber'] = '';
+        $doc->headerdata['waitpay'] = 0;
         $doc->headerdata['contract_id'] = 0;
         $doc->headerdata['_state_before_approve_'] = '';
         $doc->save();
