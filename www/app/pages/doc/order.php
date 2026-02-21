@@ -608,7 +608,9 @@ class Order extends \App\Pages\Base
                 $this->_doc->setHD('waitpay',1); 
             }   
            
-                     
+            if($this->_doc->user_id==0)  {
+               $this->_doc->user_id = \App\System::getUser()->user_id; 
+            }               
             $this->_doc->save();
 
             if ($sender->id == 'savedoc') {
@@ -902,6 +904,7 @@ class Order extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
+ 
     public function onPayed() {
         $this->docform->payed->setText($this->docform->editpayed->getDouble());
      

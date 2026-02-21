@@ -341,7 +341,10 @@ class OrderList extends \App\Pages\Base
         $conn->BeginTrans();
 
         try {
-
+            if($this->_doc->user_id==0)  {
+               $this->_doc->user_id = \App\System::getUser()->user_id; 
+               $this->_doc->save();
+            } 
  
             if ($sender->id == "binp") {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);

@@ -294,6 +294,10 @@ class IncomeItem extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
+            
+            if($this->_doc->user_id==0)  {
+               $this->_doc->user_id = \App\System::getUser()->user_id; 
+            }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {

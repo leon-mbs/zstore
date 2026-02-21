@@ -296,16 +296,16 @@ class OutcomeItem extends \App\Pages\Base
                         }
                         $indoc->document_number =  $indoc->nextNumber($indoc->branch_id);
 
-                        $admin  =\App\Entity\User::getByLogin('admin') ;
-                        $indoc->user_id = $admin->user_id;
-
+                      //  $admin  =\App\Entity\User::getByLogin('admin') ;
+                     //   $indoc->user_id = $admin->user_id;
+                        $indoc->user_id=0;
                         $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
                             $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
-                        
+                        $ina=0;
                         $items = array();
 
                         foreach ($this->_itemlist as $it) {
@@ -313,11 +313,11 @@ class OutcomeItem extends \App\Pages\Base
                             //последняя партия
                             $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$this->_doc->headerdata['store'] }", 'stock_id desc');
                             $it->price = $stock->partion;
-
+                            $ina += ($it->price * $it->quantity) ;
                             $items[] = $it;
                         }
                         $indoc->packDetails('detaildata', $items);
-
+                        $indoc->amount = $ina;
                         $indoc->save();
                         $indoc->updateStatus(Document::STATE_NEW);
 
