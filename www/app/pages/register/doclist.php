@@ -751,10 +751,10 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        
         $items=[];
-        foreach($this->_doc->unpackDetails('detaildata') as $it) {
-            if($this->_doc->meta_name=='GoodsReceipt') {
+        $doc= Document::load($this->_doc->document_id) ;
+        foreach($doc->unpackDetails('detaildata') as $it) {
+            if($doc->meta_name=='GoodsReceipt') {
                 $it->price=0;  //печатаем  продажную цену
             }
             $it->printqty  = intval($it->quantity);
