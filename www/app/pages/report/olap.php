@@ -393,7 +393,7 @@ class OLAP extends \App\Pages\Base
       
                 COALESCE(ev.outprice,0) AS outprice   
                 FROM entrylist_view ev   
-                JOIN documents dv ON ev.document_id = dv.document_id
+                JOIN documents_view dv ON ev.document_id = dv.document_id
                 JOIN items_view iv ON ev.item_id = iv.item_id
                 JOIN store_stock_view ssv ON ev.stock_id = ssv.stock_id
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
@@ -418,7 +418,7 @@ class OLAP extends \App\Pages\Base
                 COALESCE(ev.outprice,0) AS outprice,   
                 COALESCE(ev.cost,0) AS cost    
                 FROM entrylist_view ev   
-                JOIN documents dv ON ev.document_id = dv.document_id
+                JOIN documents_view dv ON ev.document_id = dv.document_id
                 JOIN services ss ON ev.service_id = ss.service_id
 
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
@@ -448,7 +448,7 @@ class OLAP extends \App\Pages\Base
                 COALESCE(uv.username ,'Н/Д') AS username,
                 COALESCE(pv.amount,0) AS amount 
                 FROM paylist_view pv   
-                JOIN documents dv ON pv.document_id = dv.document_id
+                JOIN documents_view dv ON pv.document_id = dv.document_id
                 LEFT JOIN customers c ON dv.customer_id = c.customer_id
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
              
@@ -474,7 +474,7 @@ class OLAP extends \App\Pages\Base
                 COALESCE(uv.username ,'Н/Д') AS username,
                 dv.document_id    
                 FROM entrylist_view ev   
-                JOIN documents dv ON ev.document_id = dv.document_id
+                JOIN documents_view dv ON ev.document_id = dv.document_id
                 LEFT JOIN services ss ON ev.service_id = ss.service_id
                 LEFT JOIN items_view iv ON ev.item_id = iv.item_id
                 LEFT JOIN store_stock_view ssv ON ev.stock_id = ssv.stock_id

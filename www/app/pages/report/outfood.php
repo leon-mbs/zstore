@@ -104,10 +104,7 @@ class OutFood extends \App\Pages\Base
 
         if($rtype == 1) {
   
-            
-            $sql = " dv.meta_name='OrderFood' AND  state = 9      
-               AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
-                AND DATE(dv.document_date) <= " . $conn->DBDate($to).' ' ;
+  
 
             $sql="select i.itemname, sum(0-e.quantity) as qty,sum((e.outprice )*(0-e.quantity)) as am from entrylist_view e 
           join  items i on e.item_id = i.item_id 
