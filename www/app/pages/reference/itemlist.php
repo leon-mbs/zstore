@@ -155,6 +155,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editnoprice'));
         $this->itemdetail->add(new CheckBox('editisweight'));
         $this->itemdetail->add(new CheckBox('editnoshop'));
+        $this->itemdetail->add(new CheckBox('editnoprint'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
         $this->itemdetail->add(new \Zippy\Html\Image('editimage' ));
@@ -370,6 +371,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
+        $this->itemdetail->editnoprint->setChecked($this->_item->noprint);
         $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
         $this->itemdetail->editisweight->setChecked($this->_item->isweight);
         $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
@@ -421,6 +423,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editnoprice->setChecked(false);
         $this->itemdetail->editisweight->setChecked(false);
         $this->itemdetail->editnoshop->setChecked(false);
+        $this->itemdetail->editnoprint->setChecked(false);
         $this->itemdetail->editautooutcome->setChecked(false);
         $this->itemdetail->editautoincome->setChecked(false);
         $this->_item = new Item();
@@ -527,6 +530,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
         $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
         $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
+        $this->_item->noprint = $this->itemdetail->editnoprint->isChecked() ? 1 : 0;
         $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 

@@ -53,6 +53,7 @@ class Item extends \ZCL\DB\Entity
 
         $this->isweight = (int)$xml->isweight[0];
         $this->noprice = (int)$xml->noprice[0];
+        $this->noprint = (int)$xml->noprint[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->autooutcome = (int)$xml->autooutcome[0];
         $this->autoincome = (int)$xml->autoincome[0];
@@ -174,6 +175,7 @@ class Item extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail .= "<isweight>{$this->isweight}</isweight>";
         $this->detail .= "<noprice>{$this->noprice}</noprice>";
+        $this->detail .= "<noprint>{$this->noprint}</noprint>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
         $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
