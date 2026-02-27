@@ -49,8 +49,7 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('insertcust', $modules['puinsertcust']));
 
     }
-    //584ac4cc9096eb799cf6664ce977b22c6f463cba
-
+    
     public function saveOnClick($sender) {
 
         $apitoken = $this->cform->apitoken->getText();
