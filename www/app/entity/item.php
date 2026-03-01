@@ -666,7 +666,7 @@ class Item extends \ZCL\DB\Entity
             $where .= " and store_id = " . $store_id;
         }
         if ($emp > 0) {
-            $where .= " and emp_id = " . $emp;
+            $where .= " and coalesce(emp_id,0) = " . $emp;
         }
         if (strlen($snumber) > 0) {
             $where .= " and  snumber = " . $conn->qstr($snumber);
@@ -722,7 +722,7 @@ class Item extends \ZCL\DB\Entity
             $sql .= " and store_id = " . $store_id;
         }
         if ($emp_id > 0) {
-            $sql .= " and emp_id = " . $emp_id;
+            $sql .= " and coalesce(emp_id,0) = " . $emp_id;
         }
         $amount = $conn->GetOne($sql);
         return $amount;
