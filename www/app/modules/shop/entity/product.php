@@ -183,7 +183,23 @@ class Product extends \App\Entity\Item
         }
     }
 
-
+  public function getQuantityShop(  ) {
+        $shop = \App\System::getOptions("shop");
+  
+        $store_id =$shop['defstore']??0 ;
+     
+        $conn = \ZDB\DB::getConnect();
+        $where = "   item_id = {$this->item_id} ";
+        if ($store_id > 0) {
+            $where .= " and store_id = " . $store_id;
+        }
+     
+        $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock_view where ". $where;
+       
+        $cnt = $conn->GetOne($sql);
+        return $cnt;
+    }  
+  
 
 }
 

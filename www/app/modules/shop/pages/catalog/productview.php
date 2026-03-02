@@ -102,7 +102,7 @@ class ProductView extends Base
             $this->buy->setVisible(false);
         } else {
 
-            if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
+            if ($product->getQuantityShop() > 0 || $this->_tvars["isfood"]==true) {
                 $this->onstore->setText('В наявності');
                 $this->buy->setValue('Купити');
             } else {

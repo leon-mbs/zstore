@@ -597,8 +597,8 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $wemp="";
         
         if ($emp > 0) {
-            $wemp =   " and  emp_id={$emp}  ";
-            $str .= " and emp_id={$emp} ";            
+            $wemp =   " and  coalesce(emp_id,0)={$emp}  ";
+            $str .= " and coalesce(emp_id,0)={$emp} ";            
         }        
         if ($store > 0) {
             $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store} {$wemp} ) ";
