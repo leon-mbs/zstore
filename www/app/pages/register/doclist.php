@@ -726,7 +726,10 @@ class DocList extends \App\Pages\Base
 
         $this->filterOnSubmit($this->filter); 
         $this->statusform->setVisible(false) ;
-        $this->docview->setVisible(false) ;      
+        $this->docview->setVisible(false) ; 
+ 
+   
+             
     }
 
     public function oncsv($sender) {
@@ -741,8 +744,8 @@ class DocList extends \App\Pages\Base
             $data['A' . $i] = H::fd($d->document_date);
             $data['B' . $i] = $d->document_number;
             $data['C' . $i] = $d->meta_desc;
-            $data['D' . $i] = $d->customer_name;
-            $data['E' . $i] = $d->amount;
+            $data['D' . $i] = $d->customer_name ??'';
+            $data['E' . $i] = H::fa(($d->payamount > 0) ? $d->payamount : ($d->amount > 0 ? $d->amount : ""));
             $data['F' . $i] = $d->notes;
         }
 

@@ -783,8 +783,9 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
         $row->add(new Label('sqty', H::fqty($item->qty)));
-        //   $it= Item::load($item->item_id) ;
-        //  $row->add(new Label('sprice', H::fa($it->getProdprice())));
+        $it= Item::load($item->item_id) ;
+        $row->add(new Label('sprice', H::fa($it->getProdprice())));
+
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
     }
 

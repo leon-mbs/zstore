@@ -348,7 +348,7 @@ class TTN extends Document
       
          $amount =  $this->amount;
          
-         if($this->headerdata["payamount"] >0) {
+         if($this->getHD("payamount",0)  >  0) {
             $amount =  $this->headerdata["payamount"]; 
          }
        

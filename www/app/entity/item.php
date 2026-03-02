@@ -1007,7 +1007,7 @@ class Item extends \ZCL\DB\Entity
         }
         
         if ($price == 0) {   
-            $price = $this->getPartion(0);
+            $price = $this->getPartion();
         }
         if($price==0) {
             $price = $this->getLastPartion() ;
