@@ -785,8 +785,13 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function printLabelForm($items) {
-         $this->_pritems=$items  ;
-         
+         $this->_pritems=[]  ;
+         foreach($items as $item)  {
+            if($item->noprint == 1) {
+                continue;
+            }     
+            $this->_pritems[$item->item_id]= $item;
+         }
          $this->pr_itemsform->pr_items->Reload();
     
          

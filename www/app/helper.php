@@ -1096,6 +1096,7 @@ class Helper
             if(intval($item->item_id) == 0) {
                 continue;
             }
+        
             $header = [];
             $header['turn'] = '';
             if($prturn == 1) {

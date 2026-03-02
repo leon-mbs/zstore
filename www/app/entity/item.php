@@ -53,6 +53,7 @@ class Item extends \ZCL\DB\Entity
 
         $this->isweight = (int)$xml->isweight[0];
         $this->noprice = (int)$xml->noprice[0];
+        $this->noprint = (int)$xml->noprint[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->autooutcome = (int)$xml->autooutcome[0];
         $this->autoincome = (int)$xml->autoincome[0];
@@ -174,6 +175,7 @@ class Item extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail .= "<isweight>{$this->isweight}</isweight>";
         $this->detail .= "<noprice>{$this->noprice}</noprice>";
+        $this->detail .= "<noprint>{$this->noprint}</noprint>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
         $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
@@ -664,7 +666,7 @@ class Item extends \ZCL\DB\Entity
             $where .= " and store_id = " . $store_id;
         }
         if ($emp > 0) {
-            $where .= " and emp_id = " . $emp;
+            $where .= " and coalesce(emp_id,0) = " . $emp;
         }
         if (strlen($snumber) > 0) {
             $where .= " and  snumber = " . $conn->qstr($snumber);
@@ -720,7 +722,7 @@ class Item extends \ZCL\DB\Entity
             $sql .= " and store_id = " . $store_id;
         }
         if ($emp_id > 0) {
-            $sql .= " and emp_id = " . $emp_id;
+            $sql .= " and coalesce(emp_id,0) = " . $emp_id;
         }
         $amount = $conn->GetOne($sql);
         return $amount;

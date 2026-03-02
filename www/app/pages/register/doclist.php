@@ -756,6 +756,12 @@ class DocList extends \App\Pages\Base
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             if($this->_doc->meta_name=='GoodsReceipt') {
                 $it->price=0;  //печатаем  продажную цену
+                $itm = \App\Entity\Item::load($it->item_id) ;
+                $it->price1 = $itm->price1;
+                $it->price2 = $itm->price2;
+                $it->price3 = $itm->price3;
+                $it->price4 = $itm->price4;
+                $it->price5 = $itm->price5;
             }
             $it->printqty  = intval($it->quantity);
             $items[]=$it;
