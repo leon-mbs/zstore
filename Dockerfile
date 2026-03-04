@@ -13,10 +13,10 @@ FROM php:8.2-apache
 WORKDIR /var/www/html
 
 RUN apt-get update \
-    && apt-get install -y libzip-dev libgmp-dev \
+    && apt-get install -y libzip-dev libgmp-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install mysqli zip gmp gd \
     && a2enmod rewrite \
-    && docker-php-ext-install mysqli zip gmp \
-    && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/*
 
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
