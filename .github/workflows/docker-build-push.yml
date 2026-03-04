@@ -8,9 +8,6 @@ on:
       - dev
   workflow_dispatch:
 
-env:
-  IMAGE_NAME: YOUR_DOCKERHUB_USERNAME/zippy-crm
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -38,5 +35,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/zippy-crm:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/zippy-crm:${{ github.sha }}
