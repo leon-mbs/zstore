@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - master
+    tags:
+      - "v*"
   workflow_dispatch:
 
 jobs:
@@ -36,3 +38,4 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/zippy-crm:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/zippy-crm:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/zippy-crm:${{ github.ref_name }}
