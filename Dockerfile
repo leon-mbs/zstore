@@ -26,7 +26,7 @@ COPY www/ /var/www/html/
 
 COPY --from=composer_stage /app/www/vendor /var/www/html/vendor
 
-RUN chown -R www-data:www-data /var/www/html \
-    && mkdir -p /var/www/html/logs /var/www/html/upload \
-    && chown -R www-data:www-data /var/www/html/logs /var/www/html/upload
+RUN mkdir -p /var/www/html/logs /var/www/html/upload \
+    && chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/logs /var/www/html/upload
 
