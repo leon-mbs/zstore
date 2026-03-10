@@ -85,7 +85,7 @@ class Entry extends \ZCL\DB\Entity
         }
 
         if ($emp > 0) {
-            $where = $where . " and employee_id= " . $emp;
+            $where = $where . " and coalesce(employee_id,0) = " . $emp;
         }
 
 
@@ -93,7 +93,7 @@ class Entry extends \ZCL\DB\Entity
             $where = $where . " and stock_id= " . $stock;
         }
         if ($customer > 0) {
-            $where = $where . " and customer_id= " . $customer;
+            $where = $where . " and coalesce(customer_id,0)= " . $customer;
         }
         $sql = " select coalesce(sum(quantity),0)    from entrylist  where " . $where;
         return $conn->GetOne($sql);

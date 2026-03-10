@@ -726,7 +726,10 @@ class DocList extends \App\Pages\Base
 
         $this->filterOnSubmit($this->filter); 
         $this->statusform->setVisible(false) ;
-        $this->docview->setVisible(false) ;      
+        $this->docview->setVisible(false) ; 
+ 
+   
+             
     }
 
     public function oncsv($sender) {
@@ -741,8 +744,8 @@ class DocList extends \App\Pages\Base
             $data['A' . $i] = H::fd($d->document_date);
             $data['B' . $i] = $d->document_number;
             $data['C' . $i] = $d->meta_desc;
-            $data['D' . $i] = $d->customer_name;
-            $data['E' . $i] = $d->amount;
+            $data['D' . $i] = $d->customer_name ??'';
+            $data['E' . $i] = H::fa(($d->payamount > 0) ? $d->payamount : ($d->amount > 0 ? $d->amount : ""));
             $data['F' . $i] = $d->notes;
         }
 
@@ -751,11 +754,17 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        
         $items=[];
-        foreach($this->_doc->unpackDetails('detaildata') as $it) {
-            if($this->_doc->meta_name=='GoodsReceipt') {
+        $doc= Document::load($this->_doc->document_id) ;
+        foreach($doc->unpackDetails('detaildata') as $it) {
+            if($doc->meta_name=='GoodsReceipt') {
                 $it->price=0;  //печатаем  продажную цену
+                $itm = \App\Entity\Item::load($it->item_id) ;
+                $it->price1 = $itm->price1;
+                $it->price2 = $itm->price2;
+                $it->price3 = $itm->price3;
+                $it->price4 = $itm->price4;
+                $it->price5 = $itm->price5;
             }
             $it->printqty  = intval($it->quantity);
             $items[]=$it;
