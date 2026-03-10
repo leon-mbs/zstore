@@ -43,7 +43,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
     volumes:
       - db_data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./db/db.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 volumes:
   db_data:

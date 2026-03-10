@@ -9,9 +9,6 @@ npm-debug.log
 yarn.lock
 pnpm-lock.yaml
 
-docker/mysql/init.sql
-
-db/
 logs/
 tmp/
 
