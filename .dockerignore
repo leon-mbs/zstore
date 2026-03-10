@@ -1,0 +1,17 @@
+.git
+.gitignore
+.gitattributes
+.github
+
+vendor
+node_modules
+npm-debug.log
+yarn.lock
+pnpm-lock.yaml
+
+docker/mysql/init.sql
+
+db/
+logs/
+tmp/
+
