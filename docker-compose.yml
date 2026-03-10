@@ -1,0 +1,49 @@
+services:
+  app:
+    image: ${DOCKER_IMAGE:-vladyslavhor/zippy-crm:latest}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_TIMEZONE: ${APP_TIMEZONE:-Europe/Kyiv}
+      APP_LOG_LEVEL: ${APP_LOG_LEVEL:-200}
+      DB_HOST: ${DB_HOST:-db:3306}
+      DB_NAME: ${DB_NAME:-zstore}
+      DB_USER: ${DB_USER:-zstore}
+      DB_PASS: ${DB_PASS:-zstore}
+      SMTP_USE_SMTP: ${SMTP_USE_SMTP:-false}
+      SMTP_HOST: ${SMTP_HOST:-smtp.google.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-admin.google.com}
+      SMTP_EMAIL_FROM: ${SMTP_EMAIL_FROM:-admin.google.com}
+      SMTP_PASS: ${SMTP_PASS:-secret}
+      SMTP_TLS: ${SMTP_TLS:-true}
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www/logs:/var/www/html/logs
+      - ./www/upload:/var/www/html/upload
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-zstore}
+      MYSQL_USER: ${DB_USER:-zstore}
+      MYSQL_PASSWORD: ${DB_PASS:-zstore}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  db_data:
