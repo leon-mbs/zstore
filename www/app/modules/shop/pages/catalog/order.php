@@ -301,11 +301,7 @@ class Order extends Base
             $order->amount = $amount;
             $order->payamount = $amount - $this->disc;
 
-           // $order->user_id = intval($shop["defuser"]??0) ;
-            if($order->user_id==0) {
-              //  $user = \App\Entity\User::getByLogin('admin') ;
-              //  $order->user_id = $user->user_id;
-            }
+         
         
             $order->user_id=0;
 
