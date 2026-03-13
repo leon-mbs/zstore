@@ -211,6 +211,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
+       
      
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
@@ -227,6 +228,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
+            $this->_tvars["checkbox"] ||
   
          
             $this->_tvars["vdoc"] ||
