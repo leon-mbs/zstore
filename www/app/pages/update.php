@@ -182,7 +182,9 @@ class Update extends \App\Pages\Base
             $zip = new \ZipArchive()  ;
 
             $archive = _ROOT.'upload/update.zip' ;
-            @unlink($archive) ;
+            if( file_exists($archive) ) {
+                unlink($archive) ;
+            }
             
             @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
          

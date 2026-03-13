@@ -259,6 +259,11 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }
+        if(($modules['checkbox'] ?? 0) == 1) {
+            if($role->rolename == 'admins' || strpos($role->modules, 'checkbox') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/CB/Reports", 'meta_type' => 6, 'description' => "Х-Звiт (Чекбокс)"));
+            }
+        }
       
         return $mdata;
     }
