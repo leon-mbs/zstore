@@ -562,7 +562,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $q = $in == true ? "e.quantity >0" : "e.quantity < 0";
 
-        $sql = "  select document_id,coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+        $sql = "  select document_id,coalesce(partion,0) as p, coalesce(outprice,0) as o from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . intval($store);
@@ -578,17 +578,11 @@ class Item extends \ZCL\DB\Entity
         $sql = $sql . " order  by  e.entry_id desc  "  ;
          
         foreach($conn->Execute($sql) as $r) {
-            if (strlen($doctype) == 0) {
-               return doubleval($r['p']);             
-            }         
-            
-            $doc = \App\Entity\Doc\Document::load($r['document_id']);
-            if($doc != null)  {
-                foreach ($doc->unpackDetails('detaildata') as $item) {
-                   return doubleval($item->price);             
-                    
-                }
+            if($in == false && $r['o'] > 0 ) {
+               return doubleval($r['o']);   
             }
+            
+            return doubleval($r['p']);             
         }
         
         return 0;
