@@ -68,12 +68,12 @@ class Reports extends \App\Pages\Base
         
         foreach($ret['payments'] as $p){
              if($p['type']=='CASH') {
-                $header['nal'] += doubleval($p['sell_sum']) ;
-                $header['rnal'] += doubleval($p['return_sum']) ;
+                $header['nal'] += doubleval($p['sell_sum']/100) ;
+                $header['rnal'] += doubleval($p['return_sum']/100) ;
              }
              if($p['type']=='CASHLESS') {
-                $header['card'] += doubleval($p['sell_sum']) ;
-                $header['rcard'] += doubleval($p['return_sum']) ;
+                $header['card'] += doubleval($p['sell_sum']/100) ;
+                $header['rcard'] += doubleval($p['return_sum']/100) ;
              }
         }
        
