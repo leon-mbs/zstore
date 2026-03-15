@@ -199,6 +199,7 @@
                         <button zippy="binp" class="btn btn-success  mr-2">  В обробку</button>
                         
                         <button zippy="bscan" class="btn btn-primary  mr-2">  Зiбрати</button>
+                        <button zippy="bsplit" class="btn btn-primary  mr-2">  Роздiлити</button>
                    
                         <button zippy="brd" class="btn btn-success  mr-2">  Готовий до вiдправки</button>
                         <button zippy="bsent" class="btn btn-success  mr-2">  Вiдправлений</button>
@@ -272,7 +273,7 @@
         </div>
         
         
-       <div zippy="editpanel" class="row">
+        <div zippy="editpanel" class="row">
             <div class="col-12 col-md-8 col-xl-6">
                  <h5>Замовлення <span zippy="editdn"></span></h5>
                  <form zippy="editform"  >
@@ -287,7 +288,7 @@
                     {{/usescanner}}        
                    <table class="table table-sm">
                    <tr><th>
-<i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                      <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                                 style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
                                     class="fa fa-check-double "></i>                   
                    </th><th colspan="4"></th></tr>
@@ -315,6 +316,40 @@
             </div>
         </div>        
         
+        <div zippy="splitpanel" class="row">
+            <div class="col-12 col-md-8 col-xl-6">
+                 <h5>Замовлення <span zippy="splitdn"></span></h5>
+                  <small> Виділені позиції будуть перенесені в окреме замовлення</small>
+                 <form zippy="splitform"  >
+                    
+                   <table class="table table-sm">
+                   <tr><th>
+                      <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i>                   
+                   </th><th colspan="3"></th></tr>
+                   <tr  zippy="splititemlist">
+                      <td style="width:20px"><input zippy="checksplit" class="seldel mt-1" type="checkbox"></td>
+                      <td zippy="splitlistname"></td>
+                     
+                      <td zippy="splitlistcode"></td>
+                      
+                      <td class="text-right" zippy="splitlistqty"></td>
+                   
+                   </tr> 
+                 </table>         
+                 <div class="form-group">
+                    <button zippy="splitcancel" type="submit" class="  btn btn-secondary  mr-2 ">Скасувати</button>                 
+                    <button zippy="splitsave" type="submit" class="  btn btn-info  mr-2 ">Розділити</button>                 
+                  
+                    
+                 </div>
+
+
+               </form>
+      
+            </div>
+        </div>        
         
          {{={| |}=}}   
           <div class="row">
