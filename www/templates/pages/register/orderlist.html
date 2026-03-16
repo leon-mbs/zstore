@@ -319,22 +319,19 @@
         <div zippy="splitpanel" class="row">
             <div class="col-12 col-md-8 col-xl-6">
                  <h5>Замовлення <span zippy="splitdn"></span></h5>
-                  <small> Виділені позиції будуть перенесені в окреме замовлення</small>
+                  <small> Введені кількості будуть перенесені в окреме замовлення</small>
                  <form zippy="splitform"  >
                     
                    <table class="table table-sm">
-                   <tr><th>
-                      <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
-                                    class="fa fa-check-double "></i>                   
-                   </th><th colspan="3"></th></tr>
+                   
                    <tr  zippy="splititemlist">
-                      <td style="width:20px"><input zippy="checksplit" class="seldel mt-1" type="checkbox"></td>
+                     
                       <td zippy="splitlistname"></td>
                      
                       <td zippy="splitlistcode"></td>
                       
                       <td class="text-right" zippy="splitlistqty"></td>
+                      <td class="text-right" ><input required="om" pattern="[0-9\.]+" class="form-control form-control-sm ml-2" style="width:75px" zippy="splitlistnewqty"></td>
                    
                    </tr> 
                  </table>         

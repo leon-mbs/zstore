@@ -953,7 +953,7 @@ class OrderList extends \App\Pages\Base
         $this->_itemlist = [];
         foreach($this->_doc->unpackDetails('detaildata')  as $it) {
 
-            $it->checked =   false;
+            $it->newqty =   0;
       
             $this->_itemlist[] = $it;
 
@@ -969,7 +969,7 @@ class OrderList extends \App\Pages\Base
         $row->add(new  Label('splitlistcode', $item->item_code));
 
         $row->add(new  Label('splitlistqty', $item->quantity));
-        $row->add(new CheckBox('checksplit', new \Zippy\Binding\PropertyBinding($item, 'checked')));
+        $row->add(new TextInput('splitlistnewqty', new \Zippy\Binding\PropertyBinding($item, 'newqty')));
 
     }
   
@@ -1011,19 +1011,34 @@ class OrderList extends \App\Pages\Base
                 $totalnew=0;
                 
                 foreach ($this->_itemlist as   $item) {
-                    $am = $item->price * $item->quantity;
-                    if($item->checked == true) {
-                       $newlist[]= $item;
-                       $totalnew += $am; 
-                    }   else {
+                    
+                    
+                     if($item->newqty > $item->quantity || $item->newqty < 0 )  {
+                         $this->setError('Невiрна кiлькiсть для '.$item->itemname) ;
+                         return;
+                     }
+                    
+                   
+                    $newitem = \App\Entity\Item::load($item->item_id);
+                    $newitem->price = $item->price ;
+                    $newitem->desc  = $item->desc ;
+                    $newitem->quantity  =   $item->newqty  ;
+                    $item->quantity  = $item->quantity -  $item->newqty  ;
+                     
+                    if($newitem->quantity  > 0) {
+                      
+                       $newlist[]= $newitem;
+                       $totalnew += $newitem->price * $newitem->quantity; 
+                    } 
+                    if($item->quantity  > 0) {   
                        $oldlist[]= $item; 
-                       $totalold += $am; 
+                       $totalold += $item->price * $item->quantity; 
                     }
 
                 }
                 
                 if(count($oldlist)==0 || count($newlist)==0)  {
-                     $this->setError('Порожній перелік  позицій') ;
+                     $this->setError('Порожній перелік позицій в старому або новому замовленнi ') ;
                      return;
                 }
                 
