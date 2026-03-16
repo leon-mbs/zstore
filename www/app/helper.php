@@ -1131,7 +1131,7 @@ class Helper
 
 
             $header['article'] = $item->item_code;
-            $header['garterm'] = $item->warranty;
+            $header['garterm'] = $item->getTerm();
             $header['country'] = $item->country;
             $header['brand'] = $item->manufacturer;
             $header['notes'] = $item->notes;

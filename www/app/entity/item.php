@@ -70,6 +70,7 @@ class Item extends \ZCL\DB\Entity
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
+        $this->term = (string)$xml->term[0];
         $this->snumber = (string)$xml->snumber[0];
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
@@ -187,6 +188,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
+        $this->detail .= "<term><![CDATA[{$this->term}]]></term>";
         $this->detail .= "<snumber><![CDATA[{$this->warranty}]]></snumber>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
@@ -1300,5 +1302,20 @@ class Item extends \ZCL\DB\Entity
             $io->save();
        }             
     }
-         
+   
+   
+   /**
+   *  гарантийный срок
+   *  если задан срок  голности вычисляет  от текущей даты
+   */
+    public function getTerm(){
+        if(strlen($this->warranty)>0){
+           return  $this->warranty;
+        }
+        if(intval($this->term ??0)>0){
+           return "до ". \App\Helper::fd( strtotime("+{$this->term} days")  );  ; 
+        }
+        return "";
+    }
+    
 }
