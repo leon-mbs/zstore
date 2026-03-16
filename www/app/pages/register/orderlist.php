@@ -975,7 +975,7 @@ class OrderList extends \App\Pages\Base
   
     public function splitOnSubmit($sender) {
 
-            if ($sender->id == "editcancel") {
+            if ($sender->id == "splitcancel") {
                  $this->splitpanel->setVisible(false);
                  $this->listpanel->setVisible(true);
                  return;
