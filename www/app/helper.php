@@ -259,6 +259,11 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }
+        if(($modules['checkbox'] ?? 0) == 1) {
+            if($role->rolename == 'admins' || strpos($role->modules, 'checkbox') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/CB/Reports", 'meta_type' => 6, 'description' => "Х-Звiт (Чекбокс)"));
+            }
+        }
       
         return $mdata;
     }
@@ -449,7 +454,7 @@ class Helper
      *
      * @param mixed $id
      */
-    public static function getMetaType($id) {
+    public static function getMetaType(int $id) {
         if(is_array(self::$meta[$id] ?? null) == false) {
             $conn = DB::getConnect();
             $sql = "select * from   metadata where meta_id = " . $id;
@@ -1126,7 +1131,7 @@ class Helper
 
 
             $header['article'] = $item->item_code;
-            $header['garterm'] = $item->warranty;
+            $header['garterm'] = $item->getTerm();
             $header['country'] = $item->country;
             $header['brand'] = $item->manufacturer;
             $header['notes'] = $item->notes;

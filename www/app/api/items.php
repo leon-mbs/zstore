@@ -268,8 +268,8 @@ class items extends JsonRPC
       
         $item = new CustItem();
         $item->customer_id = $args['customer_id'];
-        $item->cust_name = $args['cust_name'];
-        $item->cust_code = $args['cust_code'];
+        $item->cust_name = $args['cust_name'] ?? '';
+        $item->cust_code = $args['cust_code'] ?? '';
         $item->brand = $args['brand'];
         $item->bar_code = $args['bar_code'];
         $item->store = $args['store'];

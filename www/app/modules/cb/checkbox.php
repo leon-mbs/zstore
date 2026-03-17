@@ -42,6 +42,7 @@ class CheckBox
             CURLOPT_HTTPHEADER => [
                 "Content-Type: application/json",
                 "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
@@ -97,6 +98,7 @@ class CheckBox
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
                 "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
@@ -154,6 +156,7 @@ class CheckBox
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
                 "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);
@@ -341,6 +344,8 @@ class CheckBox
             CURLOPT_POSTFIELDS => $receipt,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
                 "Content-Type: application/json"
             ],
         ]);
@@ -479,6 +484,8 @@ class CheckBox
             CURLOPT_POSTFIELDS => $receipt,
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
                 "Content-Type: application/json"
             ],
         ]);
@@ -544,6 +551,8 @@ class CheckBox
             CURLOPT_POSTFIELDS => "",
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0" 
             ],
         ]);
 
@@ -569,6 +578,54 @@ class CheckBox
         return $response;
     }
 
+    public function GetReports() {
+     
+        $ret = $this->PinCodeAuth() ;
+        if($ret !== true) {
+            return $ret;
+        }
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => self::API_URL . "/reports",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_SSL_VERIFYPEER =>false,
+              CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "",
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
+                "Content-Type: application/json" 
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        }
+
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        if ($status_code !== 201) {
+
+            if($status_code == 422 || $status_code == 400) {
+                $response = json_decode($response, true);
+                return $response['message'] ;
+            }
+
+            return "HTTP Error #:" . $status_code . ' ' . $response;
+        }
+        return   json_decode($response, true);
+ 
+    }
 
    public function CheckShift() {
 
@@ -592,6 +649,7 @@ class CheckBox
             CURLOPT_HTTPHEADER => [
                 "Authorization: Bearer {$this->access_token}",
                 "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
                 "X-License-Key: {$this->license_key}"
             ],
         ]);

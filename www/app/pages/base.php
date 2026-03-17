@@ -211,6 +211,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
+       
      
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
@@ -227,6 +228,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
+            $this->_tvars["checkbox"] ||
   
          
             $this->_tvars["vdoc"] ||
@@ -870,21 +872,40 @@ class Base extends \Zippy\Html\WebPage
  
  
     //методы возврата для  callPM
-      public function jsonOK($data=null){
-         if($data===null) {
-             return json_encode([]) ;  
+    /**
+    * Успешная операция
+    * 
+    * @param mixed $data     данные
+    * @param mixed $success  сообщение  об успешной операции
+    * @param mixed $warning  предупреждение
+    */
+      public function jsonOK($data=null,$success="",$warning=""){
+         $ret= []; 
+         if($data!==null) {
+             $ret['data'] =  $data ;  
          }
-          
-         return json_encode(['data'=>$data], JSON_UNESCAPED_UNICODE)   ;
+         
+         if(strlen($success)>0) {
+             $ret['success'] = $success ;  
+         }
+      
+         if(strlen($warning)>0) {
+             $ret['warning'] =  $warning ;  
+         }
+  
+         return json_encode($ret, JSON_UNESCAPED_UNICODE)   ;
       }
   
-      public function jsonError($error){  
+   /**
+   * сообщение  об  ошибке
+   * 
+   * @param mixed $error
+   */
+   public function jsonError($error){  
          return json_encode(['error'=>$error], JSON_UNESCAPED_UNICODE) ;  
       }
            
-      public function jsonWarn($warn){
-         return json_encode(['warning'=>$warn], JSON_UNESCAPED_UNICODE)  ; 
-      }
+    
            
     //методы для vue
 
