@@ -1228,22 +1228,26 @@ class ARMFood extends \App\Pages\Base
     // сохранить
     public function tosaveOnClick($sender) {
 
+        if($this->_doc instanceof Document) {
+            if($this->_doc->hasPayments()  || $this->_doc->hasStore()  ){
+                $this->setError("У документа  вже є проводки") ;
+                return;
+            }    
+        }
+        
 
         if ($this->createdoc() == false) {
             return;
         }
 
    
-
+    
         if($this->_doc->state != Document::STATE_NEW) {
-            $this->_doc->updateStatus(Document::STATE_EDITED);
+            $this->_doc->updateStatus(Document::STATE_SHIFTED);
 
         }
-
-
-        //            $this->_doc = $this->_doc->cast();
-
-        $this->_doc->save();
+   
+     //   $this->_doc->save();
 
 
         $this->onNewOrder();
@@ -1454,9 +1458,10 @@ class ARMFood extends \App\Pages\Base
                 }
                 
             }
-
-           if ($this->_doc->payamount > $this->_doc->payed ) {
-               $this->_doc->updateStatus(Document::STATE_WP);
+           
+            if ($this->_doc->payamount > $this->_doc->payed ) {
+            //   $this->_doc->updateStatus(Document::STATE_WP);
+              
             }            
 
             
@@ -1467,7 +1472,8 @@ class ARMFood extends \App\Pages\Base
                     $this->_doc->headerdata["passfisc"] = 1;
                     $this->_doc->save();
                  }       
-                    
+                
+                //фискализация    
                 if($this->_pos->usefisc == 1  && strlen($this->_doc->headerdata["fiscalnumber"] ??'') ==0){
                     if( $this->docpanel->payform->passfisc->isChecked()) {
                         $this->_doc->headerdata["passfisc"]  = 1;
