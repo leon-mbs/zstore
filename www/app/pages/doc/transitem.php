@@ -47,8 +47,8 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this,'OnStore');
+        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this,'OnStore');
         $this->docform->add(new AutocompleteTextInput('fromitem'))->onText($this, 'OnAutocompleteItem');
         $this->docform->add(new AutocompleteTextInput('toitem'))->onText($this, 'OnAutocompleteItem');
 
@@ -94,6 +94,9 @@ class TransItem extends \App\Pages\Base
         $this->Reload() ;
     }
 
+    public function OnStore($sender) {
+        //для обновления  формы
+    }
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
