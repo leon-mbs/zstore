@@ -698,10 +698,25 @@
                                     {{/ppo}}
                                           {{#checkbox}}
                                     <li class="nav-item  has-treeview">
-                                        <a href="/index.php?p=App/Modules/CB/Reports" class="nav-link">
+                                       
+                                        
+                                        <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p> Х-Звiт</p>
+                                            <p>Чекбокс 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
                                         </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                 <a href="/index.php?p=App/Modules/CB/Reports" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Х-Звiт</p>
+                                                </a>
+                                            </li>   
+                  
+                                        </ul>    
+                                        
                                     </li>
                                     {{/checkbox}}
                                     {{#np}}
@@ -1348,7 +1363,7 @@
         
        //ТМЦ в закупку
        function addItemToCO(id,qty=0){
-                callPM('addItemToCO',[id,qty],null,(data)=> 
+                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {

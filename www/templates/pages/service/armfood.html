@@ -212,6 +212,13 @@
                         <div class="card">
                             <table class="table   " style="font-size:large">
                                 <tr>
+                                  <th class="text-center">
+                                    {{#pack}} <i title="З собою" class="fa fa-bag-shopping"></i>    {{/pack}}
+                                      </th>
+                                     {{#hideblock}}   
+                                  <th class="text-center"><i title="З собою" class="fa fa-bag-shopping"></i>   </th>
+                                  <th class="text-center"><i title="З собою" class="fa fa-bag-shopping"></i>   </th>
+                                      {{/hideblock}}  
                                     <th>Назва</th>
                                     <th>Код</th>
                                     <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
@@ -221,16 +228,27 @@
                                     <th class="text-right">Сума</th>
                                     <th >Стан </th>
                                     
-                                    <th class="text-center">
-                                    {{#pack}} <i title="З собою" class="fa fa-bag-shopping"></i>    {{/pack}}
-                                      </th>
+                                  
                                    
 
                                     <th > </th>
                                 </tr>
                                 <tr zippy="itemlist"> 
-
-
+                                  
+                                   <td class="text-center"> 
+                                    {{#pack}}
+                                    <a zippy="myselfon"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff"><i class="fa fa-toggle-off"></i></a> 
+                                    {{/pack}}
+                                    </td>
+                                      {{#hideblock}}
+                                   <td class="text-center"> 
+                                    <a  ><i class="fa fa-toggle-on text-success"></i></a> <a  ><i class="fa fa-toggle-off"></i></a> 
+                                    </td>
+                                   <td class="text-center"> 
+                                    <a  ><i class="fa fa-toggle-on text-success"></i></a> <a  ><i class="fa fa-toggle-off"></i></a> 
+                                    </td>
+                                    {{/hideblock}}
+                                    
                                     <td zippy="itemname"></td>
                                     <td zippy="item_code"></td>
                                                                               
@@ -247,22 +265,18 @@
                                     <td zippy="amount" class="text-right"></td>
                                     <td zippy="state"  ></td>
                                     
-                                    <td class="text-center"> 
-                                    {{#pack}}
-                                    <a zippy="myselfon"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff"><i class="fa fa-toggle-off"></i></a> 
-                                    {{/pack}}
-                                    </td>
+                                  
                                     
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6" class="text-right text-bold">Всього:</td>
+                                    <td colspan="7" class="text-right text-bold">Всього:</td>
                                     <td zippy="totalamount" class="text-right text-bold"></td>
                                     <td ></td>
                                     <td ></td>
                                 </tr>
                               <tr>
-                                    <td colspan="6" class="text-right   ">Знижка:</td>
+                                    <td colspan="7" class="text-right   ">Знижка:</td>
                                     <td  class="text-right  ">
                                       <input style="width:100px" zippy="totaldisc" class="form-control qtyprice">
                                     </td>
@@ -270,7 +284,7 @@
                                     <td > </td>
                                 </tr>
                              <tr>
-                                    <td colspan="6" class="text-right   ">Списати  бонуси:</td>
+                                    <td colspan="7" class="text-right   ">Списати  бонуси:</td>
                                     <td  class="text-right  ">
                                       <input style="width:100px" zippy="bonus" class="form-control qtyprice">
                                     </td>
@@ -387,14 +401,14 @@
 
 
 
-                        <div class="  w-100 ">
-                            <input zippy="btosave" type="submit" value="Зберегти"   class="btn btn-success mr-4">
+                        <div class="  w-100 d-flex justify-content-end pt-4">
+                            <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success mr-4">
 
                             <input zippy="btoprod" type="submit" value="У виробництво"   class="btn btn-success mr-4">
 
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
 
-                            <input zippy="btopay" type="submit" value="До сплати"   class="btn btn-success mr-4">
+                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success mr-4">
    
                         </div>
                         

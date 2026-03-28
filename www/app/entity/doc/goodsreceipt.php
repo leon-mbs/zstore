@@ -182,14 +182,19 @@ class GoodsReceipt extends Document
        
      
         if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
+             
+             $cust= \App\Entity\Customer::load($this->customer_id) ;
+        
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;
                  if($ci == null){
                     $ci = new \App\Entity\CustItem() ;    
                  }
+                 
                  $ci->item_id = $item->item_id;
                  $ci->customer_id = $this->customer_id;
+                 $ci->cust_name = $item->itemname;
                  $ci->price = $item->price;
                  $ci->quantity = 0;
                  $ci->cust_code = $item->custcode??'';

@@ -34,6 +34,17 @@ class ItemActivity extends \App\Pages\Base
         $this->filter->add(new Date('to', time()));
 
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
+        
+        
+       $catlist = array();
+        foreach (\App\Entity\Category::findYield("cat_id in (select cat_id from items where disabled <>1 )", "cat_name") as $c) {
+            if($c->noprice==1) {
+                continue;
+            }
+            $catlist[$c->cat_id] = $c->cat_name;
+        }        
+        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0))->onChange($this, "onCat");
+         
         $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
         $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
         
@@ -51,15 +62,20 @@ class ItemActivity extends \App\Pages\Base
 
     public function OnAutoItem($sender) {
         $r = array();
+        $cat = $this->filter->searchcat->getValue();
 
         $text = Item::qstr('%' . $sender->getText() . '%');
-        $list = Item::findArray('itemname', " (itemname like {$text} or item_code like {$text} or bar_code like {$text}  ) ");
+        $list = Item::findArray('itemname', ($cat >0 ? "cat_id={$cat} and ":"" ).  " (itemname like {$text} or item_code like {$text} or bar_code like {$text}  ) ");
         foreach ($list as $k => $v) {
             $r[$k] = $v;
         }
         return $r;
     }
 
+    public function onCat($sender) {
+        
+    }
+    
     public function onItem($sender) {
         $this->filter->snumber->setVisible(false);
 
@@ -92,6 +108,7 @@ class ItemActivity extends \App\Pages\Base
         $itemid = $this->filter->item->getKey();
         $snumber = $this->filter->snumber->getText();
         $emp = $this->filter->searchemp->getValue();
+        $cat = $this->filter->searchcat->getValue();
 
 
         $it = "1=1";
@@ -127,6 +144,7 @@ class ItemActivity extends \App\Pages\Base
               
               " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
               " . ($emp > 0 ? " AND st2.emp_id = {$emp}  " : "") . "  
+              " . ($cat > 0 ? " AND st2.cat_id = {$cat}  " : "") . "  
               AND sc2.document_date  < t.dt   
               GROUP BY st2.item_id 
                                  
@@ -144,6 +162,7 @@ class ItemActivity extends \App\Pages\Base
               WHERE st3.item_id = t.item_id  
              " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
              " . ($emp > 0 ? " AND st3.emp_id = {$emp}  " : "") . "  
+             " . ($cat > 0 ? " AND st3.cat_id = {$cat}  " : "") . "  
               AND sc3.document_date  < t.dt   
               GROUP BY st3.item_id 
                                  
@@ -170,6 +189,7 @@ class ItemActivity extends \App\Pages\Base
               WHERE {$it}  
            " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
            " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
+           " . ($cat > 0 ? " AND st.cat_id = {$cat}  " : "") . "  
              AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,

@@ -272,6 +272,8 @@ class Export extends \App\Pages\Base
 
         $i = 0;
         foreach ($this->_docs as $doc) {
+            
+            if($doc->ch != true) continue;
             $i++;
             $data['A' . $i] = array('value' => $doc->document_number, 'bold' => true);
             $data['B' . $i] = array('value' =>   $doc->document_date , 'format' => 'date', 'bold' => true);

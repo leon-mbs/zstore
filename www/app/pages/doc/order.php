@@ -1027,8 +1027,6 @@ class Order extends \App\Pages\Base
         $this->editdetail->setVisible(true);
     }
 
- 
-
     public function onTextBayCity($sender) {
         $text = $sender->getText()  ;
         $api = new \App\Modules\NP\Helper();

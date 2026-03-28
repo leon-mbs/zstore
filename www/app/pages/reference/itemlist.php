@@ -139,6 +139,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editvolume'));
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
+        $this->itemdetail->add(new TextInput('editterm'));
         $this->itemdetail->add(new TextInput('editlost'));
         $this->itemdetail->add(new TextInput('editimageurl'));
 
@@ -357,6 +358,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editlost->setText($this->_item->lost);
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
+        $this->itemdetail->editterm->setText($this->_item->term);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
        
         $this->itemdetail->editimageurl->setText($this->_item->imageurl);
@@ -512,6 +514,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->lost = $this->itemdetail->editlost->getText();
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
+        $this->_item->term = $this->itemdetail->editterm->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
        
         $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
@@ -1210,7 +1213,11 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          $price= H::fa($item->getPrice() );
-         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+         $stdate="";
+         if(intval($item->term??0) >0) {
+           $stdate =  date("Y-m-d", ( strtotime("+{$item->term} days") ));
+         }         
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('{$stdate}') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
       
     }
  
