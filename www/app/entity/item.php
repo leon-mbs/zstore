@@ -33,6 +33,8 @@ class Item extends \ZCL\DB\Entity
         $this->foodstate = 0;
         $this->reclist = array();
         $this->printqty = 1;      
+        $this->isforbar = "";      
+        $this->isforprod = "";      
     }
 
     protected function afterLoad() {
@@ -132,7 +134,8 @@ class Item extends \ZCL\DB\Entity
            $this->foodvars = unserialize($foodvars) ;
         }
         
-       
+        $this->isforbar = (string)$xml->isforbar[0];
+        
         
         parent::afterLoad();
     }
@@ -250,6 +253,8 @@ class Item extends \ZCL\DB\Entity
             $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
+        $this->detail .= "<isforbar>{$this->isforbar}</isforbar>";
+
         $this->detail .= "<isbasevarfood>{$this->isbasevarfood}</isbasevarfood>";
         $this->detail .= "<isvarfood>{$this->isvarfood}</isvarfood>";
         $this->detail .= "<isnds>{$this->isnds}</isnds>";
