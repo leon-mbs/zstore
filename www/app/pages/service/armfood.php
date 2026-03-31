@@ -429,8 +429,8 @@ class ARMFood extends \App\Pages\Base
     public function addnewposOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
-        $this->docpanel->listsform->setVisible(false);
-        $this->docpanel->navform->setVisible(false);
+     //   $this->docpanel->listsform->setVisible(false);
+     //   $this->docpanel->navform->setVisible(false);
 
 
         $this->_catlist = Category::find(" cat_id in(select cat_id from  items where  disabled <>1  ) and detail  not  like '%<nofastfood>1</nofastfood>%' ");
@@ -1225,7 +1225,9 @@ class ARMFood extends \App\Pages\Base
 
     // в  производство
     public function toprodOnClick($sender) {
-
+        $this->docpanel->catpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(false);
+ 
         $pass=  $this->docpanel->listsform->passprod->isChecked() ? 1:0;
         if($this->_tvars['diffbp']==1 && $this->_ct<1 && $pass ==0 )  {
             $this->setError('Не вказано тип чеку') ;
@@ -1314,7 +1316,9 @@ class ARMFood extends \App\Pages\Base
    
     // сохранить
     public function tosaveOnClick($sender) {
-
+        $this->docpanel->catpan->setVisible(false);
+        $this->docpanel->prodpan->setVisible(false);
+ 
         if($this->_doc instanceof Document) {
             if($this->_doc->hasPayments()  || $this->_doc->hasStore()  ){
                 $this->setError("У документа  вже є проводки") ;
@@ -1342,6 +1346,9 @@ class ARMFood extends \App\Pages\Base
 
     //к  оплате
     public function topayOnClick($sender) {
+         $this->docpanel->catpan->setVisible(false);
+         $this->docpanel->prodpan->setVisible(false);
+ 
          if($this->_tvars['diffbp']==1 && $this->_ct<1 && $pass ==0 )  {
             $this->setError('Не вказано тип чеку') ;
             return;
