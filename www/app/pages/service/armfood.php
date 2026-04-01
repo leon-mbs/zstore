@@ -167,7 +167,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new SubmitButton('btoprod'))->onClick($this, 'toprodOnClick');
         $this->docpanel->listsform->add(new SubmitButton('btodel'))->onClick($this, 'todelOnClick');
         
-        $this->docpanel->listsform->btopay->setVisible($this->_worktype<2);
+    //    $this->docpanel->listsform->btopay->setVisible($this->_worktype<2);
         $this->docpanel->listsform->btoprod->setVisible($this->_worktype==2);
 
         
@@ -1370,7 +1370,7 @@ class ARMFood extends \App\Pages\Base
         }
         $pass=  $this->docpanel->listsform->passprod->isChecked() ? 1:0;
        
-        if($this->_worktype==1){
+        if($this->_worktype>0){
             $this->_doc->setHD('passprod',$pass) ;
          
             if($this->_tvars['diffbp']==1  && $pass == 0)  {
