@@ -69,6 +69,8 @@ class ARMFood extends \App\Pages\Base
         $this->_tvars['packicon'] = $food['pack'] ?? 0;
         $this->_tvars['diffbp'] = $food['diffbp'] ?? 0;
         $this->_tvars['baricon'] = $this->_worktype > 0  ;
+        $this->_tvars['menuimage'] = true ;
+     
        
         if($this->_worktype==0) {
            $this->_tvars['diffbp'] = 0;
@@ -80,6 +82,7 @@ class ARMFood extends \App\Pages\Base
         $filter = \App\Filter::getFilter("armfood");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
+            $filter->menuimages = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = $food['pricetype'] ?? 'price1';
 
@@ -87,7 +90,9 @@ class ARMFood extends \App\Pages\Base
             $filter->beznal = H::getDefMF();
 
         }
-
+        if($this->_tvars['useimages'] == false || $filter->menuimages==0){
+             $this->_tvars['menuimage'] = false ;
+        }      
         //обшие настройки
         $this->add(new Form('setupform'))->onSubmit($this, 'setupOnClick');
 
@@ -95,6 +100,7 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(1), $filter->nal));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(2), $filter->beznal));
+        $this->setupform->add(new CheckBox('menuimages', $filter->menuimages ));
         $this->setupform->add(new ClickLink('options', $this, 'onOptions'));
         $this->setupform->add(new ClickLink('variations', $this, 'onVariations'));
    
@@ -274,7 +280,9 @@ class ARMFood extends \App\Pages\Base
         $this->varpandet->vardetform->add(new DropDownChoice('vardetitem'));
         $this->varpandet->add(new DataView('vardetlist', new ArrayDataSource($this, '_vbdetlist'), $this, 'onVBDetRow'));
          
-
+        if($this->_tvars['useimages'] == false || $filter->menuimages==0){
+             $this->_tvars['menuimage'] = false ;
+        }
         
     }
 
@@ -295,6 +303,7 @@ class ARMFood extends \App\Pages\Base
         $filter->store = $store;
         $filter->pos = $this->_pos->pos_id;
 
+        $filter->menuimages = $this->setupform->menuimages->isChecked() ?1:0;
         $filter->nal = $nal;
         $filter->beznal = $beznal;
         $this->_store = $store;
@@ -309,10 +318,12 @@ class ARMFood extends \App\Pages\Base
             $this->_tvars['scriptfreg']  = $this->_pos->scriptfreg;
         }
         $this->_tvars['fiscaltestmode']  = $this->_pos->testing==1;
-
+        if($this->_tvars['useimages'] == false || $filter->menuimages==0){
+             $this->_tvars['menuimage'] = false ;
+        }
 
         $this->setupform->setVisible(false);
-
+  
         $this->onNewOrder();
     }
 
@@ -663,6 +674,7 @@ class ARMFood extends \App\Pages\Base
 
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
+        $row->prodbtn->add(new Label('prodval', $prod->customsize));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
         $row->prodbtn->add(new Image('prodimage', $prod->getImageUrl()));
     }

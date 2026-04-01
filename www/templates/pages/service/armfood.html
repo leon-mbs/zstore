@@ -82,7 +82,17 @@
                             </select>
                         </div>
                     </div>
-
+                    {{#useimages}}
+                     <div class="form-group row  ">
+                        <div class="col-12">
+                        
+                         <div class="form-check form-check-inline">
+                            <input zippy="menuimages" class="form-check-input" type="checkbox"    > 
+                            <label class="form-check-label" for="menuimages">  Показувати зображення в  меню</label>
+                        </div>
+                       </div>
+                    </div>
+                     {{/useimages}}
 
                     <div class="form-group   ">
                       
@@ -122,9 +132,9 @@
                       
                         <div   zippy="catlist" class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-1   ">
                             <div class="card mb-2" zippy="catbtn"  style="cursor:pointer" >
-                                   
+                                     {{#menuimage}}
                                      <img zippy="catimage" style="height:100px;  "  >
-                                      
+                                      {{/menuimage}} 
                                    
                                  <b   zippy="catname"> </b>
 
@@ -141,18 +151,19 @@
                             
                         <div   zippy="prodlist" class="col-12 col-sm-4 col-md-3 col-lg-2 col-xl-1   ">
                       
-                            <div class="card mb-2" zippy="prodbtn" style="cursor:pointer;;">
+                            <div class="  mb-2" zippy="prodbtn" style="cursor:pointer;;">
                                  
-                                    
+                                             {{#menuimage}}
                                             <img zippy="prodimage" style="height:100px "  >
-                                       
+                                             {{/menuimage}}
                                     
 
-                                            <b   zippy="prodname"> </b> 
-
+                                            <b style="display:block"   zippy="prodname"> </b> 
+                                          
                                            
-                                        <b zippy="prodprice" style="font-size:large"></b>  
-                                
+                                        <b   zippy="prodprice" style="font-size:large; "></b> грн   &nbsp; &nbsp;&nbsp;&nbsp;
+                                        <span   zippy="prodval"> </span> 
+
 
                             </div>
 

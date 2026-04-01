@@ -147,7 +147,7 @@
                     </div>
                       {{#secondm}}
                     <div class="col-12 mt-4 d-flex justify-content-center">
-                          > <a class="btn btn-secondary  w-50 phone" href="/menu/2"> {{smname}} </a>    
+                            <a class="btn btn-secondary  w-50 phone" href="/menu/2"> {{smname}} </a>    
                     </div>
                       {{/secondm}}                    
                     {{#secondm3}}
@@ -177,19 +177,19 @@
                     {{/secondm4}}  
                   </b>
                 </div> 
-                <div class="col-12 tab_menu ">
+                <div class="col-12   ">
                  <ul class="nav nav-tabs">
                    {{#cats}}
                   <li class="nav-item">
-                    <a class="nav-link  " data-toggle="tab" href="#{{cat_id}}">{{cat_name}} </a>
+                    <a class="nav-link  "   href="#{{cat_id}}">{{cat_name}} </a>
 
                      
                   </li>
                    {{/cats}}
                 </ul>         
-                 <div class="tab-content"  >
+                 <div    >
                  {{#cats}}     
-                   <div class="tab-pane  show   " id="{{cat_id}}"> 
+                   <div   id="{{cat_id}}"> 
                      <b class="list_menu_item"> {{cat_name}} </b>
                        {{#items}}   
                       <div class="row"  >
@@ -269,16 +269,7 @@
              
         </div>
     
-      <script>   
-          $(document).ready(function () {
-       
-              $('a.nav-link').first().addClass('active') 
-              $('div.tab-pane').first().addClass('active') 
-
-              
-          });   
- 
-      </script>
+   
         
     </body>
 </html>        
