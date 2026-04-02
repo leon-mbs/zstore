@@ -925,7 +925,7 @@ class ARMFood extends \App\Pages\Base
             $state="В черзi";
         }
         if ($item->foodstate == 2) {
-            $state="Готуєтся";
+            $state="Готується";
         }
         if ($item->foodstate == 3) {
             $state="Готово";

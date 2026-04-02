@@ -14,6 +14,84 @@
                <a class="btn btn-info mr-4" >Список  замовлень</a> 
             </div>
          </div>
+      
+  <form zippy="setupform">
+        <div class="row">
+                <div class="col-auto">
+                      <h3>АРМ касира</h3>
+                    </div>
+                <div class="col-auto pt-2 lt-4">
+                     {{#isadmins}}
+                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
+                        <a   zippy="variations" class="  mr-4"><i class="fa fa-check-double"></i> Варіації</a>
+                       {{/isadmins}}
+               </div>    
+             </div>    
+           
+        
+            <div class="row">
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="form-group row ">
+                        <label class="col-6 col-form-label" for="nal">Готiвкова каса</label>
+                        <div class="col-6">
+                            <select class="form-control" zippy="nal">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row  ">
+                        <label class="col-6 col-form-label" for="beznal">Безготiвковий рахунок</label>
+                        <div class="col-6">
+                            <select class="form-control" zippy="beznal">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group  row ">
+                        <label class="col-6 col-form-label" for="pos">POS термiнал</label>
+                        <div class="col-6">
+                            <select class="form-control" zippy="pos">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row  ">
+                        <label class="col-6 col-form-label"   for="store">Склад (кухня)</label>
+                        <div class="col-6">
+                            <select class="form-control" zippy="store">
+                                <option value="0">Не обрано</option>
+                            </select>
+                        </div>
+                    </div>
+                    {{#useimages}}
+                     <div class="form-group row  ">
+                        <div class="col-12">
+                        
+                         <div class="form-check form-check-inline">
+                            <input zippy="menuimages" class="form-check-input" type="checkbox"    > 
+                            <label class="form-check-label" for="menuimages">  Показувати зображення в  меню</label>
+                        </div>
+                       </div>
+                    </div>
+                     {{/useimages}}
+
+                    <div class="form-group   ">
+                      
+                        <input type="submit" value="До замовлень >"   class="btn btn-success">
+                    </div>
+                </div>
+
+            </div>
+
+        </form>        
+         
+           
+    <div class="row"  zippy="docpanel">
+            <div class="col-12"> 
+               <h4>Оформлення замовлення</h4>
+           </div> 
                    
           <div class="col-12  col-xl-10 "> 
 
@@ -82,56 +160,26 @@
                  
                                 
                 </div>    
-     
-          <div class="card ">        
+             <div class="col-12  col-xl-10 "> 
+
+                
                         <form zippy="navform" class="form-inline   ">                   
-                            <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
+                           <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
 
                            <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
-                            {{#usescanner}}
-                             <input autofocus="on" placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
-
-                            {{/usescanner}}
-
-                            <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
-                            
+                             
          
                         </form> 
-
-                    </div>           
+             </div> 
+                            
+         div class="col-12  col-xl-10 ">             
                     
           <form zippy="listsform" >  
                       
-                        <div class="card">
+                       
                             <table class="table   " style="font-size:large">
-                            <tr>
-                                  
-                                      {{#baricon}}                                                     
-                                    <th class="text-center">
-                                      <i title="Бар" class="fa fa-mug-hot"></i>     
-                                      </th>
-                                      {{/baricon}} 
-                                     {{#packicon}}   
-                                     <th class="text-center">
-                                   <i title="З собою" class="fa fa-bag-shopping"></i>   
-                                      </th>  
-                                      {{/packicon}}
-                                      
-                                    <th>Назва</th>
-                                    <th>Код</th>
-                                    <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
-                                    <th class="text-center ">Кiл.</th>
-                                    <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
-                                    <th class="text-right">Цiна</th>
-                                    <th class="text-right">Сума</th>
-                                    <th >Стан </th>
-                                    
-                                  
-                                   
-
-                                    <th > </th>
-                                </tr>
+                           
                                       
                                 <tr zippy="itemlist"> 
                                   
@@ -152,17 +200,14 @@
                                     {{/packicon}}
                                  
                                     <td zippy="itemname"></td>
-                                    <td zippy="item_code"></td>
-                                                                              
-                                <td > {{#useexcise}}  <a zippy="editex" href="javascript:void(0)"></a>  {{/useexcise}} </td>
-                               
+                                                                                
+                                 
                                     <td class="text-right text-nowrap">
-                                         <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
+                                      <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
                                         <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
-                                        <i style="cursor:pointer" zippy="qtyedit" class="fa fa-edit"></i>
-                                    </td>
-                                    <td zippy="disc" class="text-right"></td>
+                                       </td>
+                                  
                                     <td zippy="price" class="text-right"></td>
                                     <td zippy="amount" class="text-right"></td>
                                     <td zippy="state"  ></td>
@@ -171,73 +216,14 @@
                                     
                                     <td><a zippy="removeitem"  ><i class="fa fa-trash text-danger" ></i></a></td>
                                 </tr>  
-                                <tr>
-                                
-                                   {{#baricon}}        <td     > </td>       {{/baricon}} 
-                                   {{#packicon}}        <td     > </td>       {{/packicon}} 
-                         
-                                    <td    colspan="6"  class="text-right text-bold">Всього:</td>
-                                     
-                                     
-                                    <td zippy="totalamount" class="text-right text-bold"></td>
-                                    <td ></td>
-                                    <td ></td>
-                                </tr>    
-                              <tr>
-                                
-
-                                   {{#baricon}}        <td     > </td>       {{/baricon}} 
-                                   {{#packicon}}        <td     > </td>       {{/packicon}} 
-                      
-                                    <td colspan="6" class="text-right   ">Знижка:</td>
-                                    
-                                    <td  class="d-flex justify-content-end   ">
-                                      <input style="width:100px" zippy="totaldisc" class="form-control qtyprice form-control-sm">
-                                    </td>
-                                    <td ></td>
-                                    <td > </td>
-                                </tr>      
-                             <tr>   
-                                 
-                                   {{#baricon}}        <td     > </td>       {{/baricon}} 
-                                   {{#packicon}}        <td     > </td>       {{/packicon}} 
-                      
-                                    <td colspan="6" class="text-right   ">Списати  бонуси:</td>
-                                   
-                                
-                                    <td  class="d-flex justify-content-end  ">
-                                      <input style="width:100px" zippy="bonus" class="form-control qtyprice form-control-sm">
-                                    </td>
-                                    <td ></td>
-                                    <td > </td>
-                                </tr>      
+                                  
+                               
                             </table>
-                        </div>
+                            
+                          Всього на  суму: <span zippy="totalamount"></span>
                       
-                     
-                        <div class="  row ">
-                            <div class="  col-6 col-xl-4">
-                                <div class="form-group   ">
-                                    <label   for="customer">Клiєнт</label>
-                                    <div class="input-group  ">
-
-                                     
-                                       <input  zippy="customer" class="form-control" placeholder="Почнiть вводити..."  > 
-                                    
-                                      <div class="input-group-append">
-
-                                        <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
-                                     </div>  
-                                      <div class="input-group-append"  >
-                                          <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
-                                      </div>                                                         
-                                  </div>  
-                                    <span zippy="custinfo"> </span>
-                                    
-                                    
-                                </div>                          
-
-
+                      
+  
                                 {{#tables}}
                                 <div class="form-group  row ">
                                     <label class="col-4 col-form-label" for="table">Номер столу</label>
@@ -247,11 +233,7 @@
 
                                 </div>
                                 {{/tables}}
-                               
-                                    
-                                   
-                                    
-                           
+                             
  
                                 <div class="form-group   ">
                                     <label   for="notes">Коментар </label>
@@ -261,68 +243,9 @@
 
                                 </div>                          
 
-                            </div>  
-                            <div class="  col-6  col-xl-5">
+  
 
-                                {{#delivery}}  
-
-
-                                <div class="form-group   ">
-                                    <label   for="execuser">Виконавець</label>
-
-                                    <select class="form-control" zippy="execuser">
-                                        <option value="0">Поточний користувач </option>
-                                    </select>
-
-
-                                </div>
-                                <div class="form-group   ">
-                                    <label   for="delivery">Доставка</label>
-
-                                    <select class="form-control" zippy="delivery">
-                                        <option value="0">Без доставки </option>
-                                    </select>
-
-
-                                </div>
-                                <div class="form-group   ">
-
-                                    <label   for="contact" >Контакт</label>
-
-
-                                    <input    zippy="contact" class="form-control">
-
-                                </div>                           
-                                <div class="form-group   ">
-
-                                    <label   data-label="address" for="address"  >Адреса</label>
-
-
-                                    <input   zippy="address" class="form-control"> 
-
-                                </div>
-
-                                <div class="form-group  row ">
-
-                                    <label  class="col-5 col-form-label" for="time" >Час доставки</label>
-                                     <div class="col-5">
-                                        <input   class="form-control"   zippy="dt"  >
-                                    </div> 
-                                     <div class="col-1">
-
-                                        <input   zippy="time" class="form-control">
-                                    </div> 
-                                </div>                        
-
-
-                                {{/delivery}}                          
-
-                            </div>  
-                        </div>  
-
-
-
-                        <div class="  w-100 d-flex justify-content-end pt-4">
+                        <div   >
                                       <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ml-4 mr-4">
                            
                                      
@@ -331,7 +254,7 @@
                                             <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
                                         </div>
                                         {{#diffbp}}  
-                                
+                                        <br>
                                         <div class="form-check form-check-inline">
                                             <label  class="form-check-label" >Чек для</label>
                                         </div>
@@ -348,71 +271,17 @@
                             
                             <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success mr-4">
                             
-                            <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
-
-                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success mr-4">
-   
+                             
+                           
                         </div>
                         
-               <div id="modalqty" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Кількість</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input   class="form-control qtyprice" type="text" zippy="editqtyq" pattern="[0-9,\.]+">
-                                <input    type="hidden" zippy="editqtyi" >
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="beditqty" class="ml-2 btn btn-info  ">
-
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>                               
                     
-                    
-       <div id="modalak" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered  modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Акцизні маркм</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                             <input  type="hidden" zippy="akitemid" >
-                             <div class="form-group">
-                                <label for="aklist">Перелiк</label>
-                                <textarea   class="form-control"   zippy="aklist"></textarea>
-                                <small>По однiй на строку по кiлькiстi в позицiї</small>
-
-                            </div>  
-                             <div class="form-check">
-                                <input zippy="akpass" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="akpass">Пропустити марки</label>
-                                <br> <small>Наприклад для алкоголю на розлив</small>
-
-                            </div> 
-                            <input type="submit" value="Зберегти" zippy="saveak" class="ml-2 btn btn-info  ">
-          
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                     
                         
-                    </form>       
+                    </form>    
+                     </div>    
+     </div> 
+     
+     
          
         <script>
      
