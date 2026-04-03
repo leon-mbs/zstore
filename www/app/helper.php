@@ -1567,25 +1567,7 @@ class Helper
            
         }        
   
-        $migration815 = \App\Helper::getKeyVal('migration815'); 
-        if($migration815 != "done"  ) {
-            Helper::log("Міграція 815");
-            $options = \App\System::getOptions("common");       
-       
-            $on = $options['usefood'] ==1 ?0:1;
-            try {
-              \App\Helper::setKeyVal('migration815', "done");           
         
-              $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ офіціанта (кафе)', 'ARMFoodW', 'Кафе', {$on} ) ");
-                           
-                
-
-            } catch(\Throwable $ee) {
-                $logger->error($ee->getMessage());
-            }           
-           
-        }        
-  
   
     }
 

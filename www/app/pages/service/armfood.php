@@ -83,6 +83,7 @@ class ARMFood extends \App\Pages\Base
         if ($filter->isEmpty()) {
             $filter->pos = 0;
             $filter->menuimages = 0;
+            $filter->modeof = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = $food['pricetype'] ?? 'price1';
 
@@ -92,7 +93,9 @@ class ARMFood extends \App\Pages\Base
         }
         if($this->_tvars['useimages'] == false || $filter->menuimages==0){
              $this->_tvars['menuimage'] = false ;
-        }      
+         }  
+        $this->_tvars['modeof'] = $filter->modeof ??0;
+             
         //обшие настройки
         $this->add(new Form('setupform'))->onSubmit($this, 'setupOnClick');
 
@@ -101,6 +104,7 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(1), $filter->nal));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(2), $filter->beznal));
         $this->setupform->add(new CheckBox('menuimages', $filter->menuimages ));
+        $this->setupform->add(new CheckBox('modeof', $filter->modeof ));
         $this->setupform->add(new ClickLink('options', $this, 'onOptions'));
         $this->setupform->add(new ClickLink('variations', $this, 'onVariations'));
    
@@ -304,6 +308,7 @@ class ARMFood extends \App\Pages\Base
         $filter->pos = $this->_pos->pos_id;
 
         $filter->menuimages = $this->setupform->menuimages->isChecked() ?1:0;
+        $filter->modeof = $this->setupform->modeof->isChecked() ?1:0;
         $filter->nal = $nal;
         $filter->beznal = $beznal;
         $this->_store = $store;
@@ -321,6 +326,7 @@ class ARMFood extends \App\Pages\Base
         if($this->_tvars['useimages'] == false || $filter->menuimages==0){
              $this->_tvars['menuimage'] = false ;
         }
+        $this->_tvars['modeof'] = $filter->modeof ??0;
 
         $this->setupform->setVisible(false);
   

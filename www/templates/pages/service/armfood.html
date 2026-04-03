@@ -93,7 +93,16 @@
                        </div>
                     </div>
                      {{/useimages}}
-
+                    <div class="form-group row  ">
+                        <div class="col-12">
+                        
+                         <div class="form-check form-check-inline">
+                            <input zippy="modeof" class="form-check-input" type="checkbox"    > 
+                            <label class="form-check-label" for="modeof">  Режим офiцiанта</label>
+                        </div>
+                       </div>
+                    </div>
+               
                     <div class="form-group   ">
                       
                         <input type="submit" value="До замовлень >"   class="btn btn-success">
@@ -110,7 +119,7 @@
               <div zippy="navbar" class="card justify-content-start">
                
                <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
-                  
+                   {{^modeof}} 
                    {{#fiscal}}
                    <div class="d-flex justify-content-center">
                           &nbsp;  &nbsp;
@@ -123,6 +132,7 @@
                            </div>
                            {{/fiscal}}              
 
+                         {{/modeof}}
              </div> 
             </div> 
 
@@ -330,6 +340,7 @@
                      
                         <div class="  row ">
                             <div class="  col-6 col-xl-4">
+                                 {{^modeof}} 
                                 <div class="form-group   ">
                                     <label   for="customer">Клiєнт</label>
                                     <div class="input-group  ">
@@ -349,7 +360,7 @@
                                     
                                     
                                 </div>                          
-
+                                  {{/modeof}} 
 
                                 {{#tables}}
                                 <div class="form-group  row ">
@@ -366,17 +377,17 @@
                                     
                            
  
-                                <div class="form-group   ">
-                                    <label   for="notes">Коментар </label>
-
+                                <div class="form-group  row ">
+                                    <label  class="col-4 col-form-label" for="notes">Коментар </label>
+                                    <div class="col-7">
                                     <input  zippy="notes" class="form-control"  > 
-
+                                     </div>
 
                                 </div>                          
 
                             </div>  
                             <div class="  col-6  col-xl-5">
-
+                               {{^modeof}} 
                                 {{#delivery}}  
 
 
@@ -429,13 +440,14 @@
 
 
                                 {{/delivery}}                          
-
+                                {{/modeof}} 
                             </div>  
                         </div>  
 
 
 
-                        <div class="  w-100 d-flex justify-content-end pt-4">
+                        <div class="row">
+                        <div class=" col-12  col-md-6 pt-4">
                                       <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ml-4 mr-4">
                            
                                      
@@ -444,7 +456,7 @@
                                             <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
                                         </div>
                                         {{#diffbp}}  
-                                
+                                         {{#modeof}}  <br>  {{/modeof}} 
                                         <div class="form-check form-check-inline">
                                             <label  class="form-check-label" >Чек для</label>
                                         </div>
@@ -457,14 +469,16 @@
                                             <label class="form-check-label" for="bpbar">  бару</label>
                                         </div>
                                   {{/diffbp}}      
-                          
-                            
+                            </div>
+                           <div class=" col-12 col-md-6 d-flex justify-content-end pt-4">
+                        
                             <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success mr-4">
                             
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
 
                             <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success mr-4">
    
+                        </div>
                         </div>
                         
                <div id="modalqty" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
