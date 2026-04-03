@@ -226,8 +226,9 @@
                     
                     <form zippy="listsform" >  
                       
-                        <div class="card">
-                            <table class="table   " style="font-size:large">
+                        <div class="card" style="font-size:large">
+                          {{^modeof}} 
+                            <table class="table   " >
                             <tr>
                                   
                                       {{#baricon}}                                                     
@@ -335,9 +336,41 @@
                                     <td > </td>
                                 </tr>      
                             </table>
-                        </div>
-                      
+                             {{/modeof}}  
+                             {{#modeof}}  
+                            <div class="row ">
+                              <div zippy="itemlist_of" class="col-12 col-lg-6 mb-2">
+                                 <div class="col-12">
+                                   <span zippy="itemname_of"></span> 
+                                  
+                                 
+                              </div>
+                               <div class="col-12">
+                                        Кiл. <a zippy="qtymin_of" class="btn btn-info btn-sm mr-1">-</a>
+                                        <span zippy="qty_of"></span>
+                                        <a zippy="qtyplus_of" class="btn btn-info  btn-sm ml-1">+</a>
+                                        &nbsp;Цiна <span zippy="price_of"></span>
+                                        &nbsp;Сума <span zippy="amount_of"></span>
+                              </div>
+                               <div class="col-12">
+                                {{#baricon}}   
+                                  <i title="Бар" class="fa fa-mug-hot"></i>    <a zippy="forbaron_of" ><i class="fa fa-toggle-on text-success"></i></a> <a zippy="forbaroff_of" ><i class="fa fa-toggle-off"></i></a> 
+                                    {{/baricon}}   
+                                        &nbsp;&nbsp;
+                                    {{#packicon}}
+                                   <i title="З собою" class="fa fa-bag-shopping"></i>    <a zippy="myselfon_of"><i class="fa fa-toggle-on text-success"></i></a> <a zippy="myselfoff_of"><i class="fa fa-toggle-off"></i></a> 
+                                    {{/packicon}}   &nbsp;&nbsp;
+                                  <span zippy="state_of"></span> &nbsp; &nbsp;  <a zippy="removeitem_of"  ><i class="fa fa-trash text-danger" ></i></a>
+                              </div>
+                           </div>
+                            <div class="col-12 "> 
+                             <div class="row "><b>Всього на суму:  </b>  <b zippy="totalamount_of">   </b> 
                      
+                           </div>
+                           </div>
+                            
+                        </div>
+                            {{/modeof}} 
                         <div class="  row ">
                             <div class="  col-6 col-xl-4">
                                  {{^modeof}} 
@@ -678,13 +711,14 @@
 
                                 <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
 
-                                <input type="submit" class="  btn btn-outline-success  " value="Шукати">
+                                <input type="submit" class="  btn btn-success  " value="Шукати">
 
 
                             </form>
                         </div>
 
-                <a zippy="refresh" >Оновити</a>
+                  <a zippy="refresh" >&nbsp;&nbsp;<i class="fa fa-undo"></i>  <b>Оновити</b> </a>
+                  {{^modeof}}
                 <table class="table  table-sm">
                     <tr>
 
@@ -730,7 +764,7 @@
   
 
                         <td zippy="docnotes"></td>
-                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-print"></i> Бiгунок</a></td>
+                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-running"></i> Бiгунок</a></td>
                         <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Рахунок</a></td>
                         <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
@@ -746,6 +780,34 @@
                     </tr>
 
                 </table> 
+                  {{/modeof}}
+                   {{#modeof}}
+                <div class="row mt-2">
+                  <div zippy="orderlist_of" class="col-12 col-lg-6 mb-2">
+                       <div class="col-12">
+                           <a zippy="docnumber_of"></a>&nbsp;
+                           <span zippy="doctime_of"></span>  &nbsp; 
+                           <span zippy="docamount_of"></span> грн   &nbsp;
+                           {{#tables}} Стiл <span zippy="tablenumber_of"></span>     {{/tables}}
+                       </div>
+                        <div class="col-12">
+                            Статус: <span zippy="state_of"></span>  &nbsp; 
+                       </div>
+                        <div zippy="docnotes_of" class="col-12"> </div>
+                        <div zippy="rtlist_of" class="col-12"> </div>
+                        <div class="col-12">
+                          <a zippy="brrunner_of" class="btn btn-sm btn-primary mr-2">  Бiгунок</a> 
+                          <a zippy="brprint_of" class="btn btn-sm btn-info mr-2">  Рахунок</a> 
+                          <a zippy="brpay_of" class="btn btn-sm btn-primary mr-2">  Оплатити</a> 
+                          <a zippy="bredit_of" class="btn btn-sm btn-info mr-2">  Редагувати</a> 
+                          <a zippy="brclose_of" class="btn btn-sm btn-success">  Закрити</a> 
+                          
+                       </div>   
+                       
+                         
+                 </div>
+                </div>
+                  {{/modeof}}
                 <div zippy="pag"></div>
           
                 <a id="dankor"></a>
