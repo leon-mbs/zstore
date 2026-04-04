@@ -71,8 +71,10 @@ class Task extends \App\Pages\Base
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         //prod
         $this->add(new Form('editdetailprod'));
-        $this->editdetailprod->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")));
+        $this->editdetailprod->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")))->onChange($this,"onProd");
 
+        $this->editdetailprod->add(new TextInput('editprodprice'));
+        $this->editdetailprod->add(new TextInput('editprodcost'));
         $this->editdetailprod->add(new TextInput('editqtyprod'));
         $this->editdetailprod->add(new TextInput('editdescprod'));
         $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowprodOnClick');
@@ -214,12 +216,23 @@ class Task extends \App\Pages\Base
 
         $row->add(new Label('quantityprod', $item->quantity));
         $row->add(new Label('descprod', $item->desc));
+        $row->add(new Label('costprod', $item->zarp));
+        $row->add(new Label('priceprod', $item->price));
 
 
         $row->add(new ClickLink('deleteprod'))->onClick($this, 'deleteprodOnClick');
     }
 
 
+    public function onProd($sender) {
+       $p=  Item::load($sender->getValue());
+       if($p == null) return;
+       
+       $this->editdetailprod->editprodprice->setText($p->getProdPrice())  ;
+       $this->editdetailprod->editprodcost->setText($p->zarp)  ;
+       
+    }
+    
     public function deleteprodOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -240,6 +253,8 @@ class Task extends \App\Pages\Base
         }
         $item = Item::load($id);
 
+        $item->price = $this->editdetailprod->editprodprice->getDouble();
+        $item->zarp = $this->editdetailprod->editprodcost->getDouble();
         $item->quantity = $this->editdetailprod->editqtyprod->getDouble();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 

@@ -111,7 +111,7 @@ class ProdReceipt extends \App\Pages\Base
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                 
                         foreach ($basedoc->unpackDetails('prodlist') as $item) {
-                            $item->price = $item->getProdprice();
+                          //  $item->price = $item->getProdprice();
                             $this->_itemlist[] = $item;
                         }
                         
