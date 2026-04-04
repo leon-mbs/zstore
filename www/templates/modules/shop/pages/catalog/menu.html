@@ -21,19 +21,15 @@
     <body class="dark-mode">
     <style>
     
-      .textcat {
-          font-size:20px;
+     :root {
+          font-size:18px;
       }
       .textprice {
-          font-size:18px;
+       
           color:yellow;
           font-weight: bolder;
       }  
-      .textval {
-          font-size:18px;
-     
-         
-      }
+  
     .dark-mode .fa {
        color: white;
     }
@@ -44,62 +40,131 @@
     .dark-mode a {
        color: #ccf;      
     }   
-   .img {
-         width:128px;
+      
+      
+     a {
+ 
+      text-decoration:none    
+    }  
+   .logo {
+      font-size:24px; 
+      color: white;
+      font-family:Georgia;
+      text-decoration:none    
+    }  
+   .phone {
+       font-size:18px;  
+    }  
+    .tab_menu {
+     font-size:18px;    
+    }  
+   .itemname {
+     font-size:18px;    
+    }  
+   .itemtext {
+     font-size:18px;    
+    }  
+   .itemdesc {
+     font-size:16px;    
+    }  
+    .list_menu_item {
+      font-size:22px;    
+    }  
+   .item_img {
+         width:100%;
       }    
+    @media  (min-width: 480px)  {   
+     .logo {
+       font-size:32px;   
+     }      
+    .phone {
+       font-size:22px;   
+     }      
+     .tab_menu {
+       font-size:22px;   
+     }      
+    .itemname {
+       font-size:24px;   
+     }      
+    .itemtext {
+       font-size:22px;   
+     }  
+   .itemdesc {
+     font-size:18px;    
+    }  
+         
+    .list_menu_item {
+      font-size:32px;    
+     }           
+    }
+    @media (min-width: 960px) {   
+       .logo {
+         font-size:54px;   
+       }         
+    .phone {
+       font-size:28px;   
+     }      
+     .tab_menu {
+       font-size:24px;   
+     }      
+    .itemname {
+       font-size:30px;   
+     }  
+   .itemtext {
+       font-size:26px;   
+     }      
+   .itemdesc {
+     font-size:22px;    
+    }  
+        
+    .list_menu_item {
+      font-size:44px;
+      display: block;    
+    }              
+    }
     </style>
     
-      <div class="container-fluid ">
-               {{#alert}}
-             <div class="row">
-               <div class=" col-12 col-sm-6 col-md-3  col-xl-2  justify-content-center ">
-                   <div class="alert alert-success justify-content-center" role="alert">
-                      <i class="fa fa-bullhorn"></i> Офiцiанта  викликано
-                   </div>
-              </div>
-            </div>
-             {{/alert}}
-        <div class="row ">
+      <div class="container   ">
+           
+        <div class="row mt-2">
     
-            <div class="mt-2  col-12 col-sm-6 col-md-4  col-xl-3  ">
-                 <div class="row ">
-                     <div class="col-auto">
-                        <h4> <a style="color: white;font-family:Georgia;text-decoration:none" href="/menu"> {{name}} </a> </h4>
+          
+                     <div class="col-10 col-lg-9">
+                         <a class="logo"   href="/menu"> {{name}} </a>  
                     </div>
                     {{#phone}}
-                     <div class="col-auto  text-right pl-4">
-                       <a href="tel:{{phone}}">  <i class="fa fa-phone text-success"></i>  {{phone}} </a>
+                     <div class="col-2 col-lg-3 d-flex justify-content-end pl-4">
+                       <a class="phone" href="tel:{{phone}}">  <i class="fa fa-phone text-success"></i>  {{phone}} </a>
                     </div>
                      {{/phone}}
-                     <!--
-                     <div class="col-12  mb-2  ">
-                        <small> <i class="fa fa-pepper-hot  ml-2"></i> Гостре <i class="fa fa-seedling ml-2"></i> Вегетарiанське  </small> 
-                    </div>
-                      -->
+                  </div>  
+               
+                      
+            <div class="row ">           
                     {{^list}}
-                    <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-secondary w-50" href="/menu/1"> {{bmname}} </a> </h4>    
+                    <div class="col-12 mt-4 d-flex justify-content-center  ">
+                          <a class="btn btn-secondary w-50 phone" href="/menu/1"> {{bmname}} </a>    
                     </div>
                       {{#secondm}}
-                    <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/2"> {{smname}} </a> </h4>    
+                    <div class="col-12 mt-4 d-flex justify-content-center">
+                            <a class="btn btn-secondary  w-50 phone" href="/menu/2"> {{smname}} </a>    
                     </div>
                       {{/secondm}}                    
                     {{#secondm3}}
-                    <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/3"> {{smname3}} </a> </h4>    
+                    <div class="col-12 mt-4  d-flex justify-content-center">
+                         <a class="btn btn-secondary  w-50 phone" href="/menu/3"> {{smname3}} </a>   
                     </div>
                       {{/secondm3}}                    
                   {{#secondm4}}
-                    <div class="col-12  text-center">
-                         <h4  > <a class="btn btn-secondary  w-50" href="/menu/4"> {{smname4}} </a> </h4>    
+                    <div class="col-12 mt-4  d-flex justify-content-center">
+                          <a class="btn btn-secondary  w-50 phone" href="/menu/4"> {{smname4}} </a>    
                     </div>
                       {{/secondm4}}                    
                     {{/list}}  
                 </div>
              
                  {{#list}}
-                <div class="col-12  ">
+                <div class="col-12  tab_menu  ">
                  <b> <a   href="/menu/1"> {{bmname}} </a> &nbsp;
                     {{#secondm}}
                   <a   href="/menu/2"> {{smname}} </a>  &nbsp;
@@ -112,44 +177,47 @@
                     {{/secondm4}}  
                   </b>
                 </div> 
-                <div class="col-12  ">
+                <div class="col-12   ">
                  <ul class="nav nav-tabs">
                    {{#cats}}
                   <li class="nav-item">
-                    <a class="nav-link  " data-toggle="tab" href="#{{cat_id}}">{{cat_name}} </a>
+                    <a class="nav-link  "   href="#{{cat_id}}">{{cat_name}} </a>
 
                      
                   </li>
                    {{/cats}}
                 </ul>         
-                 <div class="tab-content"  >
+                 <div    >
                  {{#cats}}     
-                   <div class="tab-pane  show   " id="{{cat_id}}"> 
-                     <h3> {{cat_name}} </h3>
+                   <div   id="{{cat_id}}"> 
+                     <b class="list_menu_item"> {{cat_name}} </b>
+                       {{#items}}   
+                      <div class="row"  >
+                        <div class="col-12 mb-2 itemname"  >
+                            <b> {{itemname}}</b>
+                        </div> 
+                        <div class="col-6 itemtext"  >
+                           {{#hasvar}} Вiд {{/hasvar}}  <span class="textprice">   {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}} 
+                        </div> 
+                        <div class="col-6 d-flex justify-content-end itemtext"  >
+                             {{customsize}} 
+                        </div> 
+                        <div class="w-100"></div>
+                       <div class="col-6 itemdesc"  >
+                            {{desc}}  
+                            
+                        </div> 
+                       <div class="col-6"  >
+                            {{#isimg}}
+                            <img class="item_img" src="{{imglink}}" >
+                             {{/isimg}}
+                        </div>                           
+                      </div> 
+                      
+                        {{/items}}   
                      <table class="table table-sm">
                                         
-                      {{#items}}                                                                 
-                          <tr>
-                            <td colspan="2" ><br><br><b> {{itemname}}</b></td>
-                          </tr>
-                          <tr>
-                            <td  >{{#hasvar}} Вiд {{/hasvar}}  <span class="textprice">   {{price}} </span> грн   &nbsp;&nbsp;  {{#priceout}}  (<i title="на винос" class="fa fa-shopping-bag"></i>  {{priceout}}  грн )      {{/priceout}}  </td>
-                            <td class="textval"  align="right" >    {{customsize}} </td>
-                          </tr>
-                      
-                        
-                         <tr>
-                            <td  valign="top"    > 
-                             <small style="display:block">   {{desc}} </small>  
-                            
-                            </td>
-                            <td style="width:130px" align="right"  ><img class="img" src="{{imglink}}" > </td>
-                          </tr>
-                      
-                      
-                      {{/items}}  
-                    </table>                       
-                     
+                    
                      
                      
                                   
@@ -162,14 +230,14 @@
              
                 
                 
-                <div class="row ">                
-                    <div class="col-12  text-center mt-4">
+                <div class="row phone ">                
+                    <div class="col-12  d-flex justify-content-center mt-4">
                          <b  >Адреса </b>   
                     </div>
-                   <div class="col-12  text-center mt-4">
+                   <div class="col-12  d-flex justify-content-center mt-4">
                           {{address}}    
                     </div>
-                    <div class="col-12  text-center mt-4">
+                    <div class="col-12  d-flex justify-content-center mt-4">
                          <b  >Розклад роботи </b>    
                     </div>
                     <div class="col-6  text-right  ">
@@ -200,17 +268,8 @@
             </div>
              
         </div>
-     </div>
-      <script>   
-          $(document).ready(function () {
-       
-              $('a.nav-link').first().addClass('active') 
-              $('div.tab-pane').first().addClass('active') 
-
-              
-          });   
- 
-      </script>
+    
+   
         
     </body>
 </html>        

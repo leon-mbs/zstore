@@ -44,7 +44,7 @@ class ServiceAct extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "customer_name"   => $this->headerdata['customer_name'],
+                        "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
                         "gar"             => $this->headerdata['gar'],
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
@@ -53,13 +53,13 @@ class ServiceAct extends Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "totalstr"        => $totalstr,
-                        "bonus"           => $this->headerdata["bonus"] > 0 ? H::fa($this->headerdata["bonus"]) : false,
+                        "bonus"           => ($this->headerdata["bonus"]??0) > 0 ? H::fa($this->headerdata["bonus"]) : false,
                         "devsn"           => $this->headerdata["devsn"],
                         "devdesc"           => $this->headerdata["devdesc"],
                         "notes"           => $this->notes,
                         "nds"           => false,
                         "document_number" => $this->document_number,
-                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
+                        "payed"           => ($this->headerdata['payed']??0) > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
                         "total"           => H::fa($this->amount)
         );
@@ -69,7 +69,7 @@ class ServiceAct extends Document
         }
         if($this->customer_id > 0) {
             $c = \App\Entity\Customer::load($this->customer_id) ;
-            if(strlen(   $this->headerdata['phone'])>0) {
+            if(strlen(   $this->headerdata['phone']??0)>0) {
                 $header['customer_name']  =   $header['customer_name'] .', '. $this->headerdata['phone'];
             }
             else if(strlen($c->phone)>0) {

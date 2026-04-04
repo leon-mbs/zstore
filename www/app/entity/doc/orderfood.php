@@ -86,6 +86,11 @@ class OrderFood extends Document
         return $html;
     }
 
+    /**
+    * 
+    * @param mixed $ps    чековый принтер
+    * @param mixed $bill  счет на оплату
+    */
     public function generatePosReport($ps=false,$bill=false) {
 
         $detail = array();
@@ -135,7 +140,7 @@ class OrderFood extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "ischeck"         => !$bill ,
+                     
                         "username"        => $this->headerdata['cashier'] ,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($shopname) > 0 ? $shopname : false,
@@ -194,10 +199,18 @@ class OrderFood extends Document
             $header['promo']  = false;
         }
 
-        if($ps) {
-            $report = new \App\Report('doc/orderfood_bill_ps.tpl');
-        } else {
-            $report = new \App\Report('doc/orderfood_bill.tpl');
+        if($bill) {
+            if($ps) {
+                $report = new \App\Report('doc/orderfood_billforpay_ps.tpl');
+            } else {
+                $report = new \App\Report('doc/orderfood_billforpay.tpl');
+            }            
+        }else{
+            if($ps) {
+                $report = new \App\Report('doc/orderfood_bill_ps.tpl');
+            } else {
+                $report = new \App\Report('doc/orderfood_bill.tpl');
+            }
         }
 
         $html = $report->generate($header);

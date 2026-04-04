@@ -20,7 +20,9 @@ class OutFood extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('OutFood')) {
             return;
         }
-
+        $food = \App\System::getOptions("food");
+        $this->_tvars['diffbp'] = $food['diffbp'] ?? 0;
+     
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
