@@ -63,9 +63,10 @@ class Task extends \App\Pages\Base
 
         //service
         $this->add(new Form('editdetail'));
-        $this->editdetail->add(new DropDownChoice('editservice', Service::getList()));
+        $this->editdetail->add(new DropDownChoice('editservice', Service::getList()))->onChange($this,"onService");
 
         $this->editdetail->add(new TextInput('editqty'));
+        $this->editdetail->add(new TextInput('editcost'));
         $this->editdetail->add(new TextInput('editdesc'));
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         //prod
@@ -121,11 +122,11 @@ class Task extends \App\Pages\Base
                     $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
+                        $this->docform->notes->setText('Замовлення '. $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
+                        $this->docform->notes->setText('Замовлення '. $basedoc->document_number);
                         $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
@@ -154,6 +155,7 @@ class Task extends \App\Pages\Base
         $row->add(new Label('category', $service->category));
 
         $row->add(new Label('quantity', $service->quantity));
+        $row->add(new Label('cost', $service->cost));
         $row->add(new Label('desc', $service->desc));
 
 
@@ -161,6 +163,10 @@ class Task extends \App\Pages\Base
     }
 
 
+    public function onService($sender) {
+       $s =  Service::load($sender->getValue());
+       $this->editdetail->editcost->setText($s->cost??0) ;
+    }
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -182,6 +188,8 @@ class Task extends \App\Pages\Base
         $service = Service::load($id);
 
         $service->quantity = $this->editdetail->editqty->getDouble();
+        $service->quantity = $this->editdetail->editqty->getDouble();
+        $service->cost = $this->editdetail->editcost->getDouble();
         $service->desc = $this->editdetail->editdesc->getText();
         $service->price = $service->cost;
         if (strlen($service->price) == 0) {

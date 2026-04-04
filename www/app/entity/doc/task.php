@@ -141,7 +141,7 @@ class Task extends Document
 
          }
          if ($state == Document::STATE_CLOSED ) {
-              
+            //стоимость работ  
             $total = 0;
             foreach ($this->unpackDetails('detaildata') as $ser) {
                 $total += doubleval($ser->cost * $ser->quantity)  ;
