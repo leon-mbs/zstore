@@ -153,6 +153,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
         $this->_tvars["ppo"] = $modules['ppo'] == 1;
+        $this->_tvars["df"] = $modules['df'] == 1;
         $this->_tvars["np"] = $modules['np'] == 1;
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
@@ -202,6 +203,9 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["np"] = false;
         }
+        if (strpos(System::getUser()->modules ?? '', 'df') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["df"] = false;
+        }
         if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["promua"] = false;
         }
@@ -219,7 +223,7 @@ class Base extends \Zippy\Html\WebPage
        
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"] ;
-
+        //показываем раздел меню  если не пустой
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
@@ -229,9 +233,8 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
             $this->_tvars["checkbox"] ||
-  
-         
             $this->_tvars["vdoc"] ||
+            $this->_tvars["df"] ||
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;
