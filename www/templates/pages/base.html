@@ -696,7 +696,9 @@
 
                                     </li>
                                     {{/ppo}}
-                                          {{#checkbox}}
+                             
+                             
+                                    {{#checkbox}}
                                     <li class="nav-item  has-treeview">
                                        
                                         
@@ -719,6 +721,33 @@
                                         
                                     </li>
                                     {{/checkbox}}
+                                 
+                                    {{#df}}
+                                    <li class="nav-item  has-treeview">
+                                       
+                                        
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Дропшипінг та  фулфілмент 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                              {{#isadmins}}
+                                            <li class="nav-item">
+                                                 <a href="/index.php?p=App/Modules/DF/Admin/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                </a>
+                                            </li>   
+                                             {{/isadmins}}
+                                        </ul>    
+                                        
+                                    </li>
+                                    {{/df}}
+                                    
+                                    
                                     {{#np}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">

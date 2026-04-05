@@ -103,7 +103,7 @@ class PaySelList extends \App\Pages\Base
         $hold = "";
         $holding = $this->filter->holdlist->getValue();
         if ($holding > 0) {
-            $hold = "  and   c.detail like '%<holding>{$holding}</holding>%'";
+            $hold = "  and   c.detail like '%<holding>{$holding}</holding>%' ";
         }
 
         $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
@@ -115,7 +115,7 @@ class PaySelList extends \App\Pages\Base
 FROM ({$cust_acc_view} ) a
   JOIN customers c
     ON a.customer_id = c.customer_id
-    AND c.status = 0 AND a.s_passive <> a.s_active  {$hold}
+    AND c.status = 0 AND a.s_passive <> a.s_active  {$hold}  and   c.detail not like '%<df>%' 
 GROUP BY c.customer_name,
          c.customer_id,c.phone";
 
@@ -127,7 +127,7 @@ GROUP BY c.customer_name,
         }
         $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt')   {$hold}
+             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt')   {$hold}  and   c.detail not like '%<df>%' 
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";

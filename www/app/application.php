@@ -97,6 +97,7 @@ class Application extends \Zippy\WebApplication
         $pages = array(
             "store"      => "\\App\\Pages\\Main",
             "admin"      => "\\App\\Pages\\Main",
+            "partner"    => "\\App\\Modules\\DF\\Public\\Main",
             "shop"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
             "menu"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
             "cchat"      => "\\App\\Modules\\Shop\\Pages\\Catalog\\CChat",

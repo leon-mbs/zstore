@@ -102,6 +102,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new CheckBox('editisholding'));
         $this->customerdetail->add(new DropDownChoice('editholding', Customer::getHoldList(), 0));
         $this->customerdetail->add(new DropDownChoice('edittype', array(1 => "Покупець", 2 => "Постачальник"), 0));
+        $this->customerdetail->add(new DropDownChoice('editdf', array(1 => "Дропшипінг", 2 => "Фулфілмент"), 0));
         $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
         $this->customerdetail->add(new CheckBox('editallowedshop'))->setVisible($shop["uselogin"] == 1);
@@ -182,6 +183,10 @@ class CustomerList extends \App\Pages\Base
 
 
         $this->_tvars['leadmode'] = false;
+        if($this->_tvars['df']== true ){
+           $this->_tvars['shop'] = true;   
+        }
+        
     }
 
     public function Reload() {
@@ -307,6 +312,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editcountry->setText($this->_customer->country);
         $this->customerdetail->editcomment->setText($this->_customer->comment);
         $this->customerdetail->edittype->setValue($this->_customer->type);
+        $this->customerdetail->editdf->setValue($this->_customer->df);
 
         $this->customerdetail->editleadsource->setValue($this->_customer->leadsource);
         $this->customerdetail->editleadstatus->setValue($this->_customer->leadstatus);
@@ -374,6 +380,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->country = $this->customerdetail->editcountry->getText();
         $this->_customer->comment = $this->customerdetail->editcomment->getText();
         $this->_customer->type = $this->customerdetail->edittype->getValue();
+        $this->_customer->df = $this->customerdetail->editdf->getValue();
         $this->_customer->holding = $this->customerdetail->editholding->getValue();
         $this->_customer->pricetype = $this->customerdetail->editpricetype->getValue();
         $this->_customer->holding_name = $this->customerdetail->editholding->getValueName();
@@ -1032,6 +1039,12 @@ class CustomerDataSource implements \Zippy\Interfaces\DataSource
                 }
                 if ($type == 5) {
                     $where .= " and detail like '%<isholding>1</isholding>%'    ";
+                }
+                if ($type == 7) {
+                    $where .= " and detail like '%<df>1</df>%'    ";
+                }
+                if ($type == 8) {
+                    $where .= " and detail like '%<df>2</df>%'    ";
                 }
                 if ($holding > 0) {
                     $where .= " and detail like '%<holding>{$holding}</holding>%'    ";
