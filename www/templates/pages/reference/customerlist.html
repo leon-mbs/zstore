@@ -29,6 +29,11 @@
                                 <option value="1">Покупці</option>
                                 <option value="2">Постачальники</option>
                                 <option value="5">Холдинги</option>
+                                {{#df}}
+                                <option value="7">Дропшипінг</option>
+                                <option value="8">Фулфілмент</option>
+                                {{/df}}
+                                
                                 <option value="10">Деактивовані</option>
                             </select>
 
@@ -196,6 +201,15 @@
                         <option value="0">Не вказано</option>
                     </select>
                 </div>
+                 {{#df}}
+                <div class="form-group">
+                    <label for="editdf">Партнер</label>
+                    <select zippy="editdf" class="form-control">
+                        <option value="0">Не обрано</option>
+            
+                    </select>
+                </div>
+                 {{/df}}         
                 <div class="form-check">
                     <input zippy="editisholding" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editisholding">Холдинг</label>
@@ -276,7 +290,8 @@
                     <input zippy="editallowedshop" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editallowedshop"   data-label="editallowedshop">Дозвiл на перегляд онлайн каталогу</label>
                 </div>        
-                {{/shop}}                 
+                {{/shop}}  
+                               
                 <div class="form-group">
                     <label for="editcomment">Примітка</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>

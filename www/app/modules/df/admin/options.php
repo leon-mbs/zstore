@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\DF;
+namespace App\Modules\DF\Admin;
 
 use App\System;
 use Zippy\Html\Form\DropDownChoice;
