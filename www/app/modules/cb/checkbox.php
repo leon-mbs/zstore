@@ -223,16 +223,16 @@ class CheckBox
 
             $g=[];
             $g['name'] = $item->itemname;
-            $g['price'] =$item->price*100;
+            $g['price'] =intval($item->price*100);
             $g['code'] = $item->item_id;
 
             $good["good"] = $g ;
 
-            $good["quantity"] = $item->quantity * 1000 ;
+            $good["quantity"] = intval($item->quantity * 1000) ;
             //    $good["sum"] =1000000;
             $good["is_return"] = $doc->meta_name=="ReturnIssue";
 
-            $sum +=  round($g['price'] * $item->quantity);
+            $sum +=  intval($g['price'] * $item->quantity);
 
             $check["goods"][] = $good;
 
@@ -244,16 +244,16 @@ class CheckBox
 
             $g=[];
             $g['name'] = $item->service_name;
-            $g['price'] =$item->price*100;
+            $g['price'] = intval($item->price*100);
             $g['code'] = $item->service_id;
 
             $good["good"] = $g ;
 
-            $good["quantity"] = $item->quantity * 1000 ;
+            $good["quantity"] = intval($item->quantity * 1000) ;
             //    $good["sum"] =1000000;
             $good["is_return"] = false;
 
-            $sum +=  round($g['price'] * $item->quantity);
+            $sum += intval($g['price'] * $item->quantity);
 
             $check["goods"][] = $good;
 
@@ -419,7 +419,7 @@ class CheckBox
 
         $g=[];
         $g['name'] = $doc->document_number;
-        $g['price'] = $payed*100;
+        $g['price'] = intval($payed*100);
         $g['code'] = $doc->document_id;
 
         $good["good"] = $g ;
@@ -428,7 +428,7 @@ class CheckBox
         //    $good["sum"] =1000000;
         $good["is_return"] = false;
 
-        $sum +=  round($g['price'] * $good["quantity"]);
+        $sum +=  intval($g['price'] * $good["quantity"]);
 
         $check["goods"][] = $good;
 

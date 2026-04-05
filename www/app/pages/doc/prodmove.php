@@ -108,6 +108,8 @@ class ProdMove extends \App\Pages\Base
                 foreach($st->itemlist as $it){
                     $item = Item::load($it->item_id) ;
                     $item->quantity = $it->quantity;
+                    $item->price = $it->price;
+                    $item->zarp = $it->zarp;
                     $this->_itemlist[$i++]=$item;
                 }
                 
