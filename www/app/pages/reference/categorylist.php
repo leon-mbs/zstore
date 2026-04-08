@@ -109,6 +109,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->add(new CheckBox('editdelimage'));
         $this->categorydetail->add(new CheckBox('editnoshop'));
         $this->categorydetail->add(new CheckBox('editnofastfood'));
+        $this->categorydetail->add(new CheckBox('editnofastfoodmenu'));
         $this->categorydetail->add(new CheckBox('editnoprice'));
 
         
@@ -225,6 +226,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->editparent->setValue($this->_category->parent_id);
         $this->categorydetail->editnoshop->setChecked($this->_category->noshop);
         $this->categorydetail->editnofastfood->setChecked($this->_category->nofastfood);
+        $this->categorydetail->editnofastfoodmenu->setChecked($this->_category->nofastfoodmenu);
         $this->categorydetail->editnoprice->setChecked($this->_category->noprice);
         $this->categorydetail->editnoprice->setVisible(true);
         if($this->_category->hasChild()) {
@@ -273,6 +275,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->cat_desc = $this->categorydetail->editcat_desc->getText();
         $this->_category->noshop = $this->categorydetail->editnoshop->isChecked() ? 1 : 0;
         $this->_category->nofastfood = $this->categorydetail->editnofastfood->isChecked() ? 1 : 0;
+        $this->_category->nofastfoodmenu = $this->categorydetail->editnofastfoodmenu->isChecked() ? 1 : 0;
         $this->_category->noprice = $this->categorydetail->editnoprice->isChecked() ? 1 : 0;
         if ($this->_category->cat_name == '') {
             $this->setError("Не введено назву");

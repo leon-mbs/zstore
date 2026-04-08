@@ -73,7 +73,7 @@ class Menu extends \Zippy\Html\WebPage
  
         $this->_tvars['cats'] =[];
 
-        $cats= Category::find("detail  not  like '%<nofastfood>1</nofastfood>%' and coalesce(parent_id,0) ={$pcat}")  ;
+        $cats= Category::find("detail  not  like '%<nofastfood>1</nofastfood>%' and detail  not  like '%<nofastfoodmenu>1</nofastfoodmenu>%'    and coalesce(parent_id,0) ={$pcat}")  ;
 
 
         usort($cats, function ($a, $b) {
