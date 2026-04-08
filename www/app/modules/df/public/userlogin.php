@@ -78,6 +78,10 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError("Користувач з таким email не знайдений");
             return;
         }
+        if ( ($c->df ??0 )  ==0) {
+            $this->setError("Нема  права  доступу");
+            return;
+        }
         if (strlen($password)==0 ||  $c->passw != $password) {
             $this->setError("Введіть пароль");
             return;
