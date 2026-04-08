@@ -551,12 +551,12 @@ class ARMFood extends \App\Pages\Base
         }
         if ($haspayment== false && $doc->state>4 ) {
             $row->brprint->setVisible(true);
+            $row->bredit->setVisible(true);
+            $row->brrunner->setVisible(true);
              
         }
         
-        if ( $doc->state>4 && $haspayment== false  ) {
-           $row->brrunner->setVisible(true);
-        }
+       
         
         
         if ($inprod) {
@@ -608,7 +608,7 @@ class ARMFood extends \App\Pages\Base
     }
 
     
-   public function onDocRowOf($row) {
+    public function onDocRowOf($row) {
         $doc = $row->getDataItem();
         $doc = $doc->cast();
         $row->add(new ClickLink('docnumber_of', $this, 'OnDocViewClick'))->setValue($doc->document_number);
