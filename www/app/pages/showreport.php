@@ -10,7 +10,8 @@ class ShowReport extends \Zippy\Html\WebPage
 
         $common = \App\System::getOptions('common');
         $user = \App\System::getUser();
-        if ($user->user_id == 0) {
+        $customer_id = intval(\App\System::getCustomer() );
+        if ($user->user_id == 0 && $customer_id==0) {
             http_response_code(401);
             die;
         }

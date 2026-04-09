@@ -499,7 +499,7 @@ class POSCheck extends Document
                             
                         $order->updateStatus(Document::STATE_DELIVERED);
                     }                            
-                    \App\Helper::log("order  state {$order->state} payamount {$this->payamount} payed  {$this->payed}  ");
+                  //  \App\Helper::log("order  state {$order->state} payamount {$this->payamount} payed  {$this->payed}  ");
                     if($this->payed  >= $this->payamount  ) {  //если  оплачено  
                         if ($order->state == Document::STATE_DELIVERED) {
                             $order->updateStatus(Document::STATE_CLOSED);

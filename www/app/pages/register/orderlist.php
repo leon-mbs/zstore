@@ -1190,12 +1190,16 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $user = System::getUser();
+        $modules = System::getOptions("modules");
 
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
           
-        $where = "     meta_name  = 'Order'   ";
+        $where = "     meta_name  = 'Order'    ";
+        if($modules['df'] == 1) {
+            $where .= "   and   content not like '%<delayinprocess>%'  ";
+        }
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {

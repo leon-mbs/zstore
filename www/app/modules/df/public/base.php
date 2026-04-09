@@ -10,7 +10,7 @@ use Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
-    protected $_c=null;
+    protected $_customer=null;
     
     public function __construct( ) {
 
@@ -29,7 +29,7 @@ class Base extends \Zippy\Html\WebPage
             if ($arr[0] > 0 && $arr[1] === md5($arr[0] . Helper::getSalt())) {
                 $customer = \App\Entity\Customer::load($arr[0]);
                 \App\System::setCustomer($customer->customer_id)  ;
-               
+                $customer_id = $customer->customer_id;
 
             }
 
@@ -44,11 +44,15 @@ class Base extends \Zippy\Html\WebPage
         }  
      
   
-        $this->_c= Customer::load($customer_id);
+        $this->_customer= Customer::load($customer_id);
+        $this->_tvars["isds"] = $this->_customer->df == 1;  //дропшиппнг
+        $this->_tvars["isff"] = $this->_customer->df == 2; //фулфилмент
    
 
-        $this->_tvars['custname']  = $this->_c->customer_name;
+        $this->_tvars['custname']  = $this->_customer->customer_name;
 
+        $this->add(new  ClickLink("logout",$this,"LogoutClick"));
+        
     }
 
  

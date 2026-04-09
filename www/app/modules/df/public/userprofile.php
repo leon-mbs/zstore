@@ -17,7 +17,7 @@ use App\Entity\Customer;
 
 class UserProfile extends Base
 {
-    public $c;
+    
 
     public function __construct() {
         parent::__construct();
@@ -26,9 +26,9 @@ class UserProfile extends Base
        
         $form = new Form('profileform');
         $form->onSubmit($this, 'onsubmit');
-        $form->add(new TextInput('email', $this->_c->email));
+        $form->add(new TextInput('email', $this->_customer->email));
     
-        $form->add(new TextInput('customer_name', $this->_c->customer_name));
+        $form->add(new TextInput('customer_name', $this->_customer->customer_name));
    
         $this->add($form);
 
@@ -46,12 +46,13 @@ class UserProfile extends Base
 
     public function onsubmit($sender) {
 
-        $this->_c->email = $sender->email->getText();
-        $this->_c->customer_name = $sender->customer_name->getText();
+        $this->_customer->email = $sender->email->getText();
+        $this->_customer->customer_name = $sender->customer_name->getText();
      
         if (!$this->isError()) {
 
-            $this->_c->save();
+            $this->_customer->save();
+              
             $this->setSuccess('Збережено');
 
         }
@@ -78,9 +79,9 @@ class UserProfile extends Base
 
 
         if (!$this->isError()) {
-            $this->_c->passw = (\password_hash($pass, PASSWORD_DEFAULT));
+            $this->_customer->passw = (\password_hash($pass, PASSWORD_DEFAULT));
 
-            $this->_c->save();
+            $this->_customer->save();
 
 
 

@@ -58,7 +58,7 @@ CREATE TABLE customers (
 
 CREATE TABLE docstatelog (
   log_id bigint(20) NOT NULL AUTO_INCREMENT,
-  user_id int(11) NOT NULL,
+  user_id int(11) DEFAULT NULL,
   document_id int(11) NOT NULL,
   docstate smallint(6) NOT NULL,
   createdon datetime NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE documents (
   document_id int(11) NOT NULL AUTO_INCREMENT,
   document_number varchar(45) NOT NULL,
   document_date date NOT NULL,
-  user_id int(11) NOT NULL,
+  user_id int(11) DEFAULT NULL,
   content longtext,
   amount decimal(11, 2) DEFAULT NULL,
   meta_id int(11) NOT NULL,
@@ -868,7 +868,7 @@ SELECT
   d.meta_desc AS meta_desc,
   d.meta_name AS meta_name
 FROM ((docstatelog dl
-  JOIN users_view u
+  LEFT JOIN users_view u
     ON ((dl.user_id = u.user_id)))
   JOIN documents_view d
     ON ((d.document_id = dl.document_id))) ;
@@ -1676,6 +1676,7 @@ INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled
 INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Закриття перiоду', 'FinResult', 'Бухоблiк',   1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по акцизних марках', 'ExciseList', 'Продажі', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Форма ведення обліку ТМЦ', 'FormItemsReport', 'Склад', 0);
 
  
    

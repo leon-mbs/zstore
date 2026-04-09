@@ -486,7 +486,7 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
         $sql = "select coalesce(count(*),0) from documents_view  d   join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
-        H::log($sql);
+     //   H::log($sql);
         return $conn->GetOne($sql);
     }
 

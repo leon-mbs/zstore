@@ -15,7 +15,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'df') === false && System::getUser()->rolename != 'admins') {
+        if (  System::getUser()->rolename != 'admins') {
             System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
@@ -31,6 +31,7 @@ class Options extends \App\Pages\Base
         
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['dfpricetype']??'price1'));
+        $form->add(new DropDownChoice('defstore', \App\Entity\Store::getListAll() , $modules['dfstore']?? \App\Helper::getDefStore()));
        
       
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -45,6 +46,7 @@ class Options extends \App\Pages\Base
 
         $modules['dfdiscprice'] =  $this->cform->discprice->getText();
         $modules['dfpricetype'] = $this->cform->defpricetype->getValue();
+        $modules['dfstore'] = $this->cform->defstore->getValue();
        
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
