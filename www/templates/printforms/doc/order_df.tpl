@@ -25,7 +25,9 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;"> </th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кіл.</th>
+        {{#isds}}
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Склад. ціна</th>
+         {{/isds}}
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Прод. ціна</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сума</th>
     </tr>
@@ -38,14 +40,18 @@
         <td valign="top">{{desc}}</td>
 
         <td align="right" valign="top">{{quantity}}</td>
+         {{#isds}}
         <td align="right" valign="top">{{pricefrom}}</td>
+         {{/isds}}
         <td align="right" valign="top">{{price}}</td>
         <td align="right" valign="top">{{amount}}</td>
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="7" align="right">На суму:</td>
+          {{#isds}}
         <td style="border-top:1px #000 solid;" align="right">{{totalfrom}}</td>
+          {{/isds}}
         <td style="border-top:1px #000 solid;" align="right"> </td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>

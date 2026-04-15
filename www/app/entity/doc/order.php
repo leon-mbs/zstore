@@ -336,7 +336,8 @@ class Order extends \App\Entity\Doc\Document
    //дропшиппинг и  фулфилмент
    public function generateReportDF() {
 
-
+        $modules = \App\System::getOptions("modules");
+   
         $i = 1;
         $detail = array();
 
@@ -381,8 +382,10 @@ class Order extends \App\Entity\Doc\Document
                    
         );                                                                               
         $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
-
-
+    
+        $header["isds"] = $this->headerdata['dsff'] ==1;
+        $header["isff"] = $this->headerdata['dsff'] ==2;
+   
 
 
         $report = new \App\Report('doc/order_df.tpl');

@@ -27,14 +27,13 @@ use App\Application as App;
 class Items extends Base
 {
     private  $_item;
-    private  $_store_id;
+  
     
     public function __construct() {
         parent::__construct();
   
         $modules = \App\System::getOptions("modules");
         
-        $this->_store_id = round($modules['dfstore'] );
         
         if($modules['df'] != 1) {
             http_response_code(404);

@@ -1438,5 +1438,8 @@ class Document extends \ZCL\DB\Entity
     }
   
  
-      
+  //дропшиппинг и  фулфилмент
+   public function generateReportDF() {
+       return $this->generatePosReport()   ;
+   }
 }

@@ -10,8 +10,8 @@ use Zippy\Html\Link\ClickLink;
 
 class Base extends \Zippy\Html\WebPage
 {
-    protected $_customer=null;
-    
+    public $_customer=null;
+    public  $_store_id;   
     public function __construct( ) {
 
         \Zippy\Html\WebPage::__construct();
@@ -21,7 +21,7 @@ class Base extends \Zippy\Html\WebPage
             die;
         } 
         $customer_id = System::getCustomer();
-   
+     
      
         if (($_COOKIE['remembercust'] ?? null) && $customer_id == 0) {
             $arr = explode('_', $_COOKIE['remembercust']);
@@ -43,14 +43,14 @@ class Base extends \Zippy\Html\WebPage
             return;
         }  
      
-  
+        $this->_store_id = round($modules['dfstore'] );
         $this->_customer= Customer::load($customer_id);
         $this->_tvars["isds"] = $this->_customer->df == 1;  //дропшиппнг
         $this->_tvars["isff"] = $this->_customer->df == 2; //фулфилмент
    
 
         $this->_tvars['custname']  = $this->_customer->customer_name;
-
+ 
         $this->add(new  ClickLink("logout",$this,"LogoutClick"));
         
     }

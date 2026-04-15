@@ -806,7 +806,7 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $partname
      * @static
      */
-    public static function findArrayAC($partname, $store = 0, $cat = 0) {
+    public static function findArrayAC($partname, $store = 0, $cat = 0,$where='') {
 
         $criteria = "  disabled <> 1 ";
         if ($store > 0) {
@@ -820,6 +820,9 @@ class Item extends \ZCL\DB\Entity
             $like = self::qstr('%' . $partname . '%');
             $partname = self::qstr($partname);
             $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        }
+        if (strlen($where) > 0) {
+            $criteria .= "  and  ". $where;
         }
 
         $itemlist = self::find($criteria);

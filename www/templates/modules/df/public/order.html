@@ -94,7 +94,9 @@
                             <th  > </th>
 
                             <th class="text-right">Кіл.</th>
+                            {{#isds}}
                             <th class="text-right"> Склад. ціна</th>                            
+                            {{/isds}}
                             <th class="text-right">Прод. ціна</th>
 
                             <th class="text-right">Сума</th>
@@ -108,7 +110,9 @@
                             <td zippy="desc"  ></td>
 
                             <td zippy="quantity" class="text-right"></td>
+                            {{#isds}}
                             <td zippy="pricefrom" class="text-right"></td>
+                            {{/isds}}
                             <td zippy="price" class="text-right"></td>
 
                             <td zippy="amount" class="text-right"></td>
@@ -119,7 +123,9 @@
                         </tr>
                         <tr style="font-weight: bolder;">
                             <td colspan="5" class="text-right">На суму:</td>
-                            <td zippy="totalfrom" class="text-right"></td>
+                            {{#isds}}
+                            <td zippy="totalfrom" class="text-right">     </td>
+                            {{/isds}}
                             <td></td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
@@ -155,9 +161,10 @@
                         <div class="form-group">                                             
                         <a zippy="openitemsel">Відкрити довідник</a>
                        
-                        
+                        {{#isds}}
                         
                         <br>   Складська  цінв:   <span zippy="pricefrom"></span>
+                        {{/isds}}   
                         
                     </div>
                     <div class="form-group">
@@ -200,20 +207,23 @@
                             <option value="0">Не задано</option>
                         </select>
                         <label for="wissearchmanufacturer">Бренд </label>
+                       
                         <input autocomplete="off" list="wissearchmanlist" class="form-control mr-2" zippy="wissearchmanufacturer"/>
+                        
+                         {{#isds}}
                         <datalist id="wissearchmanlist">
                             {{#manlist}}
                             <option label="{{mitem}}" value="{{mitem}}">  </option>
                                 {{/manlist}}
                         </datalist>
-                          
+                        
                          
                           
                      <div class="form-check  mr-sm-2">
                        <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
                        <input type="checkbox" zippy="wissearchonstore" class="form-check-input  mr-2"  >
                       </div>                  
-                          
+                      {{/isds}}       
                           
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
 

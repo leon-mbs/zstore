@@ -115,7 +115,9 @@ class Order extends  Base
         $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
-
+        if($this->_tvars["isff"]==true ) {
+           $table->AddColumn(new \Zippy\Html\DataList\Column('onstore', "На складi", false, true, false,'text-right','text-right'));
+        }
         $table->setCellClickEvent($this, 'OnSelect');
 
        
@@ -230,9 +232,7 @@ class Order extends  Base
     }
 
     public function saverowOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc)) {
-            return;
-        }
+      
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
             $this->setError("Не обрано товар");
@@ -306,10 +306,13 @@ class Order extends  Base
     public function savedocOnClick($sender) {
         
      
-        $this->_doc->headerdata['dsff'] = $this->_tvars["isds"]  ? 1:0;  
-        $this->_doc->headerdata['dsff'] = $this->_tvars["isff"]  ? 2:0;  
-      
-         
+        if($this->_tvars["isds"] ) {
+            $this->_doc->headerdata['dsff'] =1;  
+        }
+        if($this->_tvars["isff"] ) {
+            $this->_doc->headerdata['dsff'] = 2;  
+        }
+        
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->notes = $this->docform->notes->getText();
@@ -430,7 +433,9 @@ class Order extends  Base
             $item->amount = H::fa($item->price * $item->quantity);
 
             $total = $total + $item->amount;
-            $totalfrom = $totalfrom +   H::fa($item->pricefrom * $item->quantity);
+            if($this->_tvars['isds'] ) {
+               $totalfrom = $totalfrom +   H::fa( $item->pricefrom   * $item->quantity);
+            }
         }
         $this->docform->total->setText(H::fa($total));
         $this->docform->totalfrom->setText(H::fa($totalfrom));
@@ -482,16 +487,26 @@ class Order extends  Base
                 $pricefrom = $pricefrom * (1 -  $modules['dfdiscprice']/100) ; 
              }   
         }
+        $this->editdetail->pricefrom->setText(H::fa($pricefrom));
+         
         if($this->_tvars['isff']) {   //фулфилмент
             
         }      
       
-        $this->editdetail->pricefrom->setText(H::fa($pricefrom));
- 
+        $qty=$item->getQuantity();
+        
+        if(doubleval($qty) <= 0 ) {
+            $this->setWarn('Товару  немає  на  складi') ;
+        }
     }
    
     public function OnAutoItem($sender) {
-        return Item::findArrayAC($sender->getText());
+        $where="";
+        if($this->_tvars["isff"]==true ) {
+          $where .= " detail like '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'  ";
+        }        
+        
+        return Item::findArrayAC($sender->getText(),0,0,$where);
     }
    
     public function OnDelivery($sender) {
@@ -604,16 +619,11 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere($p = false) {
 
-        $where = "disabled <> 1";
+        $where = "disabled <> 1 ";
               
         if($this->page->witempan->wisfilter->wissearchonstore->isChecked()) {
             $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) >0 ";
-        
-            $br = \App\ACL::getBranchConstraint();
-            if (strlen($br) > 0) {
-               $where .= " and  item_id in (select item_id from store_stock where  store_id in (select store_id from stores where {$br} ))  "; 
-            }
-        
+         
         }
        
 
@@ -635,9 +645,12 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($man) > 0) {
 
             $man = Item::qstr($man);
-            $where = $where . " and  manufacturer like {$man}      ";
+            $where = $where . " and  manufacturer = {$man}      ";
         }
 
+        if($this->page->_tvars["isff"]==true ) {
+          $where .= " and detail like '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'  ";
+        }
 
      
         return $where;
@@ -670,6 +683,10 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
                  }   
             }  
             $item->price=$pricefrom;
+            if($this->page->_tvars['isff']??false) {  //фулфилмент
+              $item->onstore =H::fqty( $item->getQuantity($this->page->_store_id) ); 
+            }
+        
             $list[] = $item;
         }
         return $list;
