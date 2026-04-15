@@ -37,14 +37,14 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-10 col-xl-8">
-                    {{#usescanner}}
+                    
                     <div class="navbar nav justify-content-start">
                         Штрих код &nbsp;<input  autofocus="on"   autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
                     </div>
-                    {{/usescanner}}
+                  
                     <a zippy="addrow" class="btn btn-info  ">Додати товар</a>
                            {{#usesnumberitem}}
                        &nbsp;&nbsp;  <a zippy="opensn"  >Ввод за  серійними номерами</a>
@@ -93,7 +93,7 @@
                       <a   class="btn btn-secondary  ml-2 " href="/partner">Скасувати</a>
                 
                       <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary ml-2">
-                     <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ml-2 ">
+                     <input zippy="execdoc" type="submit" value="На затверження" class="btn btn-success  ml-2 ">
 
                 </div>
             </div>
@@ -172,7 +172,7 @@
 
                 </div>
                 <div class="form-group">
-                    <label for="editprice">Ціна </label>
+                    <label for="editprice">Облікова цЦіна </label>
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on" 
                            pattern="[0-9,\.]+"
                            style="width: 100px;">
@@ -217,7 +217,7 @@
                         </select>
 
                     </div>
-                  <div class="form-group">
+                    <div class="form-group">
                         <label for="editnewmsr">Од. вим.</label>
                         <input class="form-control" type="text" zippy="editnewmsr"/>
                     </div>

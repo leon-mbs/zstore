@@ -270,7 +270,7 @@ class ACL
      */
     public static function checkExeDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
-        if( intval($user_id) == 0) {
+        if( intval($user->user_id) == 0) {
             return false;
         }
         if($user_id >0) {

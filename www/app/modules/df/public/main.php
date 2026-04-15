@@ -33,7 +33,7 @@ class Main extends Base
         
         $this->docpan->add(new Label('docview')) ;
         $this->docpan->add(new ClickLink('bcancel',$this,'onButton')) ;
-        $this->docpan->add(new ClickLink('bedit',$this,'onButton')) ;
+        $this->docpan->add(new ClickLink('bedit',$this,'')) ;
         $this->docpan->add(new ClickLink('bdel',$this,'onButton')) ;
         
     }
@@ -56,7 +56,11 @@ class Main extends Base
 
    public function onButton($sender) {
        if($sender->id=='bedit') {
-           App::Redirect("\\App\\Modules\\DF\\Public\\Order", $this->_doc->document_id);
+           
+           $type = H::getMetaType($this->_doc->meta_id);
+    
+           
+           App::Redirect("\\App\\Modules\\DF\\Public\\".$type['meta_name'], $this->_doc->document_id);
        }
        if($sender->id=='bcancel') {
            $this->_doc->setHD('delayinprocess',1);  
@@ -92,6 +96,9 @@ class Main extends Base
          
         }
         if($this->_doc->state  == Document::STATE_INPROCESS)   {
+           $this->docpan->bcancel->setVisible(true);
+        }
+        if($this->_doc->state  == Document::STATE_WA)   {
            $this->docpan->bcancel->setVisible(true);
         }
          

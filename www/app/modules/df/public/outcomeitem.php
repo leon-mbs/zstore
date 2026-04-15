@@ -199,10 +199,11 @@ class OutcomeItem extends  Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
+        $this->_doc->customer_id = $this->_customer->customer_id;
 
      
         $this->_doc->headerdata['store'] = $this->_store_id;
-        $st= \App\Entity\Stock::load($this->_store_id);
+        $st= \App\Entity\Store::load($this->_store_id);
         $this->_doc->headerdata['storename'] = $st->store_name;
       
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -310,8 +311,14 @@ class OutcomeItem extends  Base
 
     public function OnAutocompleteItem($sender) {
         
-        $text = trim($sender->getText());
-        return Item::findArrayAC($text, $this->_store_id);
+          
+        $where="";
+        if($this->_tvars["isff"]==true ) {
+          $where .= " detail like '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'  ";
+        }        
+        
+        return Item::findArrayAC($sender->getText(),$this->_store_id,0,$where);
+           
     }
 
     public function addcodeOnClick($sender) {

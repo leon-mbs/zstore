@@ -54,6 +54,7 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new  ClickLink("logout",$this,"LogoutClick"));
 
         $this->_tvars['usebranch']  = false;
+        $this->_tvars['hideblock']  = false;
 
         
     }

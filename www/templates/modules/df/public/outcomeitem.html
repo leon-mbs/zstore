@@ -92,7 +92,7 @@
                     <a   class="btn btn-secondary  ml-2 " href="/partner">Скасувати</a>
                 
                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary ml-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success ml-2  ">
+                    <input zippy="execdoc" type="submit" value="На затверження" class="btn btn-success ml-2  ">
 
                 </div>
             </div>
@@ -109,8 +109,10 @@
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
                     <input     class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                 {{#hideblock}}
                    <a zippy="openitemsel">Відкрити довідник</a>
                     <br>
+                   {{/hideblock}}
                     Наявність: <span zippy="qtystock"></span>
 
 

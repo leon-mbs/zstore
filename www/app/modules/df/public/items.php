@@ -67,6 +67,7 @@ class Items extends Base
         $this->itemdetail->add(new TextArea('editdesc'));
         $this->itemdetail->add(new TextInput('editcode'));
         $this->itemdetail->add(new TextInput('editbarcode'));
+        $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new TextInput('editbrand'));
         $this->itemdetail->add(new TextInput('editprice'));
         $this->itemdetail->add(new DropDownChoice('editcat',$catlist));
@@ -121,6 +122,7 @@ class Items extends Base
         $this->itemdetail->editname->setText($this->_item->itemname) ;
         $this->itemdetail->editcode->setText($this->_item->item_code) ;
         $this->itemdetail->editbarcode->setText($this->_item->item_barcode) ;
+        $this->itemdetail->editmsr->setText($this->_item->msr) ;
         $this->itemdetail->editcat->setValue($this->_item->cat_id) ;
         $this->itemdetail->editbrand->setText($this->_item->manufacturer) ;
         $this->itemdetail->editprice->setText($this->_item->price1) ;
@@ -135,6 +137,7 @@ class Items extends Base
         $this->_item->itemname= trim( $this->itemdetail->editname->getText() );
         $this->_item->item_code= trim(  $this->itemdetail->editcode->getText()) ;
         $this->_item->item_barcode= trim(  $this->itemdetail->editbarcode->getText()) ;
+        $this->_item->msr= trim(  $this->itemdetail->edimsr->getText()) ;
         $this->_item->cat_id=   $this->itemdetail->editcat->getValue() ;
         $this->_item->manufacturer = trim(  $this->itemdetail->editbrand->getText()) ;
         $this->_item->price1 = trim(  $this->itemdetail->editprice->getText()) ;

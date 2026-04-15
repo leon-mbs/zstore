@@ -255,9 +255,10 @@ class IncomeItem extends Base
       
       
         $this->_doc->headerdata['store'] = $this->_store_id;
-        $st= \App\Entity\Stock::load($this->_store_id);
+        $st= \App\Entity\Store::load($this->_store_id);
         $this->_doc->headerdata['storename'] = $st->store_name;
  
+        $this->_doc->customer_id = $this->_customer->customer_id;
 
           
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -280,9 +281,7 @@ class IncomeItem extends Base
             }
             $this->_basedocid = $this->_customer->customer_id;
         
-            if($this->_doc->user_id==0)  {
-               $this->_doc->user_id = \App\System::getUser()->user_id; 
-            }
+           
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
@@ -343,10 +342,7 @@ class IncomeItem extends Base
             $this->setError("Не введено товар");
         }
 
-        if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
-        }
-
+     
 
         return !$this->isError();
     }
@@ -354,8 +350,13 @@ class IncomeItem extends Base
  
     public function OnAutocompleteItem($sender) {
 
-        $text = trim($sender->getText());
-        return Item::findArrayAC($text);
+        $where="";
+        if($this->_tvars["isff"]==true ) {
+          $where .= " detail like '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'  ";
+        }        
+        
+        return Item::findArrayAC($sender->getText(),0,0,$where);
+   
     }
  
     public function OnChangeItem($sender) {
@@ -497,6 +498,8 @@ class IncomeItem extends Base
             return;
         }
         $item = new Item();
+        $item->ffpartner=$this->_customer->customer_id;
+         
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
