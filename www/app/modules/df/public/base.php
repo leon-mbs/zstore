@@ -52,6 +52,9 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['custname']  = $this->_customer->customer_name;
  
         $this->add(new  ClickLink("logout",$this,"LogoutClick"));
+
+        $this->_tvars['usebranch']  = false;
+
         
     }
 

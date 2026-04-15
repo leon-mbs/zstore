@@ -1,0 +1,181 @@
+<html>
+    <head>
+          <title> Списання ТМЦ</title>
+    </head>
+    <body>
+
+
+        <form zippy="docform" enctype="multipart/form-data">
+            <h3> Списання ТМЦ</h3>
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа <small class="text-danger">*</small></label>
+                        <input style="width:150px" class="form-control"   zippy="document_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="document_date"> Дата <small class="text-danger">*</small></label>
+                        <input style="width:150px" class="form-control"   zippy="document_date"  required="on" >
+                    </div>
+
+
+                    <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+
+                        <input class="form-control" type="text" zippy="notes">
+
+                    </div>
+
+                </div>
+             
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-9 col-xl-7">
+                    {{#usescanner}}
+                    <div class="navbar nav justify-content-start">
+                        Штрих код &nbsp;<input  autofocus="on"   autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
+                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+
+
+                    </div>
+                    {{/usescanner}}
+                    <a class="btn btn-info  " zippy="addrow">Додати позицію</a>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Назва</th>
+                            <th>Код</th>
+                            <th>Од.</th>
+                           
+                            <th> {{#usesnumber}}
+                            Серія
+                             {{/usesnumber}}
+                            </th>
+
+                           
+                            <th   class="text-right">Кіл.</th>
+                            <th   class="text-right">На суму</th>
+
+                            <th  ></th>
+                        </tr>
+                        <tr zippy="detail">
+                            <td zippy="item"></td>
+                            <td zippy="item_code"></td>
+                            <td zippy="msr"></td>
+                           
+                            <td zippy="snumber"></td>
+
+                            
+                            <td zippy="quantity" class="text-right"></td>
+                            <td zippy="sum" class="text-right"></td>
+                           
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
+                            </td>
+
+
+                        </tr>
+                        <tr>
+                          <td colspan="5"  class="text-right">Всього: </td>
+                          <td zippy="amount" class="text-right"></td>
+                          <td  ></td>
+                         
+                           
+                        </tr>
+                    </table>
+
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-11 col-md-8 col-xl-6 d-flex justify-content-end pt-4">
+                    <a   class="btn btn-secondary  ml-2 " href="/partner">Скасувати</a>
+                
+                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary ml-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success ml-2  ">
+
+                </div>
+            </div>
+
+
+
+
+    </form>
+   
+        <div class="row">
+            <div class="col-12 col-md-4 col-xl-3">
+             <form zippy="editdetail">
+        <h4>Введення товару </h4>
+                <div class="form-group">
+                    <label for="edititem">Найменування</label>
+                    <input     class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                   <a zippy="openitemsel">Відкрити довідник</a>
+                    <br>
+                    Наявність: <span zippy="qtystock"></span>
+
+
+                </div>
+                {{#usesnumber}}
+                <div class="form-group">
+                   {{^usesnumberitem}}
+                        <label for="editsnumber">Серія (партія) виробника </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серійний номер </label>
+                         {{/usesnumberitem}}
+
+                    <input type="text" zippy="editsnumber" class="form-control"/>
+
+                </div>
+                {{/usesnumber}}
+                <div class="form-group">
+                    <label for="editquantity">Кількість</label>
+
+                    <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
+                            required="on"  pattern="[0-9,\.]+"/>
+
+                </div>
+
+                <div class="form-group">
+                    <input type="button" zippy="cancelrow" value="До переліку" class="btn   btn-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-primary">
+                    
+                </div>
+                  </form>
+            </div>
+             <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+
+
+            </div>  
+        </div>
+
+  
+    <script>
+        $(document).ready(function () {
+      
+        
+         $("#edititem").focus()   
+        });    
+     
+
+        function onBarCode(ele) {
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val());
+                $('#addcode').click()
+            }
+        }
+
+        function onItem(ele) {
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val());
+                $('#saverow').click()
+            }
+        }
+    </script>
+
+</body>
+
+</html>

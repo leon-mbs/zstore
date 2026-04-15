@@ -391,7 +391,7 @@ class Order extends  Base
 
                                          
             if ($sender->id == 'execdoc'  ) {
-             //   $this->_doc->updateStatus(Document::STATE_NEW);
+                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
                 
             }
          

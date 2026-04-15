@@ -10,6 +10,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Customer;
@@ -63,7 +64,9 @@ class Items extends Base
     
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
+        $this->itemdetail->add(new TextArea('editdesc'));
         $this->itemdetail->add(new TextInput('editcode'));
+        $this->itemdetail->add(new TextInput('editbarcode'));
         $this->itemdetail->add(new TextInput('editbrand'));
         $this->itemdetail->add(new TextInput('editprice'));
         $this->itemdetail->add(new DropDownChoice('editcat',$catlist));
@@ -83,6 +86,7 @@ class Items extends Base
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('brand', $item->manufacturer));
         $row->add(new Label('cat_name', $item->cat_name));
+        $row->add(new Label('description', $item->description));
         $row->add(new Label('price', $item->price1));
         $row->add(new Label('qty', H::fqty( $item->getQuantity($this->_store_id))) );
         
@@ -116,9 +120,11 @@ class Items extends Base
 
         $this->itemdetail->editname->setText($this->_item->itemname) ;
         $this->itemdetail->editcode->setText($this->_item->item_code) ;
+        $this->itemdetail->editbarcode->setText($this->_item->item_barcode) ;
         $this->itemdetail->editcat->setValue($this->_item->cat_id) ;
         $this->itemdetail->editbrand->setText($this->_item->manufacturer) ;
         $this->itemdetail->editprice->setText($this->_item->price1) ;
+        $this->itemdetail->editdesc->setText($this->_item->description) ;
         
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
@@ -128,9 +134,11 @@ class Items extends Base
    public function saveOnClick($sender) {
         $this->_item->itemname= trim( $this->itemdetail->editname->getText() );
         $this->_item->item_code= trim(  $this->itemdetail->editcode->getText()) ;
+        $this->_item->item_barcode= trim(  $this->itemdetail->editbarcode->getText()) ;
         $this->_item->cat_id=   $this->itemdetail->editcat->getValue() ;
         $this->_item->manufacturer = trim(  $this->itemdetail->editbrand->getText()) ;
         $this->_item->price1 = trim(  $this->itemdetail->editprice->getText()) ;
+        $this->_item->description = trim(  $this->itemdetail->editdesc->getText()) ;
        
         if (strlen($this->_item->itemname) == 0) {
             $this->setError('Не введено назву');
