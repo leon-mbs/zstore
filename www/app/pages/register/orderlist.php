@@ -187,7 +187,7 @@ class OrderList extends \App\Pages\Base
         if ($doc->state == Document::STATE_FAIL) {
             $row->state->setText('<span class="badge badge-danger">' . $stname . '</span>', true);
         }
-
+     
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         if ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS) {
@@ -282,6 +282,8 @@ class OrderList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
+      
+        
       //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
