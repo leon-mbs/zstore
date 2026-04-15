@@ -61,6 +61,7 @@ class Item extends \ZCL\DB\Entity
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+        $this->ffpartner = (int)$xml->ffpartner[0];
         $this->imageurl = (string)$xml->imageurl[0];
 
         $this->techcard = (string)$xml->techcard[0];
@@ -100,6 +101,7 @@ class Item extends \ZCL\DB\Entity
         if (!is_array($this->brprice)) {
             $this->brprice = array();
         }
+       
     
         $id = \App\System::getBranch();
         if ($id > 0 ) {  
@@ -232,6 +234,9 @@ class Item extends \ZCL\DB\Entity
 
         if ($this->actionprice > 0) {
             $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
+        }
+        if ($this->ffpartner > 0) {
+            $this->detail .= "<ffpartner>{$this->ffpartner}</ffpartner>";
         }
         if ($this->actiondisc > 0) {
             $this->detail .= "<actiondisc>{$this->actiondisc}</actiondisc>";
@@ -801,7 +806,7 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $partname
      * @static
      */
-    public static function findArrayAC($partname, $store = 0, $cat = 0) {
+    public static function findArrayAC($partname, $store = 0, $cat = 0,$where='') {
 
         $criteria = "  disabled <> 1 ";
         if ($store > 0) {
@@ -815,6 +820,9 @@ class Item extends \ZCL\DB\Entity
             $like = self::qstr('%' . $partname . '%');
             $partname = self::qstr($partname);
             $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        }
+        if (strlen($where) > 0) {
+            $criteria .= "  and  ". $where;
         }
 
         $itemlist = self::find($criteria);

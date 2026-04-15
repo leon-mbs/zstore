@@ -2,19 +2,23 @@
 
     <tr>
         <td></td>
-        <td>Замовник</td>
+        <td><b>Замовник</b></td>
         <td colspan="8">{{customer_name}}</td>
     </tr>
+      {{#phone}}
     <tr>
         <td></td>
         <td>Телефон</td>
         <td colspan="8">{{phone}}</td>
     </tr>
+    {{/phone}}
+    {{#email}}
     <tr>
         <td></td>
         <td>E-mail</td>
         <td colspan="8">{{email}}</td>
     </tr>
+        {{/email}}
     <tr>
         <td></td>
         <td> Тип оплати</td>
@@ -41,7 +45,7 @@
 
         <td></td>
         <td><b> Продавець</b></td>
-        <td colspan="8"><b>{{firm_name}}</b></td>
+        <td colspan="8"> {{firm_name}} </td>
 
     </tr>  
      {{#iban}}

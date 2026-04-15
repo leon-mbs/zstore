@@ -1,0 +1,57 @@
+<html>
+
+    <body>
+
+        <div class="row  ">
+            <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+                <h4>Налаштування  </h4>
+                <form zippy="cform">
+                      <div class="form-group   ">
+                        <label for="defpricetype">Тип ціни </label>
+
+                        <select class="form-control" zippy="defpricetype">
+                            <option value="0">Не обрано</option>
+
+                        </select>
+                         <small>Цiна для дропшиппера</small>
+                  
+                    </div>
+                    <div class="form-group">
+                        <label for="discprice">Знижка, %</label>
+                        <input type="text" zippy="discprice" class="form-control" pattern="[0-9\.]+"  />
+                         <small>Цiна для дропшиппера як знижка для вказаної</small>
+                    </div>               
+                 
+                    <div class="form-group   ">
+                        <label for="defstore">Склад для фулфілменту </label>
+
+                        <select class="form-control" zippy="defstore">
+                            <option value="0">Не обрано</option>
+
+                        </select>
+                         <small>Бажано  створити  окремий склад</small>
+                  
+                    </div>      
+                
+                  
+                                                     
+                    <div class="form-group">
+                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
+                        
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+
+            function check_check() {
+
+                  document.getElementById('dialogwait').showModal()
+            }
+
+        </script>
+
+    </body>
+</html>

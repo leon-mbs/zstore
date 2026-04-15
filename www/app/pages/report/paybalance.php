@@ -91,7 +91,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE    
-              iotype <30   {$brpay}
+              iotype >0 and iotype <30   {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
               GROUP BY  iotype order  by  iotype  
@@ -134,7 +134,7 @@ class PayBalance extends \App\Pages\Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              iotype >= 50 and  iotype < 80    {$brpay}
+              iotype >= 50 and   iotype < 80    {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
               GROUP BY  iotype order  by  iotype  
@@ -147,7 +147,7 @@ class PayBalance extends \App\Pages\Base
             $detailitem = array();
 
             $detailitem["out"]   = H::fa(0-$row['am']);
-            $detailitem["type"] = $pl[$row['iotype'] ] ;
+            $detailitem["type"] = $pl[$row['iotype'] ] ?? 'Не вказано';
             $detailitem["docdet"] = false ;
             if($det) {
 

@@ -1,0 +1,260 @@
+<html>
+    <head>
+          <title> Замовлення</title>
+    </head>
+
+    <body>
+
+
+        <form zippy="docform">
+            <h3>Замовлення </h3>
+            <div class="row">
+                <div class="col-12 col-md-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа</label>
+                        <input class="form-control" type="text" zippy="document_number"  required="on" readonly="on" >
+                    </div>
+                   <div class="form-group">
+                        <label for="document_date"> Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
+                    </div>   
+                   <div class="form-group">
+                        <label for="outnumber"> Зовнішній номер</label>
+                        <input class="form-control" type="text" zippy="outnumber" style="width:100px"    >
+                      <small>  Наприклад номер замовлення на  маркетплейсі </small>
+                    </div>   
+                 
+              
+                    <div class="form-group  ">
+                        <label for="notes">Примітка </label>
+
+                        <textarea class="form-control" zippy="notes"></textarea>
+                        <small>Додаткова iнформацiя (наприклад  про оплату)  </small>
+
+                    </div>
+
+                </div>
+            
+                <div class="col-12 col-md-4">
+                 
+                                      
+                    
+                    <div class="form-group  ">
+                        <label for="delivery">Доставка</label>
+
+                        <select class="form-control" zippy="delivery">
+
+                        </select>
+
+                    </div>
+                     {{#np}}
+                        <div class="form-group">
+                            <label for="deliverynp">Тип доставки НП</label>
+                             <select zippy="deliverynp" class="form-control     ">
+                                <option value="0">Вiддiлення</option>
+                                <option value="1">Поштомат</option>
+                                <option value="2">За адресою</option>
+                            </select>
+                        </div>                     
+                       <div class="form-group">
+                        <label for="baycity">Населений пункт</label>
+
+                        <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   "/>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="baypoint">Вiддiлення</label>
+
+                        <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   "/>
+                         <small>Для пошуку по номеру додайте перед цифрами №</small>
+                    </div>                    
+                       {{/np}}
+                    <div class="form-group  ">
+                        <label data-label="address" for="address">Адреса</label>
+                        <textarea zippy="address" class="form-control"></textarea>
+                    </div>
+                     <div class="form-group row">
+                            <label for="bayhouse">Буд.</label>
+                            <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
+                            <label for="bayflat">Кв. </label>
+                            <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
+                     </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col=md-10 col-xl-8 ">
+               
+                  
+                    <a zippy="addrow" class="btn btn-info  ">Додати товар</a>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Назва</th>
+                            <th>Код</th>
+                            <th>Од.</th>
+                            <th  > </th>
+
+                            <th class="text-right">Кіл.</th>
+                            {{#isds}}
+                            <th class="text-right"> Склад. ціна</th>                            
+                            {{/isds}}
+                            <th class="text-right">Прод. ціна</th>
+
+                            <th class="text-right">Сума</th>
+
+                            <th  ></th>
+                        </tr>
+                        <tr zippy="detail">
+                            <td zippy="tovar"></td>
+                            <td zippy="code"></td>
+                            <td zippy="msr"></td>
+                            <td zippy="desc"  ></td>
+
+                            <td zippy="quantity" class="text-right"></td>
+                            {{#isds}}
+                            <td zippy="pricefrom" class="text-right"></td>
+                            {{/isds}}
+                            <td zippy="price" class="text-right"></td>
+
+                            <td zippy="amount" class="text-right"></td>
+
+                            <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i class="fa fa-trash"></i></a>
+                            </td>
+
+                        </tr>
+                        <tr style="font-weight: bolder;">
+                            <td colspan="5" class="text-right">На суму:</td>
+                            {{#isds}}
+                            <td zippy="totalfrom" class="text-right">     </td>
+                            {{/isds}}
+                            <td></td>
+                            <td zippy="total" class="text-right"></td>
+                            <td></td>
+                        </tr>
+                     
+
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-9 d-flex justify-content-end pt-4">
+                    <a   class="btn btn-secondary  ml-2 " href="/partner">Скасувати</a>
+                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ml-2 ">
+                     <input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-success  ml-2 ">
+
+                   
+
+                </div>
+            </div>
+
+                    
+        </form>
+
+        <div class="row">
+            <div class="col-12 col-md-4 col-xl-3">
+                <form zippy="editdetail">
+                    <h4>Введення товару </h4>
+                    <div class="form-group">
+                        <label for="edittovar">Назва</label>
+                      
+                        <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
+                       </div>  
+                        <div class="form-group">                                             
+                        <a zippy="openitemsel">Відкрити довідник</a>
+                       
+                        {{#isds}}
+                        
+                        <br>   Складська  цінв:   <span zippy="pricefrom"></span>
+                        {{/isds}}   
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="editquantity">Кількість</label>
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on"                                pattern="[0-9,\.\s]+" style="width: 100px;">
+
+                    </div>
+                    <div class="form-group">
+                        <label for="editprice">Продажна ціна </label>
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editdesc">Коментар </label>
+                        <input   class="form-control" type="text" zippy="editdesc"     >
+
+                    </div>
+
+                    <div class="form-group">
+                      
+                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary ">
+                       &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
+                    </div>
+                </form>
+
+            </div>
+            <div class="col-12 col-md-8 col-xl-8">
+                 
+           <div   zippy="witempan"  >  
+                <div class="card">
+
+                    <form zippy="wisfilter" class="form-inline">
+
+                        <label for="wissearchkey">пошук</label>
+                        <input class="form-control mr-sm-2" type="text" zippy="wissearchkey">
+                        <label for="wissearchcat">категорiя</label>
+
+                        <select class="form-control mr-sm-2" zippy="wissearchcat">
+                            <option value="0">Не задано</option>
+                        </select>
+                        <label for="wissearchmanufacturer">Бренд </label>
+                       
+                        <input autocomplete="off" list="wissearchmanlist" class="form-control mr-2" zippy="wissearchmanufacturer"/>
+                        
+                         {{#isds}}
+                        <datalist id="wissearchmanlist">
+                            {{#manlist}}
+                            <option label="{{mitem}}" value="{{mitem}}">  </option>
+                                {{/manlist}}
+                        </datalist>
+                        
+                         
+                          
+                     <div class="form-check  mr-sm-2">
+                       <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
+                       <input type="checkbox" zippy="wissearchonstore" class="form-check-input  mr-2"  >
+                      </div>                  
+                      {{/isds}}       
+                          
+                        <input class="btn btn-outline-success  " type="submit" value="ОК">
+
+                    </form>
+                </div>
+                <table class="table table-sm" zippy="witemselt">
+
+                </table>
+
+                 </div>       
+ 
+
+            </div>
+        </div>
+
+
+     
+   
+   <script>
+            $(document).ready(function () {
+    
+                
+         
+              
+          $("#edittovar").focus()    
+                  
+          });   
+          
+          
+                        
+         </script> 
+
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<html>
+    <body>
+        <div class="row ">
+            <div class="col-12 col-md-10 col-xl-8">
+                
+                 <a class="btn btn-success btn-sm mr-2" href="/index.php?p=App/Modules/DF/Public/Order">Нове замовлення</a>
+                 {{#isff}}
+                 <a class="btn btn-success btn-sm mr-2" href="/index.php?p=App/Modules/DF/Public/IncomeItem">Оприходувати ТМЦ</a>
+                 <a class="btn btn-success btn-sm mr-2" href="/index.php?p=App/Modules/DF/Public/OutcomeItem">Списати ТМЦ</a>
+                  
+                 {{/isff}}
+                 
+               <table class="table   table-sm  table-hover   ">
+                  <thead>  <tr>
+                      
+
+                         <th class="text-nowrap  ">Тип документа</th>
+                        <th  >Номер</th>
+                        <th  >Дата</th>
+             
+                        <th class="text-right   ">Сума</th>
+                        <th  > Статус </th>
+                   
+                      
+
+                        <th></th>
+                       
+                    </tr> 
+                     </thead>
+                    <tbody>
+                        <tr zippy="doclist">
+                          
+                         
+                           
+                            <td  class="text-nowrap  "><a zippy="name"></a></td>
+                            <td  class="text-nowrap  " zippy="number"> </td>
+                            <td  class="text-nowrap" zippy="date"></td>
+                           
+                            <td zippy="amount" class="text-right  "></td>
+
+                            <td style="white-space:  nowrap" zippy="state"></td>
+                         
+                        
+                            <td><small zippy="notes"></small> </td>
+                           
+                            
+                       
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="width:75%" zippy="pag"></div>
+
+
+                <div class="col-12" zippy="docpan">
+                  <div class=" navbar nav d-flex justify-content-start"  >
+                    
+                         <a zippy="bedit" class="btn btn-success btn-sm  mr-2 ml-4">Редагувати</a>
+                         <a zippy="bcancel" class="btn btn-info btn-sm  ml-2"> Скасувати</a>                         
+                         <a zippy="bdel" class="btn btn-danger btn-sm  ml-2"> Выдалити</a>                         
+                         
+                   </div>
+                   <div    >
+                    
+                        <a   style="cursor:pointer" onclick=" $('#docview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a   href="/index.php?p=App/Pages/ShowReport&arg=xls/order" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a   href="/index.php?p=App/Pages/ShowReport&arg=pdf/order" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+                      
+                   </div>
+                   
+                     <div zippy="docview"></div>
+                </div>                 
+            </div>
+        </div>
+    <script>        
+            
+        function check_bdel() {
+            return confirm("Видалити документ?")
+        }   
+                 
+    </script>
+    </body>
+</html>

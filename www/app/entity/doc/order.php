@@ -68,8 +68,8 @@ class Order extends \App\Entity\Doc\Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
-                        "phone"           => $this->headerdata["phone"],
-                        "email"           => $this->headerdata["email"],
+                        "phone"           => $this->headerdata["phone"]??false,
+                        "email"           => $this->headerdata["email"]??false,
                         "paytypename"     => $this->getHD("paytypename",'') ,
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
@@ -83,7 +83,7 @@ class Order extends \App\Entity\Doc\Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
 
                         "total"           => H::fa($this->amount),
-                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
+                        "totaldisc"           => $this->getHD("totaldisc",0)  > 0 ? H::fa($this->getHD("totaldisc",0)) : false,
                         "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,
@@ -251,7 +251,7 @@ class Order extends \App\Entity\Doc\Document
         }
         if ($state == self::STATE_INPROCESS) {
 
-            if(strlen($this->headerdata['promocode']) > 0){
+            if(strlen($this->headerdata['promocode']??'') > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
             }
 
@@ -331,4 +331,68 @@ class Order extends \App\Entity\Doc\Document
 
         
     }       
+    
+    
+   //дропшиппинг и  фулфилмент
+   public function generateReportDF() {
+
+        $modules = \App\System::getOptions("modules");
+   
+        $i = 1;
+        $detail = array();
+
+        foreach ($this->unpackDetails('detaildata') as $item) {
+
+            if (isset($detail[$item->item_id])) {
+                $detail[$item->item_id]['quantity'] += $item->quantity;
+            } else {
+
+
+                $detail[] = array( 
+                                  "tovar_name" => $item->itemname,
+                                  "tovar_code" => $item->item_code,
+                                  "quantity"   => H::fqty($item->quantity),
+                                  "price"      => H::fa($item->price),
+                                  "pricefrom"      => H::fa($item->pricefrom),
+                                  "msr"        => $item->msr,
+                                  "desc"       => $item->desc,
+                                  "amount"     => H::fa($item->quantity * $item->price)
+                );
+            }
+        }
+        
+        $da=  trim($this->headerdata["npaddressfull"] ??'') ;
+        
+        if(strlen($da)==0) {
+           $da =  trim($this->headerdata["ship_address"] ??'') ;
+        } 
+        
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                      
+                        "delivery"        => $this->headerdata["delivery_name"],
+                        "ship_address"    => strlen($da) > 0 ? $da: false,
+                        "notes"           => nl2br($this->notes),
+                        "outnumber"       => $this->headerdata["outnumber"]??'',
+                        "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
+                        "document_number" => $this->document_number,
+                      
+                        "totalfrom"           => H::fa($this->headerdata["totalfrom"]??'') ,
+                        "total"           => H::fa($this->amount) 
+                   
+        );                                                                               
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
+    
+        $header["isds"] = $this->headerdata['dsff'] ==1;
+        $header["isff"] = $this->headerdata['dsff'] ==2;
+   
+
+
+        $report = new \App\Report('doc/order_df.tpl');
+
+        $html = $report->generate($header);
+
+        return $html;
+    }
+   
 }

@@ -400,10 +400,12 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
         $user = \App\System::getUser();
-
-        $doc->user_id = $user->user_id;
-        $doc->headerdata['author'] = $user->user_id;
-
+        if($user->user_id > 0) {
+            $doc->user_id = $user->user_id;
+            $doc->headerdata['author'] = $user->user_id;
+           
+        }
+      
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
             $doc->branch_id = \App\ACL::checkCurrentBranch();
@@ -1436,5 +1438,8 @@ class Document extends \ZCL\DB\Entity
     }
   
  
-      
+  //дропшиппинг и  фулфилмент
+   public function generateReportDF() {
+       return $this->generateReport()   ;
+   }
 }
