@@ -1119,6 +1119,7 @@ class Helper
             }
 
             $header['name'] = str_replace("'", "`", $header['name']);
+            
             $header['description'] = str_replace("'", "`", $item->description);
 
             $header['docnumber'] = $tags['docnumber'] ?? "";
@@ -1216,9 +1217,13 @@ class Helper
                 $header['description'] = str_replace("\"", "`", $header['description']??'');
                 $header['qrcode'] = str_replace("\"", "`", $header['qrcode']??'');
                 $header['brand'] = str_replace("\"", "`", $header['brand']??'');
-
-                if($user->pwsymlabel > 0) {
-                    $header['name'] = mb_substr($header['name'], 0, $user->pwsymlabel);
+            
+                if(intval($user->pwsymlabel)==0) $user->pwsymlabel =32;
+                $nm=  $header['name'] ;
+            
+                if( mb_strlen($nm)  > $user->pwsymlabel  ) {
+                    $header['name'] = mb_substr($nm, 0, $user->pwsymlabel);
+                    $header['name2'] = mb_substr($nm, 32, $user->pwsymlabel);
                 }
 
 
