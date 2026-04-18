@@ -90,7 +90,7 @@ class Orders extends \App\Pages\Base
         $data = json_decode($json, true);
         if (!isset($data)) {
             $this->setError("Невірна відповідь");
-            \App\Helper::log($json);
+         //   \App\Helper::log($json);
             return;
         }
         if ($data['error'] == "") {
