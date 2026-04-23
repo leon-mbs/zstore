@@ -268,7 +268,7 @@ class Document extends \ZCL\DB\Entity
     * @param mixed $def
     */
     public function getHD(string $name, $def=null)  {    
-       if( is_integer($def)  && ($this->headerdata[$name] ?? "") === "" ) {
+       if(  is_numeric($def)  && ($this->headerdata[$name] ?? "") === "" ) {
           return $def; 
        }
        return  $this->headerdata[$name] ?? $def ;
@@ -1285,12 +1285,15 @@ class Document extends \ZCL\DB\Entity
         return $this->document_id;
     }
 
-
+    /**
+    * сумма для журналов (для однообразия)
+    * 
+    */
     public function getAmountReg() {
         $am=$this->amount;
-        if($this->payamount <> 0) {
-            $am=$this->payamount;
-        }
+        $am = $am - $this->getHD("totaldisc",0) ; 
+        $am = $am - $this->getHD("bonus",0) ; 
+
 
         return  $am;
     }

@@ -153,7 +153,7 @@ class OrderList extends \App\Pages\Base
 
         $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer'))->setValue($doc->customer_name);
         $row->customer->setAttribute('onclick', "customerInfo({$doc->customer_id});") ;
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
+        $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 
 
         $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);

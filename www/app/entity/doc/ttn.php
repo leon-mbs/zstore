@@ -180,7 +180,11 @@ class TTN extends Document
                 return; //проводки выполняются  в  РН
             }
         }
-
+        $am =   $this->getAmountReg()   ;
+        $k = 1;   //учитываем  скидку
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }   
 
         foreach ($this->unpackDetails('detaildata') as $item) {
             $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
@@ -220,7 +224,7 @@ class TTN extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 //  $sc->setExtCode($item->price - $st->partion); //Для АВС
-                $sc->setOutPrice($item->price);
+                $sc->setOutPrice($item->price * $k);
                 $sc->tag=Entry::TAG_SELL;
                 $sc->save();
             }

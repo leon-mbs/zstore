@@ -157,10 +157,10 @@ class ServiceAct extends Document
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
 
-        $dd =      doubleval($this->headerdata['totaldisc'])   ;
+        $am =   $this->getAmountReg()   ;
         $k = 1;   //учитываем  скидку
-        if ($dd > 0 && $this->amount > 0) {
-            $k = ($this->amount - $dd) / $this->amount;
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
         }
 
 
