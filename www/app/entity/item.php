@@ -1261,8 +1261,9 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $requires  количество
     * @param mixed $store  со  склада
     * @param mixed $document_id  документ
+    * @param mixed $reserve  резервирование
     */
-    public   function setToProd($required,$store,$document_id) {
+    public   function setToProd($required,$store,$document_id,$reserve=false) {
         $common= \App\System::getOptions('common') ;
         if( ($common['storepart'] ?? 0) > 0) {
            $store = $common['storepart'] ;
@@ -1297,7 +1298,7 @@ class Item extends \ZCL\DB\Entity
             foreach ($listst as $st) {
                 $sc = new \App\Entity\Entry($document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->tag=\App\Entity\Entry::TAG_TOPROD;
+                $sc->tag=  $reserve ? \App\Entity\Entry::TAG_RESERV :  \App\Entity\Entry::TAG_TOPROD;
 
                 $sc->save();
                 if ($kl > 0) {
@@ -1306,11 +1307,11 @@ class Item extends \ZCL\DB\Entity
             }
             
         }
-        if ($lost > 0) {
+        if ($lost > 0 && $reserve==false) {
             $io = new \App\Entity\IOState();
             $io->document_id = $document_id;
             $io->amount =  0 - abs($lost);
-            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+            $io->iotype =  \App\Entity\IOState::TYPE_TRASH;
 
             $io->save();
        }             

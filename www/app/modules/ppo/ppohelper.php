@@ -949,7 +949,7 @@ class PPOHelper
                         $amount3 += $sum;
                     } else {
                         \App\Helper::log("payform ".$fc);
-                        \App\Helper::log($xml);
+                      //  \App\Helper::log($xml);
                     }
                 }
 

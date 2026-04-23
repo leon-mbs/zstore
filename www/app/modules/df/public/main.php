@@ -33,7 +33,7 @@ class Main extends Base
         
         $this->docpan->add(new Label('docview')) ;
         $this->docpan->add(new ClickLink('bcancel',$this,'onButton')) ;
-        $this->docpan->add(new ClickLink('bedit',$this,'')) ;
+        $this->docpan->add(new ClickLink('bedit',$this,'onButton')) ;
         $this->docpan->add(new ClickLink('bdel',$this,'onButton')) ;
         
     }
@@ -46,7 +46,7 @@ class Main extends Base
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         $st = Document::getStateName($doc->state);
-        if($doc->state == Document::STATE_INPROCESS && intval($doc->user_id) == 0)  {
+        if($doc->getHD('delayinprocess')==2)  {
            $st = "Очікує виконання";    
         }
         $row->add(new Label('state',$st));

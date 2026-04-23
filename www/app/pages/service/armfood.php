@@ -257,6 +257,8 @@ class ARMFood extends \App\Pages\Base
         $this->optionsform->add(new CheckBox('foodtables', $food['tables']));
         $this->optionsform->add(new CheckBox('foodpack', $food['pack']));
         $this->optionsform->add(new CheckBox('diffbp', $food['diffbp']));
+        $this->optionsform->add(new CheckBox('foodbell', $food['bell']??0));
+
 
         $this->optionsform->add(new Textinput('goodname', $food['name']));
         $this->optionsform->add(new Textinput('goodaddress', $food['address']));
@@ -793,7 +795,7 @@ class ARMFood extends \App\Pages\Base
         return $prod; 
     }
     
-    //товары
+    //товары                
     public function onProdRow($row) {
         //  $store_id = $this->setupform->store->getValue();
  
@@ -1495,7 +1497,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->save();
 
 
-        if($this->_doc->state < 4) {
+        if($this->_doc->state < 4 || $this->_doc->state == 16) {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
             $n->message = serialize(array('cmd' => 'new','document_id'=>$this->_doc->document_id));
 
@@ -1509,10 +1511,7 @@ class ARMFood extends \App\Pages\Base
             $this->setWarn('Нема  позицiй для виробництва') ;
             return;
         }
-        if($inprod==0) {
-            $this->setWarn('Нема  позицiй для виробництва') ;
-            return;
-        }
+       
         
         
         $n->save();
@@ -1543,10 +1542,10 @@ class ARMFood extends \App\Pages\Base
 
    
     
-        if($this->_doc->state != Document::STATE_NEW) {
-            $this->_doc->updateStatus(Document::STATE_SHIFTED);
+       
+    $this->_doc->updateStatus(Document::STATE_SHIFTED);
 
-        }
+        
    
      //   $this->_doc->save();
 
@@ -1914,7 +1913,15 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['arm'] = 1;
         $this->_doc->document_date = time();
         $this->_doc->headerdata['time'] = time();
-
+        $this->_doc->headerdata['table'] = $this->docpanel->listsform->table->getText();
+   
+        if($this->_tvars['tables']==1  && intval($this->_doc->headerdata['table']) ==0  ) {
+            $this->setError('Не вказано номер  столу');
+            return false;
+        }
+          
+        
+        
         $this->_doc->headerdata['contact'] = $this->docpanel->listsform->contact->getText();
         $this->_doc->notes = $this->docpanel->listsform->notes->getText();
         $this->_doc->customer_id = $this->docpanel->listsform->customer->getKey();
@@ -1923,7 +1930,6 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docpanel->listsform->customer->getText() . ' ' . $customer->phone;
         }
 
-        $this->_doc->headerdata['table'] = $this->docpanel->listsform->table->getText();
         $this->_doc->headerdata['pos'] = $this->_pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->_pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store;
@@ -2091,7 +2097,7 @@ class ARMFood extends \App\Pages\Base
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOOD);
 
-
+       
         if($cntorder>0) {
            return $this->jsonOK(array( 'cntorder' => $cntorder));               
 
@@ -2617,8 +2623,10 @@ class ARMFood extends \App\Pages\Base
         $food['delivery'] = $sender->fooddelivery->isChecked() ? 1 : 0;
         $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
         $food['diffbp'] = $sender->diffbp->isChecked() ? 1 : 0;
+        $food['bell'] = $sender->foodbell->isChecked() ? 1 : 0;
 
         $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
+
         $food['name'] = $sender->goodname->getText() ;
         $food['address'] = $sender->goodaddress->getText() ;
         $food['phone'] = $sender->goodphone->getText() ;
@@ -2773,5 +2781,16 @@ class ARMFood extends \App\Pages\Base
        
               
     }
-     
+    
+    
+    public  function afterRequest() {
+        parent::afterRequest() ;
+        if($this->docpanel->listsform->isVisible()) {
+           
+            $this->docpanel->listsform->btosave->setVisible($this->_doc->state < 4 || $this->_doc->state== 16); 
+            $this->docpanel->listsform->passprod->setVisible($this->_doc->state < 4 || $this->_doc->state== 16); 
+          
+        }
+        
+    }
 }

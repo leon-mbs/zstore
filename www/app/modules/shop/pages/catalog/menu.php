@@ -7,6 +7,8 @@ use App\Entity\Item;
 
 class Menu extends \Zippy\Html\WebPage
 {
+     
+    
     public function __construct($pm=0,$tn=0) {
         parent::__construct();
 
@@ -19,24 +21,34 @@ class Menu extends \Zippy\Html\WebPage
      
         $options = \App\System::getOptions('food');
        
-        $this->_tvars['alert']   = false ;     
+          
   
         if($pm=='tableno')  {
-            $pm=0;
-            $this->_tvars['alert']   = true ; 
             
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::ARMFOOD;
-            $n->dateshow = time();
-
-            $n->message = serialize(array('tableno' => $tn));
-
-            $n->save();                 
-        
+       
+            \App\Session::getSession()->tableno = intval($tn);
+            $pm=0;
+          
         }
-
- 
+        $t = intval( \App\Session::getSession()->tableno );
+      
+        $this->_tvars['showqr']  = false;
+        
+        if($t > 0) {
+             
+            
+          //  $this->_tvars['showqr']  = true;
+        //    $this->_tvars['sum']  = 0;
+         //   $this->_tvars['qr']  = "href=\"{$link}\" ";
+        }
+        
+              
+        
+    //    $this->_tvars['tableno']    = $this->tableno  ;
+        $this->_tvars['showbell']   = $t > 0 && $options['bell'] == 1;
+        
         $this->_tvars['list']   = $pm >0 ;
+           
         $this->_tvars['phone']   = $options['phone'] ;
         $this->_tvars['name']    = $options['name'] ;
         $this->_tvars['timepn']  = $options['timepn'] ;
@@ -117,4 +129,20 @@ class Menu extends \Zippy\Html\WebPage
  
     }
 
+    public function bellof($args, $post=null){
+       
+            $t = intval( \App\Session::getSession()->tableno );
+      
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::ARMFOOD;
+            $n->dateshow = time();
+
+            $n->message = serialize(array('tableno' => $t) );
+
+            $n->save();    
+            
+            return json_encode("", JSON_UNESCAPED_UNICODE);
+                
+    }
+    
 }

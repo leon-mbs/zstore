@@ -162,12 +162,11 @@ class GoodsIssue extends Document
 
 
         $parts = array();
-      //  $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
-        $dd =    doubleval($this->headerdata['totaldisc'])   ;
+        $am =   $this->getAmountReg()   ;
         $k = 1;   //учитываем  скидку
-        if ($dd > 0 && $this->amount > 0) {
-            $k = ($this->amount - $dd) / $this->amount;
-        }
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }   
 
         $amount = 0;
         foreach ($this->unpackDetails('detaildata') as   $item) {

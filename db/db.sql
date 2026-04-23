@@ -1573,7 +1573,7 @@ INSERT INTO customers ( customer_name, detail, email, phone, status, city, leads
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Склади', 'StoreList', 'Товари', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Номенклатура', 'ItemList', 'Товари', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Співробітники', 'EmployeeList', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Категорії товарів', 'CategoryList', 'Товари', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Категорії (групи) ТМЦ', 'CategoryList', 'Товари', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Контрагенти', 'CustomerList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Прибуткова накладна', 'GoodsReceipt', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Видаткова накладна', 'GoodsIssue', 'Продажі', 0);

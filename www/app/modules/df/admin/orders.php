@@ -82,11 +82,20 @@ class Orders extends \App\Pages\Base
        $this->_doc->user_id = $uid;
        $this->_doc->setHD('delayinprocess',null);  
        $this->_doc->save();                       
-       
-       $this->docpan->sform->emps->setValue(9);
+       $this->_doc->updateStatus(Document::STATE_INPROCESS);
+         
        $this->doclist->Reload() ;
        $this->docpan->setVisible(false) ;      
-   
+       $this->setSuccess('Вiдправлено') ;
+    
+        $n = new \App\Entity\Notify();
+        $n->user_id = $uid;
+        $n->sender_id = $user->user_id;
+        $n->dateshow = time();
+        $n->message = "Вам  призначено замовлення {$this->_doc->document_number}  " ;
+
+        $n->save();      
+       
     }
 
 }

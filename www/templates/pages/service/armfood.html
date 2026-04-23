@@ -400,7 +400,7 @@
                                 <div class="form-group  row ">
                                     <label class="col-4 col-form-label" for="table">Номер столу</label>
                                    <div class="col-7">
-                                    <input  style="width:100px;" zippy="table" class="form-control"  > 
+                                    <input pattern="[0-9]+"  style="width:100px;" zippy="table" class="form-control"  > 
                                    </div>
 
                                 </div>
@@ -485,10 +485,7 @@
                                       <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ml-4 mr-4">
                            
                                      
-                                        <div class="form-check form-check-inline mr-4">
-                                            <input zippy="passprod" class="form-check-input" type="checkbox"    > 
-                                            <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
-                                        </div>
+                                       
                                         {{#diffbp}}  
                                          {{#modeof}}  <br>  {{/modeof}} 
                                         <div class="form-check form-check-inline">
@@ -505,7 +502,12 @@
                                   {{/diffbp}}      
                             </div>
                            <div class=" col-12 col-md-6 d-flex justify-content-end pt-4">
-                        
+                                 {{^modeof}}
+                                 <div class="form-check form-check-inline mr-4">
+                                    <input zippy="passprod" class="form-check-input" type="checkbox"    > 
+                                    <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
+                                </div>
+                                  {{/modeof}}
                             <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success mr-4">
                             
                             <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
@@ -902,6 +904,7 @@
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
+                          
                            <div class="form-group  ">
                                 <label for="foodpricetypeout">Тип цiн на  винос</label>
                                 <select class="form-control" zippy="foodpricetypeout">
@@ -909,9 +912,15 @@
                                 </select>
                                 <small>Якщо вiдрiзняються  вiд основної</small>
                             </div>
+                          
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodtables">Показувати номери столикiв (в  кафе)</label>
+                               
+                            </div>
+                             <div class="form-check">
+                                <input zippy="foodbell" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="foodbell">Кнопка (в меню по QR)    виклику офiцiанта   </label>
                                
                             </div>
 
@@ -1094,7 +1103,8 @@
                 callPM('getMessages',null,null,(answer)=> 
                 {
                  
-                  
+                    if(!answer)  return
+                     
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
                         $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);

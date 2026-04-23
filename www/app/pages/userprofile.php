@@ -131,7 +131,7 @@ class UserProfile extends \App\Pages\Base
 
         $form->add(new TextInput('pserverlabel', $this->user->pserverlabel));
         $form->add(new ClickLink('pstestlabel'))->onClick($this, 'onPSTestlabel', true);
-        $form->add(new TextInput('pwsymlabel', $this->user->pwsymlabel));
+        $form->add(new TextInput('pwsymlabel', $this->user->pwsymlabel??32));
         $form->add(new SubmitButton('saveplabel'))->onClick($this, 'savePrinterlabelOnClick');
         $this->add($form);
 
@@ -272,7 +272,7 @@ class UserProfile extends \App\Pages\Base
         $this->printerlabel->pserverlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pstestlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pcplabel->setVisible($prtype!=0) ;
-        $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
+     //   $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
         $this->printerlabel->prturn->setVisible($prtype==0) ;
 
 

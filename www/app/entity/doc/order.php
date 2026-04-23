@@ -186,35 +186,26 @@ class Order extends \App\Entity\Doc\Document
       
             //оприходуем  с  производства
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
-
-                if ($item->autooutcome == 1) {    //комплекты
-                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
+                                                               
+                if ($item->autooutcome == 1) {     //резервируеем комплекты
+                    $item->setToProd($required,$this->headerdata['store'],$this->document_id,true);
+                  
+                    if ($item->quantity == $required) {
+                       continue;
+                    }                    
+                    
                 }
-
-
-                $price = $item->getProdprice();
-
-                if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
-                }
-                $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
-
-                $sc = new Entry($this->document_id, $required * $price, $required);
-                $sc->setStock($stock->stock_id);
-                $sc->tag=Entry::TAG_FROMPROD;
-                $sc->createdon=time();
-
-                $sc->save();
+               
             }
-       
         
-        
-            if (false == $item->checkMinus($item->quantity, $this->headerdata['store']) && $this->headerdata['store'] >0 ) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+            
+            
+            if ($item->quantity > $onstore ) {
+                throw new \Exception("На складі всього ".H::fqty($onstore) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
 
             }
- 
-
+            
+            
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {

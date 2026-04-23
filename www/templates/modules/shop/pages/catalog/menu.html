@@ -2,7 +2,7 @@
     <head>
         <meta charset="utf-8">
         <meta lang="uk" >
-
+        <meta name="robots" content="noindex">   
         <title>{{name}} | Меню</title>
         <meta name="description" content="Меню кафе">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,7 +14,9 @@
      
        
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?t=3" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
+        <script src="/assets/js/app.js" type="text/javascript"></script>
         
        
     </head>
@@ -124,9 +126,9 @@
     }
     </style>
     
-      <div class="container   ">
-           
-        <div class="row mt-2">
+      <div class="container  pt-2 ">
+         
+        <div class="row ">
     
           
                      <div class="col-10 col-lg-9">
@@ -139,10 +141,10 @@
                      {{/phone}}
                   </div>  
                
-                      
+              {{^list}}            
             <div class="row ">           
-                    {{^list}}
-                    <div class="col-12 mt-4 d-flex justify-content-center  ">
+                  
+                     <div class="col-12 mt-4 d-flex justify-content-center  ">
                           <a class="btn btn-secondary w-50 phone" href="/menu/1"> {{bmname}} </a>    
                     </div>
                       {{#secondm}}
@@ -160,9 +162,10 @@
                           <a class="btn btn-secondary  w-50 phone" href="/menu/4"> {{smname4}} </a>    
                     </div>
                       {{/secondm4}}                    
-                    {{/list}}  
+              
                 </div>
-             
+                  {{/list}} 
+                    
                  {{#list}}
                 <div class="col-12  tab_menu  ">
                  <b> <a   href="/menu/1"> {{bmname}} </a> &nbsp;
@@ -177,6 +180,7 @@
                     {{/secondm4}}  
                   </b>
                 </div> 
+                
                 <div class="col-12   ">
                  <ul class="nav nav-tabs">
                    {{#cats}}
@@ -228,8 +232,21 @@
                  {{/list}}    
                 
              
+              {{^list}}       
                 
-                
+                <div class="row phone "> 
+                     {{#showbell}}           
+                    <div class="col-12 mt-4 d-flex justify-content-center  ">
+                          <button id="bellbtn"  onclick="bellof()" г   class="btn btn-info w-50 phone"  ><i class="fa fa-bell-concierge"></i> Викликати офiцiанта   </button>    
+                    </div>  
+                      {{/showbell}}   
+                      {{#showqr}}            
+                    <div class="col-12 mt-4 d-flex justify-content-center  ">
+                          <a {{{qr}}}  class="btn btn-info w-50 phone"  ><i class="fa fa-credit-card "></i> Оплатити замовлення ({{sum}} грн)   </a>    
+                    </div>  
+                      {{/showqr}}                
+                 </div>
+                                   
                 <div class="row phone ">                
                     <div class="col-12  d-flex justify-content-center mt-4">
                          <b  >Адреса </b>   
@@ -266,10 +283,21 @@
               
                 
             </div>
-             
+      {{/list}}    
+                         
         </div>
     
-   
+        <script>
+        
+       function bellof() {
+        
+            callPM('bellof',[],null,(data)=> 
+            {
+                 $("#bellbtn").attr('disabled','on');
+            } )
+              
+       }       
+        </script>
         
     </body>
 </html>        

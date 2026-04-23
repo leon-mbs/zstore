@@ -114,7 +114,7 @@ class SerList extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
-        $row->add(new Label('amount', H::fa($doc->amount)));
+        $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('customerphone', $doc->headerdata['customerphone'] ?? ''));

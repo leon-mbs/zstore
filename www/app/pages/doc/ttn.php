@@ -172,8 +172,24 @@ class TTN extends \App\Pages\Base
          
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
+                $this->_doc->headerdata["totaldisc"]= $basedoc->headerdata["totaldisc"];
+                $this->_doc->headerdata["bonus"]= $basedoc->headerdata["bonus"];
+       
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                   
+                     $k = 1;    
+                     /*  //учитываем  скидку
+                     if ($basedoc->headerdata["totaldisc"] > 0 && $basedoc->amount > 0) {
+                         $am= $basedoc->amount;
+                         $am = $am - $basedoc->getHD("totaldisc",0) ; 
+                         $am = $am - $basedoc->getHD("bonus",0) ; 
+
+                         if ($am>=0) {
+                            $k = $am / $basedoc->amount;
+                         }
+                     }
+                       */
                     if ($basedoc->meta_name == 'Order') {
 
                         $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
@@ -220,17 +236,8 @@ class TTN extends \App\Pages\Base
 
                         $this->OnChangeCustomer($this->docform->customer);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $i => $it) {
-                            $it->price = $it->price * $k;
-                            $this->_itemlist[$i] = $it;
-                        }
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                      
                         $this->calcTotal();
 
                         if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
@@ -257,18 +264,8 @@ class TTN extends \App\Pages\Base
                  
                         $this->OnChangeCustomer($this->docform->customer);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $it) {
-                            $it->price = $it->price * $k;
-                            $this->_itemlist[$it->item_id] = $it;
-                        }
-
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+        
                         $this->calcTotal();
                     }
 
@@ -291,19 +288,12 @@ class TTN extends \App\Pages\Base
                      
                       
                         $this->OnChangeCustomer($this->docform->customer);
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
+    
                         $this->docform->nostore->setChecked(true);
                     
 
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
-                            $item->price = $item->price * $k;
-                            $this->_itemlist[ ] = $item;
-                        }
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+     
                         $this->calcTotal();
                     }
 
@@ -325,23 +315,16 @@ class TTN extends \App\Pages\Base
 
                        
                         $this->OnChangeCustomer($this->docform->customer);
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
-
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
-                            $item->price = $item->price * $k;
-                            $this->_itemlist[] = $item;
-                        }
+             
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+     
                         $this->calcTotal();
                     }
                     $this->_doc->headerdata["payamount"]   = $basedoc->payamount;
                     
                     
                 }
+                
             }
         }
 
