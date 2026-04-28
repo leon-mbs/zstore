@@ -10,13 +10,14 @@ use ZCL\DB\DB as DB;
  */
 class Helper
 {
-    public const STAT_HIT_SHOP = 1;     //посещение  онлайн  каталога
-    public const STAT_ORDER_SHOP = 2;     //заказы  в  онлайн каталоге
-    public const STAT_VIEW_ITEM = 3;     //просмотр товара
-    public const STAT_PROMO = 4;     //промо код
-    public const STAT_NEW_SHOP = 5;     //уникальнных  посетителей
-    public const STAT_CARD_SHOP = 6;     //позиций в  корзине
+    public const STAT_HIT_SHOP     = 1;     //посещение  онлайн  каталога
+    public const STAT_ORDER_SHOP   = 2;     //заказы  в  онлайн каталоге
+    public const STAT_VIEW_ITEM    = 3;     //просмотр товара
+    public const STAT_PROMO        = 4;     //промо код
+    public const STAT_NEW_SHOP     = 5;     //уникальнных  посетителей
+    public const STAT_CARD_SHOP    = 6;     //позиций в  корзине
     public const STAT_DOC_ISEDITED = 7;     //редактируется документ
+    public const STAT_DOC_TMP      = 8;     //временные  данные
 
     private static $meta = array(); //кеширует метаданные
 
@@ -493,8 +494,6 @@ class Helper
         $logger->error($msg);
     }
 
- 
-
     /**
      * Возвращает склад  по  умолчанию
      *
@@ -812,7 +811,6 @@ class Helper
         return 10;
     }
 
-
     /**
      * список валют
      *
@@ -952,7 +950,6 @@ class Helper
         die;
     }
 
-
     public static function exportExcelFromCSV($csvfile) {
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
@@ -989,6 +986,7 @@ class Helper
      * @param mixed $key
      * @return mixed
      */
+
     public static function getKeyVal($key, $def = "") {
         if(strlen($key) == 0) {
             return;
@@ -1027,7 +1025,6 @@ class Helper
         return false;
     }
 
-
     /**
      * Вставка  данных в  таблицу ключ-значение
      *
@@ -1049,7 +1046,6 @@ class Helper
 
     }
 
-
     /**
      * Вставка  данных  в  таблицу  статистики
      *
@@ -1069,7 +1065,6 @@ class Helper
 
 
     }
-
 
     /**
      * Печать  этикеток     
@@ -1261,8 +1256,6 @@ class Helper
         }
     }
 
-
-  
     //"соль" для  шифрования
     public static function getSalt() {
         $salt = self::getKeyVal('salt');
@@ -1320,8 +1313,6 @@ class Helper
 
         return $decryption;
     }
-
-
  
     /**
      * выполняет перенос  данных на  новой  версии
@@ -1572,7 +1563,27 @@ class Helper
            
         }        
   
-        
+        $migration821 = \App\Helper::getKeyVal('migration821'); 
+        if($migration821 != "done"  )    {
+            Helper::log("Міграція  8.2.1");
+            $conn->BeginTrans();
+            try {
+                $conn->Execute("update options set optvalue ='8.2.0' where optname='version'  and optvalue='8.1.0'");
+      
+                \App\Helper::setKeyVal('migration821', "done");
+                $conn->CommitTrans();
+
+            } catch(\Throwable $ee) {
+                
+                $conn->RollbackTrans();
+                System::setErrorMsg($ee->getMessage());
+                $logger->error($ee->getMessage());
+                return;
+            }
+
+
+        }
+      
   
     }
 

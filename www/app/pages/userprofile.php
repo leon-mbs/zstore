@@ -167,13 +167,15 @@ class UserProfile extends \App\Pages\Base
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
         $this->user->usemobileprinter = $this->profileform->usemobileprinter->isChecked() ? 1 : 0;
-
-        if (!$this->isError()) {
-
-            $this->user->save();
-            $this->setSuccess('Збережено');
-            System::setUser($this->user);
+        if (strlen($this->user->phone) > 0 && strlen($this->user->phone) != \App\Helper::PhoneL()) {
+            $this->setError("Довжина номера телефона має бути ".\App\Helper::PhoneL()." цифр");
+            return;
         }
+   
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+       
     }
 
     //записать  пароль

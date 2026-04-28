@@ -35,10 +35,10 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['pustore']??0));
       
         $pt=[];
-        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[1] = 'Оплата на сторонi IM ';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата в Чеку або ВН';
-        
+        $pt[3] = 'Оплата касовим  чекои,РФ або ВН';
+         
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['pupaytype']??0));
 
 
