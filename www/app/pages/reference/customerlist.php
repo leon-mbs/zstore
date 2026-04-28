@@ -423,7 +423,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->phone = \App\Util::handlePhone($this->_customer->phone);
 
         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Довжина номера телефона має бути ".\App\Helper::PhoneL()." цифр");
             return;
         }
         $c = Customer::getByPhone($this->_customer->phone);

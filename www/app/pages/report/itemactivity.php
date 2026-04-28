@@ -19,7 +19,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 
 /**
- * Движение товара
+ * Движение  по  складу
  */
 class ItemActivity extends \App\Pages\Base
 {
@@ -125,8 +125,7 @@ class ItemActivity extends \App\Pages\Base
         $i = 1;
         $detail = array();
         $conn = \ZDB\DB::getConnect();
-        $gd = " GROUP_CONCAT(distinct dc.document_number) ";
-     
+       
 
         $sql = "
          SELECT  t.*,
@@ -174,7 +173,7 @@ class ItemActivity extends \App\Pages\Base
           st.itemname,
           st.item_code,
          
-    
+          GROUP_CONCAT(distinct sc.document_id)   as docs,
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
@@ -226,7 +225,7 @@ class ItemActivity extends \App\Pages\Base
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
-
+            $docs = $row['docs'];
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
@@ -235,9 +234,7 @@ class ItemActivity extends \App\Pages\Base
             $bqin = $bqin + $row['obin'];
             $bqout = $bqout + $row['obout'];
 
-
-
-
+   
 
         }
 

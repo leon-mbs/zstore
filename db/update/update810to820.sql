@@ -29,3 +29,4 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
  
 delete from options where  optname='version' ;
 insert into options (optname,optvalue) values('version','8.2.0'); 
+

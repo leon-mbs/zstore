@@ -44,6 +44,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('editlogin'));
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
+        $this->editpan->editform->add(new TextInput('editphone'));
         $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', 'disabled<>1', 'rolename')));
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
@@ -84,8 +85,11 @@ class Users extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
+        $this->_tvars['otpcode']  = false;
+        
         $this->user = $sender->getOwner()->getDataItem();
         $this->editpan->editform->editemail->setText($this->user->email);
+        $this->editpan->editform->editphone->setText($this->user->phone);
         $this->editpan->editform->editlogin->setText($this->user->userlogin);
         $this->editpan->editform->editrole->setValue($this->user->role_id);
 
@@ -93,6 +97,10 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->edithidemenu->setChecked($this->user->hidemenu);
         $this->editpan->editform->editdisabled->setChecked($this->user->disabled);
 
+        if(strlen($this->user->otpcode )>0) {
+            $this->_tvars['otpcode']  = $this->user->otpcode;
+        }
+        
         $this->editpan->editform->brow->Reload();
     }
 
@@ -107,7 +115,14 @@ class Users extends \App\Pages\Base
         $emp = \App\Entity\Employee::getByLogin($this->user->userlogin);
 
         $this->user->email = $this->editpan->editform->editemail->getText();
+        $this->user->phone = $this->editpan->editform->editphone->getText();
         $this->user->userlogin = $this->editpan->editform->editlogin->getText();
+        
+        if (strlen($this->user->phone) > 0 && strlen($this->user->phone) != \App\Helper::PhoneL()) {
+            $this->setError("Довжина номера телефона має бути ".\App\Helper::PhoneL()." цифр");
+            return;
+        }
+       
         if ($emp != null && $this->user->userlogin != $emp->login) {
             $emp->login = $this->user->userlogin;
             $emp->save();

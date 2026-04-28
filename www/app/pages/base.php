@@ -32,7 +32,7 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-      
+       
         //миграция  данных
         if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
             Helper::migration() ;

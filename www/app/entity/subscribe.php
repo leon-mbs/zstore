@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Helper as H;
 use App\System;
+use App\Comm;
 
 /**
  * Класс-сущность  подписка  на  событие
@@ -395,7 +396,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
          
             if($this->reciever_type == self::RSV_WH) {
-                $ret =   self::sendHook($this->url, $text) ;
+                $ret =   Comm::sendHook($this->url, true, $text) ;
             }
 
             if(strlen($ret)>0) {
@@ -696,7 +697,7 @@ class Subscribe extends \ZCL\DB\Entity
     }
 
      
-    
+    //todo
     public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
 
@@ -988,39 +989,5 @@ class Subscribe extends \ZCL\DB\Entity
         }
     }
 
-    
-    public static function sendHook($url, $text) {
-
-        try {
-            
-   
-                $curl = curl_init($url);
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $text);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-     //           $output = curl_exec($curl);
-                if (curl_errno($curl) > 0) {
-
-                    return 'Curl error: ' . curl_error($curl);
-                }
-                $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-                if ($status_code >= 300 ) {
-                    return 'http code: ' . $status_code;
-                }
-                if ($status_code == 0 ) {
-                    return 'http code:0 ' ;
-                }
-                 
-                
-                curl_close($curl);
-                return '';
-
-        } catch(\Exception $e) {
-
-            return $e->getMessage();
-        }
-    }
     
 }

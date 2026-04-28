@@ -30,6 +30,7 @@ class User extends \ZCL\DB\Entity
         $this->pagesize = 25;
         $this->createdon = time();
         $this->mainpage = '\App\Pages\Blank';
+         
     }
 
     /**
@@ -125,6 +126,8 @@ class User extends \ZCL\DB\Entity
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
+        $this->otpcode = $options['otpcode']?? '';
+      
 
         $this->scalescript = base64_decode( $options['scalescript']?? '');
 
@@ -177,6 +180,7 @@ class User extends \ZCL\DB\Entity
          
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
+        $options['otpcode'] = $this->otpcode   ;
 
         $options['scalescript'] = base64_encode($this->scalescript )   ;
 

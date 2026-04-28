@@ -230,7 +230,8 @@ class TTN extends \App\Pages\Base
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
-                            
+                          //  $order->unreserve();  
+                         
                         }
 
 
@@ -240,9 +241,7 @@ class TTN extends \App\Pages\Base
                       
                         $this->calcTotal();
 
-                        if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
-                            $order->updateStatus(Document::STATE_INSHIPMENT);
-                        }
+                       
 
 
                     }
@@ -654,7 +653,12 @@ class TTN extends \App\Pages\Base
 
                     }
                     if($basedoc->meta_name == 'Order') {
-                        $basedoc->unreserve();     
+                        
+                        if($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP) {
+                            $basedoc->updateStatus(Document::STATE_INSHIPMENT);
+                        }  
+                        $basedoc->unreserve();                        
+                           
                     }            
                                    
                     
