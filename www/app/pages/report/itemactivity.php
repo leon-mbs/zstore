@@ -49,6 +49,7 @@ class ItemActivity extends \App\Pages\Base
         $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
         
         $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+        $this->filter->add(new CheckBox('fdet' ));
    
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
         $this->filter->item->onChange($this, "onItem");
@@ -109,6 +110,7 @@ class ItemActivity extends \App\Pages\Base
         $snumber = $this->filter->snumber->getText();
         $emp = $this->filter->searchemp->getValue();
         $cat = $this->filter->searchcat->getValue();
+        $det = $this->filter->fdet->isChecked();
 
 
         $it = "1=1";
@@ -137,8 +139,7 @@ class ItemActivity extends \App\Pages\Base
          FROM entrylist_view sc2
           JOIN store_stock_view st2
             ON sc2.stock_id = st2.stock_id
-          JOIN documents dc2
-            ON sc2.document_id = dc2.document_id
+           
               WHERE st2.item_id = t.item_id  
               
               " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
@@ -156,8 +157,7 @@ class ItemActivity extends \App\Pages\Base
          FROM entrylist_view sc3
           JOIN store_stock_view st3
             ON sc3.stock_id = st3.stock_id
-          JOIN documents dc3
-            ON sc3.document_id = dc3.document_id
+          
               WHERE st3.item_id = t.item_id  
              " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
              " . ($emp > 0 ? " AND st3.emp_id = {$emp}  " : "") . "  
@@ -183,8 +183,7 @@ class ItemActivity extends \App\Pages\Base
         FROM entrylist_view sc
           JOIN store_stock_view st
             ON sc.stock_id = st.stock_id
-          JOIN documents dc
-            ON sc.document_id = dc.document_id
+         
               WHERE {$it}  
            " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
            " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
@@ -217,16 +216,78 @@ class ItemActivity extends \App\Pages\Base
             $r = array(
                 "code"  => $row['item_code'],
                 "name"  => $row['itemname'],
-
+                "itemrow"      =>false,
+                 
                 "date"      => \App\Helper::fd(strtotime($row['dt'])),
-                "documents" => '',
+              
                 "in"        => H::fqty($row['begin_quantity']),
                 "obin"      => H::fqty($row['obin']),
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
-            $docs = $row['docs'];
-            $detail[] = $r;
+            
+            if($det) {
+               $docs = $row['docs'];
+               $r['date']  ='';
+               $r['itemrow']  =true;
+               $detail[] = $r;
+             
+              $sql ="          select
+              
+             
+               date(sc.document_date) AS dt,
+               dd.document_number ,
+              SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
+              SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout 
+             
+            FROM entrylist_view sc
+              JOIN store_stock_view st
+                ON sc.stock_id = st.stock_id
+              JOIN documents dd 
+                ON sc.document_id = dd.document_id
+               
+                  WHERE {$it}  
+               " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
+               " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
+               " . ($cat > 0 ? " AND st.cat_id = {$cat}  " : "") . "  
+                 AND  sc.document_id in({$docs}) 
+                 AND  st.item_id =  {$row['item_id']} 
+                                          
+                  GROUP BY   
+                            dd.document_number ,
+
+                           DATE(sc.document_date)  
+                  ORDER BY DATE(sc.document_date)
+            ";      
+        
+                 $rsd = $conn->Execute($sql);
+                 $bd=  $row['begin_quantity'] ; 
+                 foreach ($rsd as $rowd) {
+                     
+                 
+                  $r = array(
+                     
+                    "date"      => H::fd(strtotime($rowd['dt'])),
+                    "docnumber"      =>$rowd['document_number'],
+                    "itemrow"      =>false,
+                  
+                    "in"        => H::fqty($bd),
+                    "obin"      => H::fqty($rowd['obin']),
+                    "obout"     => H::fqty($rowd['obout']),
+                  
+                );    
+                
+                $bd = $bd + $r['obin'] - $r['obout'] ;
+                $r['out']  = H::fqty($bd) ;
+                
+                $detail[] = $r;  
+                        
+             }  
+      
+            } else {
+              $detail[] = $r;  
+            }
+            
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
             $baout = $baout + $row['oboutamount'];
@@ -255,6 +316,7 @@ class ItemActivity extends \App\Pages\Base
         $header['bqout'] = H::fqty($bqout);
         $header['bqend'] = H::fqty($bq + $bqin - $bqout);
         $header['showqty'] =$itemid >0 ;
+        $header['docs'] = $det ;
 
         $report = new \App\Report('report/itemactivity.tpl');
 

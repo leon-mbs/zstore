@@ -1613,7 +1613,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Рахунок, вхідний', 'InvoiceCust', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Рахунок-фактура', 'Invoice', 'Продажі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Імпорт', 'Import', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Рух ТМЦ', 'StockList', 'Склад', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Рух ТМЦ', 'StockList', 'Склад', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Касовий чек', 'POSCheck', 'Продажі', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'ТМЦ в дорозі', 'CustOrder', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списання ТМЦ', 'OutcomeItem', 'Склад', 0);

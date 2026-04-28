@@ -85,7 +85,7 @@ class Users extends \App\Pages\Base
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
-        $this->_tvars['otpcode']  = false;
+        $this->_tvars['otpcode']  = false; //todo
         
         $this->user = $sender->getOwner()->getDataItem();
         $this->editpan->editform->editemail->setText($this->user->email);
