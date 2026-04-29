@@ -1584,6 +1584,26 @@ class Helper
 
         }
       
+        $migration822 = \App\Helper::getKeyVal('migration822'); 
+        if($migration822 != "done"  )    {
+            Helper::log("Міграція  8.2.2");
+            $conn->BeginTrans();
+            try {
+                $conn->Execute("update metadata set disabled =1  where meta_name='StockList'  ");
+      
+                \App\Helper::setKeyVal('migration822', "done");
+                $conn->CommitTrans();
+
+            } catch(\Throwable $ee) {
+                
+                $conn->RollbackTrans();
+                System::setErrorMsg($ee->getMessage());
+                $logger->error($ee->getMessage());
+                return;
+            }
+
+
+        }
   
     }
 
