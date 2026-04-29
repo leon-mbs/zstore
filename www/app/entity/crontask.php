@@ -162,7 +162,7 @@ class CronTask extends \ZCL\DB\Entity
                 if($task->tasktype==self::TYPE_SUBSEMAIL) {
                     $msg =unserialize($task->taskdata);
 
-                    $ret = \App\Entity\Subscribe::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
+                    $ret = \App\Comm::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
                     if(strlen($ret)==0) {
                         $done = true;
                     }
@@ -175,9 +175,9 @@ class CronTask extends \ZCL\DB\Entity
                     $user = \App\Entity\User::load($data['user_id']);
 
                     if(strlen($user->chat_id) >0) {
-                        $ret= \App\Entity\Subscribe::sendBot($user->chat_id, $text) ;
+                        $ret= \App\Comm::sendBot($user->chat_id, $text) ;
                     } elseif(strlen($user->email) >0  ) {
-                        $ret= \App\Entity\Subscribe::sendEmail($user->email, $text, "ZStore  notify") ;
+                        $ret= \App\Comm::sendEmail($user->email, $text, "ZStore  notify") ;
                     }
                     if(strlen($ret)==0) {
                         $done = true;

@@ -16,7 +16,7 @@
     "picqer/php-barcode-generator": "2.4.2",
     "endroid/qr-code": "~5.1.0",
     "masterexploder/phpthumb": "2.1",
-    "phpoffice/phpspreadsheet": "^5.1.0",
+    "phpoffice/phpspreadsheet": "^5.5.0",
     "automattic/woocommerce": "3.1.0",
     "symfony/polyfill-mbstring": "^1.29.0",
     "symfony/polyfill-uuid": "^1.29.0",

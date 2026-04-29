@@ -145,8 +145,39 @@
 
                     <button type="submit"   class="btn btn-primary">Зберегти</button>
                 </form>
-              
-            
+                
+                {{#hideblock}}
+                 <h5>Двофакторна аутентифікація</h5>   
+                 <small class="compact">Відправка коду підтверження після логіну. Якщо нічого не вибрано - не використовується </small>
+                <form   zippy="otpform">
+                    <div class="form-check">
+                        <input zippy="otpemail" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="otpemail">E-Mail </label>
+                    </div>  
+                       
+                    <div class="form-check">
+                        <input zippy="otpsms" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="otpsms">SMS </label>
+                    </div>  
+                    <div class="form-check">
+                        <input zippy="otptg" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="otptg">Телеграм </label>
+                    </div>  
+                           
+                   <div class="form-group ">         
+                     
+                   <button zippy="otpsave" type="submit"   class="btn btn-primary">Зберегти</button>
+                   </div>
+                    <a  zippy="otptest" >Тестова відправка </a> <br>   
+                    <span>Резервний код:</span> <b zippy="otpcode">44444</b> 
+                     <small> 
+                    <a zippy="otprefresh" >  <i title="Оновити" class="fa fa-refresh"></i> </a>  
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                title=" Зберегти на випадок якщо відправка не спрацює "></i>
+                   </small>    
+                   
+                </form>
+               {{/hideblock}}
             </div>
             </div>
             <div class="col-10  col-md-4 col-xl-2">

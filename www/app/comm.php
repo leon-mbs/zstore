@@ -130,15 +130,7 @@ class Comm
         }
     }
 
-    public static function sendNotify($user_id, $text) {
-        $n = new \App\Entity\Notify();
-        $n->user_id = $user_id;
-        $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
-        $n->message = $text;
-
-        $n->save();
-    }
-
+   
     public static function sendBot($chat_id, $text, $doc=null, $ishtml=false) {
         $bot = new \App\ChatBot(\App\System::getOption("common", 'tbtoken')) ;
         $bot->sendMessage($chat_id, $text,$ishtml)  ;

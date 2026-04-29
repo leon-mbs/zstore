@@ -13,6 +13,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use App\Entity\User;
@@ -88,15 +89,29 @@ class UserProfile extends \App\Pages\Base
 
         //форма   пароля
 
+     
         $form = new Form('passwordform');
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
-           
-        
-        
+         //форма  OTP
+        $form = new Form('otpform');       
+        $form->add(new CheckBox('otpemail', $this->user->otpemail));
+        $form->add(new CheckBox('otpsms', $this->user->otpsms));
+        $form->add(new CheckBox('otptg', $this->user->otptg));
+        $form->add(new SubmitButton('otpsave'))->onClick($this, 'saveOtpOnClick');
+        $form->add(new SubmitLink('otprefresh'))->onClick($this, 'refreshOtpOnClick');
+        $form->add(new SubmitLink('otptest'))->onClick($this, 'testOtpOnClick');
+        if(strlen($this->user->otpcode)==0){
+             $this->user->otpcode = rand(100000,999999) ;
+             $this->user->save();
+        } 
+        $form->add(new Label('otpcode',$this->user->otpcode));
+     
+        $this->add($form);
+   
              
      
         if(strlen($this->user->prtype) == 0) {
@@ -229,6 +244,7 @@ class UserProfile extends \App\Pages\Base
 
 
     }
+
     public function onPSTest($sender) {
 
         try {
@@ -279,6 +295,7 @@ class UserProfile extends \App\Pages\Base
 
 
     }
+
     public function onPSTestlabel($sender) {
         $prtype = (int)$this->printerlabel->prtypelabel->getValue();
  
@@ -309,7 +326,6 @@ class UserProfile extends \App\Pages\Base
 
     }
 
-
     public function savePrinterlabelOnClick($sender) {
 
 
@@ -336,4 +352,24 @@ class UserProfile extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\UserProfile");               
          
     }
+    
+    public function saveOtpOnClick($sender) {
+             
+         
+    }
+    
+    public function refreshOtpOnClick($sender) {
+        $this->user->otpcode = rand(100000,999999) ;
+        $this->user->save();
+
+        $this->otpform->otpcode->setText($this->user->otpcode);
+         
+    }
+
+    public function testOtpOnClick($sender) {
+             
+         
+    }
+    
+    
 }
