@@ -550,7 +550,7 @@ class Base extends \Zippy\Html\WebPage
     public function sendSMSCode($args, $post) {
 
 
-        $ret = \App\Entity\Subscribe::sendSMS($args[0], $args[1])  ;
+        $ret =  \App\Comm::sendSMS($args[0], $args[1])  ;
         return $this->jsonOK($ret ?? "") ;
 
     }

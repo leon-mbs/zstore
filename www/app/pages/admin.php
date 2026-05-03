@@ -193,7 +193,7 @@ class Admin extends \App\Pages\Base
     public function sendSms($sender) {
         $phone = trim( $this->sendform->phone->getText() );
         try{
-            \App\Entity\Subscribe::sendSMS($phone,"test sms");
+            \App\Comm::sendSMS($phone,"test sms");
         } catch(\Exception $e) {
             H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
@@ -206,7 +206,7 @@ class Admin extends \App\Pages\Base
     public function sendBot($sender) {
         $chat_id = trim( $this->sendform->chat_id->getText() );
         try{
-            \App\Entity\Subscribe::sendBot($chat_id,"test bot");
+            \App\Comm::sendBot($chat_id,"test bot");
         } catch(\Exception $e) {
             H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;

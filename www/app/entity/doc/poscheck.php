@@ -309,6 +309,9 @@ class POSCheck extends Document
             if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
             }
+            if(($this->headerdata['bonus']??0) >0 && $payed == 0 ) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date );
+            }
         }
 
 

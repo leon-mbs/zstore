@@ -49,7 +49,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $p= substr(base64_encode(md5(time())), 0, 8);
         $c->passw = $p;
         $c->save();
-        $ret = \App\Entity\Subscribe::sendSMS($phone, "ZStore: новий пароль " . $p);
+        $ret = \App\Comm::sendSMS($phone, "ZStore: новий пароль " . $p);
         if(strlen($ret)  >0) {
             \App\Helper::logerror($ret) ;
             $this->setError('SMS error') ;

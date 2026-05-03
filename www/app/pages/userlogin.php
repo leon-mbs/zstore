@@ -10,7 +10,10 @@ use Zippy\Html\Form\TextInput ;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
-    private $cntlogin = 0;
+    private $_user = null;
+    private $_otpcode = null;
+    private $_otptime = null;
+    private $_cntlogin = 0;
 
     public function __construct() {
         parent::__construct();
@@ -74,41 +77,15 @@ class UserLogin extends \Zippy\Html\WebPage
 
         if (strlen($login) > 0 && strlen($password) > 0) {
 
-            $user = Helper::login($login, $password);
+            $this->_user = Helper::login($login, $password);
 
-            if ($user instanceof User) {
-                \App\Session::getSession()->clean();
-                $user->lastactive = time();
-                $user->save();
-                System::setUser($user);
-                Helper::log('Login: '.$user->username);
-                
-                $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
-                $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
-                //App::$app->getResponse()->toBack();
-                if ($this->loginform->remember->isChecked()) {
-                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 14);
-                } else {
-                    setcookie("remember", '', 0);
-                }
-                if (($_COOKIE['branch_id'] ?? 0) > 0) {
-                    System::getSession()->defbranch = $_COOKIE['branch_id'];
-                }
-             
-                \App\System::checkUpdate()  ;
-                
-                App::RedirectHome();
-                /* 
-                $modules = \App\System::getOptions("modules");
-
-                if (($modules['shop'] ?? 0)== 1) {
-                    App::Redirect('\App\Pages\Main');
-                } else {
-                    App::RedirectHome();
-                }    
-                */
+            if ($this->_user instanceof User) {
+       
+                $this->successLogin() ;
                 return;
-            } else {
+            } 
+            
+            else {
 
                 $this->setError('Невірний логін або пароль');
 
@@ -119,6 +96,32 @@ class UserLogin extends \Zippy\Html\WebPage
         $sender->userpasswo->setText('');
     }
 
+    public function successLogin() {
+        \App\Session::getSession()->clean();
+        $this->_user->lastactive = time();
+        $this->_user->save();
+        System::setUser($this->_user);
+        Helper::log('Login: '.$this->_user->username);
+        
+     //   $_SESSION['user_id'] = $this->_user->user_id; //для  использования  вне  Application
+      //  $_SESSION['userlogin'] = $this->_user->userlogin; //для  использования  вне  Application
+
+        if ($this->loginform->remember->isChecked()) {
+            setcookie("remember", $this->_user->user_id . '_' . md5($this->_user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 14);
+        } else {
+            setcookie("remember", '', 0);
+        }
+        if (($_COOKIE['branch_id'] ?? 0) > 0) {
+            System::getSession()->defbranch = $_COOKIE['branch_id'];
+        }
+        if($this->_user->rolename=="admins") {
+             \App\System::checkUpdate()  ; 
+        }
+      
+        
+        App::RedirectHome();        
+    }
+ 
     public function beforeRequest() {
         parent::beforeRequest();
 
@@ -134,8 +137,8 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     private function counter() {
-        $this->cntlogin++;
-        if ($this->cntlogin == 5) {
+        $this->_cntlogin++;
+        if ($this->_cntlogin == 5) {
             $msg = "Багато невдалих авторизацій";
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;

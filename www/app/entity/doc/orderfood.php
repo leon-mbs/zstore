@@ -241,10 +241,9 @@ class OrderFood extends Document
         $conn->Execute("delete from empacc  where  document_id=" . $this->document_id);
         
         
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+        if ( ( $this->headerdata['payment'] > 0 && $this->payed > 0 )  ||  $this->headerdata['bonus'] > 0  ) {
 
-
-
+            
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
