@@ -292,22 +292,18 @@ class System
     * 
     */
     public static function checkVersion() {
-        /*
-        $phpv =   phpversion()  ;
-        $phpv = substr(str_replace('.','',$phpv),0,2) ;
-       
-        $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
-    
-        $v = @file_get_contents("https://zippy.com.ua/update.php".$nocache);
+ 
+        $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
+        if($v == false) {
+           \App\Helper::logerror("Недоступний файл 'https://zippy.com.ua/updates/version.json'") ;
+           return false;
+        }
         $data = @json_decode($v, true);
         if(!is_array($data)) {
-            $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
-            $data = @json_decode($v, true);
-        }   
-        */
-        $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
-        $data = @json_decode($v, true);
-   
+           \App\Helper::logerror("Невiрний формат  файлу 'https://zippy.com.ua/updates/version.json'") ;
+           return false;
+        }
+ 
         return $data;     
     }
 }
