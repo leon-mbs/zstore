@@ -43,7 +43,7 @@ class items extends JsonRPC
         $list = array();
         $conn = \ZDB\DB::getConnect();
 
-        $res = $conn->GetCol("select item_code from items order  by  item_code");
+        $res = $conn->GetCol("select distinct item_code from items order  by  item_code");
         foreach ($res as $code) {
             if (strlen($code) > 0) {
                 $list[] = $code;
@@ -123,7 +123,7 @@ class items extends JsonRPC
 
         $sql = "select  item_code,coalesce(sum(qty),0)  as qty from store_stock_view ";
         if ($args['store_id'] > 0) {
-            $sql .= " and store_id=" . $args['store_id'];
+            $sql .= " where store_id=" . $args['store_id'];
         }
         $sql .= " group by   item_code";
         $res = $conn->Execute($sql);
