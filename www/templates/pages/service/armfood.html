@@ -154,7 +154,7 @@
 
                         </div> 
                         <div    class="col-12 mb-2">
-                          <a class="btn btn-secondary btn-sm" zippy="stopcat">Закрити меню</a>  
+                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">Закрити меню</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
                         </div>           
                     </div >        
                     <div   zippy="prodpan" class="row  mt-4">
@@ -179,7 +179,7 @@
 
                         </div>   
                           <div    class="col-12 mt-2">
-                           <a class="btn btn-secondary btn-sm" zippy="stopprod">Закрити меню</a>  
+                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">Закрити меню</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
                      </div>       
                     </div > 
                     <div   zippy="varprodpan" class="row  mt-4">
@@ -208,7 +208,7 @@
 
                     <div class="card ">        
                         <form zippy="navform" class="form-inline   ">                   
-                            <input  zippy="baddnewpos"  type="submit" value="Додати позицiю  "   class="btn btn-info mr-4"> 
+                            <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info mr-4"> 
 
                            <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
@@ -875,7 +875,7 @@
                 </div>
             </div>
         </div>      
-         <form zippy="optionsform"  >
+        <form zippy="optionsform"  >
                    
                   <div class="row">
                         <div class="col-12 col-md-4 col-xl-3">
@@ -1068,6 +1068,46 @@
                </div> 
                
          </div>
+
+         <div id="modaltran" class="modal fade  " tabindex="-1" role="dialog"   aria-hidden="true" >
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title ">Відкрити пляшку або пакет</h5> 
+                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                             <form zippy="trform">
+                            <div class="form-group  ">
+                                <label for="tritemfrom" > Вхідний ТМЦ (1 шт)  </label>
+                                <input placeholder="Почніть вводити " zippy="tritemfrom" class="form-control"  >
+                            </div>
+                             <div class="form-group  ">
+                                <label for="tritemto" > Вихідний ТМЦ (інградієнт)</label>
+                                <input placeholder="Почніть вводити " zippy="tritemto" class="form-control"  >
+                            </div>
+                             <div class="form-group row ">
+                                <div class="col-auto pt-2">
+                                   <label for="tritemqty" > Кількість</label>
+                                </div>
+                                 <div class="col-auto">
+                                    <input style="width:75px" pattern="[0-9\.]+" zippy="tritemqty" class="form-control"  >
+                                </div>
+                                <div class="col-auto">
+                                    <input zippy="btntr" type="submit" value="OK"   class="ml-2 btn btn-info  ">
+                                </div>
+                                
+                            </div>
+                              <small>Буде  створено  документ Перекомплектація (розфасовка)</small>
+                             </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>     
          
         <script>
             $(document).ready(function () {
@@ -1209,16 +1249,17 @@
                 return confirm("Анулювати?")
           }
             
-                                
+   
+          function openTransform()  {
+              $("#modaltran").modal('show')   
+          }    
+                                   
         </script>
 
         {{#usescanner}} 
         <script>
 
-
-          
-
-
+                
             function onBarCode(ele) {
 
                 if (event.key === 'Enter' || event.keyCode == 13) {
@@ -1227,9 +1268,7 @@
                 }
             }
             
-            
-           
-    
+       
                 
         </script>  
 

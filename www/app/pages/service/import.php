@@ -320,11 +320,11 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $price1 =doubleval( str_replace(',', '.', trim($row[$colprice1] ?? ''))) ;
-            $price2 =doubleval( str_replace(',', '.', trim($row[$colprice2] ?? '')));
-            $price3 =doubleval( str_replace(',', '.', trim($row[$colprice3] ?? '')));
-            $price4 =doubleval( str_replace(',', '.', trim($row[$colprice4] ?? '')));
-            $price5 =doubleval( str_replace(',', '.', trim($row[$colprice5] ?? '')));
+            $price1 =   str_replace(',', '.', trim($row[$colprice1] ?? ''));
+            $price2 =   str_replace(',', '.', trim($row[$colprice2] ?? ''));
+            $price3 =   str_replace(',', '.', trim($row[$colprice3] ?? ''));
+            $price4 =   str_replace(',', '.', trim($row[$colprice4] ?? ''));
+            $price5 =   str_replace(',', '.', trim($row[$colprice5] ?? ''));
             
             $itemcode = ''.trim($row[$colcode] ?? '');
             $brand = trim($row[$colbrand] ?? '');
@@ -396,11 +396,11 @@ class Import extends \App\Pages\Base
             if($colnotes !='0')    $item->notes = $notes;
 
             
-            if ($colprice1 !='0') $item->price1 = doubleval($price1) ;
-            if ($colprice2 !='0') $item->price2 = doubleval($price2) ;
-            if ($colprice3 !='0') $item->price3 = doubleval($price3) ;
-            if ($colprice4 !='0') $item->price4 = doubleval($price4) ;
-            if ($colprice5 !='0') $item->price5 = doubleval($price5) ;
+            if ($colprice1 !='0') $item->price1 =  $price1 ;
+            if ($colprice2 !='0') $item->price2 =  $price2 ;
+            if ($colprice3 !='0') $item->price3 =  $price3 ;
+            if ($colprice4 !='0') $item->price4 =  $price4 ;
+            if ($colprice5 !='0') $item->price5 =  $price5 ;
            
             if($colinprice !='0')    $item->price = $inprice;
             if($colminqty !='0')     $item->minqty = $minqty;
