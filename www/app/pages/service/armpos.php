@@ -2073,7 +2073,7 @@ class ARMPos extends \App\Pages\Base
 
         $code_ = Item::qstr($code);
         $code__ = trim($code_,"'") ;        
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_}   or detail like '%<bar_code1><![CDATA[{$code__}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code__}]]></bar_code2>%'   )");
+        $item = Item::getFirst(" disabled = 0 and  (item_code = {$code_} or bar_code = {$code_}   or detail like '%<bar_code1><![CDATA[{$code__}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code__}]]></bar_code2>%'   )");
       
         // проверка  на  стикер
         if ($item == null) {

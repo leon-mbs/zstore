@@ -85,7 +85,7 @@ class Equipment extends \ZCL\DB\Entity
         $where = " disabled <> 1 ";
         if (strlen($search) > 0) {
             $search = Equipment::qstr('%' . $search . '%');
-            $where .= " and  eq_name like {$search}   ";
+            $where .= " and ( eq_name like {$search}  or invnumber like {$search} )  ";
         }
         if($eq){   //оборудование
            $where .= " and type = ".Equipment::IYPR_EQ;

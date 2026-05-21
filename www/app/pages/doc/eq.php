@@ -305,7 +305,7 @@ class EQ extends \App\Pages\Base
              }
     
          }
-         if($op==4){
+         if($op==EqEntry::OP_MOVE){
             $parea = intval($this->docform->parea->getValue() );
             $emp = intval($this->docform->emp->getValue() );
             if($parea==0 && $emp==0)   {
