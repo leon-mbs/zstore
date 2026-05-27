@@ -1,16 +1,49 @@
 <html>
-
-    <body>
+  <head>
+     <title>Замовлення партнерiв  </title>
+ 
+</head>
+<body>
 
         <div class="row  ">
             <div class="col-12    col-md-10    col-xl-8  ">
-                <h4>Замовлення для виконання  </h4>
+                <h4>Замовлення  партнерiв  </h4>
+              <div class="card">
+                    <form zippy="filter" class="form-inline ">
+
+
+                        <label for="searchnumber"> № </label>
+
+                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                        <label   for="from">З </label>
+                        <input type="text" class="form-control   mr-2  " zippy="from" style="width:110px">
+                        <label   for="to">по </label>
+                        <input type="text" class="form-control   mr-2  " zippy="to" style="width:110px">
+                       
+                   
+                        <label for="status">Статус</label>
+
+                        <select class="form-control mr-2" zippy="status">
+                        </select>
+
+                        <label for="fpartner">Партнер</label>
+                        <select class="form-control mr-2" zippy="fpartner">
+                            <option value="0">Не обрано</option>
+                        </select>
+
+                        
+                        <input type="submit" class="  btn btn-success  " value="ОК">
+
+
+                    </form>
+                </div>
              <table class="table   table-sm      ">
                   <thead> 
                    <tr>
                       <th  >Номер</th>
                         <th  >Дата</th>
                         <th  >Партнер</th>
+                        <th  >Статус</th>
                         <th  class="text-right">Сума</th>
              
                   </tr> 
@@ -20,6 +53,8 @@
                             <td  > <a zippy="number"></a></td>
                             <td    zippy="date"> </td>
                             <td    zippy="customer"></td>
+                            <td class="text-nowrap" zippy="state"></td>
+                    
                             <td  class="text-right" zippy="amount"></td>
                          
                         </tr>

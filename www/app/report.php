@@ -32,7 +32,7 @@ class Report
 
         $fp = _ROOT . $dir . '/printforms/' . $this->_template ;
         $fp_c = str_replace(".tpl", "_custom.tpl", $fp) ;    //кастомный  шаблон
-        if(file_exists($fp_c)) {
+        if(is_file($fp_c)) {
             $template = @file_get_contents($fp_c);
         } else {
             $template = @file_get_contents($fp);

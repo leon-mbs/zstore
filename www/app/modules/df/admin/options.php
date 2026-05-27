@@ -28,6 +28,7 @@ class Options extends \App\Pages\Base
         $form = $this->add(new Form("cform"));
 
         $form->add(new TextInput('discprice', $modules['dfdiscprice']??''));
+        $form->add(new TextInput('hprice', $modules['hprice']??''));
         
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['dfpricetype']??'price1'));
@@ -45,6 +46,7 @@ class Options extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $modules['dfdiscprice'] =  $this->cform->discprice->getText();
+        $modules['hprice'] =  $this->cform->hprice->getText();
         $modules['dfpricetype'] = $this->cform->defpricetype->getValue();
         $modules['dfstore'] = $this->cform->defstore->getValue();
        

@@ -288,6 +288,14 @@ class ARMFood extends \App\Pages\Base
         $this->varpandet->add(new Form('vardetform'))->onSubmit($this, 'addVBItemDet');
         $this->varpandet->vardetform->add(new DropDownChoice('vardetitem'));
         $this->varpandet->add(new DataView('vardetlist', new ArrayDataSource($this, '_vbdetlist'), $this, 'onVBDetRow'));
+        
+        
+        $this->add(new Form('trform'));  
+        $this->trform->add(new AutocompleteTextInput('tritemfrom'))->onText($this, 'OnAutoItemTr');   
+        $this->trform->add(new AutocompleteTextInput('tritemto'))->onText($this, 'OnAutoItemTr');   
+        $this->trform->add(new TextInput('tritemqty')) ; 
+        $this->trform->add(new SubmitButton('btntr'))->onClick($this,"onTr",true) ; 
+        
          
         if($this->_tvars['useimages'] == false || $filter->menuimages==0){
              $this->_tvars['menuimage'] = false ;
@@ -444,10 +452,9 @@ class ARMFood extends \App\Pages\Base
         $like = Item::qstr('%' . $text . '%');
          
         return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%')  and detail  not  like '%<isbasevarfood>1</isbasevarfood>%' "  );        
-        
-
     }
     
+
     
     public function addnewposOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
@@ -463,7 +470,6 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->catpan->catlist->Reload();
     }
-     
     
     //список  заказов
     public function onDocRow($row) {
@@ -608,7 +614,6 @@ class ARMFood extends \App\Pages\Base
         }       
 
     }
-
     
     public function onDocRowOf($row) {
         $doc = $row->getDataItem();
@@ -726,7 +731,6 @@ class ARMFood extends \App\Pages\Base
       
     }
     
-    
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
         $where = " (state not in(9,17) or content like '%<passfisc>1</passfisc>%' ) and  document_date  >= " . $conn->DBDate(strtotime('-1 week'))    ;
@@ -761,7 +765,6 @@ class ARMFood extends \App\Pages\Base
         $row->catbtn->add(new Label('catname', $cat->cat_name));
         $row->catbtn->add(new Image('catimage',   $cat->getImageUrl()));
     }
-
     
     private function calcitem($prod){
          $customer_id = $this->docpanel->listsform->customer->getKey()  ;
@@ -878,7 +881,6 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->itemlist_of->Reload();
         $this->calcTotal(); 
     }
-    
   
     public function onProdBtnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
@@ -967,7 +969,7 @@ class ARMFood extends \App\Pages\Base
 
 
         $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
+        $item = Item::getFirst(" disabled = 0 and item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
 
         if ($item == null) {
 
@@ -1091,7 +1093,6 @@ class ARMFood extends \App\Pages\Base
         $row->editex->setAttribute('onclick','showakform('. $item->item_id .','."'{$list}'"  .')') ;
 
     }
-
     
     public function onItemRowOf($row) {
         $item = $row->getDataItem();
@@ -1148,7 +1149,6 @@ class ARMFood extends \App\Pages\Base
        
       
     }
-
     
     public function onQtyClick($sender) {
         $item = $sender->getOwner()->getDataItem();
@@ -1521,7 +1521,6 @@ class ARMFood extends \App\Pages\Base
         $this->setInfo('Відправлено у виробництво');
 
     }
-
    
     // сохранить
     public function tosaveOnClick($sender) {
@@ -1817,7 +1816,6 @@ class ARMFood extends \App\Pages\Base
         }         
     }
     
-    
     public function tosaveakOnClick($sender) {
         $id=$this->docpanel->listsform->akitemid->getText() ;
         $list=$this->docpanel->listsform->aklist->getText() ;
@@ -1863,7 +1861,6 @@ class ARMFood extends \App\Pages\Base
                
     }
     
-    
     public function editqtyOnClick($sender) {
         $qty =  $this->docpanel->listsform->editqtyq->getText();
         $id  =  $this->docpanel->listsform->editqtyi->getText();
@@ -1873,7 +1870,6 @@ class ARMFood extends \App\Pages\Base
         $this->calcTotal();
 
     }
-
   
     public function backItemsOnClick($sender) {
         $this->docpanel->listsform->setVisible(true);
@@ -2166,7 +2162,6 @@ class ARMFood extends \App\Pages\Base
         }
 
     }
-    
 
     public function OnPrintBill($sender) {
 
@@ -2557,7 +2552,6 @@ class ARMFood extends \App\Pages\Base
         } 
         $this->updateorderlist(null);
     }
-    
 
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
@@ -2782,6 +2776,72 @@ class ARMFood extends \App\Pages\Base
               
     }
     
+    public function OnAutoItemTr($sender) {
+        $text = trim($sender->getText());
+        $like = Item::qstr('%' . $text . '%');
+        if ($sender->id == 'tritemfrom') {
+            $store_id = $this->setupform->store->getValue();
+            return \App\Entity\Stock::findArrayAC($store_id, $text);
+        } else {
+            return Item::findArray('itemname',"disabled<>1  and    (itemname like {$like} or item_code like {$like} )   "  );        
+        }        
+    }
+  public function onTr($sender) {
+     
+       
+       $from=intval($this->trform->tritemfrom->getKey());
+       $to=intval($this->trform->tritemto->getKey());
+       $qty=doubleval($this->trform->tritemqty->getText());
+     
+       if($from==0 || $to==0 || $qty==0 )
+       {  
+           $this->addAjaxResponse("  toastr.error('Не введено дані','',{timeOut:8000})        ", true  ) ;
+           return; 
+       }
+     
+       $conn = \ZDB\DB::getConnect();
+       $conn->BeginTrans();
+       
+       try{
+           $store_id = $this->setupform->store->getValue();
+           //документ  Перекомплектация
+           $doc = Document::create('TransItem');
+           $doc->document_number = $doc->nextNumber();
+           $doc->document_date =  time();
+         
+           $stfrom = \App\Entity\Stock::load($from) ;   
+           $stfrom->qty = 1;
+
+           $itto = Item::load($to) ;
+           $itto->qty = $qty;
+           $itto->price = $stfrom->partion;
+           $doc->packDetails('detaildata', [$stfrom]);
+           $doc->packDetails('detaildata2', [$itto]);
+           $doc->headerdata['store'] = $store_id;
+           $doc->headerdata['tostore'] = $store_id;
+           $doc->amount = $stfrom->partion;
+           $doc->notes = "АРМ кафе";
+           
+           $doc->save();
+           $doc->updateStatus(Document::STATE_NEW);
+           $doc->updateStatus(Document::STATE_EXECUTED);
+           $conn->CommitTrans();
+           $this->trform->clean();
+       
+           $this->addAjaxResponse(" $(\"#modaltran\").modal(\"hide\") ; toastr.success('Створено  документ {$doc->document_number}','',{timeOut:2000})        ", true  ) ;
+           
+       }
+       catch(\Exception $e)  {
+           $conn->RollbackTrans();
+           
+           $msg = str_replace("'", "`", $e->getMessage()) ;
+     
+           $this->addAjaxResponse("  toastr.error('". $msg ."','',{timeOut:8000})        ", true  ) ;
+           return; 
+       
+       }
+     }
+  
     
     public  function afterRequest() {
         parent::afterRequest() ;

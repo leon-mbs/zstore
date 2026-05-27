@@ -3,23 +3,23 @@
     <body>
 
         <div class="row  ">
-            <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
+            <div class="col-12  col-sm-10 col-md-4    col-xl-3  ">
                 <h4>Налаштування  </h4>
                 <form zippy="cform">
                       <div class="form-group   ">
-                        <label for="defpricetype">Тип ціни </label>
+                        <label for="defpricetype">Тип ціни   </label>
 
                         <select class="form-control" zippy="defpricetype">
                             <option value="0">Не обрано</option>
 
                         </select>
-                         <small>Цiна для дропшиппера</small>
+                         <small>Цiна постачальника для дропшиппера</small>
                   
                     </div>
                     <div class="form-group">
                         <label for="discprice">Знижка, %</label>
-                        <input type="text" zippy="discprice" class="form-control" pattern="[0-9\.]+"  />
-                         <small>Цiна для дропшиппера як знижка для вказаної</small>
+                        <input style="width:100px" type="text" zippy="discprice" class="form-control" pattern="[0-9\.]+"  />
+                         <small>Цiна постачальника для дропшиппера як знижка для вказаної</small>
                     </div>               
                  
                     <div class="form-group   ">
@@ -32,10 +32,14 @@
                          <small>Бажано  створити  окремий склад</small>
                   
                     </div>      
-                
-                  
-                                                     
+                    {{#hideblock}}
                     <div class="form-group">
+                        <label for="hprice">Вартiсть обробки замовлення</label>
+                        <input type="text" zippy="hprice" class="form-control" pattern="[0-9\.]+"  />
+                         <small> Оплата  партнером обробки замовлення.     </small>
+                    </div> 
+                       {{/hideblock}}                                  
+                    <div class="form-group d-flex justify-content-end">
                         <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
                         
 

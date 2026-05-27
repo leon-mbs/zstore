@@ -856,7 +856,7 @@ class Item extends \ZCL\DB\Entity
             $codex= trim($codes,"'") ;
             $code0x= trim($code0s,"'") ;
             
-            $w='';
+            $w='disabled = 0  ';
             if ($cat_id > 0) {
 
 
@@ -866,7 +866,7 @@ class Item extends \ZCL\DB\Entity
                 $cats = implode(",", $ch)  ;
 
 
-                $w =   "  cat_id in ({$cats}) and  ";
+                $w =   " and cat_id in ({$cats}) and  ";
             }            
             
             
@@ -893,7 +893,7 @@ class Item extends \ZCL\DB\Entity
         $letters = $options['articleprefix'] ?? "ID";
         $like= $letters=="" ?"" : " like '{$letters}%'" ;
         $last=0;
-        $sql = "select item_code from  items where  item_code {$like}   order  by  item_id desc   ";  
+        $sql = "select item_code from  items where disabled=0 and item_code {$like}   order  by  item_id desc   ";  
  
         foreach($conn->Execute($sql) as $row) {
            $digits = intval( preg_replace('/[^0-9]/', '', $row['item_code']) );
@@ -935,11 +935,11 @@ class Item extends \ZCL\DB\Entity
         $code = Item::qstr($this->item_code);
         
         if(strlen($this->manufacturer)==0){
-            $where = "item_id <> {$this->item_id} and  item_code={$code} ";  
+            $where = " disabled=0 and item_id <> {$this->item_id} and  item_code={$code} ";  
         }  else {
              $manufacturer = Item::qstr($this->manufacturer);
 
-             $where = "item_id <> {$this->item_id} and ( item_code={$code} and manufacturer= {$manufacturer} )";  
+             $where = " disabled=0 and item_id <> {$this->item_id} and ( item_code={$code} and manufacturer= {$manufacturer} )";  
         }
         $cnt = Item::findCnt($where);
         if ($cnt > 0) {
