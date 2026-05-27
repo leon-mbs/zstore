@@ -307,7 +307,7 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             } else {
                 if(intval($common['paytypein']) == 1) {
-                    $this->setWarn('Накладну слід створювати на  підставі вхідного рахунку') ;
+                    $this->setWarn('При предоплаті накладну слід створювати на  підставі вхідного рахунку') ;
                 }
             }
         }
