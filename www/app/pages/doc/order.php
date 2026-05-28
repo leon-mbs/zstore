@@ -74,6 +74,8 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
 
+        $this->docform->add(new CheckBox('dostore'));
+        
         $this->docform->add(new TextInput('editpayed'));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
@@ -166,6 +168,8 @@ class Order extends \App\Pages\Base
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->promocode->setText($this->_doc->headerdata['promocode']);
+         
+            $this->docform->dostore->setChecked($this->_doc->getHD('dostore',0));
 
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -556,10 +560,14 @@ class Order extends \App\Pages\Base
 
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
      
+
         $this->_doc->headerdata['paytype'] = $this->docform->paytype->getValue() ;
         $this->_doc->headerdata['paytypename'] = $this->docform->paytype->getValueName() ;
  
-
+        $this->_doc->headerdata['dostore'] = $this->docform->dostore->isChecked() ? 1:0 ;
+        if($this->_doc->headerdata['paytype'] ==3) {
+            $this->_doc->headerdata['dostore'] = 0;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -850,6 +858,7 @@ class Order extends \App\Pages\Base
     public function OnPayType($sender) {
          $this->docform->payed->setVisible($sender->getValue()==1);
          $this->docform->payment->setVisible($sender->getValue()!=3);
+         $this->docform->dostore->setVisible($sender->getValue()!=3);
     }
     
     public function OnDelivery($sender) {

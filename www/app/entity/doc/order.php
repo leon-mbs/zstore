@@ -223,7 +223,7 @@ class Order extends \App\Entity\Doc\Document
     //отмена  резерва
     public function unreserve() {
         $conn = \ZDB\DB::getConnect();
-        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+        $conn->Execute("delete from entrylist where tag=".Entry::TAG_RESERV." and document_id =" . $this->document_id);
     }
 
     protected function onState($state, $oldstate) {
@@ -240,6 +240,17 @@ class Order extends \App\Entity\Doc\Document
             $this->reserve()  ;
 
         }
+        if ( $state == self::STATE_READYTOSHIP 
+           ||  $state == self::STATE_INSHIPMENT 
+           ||  $state == self::STATE_CLOSED 
+           ||  $state == self::STATE_DELIVERED 
+           ) {
+
+            $this->DoStore()  ;
+
+        }
+        
+        
         if ($state == self::STATE_INPROCESS) {
 
             if(strlen($this->headerdata['promocode']??'') > 0){
@@ -256,6 +267,84 @@ class Order extends \App\Entity\Doc\Document
         }
     }
     
+    /**
+    * @override
+    */
+    public function DoStore() {
+        $store_id = intval($this->headerdata['store'] ??0 );
+        if($store_id==0) {
+            return;
+        }  
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from entrylist where tag=".Entry::TAG_RESERV." and document_id =" . $this->document_id);
+        
+        
+        $cnt = intval( $conn->GetOne("select count(*) from entrylist where document_id = " . $this->document_id)   );
+        if($cnt>0)  return;
+        
+       
+        if($this->getHD('dostore',0) ==0 )  {
+            return;
+        }
+       
+ 
+        $am =   $this->getAmountReg()   ;
+        $k = 1;   //учитываем  скидку
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }   
+
+        $amount = 0;
+        foreach ($this->unpackDetails('detaildata') as   $item) {
+
+            $onstore = H::fqty($item->getQuantity($store_id )) ;
+            $required = $item->quantity - $onstore;
+
+
+            //оприходуем  с  производства
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
+
+                if ($item->autooutcome == 1) {    //комплекты
+                   $item->setToProd($required,$store_id,$this->document_id);
+                }
+
+
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                }
+                $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $required * $price, $required);
+                $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_FROMPROD;
+
+                $sc->save();
+            }
+
+            if (false == $item->checkMinus($item->quantity, $store_id)) {
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+
+            }
+
+            //продажа
+            $listst = \App\Entity\Stock::pickup($store_id, $item );
+
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
+                $sc->setOutPrice($item->price * $k);
+               
+                $sc->tag=Entry::TAG_SELL;
+                $sc->save();
+                $amount += $item->price * $k * $st->quantity;
+            }
+        }
+    
+              
+    }
     /**
     * @override
     */
