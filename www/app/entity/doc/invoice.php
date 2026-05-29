@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Helper as H;
+use App\Entity\Entry;
 
 /**
  * Класс-сущность  документ счет фактура
@@ -135,7 +136,7 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function Execute() {
         //списываем бонусы
-        if (($this->headerdata['paydisc'] ?? 0) > 0) {
+        if ($this->getHD('paydisc',0) > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->getDiscount() > 0) {
                 return; //процент
@@ -145,8 +146,30 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
+      
+        $am =   $this->getAmountReg()   ;
+        $k = 1;   //учитываем  скидку
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }
+  
+        if ($this->getHD('doservice',0) ==1) {
+             foreach ($this->unpackDetails('detaildata') as $ser) {
+                 if(intval($ser->service_id)==0) {
+                     continue;
+                 }
+                 $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0-$ser->quantity);
+                 $sc->setService($ser->service_id);
+                
+                 $sc->setOutPrice( $ser->price * $k);
+                 $sc->cost= $ser->cost;
+            
+                 $sc->save();    
+                 
+             } 
+        }       
         $this->DoBalans() ;
-
+         
         return true;
     }
 
@@ -200,7 +223,25 @@ class Invoice extends \App\Entity\Doc\Document
          if(($this->customer_id??0) == 0) {
             return;
          }
-               
+    
+         if ($this->getHD('doservice',0) ==1) {
+    
+       
+            $amount= 0;
+            $ss = Entry::findYield("service_id > 0 and document_id=". $this->document_id) ;
+            foreach($ss as $ser) {
+                $amount += doubleval($ser->outprice);
+            }
+            
+            if($amount > 0)  {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$amount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+        }               
        //платежи       
         foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
             $b = new \App\Entity\CustAcc();

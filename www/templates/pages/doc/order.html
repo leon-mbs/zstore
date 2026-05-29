@@ -68,13 +68,17 @@
                         </select>
                     </div>
                         <div class="form-group">
-                            <label for="store">Резервувати товари на  </label>
+                            <label for="store">Склад  </label>
                             <select zippy="store" class="form-control     ">
-                                <option value="0">Не резервувати</option>
+                                <option value="0">Не задано</option>
                             </select>
-                            <small>Авторезерв по статусу Готовий до відправки</small>
+                            
                         </div>                  
-                    
+                       <div class="form-check">
+                            <input zippy="dostore" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="dostore">Списати зі складу </label>
+                             <small style="display:block" data-label="dostore">Якщо оплата теж в замовленнi, iнакше потрiбна ТТН </small>
+                       </div>
                      <div class="form-group  ">
                         <label  data-label="promocode" for="promocode">Промо-код</label>
 
@@ -152,9 +156,12 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
+                     {{#usescanner}}
+                    
+                    <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
                                          <a zippy="addcode" class="btn btn-info btn-sm">+</a>
                      &nbsp; &nbsp; 
+                    {{/usescanner}}                     
                     <a zippy="addrow" class="btn btn-info  ">Додати товар</a>
                     <table class="table table-sm">
                         <tr>

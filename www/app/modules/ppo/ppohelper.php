@@ -292,7 +292,8 @@ class PPOHelper
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
      
         $ret =  self::send($xml, 'doc', $pos);
-        if($ret['success']==true && strlen($ret['docnumber']??'')>0) {
+      
+        if($ret['success']==true && strlen($ret['docnumber']??'')>0 && $pos->testing != 1  ) {
             $r = new ZRecord();
             $r->createdon = time();
             $r->amount = $amount;
@@ -753,7 +754,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
+            self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  

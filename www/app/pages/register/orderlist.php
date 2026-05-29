@@ -605,11 +605,14 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->bginv->setVisible(false);
         }
+
         if ($pt ==3  ) {
             $this->statuspan->statusform->bttn->setVisible(false);
-        
         }
-        
+
+        if ( $this->_doc->getHD('dostore',0) ==1) {
+            $this->statuspan->statusform->bttn->setVisible(false);
+        }        
         
     }
 

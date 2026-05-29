@@ -216,7 +216,7 @@ class Outcome extends \App\Pages\Base
               join services s on e.service_id = s.service_id
              join documents_view d on d.document_id = e.document_id
                where e.service_id >0  and e.quantity <>0      {$cust}  
-              and d.meta_name in (  'ServiceAct' ,'POSCheck' )
+              and d.meta_name in (  'ServiceAct' ,'POSCheck','Invoice' )
                {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.service_name
