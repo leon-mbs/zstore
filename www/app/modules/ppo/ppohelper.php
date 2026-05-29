@@ -292,7 +292,8 @@ class PPOHelper
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
      
         $ret =  self::send($xml, 'doc', $pos);
-        if($ret['success']==true && strlen($ret['docnumber']??'')>0) {
+      
+        if($ret['success']==true && strlen($ret['docnumber']??'')>0 && $pos->testing != 1  ) {
             $r = new ZRecord();
             $r->createdon = time();
             $r->amount = $amount;
