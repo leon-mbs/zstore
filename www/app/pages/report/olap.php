@@ -453,7 +453,7 @@ class OLAP extends \App\Pages\Base
                 LEFT JOIN users_view uv  ON dv.user_id = uv.user_id 
              
                 LEFT JOIN branches b ON dv.branch_id = b.branch_id
-                where dv.meta_name in('GoodsIssue', 'POSCheck','OrderFood','ServiceAct') and  {$where}
+                where dv.meta_name in('GoodsIssue', 'POSCheck','OrderFood','ServiceAct','Order') and  {$where}
                 
                 ";
         }

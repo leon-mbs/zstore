@@ -127,7 +127,7 @@ class ABC extends \App\Pages\Base
                        join items on entrylist_view.item_id = items.item_id 
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
-                    WHERE partion  is  not null and outprice>partion and documents_view.meta_name   in('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood') 
+                    WHERE partion  is  not null and outprice>partion and documents_view.meta_name   in('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','Order') 
                     AND entrylist_view.tag in(0,-1,-4)  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
@@ -181,7 +181,7 @@ class ABC extends \App\Pages\Base
                     FROM  entrylist_view 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue',  'ReturnIssue',  'POSCheck','TTN','OrderFood' )  
+                    WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue',  'ReturnIssue',  'POSCheck','TTN','OrderFood','Order' )  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.detail not like '%<isholding>1</isholding>%' 
@@ -233,7 +233,7 @@ class ABC extends \App\Pages\Base
                     FROM   entrylist_view  
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE partion  is  not null and outprice>partion and entrylist_view.quantity <0 and meta_name in('GoodsIssue', 'ReturnIssue',   'POSCheck','TTN','OrderFood' )  
+                    WHERE partion  is  not null and outprice>partion and entrylist_view.quantity <0 and meta_name in('GoodsIssue', 'ReturnIssue',   'POSCheck','TTN','OrderFood','Order' )  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 

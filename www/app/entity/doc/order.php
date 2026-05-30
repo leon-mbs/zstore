@@ -199,10 +199,8 @@ class Order extends \App\Entity\Doc\Document
             }
         
             
-            
-            if ($item->quantity > $onstore ) {
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
                 throw new \Exception("На складі всього ".H::fqty($onstore) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-
             }
             
             
