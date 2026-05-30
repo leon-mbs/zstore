@@ -857,7 +857,7 @@ class Order extends \App\Pages\Base
      
     public function OnPayType($sender) {
          $this->docform->payed->setVisible($sender->getValue()==1);
-         $this->docform->payment->setVisible($sender->getValue()!=3);
+         $this->docform->payment->setVisible($sender->getValue()==1);
          $this->docform->dostore->setVisible($sender->getValue()!=3);
     }
     

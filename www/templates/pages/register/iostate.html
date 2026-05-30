@@ -66,7 +66,9 @@
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
 
-
+                  {{#bmode}} 
+                     <small><i class="fa fa-exclamation-triangle"></i> Редагування впливає тільки на  формування  книги. Оригінальні документи і касові опперації не  змінюються</small>
+                  {{/bmode}} 
                 <br>
                   {{^bmode}} 
                 <a zippy="csv">Експорт у Excel</a>

@@ -278,9 +278,7 @@ class Orders extends \App\Pages\Base
                 $neworder->setHD('waitpay',1); 
             }        
            
-           
         
-       
                 $neworder->save();
                 
                  

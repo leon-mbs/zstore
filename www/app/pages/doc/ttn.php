@@ -217,8 +217,23 @@ class TTN extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        if($order->getNotSendedItem() == 0){
-                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                      //  $this->_itemlist = $order->unpackDetails('detaildata');
+                                               
+                        $nosent = $order->getNotSendedItem();
+                        
+                        if( count($nosent)  == 0){
+                           $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                        } else
+                        { 
+                           $this->_itemlist = [];
+                           $nosentids=array_keys($nosent) ;
+                           foreach($order->unpackDetails('detaildata') as $oit){
+                              if(in_array($oit->item_id,$nosentids)) {
+                                  $oit->quantity= $nosent[$oit->item_id];
+                                  $this->_itemlist[$oit->item_id] = $oit;
+                                  
+                              }
+                           } 
                         }
                         if($order->getHD('paytype',0) == 3){
                             $this->setWarn('В замовленні не передбачена оплата. Створіть чек  або ВН') ;
@@ -236,9 +251,7 @@ class TTN extends \App\Pages\Base
 
 
                         $this->OnChangeCustomer($this->docform->customer);
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
-                      
+                        
                         $this->calcTotal();
 
                        
@@ -319,7 +332,6 @@ class TTN extends \App\Pages\Base
      
                         $this->calcTotal();
                     }
-                    $this->_doc->headerdata["payamount"]   = $basedoc->payamount;
                     
                     
                 }
@@ -604,13 +616,14 @@ class TTN extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-
+                  
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
- 
+        $this->_doc->headerdata["payamount"]  =$this->_doc->amount;  
+      
         if($this->_doc->headerdata['nostore']==1)  {
            // $this->_doc->payamount = 0;
         }
@@ -639,7 +652,8 @@ class TTN extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-  
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                
              
              
                 if ($this->_doc->parent_id > 0) {
@@ -654,19 +668,16 @@ class TTN extends \App\Pages\Base
                     }
                     if($basedoc->meta_name == 'Order') {
                         
-                        if($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP) {
+                        $nosent = $basedoc->getNotSendedItem(); 
+                         
+                        if(count($nosent)==0 && ($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP )) {
                             $basedoc->updateStatus(Document::STATE_INSHIPMENT);
                         }  
-                        $basedoc->unreserve();                        
                            
                     }            
-                                   
                     
                 }  
                           
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                
-                           
              }            
             
             

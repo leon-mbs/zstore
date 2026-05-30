@@ -6,6 +6,7 @@ use App\Entity\Item;
 use App\Helper as H;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
@@ -57,6 +58,7 @@ class Outcome extends \App\Pages\Base
         $types[13] = "За постачальниками" ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
+        $this->filter->add(new CheckBox('shownotes' )) ;
 
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->cust->setVisible(false);
@@ -123,7 +125,7 @@ class Outcome extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-       
+        
         $brand="";
         $u = "";
 
@@ -160,17 +162,17 @@ class Outcome extends \App\Pages\Base
         $sql = '';
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {    //по товарам
             $sql = "
-          select i.itemname,i.item_code,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select i.item_id,i.itemname,i.item_code,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1 or e.tag = -4 )   {$cat}   {$cust}  
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','ServiceAct' )
+               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','ServiceAct','Order' )
                {$br}  {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
-                group by  i.itemname,i.item_code
+                group by  i.item_id,i.itemname,i.item_code
                order  by i.itemname
         ";
         }
@@ -184,7 +186,7 @@ class Outcome extends \App\Pages\Base
          left  join customers  c on c.customer_id = e.customer_id
          join documents_view  d on d.document_id = e.document_id
            where  e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4)     
-             and d.meta_name in ('GoodsIssue',  'ServiceAct' ,  'POSCheck','ReturnIssue','TTN','OrderFood' )         AND  (e.document_date) >= " . $conn->DBDate($from) . "
+             and d.meta_name in ('GoodsIssue',  'ServiceAct' ,  'POSCheck','ReturnIssue','TTN','OrderFood','Order' )         AND  (e.document_date) >= " . $conn->DBDate($from) . "
               {$br} {$u}   AND  (e.document_date) <= " . $conn->DBDate($to) . "
              AND c.detail not like '%<isholding>1</isholding>%'               
           group by  c.customer_name,c.customer_id
@@ -200,7 +202,7 @@ class Outcome extends \App\Pages\Base
               join items i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood')           
+              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood','Order')           
                {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.document_date
@@ -231,7 +233,7 @@ class Outcome extends \App\Pages\Base
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4 ) 
-               and d.meta_name in ('GoodsIssue', 'ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue', 'ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderFood','Order' )
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -261,7 +263,7 @@ class Outcome extends \App\Pages\Base
                
                  join documents_view  d on d.document_id = e.document_id
                    where e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-                     and d.meta_name in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )    
+                     and d.meta_name in ('GoodsIssue', 'ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood','Order' )    
                       {$br} {$u}  AND  (e.document_date) >= " . $conn->DBDate($from) . "
                       AND  (e.document_date) <= " . $conn->DBDate($to) . "
                       and d.customer_id in({$custlist})
@@ -288,7 +290,7 @@ class Outcome extends \App\Pages\Base
                 
              join documents_view d on d.document_id = e.document_id
                where   e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood','Order')
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -309,7 +311,7 @@ class Outcome extends \App\Pages\Base
               
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and (e.tag = 0 or e.tag = -1  or e.tag = -4)   and  d.content like '%<salesource>{$salesource}</salesource>%'    
-               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood')
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood','Order')
                 {$br} {$u}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
@@ -335,7 +337,7 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                and  manufacturer = {$man}       
-               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood','Order' )
                 {$br} {$u}
                 
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
@@ -395,7 +397,34 @@ class Outcome extends \App\Pages\Base
                     "docs"     => intval($row['docs'])
                 );
 
+                $det['descr']="" ;
+                  
+                if($this->filter->shownotes->isChecked()){
 
+                     if ($type == 1 || $type == 6 || strlen($cat) > 0) {    
+                        $item = \App\Entity\Item::load($row['item_id']);
+                        if($item != null) {
+                            if(strlen($item->notes) > 0) {
+                               $det['descr']=$item->notes ; 
+                            }  else {
+                               $det['descr']=$item->description ;   
+                               $det['descr']= str_replace('<',' ',$det['descr']) ;   
+                               $det['descr']= str_replace('>',' ',$det['descr']) ;   
+                            }
+                        }
+                     }
+                     if ($type == 2) {     
+                        $c = \App\Entity\Customer::load($row['customer_id']);
+                        if($c != null) {
+                          
+                            $det['descr']=$c->comment ; 
+                            
+                        }
+                     }
+                     
+                }
+              
+                
                 
                 $detail[] = $det;
                 
@@ -433,6 +462,7 @@ class Outcome extends \App\Pages\Base
         $header['_type9'] = false;
         $header['_type12'] = false;
         $header['_type13'] = false;
+      
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
             $header['_type1'] = true;

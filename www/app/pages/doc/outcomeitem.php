@@ -428,7 +428,7 @@ class OutcomeItem extends \App\Pages\Base
         $code = Item::qstr($code);
         $code0 = Item::qstr($code0);
 
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
+        $item = Item::getFirst("disabled = 0 and item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
         if ($item == null) {
             $this->setError('Товар не знайдено');
             return;
