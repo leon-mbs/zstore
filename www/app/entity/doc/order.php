@@ -251,6 +251,9 @@ class Order extends \App\Entity\Doc\Document
         
         if ($state == self::STATE_INPROCESS) {
 
+            if($this->getHD('paytype',0) != 1) {
+                return;
+            }           
             if(strlen($this->headerdata['promocode']??'') > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
             }
@@ -282,7 +285,7 @@ class Order extends \App\Entity\Doc\Document
         
        
         if($this->getHD('dostore',0) ==0 )  {
-            return;
+            return;  //не проводить  по  складу
         }
        
  

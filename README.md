@@ -61,4 +61,6 @@ Mysql 8.0+  (MariaDB)
   Залогінитись дефолтним користувачем admin admin  
   Змінити дефолтний пароль у профілі. Задати персональнi налаштування профiлю.  
 
+  Установка ПЗ на Ubuntu:  <https://github.com/aurodion/zstore-installer-ubuntu>  
+  
   Установка в  Docker:  <https://github.com/VladyslavHor/zstore-ci-docker>
