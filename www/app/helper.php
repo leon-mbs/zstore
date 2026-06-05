@@ -1077,8 +1077,7 @@ class Helper
 
         $printer = \App\System::getOptions('printer');
 
-        $prturn = \App\System::getUser()->prturn;
-
+         
         $htmls = "";
         $rows = [];
         
