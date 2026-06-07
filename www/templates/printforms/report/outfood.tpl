@@ -27,6 +27,8 @@
 
         <th style="border: solid black 1px">День</th>
         <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">Сер. чек</th>
 
 
         </tr>
@@ -39,6 +41,8 @@
 
         <td  >{{day}}</td>
         <td align="right">{{qty}}</td>
+        <td align="right">{{amount}}</td>
+        <td align="right">{{av}}</td>
 
        
        
