@@ -36,7 +36,7 @@ class ItemActivity extends \App\Pages\Base
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
         
         
-       $catlist = array();
+        $catlist = array();
         foreach (\App\Entity\Category::findYield("cat_id in (select cat_id from items where disabled <>1 )", "cat_name") as $c) {
             if($c->noprice==1) {
                 continue;
@@ -58,7 +58,8 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+        $this->OnSubmit($this->filter->show);
+
     }
 
     public function OnAutoItem($sender) {

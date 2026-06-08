@@ -32,7 +32,7 @@
                         <select2     v-model="empid" :options="emps"   >
 
                         </select2>
-
+              
                         <input v-on:click.prevent="onFilter"  type="button" class="ml-2  btn btn-success  " value="ОК">
 
 
@@ -197,22 +197,21 @@ var calendar
                   init:function(){
                       
                   callPM('init',[], null,(data)=> 
-                  {
-                       let tmp =   JSON.parse(data)  
-                       this.empid = tmp.empid; 
-                       this.editempid = tmp.empid; 
-                       this.isadmin = tmp.isadmin; 
-                       this.emps = tmp.emps; 
-                       this.types = tmp.types; 
-                       this.to = tmp.to; 
-                       this.from = tmp.from; 
-                       this.today = tmp.today; 
-                       this.start = tmp.start; 
-                       this.end = tmp.end; 
-                       this.break = tmp.break; 
+                  {   
+                       this.empid = data.empid; 
+                       this.editempid = data.empid; 
+                       this.isadmin = data.isadmin; 
+                       this.emps = data.emps; 
+                       this.types = data.types; 
+                       this.to = data.to; 
+                       this.from = data.from; 
+                       this.today = data.today; 
+                       this.start = data.start; 
+                       this.end = data.end; 
+                       this.break = data.break; 
                  
                        this.loaddata() ;       
-                      
+                       
                   });
                             
                               
@@ -289,7 +288,7 @@ var calendar
                     var v = checkFormInput('fval');
                     if(!v) return
  
-
+                     this.empid=this.editempid 
                     
                      let body={
                      empid:this.editempid ,
@@ -329,12 +328,12 @@ var calendar
                   callPM('loaddata',[],  body,(data)=> 
                   {
 
-                       this.stat = tmp.stat 
-                       this.times = tmp.times 
+                       this.stat = data.stat 
+                       this.times = data.times 
  
 
                        calendar.removeAllEventSources(   );
-                       calendar.addEventSource( tmp.events );
+                       calendar.addEventSource( data.events );
                         
                        calendar.render()
                       
