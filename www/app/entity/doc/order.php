@@ -189,12 +189,22 @@ class Order extends \App\Entity\Doc\Document
                                                                
                 if ($item->autooutcome == 1) {     //резервируеем комплекты
                     $item->setToProd($required,$this->headerdata['store'],$this->document_id,true);
-                  
-                    if ($item->quantity == $required) {
-                       continue;
-                    }                    
-                    
+                }  
+                //оприходуем
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
+                $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $required * $price, $required);
+                $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_RESERV;
+
+                $sc->save();                  
+                    
+                 
                
             }
         
@@ -309,7 +319,7 @@ class Order extends \App\Entity\Doc\Document
                    $item->setToProd($required,$store_id,$this->document_id);
                 }
 
-
+                //оприходуем
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
