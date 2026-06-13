@@ -24,8 +24,7 @@ class User extends \ZCL\DB\Entity
         $this->defsalesource = 0;
         $this->hidesidebar = 0;
         $this->usebotfornotify = 0;
-        $this->prturn = 0;
-
+       
         $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
@@ -119,7 +118,7 @@ class User extends \ZCL\DB\Entity
         $this->prtypelabel = $options['prtypelabel']?? 0;
         $this->pwsymlabel = $options['pwsymlabel']?? 0;
         $this->pserverlabel = $options['pserverlabel']?? '';
-        $this->prturn = $options['prturn']?? 0;
+       
         $this->pcplabel = $options['pcplabel']?? '';
         $this->pcp = $options['pcp']?? '';
 
@@ -170,7 +169,7 @@ class User extends \ZCL\DB\Entity
         $options['pserverlabel'] = $this->pserverlabel;
         $options['prtypelabel'] = $this->prtypelabel;
         $options['pwsymlabel'] = $this->pwsymlabel;
-        $options['prturn'] = $this->prturn;
+
         $options['pcplabel'] = $this->pcplabel;
         $options['pcp'] = $this->pcp;
 

@@ -26,6 +26,7 @@ class UserLogin extends \Zippy\Html\WebPage
         \App\Session::getSession()->clipboard = null;
 
         $form = new \Zippy\Html\Form\Form('loginform');
+        $form->add(new TextInput('userlogin'));
         $form->add(new TextInput('userlog'));
         $form->add(new TextInput('userpasswo'));
         $form->add(new TextInput('capchacode'));
@@ -52,6 +53,15 @@ class UserLogin extends \Zippy\Html\WebPage
         global $logger, $_config;
 
         $this->setError('');
+        $lg = trim($sender->userlogin->getText() );
+        
+        if(strlen($lg) >0)  {   //обманка  для  ботов
+            http_response_code(404);
+            Helper::log('bot: '.$lg);
+     
+            die;
+        }
+        
         $login = $sender->userlog->getText();
         $password = $sender->userpasswo->getText();
         $sender->userpasswo->setText('');
@@ -76,7 +86,7 @@ class UserLogin extends \Zippy\Html\WebPage
         }
 
         if (strlen($login) > 0 && strlen($password) > 0) {
-
+             
             $this->_user = Helper::login($login, $password);
 
             if ($this->_user instanceof User) {

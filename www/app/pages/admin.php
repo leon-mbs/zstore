@@ -258,8 +258,13 @@ class Admin extends \App\Pages\Base
            $this->checkdbanswer->setText('');
     
            $ver = str_replace('.','',System::REQUIRED_DB) ;        
-           $origtables =    file_get_contents("https://zippy.com.ua/updates/{$ver}.db" ) ;  
-                            
+          
+           $origtables =\App\Helper::getContent("https://zippy.com.ua/updates/{$ver}.db") ;
+           if($origtables === false) {
+               return  ;
+           }
+          
+                         
            if(strlen($origtables) == 0 ) {
                $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
                return; 
@@ -279,7 +284,7 @@ class Admin extends \App\Pages\Base
            }
                                   
          
-        //   file_put_contents("z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
+         //  file_put_contents("z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
                          
            $origtables = unserialize($origtables) ;
       

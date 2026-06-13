@@ -189,20 +189,28 @@ class Order extends \App\Entity\Doc\Document
                                                                
                 if ($item->autooutcome == 1) {     //резервируеем комплекты
                     $item->setToProd($required,$this->headerdata['store'],$this->document_id,true);
-                  
-                    if ($item->quantity == $required) {
-                       continue;
-                    }                    
-                    
+                }  
+                //оприходуем
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
+                $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $required * $price, $required);
+                $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_RESERV;
+
+                $sc->save();                  
+                    
+                 
                
             }
         
             
-            
-            if ($item->quantity > $onstore ) {
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
                 throw new \Exception("На складі всього ".H::fqty($onstore) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-
             }
             
             
@@ -253,6 +261,9 @@ class Order extends \App\Entity\Doc\Document
         
         if ($state == self::STATE_INPROCESS) {
 
+            if($this->getHD('paytype',0) != 1) {
+                return;
+            }           
             if(strlen($this->headerdata['promocode']??'') > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
             }
@@ -284,7 +295,7 @@ class Order extends \App\Entity\Doc\Document
         
        
         if($this->getHD('dostore',0) ==0 )  {
-            return;
+            return;  //не проводить  по  складу
         }
        
  
@@ -308,7 +319,7 @@ class Order extends \App\Entity\Doc\Document
                    $item->setToProd($required,$store_id,$this->document_id);
                 }
 
-
+                //оприходуем
                 $price = $item->getProdprice();
 
                 if ($price == 0) {

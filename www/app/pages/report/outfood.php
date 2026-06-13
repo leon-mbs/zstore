@@ -69,7 +69,7 @@ class OutFood extends \App\Pages\Base
         if($rtype ==0) {
 
             $sql = "
-              SELECT  document_date  AS dt,COUNT(*) AS qty  FROM documents_view dv  
+              SELECT  document_date  AS dt,COUNT(*) AS qty,sum(amount) AS am  FROM documents_view dv  
                 WHERE  dv.meta_name='OrderFood' AND  state = 9
                 AND dv.document_date >= " . $conn->DBDate($from) . "
                 AND dv.document_date <= " . $conn->DBDate($to) . "
@@ -97,7 +97,9 @@ class OutFood extends \App\Pages\Base
                     "dt"  =>  H::fd($t),
                     "day"  => $days[$w],
 
-                    "qty" => intval($row['qty'])
+                    "qty" => intval($row['qty']) ,
+                    "amount" => H::fa($row['am']) ,
+                    "av" => H::fa($row['am']/$row['qty'])
                 );
 
             }

@@ -1255,13 +1255,7 @@ class ItemList extends \App\Pages\Base
         if(intval($user->prtypelabel) == 0) {
             $report = new \App\Report('item_sticker.tpl');
          
-            $header['turn'] = $user->prturn ??'';
-            if($user->prturn == 1) {
-                $header['turn'] = 'transform: rotate(90deg);';
-            }
-            if($user->prturn == 2) {
-                $header['turn'] = 'transform: rotate(-90deg);';
-            }
+            
  
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;
