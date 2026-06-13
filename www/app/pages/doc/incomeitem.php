@@ -53,7 +53,8 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
  
-       
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+      
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -103,6 +104,11 @@ class IncomeItem extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            if ($this->_doc->customer_id) {
+                $this->docform->customer->setKey($this->_doc->customer_id);
+                $this->docform->customer->setText($this->_doc->customer_name);
+            }             
         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -270,7 +276,8 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
 
-
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+  
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
@@ -547,4 +554,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editnewitem->setVisible(false);
         $this->editdetail->setVisible(true);
     }
+    
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 2);
+    }    
 }

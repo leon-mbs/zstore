@@ -17,7 +17,8 @@
                         <label for="document_date"> Дата <small class="text-danger">*</small></label>
                         <input style="width:150px" class="form-control"   zippy="document_date"  required="on" >
                     </div>
-
+                            
+              
 
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
@@ -55,7 +56,14 @@
                             Цей документ не буде проведено та йому не буде присвоєно автора, поки
                             користувач, який має право роботи з цiльовою фiлiєю, не збереже новостворений документ. </small>
                     </div>
-                    {{/usebranch}}                
+                    {{/usebranch}}  
+                    
+                    <div class="form-group  ">
+                        <label for="customer">Контрагент</label>
+                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                        <small>Не враховується в взаєморозрахунках, тільки в звітах</small>                
+                   </div>   
+                                  
                 </div>
             </div>
             <div class="row">

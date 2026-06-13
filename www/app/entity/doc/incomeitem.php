@@ -71,7 +71,7 @@ class IncomeItem extends Document
             $header['storeemp'] = $this->headerdata["storeempname"];
         }
         $header['customer'] = $this->customer_id >0 ? $this->customer_name : false;
- 
+      
         $report = new \App\Report('doc/incomeitem.tpl');
 
         $html = $report->generate($header);
