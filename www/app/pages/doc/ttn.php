@@ -245,7 +245,7 @@ class TTN extends \App\Pages\Base
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
-                          //  $order->unreserve();  
+                            $order->unreserve();  
                          
                         }
 

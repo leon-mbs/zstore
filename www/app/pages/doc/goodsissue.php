@@ -233,6 +233,8 @@ class GoodsIssue extends \App\Pages\Base
                         
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
+                            $order->unreserve();  
+                     
                         }
                         if($order->headerdata['payment']>0) {
                             $this->docform->payment->setValue($order->headerdata['payment']);
