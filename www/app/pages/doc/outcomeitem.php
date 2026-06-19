@@ -52,7 +52,8 @@ class OutcomeItem extends \App\Pages\Base
             }
         }
 
-      
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+     
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
     
         $this->docform->add(new TextInput('notes'));
@@ -92,6 +93,11 @@ class OutcomeItem extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            if ($this->_doc->customer_id) {
+                $this->docform->customer->setKey($this->_doc->customer_id);
+                $this->docform->customer->setText($this->_doc->customer_name);
+            }            
         } else {
             $this->_doc = Document::create('OutcomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -248,7 +254,8 @@ class OutcomeItem extends \App\Pages\Base
             return;
         }
 
-
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+  
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -469,7 +476,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->amount->setText(H::fa( $this->_doc->amount)) ;
     }
     
-  public function onOpenItemSel($sender) {
+    public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
         $this->rowid  = 1;
 
@@ -480,5 +487,9 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
         $this->OnChangeItem($this->editdetail->edititem);
+    }    
+    
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 1 );
     }    
 }

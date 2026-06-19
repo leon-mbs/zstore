@@ -62,6 +62,7 @@ class OutcomeItem extends Document
             'date'            => H::fd($this->document_date),
             'amount'            => H::fa($this->amount),
             "emp"             => false,
+            "customer"             => false,
             "from"            => $this->headerdata["storename"],
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
