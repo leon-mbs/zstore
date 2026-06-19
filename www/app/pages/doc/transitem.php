@@ -97,6 +97,7 @@ class TransItem extends \App\Pages\Base
     public function OnStore($sender) {
         //для обновления  формы
     }
+
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
@@ -112,7 +113,6 @@ class TransItem extends \App\Pages\Base
         $this->docform->tototal->setText($this->_tototal);
              
     }
-
     
     public function fromlistOnRow( $row) {
         $it=$row->getDataItem();
@@ -202,6 +202,7 @@ class TransItem extends \App\Pages\Base
         $this->Reload() ;      
       
     }    
+
     public function deleteTo( $sender) {
       
         $it=$sender->getOwner()->getDataItem();
@@ -212,7 +213,7 @@ class TransItem extends \App\Pages\Base
      
     }    
     
-   public function onAutoPrice( $sender) {
+    public function onAutoPrice( $sender) {
       
         $tmp=[];
        
@@ -225,7 +226,6 @@ class TransItem extends \App\Pages\Base
         $this->Reload() ;      
      
     }    
-    
     
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -315,7 +315,6 @@ class TransItem extends \App\Pages\Base
         
         return !$this->isError();
     }
-
 
     public function onToPrice($sender) {
         $sum=0;        
