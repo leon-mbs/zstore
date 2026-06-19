@@ -54,6 +54,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->witempan->wisfilter->add(new TextInput('wissearchmanufacturer'));
         $this->witempan->wisfilter->wissearchmanufacturer->setDataList(Item::getManufacturers());
 
+        $this->witempan->wisfilter->add(new DropDownChoice('searchtype', array( ), 0));
 
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
@@ -205,9 +206,13 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
         $text = trim($this->page->witempan->wisfilter->wissearchkey->getText());
         $man = trim($this->page->witempan->wisfilter->wissearchmanufacturer->getText());
         $cat = $this->page->witempan->wisfilter->wissearchcat->getValue();
+        $type = $this->page->witempan->wisfilter->searchtype->getValue();
 
         if ($cat > 0) {
-            $where = $where . " and cat_id=" . $cat;
+            $where = $where . " and cat_id = " . $cat;
+        }
+        if ($type > 0) {
+            $where = $where . " and item_type = " . $type ;
         }
 
         if (strlen($text) > 0) {
