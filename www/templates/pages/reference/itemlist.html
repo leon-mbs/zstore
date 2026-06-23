@@ -651,7 +651,7 @@
                     <label for="editsqty">Кіл.</label>
                     <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on" 
                            pattern="[0-9,\.]+" style="width:60px">
-                    <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
+                    <input zippy="setformbtn" class="btn btn-success  " type="submit" value="Додати">
                 </form>
                 <table class="table   table-sm  ">
                     <tr>
@@ -680,7 +680,7 @@
                     <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost"  required="on" 
                            pattern="[0-9,\.]+" style="width:60px">
                            
-                    <input zippy="setsformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
+                    <input zippy="setsformbtn" class="btn btn-success  " type="submit" value="Додати">
                 </form>
                  <table class="table   table-sm  ">
                     <tr>
@@ -705,8 +705,17 @@
                     <textarea style="height:200px" class="form-control" zippy="editscard"></textarea> 
                            
                 
-                    <input class="btn btn-outline-success  " type="submit" value="Зберегти">
+                    <input class="btn btn-success  " type="submit" value="Зберегти">
                  </form>
+                  <form zippy="scopyform" class="form-inline mt-2 mb-2">
+                    <label for="editscopy">Скопiювати в </label>
+                    <select class="form-control  select2" zippy="editscopy">
+                      <option value="0">Не обрано</option>
+                    </select>
+                  
+                    <input   class="btn btn-success  " type="submit" value="OK">
+                </form>  
+                 
                {{/complin}}  
                {{#complout}}  
                <span>Є складовою комплектів для: </span>
