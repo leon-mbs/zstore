@@ -80,9 +80,7 @@ class Orders extends \App\Pages\Base
         $row->add(new Label('amount',  H::fa($doc->amount)));
         $row->add(new Label('customer', $doc->customer_name));
         $stname = Document::getStateName($doc->state);
-        if($doc->getHD('delayinprocess')==2)  {
-           $stname = "Очікує виконання";    
-        }     
+       
         $row->add(new Label('state', $stname));        
         
   }  
@@ -94,11 +92,9 @@ class Orders extends \App\Pages\Base
         $this->docpan->docview->setText($html,true);
         $this->docpan->setVisible(true) ;      
         $this->goAnkor('docpan');
-        if($doc->getHD('delayinprocess')==2)  {
-           $this->docpan->sform->setVisible(true) ;   
-        }    else {
-           $this->docpan->sform->setVisible(false) ;   
-        }  
+ 
+        $this->docpan->sform->setVisible($doc->state == \App\Entity\Doc\Document::STATE_WAIT  ) ;   
+       
     }
 
     public function saveOnClick($sender) {
@@ -107,8 +103,7 @@ class Orders extends \App\Pages\Base
        $uid= intval( $this->docpan->sform->emps->getValue() );
        if($uid==0)  return;
        $this->_doc->user_id = $uid;
-       $this->_doc->setHD('delayinprocess',null);  
-       $this->_doc->save();                       
+                           
        $this->_doc->updateStatus(Document::STATE_INPROCESS);
          
        $this->doclist->Reload() ;
@@ -140,7 +135,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $status=  $this->page->filter->status->getValue() ;
         $fpartner=  $this->page->filter->fpartner->getValue() ;
  
-        $wherebase  = " meta_name  = 'Order'   and  content not   like '%<delayinprocess>1</delayinprocess>%' and content like '%<dsff>%'  " ;
+        $wherebase  = " meta_name  = 'Order' and content like '%<dsff>%'  " ;
         $where  = $wherebase;
         if($fpartner > 0) {
            $where .= " and customer_id=".$fpartner; 

@@ -284,7 +284,7 @@ class Orders extends \App\Pages\Base
                  
                 $neworder->updateStatus(Document::STATE_NEW);
       
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WAIT);
               
                 if($neworder->headerdata['store']>0) {
                     $neworder->reserve();   //если задан  склад резервируем товары
