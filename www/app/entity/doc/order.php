@@ -174,7 +174,10 @@ class Order extends \App\Entity\Doc\Document
 
         $this->unreserve();
 
-        if(intval($this->headerdata['store'])==0) {
+        
+        $store_id = intval($this->headerdata['store']);
+        
+        if($store_id==0) {
             return;
         }
 
