@@ -308,20 +308,21 @@ class IOState extends \App\Pages\Base
               }
                
                
-              if($io->iotype == 1 || $io->iotype == 2 || $io->iotype == 3 )  { //доходы
-                 $c2 +=  abs( $io->amount );
-                 continue; 
-              }
-
+             
               if($doc->meta_name=='ReturnIssue') {  //возврат
                  $c3 +=  abs( $io->amount ); 
                  continue; 
               }              
-              if($doc->meta_name=='InvoiceCust') {  //предоплата
+              if($doc->meta_name=='Invoice') {  //предоплата
                  $c3 +=  abs( $io->amount ); 
                  continue; 
               }              
-              
+            
+              if($io->iotype == 1 || $io->iotype == 2 || $io->iotype == 3 )  { //доходы
+                 $c2 +=  abs( $io->amount );
+                 continue; 
+              }
+       
               //затраты
               if($io->iotype == 50)  {   //закупка
                  $c6 +=  abs( $io->amount );

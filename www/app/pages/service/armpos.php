@@ -462,7 +462,7 @@ class ARMPos extends \App\Pages\Base
         if($this->_docid >0) { //загрузка  чека
             
             $doc = Document::load($this->_docid);
-            if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+            if($doc->checkStates([Document::STATE_CANCELED])==0){  //если не  отменялся
                $doc->document_date=time();                
             }            
             $this->loadDoc($doc);
@@ -1841,7 +1841,7 @@ class ARMPos extends \App\Pages\Base
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);
-        if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+        if($doc->checkStates([Document::STATE_CANCELED])==0){  //если не  отменялся
            $doc->document_date=time();                
         }
         $this->loadDoc($doc);

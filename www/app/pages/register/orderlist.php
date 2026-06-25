@@ -389,8 +389,8 @@ class OrderList extends \App\Pages\Base
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
                 }
-
-                if($ttn== false && $gi == false) {
+                                          
+                if($ttn== false && $gi == false && $this->_doc->getHD('dostore',0) ==0) {
                     $this->setWarn('Замовлення закрито без доставки');
                 }
 

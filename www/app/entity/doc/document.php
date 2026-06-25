@@ -892,7 +892,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
-            return false;
+            return 0;
         }
         $conn = \ZDB\DB::getConnect();
         $states = implode(',', $states);
