@@ -55,7 +55,8 @@ class IncomeItem extends \App\Pages\Base
  
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
       
-        $this->add(new Form('editdetail'))->setVisible(false);
+         $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
         $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
@@ -68,6 +69,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
 
         //добавление нового товара
@@ -252,6 +254,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
+        $this->wselitem->setVisible(false);
+          
     }
 
     public function cancelrowOnClick($sender) {
@@ -262,6 +266,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editsnitem->setVisible(false);
     
         $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
+  
     }
 
     public function savedocOnClick($sender) {
@@ -558,5 +564,18 @@ class IncomeItem extends \App\Pages\Base
     
     public function OnAutoCustomer($sender) {
         return \App\Entity\Customer::getList($sender->getText(), 2);
+    }   
+    
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
     }    
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        
+        $this->OnChangeItem($this->editdetail->edititem);
+    }       
 }
