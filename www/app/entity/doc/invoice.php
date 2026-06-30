@@ -59,9 +59,9 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
-                        "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
+                        "isbank"          => (strlen($mf->bankacc??'') > 0 || strlen($mf->bank) > 0),
                         "iban"      => strlen($iban) > 0 ? $iban : false,
-                 
+                       
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
@@ -83,6 +83,7 @@ class Invoice extends \App\Entity\Doc\Document
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
+        $header["qr"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
         if ($this->getHD('nds',0) > 0) {
@@ -127,6 +128,13 @@ class Invoice extends \App\Entity\Doc\Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+        
+        $qr = $this->getQRPay();
+        if(strlen($qr['url']??'') >0){
+         //  $header["qr"]  = _BASEURL . "qrpay.php?docid=".$this->document_id;
+           $header["qr"]  = $qr['qr'];
+        }
+        
         $report = new \App\Report('doc/invoice.tpl');
 
         $html = $report->generate($header);

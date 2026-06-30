@@ -195,7 +195,16 @@
                         </td>
 
                     </tr>
-          
-                             
+     <tr>               <td> </td>
+        <td colspan="8" aliqn="center">
+                            {{#qr}}
+                               {{{qr}}} 
+                            {{/qr}}
+
+
+                        </td>
+                        
+       
+          </tr>                     
                     </table>
 
