@@ -18,6 +18,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -91,7 +92,10 @@ class Invoice extends \App\Pages\Base
 
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
-
+      
+        $this->docform->add(new CheckBox('doservice'));
+    
+      
         $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -131,6 +135,7 @@ class Invoice extends \App\Pages\Base
             $this->docform->fop->setValue($this->_doc->headerdata['fop']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docform->doservice->setChecked($this->_doc->getHD('doservice',0));
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             if ($this->_doc->payed == 0 && $this->_doc->getHD('payed',0) > 0) {
@@ -481,6 +486,8 @@ class Invoice extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
         $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
+      
+        $this->_doc->headerdata['doservice'] = $this->docform->doservice->isChecked()?1:0;
         
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -530,7 +537,8 @@ class Invoice extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
             return;
         }
     }

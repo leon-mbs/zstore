@@ -101,18 +101,21 @@
         <script>
 
             function check_updateqty() {
+               if(confirm("Оновити?") == false)    return false;
 
-            document.getElementById('dialogwait').showModal() 
+               document.getElementById('dialogwait').showModal() 
             }
 
             function check_updateprice() {
+              if(confirm("Оновити?") == false)    return false;
 
               document.getElementById('dialogwait').showModal() 
             }
 
             function check_getitems() {
+               if(confirm("Оновити?") == false)    return false;
 
- document.getElementById('dialogwait').showModal() 
+                document.getElementById('dialogwait').showModal() 
                 
             }
 

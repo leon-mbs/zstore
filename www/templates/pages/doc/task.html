@@ -59,10 +59,10 @@
 
                     </div>
                  </div>  
-                <div class="col-12">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  mr-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  mr-2">
-                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-primary  ">
+                <div class="col-11 col-md-7 col-xl-7 d-flex justify-content-end pt-4">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary   ml-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary   ml-2">
+                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-success  ml-2 ">
                 </div>
               </form> 
                 </div> 
@@ -80,11 +80,11 @@
                             <option value="0">Не обрано</option>
                         </select>
 
-
- 
+            
                         <label class="ml-2" for="editqty">Кіл.</label>
-                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"
-                               style="width: 75px;">
+                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"     style="width: 75px;">
+                        <label title="Розцінки для  нарахування зарплати" class="ml-2" for="editcost">Вартість</label>
+                        <input title="Розцінки для  нарахування зарплати" class="form-control mr-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
  
                         <label for="editdesc">Коментар  </label>
                         <input class="form-control  mr-2" type="text" zippy="editdesc"                          >
@@ -104,6 +104,7 @@
 
 
                             <td zippy="quantity" class="text-right"></td>
+                            <td zippy="cost" class="text-right"></td>
 
 
                             <td class="text-right">
@@ -128,9 +129,12 @@
                         </select>
  
                         <label class="ml-2" for="editqtyprod">Кіл.</label>
-                   <input class="form-control mr-2" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"
-                               style="width: 75px;">
-      
+                        <input class="form-control mr-2" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"         style="width: 75px;">
+                        <label title="Розцінки для  нарахування зарплати" class="ml-2" for="editprodcost">Вартість</label>
+                        <input title="Розцінки для  нарахування зарплати" class="form-control mr-2" type="text" zippy="editprodcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                        <label title="Облікова  ціна  при оприходуванні на  склад" class="ml-2" for="editprodprice">Собівартість</label>
+                        <input title="Облікова  ціна  при оприходуванні на  склад" class="form-control mr-2" type="text" zippy="editprodprice" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                         
                         <label for="editdescprod">Коментар  </label>
                         <input class="form-control  mr-2" type="text" zippy="editdescprod"                          >
  
@@ -149,6 +153,8 @@
 
                             <td zippy="descprod"  ></td>
                             <td zippy="quantityprod" class="text-right"></td>
+                            <td zippy="costprod" class="text-right"></td>
+                            <td zippy="priceprod" class="text-right"></td>
 
 
                             <td class="text-right">

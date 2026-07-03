@@ -47,8 +47,8 @@ class TransItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this,'OnStore');
+        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this,'OnStore');
         $this->docform->add(new AutocompleteTextInput('fromitem'))->onText($this, 'OnAutocompleteItem');
         $this->docform->add(new AutocompleteTextInput('toitem'))->onText($this, 'OnAutocompleteItem');
 
@@ -94,6 +94,10 @@ class TransItem extends \App\Pages\Base
         $this->Reload() ;
     }
 
+    public function OnStore($sender) {
+        //для обновления  формы
+    }
+
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
@@ -109,7 +113,6 @@ class TransItem extends \App\Pages\Base
         $this->docform->tototal->setText($this->_tototal);
              
     }
-
     
     public function fromlistOnRow( $row) {
         $it=$row->getDataItem();
@@ -145,11 +148,19 @@ class TransItem extends \App\Pages\Base
         if ($fqty > $st->qty ) {
             $this->setError(" Недостатньо ТМЦ на складі");
             return;
-        }                  
+        }   
+               
         if ($fqty == 0 ) {
             $this->setError(" Не вказана  кількість ");
             return;
-        }   
+        }  
+        
+        $it = Item::load($st->item_id) ;      
+        $q  =  $it->getQuantity($this->docform->store->getIntValue());
+        if ($fqty > $q ) {
+            $this->setWarn(" Недостатньо ТМЦ на складі");
+        }           
+        
         $st->qty= $fqty;
          $this->_fromlist[$st->stock_id]  = $st; 
         
@@ -199,6 +210,7 @@ class TransItem extends \App\Pages\Base
         $this->Reload() ;      
       
     }    
+
     public function deleteTo( $sender) {
       
         $it=$sender->getOwner()->getDataItem();
@@ -209,7 +221,7 @@ class TransItem extends \App\Pages\Base
      
     }    
     
-   public function onAutoPrice( $sender) {
+    public function onAutoPrice( $sender) {
       
         $tmp=[];
        
@@ -222,7 +234,6 @@ class TransItem extends \App\Pages\Base
         $this->Reload() ;      
      
     }    
-    
     
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
@@ -273,7 +284,8 @@ class TransItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
 
             return;
         }
@@ -312,7 +324,6 @@ class TransItem extends \App\Pages\Base
         
         return !$this->isError();
     }
-
 
     public function onToPrice($sender) {
         $sum=0;        

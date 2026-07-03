@@ -52,7 +52,8 @@ class OutcomeItem extends \App\Pages\Base
             }
         }
 
-      
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+     
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
     
         $this->docform->add(new TextInput('notes'));
@@ -92,6 +93,11 @@ class OutcomeItem extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            if ($this->_doc->customer_id) {
+                $this->docform->customer->setKey($this->_doc->customer_id);
+                $this->docform->customer->setText($this->_doc->customer_name);
+            }            
         } else {
             $this->_doc = Document::create('OutcomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -248,7 +254,8 @@ class OutcomeItem extends \App\Pages\Base
             return;
         }
 
-
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+  
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -296,16 +303,16 @@ class OutcomeItem extends \App\Pages\Base
                         }
                         $indoc->document_number =  $indoc->nextNumber($indoc->branch_id);
 
-                        $admin  =\App\Entity\User::getByLogin('admin') ;
-                        $indoc->user_id = $admin->user_id;
-
+                      //  $admin  =\App\Entity\User::getByLogin('admin') ;
+                     //   $indoc->user_id = $admin->user_id;
+                        $indoc->user_id=0;
                         $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
                             $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
-                        
+                        $ina=0;
                         $items = array();
 
                         foreach ($this->_itemlist as $it) {
@@ -313,11 +320,11 @@ class OutcomeItem extends \App\Pages\Base
                             //последняя партия
                             $stock = \App\Entity\Stock::getFirst("item_id = {$it->item_id} and store_id={$this->_doc->headerdata['store'] }", 'stock_id desc');
                             $it->price = $stock->partion;
-
+                            $ina += ($it->price * $it->quantity) ;
                             $items[] = $it;
                         }
                         $indoc->packDetails('detaildata', $items);
-
+                        $indoc->amount = $ina;
                         $indoc->save();
                         $indoc->updateStatus(Document::STATE_NEW);
 
@@ -351,7 +358,8 @@ class OutcomeItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
 
             return;
         }
@@ -428,7 +436,7 @@ class OutcomeItem extends \App\Pages\Base
         $code = Item::qstr($code);
         $code0 = Item::qstr($code0);
 
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
+        $item = Item::getFirst("disabled = 0 and item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
         if ($item == null) {
             $this->setError('Товар не знайдено');
             return;
@@ -469,7 +477,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->amount->setText(H::fa( $this->_doc->amount)) ;
     }
     
-  public function onOpenItemSel($sender) {
+    public function onOpenItemSel($sender) {
         $this->wselitem->setVisible(true);
         $this->rowid  = 1;
 
@@ -480,5 +488,9 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
         $this->OnChangeItem($this->editdetail->edititem);
+    }    
+    
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 1 );
     }    
 }

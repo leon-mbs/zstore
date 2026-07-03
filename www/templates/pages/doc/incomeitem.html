@@ -38,7 +38,15 @@
                 </div>
                 <div class="col-12 col-md-3">
                  
-                    
+             
+                    <div class="form-group  ">
+                        <label for="customer">Контрагент</label>
+                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                        <small>Не враховується  в  взаєморозрахунках, тільки в звітах</small>                
+                   </div>             
+                        
+
+                      
                     <div class="form-group">
                       <label for="scan"> Скан документа</label>
                       <input class="form-control" type="file" zippy="scan">
@@ -105,10 +113,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                <div class="col-11 col-md-9 col-xl-7  d-flex justify-content-end pt-4">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary ml-2">
+                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary ml-2">
+                     <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ml-2 ">
 
                 </div>
             </div>
@@ -137,8 +145,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-outline-secondary mr-2">
-                        <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-secondary mr-2">
+                        <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
                 </div>
@@ -147,16 +155,18 @@
     
 
     </form>
-    <form zippy="editdetail">
+    
         <h4>Введення товару </h4>
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
-
+          <form zippy="editdetail">
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
                     <input   class="form-control" zippy="edititem" placeholder="Почніть вводити...  ">
-                    <a   zippy="addnewitem">Додати новий</a>
-
+                    <a   zippy="addnewitem">Додати новий</a>   <br>
+                  <a zippy="openitemsel">Відкрити довідник</a>
+                   
+                
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
@@ -196,14 +206,20 @@
             
             
                 <div class="form-group">
-                    <input  type="button" zippy="cancelrow" value="До переліку" class="btn   btn-outline-secondary mr-2">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    <input  type="button" zippy="cancelrow" value="До переліку" class="btn   btn-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-primary">
                     
                 </div>
+                </form>
             </div>
+             <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+
+
+            </div>  
         </div>
 
-    </form>
+    
     
     <form zippy="editnewitem">
             <h3>&nbsp;Новий товар </h3>
@@ -239,8 +255,8 @@
                     
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-outline-secondary  mr-2">
-                        <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
                 </div>

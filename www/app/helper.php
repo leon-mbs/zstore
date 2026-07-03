@@ -10,13 +10,14 @@ use ZCL\DB\DB as DB;
  */
 class Helper
 {
-    public const STAT_HIT_SHOP = 1;     //посещение  онлайн  каталога
-    public const STAT_ORDER_SHOP = 2;     //заказы  в  онлайн каталоге
-    public const STAT_VIEW_ITEM = 3;     //просмотр товара
-    public const STAT_PROMO = 4;     //промо код
-    public const STAT_NEW_SHOP = 5;     //уникальнных  посетителей
-    public const STAT_CARD_SHOP = 6;     //позиций в  корзине
+    public const STAT_HIT_SHOP     = 1;     //посещение  онлайн  каталога
+    public const STAT_ORDER_SHOP   = 2;     //заказы  в  онлайн каталоге
+    public const STAT_VIEW_ITEM    = 3;     //просмотр товара
+    public const STAT_PROMO        = 4;     //промо код
+    public const STAT_NEW_SHOP     = 5;     //уникальнных  посетителей
+    public const STAT_CARD_SHOP    = 6;     //позиций в  корзине
     public const STAT_DOC_ISEDITED = 7;     //редактируется документ
+    public const STAT_DOC_TMP      = 8;     //временные  данные
 
     private static $meta = array(); //кеширует метаданные
 
@@ -259,6 +260,11 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }
+        if(($modules['checkbox'] ?? 0) == 1) {
+            if($role->rolename == 'admins' || strpos($role->modules, 'checkbox') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/CB/Reports", 'meta_type' => 6, 'description' => "Х-Звiт (Чекбокс)"));
+            }
+        }
       
         return $mdata;
     }
@@ -449,7 +455,7 @@ class Helper
      *
      * @param mixed $id
      */
-    public static function getMetaType($id) {
+    public static function getMetaType(int $id) {
         if(is_array(self::$meta[$id] ?? null) == false) {
             $conn = DB::getConnect();
             $sql = "select * from   metadata where meta_id = " . $id;
@@ -487,8 +493,6 @@ class Helper
         global $logger;
         $logger->error($msg);
     }
-
- 
 
     /**
      * Возвращает склад  по  умолчанию
@@ -807,7 +811,6 @@ class Helper
         return 10;
     }
 
-
     /**
      * список валют
      *
@@ -947,7 +950,6 @@ class Helper
         die;
     }
 
-
     public static function exportExcelFromCSV($csvfile) {
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
@@ -984,6 +986,7 @@ class Helper
      * @param mixed $key
      * @return mixed
      */
+
     public static function getKeyVal($key, $def = "") {
         if(strlen($key) == 0) {
             return;
@@ -1022,7 +1025,6 @@ class Helper
         return false;
     }
 
-
     /**
      * Вставка  данных в  таблицу ключ-значение
      *
@@ -1044,7 +1046,6 @@ class Helper
 
     }
 
-
     /**
      * Вставка  данных  в  таблицу  статистики
      *
@@ -1065,21 +1066,18 @@ class Helper
 
     }
 
-
     /**
      * Печать  этикеток     
      *
      * @param array $items  ТМЦ
-     * @param mixed $pqty  явное  указание  количества копий
      * @param array $tags  дополнительные поля
      */
-    public static function printItems(array $items, $pqty = 0, array $tags = []) {
+    public static function printItems(array $items,   array $tags = []) {
         $user = \App\System::getUser();
 
         $printer = \App\System::getOptions('printer');
 
-        $prturn = \App\System::getUser()->prturn;
-
+         
         $htmls = "";
         $rows = [];
         
@@ -1097,6 +1095,7 @@ class Helper
             if(intval($item->item_id) == 0) {
                 continue;
             }
+        
             $header = [];
             $header['turn'] = '';
             if($prturn == 1) {
@@ -1114,6 +1113,7 @@ class Helper
             }
 
             $header['name'] = str_replace("'", "`", $header['name']);
+            
             $header['description'] = str_replace("'", "`", $item->description);
 
             $header['docnumber'] = $tags['docnumber'] ?? "";
@@ -1126,7 +1126,7 @@ class Helper
 
 
             $header['article'] = $item->item_code;
-            $header['garterm'] = $item->warranty;
+            $header['garterm'] = $item->getTerm();
             $header['country'] = $item->country;
             $header['brand'] = $item->manufacturer;
             $header['notes'] = $item->notes;
@@ -1188,32 +1188,12 @@ class Helper
 
 
             $printqty = intval($item->printqty);
-            if($printqty == 5) { //не печатать
+            if($printqty == 0) { //не печатать
                continue;
             }
 
-            if($printqty == 0) {
-                $printqty = 1;
-            }
-
-            if($printqty == 1) {
-                $qty = 1;
-            }
-            if($printqty == 2) {
-                $qty = 2;
-            }
-            if($printqty == 3) ;
-            if($printqty == 4) {
-                if($qty > 10) {
-                    $qty = 10;
-                }
-            }
-            if(intval($item->quantity) > 0) {
-                $qty = intval($item->quantity);  //по  документу
-            }
-            if($pqty > 0) {
-                $qty = $pqty;
-            }
+            $qty = $printqty;
+             
             if($item->isweight ==1) {
                 $qty = 1;  //весовой товар
             }
@@ -1227,13 +1207,17 @@ class Helper
             }
             
             if($user->prtypelabel == 2) {
-                $header['name'] = str_replace("\"", "`", $header['name']);
-                $header['description'] = str_replace("\"", "`", $header['description']);
-                $header['qrcode'] = str_replace("\"", "`", $header['qrcode']);
-                $header['brand'] = str_replace("\"", "`", $header['brand']);
-
-                if($user->pwsymlabel > 0) {
-                    $header['name'] = mb_substr($header['name'], 0, $user->pwsymlabel);
+                $header['name'] = str_replace("\"", "`", $header['name']??'');
+                $header['description'] = str_replace("\"", "`", $header['description']??'');
+                $header['qrcode'] = str_replace("\"", "`", $header['qrcode']??'');
+                $header['brand'] = str_replace("\"", "`", $header['brand']??'');
+            
+                if(intval($user->pwsymlabel)==0) $user->pwsymlabel =32;
+                $nm=  $header['name'] ;
+            
+                if( mb_strlen($nm)  > $user->pwsymlabel  ) {
+                    $header['name'] = mb_substr($nm, 0, $user->pwsymlabel);
+                    $header['name2'] = mb_substr($nm, 32, $user->pwsymlabel);
                 }
 
 
@@ -1271,8 +1255,6 @@ class Helper
         }
     }
 
-
-  
     //"соль" для  шифрования
     public static function getSalt() {
         $salt = self::getKeyVal('salt');
@@ -1330,8 +1312,48 @@ class Helper
 
         return $decryption;
     }
+ 
+    /**
+    * загрузка  с интернета (file_get_content не  всегда  работает)
+    * 
+    * @param mixed $url
+    * @return   данные  или  false
+    */
+    public static function getContent($url) {
+        $ch = curl_init($url);
 
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+       
+            CURLOPT_SSL_VERIFYPEER => false 
+         
+            
+        ]);
 
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+   
+        if ($err) {
+           \App\Helper::logerror("cURL Error #:" . $err) ;
+       
+            return false;
+        }     
+        if ($status_code >= 400) {
+           \App\Helper::logerror("cURL HTTP code #:" . $status_code) ;
+       
+            return false;
+        } 
+        
+        
+        return $response;        
+    }
+ 
  
     /**
      * выполняет перенос  данных на  новой  версии
@@ -1526,7 +1548,104 @@ class Helper
             }           
            
         }   
+    
+        $migration811 = \App\Helper::getKeyVal('migration811'); 
+        if($migration811 != "done"  ) {
+            Helper::log("Міграція 811");
+         
+            \App\Helper::setKeyVal('migration811', "done");           
+        
+            try {
+         
+              $conn->Execute("ALTER TABLE iostate ADD iodate DATE DEFAULT NULL");                     
+              $conn->Execute("DROP VIEW iostate_view ");   
+              $sql="CREATE VIEW iostate_view
+                    AS
+                    SELECT
+                      s.id AS id,
+                      s.document_id AS document_id,
+                      s.iotype AS iotype,
+                      s.amount AS amount,
+                      coalesce(s.iodate, d.document_date) AS document_date,
+                      d.branch_id AS branch_id
+                    FROM (iostate s
+                      JOIN documents d
+                        ON ((s.document_id = d.document_id)))";                  
           
+              $conn->Execute($sql);   
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+      
+      
+        $migration812 = \App\Helper::getKeyVal('migration812'); 
+        if($migration812 != "done"  ) {
+            Helper::log("Міграція 812");
+         
+            \App\Helper::setKeyVal('migration812', "done");           
+        
+            try {
+       
+                 $w=  $conn->Execute("SHOW CREATE  TABLE documents");
+                           
+                 foreach($w as $e){
+                     if( strpos($e['Create Table'],'documents_ibfk_1') >0 ){
+                         $conn->Execute("ALTER TABLE documents DROP FOREIGN KEY documents_ibfk_1 ");                     
+                     }             
+                 }
+                  
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }        
+  
+        $migration821 = \App\Helper::getKeyVal('migration821'); 
+        if($migration821 != "done"  )    {
+            Helper::log("Міграція  8.2.1");
+            $conn->BeginTrans();
+            try {
+                $conn->Execute("update options set optvalue ='8.2.0' where optname='version'  and optvalue='8.1.0'");
+      
+                \App\Helper::setKeyVal('migration821', "done");
+                $conn->CommitTrans();
+
+            } catch(\Throwable $ee) {
+                
+                $conn->RollbackTrans();
+                System::setErrorMsg($ee->getMessage());
+                $logger->error($ee->getMessage());
+                return;
+            }
+
+
+        }
+      
+        $migration822 = \App\Helper::getKeyVal('migration822'); 
+        if($migration822 != "done"  )    {
+            Helper::log("Міграція  8.2.2");
+            $conn->BeginTrans();
+            try {
+                $conn->Execute("update metadata set disabled =1  where meta_name='StockList'  ");
+      
+                \App\Helper::setKeyVal('migration822', "done");
+                $conn->CommitTrans();
+
+            } catch(\Throwable $ee) {
+                
+                $conn->RollbackTrans();
+                System::setErrorMsg($ee->getMessage());
+                $logger->error($ee->getMessage());
+                return;
+            }
+
+
+        }
+  
     }
 
 

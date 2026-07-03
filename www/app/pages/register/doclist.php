@@ -108,9 +108,9 @@ class DocList extends \App\Pages\Base
         $this->statusform->add(new TextInput('refcomment'));
         $this->statusform->add(new DropDownChoice('mstates', Document::getStateListMan()));
         $this->statusform->add(new DropDownChoice('musers', array()));
-        $this->statusform->add(new CheckBox('print1'));
 
-        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels', true);
+
+        $this->statusform->add(new SubmitButton('bprint'))->onClick($this, 'printlabels' );
         $this->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'onCopy' );
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
@@ -195,7 +195,7 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('cust', $doc->customer_name));
         $row->add(new Label('branch', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
+        $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
         $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
@@ -712,6 +712,11 @@ class DocList extends \App\Pages\Base
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
         $doc->state = 0;
+        $doc->payed = 0;
+        $doc->parent_id=0  ;
+        $doc->headerdata['outnumber'] = '';
+        $doc->headerdata['fiscalnumber'] = '';
+        $doc->headerdata['waitpay'] = 0;
         $doc->headerdata['contract_id'] = 0;
         $doc->headerdata['_state_before_approve_'] = '';
         $doc->save();
@@ -721,7 +726,10 @@ class DocList extends \App\Pages\Base
 
         $this->filterOnSubmit($this->filter); 
         $this->statusform->setVisible(false) ;
-        $this->docview->setVisible(false) ;      
+        $this->docview->setVisible(false) ; 
+ 
+   
+             
     }
 
     public function oncsv($sender) {
@@ -736,8 +744,8 @@ class DocList extends \App\Pages\Base
             $data['A' . $i] = H::fd($d->document_date);
             $data['B' . $i] = $d->document_number;
             $data['C' . $i] = $d->meta_desc;
-            $data['D' . $i] = $d->customer_name;
-            $data['E' . $i] = $d->amount;
+            $data['D' . $i] = $d->customer_name ??'';
+            $data['E' . $i] = H::fa(($d->payamount > 0) ? $d->payamount : ($d->amount > 0 ? $d->amount : ""));
             $data['F' . $i] = $d->notes;
         }
 
@@ -746,60 +754,24 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        $one = $this->statusform->print1->isChecked() ? 1:0;
         $items=[];
-        foreach($this->_doc->unpackDetails('detaildata') as $it) {
-            if($this->_doc->meta_name=='GoodsReceipt') {
+        $doc= Document::load($this->_doc->document_id) ;
+        foreach($doc->unpackDetails('detaildata') as $it) {
+            if($doc->meta_name=='GoodsReceipt') {
                 $it->price=0;  //печатаем  продажную цену
+                $itm = \App\Entity\Item::load($it->item_id) ;
+                $it->price1 = $itm->price1;
+                $it->price2 = $itm->price2;
+                $it->price3 = $itm->price3;
+                $it->price4 = $itm->price4;
+                $it->price5 = $itm->price5;
             }
-            
+            $it->printqty  = intval($it->quantity);
             $items[]=$it;
         }
 
-        $user = \App\System::getUser() ;
-        $ret = H::printItems($items,$one);   
-           
-        if(intval($user->prtypelabel) == 0) {
-        
-           
-            if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $ret;
-                $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            } else {
-                $this->addAjaxResponse("  $('#tag').html('{$ret}') ; $('#pform').modal()");
-            }
-            return;
-        }
-        
-        
-        try {
-
-            if(intval($user->prtypelabel) == 1) {
-                if(strlen($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::xml2comm($ret);
-        
-            }            
-            if(intval($user->prtypelabel) == 2) {
-                if(count($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::arr2comm($ret);
-        
-            }            
-            $b = json_encode($buf) ;
-
-            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $message = str_replace("'", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
-
-        }        
+        $this->printLabelForm($items);
+         
         
         
     }

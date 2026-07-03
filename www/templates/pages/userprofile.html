@@ -58,8 +58,6 @@
                                     <label for="mainpage">Головна сторiнка</label>
 
                                     <select class="form-control" zippy="mainpage">
-                                        <option value="\App\Pages\Blank">Не вказано</option>
-                                        <option value="\App\Pages\Main">Дашборд (вiджети)</option>
                                     </select>
                                 </div>
 
@@ -87,10 +85,7 @@
                                 <label for="viber">Viber</label>
                                 <input   class="form-control" zippy="viber">
                             </div>   
-
-                          
-                  
-                 
+                   
                            <div class="form-check">
                                 <input zippy="hidesidebar" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
@@ -122,16 +117,9 @@
                         </div>
 
 
-                    <div class="col-12 col-md-6 ">         
-                        </div>
-                       <div class="col-12 col-md-6 ">         
-   
-
-                            <div class="form-group  ">
-                                <button type="submit"   class="btn btn-primary">Зберегти</button>
-                            </div>
-
-
+                    
+                        <div class="col-12 d-flex justify-content-center  ">         
+                             <button type="submit"   class="btn btn-primary">Зберегти</button>
                         </div>
                     </div>            
                 </form>
@@ -157,8 +145,39 @@
 
                     <button type="submit"   class="btn btn-primary">Зберегти</button>
                 </form>
-              
-            
+                
+                {{#hideblock}}
+                 <h5>Двофакторна аутентифікація</h5>   
+                 <small class="compact">Відправка коду підтверження після логіну. Якщо нічого не вибрано - не використовується </small>
+                <form   zippy="otpform">
+                    <div class="form-check">
+                        <input zippy="otpemail" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="otpemail">E-Mail </label>
+                    </div>  
+                       
+                    <div class="form-check">
+                        <input zippy="otpsms" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="otpsms">SMS </label>
+                    </div>  
+                    <div class="form-check">
+                        <input zippy="otptg" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="otptg">Телеграм </label>
+                    </div>  
+                           
+                   <div class="form-group ">         
+                     
+                   <button zippy="otpsave" type="submit"   class="btn btn-primary">Зберегти</button>
+                   </div>
+                    <a  zippy="otptest" >Тестова відправка </a> <br>   
+                    <span>Резервний код:</span> <b zippy="otpcode">44444</b> 
+                     <small> 
+                    <a zippy="otprefresh" >  <i title="Оновити" class="fa fa-refresh"></i> </a>  
+                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                title=" Зберегти на випадок якщо відправка не спрацює "></i>
+                   </small>    
+                   
+                </form>
+               {{/hideblock}}
             </div>
             </div>
             <div class="col-10  col-md-4 col-xl-2">
@@ -233,6 +252,8 @@
                              <div class="form-group  ">
                                 <label data-label="pwsymlabel" for="pwsymlabel">Ширина (кiл. символiв)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
+                                <small data-label="pcplabel"> Якщо строка  довше, буде  записано в другу строку (тег {{name2}})</small>    
+                          
                             </div>
                              <div class="form-group  ">
                                 <label for="pcplabel">Кодова сторінка</label>
@@ -243,14 +264,7 @@
                                 <small data-label="pcplabel">Кодування, виставлене в  принтері</small>    
                             </div>    
                             
-                             <div class="form-group  ">
-                                <label for="prturn">Поворот зображення</label>
-                                <select style="width:100px" class="form-control" zippy="prturn">
-                                     <option value="0">0</option>
-                                     <option value="1">90%</option>
-                                     <option value="2">-90%</option>
-                                </select>
-                            </div>                                            
+                                                                     
                              <div class="form-group">
                                 <input zippy="saveplabel" class="btn btn-primary" type="submit" value="Зберегти">
                             </div>                            

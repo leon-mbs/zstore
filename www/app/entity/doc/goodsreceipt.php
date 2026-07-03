@@ -67,13 +67,13 @@ class GoodsReceipt extends Document
  
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
-        $header['isprep'] = $this->headerdata["prepaid"] > 0;
-        $header['isdisc'] = $this->headerdata["disc"] > 0;
+        $header['isprep'] = ($this->headerdata["prepaid"]??0) > 0;
+        $header['isdisc'] = ($this->headerdata["disc"] ??0) > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
         $header['isval'] = strlen($this->headerdata['val']) > 1;
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
 
-        $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
+        $header['prepaid'] = H::fa($this->headerdata["prepaid"]??0);
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['delivery'] = H::fa($this->headerdata["delivery"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
@@ -166,7 +166,7 @@ class GoodsReceipt extends Document
         $this->DoBalans() ;
 
          
-         $del = $this->headerdata['delivery'] * $rate;
+         $del = doubleval($this->headerdata['delivery'] ) * $rate;
          if($del > 0) {
            if($this->headerdata['deliverytype']  == 3 ) { 
                \App\Entity\IOState::addIOState($this->document_id, 0- $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
@@ -182,14 +182,19 @@ class GoodsReceipt extends Document
        
      
         if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
+             
+             $cust= \App\Entity\Customer::load($this->customer_id) ;
+        
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;
                  if($ci == null){
                     $ci = new \App\Entity\CustItem() ;    
                  }
+                 
                  $ci->item_id = $item->item_id;
                  $ci->customer_id = $this->customer_id;
+                 $ci->cust_name = $item->itemname;
                  $ci->price = $item->price;
                  $ci->quantity = 0;
                  $ci->cust_code = $item->custcode??'';
@@ -225,7 +230,7 @@ class GoodsReceipt extends Document
     */
     public function DoBalans() {
         $conn = \ZDB\DB::getConnect();
-         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
    
         if(($this->customer_id??0) == 0) {
             return;
@@ -256,13 +261,19 @@ class GoodsReceipt extends Document
     
     
    protected function onState($state, $oldstate) {
-        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+        if($state > 4 ) {
 
             if($this->parent_id > 0) {
                 $order = Document::load($this->parent_id)->cast();
-                if($order->meta_name == 'OrderCust'  ) {
+                if($order->state != Document::STATE_CLOSED && $order->meta_name == 'OrderCust'  ) {
                       $order = $order->cast() ;
-                      $order->updateStatus(Document::STATE_CLOSED);
+                   
+                      $oitems =  $order->unpackDetails('detaildata');
+                      $items =  $this->unpackDetails('detaildata');
+                      if(count($oitems)=== count($items) ){
+                          $order->updateStatus(Document::STATE_CLOSED);    
+                      }
+                      
                       
                 }    
             }

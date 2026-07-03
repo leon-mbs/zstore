@@ -43,27 +43,27 @@
     {{#_detail}}
     <tr>
         {{#showimage}}
-        <td style="border-top:1px #ccc solid;" >
+        <td  >
           {{#isimage}}
           <img src="{{im}}"  style="width:64px" />
            {{/isimage}}
         </td>
         {{/showimage}}
 
-        <td style="border-top:1px #ccc solid;">{{name}}</td>
-        <td style="border-top:1px #ccc solid;">{{code}}</td>
-        <td style="border-top:1px #ccc solid;">{{msr}}</td>
+        <td >{{name}}</td>
+        <td >{{code}}</td>
+        <td >{{msr}}</td>
 
-  {{#iscat}}        <td style="border-top:1px #ccc solid;">{{cat}}</td>     {{/iscat}}  
-  {{#isbrand}}      <td style="border-top:1px #ccc solid;">{{brand}}</td>   {{/isbrand}}  
-{{#showqty}}        <td style="border-top:1px #ccc solid;" align="right">{{qty}}</td> {{/showqty}}
-{{#price1name}}         <td style="border-top:1px #ccc solid;" align="right">{{price1}}</td> {{/price1name}} 
-{{#price2name}}         <td style="border-top:1px #ccc solid;" align="right">{{price2}}</td> {{/price2name}} 
-{{#price3name}}         <td style="border-top:1px #ccc solid;" align="right">{{price3}}</td> {{/price3name}} 
-{{#price4name}}         <td style="border-top:1px #ccc solid;" align="right">{{price4}}</td> {{/price4name}} 
-{{#price5name}}         <td style="border-top:1px #ccc solid;" align="right">{{price5}}</td> {{/price5name}} 
-{{#showdesc}}           <td style="border-top:1px #ccc solid;">{{desc}}</td>{{/showdesc}}
-        <td style="border-top:1px #ccc solid;">{{notes}}</td>
+  {{#iscat}}        <td >{{cat}}</td>     {{/iscat}}  
+  {{#isbrand}}      <td >{{brand}}</td>   {{/isbrand}}  
+{{#showqty}}        <td  align="right">{{qty}}</td> {{/showqty}}
+{{#price1name}}         <td  align="right">{{price1}}</td> {{/price1name}} 
+{{#price2name}}         <td  align="right">{{price2}}</td> {{/price2name}} 
+{{#price3name}}         <td  align="right">{{price3}}</td> {{/price3name}} 
+{{#price4name}}         <td  align="right">{{price4}}</td> {{/price4name}} 
+{{#price5name}}         <td  align="right">{{price5}}</td> {{/price5name}} 
+{{#showdesc}}           <td >{{desc}}</td>{{/showdesc}}
+        <td >{{notes}}</td>
     </tr>
     {{/_detail}}
 </table>

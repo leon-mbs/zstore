@@ -462,7 +462,7 @@ class ARMPos extends \App\Pages\Base
         if($this->_docid >0) { //загрузка  чека
             
             $doc = Document::load($this->_docid);
-            if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+            if($doc->checkStates([Document::STATE_CANCELED])==0){  //если не  отменялся
                $doc->document_date=time();                
             }            
             $this->loadDoc($doc);
@@ -1127,6 +1127,7 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->setVisible(false);
        
         $this->docpanel->form2->custinfo->setVisible(false);
+        $this->docpanel->form2->setVisible(true);
 
     }
 
@@ -1186,8 +1187,13 @@ class ARMPos extends \App\Pages\Base
     //оплатить
     public function savedocOnClick($sender) {
 
+        if($this->_doc->document_id >0) {
+            if($this->_doc->hasStore() || $this->_doc->hasPayments()) {
+               $this->setError("Чек вже був проведений. Створiть новий чек")  ;
+               return;
+            }
+        }
         $this->_doc->document_number = $this->docpanel->form3->document_number->getText();
-
         $doc = Document::getFirst(" document_id <> {$this->_doc->document_id}  and   document_number = '{$this->_doc->document_number}' ");
         if ($doc instanceof Document) {   //если уже  кто то  сохранил  с таким номером
             $this->_doc->document_number = $this->_doc->nextNumber();
@@ -1326,7 +1332,7 @@ class ARMPos extends \App\Pages\Base
                 $this->_doc->save();
             }    
                 
-            if($this->pos->usefisc == 1) {
+            if($this->pos->usefisc == 1 && strlen($this->_doc->headerdata["fiscalnumber"] ??'') ==0 ) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
                 } else {
@@ -1378,7 +1384,7 @@ class ARMPos extends \App\Pages\Base
                             $this->setErrorTopPage($ret['data']);
                             throw new \Exception($ret['data']);
                         } else {
-                            //  $this->setSuccess("Выполнено") ;
+                            
                             if ($ret['docnumber'] > 0) {
                                 $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                                 $this->pos->save();
@@ -1401,7 +1407,7 @@ class ARMPos extends \App\Pages\Base
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
-            $this->setErrorTopPage($ee->getMessage());
+            $this->setError($ee->getMessage());
 
             $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
             if($isnew) {
@@ -1835,7 +1841,7 @@ class ARMPos extends \App\Pages\Base
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);
-        if($doc->checkStates([Document::STATE_CANCELED])==false){  //если не  отменялся
+        if($doc->checkStates([Document::STATE_CANCELED])==0){  //если не  отменялся
            $doc->document_date=time();                
         }
         $this->loadDoc($doc);
@@ -2067,7 +2073,7 @@ class ARMPos extends \App\Pages\Base
 
         $code_ = Item::qstr($code);
         $code__ = trim($code_,"'") ;        
-        $item = Item::getFirst("  (item_code = {$code_} or bar_code = {$code_}   or detail like '%<bar_code1><![CDATA[{$code__}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code__}]]></bar_code2>%'   )");
+        $item = Item::getFirst(" disabled = 0 and  (item_code = {$code_} or bar_code = {$code_}   or detail like '%<bar_code1><![CDATA[{$code__}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code__}]]></bar_code2>%'   )");
       
         // проверка  на  стикер
         if ($item == null) {

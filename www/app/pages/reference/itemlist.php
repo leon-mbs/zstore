@@ -70,7 +70,7 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
-        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
+        $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll' );
         $this->itemtable->listform->add(new SubmitLink('priceall'))->onClick($this, 'OnPriceAll' );
 
         $catlist = Category::findArray("cat_name", "childcnt = 0", "cat_name");
@@ -139,6 +139,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editvolume'));
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
+        $this->itemdetail->add(new TextInput('editterm'));
         $this->itemdetail->add(new TextInput('editlost'));
         $this->itemdetail->add(new TextInput('editimageurl'));
 
@@ -155,13 +156,14 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editnoprice'));
         $this->itemdetail->add(new CheckBox('editisweight'));
         $this->itemdetail->add(new CheckBox('editnoshop'));
+        $this->itemdetail->add(new CheckBox('editnoprint'));
         $this->itemdetail->add(new CheckBox('editautooutcome'));
         $this->itemdetail->add(new CheckBox('editautoincome'));
         $this->itemdetail->add(new \Zippy\Html\Image('editimage' ));
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes(),Item::TYPE_TOVAR));
-        $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
+
         $this->itemdetail->add(new DropDownChoice('editisnds',[],0))->onChange($this, 'onNds');;
         $this->itemdetail->add(new TextInput('editnds'))->setVisible(false);
   
@@ -191,6 +193,9 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
         $this->setpanel->cardform->add(new TextArea('editscard'));
+      
+        $this->setpanel->add(new Form('scopyform'))->onSubmit($this, 'OnCopySet');
+        $this->setpanel->scopyform->add(new DropDownChoice('editscopy'));
 
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new Label('stotal'));
@@ -356,9 +361,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editlost->setText($this->_item->lost);
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
+        $this->itemdetail->editterm->setText($this->_item->term);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
-        $this->itemdetail->editprintqty->setValue($this->_item->printqty);
-
+       
         $this->itemdetail->editimageurl->setText($this->_item->imageurl);
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
@@ -371,6 +376,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->edituseserial->setChecked($this->_item->useserial);
         $this->itemdetail->editnoshop->setChecked($this->_item->noshop);
+        $this->itemdetail->editnoprint->setChecked($this->_item->noprint);
         $this->itemdetail->editnoprice->setChecked($this->_item->noprice);
         $this->itemdetail->editisweight->setChecked($this->_item->isweight);
         $this->itemdetail->editautooutcome->setChecked($this->_item->autooutcome);
@@ -422,6 +428,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editnoprice->setChecked(false);
         $this->itemdetail->editisweight->setChecked(false);
         $this->itemdetail->editnoshop->setChecked(false);
+        $this->itemdetail->editnoprint->setChecked(false);
         $this->itemdetail->editautooutcome->setChecked(false);
         $this->itemdetail->editautoincome->setChecked(false);
         $this->_item = new Item();
@@ -510,9 +517,9 @@ class ItemList extends \App\Pages\Base
         $this->_item->lost = $this->itemdetail->editlost->getText();
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
+        $this->_item->term = $this->itemdetail->editterm->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
-        $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
-
+       
         $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
@@ -529,6 +536,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
         $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
         $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
+        $this->_item->noprint = $this->itemdetail->editnoprint->isChecked() ? 1 : 0;
         $this->_item->autooutcome = $this->itemdetail->editautooutcome->isChecked() ? 1 : 0;
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 
@@ -749,8 +757,14 @@ class ItemList extends \App\Pages\Base
                }
            }
         } 
+       
+       
         
+       $list=Item::findArray("itemname","disabled<> 1  and item_type in(2,4,5) and item_id <> ".$this->_pitem_id,"itemname") ;
         
+       $this->setpanel->scopyform->editscopy->setOptionList($list); 
+       
+       $this->setpanel->scopyform->editscopy->setValue(0); 
     }
 
     private function setupdate() {
@@ -781,8 +795,9 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
         $row->add(new Label('sqty', H::fqty($item->qty)));
-        //   $it= Item::load($item->item_id) ;
-        //  $row->add(new Label('sprice', H::fa($it->getProdprice())));
+        $it= Item::load($item->item_id) ;
+        $row->add(new Label('sprice', H::fa($it->getProdprice())));
+
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
     }
 
@@ -862,7 +877,39 @@ class ItemList extends \App\Pages\Base
 
 
     }
+    public function OnCopySet($sender) {
+       $itemto = $this->setpanel->scopyform->editscopy->getIntValue();
+       if($itemto==0) {
+           return;
+       }
+       $conn = \ZDB\DB::getConnect()  ;
+       
 
+        $item = Item::load($itemto);
+        $item->techcard = $this->setpanel->cardform->editscard->getText();
+        $item->save() ;
+
+        $conn->Execute("delete from item_set WHERE pitem_id = ".$itemto);
+        
+        $sql="SELECT * from item_set   WHERE pitem_id = ".$this->_pitem_id ;
+        
+        foreach($conn->Execute($sql) as $r){
+            $set = new ItemSet();
+            $set->pitem_id = $itemto;
+            if($r['service_id'] > 0)  $set->service_id = $r['service_id'];
+            if($r['item_id'] > 0)  $set->item_id = $r['item_id'];
+            if($r['cost'] > 0)  $set->cost = $r['cost'];
+            if($r['qty'] > 0)  $set->qty = $r['qty'];
+
+            $set->save();  
+        }
+         
+        $this->setpanel->scopyform->editscopy->setValue(0) ;
+        
+        $this->setSuccess("Скопiйовано") ;
+    }  
+        
+   
     public function printQrOnClick($sender) {
 
         $printer = \App\System::getOptions('printer') ;
@@ -877,7 +924,7 @@ class ItemList extends \App\Pages\Base
 
             $html =  $report->generate($header);                  
 
-            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; $('#pr_items_pform').modal('show')");
             return;
         }
        
@@ -1011,60 +1058,17 @@ class ItemList extends \App\Pages\Base
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->seldel == true) {
+                $item->printqty = 1;
                 $items[] = $item;
             }
         }
         if (count($items) == 0) {
-           $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+           
+            return;
+        }
+        $this->printLabelForm($items);
           
-            return;
-        }
-        
-        $user = \App\System::getUser() ;
-        $ret = H::printItems($items);   
-      
-        if(intval($user->prtypelabel) == 0) {
-
-            if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $ret;
-
-                $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            } else {
-                $this->addAjaxResponse("  $('#tag').html('{$ret}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-
-            }
-            return;
-        }
-
-        try {
-
-         
-            if(intval($user->prtypelabel) == 1) {
-                if(strlen($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::xml2comm($ret);
-        
-            }            
-            if(intval($user->prtypelabel) == 2) {
-                if(count($ret)==0) {
-                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
-                   return; 
-                }
-                $buf = \App\Printer::arr2comm($ret);
-        
-            }            
-            $b = json_encode($buf) ;
-
-            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
-        } catch(\Exception $e) {
-            $message = $e->getMessage()  ;
-            $message = str_replace(";", "`", $message)  ;
-            $message = str_replace("'", "`", $message)  ;
-            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
-
-        }
+  
 
     }
 
@@ -1250,7 +1254,11 @@ class ItemList extends \App\Pages\Base
     public function printStOnClick($sender) {
          $item = $sender->getOwner()->getDataItem();
          $price= H::fa($item->getPrice() );
-         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+         $stdate="";
+         if(intval($item->term??0) >0) {
+           $stdate =  date("Y-m-d", ( strtotime("+{$item->term} days") ));
+         }         
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('{$stdate}') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
       
     }
  
@@ -1288,13 +1296,7 @@ class ItemList extends \App\Pages\Base
         if(intval($user->prtypelabel) == 0) {
             $report = new \App\Report('item_sticker.tpl');
          
-            $header['turn'] = $user->prturn ??'';
-            if($user->prturn == 1) {
-                $header['turn'] = 'transform: rotate(90deg);';
-            }
-            if($user->prturn == 2) {
-                $header['turn'] = 'transform: rotate(-90deg);';
-            }
+            
  
             $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
             $header['dataUri']  = "data:image/png;base64," . base64_encode($generator->getBarcode($barcode, 'C128'))  ;

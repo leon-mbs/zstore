@@ -95,15 +95,7 @@ class ProdProcList extends \App\Pages\Base
         $this->editstage->add(new DropDownChoice('editstagearea', \App\Entity\ProdArea::findArray('pa_name', "disabled<>1","pa_name")));
         $this->editstage->add(new SubmitButton('savestage'))->onClick($this, 'OnSaveStage');
         $this->editstage->add(new Button('cancelstage'))->onClick($this, 'onCanceStage');
-
-
-        $this->add(new Form('editcardform'))->setVisible(false);
-        $this->editcardform->add(new Label('stagenameh4'));
-        $this->editcardform->add(new TextArea('editcard'));
-        $this->editcardform->add(new SubmitButton('savecard'))->onClick($this, 'OnSaveCard');
-        $this->editcardform->add(new Button('cancelcard'))->onClick($this, 'onCanceStage');
-
-
+ 
         $this->listpan->add(new Panel("showpan"))->setVisible(false);
         $this->listpan->showpan->add(new ClickLink('btnstinprocess', $this, 'onProcStatus'));
         $this->listpan->showpan->add(new ClickLink('btnstsuspend', $this, 'onProcStatus'));
@@ -114,12 +106,16 @@ class ProdProcList extends \App\Pages\Base
         $this->add(new Panel("itemspan"))->setVisible(false);
         $this->itemspan->add(new Label('stagename5')) ;
         $this->itemspan->add(new Form('edititemsform')) ;
-        $this->itemspan->edititemsform->add(new DropDownChoice('edititem',[],0));
+        $this->itemspan->edititemsform->add(new DropDownChoice('edititem',[],0))->onChange($this,"onChangelItem");
         $this->itemspan->edititemsform->add(new TextInput('editqty'));
+        $this->itemspan->edititemsform->add(new TextInput('editcost'));
+        $this->itemspan->edititemsform->add(new TextInput('editprice'));
         $this->itemspan->edititemsform->add(new SubmitButton('saveitem'))->onClick($this, 'saveitemOnClick');
-        $this->itemspan->add(new DataView('detailitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailitemOnRow'))->Reload();
-        $this->itemspan->add(new ClickLink('saveitems', $this, 'onSaveItems'));
-        $this->itemspan->add(new ClickLink('cancelitems', $this, 'onCanceltems'));
+        $this->itemspan->edititemsform->add(new TextArea('editcard'));
+             
+        $this->itemspan->edititemsform->add(new DataView('detailitem', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailitemOnRow'))->Reload();
+        $this->itemspan->edititemsform->add(new SubmitButton('saveitems' ))->onClick($this, 'onSaveItems');
+        $this->itemspan->edititemsform->add(new ClickLink('cancelitems', $this, 'onCanceltems'));
 
         
         $this->add(new Panel("empspan"))->setVisible(false);
@@ -341,7 +337,6 @@ class ProdProcList extends \App\Pages\Base
 
         $row->add(new ClickLink('stageedit', $this, 'OnStageEdit'))->setVisible($s->state != ProdStage::STATE_FINISHED && $s->state != ProdStage::STATE_INPROCESS );
         $row->add(new ClickLink('stagedel', $this, 'OnStageDel'))->setVisible($s->state != ProdStage::STATE_FINISHED);
-        $row->add(new ClickLink('stagecard', $this, 'OnCard'));
         $row->add(new ClickLink('stageitems', $this, 'OnItems'))->setVisible($s->state != ProdStage::STATE_FINISHED );
         $row->add(new ClickLink('stageemps', $this, 'OnEmps'))->setVisible($s->state != ProdStage::STATE_FINISHED);
 
@@ -404,34 +399,14 @@ class ProdProcList extends \App\Pages\Base
     }
 
     public function onCanceStage($sender) {
-        $this->editcardform->setVisible(false);
+      
         $this->editstage->setVisible(false);
         $this->stagespan->setVisible(true);
 
     }
 
-    //техкарта
-    public function OnCard($sender) {
-        $this->editcardform->setVisible(true);
-        $this->editstage->setVisible(false);
-        $this->stagespan->setVisible(false);
-
-        $this->_stage = $sender->getOwner()->getDataItem();
-
-        $this->editcardform->editcard->setText($this->_stage->card);
-        $this->editcardform->stagenameh4->setText($this->_stage->stagename);
-    }
-
-    public function OnSaveCard($sender) {
-
-        $this->_stage->card = $this->editcardform->editcard->getText();
-        $this->_stage->save();
-
-        $this->editcardform->setVisible(false);
-        $this->editstage->setVisible(false);
-        $this->stagespan->setVisible(true);
-
-    }
+ 
+  
 
 
     //сотрудники
@@ -523,14 +498,16 @@ class ProdProcList extends \App\Pages\Base
         $this->_stage = $sender->getOwner()->getDataItem();
         $this->_itemlist = $this->_stage->itemlist;
     
+      
         $this->itemspan->edititemsform->clean();
         $this->itemspan->edititemsform->edititem->setOptionList(  Item::findArray("itemname", "disabled<>1 and item_type in(4,5) ", "itemname")) ;
         $this->itemspan->edititemsform->edititem->setValue(0);
-         
+        $this->itemspan->edititemsform->editcard->setText($this->_stage->card);
+           
         $this->itemspan->setVisible(true);
         $this->stagespan->setVisible(false);
         $this->itemspan->stagename5->setText($this->_stage->stagename);
-        $this->itemspan->detailitem->Reload() ;
+        $this->itemspan->edititemsform->detailitem->Reload() ;
        
     }
     
@@ -544,17 +521,27 @@ class ProdProcList extends \App\Pages\Base
         $item->item_id = $id;
         $item->itemname = $it->itemname;
         $item->item_code = $it->item_code;
-        $item->quantity = H::fqty($this->itemspan->edititemsform->editqty->getText() );
+        $item->quantity =  $this->itemspan->edititemsform->editqty->getDouble() ;
+        $item->zarp =  $this->itemspan->edititemsform->editcost->getDouble() ;
+        $item->price =  $this->itemspan->edititemsform->editprice->getDouble() ;
         
         $this->_itemlist[$item->item_id] = $item;
-        $this->itemspan->detailitem->Reload() ;
+        $this->itemspan->edititemsform->detailitem->Reload() ;
 
         $this->itemspan->edititemsform->clean();        
     }
     public function onDelItem(  $sender) {
         $item = $sender->getOwner()->getDataItem();
         $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
-        $this->itemspan->detailitem->Reload() ;   
+        $this->itemspan->edititemsform->detailitem->Reload() ;   
+        
+    }
+    public function onChangelItem(  $sender) {
+        $item = Item::load($sender->getValue());
+        if($item== null) return;
+        $this->itemspan->edititemsform->editcost->setText($item->zarp)  ;
+        $this->itemspan->edititemsform->editprice->setText($item->getProdPrice())  ;
+
         
     }
     public function onCanceltems(  $sender) {
@@ -563,7 +550,8 @@ class ProdProcList extends \App\Pages\Base
     }
     public function onSaveItems(  $sender) {
     
-        
+   
+        $this->_stage->card =  $this->itemspan->edititemsform->editcard->getText();
         $this->_stage->itemlist = $this->_itemlist;
         $this->_stage->save();   
         $this->itemspan->setVisible(false);
@@ -580,6 +568,8 @@ class ProdProcList extends \App\Pages\Base
             $row->add(new Label('itemname', $item->itemname));
             $row->add(new Label('item_code', $item->item_code));
             $row->add(new Label('item_qty', $item->quantity));
+            $row->add(new Label('item_zarp', $item->zarp));
+            $row->add(new Label('item_price', $item->price));
             $row->add(new ClickLink('deleteitem', $this, 'onDelItem')) ;
           
     }

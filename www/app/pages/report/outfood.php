@@ -20,7 +20,9 @@ class OutFood extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('OutFood')) {
             return;
         }
-
+        $food = \App\System::getOptions("food");
+        $this->_tvars['diffbp'] = $food['diffbp'] ?? 0;
+     
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
@@ -67,7 +69,7 @@ class OutFood extends \App\Pages\Base
         if($rtype ==0) {
 
             $sql = "
-              SELECT  document_date  AS dt,COUNT(*) AS qty  FROM documents_view dv  
+              SELECT  document_date  AS dt,COUNT(*) AS qty,sum(amount) AS am  FROM documents_view dv  
                 WHERE  dv.meta_name='OrderFood' AND  state = 9
                 AND dv.document_date >= " . $conn->DBDate($from) . "
                 AND dv.document_date <= " . $conn->DBDate($to) . "
@@ -95,7 +97,9 @@ class OutFood extends \App\Pages\Base
                     "dt"  =>  H::fd($t),
                     "day"  => $days[$w],
 
-                    "qty" => intval($row['qty'])
+                    "qty" => intval($row['qty']) ,
+                    "amount" => H::fa($row['am']) ,
+                    "av" => H::fa($row['am']/$row['qty'])
                 );
 
             }
@@ -104,10 +108,7 @@ class OutFood extends \App\Pages\Base
 
         if($rtype == 1) {
   
-            
-            $sql = " dv.meta_name='OrderFood' AND  state = 9      
-               AND DATE(dv.document_date) >= " . $conn->DBDate($from) . "
-                AND DATE(dv.document_date) <= " . $conn->DBDate($to).' ' ;
+  
 
             $sql="select i.itemname, sum(0-e.quantity) as qty,sum((e.outprice )*(0-e.quantity)) as am from entrylist_view e 
           join  items i on e.item_id = i.item_id 

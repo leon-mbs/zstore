@@ -172,8 +172,24 @@ class TTN extends \App\Pages\Base
          
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
+                $this->_doc->headerdata["totaldisc"]= $basedoc->headerdata["totaldisc"];
+                $this->_doc->headerdata["bonus"]= $basedoc->headerdata["bonus"];
+       
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
+                   
+                     $k = 1;    
+                     /*  //учитываем  скидку
+                     if ($basedoc->headerdata["totaldisc"] > 0 && $basedoc->amount > 0) {
+                         $am= $basedoc->amount;
+                         $am = $am - $basedoc->getHD("totaldisc",0) ; 
+                         $am = $am - $basedoc->getHD("bonus",0) ; 
+
+                         if ($am>=0) {
+                            $k = $am / $basedoc->amount;
+                         }
+                     }
+                       */
                     if ($basedoc->meta_name == 'Order') {
 
                         $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
@@ -201,8 +217,23 @@ class TTN extends \App\Pages\Base
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        if($order->getNotSendedItem() == 0){
-                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                      //  $this->_itemlist = $order->unpackDetails('detaildata');
+                                               
+                        $nosent = $order->getNotSendedItem();
+                        
+                        if( count($nosent)  == 0){
+                           $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                        } else
+                        { 
+                           $this->_itemlist = [];
+                           $nosentids=array_keys($nosent) ;
+                           foreach($order->unpackDetails('detaildata') as $oit){
+                              if(in_array($oit->item_id,$nosentids)) {
+                                  $oit->quantity= $nosent[$oit->item_id];
+                                  $this->_itemlist[$oit->item_id] = $oit;
+                                  
+                              }
+                           } 
                         }
                         if($order->getHD('paytype',0) == 3){
                             $this->setWarn('В замовленні не передбачена оплата. Створіть чек  або ВН') ;
@@ -214,28 +245,16 @@ class TTN extends \App\Pages\Base
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
-                            
+                            $order->unreserve();  
+                         
                         }
 
 
                         $this->OnChangeCustomer($this->docform->customer);
-
-                        $itemlist = $basedoc->unpackDetails('detaildata');
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $i => $it) {
-                            $it->price = $it->price * $k;
-                            $this->_itemlist[$i] = $it;
-                        }
+                        
                         $this->calcTotal();
 
-                        if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
-                            $order->updateStatus(Document::STATE_INSHIPMENT);
-                        }
+                       
 
 
                     }
@@ -257,18 +276,8 @@ class TTN extends \App\Pages\Base
                  
                         $this->OnChangeCustomer($this->docform->customer);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $it) {
-                            $it->price = $it->price * $k;
-                            $this->_itemlist[$it->item_id] = $it;
-                        }
-
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+        
                         $this->calcTotal();
                     }
 
@@ -291,19 +300,12 @@ class TTN extends \App\Pages\Base
                      
                       
                         $this->OnChangeCustomer($this->docform->customer);
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
+    
                         $this->docform->nostore->setChecked(true);
                     
 
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
-                            $item->price = $item->price * $k;
-                            $this->_itemlist[ ] = $item;
-                        }
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+     
                         $this->calcTotal();
                     }
 
@@ -325,20 +327,15 @@ class TTN extends \App\Pages\Base
 
                        
                         $this->OnChangeCustomer($this->docform->customer);
-                        $k = 1;      //учитываем  скидку
-                        if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
-                            $k = ($basedoc->amount - $basedoc->headerdata["paydisc"]) / $basedoc->amount;
-                        }
-
-
-                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            // $item->price = $item->getPrice($basedoc->headerdata['pricetype']);
-                            $item->price = $item->price * $k;
-                            $this->_itemlist[] = $item;
-                        }
+             
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+     
                         $this->calcTotal();
                     }
+                    
+                    
                 }
+                
             }
         }
 
@@ -619,13 +616,14 @@ class TTN extends \App\Pages\Base
         if ($this->checkForm() == false) {
             return;
         }
-
+                  
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
         $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
- 
+        $this->_doc->headerdata["payamount"]  =$this->_doc->amount;  
+      
         if($this->_doc->headerdata['nostore']==1)  {
            // $this->_doc->payamount = 0;
         }
@@ -654,7 +652,8 @@ class TTN extends \App\Pages\Base
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-  
+                $this->_doc->updateStatus(Document::STATE_EXECUTED);
+                
              
              
                 if ($this->_doc->parent_id > 0) {
@@ -668,15 +667,17 @@ class TTN extends \App\Pages\Base
 
                     }
                     if($basedoc->meta_name == 'Order') {
-                        $basedoc->unreserve();     
+                        
+                        $nosent = $basedoc->getNotSendedItem(); 
+                         
+                        if(count($nosent)==0 && ($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP )) {
+                            $basedoc->updateStatus(Document::STATE_INSHIPMENT);
+                        }  
+                           
                     }            
-                                   
                     
                 }  
                           
-                $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                
-                           
              }            
             
             
@@ -708,8 +709,9 @@ class TTN extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
-            return;
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+           return;
         }
     }
 

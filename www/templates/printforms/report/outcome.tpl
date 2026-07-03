@@ -3,14 +3,14 @@
 
     <tr>
 
-        <td align="center" colspan="6">
+        <td align="center" colspan="7">
             Період з {{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="5">
-            Продажі по товарах <br><br>
+        <td align="center" colspan="7">
+            Продажі за  товарами <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
@@ -25,7 +25,7 @@
         <th align="right" style="border: solid black 1px">Приб.,%</th>
       {{/noshowpartion}}
 
-
+      <th> </th>
     </tr>
     {{#_detail}}
     <tr>
@@ -50,7 +50,7 @@
         <td align="right" >{{navarproc}}</td>
       {{/noshowpartion}}
 
-
+      <td>{{descr}} </td>
     </tr>
     {{/_detail}}
     <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
@@ -60,15 +60,15 @@
     <td align="right" ><b>{{totnavarproc}}</b></td> 
       {{/noshowpartion}}
     
- 
+      <td>  </td>
     </tr>
 
 </table>
 {{/_type1}}
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажі по покупцям <br> <br>
+    <td align="center" colspan="7">
+        Продажі за покупцями <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -84,6 +84,7 @@
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
+    <th></th>    
     <th></th>    
 </tr>
 {{#_detail}}
@@ -102,6 +103,7 @@
     {{/noshowpartion}}
     
     <td></td>  
+    <td>{{descr}}</td>  
 </tr>
 {{/_detail}}
 <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
@@ -111,15 +113,16 @@
 <td align="right" ><b>{{totnavarproc}}</b> </td> 
 
     {{/noshowpartion}}
-
+    <td></td>  
+    <td></td>  
 </tr>
 
 </table>
 {{/_type2}}
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажі по датам <br> <br>
+    <td align="center" colspan="7">
+        Продажі за датами <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -127,6 +130,7 @@
    <th style="border: solid black 1px;width:120px;">Дата</th>
 
     <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th></th>
     <th></th>
     <th></th>
     <th></th>
@@ -144,6 +148,7 @@
     <td></td>
     <td></td>
     <td></td>
+    <td>{{descr}}</td>
 
 </tr>
 {{/_detail}}
@@ -153,7 +158,7 @@
 {{/_type3}}
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
+    <td align="center" colspan="7">
         Послуги та роботи <br><br>
     </td>
 </tr>
@@ -166,6 +171,7 @@
     <th align="right" style="border: solid black 1px; ">Прибуток</th>
     <th align="right" style="border: solid black 1px; ">Приб.,%</th>
    
+    <th></th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -181,6 +187,7 @@
     <td align="right">{{navarproc}}</td>
  
     <td></td>
+    <td>{{descr}}</td>
 </tr>
 {{/_detail}}
  <tr><td colspan="2"></td>
@@ -190,6 +197,7 @@
     <td align="right" ><b>{{totnavar}}</b></td> 
     <td align="right" ><b>{{totnavarproc}}</b></td> 
     <td></td>   
+    <td></td>   
     
  
 </table>
@@ -197,8 +205,8 @@
 
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажi по категорiям <br> <br>
+    <td align="center" colspan="7">
+        Продажi за категорiями <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -214,6 +222,7 @@
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
+    <th></th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -232,7 +241,8 @@
   
     {{/noshowpartion}}
   
-    <td></td>
+  
+    <td>{{descr}}</td>
 </tr>
 {{/_detail}}
 <tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
@@ -241,6 +251,8 @@
 <td align="right"   > <b>{{totnavar}}</b></td>
 <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
+    <td> </td>
+    <td> </td>
 
  </tr>
 
@@ -249,8 +261,8 @@
 
 {{#_type6}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажi по компанiям <br> <br>
+    <td align="center" colspan="7">
+        Продажi за компанiями <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -265,6 +277,7 @@
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
+    <th></th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -284,15 +297,18 @@
     {{/noshowpartion}}
    
     <td></td>
+    <td>{{descr}}</td>
 </tr>
 {{/_detail}}
-<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td>
+<tr><td colspan="4" ></td> 
+<td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
  <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
  
+       <td> </td>
 
   </tr>
 
@@ -301,8 +317,8 @@
 
 {{#_type7}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажi по складам <br> <br>
+    <td align="center" colspan="7">
+        Продажi за  складами <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -317,6 +333,7 @@
    <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
+    <th></th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -336,6 +353,7 @@
     {{/noshowpartion}}
   
     <td></td>
+    <td>{{descr}}</td>
 </tr>
 {{/_detail}}
 <tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td>
@@ -344,15 +362,16 @@
  <td align="right"   > <b>{{totnavar}}</b></td>
  <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
- 
+       <td> </td>
+
  </tr>
 
 </table>
 {{/_type7}}     
 {{#_type8}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажi по джерелам <br> <br>
+    <td align="center" colspan="7">
+        Продажi за джерелами <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -368,7 +387,8 @@
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
-    
+       <th> </th>
+   
 </tr>
 {{#_detail}}
 <tr>
@@ -386,7 +406,8 @@
         <td align="right" >{{navarproc}}</td>
   
     {{/noshowpartion}}
-     
+       <td> {{descr}}</td>
+    
 </tr>
 {{/_detail}}
 <tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
@@ -396,14 +417,15 @@
     <td align="right"   > <b>{{totnavarproc}}</b></td>
     {{/noshowpartion}}
 
-   </tr>
+      <td> </td>
+    </tr>
 
 </table>
 {{/_type8}}     
 {{#_type12}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажі по брендам  {{brand}}<br> <br>
+    <td align="center" colspan="7">
+        Продажі за брендами  {{brand}}<br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -419,7 +441,8 @@
   <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
-  
+     <th> </th>
+    
 </tr>
 {{#_detail}}
 <tr>
@@ -437,6 +460,7 @@
         <td align="right" >{{navarproc}}</td>
     
     {{/noshowpartion}}
+    <td> {{descr}}</td>
     
 </tr>
 {{/_detail}}
@@ -447,13 +471,13 @@
     {{/noshowpartion}}
 
   </tr>
-
+   <td> </td>
 </table>
 {{/_type12}}
 {{#_type13}}
 <tr style="font-size:larger; font-weight: bolder;">
-    <td align="center" colspan="5">
-        Продажі по постачальниках <br> <br>
+    <td align="center" colspan="7">
+        Продажі за постачальниками <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -469,6 +493,7 @@
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
+    <th></th>    
     <th></th>    
 </tr>
 {{#_detail}}
@@ -487,6 +512,7 @@
     {{/noshowpartion}}
     
     <td></td>  
+    <td>{{descr}}</td>  
 </tr>
 {{/_detail}}
 <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
@@ -496,7 +522,7 @@
 <td align="right" ><b>{{totnavarproc}}</b> </td> 
 
     {{/noshowpartion}}
-
+     <td> </td>
 </tr>
 
 </table>

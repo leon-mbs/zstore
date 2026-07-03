@@ -85,7 +85,7 @@ class VarList extends \App\Pages\Base
     public function OnGroupRow($row) {
         $group = $row->getDataItem();
         $row->add(new ClickLink('groupname', $this, 'onGroup'))->setValue($group->full_name);
-        if ($group->cat_id == $this->group->cat_id) {
+        if ($group->cat_id == ($this->group->cat_id ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
     }

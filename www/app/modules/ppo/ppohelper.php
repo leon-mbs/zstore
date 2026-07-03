@@ -292,11 +292,12 @@ class PPOHelper
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
      
         $ret =  self::send($xml, 'doc', $pos);
-        if($ret['success']==true) {
+      
+        if($ret['success']==true && strlen($ret['docnumber']??'')>0 && $pos->testing != 1  ) {
             $r = new ZRecord();
             $r->createdon = time();
             $r->amount = $amount;
-            $r->fndoc = $ret['docnumber'];
+            $r->fndoc = $ret['docnumber'] ;
             $r->fnpos = $pos->fiscalnumber;
             $r->ramount = $amountr;
             $r->cnt = $cnt;
@@ -333,7 +334,7 @@ class PPOHelper
         }
         
         
-        $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
+        $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']??0);
 
         $header = array();
         //  $header['doctype'] = $doctype;
@@ -650,7 +651,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
+            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
 
         return $ret;
@@ -753,7 +754,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number);
+            self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  
@@ -764,6 +765,8 @@ class PPOHelper
 
     //функции работы  со статистикой  для  z-отчета
     public static function insertStat($pos_id, $checktype, $amount0, $amount1, $amount2, $amount3, $document_number = '', $fiscnumber='') {
+        if(strlen($fiscnumber)==0) return;
+ 
         $conn = \ZDB\DB::getConnect();
 
         if(strlen($document_number) >0) {
@@ -947,7 +950,7 @@ class PPOHelper
                         $amount3 += $sum;
                     } else {
                         \App\Helper::log("payform ".$fc);
-                        \App\Helper::log($xml);
+                      //  \App\Helper::log($xml);
                     }
                 }
 

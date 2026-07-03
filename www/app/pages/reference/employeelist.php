@@ -163,7 +163,9 @@ class EmployeeList extends \App\Pages\Base
         $this->employeetable->employeelist->Reload();
     }
 
-
+    public function OnFilter($sender) {
+           $this->employeetable->employeelist->Reload();
+    }
 
     public function editOnClick($sender) {
         $this->_employee = $sender->owner->getDataItem();
@@ -416,6 +418,8 @@ class EmployeeList extends \App\Pages\Base
         $this->updateFiles();
   
     }
+
+   
 
   
     

@@ -68,8 +68,8 @@ class Order extends \App\Entity\Doc\Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
-                        "phone"           => $this->headerdata["phone"],
-                        "email"           => $this->headerdata["email"],
+                        "phone"           => $this->headerdata["phone"]??false,
+                        "email"           => $this->headerdata["email"]??false,
                         "paytypename"     => $this->getHD("paytypename",'') ,
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
@@ -83,7 +83,7 @@ class Order extends \App\Entity\Doc\Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
 
                         "total"           => H::fa($this->amount),
-                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
+                        "totaldisc"           => $this->getHD("totaldisc",0)  > 0 ? H::fa($this->getHD("totaldisc",0)) : false,
                         "addbonus"        => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"        => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"        => $allbonus > 0 ? H::fa($allbonus) : false,
@@ -174,7 +174,10 @@ class Order extends \App\Entity\Doc\Document
 
         $this->unreserve();
 
-        if(intval($this->headerdata['store'])==0) {
+        
+        $store_id = intval($this->headerdata['store']);
+        
+        if($store_id==0) {
             return;
         }
 
@@ -186,35 +189,34 @@ class Order extends \App\Entity\Doc\Document
       
             //оприходуем  с  производства
             if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
-
-                if ($item->autooutcome == 1) {    //комплекты
-                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
-                }
-
-
+                                                               
+                if ($item->autooutcome == 1) {     //резервируеем комплекты
+                    $item->setToProd($required,$this->headerdata['store'],$this->document_id,true);
+                }  
+                //оприходуем
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
                     throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
                 }
-                $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
+                $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
 
                 $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
-                $sc->tag=Entry::TAG_FROMPROD;
-                $sc->createdon=time();
+                $sc->tag=Entry::TAG_RESERV;
 
-                $sc->save();
+                $sc->save();                  
+                    
+                 
+               
             }
-       
         
-        
-            if (false == $item->checkMinus($item->quantity, $this->headerdata['store']) && $this->headerdata['store'] >0 ) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-
+            
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+                throw new \Exception("На складі всього ".H::fqty($onstore) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
             }
- 
-
+            
+            
             $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $item);
 
             foreach ($listst as $st) {
@@ -232,7 +234,7 @@ class Order extends \App\Entity\Doc\Document
     //отмена  резерва
     public function unreserve() {
         $conn = \ZDB\DB::getConnect();
-        $conn->Execute("delete from entrylist where document_id =" . $this->document_id);
+        $conn->Execute("delete from entrylist where tag=".Entry::TAG_RESERV." and document_id =" . $this->document_id);
     }
 
     protected function onState($state, $oldstate) {
@@ -249,13 +251,27 @@ class Order extends \App\Entity\Doc\Document
             $this->reserve()  ;
 
         }
+        if ( $state == self::STATE_READYTOSHIP 
+           ||  $state == self::STATE_INSHIPMENT 
+           ||  $state == self::STATE_CLOSED 
+           ||  $state == self::STATE_DELIVERED 
+           ) {
+
+            $this->DoStore()  ;
+            $this->DoBalans() ;
+        }
+        
+        
         if ($state == self::STATE_INPROCESS) {
 
-            if(strlen($this->headerdata['promocode']) > 0){
+            if($this->getHD('paytype',0) != 1) {
+                return;
+            }           
+            if(strlen($this->headerdata['promocode']??'') > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
             }
 
-            if($this->payed >0) {
+            if($this->payed >0 || $this->headerdata['bonus'] > 0) {
                 $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
               
                 \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
@@ -268,15 +284,100 @@ class Order extends \App\Entity\Doc\Document
     /**
     * @override
     */
+    public function DoStore() {
+        $store_id = intval($this->headerdata['store'] ??0 );
+        if($store_id==0) {
+            return;
+        }  
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from entrylist where tag=".Entry::TAG_RESERV." and document_id =" . $this->document_id);
+        
+        
+        $cnt = intval( $conn->GetOne("select count(*) from entrylist where document_id = " . $this->document_id)   );
+        if($cnt>0)  return;
+        
+       
+        if($this->getHD('dostore',0) ==0 )  {
+            return;  //не проводить  по  складу
+        }
+       
+ 
+        $am =   $this->getAmountReg()   ;
+        $k = 1;   //учитываем  скидку
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }   
+
+        $amount = 0;
+        foreach ($this->unpackDetails('detaildata') as   $item) {
+
+            $onstore = H::fqty($item->getQuantity($store_id )) ;
+            $required = $item->quantity - $onstore;
+
+
+            //оприходуем  с  производства
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
+
+                if ($item->autooutcome == 1) {    //комплекты
+                   $item->setToProd($required,$store_id,$this->document_id);
+                }
+
+                //оприходуем
+                $price = $item->getProdprice();
+
+                if ($price == 0) {
+                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                }
+                $stock = \App\Entity\Stock::getStock($store_id, $item->item_id, $price, $item->snumber, $item->sdate, true);
+
+                $sc = new Entry($this->document_id, $required * $price, $required);
+                $sc->setStock($stock->stock_id);
+                $sc->tag=Entry::TAG_FROMPROD;
+
+                $sc->save();
+            }
+
+            if (false == $item->checkMinus($item->quantity, $store_id)) {
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+
+            }
+
+            //продажа
+            $listst = \App\Entity\Stock::pickup($store_id, $item );
+
+            foreach ($listst as $st) {
+                $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                $sc->setStock($st->stock_id);
+                //   $sc->setExtCode($item->price * $k - $st->partion); //Для АВС
+                $sc->setOutPrice($item->price * $k);
+               
+                $sc->tag=Entry::TAG_SELL;
+                $sc->save();
+                $amount += $item->price * $k * $st->quantity;
+            }
+        }
+    
+              
+    }
+    /**
+    * @override
+    */
     public function DoBalans() {
-          $conn = \ZDB\DB::getConnect();
-          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
         if(($this->customer_id??0) == 0) {
             return;
         }
 
-              
+        if($this->payamount >0  && $this->getHD('dostore',0) == 1  ) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$this->payamount;
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }           
        //платежи       
         foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
             $b = new \App\Entity\CustAcc();
@@ -287,7 +388,7 @@ class Order extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-       $this->DoAcc() ;
+        $this->DoAcc() ;
              
     }
     /**
@@ -331,4 +432,68 @@ class Order extends \App\Entity\Doc\Document
 
         
     }       
+    
+    
+   //дропшиппинг и  фулфилмент
+   public function generateReportDF() {
+
+        $modules = \App\System::getOptions("modules");
+   
+        $i = 1;
+        $detail = array();
+
+        foreach ($this->unpackDetails('detaildata') as $item) {
+
+            if (isset($detail[$item->item_id])) {
+                $detail[$item->item_id]['quantity'] += $item->quantity;
+            } else {
+
+
+                $detail[] = array( 
+                                  "tovar_name" => $item->itemname,
+                                  "tovar_code" => $item->item_code,
+                                  "quantity"   => H::fqty($item->quantity),
+                                  "price"      => H::fa($item->price),
+                                  "pricefrom"      => H::fa($item->pricefrom),
+                                  "msr"        => $item->msr,
+                                  "desc"       => $item->desc,
+                                  "amount"     => H::fa($item->quantity * $item->price)
+                );
+            }
+        }
+        
+        $da=  trim($this->headerdata["npaddressfull"] ??'') ;
+        
+        if(strlen($da)==0) {
+           $da =  trim($this->headerdata["ship_address"] ??'') ;
+        } 
+        
+        $header = array('date'            => H::fd($this->document_date),
+                        "_detail"         => $detail,
+                      
+                        "delivery"        => $this->headerdata["delivery_name"],
+                        "ship_address"    => strlen($da) > 0 ? $da: false,
+                        "notes"           => nl2br($this->notes),
+                        "outnumber"       => $this->headerdata["outnumber"]??'',
+                        "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
+                        "document_number" => $this->document_number,
+                      
+                        "totalfrom"           => H::fa($this->headerdata["totalfrom"]??'') ,
+                        "total"           => H::fa($this->amount) 
+                   
+        );                                                                               
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
+    
+        $header["isds"] = $this->headerdata['dsff'] ==1;
+        $header["isff"] = $this->headerdata['dsff'] ==2;
+   
+
+
+        $report = new \App\Report('doc/order_df.tpl');
+
+        $html = $report->generate($header);
+
+        return $html;
+    }
+   
 }

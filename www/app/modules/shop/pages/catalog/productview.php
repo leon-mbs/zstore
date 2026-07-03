@@ -28,6 +28,7 @@ class ProductView extends Base
 
     public function __construct($item_id = 0) {
         parent::__construct();
+        $conn = \ZDB\DB::getConnect();
 
         $item_id = intval($item_id);
 
@@ -102,7 +103,7 @@ class ProductView extends Base
             $this->buy->setVisible(false);
         } else {
 
-            if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
+            if ($product->getQuantityShop() > 0 || $this->_tvars["isfood"]==true) {
                 $this->onstore->setText('В наявності');
                 $this->buy->setValue('Купити');
             } else {
@@ -131,13 +132,40 @@ class ProductView extends Base
         $this->varpan->add(new Label("vattrname", $product->vattrname))  ;
 
 
-
+        //рекомендованные  товары
         $this->add(new Panel('recpan'))->setVisible(count($product->reclist ?? [])>0);
         $reclist=[];
         foreach($product->reclist ?? [] as $r) {
             $reclist[] = Product::load($r->item_id);
         }
         $this->recpan->add(new DataView('reclist', new ArrayDataSource($reclist), $this, 'reclistOnRow'))->Reload();
+
+
+       //покупают вместе
+
+        $pairlist=[];
+        
+        $sql="SELECT  * FROM (SELECT i.item_id,COUNT(*) AS cnt  FROM  entrylist_view e 
+                JOIN items i  ON i.item_id=e.item_id 
+
+                AND i.disabled <> 1 AND i.detail  not  LIKE '%<noshop>1</noshop>%' and i.item_id<>{$product->item_id}  
+                AND e.document_id IN (
+                SELECT ee.document_id FROM entrylist_view ee WHERE  item_id={$product->item_id} AND tag=-1)
+                GROUP BY i.item_id 
+                ) t
+                HAVING cnt >4
+                ORDER  BY cnt  DESC 
+                limit 0,4";
+        
+        
+        foreach($conn->Execute($sql)  as $row){
+           $pairlist[]= Product::load($row['item_id']);
+        }
+        
+        $this->add(new Panel('pairpan'))->setVisible(count($pairlist)>0);
+      
+        
+        $this->pairpan->add(new DataView('pairlist', new ArrayDataSource($pairlist), $this, 'pairlistOnRow'))->Reload();
 
 
 
@@ -329,6 +357,12 @@ class ProductView extends Base
         $item = $row->getDataItem();
         $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue( $item->getImageUrl(true,true) );
         $row->add(new BookmarkableLink("rcname", $item->getSEF()))->setValue($item->itemname);
+
+    }
+    public function pairlistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new BookmarkableLink("pairimage", $item->getSEF()))->setValue( $item->getImageUrl(true,true) );
+        $row->add(new BookmarkableLink("pairname", $item->getSEF()))->setValue($item->itemname);
 
     }
 }

@@ -198,17 +198,33 @@ class GoodsIssue extends \App\Pages\Base
                         // $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->_orderid = $basedocid;
                         $this->docform->order->setText($basedoc->document_number);
-
-                        $notfound = array();
+                   
+                        
                         $order = $basedoc->cast();
 
-                        if($order->getNotSendedItem() == 0){
+                        
+                        $this->_itemlist = $order->unpackDetails('detaildata');
+                                               
+                        $nosent = $order->getNotSendedItem();
+                        
+                        if( count($nosent)  == 0){
                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                        } else
+                        { 
+                           $this->_itemlist = [];
+                           $nosentids=array_keys($nosent) ;
+                           foreach($order->unpackDetails('detaildata') as $oit){
+                              if(in_array($oit->item_id,$nosentids)) {
+                                  $oit->quantity= $nosent[$oit->item_id];
+                                  $this->_itemlist[$oit->item_id] = $oit;
+                                  
+                              }
+                           } 
                         }
 
-                        $this->docform->total->setText(H::fa($order->amount));
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        
+                       
+                       
                         if($basedoc->state == Document::STATE_WP || $basedoc->hasPayments()) {
                             $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
                         }
@@ -217,6 +233,8 @@ class GoodsIssue extends \App\Pages\Base
                         
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
+                            $order->unreserve();  
+                     
                         }
                         if($order->headerdata['payment']>0) {
                             $this->docform->payment->setValue($order->headerdata['payment']);
@@ -224,9 +242,8 @@ class GoodsIssue extends \App\Pages\Base
 
 
 
-                        // $this->calcTotal();
-                        $this->docform->total->setText($basedoc->amount);
-
+                        $this->calcTotal();
+                        
                         $this->calcPay();
 
 
@@ -249,7 +266,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
                         $this->docform->fop->setValue($basedoc->headerdata['fop']);
      
-                        $notfound = array();
+                       
                         $invoice = $basedoc->cast();
 
 
@@ -337,7 +354,9 @@ class GoodsIssue extends \App\Pages\Base
 
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            $item->price = $item->getPrice(); //последние  цены
+                            $it = \App\Entity\Item::load($item->item_id);
+                            $item->price = $it->getPrice(); //последние  цены
+                              
                             $this->_itemlist[ ] = $item;
                         }
                         $this->calcTotal();
@@ -673,7 +692,7 @@ class GoodsIssue extends \App\Pages\Base
             $this->editdetail->editserial->setText("");
             $this->editdetail->editquantity->setText("1");
 
-            $this->editdetail->editprice->setText("");
+            $this->editdetail->editprice->setText("0");
         } else {
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
@@ -778,7 +797,11 @@ class GoodsIssue extends \App\Pages\Base
                         \App\Entity\Notify::toSystemLog($msg) ;
                     }
                     if($order->meta_name == 'Order') {
-                        $order->unreserve();     
+                        $nosent = $order->getNotSendedItem(); 
+                         
+                        if(count($nosent)==0 && ($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP )) {
+                            $order->updateStatus(Document::STATE_INSHIPMENT);
+                        }   
                     }  
                 }
        
@@ -789,7 +812,7 @@ class GoodsIssue extends \App\Pages\Base
 
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid'])) {
+                if($this->_doc->payamount > $this->_doc->payed && $this->_doc->payamount > doubleval($this->_doc->headerdata['prepaid']??0)) {
                     $this->_doc->updateStatus(Document::STATE_WP);
                 }
                 
@@ -818,7 +841,9 @@ class GoodsIssue extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+
             return;
         }
     }

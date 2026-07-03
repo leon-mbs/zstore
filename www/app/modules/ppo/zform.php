@@ -134,7 +134,7 @@ class ZForm extends \App\Pages\Base
         $ret = \App\Modules\PPO\PPOHelper::check($doc);
 
 
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+        if ($ret['success'] == false && ($ret['doclocnumber'] ?? 0) > 0) {
             //повторяем для  нового номера
             $this->_pos->fiscdocnumber = $ret['doclocnumber'];
             $this->_pos->save();
@@ -146,7 +146,7 @@ class ZForm extends \App\Pages\Base
             return;
         } else {
 
-            if ($ret['docnumber'] > 0) {
+            if ( ($ret['docnumber'] ?? 0) > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
                 $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
@@ -188,7 +188,7 @@ class ZForm extends \App\Pages\Base
 
             $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
 
-            if ($ret['success'] == false && $ret['docnumber'] > 0) {
+            if ($ret['success'] == false && ($ret['docnumber']??0) > 0) {
                 //повторяем для  нового номера
                 $this->_pos->fiscdocnumber = $ret['docnumber'];
                 $this->_pos->save();
@@ -200,7 +200,7 @@ class ZForm extends \App\Pages\Base
                 $this->setErrorTopPage($ret['data']);
             } else {
                 \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
-                $this->setSuccess('Смена  закрыта');
+                $this->setSuccess('Змiна закрита');
                 $this->stat->clean();
                 $this->OnRefresh($this->filter) ;
 
@@ -230,7 +230,7 @@ class ZForm extends \App\Pages\Base
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
-        if ($ret['success'] == false && $ret['docnumber'] > 0) {
+        if ($ret['success'] == false && ( $ret['docnumber'] ??0) > 0) {
             //повторяем для  нового номера
             $this->_pos->fiscdocnumber = $ret['docnumber'];
             $this->_pos->save();
@@ -241,7 +241,7 @@ class ZForm extends \App\Pages\Base
             return false;
         } else {
 
-            if ($ret['docnumber'] > 0) {
+            if (($ret['docnumber'] ?? 0) > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
                 return true;

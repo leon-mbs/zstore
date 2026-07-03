@@ -4,12 +4,15 @@
         <td align="center" colspan="8">
             Рух по складу  {{store}}
         </td>
+       {{#docs}}  <td> </td>       {{/docs}} 
     </tr>
     <tr>
 
         <td align="center" colspan="8">
             Період з {{datefrom}} по {{dateto}}
         </td>
+             {{#docs}}  <td> </td>       {{/docs}} 
+ 
     </tr>
  
 
@@ -19,7 +22,9 @@
 
         <th style="border: solid black 1px">Код</th>
         <th style="border: solid black 1px">Найменування</th>
-
+          {{#docs}}  <th style="border: solid black 1px">Документ</th>     {{/docs}} 
+               
+ 
         <th align="right" style="border: solid black 1px">Поч.</th>
         <th style="border: solid black 1px">Прих.</th>
         <th align="right" style="border: solid black 1px">Витр.</th>
@@ -27,17 +32,18 @@
        
     </tr>
     {{#_detail}}
-    <tr>
+    <tr   > 
 
         <td>{{date}}</td>
 
         <td>{{code}}</td>
         <td>{{name}}</td>
-
-        <td align="right">{{in}}</td>
-        <td align="right">{{obin}}</td>
-        <td align="right">{{obout}}</td>
-        <td align="right">{{out}}</td>
+          {{#docs}}  <td> {{docnumber}}</td>       {{/docs}} 
+ 
+        <td align="right"  {{#itemrow}} style="font-weight:bolder"   {{/itemrow}} >{{in}}</td>
+        <td align="right"  {{#itemrow}} style="font-weight:bolder"   {{/itemrow}} >{{obin}}</td>
+        <td align="right"  {{#itemrow}} style="font-weight:bolder"   {{/itemrow}} >{{obout}}</td>
+        <td align="right"  {{#itemrow}} style="font-weight:bolder"   {{/itemrow}} >{{out}}</td>
  
     </tr>
     {{/_detail}}
@@ -45,7 +51,8 @@
     <tr>
 
         <td></td>
-     
+                 {{#docs}}  <td> </td>       {{/docs}} 
+ 
         <td></td>
         <td align="right"><b>Всього</b></td>
 
@@ -61,7 +68,8 @@
     <tr>
 
         <td></td>
-    
+                 {{#docs}}  <td> </td>       {{/docs}} 
+ 
         <td></td>
         <td align="right"><b>На суму</b></td>
 

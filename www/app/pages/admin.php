@@ -80,7 +80,9 @@ class Admin extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnote', $modules['note']));
         $this->modules->add(new CheckBox('modissue', $modules['issue']));
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
+        $this->modules->add(new CheckBox('modhoroshop', $modules['horoshop']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
+        $this->modules->add(new CheckBox('moddf', $modules['df']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
 
         $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
@@ -109,7 +111,7 @@ class Admin extends \App\Pages\Base
           
         $conn = \ZDB\DB::getConnect();
       
-        $where = " where meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood') or    menugroup= ".$conn->qstr('Кафе');
+        $where = " where meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood','ARMFoodW') or    menugroup= ".$conn->qstr('Кафе');
         if($options['usefood']==1) {
             $sql="update metadata set  disabled=0 ";
         }   else {
@@ -191,7 +193,7 @@ class Admin extends \App\Pages\Base
     public function sendSms($sender) {
         $phone = trim( $this->sendform->phone->getText() );
         try{
-            \App\Entity\Subscribe::sendSMS($phone,"test sms");
+            \App\Comm::sendSMS($phone,"test sms");
         } catch(\Exception $e) {
             H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
@@ -204,7 +206,7 @@ class Admin extends \App\Pages\Base
     public function sendBot($sender) {
         $chat_id = trim( $this->sendform->chat_id->getText() );
         try{
-            \App\Entity\Subscribe::sendBot($chat_id,"test bot");
+            \App\Comm::sendBot($chat_id,"test bot");
         } catch(\Exception $e) {
             H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
@@ -256,8 +258,13 @@ class Admin extends \App\Pages\Base
            $this->checkdbanswer->setText('');
     
            $ver = str_replace('.','',System::REQUIRED_DB) ;        
-           $origtables =    file_get_contents("https://zippy.com.ua/updates/{$ver}.db" ) ;  
-                            
+          
+           $origtables =\App\Helper::getContent("https://zippy.com.ua/updates/{$ver}.db") ;
+           if($origtables === false) {
+               return  ;
+           }
+          
+                         
            if(strlen($origtables) == 0 ) {
                $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
                return; 
@@ -277,7 +284,7 @@ class Admin extends \App\Pages\Base
            }
                                   
          
-        //   file_put_contents("z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
+         //  file_put_contents("z:/home/local.site/www/updates/{$ver}.db",serialize($tables)) ;                  
                          
            $origtables = unserialize($origtables) ;
       
@@ -318,7 +325,9 @@ class Admin extends \App\Pages\Base
         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
         $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
+        $modules['horoshop'] = $sender->modhoroshop->isChecked() ? 1 : 0;
         $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
+        $modules['df'] = $sender->moddf->isChecked() ? 1 : 0;
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
 
         $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;

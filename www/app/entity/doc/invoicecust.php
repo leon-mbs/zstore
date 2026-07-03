@@ -92,6 +92,29 @@ class InvoiceCust extends Document
 
         return $list;
     }
+  
+    protected function onState($state, $oldstate) {
+        if($state > 4 ) {
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->state != Document::STATE_CLOSED && $order->meta_name == 'OrderCust'  ) {
+                      $order = $order->cast() ;
+                   
+                      $oitems =  $order->unpackDetails('detaildata');
+                      $items =  $this->unpackDetails('detaildata');
+                      if(count($oitems)=== count($items) ){
+                          $order->updateStatus(Document::STATE_CLOSED);    
+                      }
+                      
+                      
+                }    
+            }
+      }
+   }
+   
+  
+  
     /**
     * @override
     */
@@ -115,7 +138,8 @@ class InvoiceCust extends Document
         $this->DoAcc();  
   
     }
-   public   function DoAcc() {
+  
+    public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
     

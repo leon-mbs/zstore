@@ -30,13 +30,15 @@ class Document extends \ZCL\DB\Entity
     public const STATE_READYTOSHIP = 20; // готов к отправке
     public const STATE_WP          = 21; // ждет  оплату
     public const STATE_PAYED       = 22; // Оплачен
+    public const STATE_WAIT        = 23; // Ожидает обработки
 
     // типы  экспорта
     public const EX_WORD  = 1;    //  Word
     public const EX_EXCEL = 2;    //  Excel
     public const EX_PDF   = 3;    //  PDF
     public const EX_POS   = 4;    //  POS терминал
-    public const EX_MAIL  = 5;    //  Отправка  email
+   // public const EX_MAIL  = 5;    //  Отправка  email
+    public const EX_XML = 6;    //  GNAU XML
 
     //доставка
     public const DEL_SELF    = 1;    //  самовывоз
@@ -267,6 +269,9 @@ class Document extends \ZCL\DB\Entity
     * @param mixed $def
     */
     public function getHD(string $name, $def=null)  {    
+       if(  is_numeric($def)  && ($this->headerdata[$name] ?? "") === "" ) {
+          return $def; 
+       }
        return  $this->headerdata[$name] ?? $def ;
     }    
      
@@ -396,10 +401,12 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
         $user = \App\System::getUser();
-
-        $doc->user_id = $user->user_id;
-        $doc->headerdata['author'] = $user->user_id;
-
+        if($user->user_id > 0) {
+            $doc->user_id = $user->user_id;
+            $doc->headerdata['author'] = $user->user_id;
+           
+        }
+      
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
             $doc->branch_id = \App\ACL::checkCurrentBranch();
@@ -499,6 +506,12 @@ class Document extends \ZCL\DB\Entity
                 }
                 
             }
+            
+            
+            if($state == Document::STATE_WAIT) {
+                 $doc->Cancel();  //отменяем  если  ожидание  обработки 
+            }            
+            
             // подписка  на  смену  статуса
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
             
@@ -628,6 +641,8 @@ class Document extends \ZCL\DB\Entity
                 return "Очікує оплату";
             case Document::STATE_PAYED:
                 return "Оплачений";
+            case Document::STATE_WAIT:
+                return "Очікує обробки";
 
             default:
                 return "Невідомий статус";
@@ -653,6 +668,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_READYTOSHIP] = "Готовий до відправки";
         $list[Document::STATE_WP] = "Очікує оплату";
         $list[Document::STATE_PAYED] = "Оплачений";
+        $list[Document::STATE_WAIT] = "Очікує обробки";
 
         return $list;
     }
@@ -674,6 +690,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_INPROCESS] = "Виконується";
         $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
         $list[Document::STATE_WP] = "Очікує оплату";
+        $list[Document::STATE_WAIT] = "Очікує обробки";
 
         return $list;
     }
@@ -875,7 +892,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
-            return false;
+            return 0;
         }
         $conn = \ZDB\DB::getConnect();
         $states = implode(',', $states);
@@ -1279,12 +1296,15 @@ class Document extends \ZCL\DB\Entity
         return $this->document_id;
     }
 
-
+    /**
+    * сумма для журналов (для однообразия)
+    * 
+    */
     public function getAmountReg() {
         $am=$this->amount;
-        if($this->payamount <> 0) {
-            $am=$this->payamount;
-        }
+        $am = $am - $this->getHD("totaldisc",0) ; 
+        $am = $am - $this->getHD("bonus",0) ; 
+
 
         return  $am;
     }
@@ -1338,7 +1358,13 @@ class Document extends \ZCL\DB\Entity
    public function customExportPDF() { 
        return ''; 
    }   
-    
+   /**
+   * експорт в  XML 
+   * 
+   */
+   public function exportGNAU() { 
+       return ''; 
+   }       
     /**
     * открыт на  редактирование
     * 
@@ -1426,5 +1452,8 @@ class Document extends \ZCL\DB\Entity
     }
   
  
-      
+  //дропшиппинг и  фулфилмент
+   public function generateReportDF() {
+       return $this->generateReport()   ;
+   }
 }

@@ -110,8 +110,8 @@
 
                             </div>
                             <div class="form-group">
-                            <a zippy="cancel" class="btn btn-outline-secondary    ">Скасувати</a>
-                              &nbsp;  &nbsp; 
+                            <a zippy="cancel" class="btn btn-outline-secondary   mr-2  ">Скасувати</a>
+                            
                                 <button type="submit" class="btn btn-primary   ">Зберегти</button>
                                
                             </div>
@@ -190,6 +190,19 @@
                                         </td>
                                     </tr>
                                     {{/woocomerce}}
+                                    
+                                     {{#horoshop}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="edithoroshop">
+                                            <label class="form-check-label mr-sm-2" for="editwoocomerce"> Iнтеграція з
+                                                Хорошоп</label>
+                                        </td>
+                                    </tr>
+                                    {{/horoshop}}
+                                    
+                                    
                                     {{#shop}}
                                     <tr>
                                         <td>
@@ -276,6 +289,15 @@
                                         </td>
                                     </tr>
                                     {{/vdoc}}
+                                   {{#df}}
+                                    <tr>
+                                        <td>
+
+                                            <input class="form-check-input" type="checkbox" zippy="editdf">
+                                            <label class="form-check-label mr-sm-2" for="editdf">Дропшипінг та  фулфілмент</label>
+                                        </td>
+                                    </tr>
+                                    {{/df}}
 
                                 </table>
                             </div>
@@ -306,8 +328,9 @@
 
                     </div>
                     <div class="form-group">
+                            <a zippy="cancelmenu" class="btn btn-outline-secondary   mr-2  ">Скасувати</a>
                         <button type="submit" class="btn btn-primary  ">Зберегти</button>
-                        <a zippy="cancelmenu" class="btn btn-outline-secondary  ml-4   ">Скасувати</a>
+                   
                     </div>
                 </form>
             </div>

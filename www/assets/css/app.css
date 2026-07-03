@@ -1,5 +1,5 @@
 body {
-    font-family: "Segoe UI","Roboto", "Helvetica Neue"; 
+    font-family: system-ui, "Segoe UI","Roboto" ; 
      
 }
       
@@ -26,7 +26,7 @@ body {
 .dark-mode .ctable  {
    color:#fff; 
     background-color: #454d55;
-   font-family: "Segoe UI","Arial";
+   font-family: system-ui,"Segoe UI","Arial";
      
 }
 

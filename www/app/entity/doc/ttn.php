@@ -180,7 +180,11 @@ class TTN extends Document
                 return; //проводки выполняются  в  РН
             }
         }
-
+        $am =   $this->getAmountReg()   ;
+        $k = 1;   //учитываем  скидку
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }   
 
         foreach ($this->unpackDetails('detaildata') as $item) {
             $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
@@ -220,7 +224,7 @@ class TTN extends Document
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
                 //  $sc->setExtCode($item->price - $st->partion); //Для АВС
-                $sc->setOutPrice($item->price);
+                $sc->setOutPrice($item->price * $k);
                 $sc->tag=Entry::TAG_SELL;
                 $sc->save();
             }
@@ -345,18 +349,25 @@ class TTN extends Document
           if(($this->customer_id??0) == 0) {
               return;
           }
+      
+         $amount =  $this->amount;
+         
+         if($this->getHD("payamount",0)  >  0) {
+            $amount =  $this->headerdata["payamount"]; 
+         }
        
            //тмц
-            if($this->amount >0) {
+            if($amount >0) {
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;
                 $b->document_id = $this->document_id;
-                $b->amount = 0-$this->amount;
+                $b->amount = 0-$amount;
                 $b->optype = \App\Entity\CustAcc::BUYER;
                 $b->save();
             }
              
     }
+  
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;

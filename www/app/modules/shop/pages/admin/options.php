@@ -38,7 +38,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new DropDownChoice('shopordertype', array(), 0));
 
 
-        $this->shop->add(new DropDownChoice('shopdefuser', \App\Entity\User::findArray('username','disabled<>1','username')));
+
         $this->shop->add(new DropDownChoice('shopdefpricetype', \App\Entity\Item::getPriceTypeList()));
         $this->shop->add(new DropDownChoice('shopdefbranch', \App\Entity\Branch::getList()));
         $this->shop->add(new TextInput('email'));
@@ -75,12 +75,9 @@ class Options extends \App\Pages\Base
         if (!is_array($this->_pages)) {
             $this->_pages = array();
         }
-        if (intval($shop['defuser'] ??0) ==0) {
-            $admin=\App\Entity\User::getByLogin('admin') ;
-            $shop['defuser']   = $admin->user_id;
-        }
+         
 
-        $this->shop->shopdefuser->setValue($shop['defuser']);
+
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
         $this->shop->defmf->setValue($shop['defmf']??0);
@@ -132,7 +129,7 @@ class Options extends \App\Pages\Base
         }
 
 
-        $shop['defuser'] = $this->shop->shopdefuser->getValue();
+
         $shop['defbranch'] = $this->shop->shopdefbranch->getValue();
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();

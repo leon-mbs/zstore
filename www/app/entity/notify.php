@@ -43,7 +43,7 @@ class Notify extends \ZCL\DB\Entity
                // \App\Helper::sendLetter($user->email, $this->message, "Нове повідомлення");
             }
             if ( $user->usebotfornotify ==1  &&   strlen($user->chat_id) > 0) {
-                \App\Entity\Subscribe::sendBot($user->chat_id, $this->message);
+                \App\Comm::sendBot($user->chat_id, $this->message);
             }
         }
     }
@@ -77,6 +77,15 @@ class Notify extends \ZCL\DB\Entity
         $n->sender_id =  Notify::SYSTEM;
 
         $n->message = $message;
+        $n->save();
+    }
+   
+    public static function sendNotify($user_id, $text,$sender) {
+        $n = new  Notify();
+        $n->user_id = $user_id;
+        $n->sender_id = $sender; 
+        $n->message = $text;
+
         $n->save();
     }
 

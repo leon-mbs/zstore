@@ -67,6 +67,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('brec'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bsent'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bscan'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bsplit'))->onClick($this, 'statusOnSubmit');
 
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
@@ -109,7 +110,14 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->editform->add(new TextInput('editbarcode'));
         $this->editpanel->editform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
-
+        $this->add(new Panel("splitpanel"))->setVisible(false);
+        $this->splitpanel->add(new Label("splitdn"));
+        $this->splitpanel->add(new Form("splitform"));
+        $this->splitpanel->splitform->add(new SubmitButton('splitcancel'))->onClick($this, 'splitOnSubmit');
+        $this->splitpanel->splitform->add(new SubmitButton('splitsave'))->onClick($this, 'splitOnSubmit');
+        $this->splitpanel->splitform->add(new DataView('splititemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_itemlist'), $this, 'splitlistOnRow'));
+ 
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -145,7 +153,7 @@ class OrderList extends \App\Pages\Base
 
         $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer'))->setValue($doc->customer_name);
         $row->customer->setAttribute('onclick', "customerInfo({$doc->customer_id});") ;
-        $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
+        $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 
 
         $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
@@ -179,7 +187,7 @@ class OrderList extends \App\Pages\Base
         if ($doc->state == Document::STATE_FAIL) {
             $row->state->setText('<span class="badge badge-danger">' . $stname . '</span>', true);
         }
-
+     
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         if ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS) {
@@ -274,6 +282,8 @@ class OrderList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
+      
+        
       //проверяем  что есть ТТН
         $list = $this->_doc->getChildren('TTN');
         $ttn = count($list) > 0;
@@ -336,12 +346,19 @@ class OrderList extends \App\Pages\Base
             $this->openedit();
             return;
         }
+        if ($sender->id == "bsplit") {
+            $this->openSplit();
+            return;
+        }
       
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
         try {
-
+            if($this->_doc->user_id==0)  {
+               $this->_doc->user_id = \App\System::getUser()->user_id; 
+               $this->_doc->save();
+            } 
  
             if ($sender->id == "binp") {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
@@ -372,8 +389,8 @@ class OrderList extends \App\Pages\Base
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
                 }
-
-                if($ttn== false && $gi == false) {
+                                          
+                if($ttn== false && $gi == false && $this->_doc->getHD('dostore',0) ==0) {
                     $this->setWarn('Замовлення закрито без доставки');
                 }
 
@@ -417,12 +434,13 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->brec->setVisible(false);
         $this->statuspan->statusform->bsent->setVisible(false);
         $this->statuspan->statusform->bscan->setVisible(false);
+        $this->statuspan->statusform->bsplit->setVisible(false);
         $this->statuspan->moveform->setVisible(false);
 
         $this->statuspan->resform->setVisible(false);
 
 
-        $this->statuspan->statusform->bscan->setAttribute('onclick', "openscan({$this->_doc->document_id})");
+     //   $this->statuspan->statusform->bscan->setAttribute('onclick', "openscan({$this->_doc->document_id})");
 
 
         //новый
@@ -442,6 +460,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brec->setVisible(false);
             $this->statuspan->statusform->bsent->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
+            $this->statuspan->statusform->bsplit->setVisible(false);
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
@@ -466,6 +485,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bsent->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(true);
             $this->statuspan->statusform->bscan->setVisible(true);
+            $this->statuspan->statusform->bsplit->setVisible(true);
 
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
@@ -475,8 +495,7 @@ class OrderList extends \App\Pages\Base
         if ($state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bsent->setVisible(true);
             $this->statuspan->statusform->brec->setVisible(true);
-            $this->statuspan->statusform->bscan->setVisible(true);
-
+           
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
             $this->statuspan->statusform->bgi->setVisible(true);
@@ -548,6 +567,9 @@ class OrderList extends \App\Pages\Base
         if ($state < 5) {
             $this->statuspan->statusform->bref->setVisible(true);
         }
+        if ($state == Document::STATE_WAIT ) {
+            $this->statuspan->statusform->binp->setVisible(true);
+        }
 
         if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
             $this->statuspan->moveform->setVisible(true);
@@ -586,11 +608,14 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bgi->setVisible(false);
             $this->statuspan->statusform->bginv->setVisible(false);
         }
+
         if ($pt ==3  ) {
             $this->statuspan->statusform->bttn->setVisible(false);
-        
         }
-        
+
+        if ( $this->_doc->getHD('dostore',0) ==1) {
+            $this->statuspan->statusform->bttn->setVisible(false);
+        }        
         
     }
 
@@ -808,6 +833,7 @@ class OrderList extends \App\Pages\Base
 
     }
 
+    //сборка
     public function openedit() {
         $this->editpanel->setVisible(true);
         $this->listpanel->setVisible(false);
@@ -833,6 +859,8 @@ class OrderList extends \App\Pages\Base
 
     }
 
+  
+    
     public function editlistOnRow($row) {
         $item = $row->getDataItem();
         $row->add(new  Label('editlistname', $item->itemname));
@@ -881,7 +909,11 @@ class OrderList extends \App\Pages\Base
    
     public function editOnSubmit($sender) {
 
-
+            if ($sender->id == "editcancel") {
+                 $this->editpanel->setVisible(false);
+                 $this->listpanel->setVisible(true);
+                 return;
+            }
             $conn = \ZDB\DB::getConnect();
             $conn->BeginTrans();
 
@@ -915,6 +947,136 @@ class OrderList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
 
     }
+  
+    //разделение
+    public function openSplit() {
+        $this->splitpanel->setVisible(true);
+        $this->listpanel->setVisible(false);
+        $this->statuspan->setVisible(false);
+      
+        $this->_doc = Document::load($this->_doc->document_id);
+        
+       
+        $this->splitpanel->splitdn->setText($this->_doc->document_number);
+        $this->_itemlist = [];
+        foreach($this->_doc->unpackDetails('detaildata')  as $it) {
+
+            $it->newqty =   0;
+      
+            $this->_itemlist[] = $it;
+
+        }
+
+        $this->splitpanel->splitform->splititemlist->Reload();
+       
+    }
+
+    public function splitlistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new  Label('splitlistname', $item->itemname));
+        $row->add(new  Label('splitlistcode', $item->item_code));
+
+        $row->add(new  Label('splitlistqty', $item->quantity));
+        $row->add(new TextInput('splitlistnewqty', new \Zippy\Binding\PropertyBinding($item, 'newqty')));
+
+    }
+  
+    public function splitOnSubmit($sender) {
+
+            if ($sender->id == "splitcancel") {
+                 $this->splitpanel->setVisible(false);
+                 $this->listpanel->setVisible(true);
+                 return;
+            }
+            
+            if($this->_doc->hasPayments() ){
+                $this->setError('Документ  з оплатами не  може  бути розділений') ;
+                return;
+            }
+            $ch=$this->_doc->getChildren(); 
+            if(is_array($ch) && count($ch)  >0 ){
+                $this->setError('Документ  має дочірні') ;
+                return;
+            }
+             
+            if($this->_doc->getHD('totaldisc',0)>0 || $this->_doc->getBonus()>0 || $this->_doc->getBonus(false)>0 ){
+                $this->setError('Документ  зі знижками  або бонусами не  може  бути розділений') ;
+                return;
+            }
+            
+            
+            $conn = \ZDB\DB::getConnect();
+            $conn->BeginTrans();
+
+            try {
+                $newdoc= $this->_doc->cast() ;
+                $newdoc->document_id=0;
+                $newdoc->document_date=time();
+                $newdoc->document_number=$newdoc->nextNumber();;
+                $oldlist=[] ;
+                $newlist=[] ;
+                $totalold=0;
+                $totalnew=0;
+                
+                foreach ($this->_itemlist as   $item) {
+                    
+                    
+                     if($item->newqty > $item->quantity || $item->newqty < 0 )  {
+                         $this->setError('Невiрна кiлькiсть для '.$item->itemname) ;
+                         return;
+                     }
+                    
+                   
+                    $newitem = \App\Entity\Item::load($item->item_id);
+                    $newitem->price = $item->price ;
+                    $newitem->desc  = $item->desc ;
+                    $newitem->quantity  =   $item->newqty  ;
+                    $item->quantity  = $item->quantity -  $item->newqty  ;
+                     
+                    if($newitem->quantity  > 0) {
+                      
+                       $newlist[]= $newitem;
+                       $totalnew += $newitem->price * $newitem->quantity; 
+                    } 
+                    if($item->quantity  > 0) {   
+                       $oldlist[]= $item; 
+                       $totalold += $item->price * $item->quantity; 
+                    }
+
+                }
+                
+                if(count($oldlist)==0 || count($newlist)==0)  {
+                     $this->setError('Порожній перелік позицій в старому або новому замовленнi ') ;
+                     return;
+                }
+                
+                $this->_doc->packDetails('detaildata', $oldlist)  ;
+                $this->_doc->amount=$totalold;
+                $this->_doc->payamount=$totalold;
+                $this->_doc->save();
+               
+                $newdoc->packDetails('detaildata', $newlist)  ;
+                $newdoc->amount=$totalnew;
+                $newdoc->payamount=$totalnew;
+                $newdoc->save();
+                $newdoc->updateStatus(Document::STATE_NEW);
+             
+                $this->listpanel->doclist->Reload();
+
+               
+                $conn->CommitTrans();
+                $this->setSuccess('Створено замовдення '.$newdoc->document_number) ;
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage()) ;
+            $conn->RollbackTrans();
+            return;
+        }
+       
+        $this->splitpanel->setVisible(false);
+        $this->listpanel->setVisible(true);
+
+    }
+  
     //vue
 
     /**
@@ -1003,7 +1165,7 @@ class OrderList extends \App\Pages\Base
 
         $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
 
-        $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
+        $r = \App\Comm::sendSMS($phone, $text) ;
         if($r!="") {
           return  $this->jsonError($r) ;
         }
@@ -1036,12 +1198,13 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $user = System::getUser();
-
+       
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
           
-        $where = "     meta_name  = 'Order'   ";
+        $where = "     meta_name  = 'Order'    ";
+      
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {

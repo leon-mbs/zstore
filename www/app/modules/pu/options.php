@@ -35,10 +35,10 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['pustore']??0));
       
         $pt=[];
-        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[1] = 'Оплата на сторонi IM ';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата в Чеку або ВН';
-        
+        $pt[3] = 'Оплата касовим  чекои,РФ або ВН';
+         
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['pupaytype']??0));
 
 
@@ -49,8 +49,7 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('insertcust', $modules['puinsertcust']));
 
     }
-    //584ac4cc9096eb799cf6664ce977b22c6f463cba
-
+    
     public function saveOnClick($sender) {
 
         $apitoken = $this->cform->apitoken->getText();

@@ -40,8 +40,15 @@ class Order extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
        
-        $common = \App\System::getOptions("common");
-
+      //  $common = \App\System::getOptions("common");
+         
+        $defstore= false;
+        if($docid==0) {
+            $last = Document::getFirst("state > 3 and  meta_name='Order'","document_id desc");
+            if($last != null){
+                $defstore = $last->getHD('dostore',0)==1;
+            }
+        }
   
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -74,6 +81,8 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
 
+        $this->docform->add(new CheckBox('dostore',$defstore));
+        
         $this->docform->add(new TextInput('editpayed'));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
@@ -83,7 +92,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
  
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], H::getDefPayType() ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (напр. оплачено в IM)',2=>'Післяплата (в журналі розрахунків)',3=>'Оплата касовим чеком,РФ або ВН'], H::getDefPayType() ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
@@ -166,6 +175,8 @@ class Order extends \App\Pages\Base
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->promocode->setText($this->_doc->headerdata['promocode']);
+         
+            $this->docform->dostore->setChecked($this->_doc->getHD('dostore',0));
 
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -556,10 +567,14 @@ class Order extends \App\Pages\Base
 
         $this->_doc->headerdata['salesource'] = $this->docform->salesource->getValue();
      
+
         $this->_doc->headerdata['paytype'] = $this->docform->paytype->getValue() ;
         $this->_doc->headerdata['paytypename'] = $this->docform->paytype->getValueName() ;
  
-
+        $this->_doc->headerdata['dostore'] = $this->docform->dostore->isChecked() ? 1:0 ;
+        if($this->_doc->headerdata['paytype'] ==3) {
+            $this->_doc->headerdata['dostore'] = 0;
+        }
         if ($this->checkForm() == false) {
             return;
         }
@@ -608,7 +623,9 @@ class Order extends \App\Pages\Base
                 $this->_doc->setHD('waitpay',1); 
             }   
            
-                     
+            if($this->_doc->user_id==0)  {
+               $this->_doc->user_id = \App\System::getUser()->user_id; 
+            }               
             $this->_doc->save();
 
             if ($sender->id == 'savedoc') {
@@ -645,7 +662,8 @@ class Order extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
             return;
         }
     }
@@ -846,8 +864,14 @@ class Order extends \App\Pages\Base
     
      
     public function OnPayType($sender) {
-         $this->docform->payed->setVisible($sender->getValue()==1);
-         $this->docform->payment->setVisible($sender->getValue()!=3);
+         $t= intval($sender->getValue() );
+         $this->docform->payed->setVisible($t==1);
+         $this->docform->payment->setVisible($t==1);
+         $this->docform->dostore->setVisible($t!=3);
+         if($t==3) {
+           $this->docform->dostore->setChecked(false) ; 
+         }
+         
     }
     
     public function OnDelivery($sender) {
@@ -902,6 +926,7 @@ class Order extends \App\Pages\Base
         $this->calcPay();
         $this->goAnkor("tankor");
     }
+ 
     public function onPayed() {
         $this->docform->payed->setText($this->docform->editpayed->getDouble());
      
@@ -1023,8 +1048,6 @@ class Order extends \App\Pages\Base
         $this->editnewitem->setVisible(false);
         $this->editdetail->setVisible(true);
     }
-
- 
 
     public function onTextBayCity($sender) {
         $text = $sender->getText()  ;

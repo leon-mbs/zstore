@@ -116,7 +116,7 @@ class PayBayList extends \App\Pages\Base
 FROM ({$cust_acc_view} ) a
   JOIN customers c
     ON a.customer_id = c.customer_id
-    AND c.status = 0 AND a.b_passive <> a.b_active  {$hold}
+    AND c.status = 0 AND a.b_passive <> a.b_active  {$hold}   and   c.detail not like '%<df>%' 
 GROUP BY c.customer_name,
          c.customer_id,c.phone";
 
@@ -130,7 +130,7 @@ GROUP BY c.customer_name,
  
         $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state > 4 and  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
+             WHERE  d.state > 4 and  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}   and   c.detail not like '%<df>%' 
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
@@ -362,8 +362,8 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        if (in_array($this->_doc->meta_name, array( 'GoodsIssue','Invoice','ServiceAct','Order'))) {
-            \App\Entity\IOState::addIOState($this->_doc->document_id,  $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        if (in_array($this->_doc->meta_name, array( 'GoodsIssue','Invoice','ServiceAct','Order','POSCheck'))) {
+            \App\Entity\IOState::addIOState($this->_doc->document_id,  $amount, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
         }       
         if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
 
@@ -377,14 +377,11 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
-             \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true);
+             \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true,$pdate);
             $amount = 0 - $amount;
   
   
-        }  else {
-            \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME );
-             
-        }
+        }   
 
  
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
@@ -396,7 +393,7 @@ GROUP BY c.customer_name,
         }
         if ($payed > 0) {
             $this->_doc->payed = $payed;
-            \App\Entity\IOState::addIOState($this->_doc->document_id, $payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+         
                 
         }
   

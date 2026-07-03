@@ -106,7 +106,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
-        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem',true );
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
         $this->editdetail->addnewitem->setVisible(       \App\ACL::checkEditRef('ItemList',false));
   
@@ -307,7 +307,7 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             } else {
                 if(intval($common['paytypein']) == 1) {
-                    $this->setWarn('Накладну слід створювати на  підставі вхідного рахунку') ;
+                    $this->setWarn('При предоплаті накладну слід створювати на  підставі вхідного рахунку') ;
                 }
             }
         }
@@ -444,6 +444,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->editdetail->editsdate->setText("");
         $this->editdetail->editsellprice->setText("");
         $this->editdetail->editsellprice2->setText("");
+        $this->editdetail->editcustcode->setText("");
 
     }
 
@@ -804,7 +805,9 @@ class GoodsReceipt extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+
 
             return;
         }

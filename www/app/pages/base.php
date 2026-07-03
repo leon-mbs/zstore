@@ -8,10 +8,17 @@ use App\Session;
 use App\System;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\SubmitButton  ;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\DataList\DataView;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Binding\PropertyBinding as Bind;
 
 class Base extends \Zippy\Html\WebPage
 {
     public $branch_id = 0;
+    public $_pritems=[] ;
 
 
     public function __construct( ) {
@@ -25,7 +32,7 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-      
+       
         //миграция  данных
         if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
             Helper::migration() ;
@@ -56,7 +63,6 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["canevent"] = true;
         }
         $this->_tvars["noshowpartion"] = $user->noshowpartion;
-        $this->_tvars["showsidemenu"] = !($user->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
         $this->_tvars['qtydigits']  = intval($options['qtydigits'] ?? 0);
@@ -94,6 +100,10 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('loginname', $user->username));
+
+        $this->add(new Form('pr_itemsform' ))->onSubmit($this,'saveLabelForm');
+        $this->pr_itemsform->add(new DataView('pr_items', new ArrayDataSource(new Bind($this, '_pritems')), $this, 'pr_itemsOnRow'));
+        $this->add(new Label('pr_items_tag' ));
 
 
         //меню
@@ -137,10 +147,12 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["shop"] = $modules['shop'] == 1;
         $this->_tvars["ocstore"] = $modules['ocstore'] == 1;
         $this->_tvars["woocomerce"] = $modules['woocomerce'] == 1;
+        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
         $this->_tvars["note"] = $modules['note'] == 1;
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
         $this->_tvars["ppo"] = $modules['ppo'] == 1;
+        $this->_tvars["df"] = $modules['df'] == 1;
         $this->_tvars["np"] = $modules['np'] == 1;
         $this->_tvars["promua"] = $modules['promua'] == 1;
         $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
@@ -180,12 +192,18 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'woocomerce') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["woocomerce"] = false;
         }
+        if (strpos(System::getUser()->modules ?? '', 'horoshop') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["horoshop"] = false;
+        }
 
         if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["ppo"] = false;
         }
         if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["np"] = false;
+        }
+        if (strpos(System::getUser()->modules ?? '', 'df') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["df"] = false;
         }
         if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["promua"] = false;
@@ -196,6 +214,7 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vkassa"] = false;
         }
+       
      
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
@@ -203,17 +222,18 @@ class Base extends \Zippy\Html\WebPage
        
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"] ;
-
+        //показываем раздел меню  если не пустой
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
+            $this->_tvars["horoshop"] ||
             $this->_tvars["note"] ||
             $this->_tvars["issue"] ||
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
-  
-         
+            $this->_tvars["checkbox"] ||
             $this->_tvars["vdoc"] ||
+            $this->_tvars["df"] ||
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;
@@ -230,11 +250,16 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showsermenu"] = true;
             $this->_tvars["showmodmenu"] = true;
         }   */
- 
-        //скрыть  боковое  меню
-        $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
+        
+       
+        //не показывать  боковое  меню
+        $this->_tvars["showsidemenu"] = $user->hidemenu != 1 ;
+
+     
+        //убирать  боковое  меню
+        $this->_tvars["theme"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         if ($user->darkmode == 1) {
-            $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' . 'dark-mode';
+            $this->_tvars["theme"] = $this->_tvars["theme"] . ' ' . 'dark-mode';
         }
 
         $this->_tvars["darkmode"] = $user->darkmode == 1;
@@ -282,10 +307,19 @@ class Base extends \Zippy\Html\WebPage
     //вывод ошибки,  используется   в дочерних страницах
 
     public function setError($msg,$log=false ) {
+
         if($log) {
             \App\Helper::logerror($msg) ;
         }
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+     
+        if($msg != "" && $this->isAjaxRequest()   ) {
+           $this->addAjaxResponse("toastr.error('" . $msg . "','',{timeOut:8000})        ", true);
+           return;
+        }       
         System::setErrorMsg($msg);
     }
 
@@ -293,25 +327,49 @@ class Base extends \Zippy\Html\WebPage
     * @deprecated
     */
     public function setErrorTopPage($msg) {
-        
-        System::setErrorMsg($msg,true );
+        $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+         
+ 
+        System::setErrorMsg($msg  );
     }
 
     public function setSuccess($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+ 
+        if($msg != "" && $this->isAjaxRequest()   ) {
+           $this->addAjaxResponse("toastr.success('" . $msg . "','',{timeOut:2000})        ", true);
+           return;
+        }
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+         if($msg != "" && $this->isAjaxRequest()  ) {
+           $this->addAjaxResponse("toastr.warning('" . $msg . "','',{timeOut:4000})        ", true);
+           return;
+        }
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+        if($msg != "" && $this->isAjaxRequest()   ) {
+           $this->addAjaxResponse("toastr.info('" . $msg . "','',{timeOut:3000})        ", true);
+           return;
+        }
         System::setInfoMsg($msg);
     }
  
@@ -334,6 +392,7 @@ class Base extends \Zippy\Html\WebPage
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
+           
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{timeOut:8000})        ", true);
         }
         if (strlen(System::getWarnMsg() ?? '') > 0) {
@@ -360,24 +419,6 @@ class Base extends \Zippy\Html\WebPage
     //например для  сброса  адресной строки  после  команды удаления
     final protected function resetURL() {
         \App\Application::$app->setReloadPage();
-    }
-
-    /**
-     * Вставляет  JavaScript  в  конец   выходного HTML потока
-     * @param string $js Код  скрипта
-     * @param mixed $docready Если  true  - вставка  после  загрузки  документа в  браузер
-     */
-    public function addJavaScript($js, $docready = false) {
-        App::$app->getResponse()->addJavaScript($js, $docready);
-    }
-    
-    /**
-    * Добавление  javascript в AJAX вызовах
-    * 
-    * @param mixed $js
-    */
-    public function addAjaxJavaScript($js) {
-         $this->addAjaxResponse($js) ; 
     }
 
     public function goDocView() {
@@ -513,7 +554,7 @@ class Base extends \Zippy\Html\WebPage
     public function sendSMSCode($args, $post) {
 
 
-        $ret = \App\Entity\Subscribe::sendSMS($args[0], $args[1])  ;
+        $ret =  \App\Comm::sendSMS($args[0], $args[1])  ;
         return $this->jsonOK($ret ?? "") ;
 
     }
@@ -752,23 +793,126 @@ class Base extends \Zippy\Html\WebPage
         return $this->jsonOK("") ;
     }
 
+    public function printLabelForm($items) {
+         $this->_pritems=[]  ;
+         foreach($items as $item)  {
+            if($item->noprint == 1) {
+                continue;
+            }     
+            $this->_pritems[$item->item_id]= $item;
+         }
+         $this->pr_itemsform->pr_items->Reload();
+    
+         
+         $this->addJavaScript("$('#modalpritems').modal('show')",true)  ;
+    }
+ 
+    public function pr_itemsOnRow($row) {
+        $item= $row->getDataItem() ;
+        $row->add(new Label('pr_itemname',$item->itemname));
+        $row->add(new Label('pr_itemcode',$item->item_code));
+        $row->add(new TextInput('pr_itemqty', new Bind($item,'printqty') ));
+        
+    }
+ 
+    public function saveLabelForm($sender) {
+        $items=[];
+        foreach($this->_pritems as $it) {
+            if($it->printqty > 0) {
+               $items[] = $it; 
+            }
+        }
+        $this->_pritems=[]  ;
+        $this->pr_itemsform->pr_items->Reload();
+            
+       
+        $ret = \App\Helper::printItems($items  );   
+        $user = \App\System::getUser() ;         
+ 
+        
+        if(intval($user->prtypelabel) == 0) {
+        
+           
+            if($user->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $ret;
+                $this->addJavaScript("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->pr_items_tag->setText($ret,true);
+                $this->addJavaScript("    $('#pr_items_pform').modal()",true);
+            }
+            return;
+        }
+        
+        
+        try {
+
+            if(intval($user->prtypelabel) == 1) {
+                if(strlen($ret)==0) {
+                   $this->addJavaScript(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::xml2comm($ret);
+        
+            }            
+            if(intval($user->prtypelabel) == 2) {
+                if(count($ret)==0) {
+                   $this->addJavaScript(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::arr2comm($ret);
+        
+            }            
+            $b = json_encode($buf) ;
+
+            $this->addJavaScript(" sendPSlabel('{$b}') ",true);
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $message = str_replace("'", "`", $message)  ;
+            $this->addJavaScript(" toastr.error( '{$message}' )         ");
+
+        }               
+    }
+ 
+  
+ 
+ 
  
     //методы возврата для  callPM
-      public function jsonOK($data=null){
-         if($data===null) {
-             return json_encode([]) ;  
+    /**
+    * Успешная операция
+    * 
+    * @param mixed $data     данные
+    * @param mixed $success  сообщение  об успешной операции
+    * @param mixed $warning  предупреждение
+    */
+      public function jsonOK($data=null,$success="",$warning=""){
+         $ret= []; 
+         if($data!==null) {
+             $ret['data'] =  $data ;  
          }
-          
-         return json_encode(['data'=>$data], JSON_UNESCAPED_UNICODE)   ;
+         
+         if(strlen($success)>0) {
+             $ret['success'] = $success ;  
+         }
+      
+         if(strlen($warning)>0) {
+             $ret['warning'] =  $warning ;  
+         }
+  
+         return json_encode($ret, JSON_UNESCAPED_UNICODE)   ;
       }
   
-      public function jsonError($error){  
+   /**
+   * сообщение  об  ошибке
+   * 
+   * @param mixed $error
+   */
+   public function jsonError($error){  
          return json_encode(['error'=>$error], JSON_UNESCAPED_UNICODE) ;  
       }
            
-      public function jsonWarn($warn){
-         return json_encode(['warning'=>$warn], JSON_UNESCAPED_UNICODE)  ; 
-      }
+    
            
     //методы для vue
 
@@ -976,5 +1120,39 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
+    
 
+    /**
+     * Вставляет  JavaScript  в  конец   выходного HTML потока
+     * @param string $js Код  скрипта
+     * @param mixed $docready Если  true  - вставка  после  загрузки  документа в  браузер
+     */
+    public function addJavaScript($js, $docready = false) {
+        App::$app->getResponse()->addJavaScript($js, $docready);
+    }
+    
+    /**
+    * Добавление  javascript в AJAX вызовах
+    * 
+    * @param mixed $js
+    */
+    public function addAjaxJavaScript($js) {
+         $this->addAjaxResponse($js) ; 
+    }
+    
+    
+   /**
+    * добавляет  яваскрипт  в  конец  ответа на ajax  запрос
+    *
+    * @param mixed $js
+    */
+    protected function addAjaxResponse($js) {
+        if (strlen($js) > 0) {
+            App::$app->getResponse()->addAjaxResponse($js);
+        }
+    }    
+  
+    protected function isAjaxRequest( ) {
+       return App::$app->getRequest()->isAjaxRequest()   ;
+    }   
 }

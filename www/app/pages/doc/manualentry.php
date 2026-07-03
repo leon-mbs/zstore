@@ -204,7 +204,8 @@ class ManualEntry extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
 
 
         }

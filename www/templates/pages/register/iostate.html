@@ -3,7 +3,7 @@
         <title> Журнал прибуткiв та видаткiв  </title>
 
     </head>
-  <body>
+  <body>      
         <div class="row">
             <div class="col-12  ">
 
@@ -36,7 +36,7 @@
                         </select>
                        {{/bmode}}
 
-                        <input type="submit" class="  btn btn-outline-success  " value="ОК">
+                        <input type="submit" class="  btn btn-success  " value="ОК">
 
                     </form>
                     
@@ -51,7 +51,7 @@
                         </select>
                         <label for="docamount"> Сума </label>
                         <input required="on"   class="form-control  mr-2  " zippy="docamount"  >
-                   
+                        
                         <input type="submit" class="  btn btn-outline-success  " value="Додати">
                       
                     </form>       
@@ -66,7 +66,9 @@
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
 
-
+                  {{#bmode}} 
+                     <small><i class="fa fa-exclamation-triangle"></i> Редагування впливає тільки на  формування  книги. Оригінальні документи і касові опперації не  змінюються</small>
+                  {{/bmode}} 
                 <br>
                   {{^bmode}} 
                 <a zippy="csv">Експорт у Excel</a>
@@ -105,6 +107,8 @@
                             <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                              {{#bmode}} 
                              &nbsp;&nbsp;
+                             <a href="javascript:void(0) " zippy="edit" title="Редагувти" ><i class="fa fa-edit  "></i></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
                              <a zippy="delete" title="Видалити"><i class="fa fa-trash text-danger"></i></a>
                              {{/bmode}} 
 
@@ -145,7 +149,37 @@
             
             
         </div>
+   
+      
+     <div id="modaledit" class="modal fade  " tabindex="-1" role="dialog"  >
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Редагування</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                              <form zippy="formedit">       
+                             <input   type="hidden" zippy="editio"  >
+                               
+                             <div class="form-group  ">
+                             <label for="editdate">Дата:</label>
+                                <input   class="form-control  " type="text" zippy="editdate"  >
+                                 </div>
+                                <div class="form-group  ">   
+                                    <input type="submit" value="Зберегти"   class="  btn btn-info  ">
+                                </div>
+                                
+                           
+                            </div>
+                              </form>
+                        </div>
 
+                    </div>
+                </div>     
+         
 
      <script>
             function check_delete() {
@@ -155,6 +189,16 @@
                document.getElementById('dialogwait').showModal()
                return true;
             }
+        
+            function editRow($id,$dt) {
+                 
+                $('#editio').val($id)
+                $('#editdate').val($dt)
+                $('#modaledit').modal('show')
+            }
+            
+            
+            
        </script>
     </body>
 </html>

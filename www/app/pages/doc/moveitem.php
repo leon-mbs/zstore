@@ -251,13 +251,13 @@ class MoveItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['tostore'] =  intval( $this->docform->tostore->getValue());
+        $this->_doc->headerdata['tostore'] =  intval( $this->docform->tostore->getIntValue());
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
-        $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
+        $this->_doc->headerdata['store'] = intval( $this->docform->store->getIntValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
-        $this->_doc->headerdata['storeemp'] = intval( $this->docform->storeemp->getValue() );
+        $this->_doc->headerdata['storeemp'] = intval( $this->docform->storeemp->getIntValue() );
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
-        $this->_doc->headerdata['tostoreemp'] = intval( $this->docform->tostoreemp->getValue() );
+        $this->_doc->headerdata['tostoreemp'] = intval( $this->docform->tostoreemp->getIntValue() );
         $this->_doc->headerdata['tostoreempname'] = $this->docform->tostoreemp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
@@ -308,7 +308,9 @@ class MoveItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+
 
             return;
         }
@@ -344,10 +346,12 @@ class MoveItem extends \App\Pages\Base
         if ( $this->_doc->headerdata['tostore'] == 0) {
             $this->setError("Не обрано склад");
         }
-        if ( $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
+        if ( $this->_doc->headerdata['storeemp'] ==0 && $this->_doc->headerdata['tostoreemp'] ==0 && $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
             $this->setError("Той самий склад");
         }
-        if ( $this->_doc->headerdata['tostoreemp'] > 0 && ($this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store'] ) && ($this->_doc->headerdata['tostoreemp'] == $this->_doc->headerdata['storeemp'] )  ) {
+        if ( ($this->_doc->headerdata['tostoreemp'] > 0 || $this->_doc->headerdata['storeemp'] > 0 ) &&
+            ($this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store'] ) 
+             && ($this->_doc->headerdata['tostoreemp'] == $this->_doc->headerdata['storeemp'] )  ) {
             $this->setError("Той самий склад");
         }
     

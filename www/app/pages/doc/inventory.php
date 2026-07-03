@@ -79,7 +79,9 @@ class Inventory extends \App\Pages\Base
 
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
-
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+ 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
@@ -151,7 +153,6 @@ class Inventory extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
-
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
             $this->setError("Не обрано склад");
@@ -196,7 +197,8 @@ class Inventory extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-
+        $this->wselitem->setVisible(false);
+   
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
@@ -282,7 +284,8 @@ class Inventory extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
 
             return;
         }
@@ -353,7 +356,7 @@ class Inventory extends \App\Pages\Base
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        $cat_id = intval($this->docform->category->getValue());
+        $cat_id = intval($this->docform->category->getIntValue());
         $common = \App\System::getOptions('common')  ;
         if($common['usecattree'] != 1 || $cat_id==0) {
             return Item::findArrayAC($text, $store_id, $cat_id);
@@ -362,9 +365,10 @@ class Inventory extends \App\Pages\Base
         $c = Category::load($cat_id) ;
         $ch = $c->getChildren();
         $ch[]=$cat_id;
+        $ch[] = 0;
         $ret = array();
         foreach($ch as $id) {
-            foreach(Item::findArrayAC($text, $store_id, $id) as $k=>$v) {
+            foreach(Item::findArrayAC($text, $store_id, intval( $id )) as $k=>$v) {
                 $ret[$k]=$v;
             }
         }
@@ -418,10 +422,10 @@ class Inventory extends \App\Pages\Base
       
   
 
-        $store = $this->docform->store->getValue();
+        $store =   $this->docform->store->getIntValue();
       
 
-        $cat_id = $this->docform->category->getValue();
+        $cat_id = $this->docform->category->getIntValue();
       
         $item = Item::findBarCode($code,$store,$cat_id );
 
@@ -493,5 +497,18 @@ class Inventory extends \App\Pages\Base
         $this->docform->detail->Reload();
 
     }
+
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
+    }  
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+       
+    }    
     
 }

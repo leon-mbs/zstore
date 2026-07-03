@@ -204,17 +204,19 @@ class ArmProdFood extends \App\Pages\Base
 
         $itemlist = array();
         $where = "meta_name='OrderFood' and state in (7) ";
-        if($args[0]=="true") {
-            $where .= " and content like '%<forbar>1</forbar>%'";
-        } else {
-            $where .= " and (content like '%<forbar>0</forbar>%' or content not  like '%<forbar>%' ) ";
-        }
-        
+       
 
         foreach (Document::findYield($where, "  document_id asc") as $doc) {
             $items = $doc->unpackDetails('detaildata');
             foreach ($items as $rowid=>$item) {
-                if ($item->foodstate == 0 || $item->foodstate == 4) {
+                if ($item->foodstate < 1 || $item->foodstate == 4) {
+                    continue;
+                }
+                if ($item->forbar==1 && $args[0]!="true") {
+                    continue;
+                }
+
+                if ($item->forbar!=1 && $args[0]=="true") {
                     continue;
                 }
 

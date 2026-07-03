@@ -17,7 +17,8 @@
                         <label for="document_date"> Дата <small class="text-danger">*</small></label>
                         <input style="width:150px" class="form-control"   zippy="document_date"  required="on" >
                     </div>
-
+                            
+              
 
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
@@ -55,7 +56,14 @@
                             Цей документ не буде проведено та йому не буде присвоєно автора, поки
                             користувач, який має право роботи з цiльовою фiлiєю, не збереже новостворений документ. </small>
                     </div>
-                    {{/usebranch}}                
+                    {{/usebranch}}  
+                    
+                    <div class="form-group  ">
+                        <label for="customer">Контрагент</label>
+                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                        <small>Не враховується в взаєморозрахунках, тільки в звітах</small>                
+                   </div>   
+                                  
                 </div>
             </div>
             <div class="row">
@@ -117,10 +125,10 @@
 
 
             <div class="row">
-                <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                <div class="col-11 col-md-8 col-xl-6 d-flex justify-content-end pt-4">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary ml-2">
+                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary ml-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success ml-2  ">
 
                 </div>
             </div>
@@ -165,8 +173,8 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="button" zippy="cancelrow" value="До переліку" class="btn   btn-outline-secondary mr-2">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    <input type="button" zippy="cancelrow" value="До переліку" class="btn   btn-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-primary">
                     
                 </div>
                   </form>

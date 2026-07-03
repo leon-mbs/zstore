@@ -90,7 +90,7 @@ class Orders extends \App\Pages\Base
         $data = json_decode($json, true);
         if (!isset($data)) {
             $this->setError("Невірна відповідь");
-            \App\Helper::log($json);
+         //   \App\Helper::log($json);
             return;
         }
         if ($data['error'] == "") {
@@ -152,7 +152,11 @@ class Orders extends \App\Pages\Base
         $defmf=intval($modules['ocmf']);
  
         $i = 0;
-        foreach ($this->_neworders as $shoporder) {
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+
+        try{     
+           foreach ($this->_neworders as $shoporder) {
 
 
             $neworder = Document::create('Order');
@@ -273,22 +277,39 @@ class Orders extends \App\Pages\Base
             if ($neworder->headerdata['paytype'] == 2) {
                 $neworder->setHD('waitpay',1); 
             }        
-            $neworder->save();
-            
-             
-            $neworder->updateStatus(Document::STATE_NEW);
-  
-            $neworder->updateStatus(\App\Entity\Doc\Document::STATE_INPROCESS);
-          
-            if($neworder->headerdata['store']>0) {
-                $neworder->reserve();   //если задан  склад резервируем товары
-            }            
-
-
+           
+        
+                $neworder->save();
+                
+                 
+                $neworder->updateStatus(Document::STATE_NEW);
+      
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WAIT);
+              
+                if($neworder->headerdata['store']>0) {
+                    $neworder->reserve();   //если задан  склад резервируем товары
+                }  
+      
+           
             $i++;
         }
-        $this->setInfo("Імпортовано {$i} замовлень");
+        
+           $conn->CommitTrans();
+          
+        } catch(\Throwable $ee){
+            global $logger;
+            $conn->RollbackTrans();
+           
+            $this->setError($ee->getMessage());
 
+            $logger->error( $ee->getMessage() . " OCStore " );
+                 
+           
+            return;
+        }        
+        
+        $this->setInfo("Імпортовано {$i} замовлень");
+        
         $this->_neworders = array();
         $this->neworderslist->Reload();
     }

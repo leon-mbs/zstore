@@ -68,22 +68,29 @@
                         </select>
                     </div>
                         <div class="form-group">
-                            <label for="store">Резервувати товари на  </label>
+                            <label for="store">Склад  </label>
                             <select zippy="store" class="form-control     ">
-                                <option value="0">Не резервувати</option>
+                                <option value="0">Не задано</option>
                             </select>
-                            <small>Авторезерв по статусу Готовий до відправки</small>
+                            
                         </div>                  
-                    
-                     <div class="form-group  ">
+                       <div class="form-check">
+                            <input zippy="dostore" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="dostore">Списати зі складу </label>
+                             <small style="display:block" data-label="dostore">Якщо оплата теж в замовленнi, iнакше потрiбна ТТН </small>
+                       </div>
+                     <div class="form-group row mt-2">
+                         <div class="col-auto">
                         <label  data-label="promocode" for="promocode">Промо-код</label>
-
-
+                        </div> 
+                          <div class="col-auto">
+                      
                          <div style="width:150px" class="input-group  ">
                              <input  readonly  zippy="promocode" class="form-control">
                              <div class="input-group-append">
                                  <a data-toggle="modal" data-label="promocode" data-target="#modalpromo" href="javascript:void(0);" title="Ввести промо" class="btn btn-success"   >+</a>
                             </div>                    
+                           </div>                    
                         </div> 
                     </div>               
             
@@ -91,12 +98,12 @@
 
 
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-3">
                     <div class="form-group  ">
-                        <label for="paytype">Тип оплати</label>
+                        <label for="paytype">Спосіб оплати</label>
 
                         <select class="form-control" zippy="paytype">
-                               <option value="0">Не вказано</option>
+                               
                         </select>
 
                     </div>
@@ -152,9 +159,12 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
+                     {{#usescanner}}
+                    
+                    <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
                                          <a zippy="addcode" class="btn btn-info btn-sm">+</a>
                      &nbsp; &nbsp; 
+                    {{/usescanner}}                     
                     <a zippy="addrow" class="btn btn-info  ">Додати товар</a>
                     <table class="table table-sm">
                         <tr>
@@ -234,10 +244,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-8">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-primary  ">
+                <div class="col-9 d-flex justify-content-end pt-4">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ml-2 ">
+                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ml-2 ">
+                     <input zippy="execdoc" type="submit"   value="На виконання" class="btn btn-success  ml-2 ">
 
                    
 
@@ -384,8 +394,8 @@
 
                     <div class="form-group">
                       
-                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary ">
-                       &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
+                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary ">
+                       &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
                     </div>
                 </form>
 
@@ -419,8 +429,9 @@
 
 
                     <div class="form-group">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary ">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary mr-2 ">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
+                    
                     </div>
                 </div>
             </div>
@@ -459,8 +470,9 @@
                     
 
                     <div class="form-group">
-                        <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-outline-secondary ">
+                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-secondary  mr-2 ">
+                        <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-primary">
+                       
                     </div>
                 </div>
             </div>

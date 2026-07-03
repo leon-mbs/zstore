@@ -408,15 +408,15 @@ class CustItems extends \App\Pages\Base
             }
               
             $item->customer_id = $cust;
-            $item->cust_name = $custname;
-            $item->cust_code = $custcode;
-            $item->bar_code = $custbarcode;
+            $item->cust_name = $custname?? '';
+            $item->cust_code = $custcode?? '';
+            $item->bar_code = $custbarcode?? '';
                     
             $item->price = $price;
             $item->quantity = $qty;
             $item->comment =$comment;
-            $item->brand = $brand;
-            $item->store = $store;
+            $item->brand = $brand?? '';
+            $item->store = $store?? '';
             $item->updatedon = time();
 
             $it =  $item->findItem();

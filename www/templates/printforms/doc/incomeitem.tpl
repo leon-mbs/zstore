@@ -19,6 +19,16 @@
  
     {{/storeemp}}    
  
+  </tr>
+   {{#customer}}
+    <tr>
+        <td colspan="6">
+            <b>Партнер:</b> {{customer}}
+        </td>
+    </tr>
+ 
+    {{/customer}}    
+ 
 
 
     <tr style="font-weight: bolder;">

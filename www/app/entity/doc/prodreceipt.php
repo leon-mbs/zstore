@@ -65,7 +65,7 @@ class ProdReceipt extends Document
                 $cost += doubleval($item->zarp * $item->quantity) ;
             }
             if ($item->autooutcome == 1) {  //списание  комплектующих
-                $item->setToProd($required,$this->headerdata['store'],$this->document_id);
+                $item->setToProd($item->quantity,$this->headerdata['store'],$this->document_id);
             }
 
 
@@ -126,14 +126,15 @@ class ProdReceipt extends Document
 
         return $list;
     }
-  public   function DoAcc() {
-             if(\App\System::getOption("common",'useacc')!=1 ) return;
-             parent::DoAcc()  ;
-      
-             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-             foreach($ia as $a=>$am){
-                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
-             }            
+   
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
   
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
+         }            
+
     }
 }

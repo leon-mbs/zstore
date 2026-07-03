@@ -57,6 +57,7 @@ class IOState extends \App\Pages\Base
         $this->filter->add(new Date('to',$to));
               
         
+
         $this->add(new Form('docform'))->onSubmit($this, 'addOnSubmit');
         $this->docform->add(new TextInput('docnumber'));
         $this->docform->add(new TextInput('docamount'));
@@ -82,8 +83,11 @@ class IOState extends \App\Pages\Base
         $this->add(new Panel('bookrep' ))->setVisible(false);
        
         $this->bookrep->add(new Label('bookrephtml' ));
-        
-        
+         
+        $this->add(new Form('formedit'))->onSubmit($this, 'editOnSubmit');
+        $this->formedit->add(new Date('editdate' ));
+        $this->formedit->add(new TextInput('editio' ));
+                
    //     $this->_ptlist[0] = '';
        
         $this->update(); 
@@ -164,6 +168,9 @@ class IOState extends \App\Pages\Base
         $row->add(new Label('iotype', $this->_ptlist[$doc->iotype] ??''));
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $row->add(new ClickLink('delete', $this, 'deleteOnClick'));
+        $row->add(new BookmarkableLink('edit' ));
+        $d=date('Y-m-d', $doc->document_date);
+        $row->edit->setAttribute("onclick","editRow({$doc->id},'{$d}')");
         
         if($doc->iotype < 30) {
            $row ->amountin->setText(H::fa($doc->amount));
@@ -186,6 +193,17 @@ class IOState extends \App\Pages\Base
         $this->_doc->save();
 
         $this->docview->setVisible(false);
+        $this->update();       
+    }
+  
+    public function editOnSubmit($sender) {
+
+        $dt=$sender->editdate->getDate();
+        $id=$sender->editio->getInt();
+        
+        $io = \App\Entity\IOState::load($id);
+        $io->iodate = $dt;
+        $io->save();
         $this->update();       
     }
   
@@ -290,20 +308,21 @@ class IOState extends \App\Pages\Base
               }
                
                
-              if($io->iotype == 1 || $io->iotype == 2 || $io->iotype == 3 )  { //доходы
-                 $c2 +=  abs( $io->amount );
-                 continue; 
-              }
-
+             
               if($doc->meta_name=='ReturnIssue') {  //возврат
                  $c3 +=  abs( $io->amount ); 
                  continue; 
               }              
-              if($doc->meta_name=='InvoiceCust') {  //предоплата
+              if($doc->meta_name=='Invoice') {  //предоплата
                  $c3 +=  abs( $io->amount ); 
                  continue; 
               }              
-              
+            
+              if($io->iotype == 1 || $io->iotype == 2 || $io->iotype == 3 )  { //доходы
+                 $c2 +=  abs( $io->amount );
+                 continue; 
+              }
+       
               //затраты
               if($io->iotype == 50)  {   //закупка
                  $c6 +=  abs( $io->amount );
@@ -467,15 +486,15 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItemCount() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(count(*),0) from documents_view  d left join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
-        H::log($sql);
+        $sql = "select coalesce(count(*),0) from documents_view  d   join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
+     //   H::log($sql);
         return $conn->GetOne($sql);
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
         $conn = \ZDB\DB::getConnect();
-        $sql = "select  i.iotype,i.amount, d.username,  d.document_id,  d.document_number,d.document_date,i.amount  from documents_view  d left join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by d.document_date   ";
+        $sql = "select i.id, i.iotype,i.amount, d.username,  d.document_id,  d.document_number,i.document_date,i.amount  from documents_view  d   join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by d.document_date   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
             $sql .= $limit;

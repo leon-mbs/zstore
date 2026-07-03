@@ -59,9 +59,12 @@
                     toastr.error(answer.error,'',{'timeOut':'8000'} )   
                     return   
                 }
+                if(answer.success)  {
+                    toastr.success(answer.success,'',{'timeOut':'2000'} )   
+                }
+
                 if(answer.warning)  {
                     toastr.warning(answer.warning,'',{'timeOut':'4000'} )   
-                    
                 }
           
           

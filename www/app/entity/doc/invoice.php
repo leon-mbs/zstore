@@ -3,6 +3,7 @@
 namespace App\Entity\Doc;
 
 use App\Helper as H;
+use App\Entity\Entry;
 
 /**
  * Класс-сущность  документ счет фактура
@@ -45,12 +46,12 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
                        
-                        "logo"            => _BASEURL . $firm['logo'],
-                        "islogo"          => strlen($firm['logo']) > 0,
+                        "logo"            => _BASEURL . ltrim( $firm['logo'] ,'/' ) ,
+                        "islogo"          => is_file(_ROOT .'/'. ltrim( $firm['logo'] ,'/' ) ),
                         "stamp"           => _BASEURL . $firm['stamp'],
-                        "isstamp"         => strlen($firm['stamp']) > 0,
+                        "isstamp"         => is_file(_ROOT .'/'. ltrim( $firm['stamp'] ,'/' ) ), 
                         "sign"            => _BASEURL . $firm['sign'],
-                        "issign"          => strlen($firm['sign']) > 0,
+                        "issign"          => is_file(_ROOT .'/'. ltrim( $firm['sign'] ,'/' ) ),
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "iscustaddress"    => false,
@@ -58,9 +59,9 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
-                        "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
+                        "isbank"          => (strlen($mf->bankacc??'') > 0 || strlen($mf->bank) > 0),
                         "iban"      => strlen($iban) > 0 ? $iban : false,
-                 
+                       
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
@@ -82,6 +83,7 @@ class Invoice extends \App\Entity\Doc\Document
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
+        $header["qr"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
         if ($this->getHD('nds',0) > 0) {
@@ -126,6 +128,13 @@ class Invoice extends \App\Entity\Doc\Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
+        
+        $qr = $this->getQRPay();
+        if(strlen($qr['url']??'') >0){
+         //  $header["qr"]  = _BASEURL . "qrpay.php?docid=".$this->document_id;
+           $header["qr"]  = $qr['qr'];
+        }
+        
         $report = new \App\Report('doc/invoice.tpl');
 
         $html = $report->generate($header);
@@ -135,7 +144,7 @@ class Invoice extends \App\Entity\Doc\Document
 
     public function Execute() {
         //списываем бонусы
-        if (($this->headerdata['paydisc'] ?? 0) > 0) {
+        if ($this->getHD('paydisc',0) > 0) {
             $customer = \App\Entity\Customer::load($this->customer_id);
             if ($customer->getDiscount() > 0) {
                 return; //процент
@@ -145,8 +154,30 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
+      
+        $am =   $this->getAmountReg()   ;
+        $k = 1;   //учитываем  скидку
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
+        }
+  
+        if ($this->getHD('doservice',0) ==1) {
+             foreach ($this->unpackDetails('detaildata') as $ser) {
+                 if(intval($ser->service_id)==0) {
+                     continue;
+                 }
+                 $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0-$ser->quantity);
+                 $sc->setService($ser->service_id);
+                
+                 $sc->setOutPrice( $ser->price * $k);
+                 $sc->cost= $ser->cost;
+            
+                 $sc->save();    
+                 
+             } 
+        }       
         $this->DoBalans() ;
-
+         
         return true;
     }
 
@@ -187,7 +218,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
+        return array(self::EX_EXCEL, self::EX_PDF  );    
     }
 
     /**
@@ -200,7 +231,25 @@ class Invoice extends \App\Entity\Doc\Document
          if(($this->customer_id??0) == 0) {
             return;
          }
-               
+    
+         if ($this->getHD('doservice',0) ==1) {
+    
+       
+            $amount= 0;
+            $ss = Entry::findYield("service_id > 0 and document_id=". $this->document_id) ;
+            foreach($ss as $ser) {
+                $amount += doubleval($ser->outprice);
+            }
+            
+            if($amount > 0)  {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$amount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+        }               
        //платежи       
         foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
             $b = new \App\Entity\CustAcc();

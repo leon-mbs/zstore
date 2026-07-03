@@ -67,7 +67,7 @@ class Update extends \App\Pages\Base
     
          
         if(!is_array($data)){
-            $this->setErrorTopPage('Помилка завантаження version.json') ;
+            $this->setError('Помилка завантаження version.json. Детальнiше  в  лог файлi ') ;
             return  ;
         }
    
@@ -182,12 +182,22 @@ class Update extends \App\Pages\Base
             $zip = new \ZipArchive()  ;
 
             $archive = _ROOT.'upload/update.zip' ;
-            @unlink($archive) ;
+            if( file_exists($archive) ) {
+                unlink($archive) ;
+            }
+        
+            $response = H::getContent($this->_tvars['archive']) ;
+            if($response === false) {
+                $this->setError('Помилка завантаження файлу');
+         
+                return false;
+            }
+        
             
-            @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
+            @file_put_contents($archive, $response) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка завантаження файлу');
+                $this->setError('Помилка архiву');
                 return;        
             }
 

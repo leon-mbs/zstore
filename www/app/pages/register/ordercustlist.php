@@ -144,6 +144,8 @@ class OrderCustList extends \App\Pages\Base
 
         if ($sender->id == "binp") {
             $this->_doc->updateStatus(Document::STATE_INPROCESS);
+            $this->_doc->user_id  = System::getUser()->user_id;
+            $this->_doc->save(); 
         }
         if ($sender->id == "bcan") {
             $this->_doc->updateStatus(Document::STATE_CANCELED);
@@ -151,7 +153,7 @@ class OrderCustList extends \App\Pages\Base
         if ($sender->id == "bclose") {
 
             // $this->_doc->payamount = $this->_doc->amount;
-            $this->_doc->save();
+           // $this->_doc->save();
 
             $this->_doc->updateStatus(Document::STATE_CLOSED);
             $this->statuspan->setVisible(false);

@@ -17,10 +17,17 @@
         </td>
     </tr>
  
-    {{/storeemp}}       
+    {{/storeemp}}     
+   {{#customer}}
     <tr>
-        <td colspan="6">{{{notes}}}</td>
+        <td colspan="6">
+            <b>Партнер:</b> {{customer}}
+        </td>
     </tr>
+ 
+    {{/customer}}    
+       
+
 
 
     <tr style="font-weight: bolder;">
@@ -52,6 +59,11 @@
         <td align="right" colspan="5"><b>Всього:</b></td>
           <td align="right">{{amount}}</td>
     </tr>   
+    
+    
+    <tr>
+        <td colspan="6">{{{notes}}}</td>
+    </tr>    
 </table>
 
 

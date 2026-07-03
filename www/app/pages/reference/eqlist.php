@@ -275,7 +275,7 @@ class EqList extends \App\Pages\Base
 
             $html =  $report->generate($header);                  
 
-            $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
+            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; $('#pr_items_pform').modal()");
             return;
         }
        
@@ -355,8 +355,8 @@ class EQDS implements \Zippy\Interfaces\DataSource
             $where  = $where . " and disabled <> 1";
         }
         if (strlen($text) > 0) {
-            $text = Equipment::qstr(  $text  );
             $_text = Equipment::qstr('%' . $text . '%');
+            $text = Equipment::qstr(  $text  );
             $where = $where . " and (invnumber = {$text} or eq_name like {$_text} or detail like {$_text} )  ";
         }
         

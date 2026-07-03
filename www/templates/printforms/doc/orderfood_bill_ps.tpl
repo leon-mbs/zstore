@@ -1,10 +1,7 @@
 <font bold="true">a</font>
-    {{#ischeck}}
+ 
 <text>Чек {{document_number}}</text>
-    {{/ischeck}}
-    {{^ischeck}}
-<text>Рахунок {{document_number}}</text>
-    {{/ischeck}}
+ 
     
 <font >a</font>
 <text>вiд {{date}}</text>
@@ -36,7 +33,7 @@
 
     {{/customer_name}}
     
-   {{#ischeck}}    
+    
    
     
         {{#form1}}
@@ -55,7 +52,7 @@
           
         {{/trans}}     
 <text>Касир: {{username}}</text>    
-   {{/ischeck}}
+  
  
 
 <separator>-</separator>
@@ -95,14 +92,14 @@
 
  <text>До сплати: {{payamount}}</text>
  
-    {{#ischeck}} 
+  
  
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
  <text>Решта: {{exchange}}</text>
  {{/exchange}} 
  
-    {{/ischeck}} 
+    
      
     {{/prepaid}}
  {{#exciseval}}
@@ -132,7 +129,7 @@
 
 
 
-    {{#ischeck}} 
+  
 
 {{#docqrcodeurl}}
 <font >a</font>
@@ -140,6 +137,6 @@
 <qrcode type="code128"> {{docqrcodeurl}}</qrcode>
 {{/docqrcodeurl}}
 
-    {{/ischeck}} 
+    
 <newline ></newline>
  

@@ -121,7 +121,12 @@
         <td colspan="2" align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
-
+     {{#exciseval}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">В т.ч. акциз:</td>
+        <td align="right">{{exciseval}}</td>
+    </tr>
+    {{/exciseval}}
  
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
@@ -141,12 +146,7 @@
         <td align="right">{{prepaid}}</td>
     </tr>
     {{/prepaid}}
-    {{#exciseval}}
-    <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">В т.ч. акциз:</td>
-        <td align="right">{{exciseval}}</td>
-    </tr>
-    {{/exciseval}}
+
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>

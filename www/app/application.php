@@ -30,9 +30,9 @@ class Application extends \Zippy\WebApplication
         $path = _ROOT . strtolower($path);
         $cpath = _ROOT . strtolower($cpath);
 
-        if (file_exists($cpath)) {
+        if (is_file($cpath)) {
             $template = @file_get_contents($cpath);
-        } elseif (file_exists($path)) {
+        } elseif (is_file($path)) {
             $template = @file_get_contents($path);
         } else {
             throw new \Exception('Invalid template path: ' . $path);
@@ -66,7 +66,7 @@ class Application extends \Zippy\WebApplication
             try {
 
                 $file = _ROOT . "app/api/" . strtolower($class) . ".php";
-                if (!file_exists($file)) {
+                if (!is_file($file)) {
                     http_response_code(404);
                     die;
                 }
@@ -97,6 +97,7 @@ class Application extends \Zippy\WebApplication
         $pages = array(
             "store"      => "\\App\\Pages\\Main",
             "admin"      => "\\App\\Pages\\Main",
+            "partner"    => "\\App\\Modules\\DF\\Public\\Main",
             "shop"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
             "menu"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Menu",
             "cchat"      => "\\App\\Modules\\Shop\\Pages\\Catalog\\CChat",

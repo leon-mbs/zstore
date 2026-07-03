@@ -1,14 +1,9 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
-    {{#ischeck}}
+  
     <tr>
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
-    {{/ischeck}}    
-    {{^ischeck}}
-    <tr>
-        <td colspan="3">Рахунок {{document_number}}</td>
-    </tr>
-    {{/ischeck}}    
+      
     
     {{#fiscalnumber}}
     <tr>
@@ -66,7 +61,7 @@
 
     {{/customer_name}}
 
-    {{#ischeck}}
+  
       <tr>
        <td colspan="3">
       {{#form1}}
@@ -99,7 +94,7 @@
     <tr>
         <td colspan="3">Касир: {{username}}</td>
     </tr>
-    {{/ischeck}}
+    
 
 
     {{#_detail}}
@@ -150,7 +145,7 @@
         <td style="font-size:larger" align="right">{{payamount}}</td>
     </tr>
     
-    {{#ischeck}}    
+     
     
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Оплата:</td>
@@ -160,7 +155,7 @@
         <td colspan="2" align="right">Решта:</td>
         <td align="right">{{exchange}}</td>
     </tr>
-    {{/ischeck}}
+   
     
     {{/prepaid}}
     {{#exciseval}}
@@ -195,13 +190,13 @@
     </tr>
    {{/checkslogan}}   
 
-    {{#ischeck}}
+  
        <tr>                    
                         <td colspan="3" > 
                             {{{docqrcode}}}
                         </td>
 
                     </tr>      
-    {{/ischeck}}                    
+                     
                     
 </table>

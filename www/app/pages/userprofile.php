@@ -13,6 +13,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\SubmitLink;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use App\Entity\User;
@@ -51,17 +52,15 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
 
         $pages = array();
-
+        $pages["\\App\\Pages\\Blank"] =  'Не вказано' ;
+        $pages["\\App\\Pages\\Main"] =  'Дашборд' ;
         foreach (\App\Entity\MetaData::find("meta_type<>1", "meta_type,description") as $m) {
             $p = "";
             $n = "";
             switch($m->meta_type) {
 
 
-                case 1:
-                    $p = "\\App\\Pages\\Doc\\";
-                    $n = "Документ";
-                    break;
+              
                 case 2:
                     $p = "\\App\\Pages\\Report\\";
                     $n = 'Звіт';
@@ -90,15 +89,29 @@ class UserProfile extends \App\Pages\Base
 
         //форма   пароля
 
+     
         $form = new Form('passwordform');
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
-           
-        
-        
+         //форма  OTP
+        $form = new Form('otpform');       
+        $form->add(new CheckBox('otpemail', $this->user->otpemail));
+        $form->add(new CheckBox('otpsms', $this->user->otpsms));
+        $form->add(new CheckBox('otptg', $this->user->otptg));
+        $form->add(new SubmitButton('otpsave'))->onClick($this, 'saveOtpOnClick');
+        $form->add(new SubmitLink('otprefresh'))->onClick($this, 'refreshOtpOnClick');
+        $form->add(new SubmitLink('otptest'))->onClick($this, 'testOtpOnClick');
+        if(strlen($this->user->otpcode)==0){
+             $this->user->otpcode = rand(100000,999999) ;
+             $this->user->save();
+        } 
+        $form->add(new Label('otpcode',$this->user->otpcode));
+     
+        $this->add($form);
+   
              
      
         if(strlen($this->user->prtype) == 0) {
@@ -127,13 +140,12 @@ class UserProfile extends \App\Pages\Base
         $form = new Form('printerlabel');
         $form->add(new DropDownChoice('prtypelabel', [],0))->onChange($this, "onPSTypelabel");
         $form->prtypelabel->setValue($this->user->prtypelabel);
-        $form->add(new DropDownChoice('prturn'));
-        $form->prturn->setValue($this->user->prturn);
+      
         $form->add(new DropDownChoice('pcplabel',[], $this->user->pcplabel));
 
         $form->add(new TextInput('pserverlabel', $this->user->pserverlabel));
         $form->add(new ClickLink('pstestlabel'))->onClick($this, 'onPSTestlabel', true);
-        $form->add(new TextInput('pwsymlabel', $this->user->pwsymlabel));
+        $form->add(new TextInput('pwsymlabel', $this->user->pwsymlabel??32));
         $form->add(new SubmitButton('saveplabel'))->onClick($this, 'savePrinterlabelOnClick');
         $this->add($form);
 
@@ -169,13 +181,15 @@ class UserProfile extends \App\Pages\Base
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
         $this->user->usemobileprinter = $this->profileform->usemobileprinter->isChecked() ? 1 : 0;
-
-        if (!$this->isError()) {
-
-            $this->user->save();
-            $this->setSuccess('Збережено');
-            System::setUser($this->user);
+        if (strlen($this->user->phone) > 0 && strlen($this->user->phone) != \App\Helper::PhoneL()) {
+            $this->setError("Довжина номера телефона має бути ".\App\Helper::PhoneL()." цифр");
+            return;
         }
+   
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+       
     }
 
     //записать  пароль
@@ -229,6 +243,7 @@ class UserProfile extends \App\Pages\Base
 
 
     }
+
     public function onPSTest($sender) {
 
         try {
@@ -274,11 +289,10 @@ class UserProfile extends \App\Pages\Base
         $this->printerlabel->pserverlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pstestlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pcplabel->setVisible($prtype!=0) ;
-        $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
-        $this->printerlabel->prturn->setVisible($prtype==0) ;
-
-
+     //   $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
+      
     }
+
     public function onPSTestlabel($sender) {
         $prtype = (int)$this->printerlabel->prtypelabel->getValue();
  
@@ -309,14 +323,13 @@ class UserProfile extends \App\Pages\Base
 
     }
 
-
     public function savePrinterlabelOnClick($sender) {
 
 
 
         $this->user->prtypelabel = $this->printerlabel->prtypelabel->getValue() ;
         $this->user->pcplabel = $this->printerlabel->pcplabel->getValue() ;
-        $this->user->prturn = $this->printerlabel->prturn->getValue() ;
+      
         $this->user->pwsymlabel = trim($this->printerlabel->pwsymlabel->getText());
         $this->user->pserverlabel = trim($this->printerlabel->pserverlabel->getText());
         $this->user->pserverlabel  = rtrim($this->user->pserverlabel, "/") ;
@@ -336,4 +349,24 @@ class UserProfile extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\UserProfile");               
          
     }
+    
+    public function saveOtpOnClick($sender) {
+             
+         
+    }
+    
+    public function refreshOtpOnClick($sender) {
+        $this->user->otpcode = rand(100000,999999) ;
+        $this->user->save();
+
+        $this->otpform->otpcode->setText($this->user->otpcode);
+         
+    }
+
+    public function testOtpOnClick($sender) {
+             
+         
+    }
+    
+    
 }

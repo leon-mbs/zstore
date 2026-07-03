@@ -33,6 +33,8 @@ class Item extends \ZCL\DB\Entity
         $this->foodstate = 0;
         $this->reclist = array();
         $this->printqty = 1;      
+        $this->isforbar = "";      
+        $this->isforprod = "";      
     }
 
     protected function afterLoad() {
@@ -53,11 +55,13 @@ class Item extends \ZCL\DB\Entity
 
         $this->isweight = (int)$xml->isweight[0];
         $this->noprice = (int)$xml->noprice[0];
+        $this->noprint = (int)$xml->noprint[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->autooutcome = (int)$xml->autooutcome[0];
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+        $this->ffpartner = (int)$xml->ffpartner[0];
         $this->imageurl = (string)$xml->imageurl[0];
 
         $this->techcard = (string)$xml->techcard[0];
@@ -69,6 +73,7 @@ class Item extends \ZCL\DB\Entity
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
+        $this->term = (string)$xml->term[0];
         $this->snumber = (string)$xml->snumber[0];
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
@@ -96,6 +101,7 @@ class Item extends \ZCL\DB\Entity
         if (!is_array($this->brprice)) {
             $this->brprice = array();
         }
+       
     
         $id = \App\System::getBranch();
         if ($id > 0 ) {  
@@ -119,12 +125,19 @@ class Item extends \ZCL\DB\Entity
         $this->actiondisc = doubleval($xml->actiondisc[0]);
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
-        $this->printqty = intval($xml->printqty[0]);
-      
+       
+        $this->isbasevarfood = (int)$xml->isbasevarfood[0];
+        $this->isvarfood = (int)$xml->isvarfood[0];
         $this->isnds = (int)$xml->isnds[0];
         $this->nds = (string)$xml->nds[0];
-
-       
+        $foodvars = (string)$xml->foodvars[0];
+        $this->foodvars=[];
+        if(strlen($foodvars)>0) {
+           $this->foodvars = unserialize($foodvars) ;
+        }
+        
+        $this->isforbar = (string)$xml->isforbar[0];
+        
         
         parent::afterLoad();
     }
@@ -168,6 +181,7 @@ class Item extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail .= "<isweight>{$this->isweight}</isweight>";
         $this->detail .= "<noprice>{$this->noprice}</noprice>";
+        $this->detail .= "<noprint>{$this->noprint}</noprint>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
         $this->detail .= "<autoincome>{$this->autoincome}</autoincome>";
@@ -179,6 +193,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
+        $this->detail .= "<term><![CDATA[{$this->term}]]></term>";
         $this->detail .= "<snumber><![CDATA[{$this->warranty}]]></snumber>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
@@ -220,6 +235,9 @@ class Item extends \ZCL\DB\Entity
         if ($this->actionprice > 0) {
             $this->detail .= "<actionprice>{$this->actionprice}</actionprice>";
         }
+        if ($this->ffpartner > 0) {
+            $this->detail .= "<ffpartner>{$this->ffpartner}</ffpartner>";
+        }
         if ($this->actiondisc > 0) {
             $this->detail .= "<actiondisc>{$this->actiondisc}</actiondisc>";
         }
@@ -233,15 +251,20 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail .= "<todate>{$this->todate}</todate>";
         $this->detail .= "<fromdate>{$this->fromdate}</fromdate>";
-        $this->detail .= "<printqty>{$this->printqty}</printqty>";
+      
         if(count($this->reclist) > 0) {
             $this->detail .= "<reclist>";
             $ss =    serialize($this->reclist) ;
             $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
+        $this->detail .= "<isforbar>{$this->isforbar}</isforbar>";
+
+        $this->detail .= "<isbasevarfood>{$this->isbasevarfood}</isbasevarfood>";
+        $this->detail .= "<isvarfood>{$this->isvarfood}</isvarfood>";
         $this->detail .= "<isnds>{$this->isnds}</isnds>";
         $this->detail .= "<nds>{$this->nds}</nds>";
+        $this->detail .= "<foodvars>". serialize($this->foodvars) ."</foodvars>";
 
 
         $this->detail .= "</detail>";
@@ -551,7 +574,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $q = $in == true ? "e.quantity >0" : "e.quantity < 0";
 
-        $sql = "  select document_id,coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+        $sql = "  select document_id,coalesce(partion,0) as p, coalesce(outprice,0) as o from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . intval($store);
@@ -567,17 +590,11 @@ class Item extends \ZCL\DB\Entity
         $sql = $sql . " order  by  e.entry_id desc  "  ;
          
         foreach($conn->Execute($sql) as $r) {
-            if (strlen($doctype) == 0) {
-               return doubleval($r['p']);             
-            }         
-            
-            $doc = \App\Entity\Doc\Document::load($r['document_id']);
-            if($doc != null)  {
-                foreach ($doc->unpackDetails('detaildata') as $item) {
-                   return doubleval($item->price);             
-                    
-                }
+            if($in == false && $r['o'] > 0 ) {
+               return doubleval($r['o']);   
             }
+            
+            return doubleval($r['p']);             
         }
         
         return 0;
@@ -645,7 +662,7 @@ class Item extends \ZCL\DB\Entity
      */
     public function getQuantity($store_id = 0, $snumber = "", $date=0, $emp=0) {
         $cstr = \App\ACL::getStoreBranchConstraint();
-        if (strlen($cstr) > 0) {
+        if (strlen($cstr) > 0  ) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
 
@@ -655,7 +672,7 @@ class Item extends \ZCL\DB\Entity
             $where .= " and store_id = " . $store_id;
         }
         if ($emp > 0) {
-            $where .= " and emp_id = " . $emp;
+            $where .= " and coalesce(emp_id,0) = " . $emp;
         }
         if (strlen($snumber) > 0) {
             $where .= " and  snumber = " . $conn->qstr($snumber);
@@ -711,7 +728,7 @@ class Item extends \ZCL\DB\Entity
             $sql .= " and store_id = " . $store_id;
         }
         if ($emp_id > 0) {
-            $sql .= " and emp_id = " . $emp_id;
+            $sql .= " and coalesce(emp_id,0) = " . $emp_id;
         }
         $amount = $conn->GetOne($sql);
         return $amount;
@@ -789,7 +806,7 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $partname
      * @static
      */
-    public static function findArrayAC($partname, $store = 0, $cat = 0) {
+    public static function findArrayAC($partname, $store = 0, $cat = 0,$where='') {
 
         $criteria = "  disabled <> 1 ";
         if ($store > 0) {
@@ -803,6 +820,9 @@ class Item extends \ZCL\DB\Entity
             $like = self::qstr('%' . $partname . '%');
             $partname = self::qstr($partname);
             $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
+        }
+        if (strlen($where) > 0) {
+            $criteria .= "  and  ". $where;
         }
 
         $itemlist = self::find($criteria);
@@ -836,7 +856,7 @@ class Item extends \ZCL\DB\Entity
             $codex= trim($codes,"'") ;
             $code0x= trim($code0s,"'") ;
             
-            $w='';
+            $w='disabled = 0  ';
             if ($cat_id > 0) {
 
 
@@ -846,14 +866,14 @@ class Item extends \ZCL\DB\Entity
                 $cats = implode(",", $ch)  ;
 
 
-                $w =   "  cat_id in ({$cats}) and  ";
+                $w =   " and cat_id in ({$cats})   ";
             }            
             
             
             if($store_id > 0)  {
-                $item = Item::getFirst($w." item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}   or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%' )");
+                $item = Item::getFirst($w." and item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}   or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%' )");
             }   else {
-                $item = Item::getFirst($w."  item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}  or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%'   ");
+                $item = Item::getFirst($w." and  item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}  or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%'   ");
             }
             return $item;
     }
@@ -873,7 +893,7 @@ class Item extends \ZCL\DB\Entity
         $letters = $options['articleprefix'] ?? "ID";
         $like= $letters=="" ?"" : " like '{$letters}%'" ;
         $last=0;
-        $sql = "select item_code from  items where  item_code {$like}   order  by  item_id desc   ";  
+        $sql = "select item_code from  items where disabled=0 and item_code {$like}   order  by  item_id desc   ";  
  
         foreach($conn->Execute($sql) as $row) {
            $digits = intval( preg_replace('/[^0-9]/', '', $row['item_code']) );
@@ -915,11 +935,11 @@ class Item extends \ZCL\DB\Entity
         $code = Item::qstr($this->item_code);
         
         if(strlen($this->manufacturer)==0){
-            $where = "item_id <> {$this->item_id} and  item_code={$code} ";  
+            $where = " disabled=0 and item_id <> {$this->item_id} and  item_code={$code} ";  
         }  else {
              $manufacturer = Item::qstr($this->manufacturer);
 
-             $where = "item_id <> {$this->item_id} and ( item_code={$code} and manufacturer= {$manufacturer} )";  
+             $where = " disabled=0 and item_id <> {$this->item_id} and ( item_code={$code} and manufacturer= {$manufacturer} )";  
         }
         $cnt = Item::findCnt($where);
         if ($cnt > 0) {
@@ -996,7 +1016,7 @@ class Item extends \ZCL\DB\Entity
         }
         
         if ($price == 0) {   
-            $price = $this->getPartion(0);
+            $price = $this->getPartion();
         }
         if($price==0) {
             $price = $this->getLastPartion() ;
@@ -1241,8 +1261,9 @@ class Item extends \ZCL\DB\Entity
     * @param mixed $requires  количество
     * @param mixed $store  со  склада
     * @param mixed $document_id  документ
+    * @param mixed $reserve  резервирование
     */
-    public   function setToProd($required,$store,$document_id) {
+    public   function setToProd($required,$store,$document_id,$reserve=false) {
         $common= \App\System::getOptions('common') ;
         if( ($common['storepart'] ?? 0) > 0) {
            $store = $common['storepart'] ;
@@ -1277,7 +1298,7 @@ class Item extends \ZCL\DB\Entity
             foreach ($listst as $st) {
                 $sc = new \App\Entity\Entry($document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
-                $sc->tag=\App\Entity\Entry::TAG_TOPROD;
+                $sc->tag=  $reserve ? \App\Entity\Entry::TAG_RESERV :  \App\Entity\Entry::TAG_TOPROD;
 
                 $sc->save();
                 if ($kl > 0) {
@@ -1286,14 +1307,29 @@ class Item extends \ZCL\DB\Entity
             }
             
         }
-        if ($lost > 0) {
+        if ($lost > 0 && $reserve==false) {
             $io = new \App\Entity\IOState();
             $io->document_id = $document_id;
             $io->amount =  0 - abs($lost);
-            $io->iotype = \App\Entity\IOState::TYPE_TRASH;
+            $io->iotype =  \App\Entity\IOState::TYPE_TRASH;
 
             $io->save();
        }             
     }
-         
+   
+   
+   /**
+   *  гарантийный срок
+   *  если задан срок  голности вычисляет  от текущей даты
+   */
+    public function getTerm(){
+        if(strlen($this->warranty)>0){
+           return  $this->warranty;
+        }
+        if(intval($this->term ??0)>0){
+           return "до ". \App\Helper::fd( strtotime("+{$this->term} days")  );  ; 
+        }
+        return "";
+    }
+    
 }

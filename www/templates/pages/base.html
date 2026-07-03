@@ -8,9 +8,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
+      <!--  <link rel="stylesheet" href="/assets/css/bootstrap-icons.css">  -->
 
         <link rel="stylesheet" href="/assets/css/adminlte.css">
-        <!--<link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css">   -->
+   
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
         <link rel="stylesheet" href="/assets/css/toastr.min.css">
         <link rel="stylesheet" href="/assets/css/select2.css">
@@ -20,7 +21,7 @@
 
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
-        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js" type="text/javascript"></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?t=4" type="text/javascript"></script>
         <script src="/assets/js/select2.js" type="text/javascript"></script>
         <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
         <script src="/assets/js/printThis.js" type="text/javascript"></script>
@@ -63,7 +64,7 @@
 
   
     </head>
-    <body class="{{hidesidebar}} ">
+    <body class="{{theme}} ">
  
     
    
@@ -75,16 +76,16 @@
                {{#showsidemenu}}
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                     </li>
 
                 </ul>
                {{/showsidemenu}}   
-               
+                   
                {{^showsidemenu}}   
                <ul class="navbar-nav">
                 <li class="nav-item">   
-               <a href="/index.php" class="brand-link">
+                <a href="/index.php" class="brand-link">
                     <span  > Zippy CRM</span>
                 </a>     </li>
                </ul>   
@@ -580,6 +581,40 @@
 
                                     </li>
                                     {{/woocomerce}}
+                                    {{#horoshop}}
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Обмін з Хорошоп
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                              {{#isadmins}}
+                                            <li class="nav-item">
+                                                <a href="/index.php?p=App/Modules/HR/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                </a>
+                                            </li>
+                                              {{/isadmins}}
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/HR/Orders" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Замовлення</p>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/index.php?p=App/Modules/HR/Items" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Товари</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    {{/horoshop}}                                       
                                     {{#note}}
                                     <li class="nav-item  has-treeview">
                                         <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
@@ -662,6 +697,64 @@
 
                                     </li>
                                     {{/ppo}}
+                             
+                             
+                                    {{#checkbox}}
+                                    <li class="nav-item  has-treeview">
+                                       
+                                        
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Чекбокс 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                 <a href="/index.php?p=App/Modules/CB/Reports" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Х-Звiт</p>
+                                                </a>
+                                            </li>   
+                  
+                                        </ul>    
+                                        
+                                    </li>
+                                    {{/checkbox}}
+                                 
+                                    {{#df}}
+                                    <li class="nav-item  has-treeview">
+                                       
+                                        
+                                        <a href="#" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>Дропшипінг та  фулфілмент 
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+
+                                        </a>
+                                        <ul class="nav nav-treeview">
+                                              {{#isadmins}}
+                                            <li class="nav-item">
+                                                 <a href="/index.php?p=App/Modules/DF/Admin/Options" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                </a>
+                                            </li>   
+                                             {{/isadmins}}
+                                            <li class="nav-item">
+                                                 <a href="/index.php?p=App/Modules/DF/Admin/Orders" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Замовлення</p>
+                                                </a>
+                                            </li>                                               
+                                        </ul>    
+                                        
+                                    </li>
+                                    {{/df}}
+                                    
+                                    
                                     {{#np}}
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
@@ -948,7 +1041,7 @@
                                  {{#isadmins}}
                                  <small><a href="/index.php?p=App/Pages/Roles" title="Налаштування оперативного меню"><i class="fa fa-cog"></i> </a> </small>
                                  {{/isadmins}}
-                                 
+                               
                             </div>
                              
                             {{/smart}}
@@ -1008,7 +1101,64 @@
                 </div>
             </div>
            
+           
+             <div id="modalpritems" class="modal fade  " tabindex="-1"                   aria-hidden="true">
+                <div class="modal-dialog  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Друк етикеток</h5>
+                         
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div   class="modal-body">
+                        <small>Для виключення строки  з друку  виставте 0 </small>
+                        <form  zippy="pr_itemsform">
+                        <table class="table table-sm">
 
+                          <tr><td colspan="3" align="right"><a href="javascript:void(0)" onclick=" $('.pr_item').val(1) ">Виставити 1</a></td></tr>
+                           <tr zippy="pr_items">
+                              <td zippy="pr_itemname"></td>
+                              <td zippy="pr_itemcode"></td>
+                              <td align="right"><input zippy="pr_itemqty" pattern="[0-9]+" style="width:40px" class="form-control form-control-sm pr_item" ></td>
+                              </tr>
+                       
+                             <tr><td colspan="3" align="right">
+                             
+                             <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">Закрити</button>
+                             <button type="submit" class="btn btn-primary"  >Друкувати</button>
+                               </td></tr>
+                            </table>
+                          </form>
+                        </div>
+                     
+                    </div>
+                </div>
+            </div>    
+
+            
+        <div id="pr_items_pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" zippy="pr_items_tag"></td>
+                            </tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#pr_items_tag').printThis();$('#pr_items_pform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>            
+                    
+            
     <dialog id="dialogwait">
                      
            <div class="spinner-border" role="status">
@@ -1249,7 +1399,7 @@
         
        //ТМЦ в закупку
        function addItemToCO(id,qty=0){
-                callPM('addItemToCO',[id,qty],null,(data)=> 
+                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {

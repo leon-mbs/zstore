@@ -78,6 +78,7 @@ class ShowDoc extends \Zippy\Html\WebPage
                 die;
 
             }
+            /*
             if ($type == "html") {
                 header("Content-type: text/plain");
                 header("Content-Disposition: attachment;Filename={$filename}.html");
@@ -85,10 +86,11 @@ class ShowDoc extends \Zippy\Html\WebPage
 
                 echo $html;
             }
+            */
             if ($type == "xml") {
                 $xml = $doc->exportGNAU();
                 header("Content-type: text/xml");
-                header("Content-Disposition: attachment;Filename={$xml['filename']}");
+                header("Content-Disposition: attachment;Filename={$filename}");
                 header("Content-Transfer-Encoding: binary");
 
                 echo $xml['content'];

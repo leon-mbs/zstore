@@ -65,9 +65,10 @@ class IOState extends \ZCL\DB\Entity
     * @param mixed $amount
     * @param mixed $type
     * @param mixed $storno   для возвратов
+    * @param mixed $date  дата  если  отличается  от  даты  документа
     * @return mixed
     */
-    public static function addIOState($document_id, $amount, $type,$storno=false) {
+    public static function addIOState($document_id, $amount, $type,$storno=false,$date=null) {
         if (0 == doubleval($amount) || 0 == intval($document_id) || 0 == intval($type)) {
             return;
         }
@@ -86,6 +87,9 @@ class IOState extends \ZCL\DB\Entity
         $io->document_id = $document_id;
         $io->amount = $amount;
         $io->iotype = $type;
+        if($date != null) {
+          $io->iodate = $date;  
+        }
         $io->save();
     }
 

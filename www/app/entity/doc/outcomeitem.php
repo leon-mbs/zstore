@@ -62,6 +62,7 @@ class OutcomeItem extends Document
             'date'            => H::fd($this->document_date),
             'amount'            => H::fa($this->amount),
             "emp"             => false,
+            "customer"             => false,
             "from"            => $this->headerdata["storename"],
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
@@ -70,6 +71,7 @@ class OutcomeItem extends Document
         if (  ($this->headerdata["storeemp"] ?? 0)> 0  ) {
             $header['storeemp'] = $this->headerdata["storeempname"];
         }        
+        $header['customer'] = $this->customer_id >0 ? $this->customer_name : false;
         
         $report = new \App\Report('doc/outcomeitem.tpl');
 
@@ -90,6 +92,9 @@ class OutcomeItem extends Document
     public   function DoAcc() {
          if(\App\System::getOption("common",'useacc')!=1 ) return;
          parent::DoAcc()  ;
+
+         $conn = \ZDB\DB::getConnect();
+       
          $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
       
          $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_OUT) ;

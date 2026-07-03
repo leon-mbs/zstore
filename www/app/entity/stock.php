@@ -32,6 +32,7 @@ class Stock extends \ZCL\DB\Entity
 
          
         $criteria = "qty > 0 and itemdisabled <> 1 and store_id=" . $store;
+     //   $criteria .= "  and item_id in( select ss.item_id  from store_stock ss where ss.store_id={$store} group by ss.item_id having sum(ss.qty) > 0  ) "  ;
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
             $partname = self::qstr($partname);
@@ -39,10 +40,12 @@ class Stock extends \ZCL\DB\Entity
             $criteria .= "  and  (itemname like {$like} or item_code = {$partname} or snumber = {$partname} or   bar_code = {$partname} )";
         }
 
-        $entitylist = self::find($criteria, " itemname asc,sdate asc");
+        $entitylist = self::find($criteria, " itemname asc,stock_id desc");
 
         $list = array();
         foreach ($entitylist as $key => $value) {
+          //  if(isset($list[$value->item_id]) ) continue;
+           
             $name = $value->itemname;
             
             if (strlen($value->item_code) > 0) {
@@ -57,7 +60,7 @@ class Stock extends \ZCL\DB\Entity
              
             $name .= ', ц. ' . \App\Helper::fa($value->partion) ;
             $name .= ', к. ' . \App\Helper::fqty($value->qty) ;
-            $list[$key] = $name;
+            $list[$value->stock_id] = $name;
         }
 
         return $list;
@@ -76,7 +79,9 @@ class Stock extends \ZCL\DB\Entity
      * @param mixed $emp_id Сотрудник (МОЛ)
      */
     public static function getStock($store_id, $item_id, $price, $snumber = "", $sdate = 0, $create = true,$customer_id=0,$emp_id=0) {
-
+        $store_id =intval($store_id);
+        $item_id =intval($item_id);
+        $price = doubleval($price);
     
         $conn = \ZDB\DB::getConnect();
 

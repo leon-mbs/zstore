@@ -59,7 +59,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new DropDownChoice('edititem', Item::findArray('itemname', 'disabled<>1 and  item_type in(4,5)', 'itemname')));
-        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem' );
 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -111,7 +111,7 @@ class ProdReceipt extends \App\Pages\Base
                         $this->docform->parea->setValue($basedoc->headerdata['parea']);
                 
                         foreach ($basedoc->unpackDetails('prodlist') as $item) {
-                            $item->price = $item->getProdprice();
+                          //  $item->price = $item->getProdprice();
                             $this->_itemlist[] = $item;
                         }
                         
@@ -135,6 +135,8 @@ class ProdReceipt extends \App\Pages\Base
                 foreach($st->itemlist as $it){
                     $item = Item::load($it->item_id) ;
                     $item->quantity = $it->quantity;
+                    $item->price = $it->price;
+                    $item->zarp = $it->zarp;
                     $this->_itemlist[$i++]=$item;
                 }
 
@@ -260,7 +262,7 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
     }
@@ -328,8 +330,9 @@ class ProdReceipt extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
-            return;
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+           return;
         }
         App::Redirect("\\App\\Pages\\Register\\StockList");
 

@@ -76,10 +76,12 @@ class Firm extends \App\Pages\Base
         $firm['city'] = $this->firmform->city->getText();
         $firm['vdoc'] = $this->firmform->vdoc->getText();
   
-        $firm['sign'] = $this->firmform->sign->getText();
-        $firm['stamp'] = $this->firmform->stamp->getText();
-        $firm['logo'] = $this->firmform->logo->getText();
-
+        $firm['logo'] =  trim($this->firmform->logo->getText());
+        $firm['logo']  = ltrim( $firm['logo'] ,'/' )  ;
+        $firm['stamp'] =  trim($this->firmform->stamp->getText());
+        $firm['stamp']  = ltrim( $firm['stamp'] ,'/' )  ;
+        $firm['sign'] =  trim($this->firmform->sign->getText());
+        $firm['sign']  = ltrim( $firm['sign'] ,'/' )  ;
         $firm['koatuu'] = $this->firmform->koatuu->getText();
         $firm['kopfg'] = $this->firmform->kopfg->getText();
         $firm['gni'] = $this->firmform->gni->getText();
@@ -87,10 +89,7 @@ class Firm extends \App\Pages\Base
         $firm['kodu'] = $this->firmform->kodu->getText();
         $firm['isjur'] = $this->firmform->isjur->isChecked() ? 1:0;
       
-        $firm['logo'] = $this->firmform->logo->getText();
-        $firm['stamp'] = $this->firmform->stamp->getText();
-        $firm['sign'] = $this->firmform->sign->getText();
-       
+   
         $firm['fops'] =   $this->_fops;
     
          

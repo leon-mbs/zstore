@@ -253,7 +253,7 @@
              
                        <th> </th>
                        <th> </th>
-                       <th> </th>
+                       
                        <th> </th>
                        <th> </th>
                     </tr>
@@ -264,9 +264,9 @@
                  
 
                         <td><a title="Редагувати" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
-                        <td><a title="ТМЦ" zippy="stageitems"><i class="fa fa-cogs"></i></a></td>
+                        <td><a title="ТМЦ і тех. карта " zippy="stageitems"><i class="fa fa-wrench"></i></a></td>
                         <td><a title="Виконавці " zippy="stageemps"><i class="fa fa-users"></i></a></td>
-                        <td><a title="Тех. карта" zippy="stagecard"><i class="fa fa-wrench"></i></a></td>
+
                         <td><a title="Видалити" zippy="stagedel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>               
@@ -303,43 +303,56 @@
             </div>
         </form> 
 
-        <form zippy="editcardform"  >
-            <h4 zippy="stagenameh4"></h4>    
-            <div class="row"  >
-                <div class="col-12 col-md-8 col-xl-6">
-                    <div class="form-group">
-                        <label for="editcard">Технологічна карта</label>
-                        <textarea     class="form-control" zippy="editcard"></textarea>
-                    </div>             
+  
 
-                </div>
-                <div class="col-12">
-                    <input zippy="cancelcard" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">   
-                    <input zippy="savecard"   type="submit" value="Зберегти" class="btn btn-primary  "> 
-                </div> 
-            </div>
-        </form> 
-
-     <div class="col-12 col-md-4 col-xl-3 "  zippy="itemspan">
+     <div class="col-12  "  zippy="itemspan">
 
             <i zippy="stagename5"></i><br>    
                    
             <h5>Виготовлювані ТМЦ</h5>
-            <div class="card">
+            
 
-             <form zippy="edititemsform" class="form-inline">
+             <form zippy="edititemsform"  >
+                       
+                   <div   class="row" >
+                   <div   class="col-12 col-md-6 " >
+                      <div   class="navbar nav " >
+                       <div   class="row" >
+                       <div   class="col-auto" >
                         <select zippy="edititem" class="form-control select2">
                             <option value="0">Не обрано</option>
                         </select>
- 
-                        <label class="ml-2" for="editqty">Кіл.</label>
-                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9]+" value="1"  style="width: 50px;">
-      
-                     
-
-                        <input zippy="saveitem" type="submit" value="+" class="btn btn-primary">
-                   </form>                    
-                </div>              
+                        </div>  
+                         <div   class="col-auto" >
+                            <div   class="form-group row" >
+                            <label class="ml-2" for="editqty">Кіл.</label>
+                            <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9]+" value="1"  style="width: 50px;">
+                       
+                             </div>  
+                         </div>  
+                         <div   class="col-auto" >
+                            <div   class="form-group row" >
+                            <label class="ml-2" for="editcost">Оплата.</label>
+                            <input class="form-control mr-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="1"  style="width: 75px;">
+                       
+                             </div>  
+                         </div>  
+                         <div   class="col-auto" >
+                            <div   class="form-group row" >
+                            <label class="ml-2" for="editprice">Собівартість</label>
+                            <input class="form-control mr-2" type="text" zippy="editprice" pattern="[0-9\.]+" value="1"  style="width: 75px;">
+                       
+                             </div>  
+                         </div>  
+                         
+                        <div   class="col-auto" >
+                            
+                            
+                            <input zippy="saveitem" type="submit" value="+" class="btn btn-primary">
+                          
+                         </div>  
+                        </div>               
+                      </div>      
    
 
                     <table class="table  table-sm">
@@ -348,8 +361,10 @@
                             <td zippy="itemname"></td>
                             <td zippy="item_code"></td>
                             <td zippy="item_qty" class="text-right"></td>
+                            <td zippy="item_zarp" class="text-right"></td>
+                            <td zippy="item_price" class="text-right"></td>
                           
-                            <td class="text-right">
+                            <td  >
 
                                 <a zippy="deleteitem"><i class="fa fa-trash"></i></a>
 
@@ -358,12 +373,27 @@
 
 
                     </table>
-                    
-                   <a zippy="cancelitems" class="btn btn-secondary mr-4" >Скасувати</a> 
-                   <a zippy="saveitems" class="btn btn-primary mr-4" >Зберегти</a> 
-                    
-                    
-                   </div>
+                  
+                   </div>   
+                   
+                   <div   class="col-12 col-md-6 " >
+                      
+                    <div class="form-group">
+                        <label for="editcard">Технологічна карта</label>
+                        <textarea     class="form-control" zippy="editcard"></textarea>
+                    </div>   
+                 </div>   
+              
+                   <div   class="col-12   " >
+                       
+                       <a zippy="cancelitems" class="btn btn-secondary mr-4" >Скасувати</a> 
+                  
+                       <input zippy="saveitems" type="submit" value="Зберегти" class="btn btn-primary">
+                              
+                    </div>  
+                   </div>  
+                  </form>          
+             </div>
 
 
              <div class="col-12 col-md-4 col-xl-3 "  zippy="empspan" >
@@ -443,7 +473,7 @@
                 // Summernote
 
                 $('#editcard').summernote({
-                    height: 600,
+                    height: 400,
                     lang: 'uk-UA',
 
                     callbacks: {

@@ -108,6 +108,8 @@ class ProdMove extends \App\Pages\Base
                 foreach($st->itemlist as $it){
                     $item = Item::load($it->item_id) ;
                     $item->quantity = $it->quantity;
+                    $item->price = $it->price;
+                    $item->zarp = $it->zarp;
                     $this->_itemlist[$i++]=$item;
                 }
                 
@@ -321,7 +323,9 @@ class ProdMove extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+
             return;
         }
     }

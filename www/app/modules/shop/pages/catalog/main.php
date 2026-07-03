@@ -66,7 +66,7 @@ class Main extends Base
             $newlist = Product::find($sql, '', 6);
 
             foreach($ar as $a) {  //выстраиваем  в порядке  добавления
-                if($newlist[$a->item_id] instanceof Product) {
+                if(($newlist[$a->item_id] ?? null) instanceof Product) {
                     $this->_newlist[]=$newlist[$a->item_id] ;
                 }
 

@@ -85,7 +85,7 @@ class Items extends \App\Pages\Base
         if (!isset($data)) {
 
             $this->setError("Невірна відповідь");
-            \App\Helper::log($json);
+           // \App\Helper::log($json);
             return;
         }
         if ($data['error'] == "") {

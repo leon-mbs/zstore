@@ -86,6 +86,11 @@ class OrderFood extends Document
         return $html;
     }
 
+    /**
+    * 
+    * @param mixed $ps    чековый принтер
+    * @param mixed $bill  счет на оплату
+    */
     public function generatePosReport($ps=false,$bill=false) {
 
         $detail = array();
@@ -99,8 +104,9 @@ class OrderFood extends Document
                 "quantity"   => H::fqty($item->quantity,true),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
-            $stamps= explode(",",$item->aklist??'') ;
-            if(count($stamps)>0) {
+            
+            if(strlen($item->aklist??'')>0) {
+               $stamps= explode(",",$item->aklist??'') ;
                $row['stamps'] = [] ;
                foreach($stamps  as $st){
                    $row['stamps'][]=['name'=>$st];   
@@ -134,7 +140,7 @@ class OrderFood extends Document
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
-                        "ischeck"         => !$bill ,
+                     
                         "username"        => $this->headerdata['cashier'] ,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($shopname) > 0 ? $shopname : false,
@@ -193,10 +199,18 @@ class OrderFood extends Document
             $header['promo']  = false;
         }
 
-        if($ps) {
-            $report = new \App\Report('doc/orderfood_bill_ps.tpl');
-        } else {
-            $report = new \App\Report('doc/orderfood_bill.tpl');
+        if($bill) {
+            if($ps) {
+                $report = new \App\Report('doc/orderfood_billforpay_ps.tpl');
+            } else {
+                $report = new \App\Report('doc/orderfood_billforpay.tpl');
+            }            
+        }else{
+            if($ps) {
+                $report = new \App\Report('doc/orderfood_bill_ps.tpl');
+            } else {
+                $report = new \App\Report('doc/orderfood_bill.tpl');
+            }
         }
 
         $html = $report->generate($header);
@@ -227,10 +241,9 @@ class OrderFood extends Document
         $conn->Execute("delete from empacc  where  document_id=" . $this->document_id);
         
         
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+        if ( ( $this->headerdata['payment'] > 0 && $this->payed > 0 )  ||  $this->headerdata['bonus'] > 0  ) {
 
-
-
+            
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
@@ -309,15 +322,14 @@ class OrderFood extends Document
                 throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
             }
 
+            $am =   $this->getAmountReg()   ;
             $k = 1;   //учитываем  скидку
-
-            $dd =   doubleval($this->headerdata['bonus']) + doubleval($this->headerdata['totaldisc']) ;
-
-            if ($dd > 0 && $this->amount > 0) {
-                $k =   ($this->amount - $dd)/ $this->amount;
-            }
+            if ($am < $this->amount && $this->amount > 0  ) {
+                $k = $am / $this->amount;
+            }         
 
             //учитываем  отходы
+            $lost=0;
             $kl=0;
             if ($item->lost > 0) {
                 $kl = 1 / (1 - $item->lost / 100);

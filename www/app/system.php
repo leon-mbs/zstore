@@ -10,9 +10,9 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "8.1.0";
-    public const PREV_VERSION = "8.0.1";
-    public const REQUIRED_DB  = "8.1.0";
+    public const CURR_VERSION = "8.2.4";
+    public const PREV_VERSION = "8.2.3";
+    public const REQUIRED_DB  = "8.2.0";
    
 
     /**
@@ -170,9 +170,7 @@ class System
         return Session::getSession()->emsg;
     }
 
-    public static function getErrorMsgTopPage() {
-        return Session::getSession()->emsgtp;
-    }
+  
 
     public static function setWarnMsg($msg) {
         Session::getSession()->wmsg = $msg;
@@ -228,9 +226,7 @@ class System
     */
     public static function checkUpdate() {
         $options = System::getOptions("common");       
-        if(($options['noupdate'] ??0)==1) {
-           return;  
-        }
+      
         $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
         if(strtotime('-7 day') < $lastcheck ) {
            return;
@@ -270,7 +266,10 @@ class System
                 $n->save();                 
             }          
           
-             
+            if(($options['noupdate'] ??0)==1) {
+              return;  
+            }    
+                 
             $b=0;
             $data = System::checkVersion() ;
 
@@ -293,22 +292,21 @@ class System
     * 
     */
     public static function checkVersion() {
-        /*
-        $phpv =   phpversion()  ;
-        $phpv = substr(str_replace('.','',$phpv),0,2) ;
-       
-        $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
-    
-        $v = @file_get_contents("https://zippy.com.ua/update.php".$nocache);
-        $data = @json_decode($v, true);
+ 
+        $url = "https://zippy.com.ua/updates/version.json";
+        
+        $response = Helper::getContent($url) ;
+        if($response === false) {
+            return false;
+        }
+        
+        $data = @json_decode($response, true);
         if(!is_array($data)) {
-            $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
-            $data = @json_decode($v, true);
-        }   
-        */
-        $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
-        $data = @json_decode($v, true);
-   
+           \App\Helper::logerror("Невiрний формат  файлу '{$url}'") ;
+           \App\Helper::logerror($response) ;
+           return false;
+        }
+ 
         return $data;     
     }
 }

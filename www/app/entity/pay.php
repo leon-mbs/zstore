@@ -49,9 +49,11 @@ class Pay extends \ZCL\DB\Entity
      * @param mixed $comment коментарий
      * @param mixed $nobank  без банковского  процента 
      */
-    public static function addPayment($document_id, $paydate, $amount, $mf_id, $comment = '', $nobank=false) {
+    public static function addPayment($document_id, $paydate=null, $amount=0, $mf_id=0, $comment = '', $nobank=false) {
         $doc = \App\Entity\Doc\Document::load($document_id);
- 
+        if(strlen($paydate)==0){
+            $paydate = $doc->documemt_date;
+        }
         \App\Entity\CustAcc::addBonus($doc, $amount);
 
         if (0 == (float)$amount || 0 == (int)$document_id || 0 == $mf_id) {

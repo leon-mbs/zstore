@@ -64,7 +64,7 @@ class Toc extends \App\Pages\Base
         
         $dd = "document_date >={$from} and document_date <={$to} ";
         
-           //актуальность складов
+       
         $detail1=[] ;
         $detail2=[] ;
         $detail3=[] ;
@@ -73,7 +73,7 @@ class Toc extends \App\Pages\Base
         
         $items=[];
         $itemsd=[];
-        
+         //актуальность складов   
          
         foreach(Document::findYield("document_date >={$from}  and meta_name='Order' and state >4 ") as $order){
              foreach ($order->unpackDetails('detaildata') as $item) {
@@ -226,15 +226,15 @@ class Toc extends \App\Pages\Base
         //todo убрать =  
         $header = array(
            "_detail1" => $detail1,
-           "isdetail1" => count($detail1) >= 0,
+           "isdetail1" => count($detail1) > 0,
            "_detail2" => $detail2,
-           "isdetail2" => count($detail2) >= 0,
+           "isdetail2" => count($detail2) > 0,
           "_detail3" => $detail3,
-           "isdetail3" => count($detail3) >= 0, 
+           "isdetail3" => count($detail3) > 0, 
           "_detail4" => $detail4,
-           "isdetail4" => count($detail4) >= 0, 
+           "isdetail4" => count($detail4) > 0, 
            "_detail5" => $detai5,
-           "isdetail5" => count($detail5) >= 0 
+           "isdetail5" => count($detail5) > 0 
 
 
                         

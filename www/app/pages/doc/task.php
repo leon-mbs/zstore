@@ -63,15 +63,18 @@ class Task extends \App\Pages\Base
 
         //service
         $this->add(new Form('editdetail'));
-        $this->editdetail->add(new DropDownChoice('editservice', Service::getList()));
+        $this->editdetail->add(new DropDownChoice('editservice', Service::getList()))->onChange($this,"onService");
 
         $this->editdetail->add(new TextInput('editqty'));
+        $this->editdetail->add(new TextInput('editcost'));
         $this->editdetail->add(new TextInput('editdesc'));
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         //prod
         $this->add(new Form('editdetailprod'));
-        $this->editdetailprod->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")));
+        $this->editdetailprod->add(new DropDownChoice('editprod', Item::findArray("itemname", "item_type in(4,5) and disabled<>1", "itemname")))->onChange($this,"onProd");
 
+        $this->editdetailprod->add(new TextInput('editprodprice'));
+        $this->editdetailprod->add(new TextInput('editprodcost'));
         $this->editdetailprod->add(new TextInput('editqtyprod'));
         $this->editdetailprod->add(new TextInput('editdescprod'));
         $this->editdetailprod->add(new SubmitButton('saverowprod'))->onClick($this, 'saverowprodOnClick');
@@ -121,11 +124,11 @@ class Task extends \App\Pages\Base
                     $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
+                        $this->docform->notes->setText('Замовлення '. $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
+                        $this->docform->notes->setText('Замовлення '. $basedoc->document_number);
                         $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
@@ -154,6 +157,7 @@ class Task extends \App\Pages\Base
         $row->add(new Label('category', $service->category));
 
         $row->add(new Label('quantity', $service->quantity));
+        $row->add(new Label('cost', $service->cost));
         $row->add(new Label('desc', $service->desc));
 
 
@@ -161,6 +165,10 @@ class Task extends \App\Pages\Base
     }
 
 
+    public function onService($sender) {
+       $s =  Service::load($sender->getValue());
+       $this->editdetail->editcost->setText($s->cost??0) ;
+    }
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -182,6 +190,8 @@ class Task extends \App\Pages\Base
         $service = Service::load($id);
 
         $service->quantity = $this->editdetail->editqty->getDouble();
+        $service->quantity = $this->editdetail->editqty->getDouble();
+        $service->cost = $this->editdetail->editcost->getDouble();
         $service->desc = $this->editdetail->editdesc->getText();
         $service->price = $service->cost;
         if (strlen($service->price) == 0) {
@@ -206,12 +216,23 @@ class Task extends \App\Pages\Base
 
         $row->add(new Label('quantityprod', $item->quantity));
         $row->add(new Label('descprod', $item->desc));
+        $row->add(new Label('costprod', $item->zarp));
+        $row->add(new Label('priceprod', $item->price));
 
 
         $row->add(new ClickLink('deleteprod'))->onClick($this, 'deleteprodOnClick');
     }
 
 
+    public function onProd($sender) {
+       $p=  Item::load($sender->getValue());
+       if($p == null) return;
+       
+       $this->editdetailprod->editprodprice->setText($p->getProdPrice())  ;
+       $this->editdetailprod->editprodcost->setText($p->zarp)  ;
+       
+    }
+    
     public function deleteprodOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -232,6 +253,8 @@ class Task extends \App\Pages\Base
         }
         $item = Item::load($id);
 
+        $item->price = $this->editdetailprod->editprodprice->getDouble();
+        $item->zarp = $this->editdetailprod->editprodcost->getDouble();
         $item->quantity = $this->editdetailprod->editqtyprod->getDouble();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
@@ -383,7 +406,9 @@ class Task extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
+
             return;
         }
     }

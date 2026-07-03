@@ -125,9 +125,10 @@ class POSCheck extends Document
                 "price"   => H::fasell($item->price),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
-            
-            $stamps= explode(",",$item->aklist??'') ;
-            if(count($stamps)>0) {
+         
+            if(strlen($item->aklist??'')>0) {
+               $stamps= explode(",",$item->aklist??'') ;
+           
                $row['stamps'] = [] ;
                foreach($stamps  as $st){
                    $row['stamps'][]=['name'=>$st];   
@@ -284,12 +285,11 @@ class POSCheck extends Document
         //$conn = \ZDB\DB::getConnect();
       
       
-        $dd =   doubleval($this->headerdata['bonus']) +  doubleval($this->headerdata['totaldisc'])   ;
+        $am =   $this->getAmountReg()   ;
         $k = 1;   //учитываем  скидку
-        if ($dd > 0 && $this->amount > 0) {
-            $k = ($this->amount - $dd) / $this->amount;
+        if ($am < $this->amount && $this->amount > 0  ) {
+            $k = $am / $this->amount;
         }
-
 
 
         //оплата
@@ -308,6 +308,9 @@ class POSCheck extends Document
             }
             if(($this->headerdata['mfbeznal']??0) >0 && ($this->headerdata['payedcard']??0) >0) {
                 $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payedcard'], $this->headerdata['mfbeznal']);
+            }
+            if(($this->headerdata['bonus']??0) >0 && $payed == 0 ) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date );
             }
         }
 
@@ -457,7 +460,7 @@ class POSCheck extends Document
         }
         
                
-       //платежи    
+        //к  оплате
         if($this->payamount >0) {
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
@@ -466,7 +469,7 @@ class POSCheck extends Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-       //тмц      
+       //платежи      
         foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
@@ -498,7 +501,7 @@ class POSCheck extends Document
                             
                         $order->updateStatus(Document::STATE_DELIVERED);
                     }                            
-                    \App\Helper::log("order  state {$order->state} payamount {$this->payamount} payed  {$this->payed}  ");
+                  //  \App\Helper::log("order  state {$order->state} payamount {$this->payamount} payed  {$this->payed}  ");
                     if($this->payed  >= $this->payamount  ) {  //если  оплачено  
                         if ($order->state == Document::STATE_DELIVERED) {
                             $order->updateStatus(Document::STATE_CLOSED);

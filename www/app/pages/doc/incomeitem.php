@@ -53,8 +53,10 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
  
-       
-        $this->add(new Form('editdetail'))->setVisible(false);
+        $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
+      
+         $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
         $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
@@ -67,6 +69,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
 
 
         //добавление нового товара
@@ -103,6 +106,11 @@ class IncomeItem extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+            
+            if ($this->_doc->customer_id) {
+                $this->docform->customer->setKey($this->_doc->customer_id);
+                $this->docform->customer->setText($this->_doc->customer_name);
+            }             
         } else {
             $this->_doc = Document::create('IncomeItem');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -246,6 +254,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
+        $this->wselitem->setVisible(false);
+          
     }
 
     public function cancelrowOnClick($sender) {
@@ -256,6 +266,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editsnitem->setVisible(false);
     
         $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
+  
     }
 
     public function savedocOnClick($sender) {
@@ -270,7 +282,8 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
 
-
+        $this->_doc->customer_id = $this->docform->customer->getKey();
+  
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
@@ -293,6 +306,10 @@ class IncomeItem extends \App\Pages\Base
             if ($this->_basedocid > 0) {
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
+            }
+            
+            if($this->_doc->user_id==0)  {
+               $this->_doc->user_id = \App\System::getUser()->user_id; 
             }
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
@@ -322,7 +339,8 @@ class IncomeItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-           $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
 
             return;
         }
@@ -543,4 +561,21 @@ class IncomeItem extends \App\Pages\Base
         $this->editnewitem->setVisible(false);
         $this->editdetail->setVisible(true);
     }
+    
+    public function OnAutoCustomer($sender) {
+        return \App\Entity\Customer::getList($sender->getText(), 2);
+    }   
+    
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
+    }    
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        
+        $this->OnChangeItem($this->editdetail->edititem);
+    }       
 }
