@@ -1,3 +1,16 @@
+:root,
+[data-bs-theme="light"] {
+   --bs-body-bg: #f3f4f6;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-bg: #14171c;        /* darker than Bootstrap's default */
+  --bs-body-color: #e9ecef; 
+  a {
+   color: #ccf;
+}
+}
+
 body {
     font-family: system-ui, "Segoe UI","Roboto" ; 
      
@@ -144,9 +157,7 @@ body {
 .text-smaller{
    font-size:smaller ;
 }  
-table {
-  font-family:"Segoe UI","Arial"
-}  
+  
 .toast-header {
   
   background-color: #fff;
@@ -161,6 +172,7 @@ input[type=time] {
 
 a {
     cursor:pointer;
+    text-decoration: none;
 }
 
 small.compact {

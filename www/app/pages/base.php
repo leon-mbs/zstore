@@ -257,13 +257,13 @@ class Base extends \Zippy\Html\WebPage
 
      
         //убирать  боковое  меню
-        $this->_tvars["theme"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
-        if ($user->darkmode == 1) {
-            $this->_tvars["theme"] = $this->_tvars["theme"] . ' ' . 'dark-mode';
-        }
+        $this->_tvars["svh"] = $user->hidesidebar == 1 ? 'sidebar-without-hover' : '';
+      
 
-        $this->_tvars["darkmode"] = $user->darkmode == 1;
+        $this->_tvars["darkmode"] = $user->darkmode == 1 ?"dark":"light";
+     
 
+    
       
         $this->_tvars["scalescript"] = $user->scalescript  ;
 
