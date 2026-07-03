@@ -30,6 +30,7 @@ class Document extends \ZCL\DB\Entity
     public const STATE_READYTOSHIP = 20; // готов к отправке
     public const STATE_WP          = 21; // ждет  оплату
     public const STATE_PAYED       = 22; // Оплачен
+    public const STATE_WAIT        = 23; // Ожидает обработки
 
     // типы  экспорта
     public const EX_WORD  = 1;    //  Word
@@ -505,6 +506,12 @@ class Document extends \ZCL\DB\Entity
                 }
                 
             }
+            
+            
+            if($state == Document::STATE_WAIT) {
+                 $doc->Cancel();  //отменяем  если  ожидание  обработки 
+            }            
+            
             // подписка  на  смену  статуса
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
             
@@ -634,6 +641,8 @@ class Document extends \ZCL\DB\Entity
                 return "Очікує оплату";
             case Document::STATE_PAYED:
                 return "Оплачений";
+            case Document::STATE_WAIT:
+                return "Очікує обробки";
 
             default:
                 return "Невідомий статус";
@@ -659,6 +668,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_READYTOSHIP] = "Готовий до відправки";
         $list[Document::STATE_WP] = "Очікує оплату";
         $list[Document::STATE_PAYED] = "Оплачений";
+        $list[Document::STATE_WAIT] = "Очікує обробки";
 
         return $list;
     }
@@ -680,6 +690,7 @@ class Document extends \ZCL\DB\Entity
         $list[Document::STATE_INPROCESS] = "Виконується";
         $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
         $list[Document::STATE_WP] = "Очікує оплату";
+        $list[Document::STATE_WAIT] = "Очікує обробки";
 
         return $list;
     }
@@ -881,7 +892,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
-            return false;
+            return 0;
         }
         $conn = \ZDB\DB::getConnect();
         $states = implode(',', $states);

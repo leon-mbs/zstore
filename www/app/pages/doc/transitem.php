@@ -148,11 +148,19 @@ class TransItem extends \App\Pages\Base
         if ($fqty > $st->qty ) {
             $this->setError(" Недостатньо ТМЦ на складі");
             return;
-        }                  
+        }   
+               
         if ($fqty == 0 ) {
             $this->setError(" Не вказана  кількість ");
             return;
-        }   
+        }  
+        
+        $it = Item::load($st->item_id) ;      
+        $q  =  $it->getQuantity($this->docform->store->getIntValue());
+        if ($fqty > $q ) {
+            $this->setWarn(" Недостатньо ТМЦ на складі");
+        }           
+        
         $st->qty= $fqty;
          $this->_fromlist[$st->stock_id]  = $st; 
         
@@ -276,7 +284,8 @@ class TransItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
 
             return;
         }

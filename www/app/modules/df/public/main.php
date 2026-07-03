@@ -46,9 +46,7 @@ class Main extends Base
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
         $st = Document::getStateName($doc->state);
-        if($doc->getHD('delayinprocess')==2)  {
-           $st = "Очікує виконання";    
-        }
+      
         $row->add(new Label('state',$st));
         $row->add(new Label('notes', $doc->notes));
          
@@ -63,8 +61,6 @@ class Main extends Base
            App::Redirect("\\App\\Modules\\DF\\Public\\".$type['meta_name'], $this->_doc->document_id);
        }
        if($sender->id=='bcancel') {
-           $this->_doc->setHD('delayinprocess',1);  
-           $this->_doc->save();
            $this->_doc->updateStatus( Document::STATE_CANCELED  );
        }
        if($sender->id=='bdel') {
@@ -95,7 +91,7 @@ class Main extends Base
            $this->docpan->bdel->setVisible(true);
          
         }
-        if($this->_doc->state  == Document::STATE_INPROCESS)   {
+        if($this->_doc->state  == Document::STATE_WAIT)   {
            $this->docpan->bcancel->setVisible(true);
         }
         if($this->_doc->state  == Document::STATE_WA)   {

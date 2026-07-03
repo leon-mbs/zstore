@@ -63,7 +63,6 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["canevent"] = true;
         }
         $this->_tvars["noshowpartion"] = $user->noshowpartion;
-        $this->_tvars["showsidemenu"] = !($user->hidemenu == true);
         $this->_tvars["twodigit"] = round($options['amdigits']) > 0;
 
         $this->_tvars['qtydigits']  = intval($options['qtydigits'] ?? 0);
@@ -251,11 +250,16 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showsermenu"] = true;
             $this->_tvars["showmodmenu"] = true;
         }   */
- 
-        //скрыть  боковое  меню
-        $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
+        
+       
+        //не показывать  боковое  меню
+        $this->_tvars["showsidemenu"] = $user->hidemenu != 1 ;
+
+     
+        //убирать  боковое  меню
+        $this->_tvars["theme"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
         if ($user->darkmode == 1) {
-            $this->_tvars["hidesidebar"] = $this->_tvars["hidesidebar"] . ' ' . 'dark-mode';
+            $this->_tvars["theme"] = $this->_tvars["theme"] . ' ' . 'dark-mode';
         }
 
         $this->_tvars["darkmode"] = $user->darkmode == 1;

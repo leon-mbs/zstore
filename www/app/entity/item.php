@@ -662,7 +662,7 @@ class Item extends \ZCL\DB\Entity
      */
     public function getQuantity($store_id = 0, $snumber = "", $date=0, $emp=0) {
         $cstr = \App\ACL::getStoreBranchConstraint();
-        if (strlen($cstr) > 0) {
+        if (strlen($cstr) > 0  ) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
 

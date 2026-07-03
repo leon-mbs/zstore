@@ -185,11 +185,19 @@ class Update extends \App\Pages\Base
             if( file_exists($archive) ) {
                 unlink($archive) ;
             }
+        
+            $response = H::getContent($this->_tvars['archive']) ;
+            if($response === false) {
+                $this->setError('Помилка завантаження файлу');
+         
+                return false;
+            }
+        
             
-            @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
+            @file_put_contents($archive, $response) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка завантаження файлу');
+                $this->setError('Помилка архiву');
                 return;        
             }
 

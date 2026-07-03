@@ -193,6 +193,9 @@ class ItemList extends \App\Pages\Base
 
         $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
         $this->setpanel->cardform->add(new TextArea('editscard'));
+      
+        $this->setpanel->add(new Form('scopyform'))->onSubmit($this, 'OnCopySet');
+        $this->setpanel->scopyform->add(new DropDownChoice('editscopy'));
 
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new Label('stotal'));
@@ -754,8 +757,14 @@ class ItemList extends \App\Pages\Base
                }
            }
         } 
+       
+       
         
+       $list=Item::findArray("itemname","disabled<> 1  and item_type in(2,4,5) and item_id <> ".$this->_pitem_id,"itemname") ;
         
+       $this->setpanel->scopyform->editscopy->setOptionList($list); 
+       
+       $this->setpanel->scopyform->editscopy->setValue(0); 
     }
 
     private function setupdate() {
@@ -868,7 +877,39 @@ class ItemList extends \App\Pages\Base
 
 
     }
+    public function OnCopySet($sender) {
+       $itemto = $this->setpanel->scopyform->editscopy->getIntValue();
+       if($itemto==0) {
+           return;
+       }
+       $conn = \ZDB\DB::getConnect()  ;
+       
 
+        $item = Item::load($itemto);
+        $item->techcard = $this->setpanel->cardform->editscard->getText();
+        $item->save() ;
+
+        $conn->Execute("delete from item_set WHERE pitem_id = ".$itemto);
+        
+        $sql="SELECT * from item_set   WHERE pitem_id = ".$this->_pitem_id ;
+        
+        foreach($conn->Execute($sql) as $r){
+            $set = new ItemSet();
+            $set->pitem_id = $itemto;
+            if($r['service_id'] > 0)  $set->service_id = $r['service_id'];
+            if($r['item_id'] > 0)  $set->item_id = $r['item_id'];
+            if($r['cost'] > 0)  $set->cost = $r['cost'];
+            if($r['qty'] > 0)  $set->qty = $r['qty'];
+
+            $set->save();  
+        }
+         
+        $this->setpanel->scopyform->editscopy->setValue(0) ;
+        
+        $this->setSuccess("Скопiйовано") ;
+    }  
+        
+   
     public function printQrOnClick($sender) {
 
         $printer = \App\System::getOptions('printer') ;

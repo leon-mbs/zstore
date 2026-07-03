@@ -377,9 +377,9 @@ class Order extends  Base
           //  $this->_doc->headerdata['store'] = $this->docform->store->getValue() ;
           //  $this->_doc->headerdata['storename'] = $this->docform->store->getValueName() ;
          
-            $this->_doc->setHD('delayinprocess',1);  
+           
             if ($sender->id == 'execdoc'  ) {
-                $this->_doc->setHD('delayinprocess',2);  //появится  в модуле как  гготов  к  выполнению
+                $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_WAIT);
             }
             
             $this->_doc->user_id=null;            
@@ -391,7 +391,7 @@ class Order extends  Base
 
                                          
             if ($sender->id == 'execdoc'  ) {
-               //  $this->_doc->updateStatus(Document::STATE_INPROCESS);
+                 $this->_doc->updateStatus(Document::STATE_WAIT);
                 
             }
          

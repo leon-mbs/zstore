@@ -40,8 +40,15 @@ class Order extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
        
-        $common = \App\System::getOptions("common");
-
+      //  $common = \App\System::getOptions("common");
+         
+        $defstore= false;
+        if($docid==0) {
+            $last = Document::getFirst("state > 3 and  meta_name='Order'","document_id desc");
+            if($last != null){
+                $defstore = $last->getHD('dostore',0)==1;
+            }
+        }
   
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
@@ -74,7 +81,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
 
-        $this->docform->add(new CheckBox('dostore'));
+        $this->docform->add(new CheckBox('dostore',$defstore));
         
         $this->docform->add(new TextInput('editpayed'));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
@@ -655,7 +662,8 @@ class Order extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
             return;
         }
     }

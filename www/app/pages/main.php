@@ -101,18 +101,14 @@ class Main extends Base
 
         //недавние  документы
      
-            $data = array();
-
-            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state ,d.lastupdate 
-                      from documents_view d    
-                      join users_view u  on d.user_id= u.user_id where  d.lastupdate >  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ORDER  BY  d.lastupdate desc,document_id desc";
-
-
-            $rc = $conn->Execute($sql);
-
-            foreach ($rc as $row) {
-                $data[] = new \App\DataItem($row);
+          
+            $data = array(); 
+            foreach( \App\Entity\Doc\Document::find("  lastupdate >=  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ","lastupdate desc,document_id desc") as $d ){
+               
+               $data[] = $d ; 
             }
+            
+            
             if (count($data) == 0) {
                 $this->_tvars['wrdoc'] = false;
             }
@@ -345,7 +341,7 @@ class Main extends Base
     public function rdoclistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->lastupdate))));
+        $row->add(new Label('wrd_date', \App\Helper::fd( $item->lastupdate)));
         $row->add(new Label('wrd_type', $item->meta_desc));
         $row->add(new Label('wrd_state', $this->_docstatelist[$item->state]));
         $row->add(new Label('wrd_user', $item->username));

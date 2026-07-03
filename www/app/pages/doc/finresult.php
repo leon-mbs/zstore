@@ -63,7 +63,8 @@ class FinResult extends \App\Pages\Base
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
 
-            $logger->error($ee);
+            $logger->error( $ee->getMessage()  );
+            $logger->error( $ee->getTraceAsString()  );
             return;
         }
     }

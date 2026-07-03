@@ -207,7 +207,7 @@ class Orders extends \App\Pages\Base
         
                 $shoporder->save();
                 $shoporder->updateStatus(Document::STATE_NEW);
-                $shoporder->updateStatus(Document::STATE_INPROCESS);
+                $shoporder->updateStatus(Document::STATE_WAIT);
                 if($shoporder->headerdata['store']>0) {
                     $shoporder->reserve();   //если задан  склад резервируем товары
                 }  

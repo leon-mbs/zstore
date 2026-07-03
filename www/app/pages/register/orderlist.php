@@ -389,8 +389,8 @@ class OrderList extends \App\Pages\Base
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
                     $this->setWarn('"Замовлення закрито без оплати"');
                 }
-
-                if($ttn== false && $gi == false) {
+                                          
+                if($ttn== false && $gi == false && $this->_doc->getHD('dostore',0) ==0) {
                     $this->setWarn('Замовлення закрито без доставки');
                 }
 
@@ -566,6 +566,9 @@ class OrderList extends \App\Pages\Base
         }
         if ($state < 5) {
             $this->statuspan->statusform->bref->setVisible(true);
+        }
+        if ($state == Document::STATE_WAIT ) {
+            $this->statuspan->statusform->binp->setVisible(true);
         }
 
         if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
@@ -1195,16 +1198,13 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere() {
         $user = System::getUser();
-        $modules = System::getOptions("modules");
-
+       
         $conn = \ZDB\DB::getConnect();
         $filter=$this->page->listpanel->filter;
 
           
         $where = "     meta_name  = 'Order'    ";
-        if($modules['df'] == 1) {
-            $where .= "   and   content not like '%<delayinprocess>%'  ";
-        }
+      
 
         $salesource =$filter->salesource->getValue();
         if ($salesource > 0) {

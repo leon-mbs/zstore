@@ -1683,7 +1683,7 @@ class ARMFood extends \App\Pages\Base
             if ($this->_doc->payamount <= $this->_doc->payed) {
               
                     $inprod = $this->_doc->checkStates([Document::STATE_INPROCESS]) ;//уже в  производстве
-                    if($inprod== false) {
+                    if($inprod==0) {
                       // $this->toprod()  ;
                     }
                 
