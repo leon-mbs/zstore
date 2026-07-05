@@ -261,6 +261,7 @@ class Base extends \Zippy\Html\WebPage
       
 
         $this->_tvars["darkmode"] = $user->darkmode == 1 ?"dark":"light";
+        $this->_tvars["darkmodecss"] = $user->darkmode == 1 ?true:false;
      
 
     
