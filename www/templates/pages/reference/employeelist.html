@@ -10,16 +10,18 @@
 
             <div zippy="employeetable" class="col-12 col-md-10 col-xl-8">
                 <h3>Довідник співробітників </h3>
-                 <div class="card">
+                 <div class="navbar">
 
-                    <form zippy="filter" class="form-inline">
-
-                        <label for="searchtext">Пошук</label>
+                    <form zippy="filter"  >
+                        <div class="row  ">
+                        <label class="col-form-label col-auto" for="searchtext">Пошук</label>
+                             <div class="col-auto  ">
                         <input zippy="searchtext" class="form-control mr-sm-2">
-                             
-
+                         </div>      
+                            <div class="col-auto  ">
                         <input class="btn btn-success  " type="submit" value="ОК">
-
+                       </div>  
+                       </div>  
                     </form>
                 </div>               <a zippy="addnew" class="btn btn-outline-primary btn-sm">Додати</a>
                 <table class="table table-hover   table-sm"  >
@@ -227,18 +229,20 @@
           <div class="col-12  col-lg-8 col-xl-6">
                 <h3>Особовий  рахунок</h3>   
                    
-                    <form zippy="filters" class="form-inline">
-                                        
-                        <label for="from">З</label>
-                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
-
-                        <label for="to">По</label>
-                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
-
-                   
-                        <input class="btn btn-primary  " type="submit" value="ОК">
-
-
+                    <form zippy="filters"  >
+                    <div class="row  ">                     
+                        <label class="col-form-label col-auto" for="from">З</label>
+                        <div class="col-auto  ">
+                          <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+                       </div>
+                        <label class="col-form-label col-auto" for="to">По</label>
+                        <div class="col-auto  ">
+                           <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+                         </div>
+                         <div class="col-auto  ">
+                           <input class="btn btn-primary  " type="submit" value="ОК">
+                         </div>
+                        </div>
                     </form>
                    
                

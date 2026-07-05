@@ -9,20 +9,20 @@
               <h3>Експорт   товарів в  магазин</h3>
                 &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i>Спецсимволи (типу <b> &amp; ' " `</b>)
                     в назвi або описi може викликати проблеми з вигрузкою</small>
-               <div class="card">
-                    <form zippy="filter" class="form-inline ">
-
-                        <label for="searchcat">Категорія</label>
-
+               <div class="navbar">
+                    <form zippy="filter"  >
+                      <div class="row  ">
+                        <label class="col-form-label col-auto" for="searchcat">Категорія</label>
+                         <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
                         </select>
-
-
+                          </div>
+                          <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-
-
+                        </div>
+                      </div>
                     </form>
                 </div>
 
@@ -69,18 +69,21 @@
 
                 <h3>Оновлення цін та кількості</h3>
 
-                <div class="card">
-                  <form zippy="upd" class="form-inline ">
-                      <label for="updcat">Категорiя</label>
-
+                <div class="navbar">
+                  <form zippy="upd"  >
+                    <div class="row  ">
+                      <label class="col-form-label col-auto" for="updcat">Категорiя</label>
+                     <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="updcat">
                             <option value="0">Всi</option>
                         </select>
+                       </div>
+                   <div class="col-auto  ">
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
-                    
-                    &nbsp;&nbsp;
+                     </div>
+                    <div class="col-auto  ">
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
-
+                      </div></div>
                     </form>
 
                 </div>
@@ -90,19 +93,20 @@
 
                 <h3>Iмпорт товарів з магазину </h3>
 
-                <div class="card">
-                     <form zippy="importform" class="form-inline ">
-
+                <div class="navbar">
+                     <form zippy="importform"  >
+                       <div class="row  ">
+                          <div class="col-auto  ">
                          <div class="form-check">
 
                             <input   class="form-check-input" type="checkbox" zippy="createcat">
                             <label class="form-check-label mr-1" for="createcat">Створювати  категорiю як в  магазинi</label>
                         </div> 
-                        
-
+                         </div> 
+                        <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" zippy="getitems" type="submit" class=" mr-2 ml-2 btn btn-outline-success  "
                                value="Завантажити">
-
+                         </div>  </div> 
 
                     </form>
                     

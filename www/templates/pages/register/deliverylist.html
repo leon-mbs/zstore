@@ -16,15 +16,16 @@
             <div class="w-100">
 
                 <div class="col-12 col-md-10 col-xl-8" >
-                            <div class="card">
-                                <form zippy="searchform" class="form-inline ">
-                                    <label for="searchnumber"> № </label>
-
+                            <div class="navbar">
+                                <form zippy="searchform"  >
+                                   <div class="row  ">
+                                    <label class="col-form-label col-auto" for="searchnumber"> № </label>
+                                       <div class="col-auto  ">
                                     <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-
-
+                                    </div>
+                                       <div class="col-auto  ">
                                     <input type="submit" class="  btn btn-outline-success  " value="Шукати">
-
+                                 </div></div>
 
                                 </form>
                     </div>
@@ -74,28 +75,36 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <div class="card">
-                                    <form zippy="statusform" class="form-inline ">
+                                <div class="navbar">
+                                    <form zippy="statusform"  >
+                                    <div class="row  ">
+                                          <div class="col-auto  ">
                                         <button zippy="bdelivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>   
-
-                                        <label data-label="emp" for="emp">Вiдповiдальний</label>
+                                        </div>
+                                        <label class="col-form-label col-auto" data-label="emp" for="emp">Вiдповiдальний</label>
+                                           <div class="col-auto  ">
                                         <select zippy="emp" class="form-control mr-2">
                                             <option value="0">Не вказано</option>
-                                        </select>
+                                        </select>   </div>
+                                           <div class="col-auto  ">
                                         <button zippy="bsend" type="submit" class="  btn btn-success ml-2  mr-2 ">Вiдправити</button>   
-
+                                       </div></div>
                                     </form>
 
-                                    <form zippy="payform" class="form-inline ">
-                                        <label data-label="payamount" for="payamount">До сплати</label>
-                                        <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice mr-2">
-
-                                        <label data-label="mf" for="mf">Рахунок</label>
+                                    <form zippy="payform"  >
+                                    <div class="row  ">
+                                        <label class="col-form-label col-auto" data-label="payamount" for="payamount">До сплати</label>
+                                          <div class="col-auto  ">
+                                       <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice mr-2">
+                                        </div>
+                                        <label class="col-form-label col-auto" data-label="mf" for="mf">Рахунок</label>
+                                           <div class="col-auto  ">
                                         <select zippy="mf" class="form-control">
                                             <option value="0">Не вказано</option>
-                                        </select>
-
+                                        </select>   </div>
+                                          <div class="col-auto  ">
                                         <button zippy="bpay" type="submit" class="  btn btn-primary ml-2  mr-2 ">Внести оплату</button>
+                                       </div></div> 
                                     </form>
                                 </div>
                             </div>

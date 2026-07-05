@@ -10,36 +10,41 @@
 
                 <h3>Документи на вiдправку </h3>
                      
-                     <div class="card">
-                                <form  class="form-inline ">
-
-                                    <label for="firm"> POS термiнал </label>
-                                    <select class="form-control  mr-2" v-model="posid" id="pos" name="pos" >
+                     <div class="navbar">
+                                <form   >
+                                  <div class="row  ">
+                                    <label class="col-form-label col-auto" for="firm"> POS термiнал </label>
+                                     <div class="col-auto  ">
+                                     <select class="form-control  mr-2" v-model="posid" id="pos" name="pos" >
                                        <option v-for="p in poses" :value="p.key">
                                           {{ p.value }}
                                       </option>
                                     </select>
-                                   
-                                    <label for="customer"> Контрагент </label>
-                                    <select v-model="custid" class="form-control  mr-2" id="customer" name="customer" >
+                                    </div>
+                                    <label class="col-form-label col-auto" for="customer"> Контрагент </label>
+                                     <div class="col-auto  ">
+                                     <select v-model="custid" class="form-control  mr-2" id="customer" name="customer" >
                                        <option value="0">Не вказано </option>
                                        
                                       <option v-for="c in clist" :value="c.key">
                                           {{ c.value }}
                                       </option>
                                     </select>                                   
-
+                                     </div>
                         
-                                    <label for="doctype"> Тип  документа </label>
-                                    <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
+                                    <label class="col-form-label col-auto" for="doctype"> Тип  документа </label>
+                                     <div class="col-auto  ">
+                                     <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
                                        <option value="GoodsIssue"    >Видаткова  накладна </option>
                                        <option value="Invoice">Рахунок-фактура </option>
                                        <option value="ServiceAct">Акт виконаних робiт </option>
 
                                     </select>
-
+                                    </div>
+                                     <div class="col-auto  ">
                                     <button v-on:click.prevent="onFilter" class="  btn btn-success " >Вибрати</button>
-
+                                    </div>
+                                    </div>
 
                                 </form>
                                 <small>Вибираються тiльки документи з контрагентами  у  яких задано ЄДРПОУ</small>

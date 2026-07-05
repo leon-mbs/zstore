@@ -13,30 +13,38 @@
                             </button>
                         </div>
                         <div id="vitemlist" class="modal-body">    
-                             <form   class="form-inline">
-
-                                <label for="wissearchkey">пошук</label>
-                                <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
-                                <label for="wissearchcat">категорiя</label>
-
+                             <form    >
+                               <div class="row  ">
+                                <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
+                                 <div class="col-auto  ">
+                                    <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
+                                  </div> 
+                                <label class="col-form-label col-auto" for="wissearchcat">категорiя</label>
+                                  <div class="col-auto  ">
                                 <select v-model="wissearchcat" class="form-control mr-sm-2"  >
                                     <option value="0">Не задано</option>
                                     <option v-for="cat in cats"    v-bind:value="cat.key">{{cat.value}}</option>
                                                                        
                                 </select>
-                                <label for="wissearchmanufacturer">Бренд </label>
-                                <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
-                                <datalist id="wissearchmanlist">
-                                      <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" ></option>
-            
-                                </datalist>
+                                  </div> 
+                                <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
+                                 <div class="col-auto  ">
+                                    <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
+                                    <datalist id="wissearchmanlist">
+                                          <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" ></option>
+                
+                                    </datalist>
+                                 </div> 
+                                 <div class="col-auto  pt-2`">
                                    <div class="form-check  mr-sm-2">
                                      <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
                                      <input type="checkbox" v-model="wissearchonstore" id="wissearchonstore" class="form-check-input  mr-2"  >
                                   </div> 
-
+                                 </div> 
+                                 <div class="col-auto  ">
                                 <input v-on:click.prevent="onSearch" class="btn btn-outline-success  " type="button" value="ОК">
-
+                                </div> 
+                              </div>    
                             </form>     
                             <table class="table table-sm table-hover">
                         <tr >

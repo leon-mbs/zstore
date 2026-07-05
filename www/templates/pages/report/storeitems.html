@@ -8,42 +8,52 @@
             <div class="col-12   ">
                 <h3>Стан складiв</h3>
                 <small>Кiлькiсть ТМЦ на складах</small>
-                <div class="card">
-                    <form zippy="filter" class="form-inline">
-                        
-                       <div class="form-check   mr-2">
+                <div class="navbar">
+                    <form zippy="filter"  >
+                        <div class="row  ">
+                         <div class="col-auto  pt-2">  
+                         <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="fcust">
                             <label class="form-check-label" for="fcust">
                                Кастомнi поля
                             </label>
                         </div>
-                    
-                         <div class="form-check   mr-2">
+                        </div>
+                          <div class="col-auto   pt-2">
+                         <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="fminus">
                             <label class="form-check-label" for="fminus">
                                В мiнусi
                             </label>
                         </div>
-                       <div class="form-check   mr-2">
+                        </div>
+                         <div class="col-auto  pt-2 ">
+                       <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="fmin">
                             <label class="form-check-label" for="fmin">
                                 Менше мiн.
                             </label>
                         </div>
-                         <div class="form-check   mr-2">
+                        </div>
+                         <div class="col-auto   pt-2">
+                         <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="fver">
                             <label class="form-check-label" for="fver">
                                 Вертикальний режим
                             </label>
-                        </div>                        
-                        <label for="searchcat">категорiя</label>
-
-                        <select class="form-control mr-sm-2" zippy="searchcat">
-                            <option value="0">Не вказано</option>
-                        </select>                        
-                        <input class="btn btn-primary  " type="submit" value="ОК">
-
-
+                        </div>  
+                        </div>  
+                                              
+                        <label class="col-form-label col-auto" for="searchcat">категорiя</label>
+                          <div class="col-auto  ">
+                            <select class="form-control mr-sm-2" zippy="searchcat">
+                                <option value="0">Не вказано</option>
+                            </select>    
+                         </div>             
+                         <div class="col-auto  ">       
+                           <input class="btn btn-primary  " type="submit" value="ОК">
+                         </div>
+                       </div>
                     </form>
                 </div>
 
@@ -51,8 +61,8 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/storeitems" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/storeitems" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/storeitems" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/storeitems" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
 

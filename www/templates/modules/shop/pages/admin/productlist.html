@@ -24,19 +24,21 @@
             <div class="col-12 col-md-6">
                 <div class="row">
                     <div zippy="listpanel" class="col-12   col-xl-10">
-                        <div class="card">
-                            <form zippy="searchform" class="form-inline  ">
-
+                        <div class="navbar">
+                            <form zippy="searchform"  >
+                             <div class="row  ">
+                                 <div class="col-auto  ">
                                 <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control mr-sm-2">
+                                 </div>
 
-
-                                <label> Бренд</label>
+                                <label class="col-form-label col-auto"> Бренд</label>
+                                 <div class="col-auto  ">
                                 <input zippy="smanuf" class="form-control mr-sm-2    ">
-               
-
+                                 </div>
+                                 <div class="col-auto  ">
                                 <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
                                 &nbsp;<a title="Очистити  форму  пошуку" zippy="sclear"><i class="fa fa-eraser"></i></a>
-
+                               </div></div>
                             </form>
                         </div>
 
@@ -129,10 +131,14 @@
                         <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> До переліку товарiв</a>
                         <h4>Перелік додаткових зображень</h4>
 
-                        <form class="form-inline" zippy="addimageform" enctype="multipart/form-data">
+                        <form   zippy="addimageform" enctype="multipart/form-data">
+                           <div class="row  ">
+                             <div class="col-auto  ">
                             <input  accept="image/png,image/jpeg" zippy="photo" type="file" class="form-control mr-2">
-
+                             </div>
+                               <div class="col-auto  ">
                             <input type="submit" class="btn btn-success   " value="Додати">
+                             </div>
                             <small>Зображення має  бути  приблизно  квадратним та з розміром  файлу  не більше 1M</small>
                         </form>
 

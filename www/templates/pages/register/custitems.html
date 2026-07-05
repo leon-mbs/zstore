@@ -9,27 +9,33 @@
             <div class="col-12  col-xl-11" zippy="itemtable">
                 <h3>Товари у постачальникiв               </h3>
 
-                <div class="card" >
+                <div class="navbar" >
 
-                    <form zippy="filter" class="form-inline">
+                    <form zippy="filter"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="searchkey">Пошук</label>
+                          <div class="col-auto  ">
+                           <input class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
+                        </div>
+                        <label class="col-form-label col-auto" for="searchbrand">бренд</label>
+                          <div class="col-auto  ">
+                           <input class="form-control mr-2" type="text" zippy="searchbrand"  >
+                        </div>
+                         <label class="col-form-label col-auto" for="searchcust">постачальник </label>
 
-                        <label for="searchkey">Пошук</label>
-                        <input class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
-                        <label for="searchbrand">бренд</label>
-                        <input class="form-control mr-2" type="text" zippy="searchbrand"  >
-                     
-                        <label for="searchcust">постачальник </label>
-
-                        <select class="form-control   mr-2" zippy="searchcust">
+                         <div class="col-auto  ">
+                          <select class="form-control   mr-2" zippy="searchcust">
                             <option   value="0">Не вказано</option>
-                        </select>
-                        <label for="searchstore">склад</label>
-                        <input class="form-control mr-2" type="text" zippy="searchstore"  >
-                  
-   
-                        <input class="btn btn-success mr-4 " type="submit" value="ОК">
-                        
-
+                          </select>
+                        </div>
+                        <label class="col-form-label col-auto" for="searchstore">склад</label>
+                          <div class="col-auto  ">
+                           <input class="form-control mr-2" type="text" zippy="searchstore"  >
+                         </div>
+                           <div class="col-auto  ">
+                         <input class="btn btn-success mr-4 " type="submit" value="ОК">
+                       </div> 
+                     </div>
                     </form>
                 </div>
                 <div class="navbar nav justify-content-start" >

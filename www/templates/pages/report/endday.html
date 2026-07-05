@@ -8,25 +8,27 @@
             <div class="col-12  col-xl-10">
                 <h3> Кінець дня  </h3>
 
-                <div class="card">
-                    <form zippy="filter" class="form-inline">
+                <div class="navbar">
+                    <form zippy="filter"  >
+                       <div class="row  " >
+                        <label  class="col-form-label col-auto" for="from">Дата</label>
+                        <div class="col-auto  ">
+                           <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="from">
+                       </div>
 
-                        <label for="from">Дата</label>
-                        <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="from">
-
-
-
-                        <input class="btn btn-primary ml-2 " type="submit" value="ОК">
-
+                        <div class="col-auto  ">
+                          <input class="btn btn-primary ml-2 " type="submit" value="ОК">
+                        </div>
+                       </div>
                     </form>
                 </div>
 
 
                 <div zippy="detail">
                     <div>
-                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/endday" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/endday" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/endday" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/endday" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
 
                     </div>

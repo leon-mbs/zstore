@@ -7,28 +7,30 @@
         <div class="row">
             <div class="col-12   ">
                 <h3>Оборотно-сальдова вiдомiсть</h3>
-                <div class="card">
-                    <form zippy="filter" class="form-inline">
-
-                        <label for="from">З</label>
-                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
-
-                        <label for="to">по</label>
-                        <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
-                            
+                <div class="navbar">
+                    <form zippy="filter"  >
+                        <div class="row  ">
+                        <label class="col-form-label col-auto" for="from">З</label>
+                          <div class="col-auto  ">
+                           <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
+                         </div>
+                        <label class="col-form-label col-auto" for="to">по</label>
+                          <div class="col-auto  ">
+                            <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
+                         </div>   
                          
-
+                          <div class="col-auto  ">
                         <input zippy="show" class="btn btn-primary  " type="submit" value="ОК">
-
-
+                      </div>
+                     </div>
                     </form>
                 </div>
 
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/obsaldo" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/obsaldo" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/obsaldo" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/obsaldo" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                                                          
 
                     </div>

@@ -10,18 +10,20 @@
 
             <div zippy="listpan" class="col-12 col-md-10 col-xl-8">
                 <h3>Користувачі системи</h3>
-                <div class="card">
+                <div class="navbar">
 
-                    <form zippy="filter" class="form-inline">
-
-                        <label for="searchrole">Роль</label>
-                        <select zippy="searchrole" class="form-control mr-sm-2">
+                    <form zippy="filter"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="searchrole">Роль</label>
+                        <div class="col-auto  ">
+                         <select zippy="searchrole" class="form-control mr-sm-2">
                             <option value="0">Не обрано</option>
                         </select>
-
-
+                       </div>
+                         <div class="col-auto  ">
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
-
+                       </div>
+                       </div>
                     </form>
                 </div>
                 <a zippy="addnew" class="btn btn-outline-success  ">Додати</a>

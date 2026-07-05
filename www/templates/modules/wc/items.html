@@ -7,20 +7,21 @@
 
                 <h3>Експорт нових товарів</h3>
                               <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевiрити  з'єднання</a>
-   <div class="card">
-                    <form zippy="filter" class="form-inline ">
-                       <label for="searchcat">Категорія</label>
-
-                        <select class="form-control mr-sm-2" zippy="searchcat">
+         <div class="navbar">
+                    <form zippy="filter"  >
+                      <div class="row  ">
+                       <label class="col-form-label col-auto" for="searchcat">Категорія</label>
+                        <div class="col-auto  ">
+                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
-                        </select>
-
-
-                        <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
+                         </select>
+                        </div>
+                         <div class="col-auto  ">
+                          <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
 
-
-
+                       </div>
+                      </div>
                     </form>
                 </div>
 
@@ -65,10 +66,11 @@
 
                 <h3>Оновлення цін і кількості</h3>
 
-                <div class="card">
+                <div class="navbar">
                   
-                  <form zippy="upd" class="form-inline ">
-                      <label for="updcat">Категорiя</label>
+                  <form zippy="upd"  >
+                      <div class="row  ">
+                      <label class="col-form-label col-auto" for="updcat">Категорiя</label>
 
                         <select class="form-control mr-sm-2" zippy="updcat">
                             <option value="0">Всi</option>

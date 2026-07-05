@@ -295,6 +295,7 @@ class OutcomeItem extends \App\Pages\Base
 
                         $indoc->headerdata['store'] = $tostore;
                         $indoc->headerdata['storename'] = $this->docform->tostore->getValueName();
+                        $indoc->parent_id = $this->_doc->document_id;
                         $indoc->branch_id = 0;
                         if ($this->_tvars["usebranch"]) {
                             $st = Store::load($tostore);
@@ -302,6 +303,7 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->branch_id = $st->branch_id;
                         }
                         $indoc->document_number =  $indoc->nextNumber($indoc->branch_id);
+                        $indoc->document_date =  $this->_doc->document_date;
 
                       //  $admin  =\App\Entity\User::getByLogin('admin') ;
                      //   $indoc->user_id = $admin->user_id;
@@ -333,6 +335,9 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->save();                            
                             $indoc->updateStatus(Document::STATE_EXECUTED);
                         }
+                        
+                        
+                        
                         if ($indoc->document_id > 0) {
                             $this->setSuccess("Створено документ " . $indoc->document_number);
                         }

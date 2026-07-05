@@ -206,20 +206,27 @@
 
                 <div class="col-12 col-md-10 col-xl-8  ">         
 
-                    <div class="card ">        
-                        <form zippy="navform" class="form-inline   ">                   
-                            <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info mr-4"> 
-
-                           <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
-                           <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
+                    <div class="navbar ">        
+                        <form zippy="navform"  >                   
+                           <div class="row  ">
+                            <div class="col-auto  ">
+                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info mr-4"> 
+                           </div> 
+                           <div class="col-auto  ">
+                             <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
+                           </div> 
+                           <div class="col-auto  ">
+                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
+                            </div> 
                             {{#usescanner}}
-                             <input autofocus="on" placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
-
+                             <div class="col-auto  ">
+                               <input autofocus="on" placeholder="Штрих код"  class="form-control"   style="width:150px;" autocomplete="off"    type="text" zippy="barcode"                                                    onkeydown="onBarCode()"> <a zippy="addcode"></a>
+                            </div> 
                             {{/usescanner}}
-
-                            <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
-                            
-         
+                            <div class="col-auto  ">
+                              <input placeholder="Промокод"  style="width:150px"  zippy="promocode" class="form-control">
+                            </div> 
+                          </div> 
                         </form> 
 
                     </div>           
@@ -704,19 +711,21 @@
             </div>
 
             <div class="col-12 col-md-11 xl-9" >
-                <div class="card">
-                            <form zippy="searchform" class="form-inline ">
-                                <label for="searchnumber"> № </label>
-
-                                <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-
-                                <label for="searchcust"> Клiєнт </label>
-
+                <div class="navbar">
+                            <form zippy="searchform"  >
+                                <div class="row  ">
+                                <label class="col-form-label col-auto" for="searchnumber"> № </label>
+                                <div class="col-auto  ">
+                                  <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                               </div>
+                                <label class="col-form-label col-auto" for="searchcust"> Клiєнт </label>
+                               <div class="col-auto  ">
                                 <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
-
+                               </div>
+                               <div class="col-auto  ">
                                 <input type="submit" class="  btn btn-success  " value="Шукати">
-
-
+                               </div>
+                             </div>
                             </form>
                         </div>
 
@@ -1026,9 +1035,14 @@
              <div class="col-12">
                  <a zippy="backvar"    ><i class="fa fa-arrow-circle-left"></i> До АРМ</a>
                  <h5>Товари з варіаціями</h5>
-                 <form zippy="varbaseform" class="form-inline"> 
+                 <form zippy="varbaseform"  > 
+                       <div class="row  ">
+                       <div class="col-auto  ">
                       <select  zippy="varbaseitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
-                    <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                     </div>  
+                      <div class="col-auto  ">
+                      <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                    </div> </div>   
                  </form>  
                   
                </div> 
@@ -1049,9 +1063,14 @@
              <div class="col-12">
                  <a zippy="backvardet"    ><i class="fa fa-arrow-circle-left"></i> До переліку </a>
                  <h5>Варіації для <span zippy="vbbasename"></span></h5>
-                 <form zippy="vardetform" class="form-inline"> 
+                 <form zippy="vardetform"  > 
+                    <div class="row  ">
+                       <div class="col-auto  ">
                     <select  zippy="vardetitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
+                      </div> 
+                     <div class="col-auto  ">
                     <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                    </div>  </div> 
                  </form>  
                   
                </div> 

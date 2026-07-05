@@ -13,42 +13,52 @@
   
             <div class="col-12  ">
                 <h3>Перелік завдань </h3>
-                <div class="card">
+                <div class="navbar">
 
 
-                    <form   class="form-inline ">
+                    <form    >
+                      <div class="row  ">
+                         <div class="col-auto  ">
                         <input v-model="searchnumber" placeholder="Пошук..." class="form-control mr-2" >
-                                             
-                        <label for="searchstatus">Статус </label>
+                          </div>                    
+                        <label class="col-form-label col-auto" for="searchstatus">Статус </label>
+                          <div class="col-auto  ">
                         <select v-model="searchstatus"  class="form-control mr-sm-2  " >
                             <option value="0">Відкриті</option>                           
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option> 
                         </select>
-                        <label for="searchemp">виконавець </label>
+                         </div>
+                        <label class="col-form-label col-auto" for="searchemp">виконавець </label>
+                          <div class="col-auto  ">
                         <select v-model="searchemp"   class="form-control mr-sm-2  "  >
                             <option value="0">Не обрано</option>
                            <option v-for="option in emps" :value="option.key">
                               {{ option.value }}
                           </option> 
                         </select>
-                        <label for="searchproject"> проект </label>
-                        <select v-model="searchproject"   class="form-control mr-sm-2  "  >
+                         </div>
+                        <label class="col-form-label col-auto" for="searchproject"> проект </label>
+                          <div class="col-auto  ">
+                          <select v-model="searchproject"   class="form-control mr-sm-2  "  >
                             <option value="0">Не обрано</option>
                            <option v-for="option in projects" :value="option.key">
                               {{ option.value }}
                           </option> 
                         </select>
-
-                       <label for="searchproject"> сортувати </label>
-                        <select v-model="searchsort"   class="form-control mr-sm-2  "  >
+                          </div>
+                       <label class="col-form-label col-auto" for="searchproject"> сортувати </label>
+                         <div class="col-auto  ">
+                          <select v-model="searchsort"   class="form-control mr-sm-2  "  >
                             <option value="0">За пріоритетом</option>
                             <option value="1">За номером</option>
                             <option value="2">За оновленням</option>
                         </select>
-
+                         </div>
+                          <div class="col-auto  ">
                         <input v-on:click.prevent="onfilter" type="button" class="mr-2  btn btn-outline-success  " value="ОК">
+                         </div> </div>
                     </form>
                 </div>
 
@@ -99,14 +109,16 @@
                         <a v-on:click.prevent="edit"  class="text-info  "><i class="fa fa-edit"></i> Редагувати</a>&nbsp;&nbsp;
                         <a v-on:click.prevent="del" class="text-danger"><i class="fa fa-trash"></i> Вилучити</a>
                         <hr>
-                        <form class="form-inline" id="fileaddform" enctype="multipart/form-data">
-
-                            <label> Вибрати файл: </label>
-
+                        <form   id="fileaddform" enctype="multipart/form-data">
+                          <div class="row  ">
+                            <label  class="col-form-label col-auto"> Вибрати файл: </label>
+                             <div class="col-auto  ">
                             <input name="pfile" class="form-control mr-2" type="file"  >
-
+                             </div>
+                             <div class="col-auto  ">
                             <input v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Додати:">
-
+                            </div>
+                             </div>
                         </form>
                     <div v-for="f in filelist"  style="float:left">
 

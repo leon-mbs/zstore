@@ -10,29 +10,35 @@
                 <h3>Журнал проводок</h3>
 
 
-                <div class="card">
-                    <form zippy="filter" class="form-inline ">
-
-                  <label for="from"> З </label>
-                        <input type="text" class="form-control    " zippy="from" style="width:110px">
-                        <label for="to"> По </label>
-                        <input type="text" class="form-control    " zippy="to" style="width:110px">
-                    
-
-                        <label for="facc"> Рахунок </label>
-                        <select class="form-control mr-2" zippy="facc">
+                <div class="navbar">
+                    <form zippy="filter"  >
+                     <div class="row  ">
+                  <label class="col-form-label col-auto" for="from"> З </label>
+                        <div class="col-auto  ">
+                          <input type="text" class="form-control    " zippy="from" style="width:110px">
+                        </div>
+                        <label class="col-form-label col-auto" for="to"> По </label>
+                        <div class="col-auto  ">
+                          <input type="text" class="form-control    " zippy="to" style="width:110px">
+                        </div>
+                         <div class="col-auto  ">
+                        <label class="col-form-label col-auto" for="facc"> Рахунок </label>
+                        <div class="col-auto  ">
+                          <select class="form-control mr-2" zippy="facc">
                             <option value="0">Не обрано</option>
-                        </select>
-                        <label for="ftype"> Вибрати </label>
-                        <select class="form-control mr-2" zippy="ftype">
+                         </select>
+                        </div>
+                        <label class="col-form-label col-auto" for="ftype"> Вибрати </label>
+                        <div class="col-auto  ">
+                         <select class="form-control mr-2" zippy="ftype">
                             <option value="0">Все</option>
                             <option value="1">По дебету</option>
                             <option value="2">По кредиту</option>
-                        </select>
-
-
-                        <input type="submit" class="  btn btn-success  " value="ОК">
-
+                         </select>
+                         </div>
+                        <div class="col-auto  ">
+                         <input type="submit" class="  btn btn-success  " value="ОК">
+                      </div></div>
                     </form>
                 </div>
             </div>

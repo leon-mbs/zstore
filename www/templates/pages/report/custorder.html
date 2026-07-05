@@ -9,16 +9,19 @@
                 <h3>Товари в дорозі                </h3>
                 <small>Товари в замовленнях постачальнику зі статусом 'Виконується'</small>
 
-                <div class="card">
-                    <form zippy="filter" class="form-inline">
-
-                        <label for="cust">Постачальник</label>
-                        <select class="form-control " zippy="cust">
+                <div class="navbar">
+                    <form zippy="filter"  >
+                     <div class="row">
+                        <label class="col-form-label col-auto" for="cust">Постачальник</label>
+                         <div class="col-auto  ">
+                           <select class="form-control " zippy="cust">
                             <option value="0">По всім</option>
-                        </select>
-
-                        <input class="btn btn-primary ml-2 " type="submit" value="ОК">
-
+                          </select>
+                        </div>
+                         <div class="col-auto  ">
+                          <input class="btn btn-primary ml-2 " type="submit" value="ОК">
+                       </div>
+                     </div>
                     </form>
                 </div>
 
@@ -26,8 +29,8 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/custorder" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/custorder" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/custorder" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/custorder" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
                     <div zippy="preview" class="table-responsive-sm">

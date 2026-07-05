@@ -6,19 +6,22 @@
                 <h3>Імпорт замовлень</h3>
 
         
-                <div class="card">
-                    <form zippy="filter" class="form-inline ">
-                        <label for="status">Статус в магазині </label>
-
+                <div class="navbar">
+                    <form zippy="filter"  >
+                        <div class="row  ">
+                         <label class="col-form-label col-auto" for="status">Статус в магазині </label>
+                        <div class="col-auto  ">
                         <select class="form-control mr-2" zippy="status">
                             
                         </select>
+                         </div>
+                        <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">           
                                
-                  
+                       </div>
 
-
+                     </div>
                     </form>
                 </div>
 

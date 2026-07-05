@@ -85,16 +85,22 @@
                             </form>
                             
                             <h5> Персональнi бонуси</h5>
-                            <div class="card  ">
-                                <form zippy="pbfilter" class="form-inline ">
+                            <div class="navbar  ">
+                                <form zippy="pbfilter"  >
+                                 <div class="row  ">
 
-                                    <label for="pbsearchkey">Контрагент</label>
-                                    <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="pbsearchkey">
-                                    <label for="pbsearchbon">бонус,%</label>
-                                    <input class="form-control qtyprice mr-sm-2" type="text" zippy="pbsearchbon" pattern="[0-9\.]+" style="width:50px;">
-                                    <input class="btn btn-success " type="submit" value="Додати"  >
-                                 
-  
+                                    <label class="col-form-label col-auto" for="pbsearchkey">Контрагент</label>
+                                    <div class="col-auto  ">
+                                     <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="pbsearchkey">
+                                    </div>
+                                    <label class="col-form-label col-auto" for="pbsearchbon">бонус,%</label>
+                                    <div class="col-auto  ">
+                                     <input class="form-control qtyprice mr-sm-2" type="text" zippy="pbsearchbon" pattern="[0-9\.]+" style="width:50px;">
+                                    </div>
+                                    <div class="col-auto  ">
+                                     <input class="btn btn-success " type="submit" value="Додати"  >
+                                   </div>
+                                 </div>
                                 </form> 
                             </div>                            
                                    <table class="table    table-sm mt-2">
@@ -116,12 +122,18 @@
                         
                         <div class="col-12 col-md-6 col-xl-6   ">
                             <h5> Нарахованi бонуси</h5> 
-                           <div class="card  ">
-                                <form zippy="blfilter" class="form-inline ">
-                                    <input placeholder="Контрагент..." class="form-control " type="search"  zippy="blsearch">
-                                    <input class="btn btn-success mr-4" type="submit" value="Шукати"  >
+                           <div class="navbar  ">
+                                <form zippy="blfilter"  >
+                                    <div class="row  ">
+                                    <div class="col-auto  ">
+                                      <input placeholder="Контрагент..." class="form-control " type="search"  zippy="blsearch">
+                                    </div>
+                                    <div class="col-auto  ">
+                                      <input class="btn btn-success mr-4" type="submit" value="Шукати"  >
+                                    </div>
+                                    <div class="col-auto  ">
                                     <a href="javascript:void(0);" data-toggle="modal" data-target="#modaladdbonus" class="btn btn-success " title="Додати/вiдняти бонуси"  >Бонус +/-</a>
-                             
+                                  </div></div>
                                 </form> 
                             </div>  
                                <table class="table    table-sm  ">
@@ -204,15 +216,21 @@
                              </div>
                          <div class="col-12 col-md-8 col-xl-6   ">    
                             <h5> Постiйнi знижки</h5>
-                            <div class="card  ">
-                                <form zippy="cfilter" class="form-inline ">
-
-                                    <label for="csearchkey">Контрагент</label>
+                            <div class="navbar  ">
+                                <form zippy="cfilter"  >
+                                   <div class="row  ">
+                                    <label class="col-form-label col-auto" for="csearchkey">Контрагент</label>
+                                    <div class="col-auto  ">
+                                   
                                     <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" type="text" zippy="csearchkey">
-                                    <label for="csearchdisc">знижка, %</label>
+                                     </div>
+                                     <label class="col-form-label col-auto" for="csearchdisc">знижка, %</label>
+                                    <div class="col-auto  ">
                                     <input class="form-control qtyprice mr-sm-2" type="text" zippy="csearchdisc" pattern="[0-9,\.]+" style="width:50px;">
+                                     </div>
+                                     <div class="col-auto  ">
                                     <input class="btn btn-success " type="submit" value="Додати"  >
-
+                                     </div> </div>
                                 </form> 
                             </div>
                             <form zippy="clistform">
@@ -249,41 +267,56 @@
                              
                             <span><i class="fa fa-exclamation-triangle"></i> Тiльки для цін типу <i> {{price1name}}</i> </span>
                             <h5>Акційні ціни</h5>                            
-                            <div class="card  ">
-                                            <form zippy="ifilter" class="form-inline ">
-
-                                                <label for="isearchkey">Назва</label>
+                            <div class="navbar  ">
+                                            <form zippy="ifilter"  >
+                                               <div class="row  ">
+                                                <label class="col-form-label col-auto" for="isearchkey">Назва</label>
+                                                <div class="col-auto  ">
                                                 <input  placeholder="Почнiть вводити..."  class="form-control   mr-2"   zippy="isearchkey"> 
-
-                                                <label for="isearchdisc">акц. цiна</label>
+                                                 </div>
+                                                <label class="col-form-label col-auto" for="isearchdisc">акц. цiна</label>
+                                                <div class="col-auto  ">
                                                 <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchdisc" pattern="[0-9,\.]+" style="width:100px;">
-                                                <label for="isearchfrom">з</label>
+                                                 </div>
+                                                <label class="col-form-label col-auto" for="isearchfrom">з</label>
+                                                <div class="col-auto  ">
                                                 <input  class="form-control mr-sm-2"   zippy="isearchfrom"  style="width:100px;">
-                                                <label  for="isearchto">по</label>
+                                                 </div>
+                                                <label class="col-form-label col-auto"  for="isearchto">по</label>
+                                                <div class="col-auto  ">
                                                 <input  class="form-control mr-sm-2"   zippy="isearchto" style="width:100px;" >
-
+                                                 </div>
+                                                <div class="col-auto  ">
                                                 <input zippy="ifiltersbm"  class="btn btn-success  ml-2 " type="submit" value="Додати"  >
-
+                                               </div> </div>
                                             </form>   
                                             
                                         </div>
                                         
                             <span>Встановлює акційну ціну на даний товар</span>  
-                           <div class="card  ">
-                                <form zippy="gfilter" class="form-inline ">
-
+                           <div class="navbar  ">
+                                <form zippy="gfilter"  >
+                                 <div class="row  ">
                                     <label for="gsearchkey">Категорiя</label>
-                                    <select   class="form-control  "   zippy="gsearchkey"></select>
-                                    &nbsp;   &nbsp;
-                                    <label for="gsearchdisc">знижка, %</label>
-                                    <input   class="form-control qtyprice mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9,\.]+" style="width:50px;">
-                                    <label for="gsearchfrom">з</label>
-                                    <input  class="form-control mr-sm-2"   zippy="gsearchfrom"  style="width:100px;">
-                                    <label  for="gsearchto">по</label>
-                                    <input  class="form-control mr-sm-2"   zippy="gsearchto" style="width:100px;" >
-
-                                    <input  class="btn btn-success  ml-2 " type="submit" value="Додати"  >
-
+                                     <div class="col-auto  ">
+                                      <select   class="form-control  "   zippy="gsearchkey"></select>
+                                    </div> 
+                                    <label class="col-form-label col-auto" for="gsearchdisc">знижка, %</label>
+                                     <div class="col-auto  ">
+                                       <input   class="form-control qtyprice mr-sm-2" type="text" zippy="gsearchdisc" pattern="[0-9,\.]+" style="width:50px;">
+                                    </div>
+                                    <label class="col-form-label col-auto" for="gsearchfrom">з</label>
+                                     <div class="col-auto  ">
+                                       <input  class="form-control mr-sm-2"   zippy="gsearchfrom"  style="width:100px;">
+                                    </div>
+                                    <label class="col-form-label col-auto"  for="gsearchto">по</label>
+                                     <div class="col-auto  ">
+                                       <input  class="form-control mr-sm-2"   zippy="gsearchto" style="width:100px;" >
+                                     </div>
+                                     <div class="col-auto  ">
+                                       <input  class="btn btn-success  ml-2 " type="submit" value="Додати"  >
+                                     </div>
+                                     </div>
                                 </form>
                                 
                             </div>
@@ -327,23 +360,32 @@
                             </form>
                             
                             <h5>Знижки для опту (2 товари і більше)</h5> 
-                                       <div class="card  ">
-                                            <form zippy="iofilter" class="form-inline ">
-
-                                                <label for="isearchokey">Назва</label>
+                                       <div class="navbar  ">
+                                            <form zippy="iofilter"  >
+                                              <div class="row  ">
+                                                <label class="col-form-label col-auto" for="isearchokey">Назва</label>
+                                                 <div class="col-auto  ">
                                                 <input  placeholder="Почнiть вводити..."  class="form-control  mr-2"   zippy="isearchokey"> 
-
-                                                <label for="isearchoqty1">кiл. (рiвень1)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty1" pattern="[0-9,\.]+" style="width:50px;">
-                                                <label for="isearchoprice1">акц. цiна (рiвень1)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice1" pattern="[0-9,\.]+" style="width:75px;">
+                                                  </div>
+                                                <label class="col-form-label col-auto" for="isearchoqty1">кiл. (рiвень1)</label>
+                                                 <div class="col-auto  ">
+                                                 <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty1" pattern="[0-9,\.]+" style="width:50px;">
+                                                  </div>
+                                                <label class="col-form-label col-auto" for="isearchoprice1">акц. цiна (рiвень1)</label>
+                                                 <div class="col-auto  ">
+                                                 <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice1" pattern="[0-9,\.]+" style="width:75px;">
+                                                 </div>
                                                 <label for="isearchoqty2">кiл. (рiвень2)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty2" pattern="[0-9,\.]+" style="width:50px;">
-                                                <label for="isearchoprice2">акц. цiна (рiвень2)</label>
-                                                <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice2" pattern="[0-9,\.]+" style="width:75px;">
-                                           
-                                                <input zippy="iofiltersbm" class="btn btn-success  ml-2 " type="submit" value="Додати"  >
-
+                                                 <div class="col-auto  ">
+                                                 <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoqty2" pattern="[0-9,\.]+" style="width:50px;">
+                                                 </div>
+                                                <label class="col-form-label col-auto" for="isearchoprice2">акц. цiна (рiвень2)</label>
+                                                 <div class="col-auto  ">
+                                                 <input   class="form-control qtyprice mr-sm-2" type="text" zippy="isearchoprice2" pattern="[0-9,\.]+" style="width:75px;">
+                                                  </div>
+                                                 <div class="col-auto  ">
+                                                 <input zippy="iofiltersbm" class="btn btn-success  ml-2 " type="submit" value="Додати"  >
+                                                  </div> </div>
                                             </form>   
                                             
                                         </div>
@@ -377,21 +419,29 @@
                     <div class="row">
                         <div class="col-12 col-md-10 col-xl-8   ">
                             
-                            <div class="card  ">
-                                <form zippy="sfilter" class="form-inline ">
-
-                                    <label for="ssearchkey">Назва</label>
+                            <div class="navbar  ">
+                                <form zippy="sfilter"  >
+                                  <div class="row  ">
+                                    <label class="col-form-label col-auto" for="ssearchkey">Назва</label>
+                                    
+                                    <div class="col-auto  ">
                                     <select   class="form-control select2"   zippy="ssearchkey"></select>
-                                    &nbsp;   &nbsp;
-                                    <label for="ssearchdisc">акц. ціна</label>
+                                    </div>
+                                    <label class="col-form-label col-auto" for="ssearchdisc">акц. ціна</label>
+                                    <div class="col-auto  ">
                                     <input   class="form-control qtyprice mr-sm-2" type="text" zippy="ssearchdisc" pattern="[0-9,\.]+" style="width:50px;">
-                                    <label for="ssearchfrom">з</label>
+                                    </div>
+                                    <label class="col-form-label col-auto" for="ssearchfrom">з</label>
+                                    <div class="col-auto  ">
                                     <input  class="form-control mr-sm-2"   zippy="ssearchfrom"  style="width:100px;">
-                                    <label  for="sgsearchto">по</label>
+                                    </div>
+                                    <label class="col-form-label col-auto"  for="sgsearchto">по</label>
+                                    <div class="col-auto  ">
                                     <input  class="form-control mr-sm-2"   zippy="ssearchto" style="width:100px;" >
-
+                                    </div>
+                                    <div class="col-auto  ">
                                     <input class="btn btn-success  ml-2 " type="submit" value="Додати"  >
-
+                                    </div></div>
                                 </form> 
                             </div>                     
                             <table class="table    table-sm mt-2">
@@ -424,11 +474,16 @@
                              
                            <div zippy="listpan">
                            <span>Використовується в замовленнях та чеках</span>
-                             <div class="card  ">
-                                <form zippy="pfilter" class="form-inline ">
-                                    <label for="psearchkey">Код</label>
+                             <div class="navbar  ">
+                                <form zippy="pfilter"  >
+                                    <div class="row  ">
+                                    <label class="col-form-label col-auto" for="psearchkey">Код</label>
+                                    <div class="col-auto  ">
                                     <input placeholder="Код для пошуку" class="form-control mr-2" type="search" zippy="psearchkey">
+                                    </div>  
+                                    <div class="col-auto  ">
                                     <input class="btn btn-success " type="submit" value="OK"  >
+                                    </div>  </div>  
                                 </form> 
                               </div>                                
                      

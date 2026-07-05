@@ -10,26 +10,30 @@
                 <div zippy="contracttable">
                     <h3>Договори </h3>
                     <small><i class="fa fa-info-circle"></i> В  документах вибираються  договори зi статусом В роботi  </small>
-                    <div class="card">
+                    <div class="navbar">
 
-                        <form zippy="filter" class="form-inline">
-
-                            <label for="searchkey">Пошук</label>
-                            <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-                            <label for="searchcust">Контрагент</label>
-                            <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" zippy="searchcust"/>
-
-
-                          
-
-                            <div class="form-check">
-
-                                <input title="Показати також не актуальнi" class="form-check-input" type="checkbox" zippy="showdis">
-                                <label class="form-check-label mr-sm-3" for="showdis">Всi</label>
+                        <form zippy="filter"  >
+                         <div class="row">
+                            <label  class="col-form-label col-auto" for="searchkey" >Пошук</label>
+                             <div class="col-auto  ">
+                               <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                            </div>
+                            <label  class="col-form-label col-auto" for="searchcust">Контрагент</label>
+                             <div class="col-auto  ">
+                               <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" zippy="searchcust"/>
                             </div>
 
-                            <input class="btn btn-success  " type="submit" value="ОК">
-
+                          
+                             <div class="col-auto pt-2 ">
+                                <div class="form-check">
+                                   <input title="Показати також не актуальнi" class="form-check-input" type="checkbox" zippy="showdis">
+                                    <label class="form-check-label mr-sm-3" for="showdis">Всi</label>
+                                </div>
+                            </div>
+                             <div class="col-auto  ">
+                              <input class="btn btn-success  " type="submit" value="ОК">
+                           </div>
+                          </div>
                         </form>
                     </div>
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
@@ -154,20 +158,33 @@
             <div class="col-12 ">  
                 <h5 zippy="cname"></h5>
                 <a zippy="back">До переліку</a>
-               <div class="card ">  
+                <div class="navbar">
+ 
               
-                    <form zippy="statusform" class="form-inline ">
-                         <label data-label="mstates" for="mstates"> Статус </label>
+                    <form zippy="statusform"  >
+                       <div class="row">
+                      
+                         <label class="col-form-label col-auto" data-label="mstates" for="mstates"> Статус </label>
+                         <div class="col-auto  ">
                          <select zippy="mstates" class="form-control mr-2">
                         
                          </select>
+                           </div>
+                          <div class="col-auto  ">
                          <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
-                         <label data-label="musers" for="mstates"> Відповідальний </label>
+                           </div>
+                         <label class="col-form-label col-auto" data-label="musers" for="mstates"> Відповідальний </label>
+                            
+                            <div class="col-auto  ">
                          <select zippy="musers" class="form-control mr-2">
-                         <option value="0">Не обрано</option>
+                           <option value="0">Не обрано</option>
                          </select>
+                             </div>
+                            <div class="col-auto  ">
                          <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
-                      </form>
+                        </div>
+                       </div>
+                    </form>
               
               </div>
             </div>

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Helper as H;
 use App\System;
+use App\Entity\Notify;
 use App\Comm;
 
 /**
@@ -357,10 +358,10 @@ class Subscribe extends \ZCL\DB\Entity
     private    function sendmsg($text, $options=[]){
         $ret='';    
         if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
-                App\Entity\Notify::sendNotify($options['notifyuser'], $text,\App\Entity\Notify::SUBSCRIBE);
+               Notify::sendNotify($options['notifyuser'], $text, Notify::SUBSCRIBE);
             }
             if (  $this->reciever_type== self::RSV_SYSTEM) {
-                App\Entity\Notify::sendNotify(\App\Entity\Notify::SYSTEM, $text,\App\Entity\Notify::SUBSCRIBE);
+                Notify::sendNotify( Notify::SYSTEM, $text, Notify::SUBSCRIBE);
             }
 
             if (strlen($options['phone']) > 0 && $this->msg_type == self::MSG_SMS) {
@@ -401,9 +402,9 @@ class Subscribe extends \ZCL\DB\Entity
 
             if(strlen($ret)>0) {
                 \App\Helper::logerror($ret);
-                $n = new \App\Entity\Notify();
-                $n->user_id = \App\Entity\Notify::SYSTEM;
-                $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
+                $n = new  Notify();
+                $n->user_id =  Notify::SYSTEM;
+                $n->sender_id = Notify::SUBSCRIBE;
                 $n->message = $ret;
 
                 $n->save();
