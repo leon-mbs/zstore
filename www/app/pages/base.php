@@ -805,7 +805,7 @@ class Base extends \Zippy\Html\WebPage
          $this->pr_itemsform->pr_items->Reload();
     
          
-         $this->addJavaScript("$('#modalpritems').modal('show')",true)  ;
+         $this->addJavaScript(" openModal('pr_items_pform')  ",true)  ;
     }
  
     public function pr_itemsOnRow($row) {
@@ -839,7 +839,7 @@ class Base extends \Zippy\Html\WebPage
                 $this->addJavaScript("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
                 $this->pr_items_tag->setText($ret,true);
-                $this->addJavaScript("    $('#pr_items_pform').modal()",true);
+                $this->addJavaScript("   openModal('pr_items_pform') ",true);
             }
             return;
         }

@@ -106,13 +106,16 @@
                 <ul class="navbar-nav ms-auto">
                     {{#usebranch}}
                     <li class="nav-item">
-                        <form zippy="nbform" class="form-inline ">
-                            Філія
-                            <select zippy="nbbranch" class="form-control ml-1 ">
+                        <form zippy="nbform"  >
+                        <div class="row  ">
+                            
+                             <label class="col-form-label col-auto"  >Філія</label>
+                            <div class="col-auto  ">
+                            <select zippy="nbbranch" class="form-control ms-1 ">
                                 <option value="0">Всі доступні</option>
                             </select>
-
-
+                            </div>
+                         </div>
                         </form>
                     </li>
                     {{/usebranch}}
@@ -1459,12 +1462,17 @@
            
         }
  
-          function openModal(id){
+          function openModal(id,open=true){
           //   $('#'+id).modal('show')   
         
  
             const m = new bootstrap.Modal('#'+id, {})      
-            m.show() 
+            if(open) {
+              m.show()      
+            } else {
+              m.hide() 
+            }
+           
         }
        //  обработчмк весов
         {{#usescale}}
