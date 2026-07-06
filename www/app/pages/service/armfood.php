@@ -2231,7 +2231,7 @@ class ARMFood extends \App\Pages\Base
 
                 $this->addAjaxResponse("   window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
-                $this->addAjaxResponse("  $('#rtag').html('{$html}') ; $('#prform').modal()");
+                $this->addAjaxResponse("  $('#rtag').html('{$html}') ; openModal('prform')  ");
             }            
             
             
@@ -2828,7 +2828,7 @@ class ARMFood extends \App\Pages\Base
            $conn->CommitTrans();
            $this->trform->clean();
        
-           $this->addAjaxResponse(" $(\"#modaltran\").modal(\"hide\") ; toastr.success('Створено  документ {$doc->document_number}','',{timeOut:2000})        ", true  ) ;
+           $this->addAjaxResponse(" openModal('modaltran',false)    ; toastr.success('Створено  документ {$doc->document_number}','',{timeOut:2000})        ", true  ) ;
            
        }
        catch(\Exception $e)  {

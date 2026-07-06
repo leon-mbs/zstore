@@ -1414,8 +1414,13 @@
                 } )          
         }
              
-        function openModal(id){
-            $('#'+id).modal('show')   
+        function openModal(id,open=true){
+            if(open) {
+                 $('#'+id).modal('show')        
+            } else {
+                 $('#'+id).modal('hide')                        
+            }
+           
             
           //  const m = new bootstrap.Modal('#'+id, {})      
           //  m.show() 

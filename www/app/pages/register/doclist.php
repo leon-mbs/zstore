@@ -791,7 +791,7 @@ class DocList extends \App\Pages\Base
             
             $dataUri = \App\Util::generateQR($url, 150, 5)  ;
             $html = "<img src=\"{$dataUri}\"  />";
-            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()" );
+            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ;openModal('modalqr')  " );
         
 
     }
