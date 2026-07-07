@@ -1414,17 +1414,28 @@
                 } )          
         }
              
-        function openModal(id,open=true){
-            if(open) {
-                 $('#'+id).modal('show')        
-            } else {
-                 $('#'+id).modal('hide')                        
-            }
+        function openModal(id ){
+         
+             $('#'+id).modal('show')        
+   
            
             
           //  const m = new bootstrap.Modal('#'+id, {})      
           //  m.show() 
         }
+        
+        function closeModal(id ){
+ 
+          $('#'+id).modal('hide')                        
+       
+           
+            
+          //  const m = new bootstrap.Modal('#'+id, {})      
+          //  m.show() 
+        }
+        
+        
+        
         function sendSMSCust(phone,code) {
             
                 callPM('sendSMSCode',[phone,code],null,(data)=> 

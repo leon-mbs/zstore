@@ -2828,7 +2828,7 @@ class ARMFood extends \App\Pages\Base
            $conn->CommitTrans();
            $this->trform->clean();
        
-           $this->addAjaxResponse(" openModal('modaltran',false)    ; toastr.success('Створено  документ {$doc->document_number}','',{timeOut:2000})        ", true  ) ;
+           $this->addAjaxResponse(" closeModal('modaltran' )    ; toastr.success('Створено  документ {$doc->document_number}','',{timeOut:2000})        ", true  ) ;
            
        }
        catch(\Exception $e)  {

@@ -231,7 +231,7 @@
                        </div>
                        <div class="col-12"> 
                          <div class="row"> 
-                        <span>Створити </span> 
+                        
                            <label class="col-form-label col-auto"  >Створити</label>
                            <div class="col-auto  ">
                         <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
@@ -548,14 +548,14 @@
                       
                       callPM('getCChatMessages',[this.doc_id],null,(data)=> 
                       {
-                               
+                              
                           this.msglist = data.msglist  
 
        
                       })                       
                       
                        callPM('getCChatItems',[this.doc_id],null,(data)=> 
-                       {
+                       {   
                           this.cchatitemlist = data.itemlist  
                        })                   
                     
@@ -570,8 +570,8 @@
      
                    
           function opencchat(doc_id ) {
-             $('#modalcchat').modal('show')
            
+               openModal('modalcchat' )    
              
              vapp.CChatInit(doc_id   )  
                
