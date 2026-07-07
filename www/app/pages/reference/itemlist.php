@@ -924,7 +924,7 @@ class ItemList extends \App\Pages\Base
 
             $html =  $report->generate($header);                  
 
-            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; $('#pr_items_pform').modal('show')");
+            $this->addAjaxResponse("  $('#pr_items_tag').html('{$html}') ; openModal('pr_items_pform')  ");
             return;
         }
        
@@ -1226,8 +1226,8 @@ class ItemList extends \App\Pages\Base
         $desc = str_replace ("\n","",$desc);
         $desc = str_replace ("\r","",$desc);
         
-    //    $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
-        $this->addAjaxResponse("$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
+
+        $this->addAjaxResponse("   openModal('idesc')   ; $('#idesccontent').html('{$desc}'); ")  ;
         
     }
     
@@ -1258,7 +1258,7 @@ class ItemList extends \App\Pages\Base
          if(intval($item->term??0) >0) {
            $stdate =  date("Y-m-d", ( strtotime("+{$item->term} days") ));
          }         
-         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('{$stdate}') ; $('#stprice').val('{$price}') ; $('#pscale').modal()");
+         $this->addAjaxResponse("   $('#stsum').text('') ; $('#tagsticker').html('') ;  $('#stitemid').val('{$item->item_id}') ;  $('#stqty').val('') ; $('#stdate').val('{$stdate}') ; $('#stprice').val('{$price}') ;openModal('pscale')  ");
       
     }
  

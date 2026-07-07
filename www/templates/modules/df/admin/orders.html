@@ -8,32 +8,38 @@
         <div class="row  ">
             <div class="col-12    col-md-10    col-xl-8  ">
                 <h4>Замовлення  партнерiв  </h4>
-              <div class="card">
-                    <form zippy="filter" class="form-inline ">
+              <div class="navbar">
+                    <form zippy="filter"  >
+                     <div class="row  ">
 
-
-                        <label for="searchnumber"> № </label>
-
+                        <label class="col-form-label col-auto" for="searchnumber"> № </label>
+                          <div class="col-auto  ">
                         <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-                        <label   for="from">З </label>
-                        <input type="text" class="form-control   mr-2  " zippy="from" style="width:110px">
-                        <label   for="to">по </label>
-                        <input type="text" class="form-control   mr-2  " zippy="to" style="width:110px">
-                       
+                      </div>
+                        <label class="col-form-label col-auto"   for="from">З </label>
+                         <div class="col-auto  ">
+                         <input type="text" class="form-control   mr-2  " zippy="from" style="width:110px">
+                      </div>
+                        <label  class="col-form-label col-auto"  for="to">по </label>
+                         <div class="col-auto  ">
+                         <input type="text" class="form-control   mr-2  " zippy="to" style="width:110px">
+                        </div>
                    
-                        <label for="status">Статус</label>
-
+                        <label class="col-form-label col-auto" for="status">Статус</label>
+                          <div class="col-auto  ">
                         <select class="form-control mr-2" zippy="status">
                         </select>
-
-                        <label for="fpartner">Партнер</label>
-                        <select class="form-control mr-2" zippy="fpartner">
+                         </div>
+                        <label  class="col-form-label col-auto"for="fpartner">Партнер</label>
+                        
+                         <div class="col-auto  ">
+                         <select class="form-control mr-2" zippy="fpartner">
                             <option value="0">Не обрано</option>
                         </select>
-
-                        
+                          </div>
+                          <div class="col-auto  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
-
+                        </div></div>
 
                     </form>
                 </div>
@@ -61,13 +67,17 @@
                  </tbody>
                 </table>  
                   <div class="col-12" zippy="docpan">
-                  <form zippy="sform" class="form-inline"  >
-                         <label data-label="emps" for="mstates"> Виконавець </label>
+                  <form zippy="sform"    >
+                      <div class="row  ">
+                         <label class="col-form-label col-auto" data-label="emps" for="mstates"> Виконавець </label>
+                         <div class="col-auto  ">
                          <select zippy="emps" class="form-control mr-2">
                          <option value="0">Не обрано</option>
                          </select>
+                         </div> 
+                         <div class="col-auto  ">
                          <button zippy="bsaves" class="btn btn-success  mr-2"> В обробку</button>
-                       
+                      </div>  
                            
                    </form>
                

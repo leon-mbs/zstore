@@ -17,9 +17,10 @@
                        У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
                 </h3>
 
-                <div class="card">
+                <div class="navbar">
 
-                    <form zippy="filter" class="row   g-2 align-items-center">
+                    <form zippy="filter" class="   g-2 align-items-center">
+                      <div class="row">
                       <div class="col-auto">
                         <input autocomplete="off" placeholder="Пошук..." class="form-control mr-2" type="search" zippy="searchkey" onkeydown="onSearch()">
                       </div>
@@ -81,6 +82,7 @@
          
                                <input class="btn btn-success  " type="submit" value="ОК">
                            </div>
+                        </div>
                     </form>
                    
                     
@@ -644,15 +646,26 @@
                
                 {{#complin}}
                 <span>Комплекти (рецепти) для готової продукцiї та напiвфабрикатiв</span>
-                <form zippy="setform" class="form-inline mt-2 mb-2">
-                    <label for="editsname">ТМЦ</label>
-                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
-
-                    <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on" 
-                           pattern="[0-9,\.]+" style="width:60px">
-                    <input zippy="setformbtn" class="btn btn-success  " type="submit" value="Додати">
-                </form>
+                 <div class="navbar  ">
+                
+                    <form zippy="setform"  >
+                        <div class="row  ">
+                    
+                        <label class="col-form-label col-auto" for="editsname">ТМЦ</label>
+                        <div class="col-auto  ">
+                           <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
+                         </div>
+                        <label class="col-form-label col-auto" for="editsqty">Кіл.</label>
+                       <div class="col-auto  ">
+                        <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on" 
+                               pattern="[0-9,\.]+" style="width:60px">
+                        </div>
+                        <div class="col-auto  ">
+                          <input zippy="setformbtn" class="btn btn-success  " type="submit" value="Додати">
+                       </div>
+                      </div>
+                    </form>
+                   </div>
                 <table class="table   table-sm  ">
                     <tr>
                         <th>Найменування</th>
@@ -669,19 +682,27 @@
                         <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-           
-                 <form zippy="setsform" class="form-inline mt-2 mb-2">
-                    <label for="editssname">Робота, послуга</label>
-                    <select class="form-control  select2" zippy="editssname">
-                      <option value="0">Не обрано</option>
-                    </select>
-
-                    <label class="ml-sm-2" for="editscost">Вартість</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost"  required="on" 
-                           pattern="[0-9,\.]+" style="width:60px">
-                           
-                    <input zippy="setsformbtn" class="btn btn-success  " type="submit" value="Додати">
+                  <div class="navbar  ">
+               
+                 <form zippy="setsform"  >
+                    <div class="row  ">
+                    <label class="col-form-label col-auto" for="editssname">Робота, послуга</label>
+                    <div class="col-auto  "> 
+                      <select class="form-control  select2" zippy="editssname">
+                        <option value="0">Не обрано</option>
+                     </select>
+                     </div>
+                    <label class="col-form-label col-auto" class="ml-sm-2" for="editscost">Вартість</label>
+                      <div class="col-auto  ">
+                       <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editscost"  required="on" 
+                            pattern="[0-9,\.]+" style="width:60px">
+                      </div>
+                     <div class="col-auto  ">      
+                      <input zippy="setsformbtn" class="btn btn-success  " type="submit" value="Додати">
+                    </div>
+                   </div>
                 </form>
+                </div>
                  <table class="table   table-sm  ">
                     <tr>
                         <th>Найменування</th>
@@ -707,15 +728,22 @@
                 
                     <input class="btn btn-success  " type="submit" value="Зберегти">
                  </form>
-                  <form zippy="scopyform" class="form-inline mt-2 mb-2">
-                    <label for="editscopy">Скопiювати в </label>
-                    <select class="form-control  select2" zippy="editscopy">
-                      <option value="0">Не обрано</option>
-                    </select>
-                  
-                    <input   class="btn btn-success  " type="submit" value="OK">
-                </form>  
-                 
+                 <div class="navbar  ">
+                  <form zippy="scopyform" >
+                  <div class="row  ">
+                   
+                    <label class="col-form-label col-auto" for="editscopy">Скопiювати в </label>
+                    <div class="col-auto  "> 
+                        <select class="form-control  select2" zippy="editscopy">
+                          <option value="0">Не обрано</option>
+                        </select>
+                     </div>
+                     <div class="col-auto  "> 
+                        <input   class="btn btn-success  " type="submit" value="OK">
+                   </div>
+                  </div>
+                 </form>  
+               </div>
                {{/complin}}  
                {{#complout}}  
                <span>Є складовою комплектів для: </span>

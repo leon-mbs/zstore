@@ -17,43 +17,56 @@
                   {{/bmode}}
                 </b> 
 
-                <div class="card">
-                    <form zippy="filter" class="form-inline ">
-
-                        <label for="from"> З </label>
-                        <input type="text" class="form-control    " zippy="from" style="width:110px">
-                        <label for="to"> По </label>
-                        <input type="text" class="form-control    " zippy="to" style="width:110px">
-                      
+                <div class="navbar">
+                    <form zippy="filter"  >
+                        <div class="row  ">
+                        <label class="col-form-label col-auto" for="from"> З </label>
+                          <div class="col-auto  ">
+                          <input type="text" class="form-control    " zippy="from" style="width:110px">
+                           </div>
+                        <label class="col-form-label col-auto" for="to"> По </label>
+                          <div class="col-auto  ">
+                          <input type="text" class="form-control    " zippy="to" style="width:110px">
+                           </div>
                           {{^bmode}}
-                        <label for="fuser"> автор </label>
-                        <select class="form-control mr-2" zippy="fuser">
+                        <label class="col-form-label col-auto" for="fuser"> автор </label>
+                          <div class="col-auto  ">
+                          <select class="form-control mr-2" zippy="fuser">
                             <option value="0">Не обрано</option>
                         </select>
-                        <label for="ftype"> тип </label>
-                        <select class="form-control mr-2" zippy="ftype">
+                         </div>
+                        <label class="col-form-label col-auto" for="ftype"> тип </label>
+                          <div class="col-auto  ">
+                          <select class="form-control mr-2" zippy="ftype">
                             <option value="0">Не обрано</option>
                         </select>
+                         </div>
                        {{/bmode}}
-
+                          <div class="col-auto  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
-
+                        </div> </div>
                     </form>
                     
                   {{#bmode}}
-                   <form zippy="docform" class="form-inline ">
-
-                        <label for="docnumber"> Документ </label>
-                        <input required="on" placeholder="Номер документа" class="form-control  mr-2  " zippy="docnumber"  >
-                         <label for="docio"> Тип </label>
-                        <select class="form-control mr-2" zippy="docio">
+                   <form zippy="docform"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="docnumber"> Документ </label>
+                          <div class="col-auto  ">
+                          <input required="on" placeholder="Номер документа" class="form-control  mr-2  " zippy="docnumber"  >
+                           </div>
+                         <label class="col-form-label col-auto" for="docio"> Тип </label>
+                         <div class="col-auto  ">
+                          <select class="form-control mr-2" zippy="docio">
                             <option value="0">Не обрано</option>
                         </select>
-                        <label for="docamount"> Сума </label>
-                        <input required="on"   class="form-control  mr-2  " zippy="docamount"  >
-                        
+                         </div>
+                        <label class="col-form-label col-auto" for="docamount"> Сума </label>
+                          <div class="col-auto  ">
+                          <input required="on"   class="form-control  mr-2  " zippy="docamount"  >
+                           </div>
+                          <div class="col-auto  ">
                         <input type="submit" class="  btn btn-outline-success  " value="Додати">
-                      
+                        </div> </div>
                     </form>       
                   {{/bmode}}
                     

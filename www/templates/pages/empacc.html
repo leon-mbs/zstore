@@ -8,20 +8,27 @@
                    
             <div class="col-12  col-lg-6  col-xl-4 ">
                 <h3>Звіт по заробітній платі</h3>   
-                <div class="card">
-                    <form zippy="filterz" class="form-inline">
-                                        
-                        <label for="from">З</label>
+                <div class="navbar">
+                    <form zippy="filterz"  >
+                       <div class="row  ">                 
+                        <label class="col-form-label col-auto" for="from">З</label>
+                        <div class="col-auto  ">
                         <select class="form-control  " zippy="mfrom"> </select>
+                         </div>
+                        <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="yfrom"> </select>
-
-                        <label for="to">По</label>
+                          </div>
+                        <label class="col-form-label col-auto" for="to">По</label>
+                        <div class="col-auto  ">
                         <select class="form-control  " zippy="mto"> </select>
+                         </div>
+                        <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="yto"> </select>
-                     
-
+                          </div>
+                        <div class="col-auto  ">
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
-
+                         </div>
+                        </div>  
 
                     </form>
                 </div>
@@ -78,18 +85,20 @@
              <div class="col-12  col-lg-8 col-xl-6">
                 <h3>Особовий  рахунок</h3>   
                   
-                    <form zippy="filters" class="form-inline">
-                                        
-                        <label for="from">З</label>
+                    <form zippy="filters"  >
+                       <div class="row  ">                  
+                        <label class="col-form-label col-auto" for="from">З</label>
+                        <div class="col-auto  ">
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
-
-                        <label for="to">По</label>
+                          </div>
+                        <label class="col-form-label col-auto" for="to">По</label>
+                        <div class="col-auto  ">
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
-
-                   
+                         </div>
+                        <div class="col-auto  ">
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
 
-
+                       </div> </div>
                     </form>
                    
                    {{#az}}

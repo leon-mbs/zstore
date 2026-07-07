@@ -15,20 +15,23 @@
 
 
                
-                <div class="card">
+                <div class="navbar">
 
-                    <form zippy="filter" class="form-inline ">
-
-                        <label for="period">Період </label>
-
-                        <select class="form-control mr-2" zippy="period">
-                            <option value="1">1 місяць</option>
-                            <option value="2">2 місяці</option>
-                            <option value="3">3 місяці</option>
-                            <option value="3">6 місяців</option>
-                         </select>
-                        <input zippy="start" class="btn btn-primary  " type="submit" value="ОК">
-
+                    <form zippy="filter"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="period">Період </label>
+                         <div class="col-auto  ">
+                            <select class="form-control mr-2" zippy="period">
+                                <option value="1">1 місяць</option>
+                                <option value="2">2 місяці</option>
+                                <option value="3">3 місяці</option>
+                                <option value="3">6 місяців</option>
+                             </select>
+                          </div>
+                          <div class="col-auto  ">
+                          <input zippy="start" class="btn btn-primary  " type="submit" value="ОК">
+                        </div>
+                      </div>
                     </form>
 
                 </div>
@@ -38,8 +41,8 @@
                     <div class="mt-2">
 
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/predsell" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/predsell" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/predsell" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/predsell" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
 
                     </div>
 

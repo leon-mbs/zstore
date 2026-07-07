@@ -8,17 +8,18 @@
             <div class="col-12   col-md-10 col-md-8 " zippy="clist">
                 <h3>Розрахунки з постачальниками </h3>
              <small>В списку тільки ті контрагенти з якими є  назакриті розрахунки </small>
-            <div class="card">
-                    <form zippy="filter" class="form-inline ">
+            <div class="navbar">
+                    <form zippy="filter"  >
+                       <div class="row  ">
 
-
-                        <label for="holdlist"> Холдинг </label>
+                        <label class="col-form-label col-auto" for="holdlist"> Холдинг </label>
+                           <div class="col-auto  ">
                         <select class="form-control mr-2" zippy="holdlist">
                             <option value="0">Не вказано</option>
-                        </select>
-
+                        </select>  </div>
+                        <div class="col-auto  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
-
+                     </div></div>
                     </form>
                 </div>
 
@@ -122,30 +123,40 @@
             <div class="col-12 col-lg-10 col-xl-8 " zippy="paypan">
 
 
-                <div class="card">
-                    <form zippy="payform" class="form-inline ">
-                        <label>До оплати</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
-                               class="form-control mr-2">
-                        <label for="payment">рахунок</label>
-                        <select class="form-control mr-2" zippy="payment">
+                <div class="navbar">
+                    <form zippy="payform"  >
+                        <div class="row  ">
+                        
+                        <label class="col-form-label col-auto">До оплати</label>
+                           <div class="col-auto  ">
+                           <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."                               class="form-control mr-2">
+                           </div>
+                        <label class="col-form-label col-auto" for="payment">рахунок</label>
+                           <div class="col-auto  ">
+                           <select class="form-control mr-2" zippy="payment">
 
                         </select>
+                        </div>
                         {{#hideblock}}
-                        <label for="pos">POS</label>
-                        <select class="form-control mr-2" zippy="pos">
+                        <label class="col-form-label col-auto" for="pos">POS</label>
+                          <div class="col-auto  ">
+                           <select class="form-control mr-2" zippy="pos">
                             <option value="0">Не обрано</option>
 
                         </select>
+                        </div>
                         {{/hideblock}}
-                        <label>дата</label>
-                        <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
-
+                        <label class="col-form-label col-auto">дата</label>
+                           <div class="col-auto  ">
+                           <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
+                           </div>
+                            <div class="col-auto  ">
                         <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
-
+                        </div>
+                           <div class="col-auto  ">
                         <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
 
-
+                      </div></div>
                     </form>
 
                 </div>

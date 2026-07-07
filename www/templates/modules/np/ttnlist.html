@@ -11,19 +11,23 @@
                 <small>ТТН в  станi Готовий до вiдправки та В доставцi</small>
                     <div class="col-12 col-md-10 col-xl-8" >
               
-                            <div class="card">
-                                <form zippy="searchform" class="form-inline ">
-                                    <label for="searchnumber"> ЕН </label>
-
-                                    <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:200px">
-                                    <label for="searchcust"> Покупець </label>
+                            <div class="navbar">
+                                <form zippy="searchform"  >
+                                    <div class="row  ">
+                                    <label class="col-form-label col-auto" for="searchnumber"> ЕН </label>
+                                    <div class="col-auto  ">
+                                      <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:200px">
+                                    </div>
+                                    <label class="col-form-label col-auto" for="searchcust"> Покупець </label>
+                                    <div class="col-auto  ">
                                     <select class="form-control select2" zippy="searchcust" >
                                        <option value="0">Не обрано </option>
                                     </select>
-
+                                    </div>
+                                    <div class="col-auto  ">
                                     <input type="submit" class=" ml-2 btn btn-outline-success  " value="Шукати">
-
-
+                                 </div>
+                               </div>
                                 </form>
                             </div>
                   

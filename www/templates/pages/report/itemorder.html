@@ -12,19 +12,26 @@
                        data-placement="bottom" data-content="Товари в замовленнях покупцiв зі статусами 'Новий' та 'Виконується' "></i>
                 </h3>
 
-                <div class="card">
-                    <form zippy="filter" class="form-inline">
-
-                        <label for="cust">Покупець</label>
-                        <select class="form-control " zippy="cust">
+                <div class="navbar">
+                    <form zippy="filter"  >
+                        <div class="row  ">
+                 
+                        <label class="col-form-label col-auto" for="cust">Покупець</label>
+                         <div class="col-auto  ">
+                          <select class="form-control " zippy="cust">
                             <option value="0">По всім</option>
-                        </select>
-                       <label for="emp">менеджер</label>
-                        <select class="form-control mr-sm-2" zippy="emp">
+                          </select>
+                         </div>
+                       <label class="col-form-label col-auto" for="emp">менеджер</label>
+                         <div class="col-auto  ">
+                           <select class="form-control  " zippy="emp">
                             <option value="0">Не обрано</option>
-                        </select>
-                        <input class="btn btn-primary ml-2 " type="submit" value="ОК">
-
+                          </select>
+                         </div>
+                         <div class="col-auto  ">
+                           <input class="btn btn-primary ml-2 " type="submit" value="ОК">
+                        </div>  
+                      </div>
                     </form>
                 </div>
 
@@ -32,8 +39,8 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemorder" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemorder" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemorder" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemorder" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                                                     
 
                     </div>

@@ -106,7 +106,7 @@ class User extends \ZCL\DB\Entity
         $this->phone = $options['phone']?? '';
         $this->viber = $options['viber']?? '';
      
-        $this->darkmode = $options['darkmode']?? 0;
+        $this->darkmode = $options['darkmode']?? 1;
 
         $this->hidesidebar = (int)$options['hidesidebar'];
         $this->usemobileprinter = $options['usemobileprinter']?? 0;

@@ -282,17 +282,27 @@
 
             <div class="col-10  col-lg-8 mb-4" zippy="setpanel">
 
-             
-                <form zippy="setform" class="form-inline mt-2 mb-2">
-                    <label for="editsname">ТМЦ</label>
-                    <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
-
-                    <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on"                            pattern="[0-9,\.]+" style="width:75px">
-                    <label for="editsprice">Ціна</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsprice"  required="on"                            pattern="[0-9,\.]+" style="width:100px">
-                    <input class="btn btn-success  " type="submit" value="Додати">
+               <div class="navbar  ">
+                <form zippy="setform"  >
+                  <div class="row  ">
+                    <label class="col-form-label col-auto" for="editsname">ТМЦ</label>
+                    <div class="col-auto  ">
+                      <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
+                    </div>
+                    <label class="col-form-label col-auto" for="editsqty">Кіл.</label>
+                    <div class="col-auto  ">
+                      <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on"                            pattern="[0-9,\.]+" style="width:75px">
+                    </div>
+                    <label class="col-form-label col-auto" for="editsprice">Ціна</label>
+                    <div class="col-auto  ">
+                      <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsprice"  required="on"                            pattern="[0-9,\.]+" style="width:100px">
+                    </div>
+                    <div class="col-auto  ">
+                      <input class="btn btn-success  " type="submit" value="Додати">
+                    </div>
+                 </div>
                 </form>
+               </div> 
                 <table class="table   table-sm  ">
                     <tr>
                         <th>Найменування</th>

@@ -18,24 +18,28 @@
          <div class="row">
             <div class="col-12 col-lg-10" id="vapp" >
                 <h4>Табель облiку робочого часу</h4>
-                     <div class="card">
-                    <form   class="form-inline ">
-
-                        <label for="from">З</label>
+                     <div class="navbar">
+                    <form    >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="from">З</label>
+                        <div class="col-auto  ">
                         <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
-
-                        <label for="to">По</label>
+                          </div>
+                        <label class="col-form-label col-auto" for="to">По</label>
+                        <div class="col-auto  ">
                         <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
+                          </div>
 
-
-                        <label v-show="isadmin==true" >Спiвробiтник</label>
+                        <label class="col-form-label col-auto" v-show="isadmin==true" >Спiвробiтник</label>
+                        <div class="col-auto  ">
                         <select2     v-model="empid" :options="emps"   >
 
                         </select2>
-              
+                         </div>
+                          <div class="col-auto  ">
                         <input v-on:click.prevent="onFilter"  type="button" class="ml-2  btn btn-success  " value="ОК">
-
-
+                         </div>
+                        </div>
                     </form>
                 </div>
                        <a v-on:click.prevent="add(today)"  class="btn  btn-success">Додати</a>

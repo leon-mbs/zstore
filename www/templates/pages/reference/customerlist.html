@@ -15,16 +15,27 @@
                         
                     </div>
                     <div class="card ">
-                    <form zippy="leadf" class="form-inline ">
-                            <input   zippy="chleads" type="checkbox"> <label for="chleads"> Режим роботи з лідами </label>
+                       <form zippy="leadf" class="row"  >
+                          <div class="col-auto pt-2 ">
+                            <div class="form-check ">
+                              <input   zippy="chleads" type="checkbox"> 
+                              <label for="chleads"> Режим роботи з лідами </label>
+                            </div>
+                          </div>  
                         </form>
-                        <form zippy="filter" class="form-inline ">
-
-                            <label for="searchkey">Пошук</label>
-                            <input class="form-control mr-sm-2" type="search" zippy="searchkey">
+                          <div class="navbar  ">
+              
+                        <form zippy="filter"  >
+                            <div class="row  ">
+                  
+                            <label class="col-form-label col-auto" for="searchkey">Пошук</label>
+                             <div class="col-auto  ">
+                              <input class="form-control mr-sm-2" type="search" zippy="searchkey">
+                            </div> 
                             {{^leadmode}}
-                            <label for="searchtype">Тип</label>
-                            <select zippy="searchtype" class="form-control mr-sm-2">
+                            <label class="col-form-label col-auto" for="searchtype">Тип</label>
+                             <div class="col-auto  ">
+                              <select zippy="searchtype" class="form-control mr-sm-2">
                                 <option value="0">Всі активні</option>
                                 <option value="1">Покупці</option>
                                 <option value="2">Постачальники</option>
@@ -35,41 +46,54 @@
                                 {{/df}}
                                 
                                 <option value="10">Деактивовані</option>
-                            </select>
-
-                            <label for="searchholding">дочірній для</label>
-                            <select zippy="searchholding" class="form-control mr-sm-2">
+                             </select>
+                            </div> 
+                            <label class="col-form-label col-auto" for="searchholding">дочірній для</label>
+                            <div class="col-auto  ">
+                              <select zippy="searchholding" class="form-control mr-sm-2">
                                 <option value="0">Не вказано</option>
-                            </select>
+                              </select>
+                            </div> 
                             {{/leadmode}}
                             {{#leadmode}} 
-                            <label for="searchleadsource">джерело</label>
-                            <select zippy="searchleadsource" class="form-control mr-2">
+                            <label class="col-form-label col-auto" for="searchleadsource">джерело</label>
+                            <div class="col-auto  ">
+                              <select zippy="searchleadsource" class="form-control mr-2">
                                 <option value="0">Не вказано</option>
-                            </select>    
-                            <label for="searchleadstatus">стан</label>
-                            <select zippy="searchleadstatus" class="form-control mr-2">
+                              </select>    
+                            </div> 
+                            <label class="col-form-label col-auto" for="searchleadstatus">стан</label>
+                            <div class="col-auto  ">
+                             <select zippy="searchleadstatus" class="form-control mr-2">
                                 <option value="0">Не вказано</option>
-                            </select>    
+                             </select>  
+                            </div>   
                             {{/leadmode}} 
-                            <input class="btn btn-success   " type="submit" value="ОК"  >
-                             <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
-
+                            <div class="col-auto  ">
+                               <input class="btn btn-success   " type="submit" value="ОК"  >
+                             </div>
+                             <div class="col-auto pt-2 ">
+                              <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                             
+                           </div> 
+                         </div> 
                         </form>
-                      
+                       </div> 
                         {{#leadmode}}  
-
-                        <a class="btn btn-outline-success mr-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
-                         <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
+                       <div class=" row  ">
+                         <div class="col-auto  pr-4 pt-2">
+                           <a zippy="showstat"><i class="fa fa-chart-area"></i> Статистика</a>
+                         </div>
+                         <div class="col-auto  ">
+                            <a class="btn btn-outline-success mr-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
+                         </div>
+                         <div class="col-auto  ">
+                           <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
+                         </div>  
+                       </div>  
                         {{/leadmode}}            
-                    </div>
-                    {{#leadmode}}  
-                    <div class="mb-4 ml-2">
-  
-                        <a zippy="showstat"><i class="fa fa-chart-area"></i> Статистика</a>
-
-                    </div>
-                    {{/leadmode}}  
+                    
+                   
                     
                     
                      <details class="mb-2 ml-2">
@@ -334,10 +358,17 @@
          
                 {{#leadmode}} 
 
-                <form zippy="conlstform" class="form-inline ">
-                    <label for="conleadstatus"> Стан</label> 
+                <form zippy="conlstform"  >
+                     <div class="row  ">
+                    
+                    <label class="col-form-label col-auto" for="conleadstatus"> Стан</label> 
+                      <div class="col-auto  ">
                     <select zippy="conleadstatus" class="form-control mr-4"></select>
-                    &nbsp;&nbsp; <a zippy="convert"> <i class="fa fa-gavel"></i> Конвертувати в контрагента </a>
+                     </div>
+                     <div class="col-auto  "> 
+                     <a zippy="convert"> <i class="fa fa-gavel"></i> Конвертувати в контрагента </a>
+                   </div>
+                  </div>   
                 </form>
 
 

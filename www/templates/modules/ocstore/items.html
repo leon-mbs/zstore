@@ -9,21 +9,21 @@
 
             <br><a zippy="checkconn"><i class="fa   fa-sync"></i> Перевiрити  з'єднання</a>        
                 
-                <div class="card">
-                    <form zippy="filter" class="form-inline ">
-
-                        <label for="searchcat">Категорія</label>
-
+                <div class="navbar">
+                    <form zippy="filter"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="searchcat">Категорія</label>
+                        <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
                         </select>
-
-
+                       </div>
+                         <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
                       
-
-
+                        </div>
+                       </div>
                     </form>
                 </div>
 
@@ -54,17 +54,18 @@
 
                     </table>
                     <div zippy="pag"></div>
-                    <div class="ml-2 form-group row  ">
-                        <label for="ecat">Категорія в магазині </label>
- 
-                        <select class="   mr-2" zippy="ecat">
+                    <div class="ml-2   row  ">
+                        <label class="col-form-label col-auto" for="ecat">Категорія в магазині </label>
+                         <div class="col-auto  ">
+                          <select class="   mr-2" zippy="ecat">
                             <option value="0">Не обрано</option>
-                        </select>
-
-                        &nbsp;<input onclick="document.getElementById('dialogwait').showModal()" type="submit"
+                          </select>
+                         </div>
+                       <div class="col-auto  ">
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit"
                                      class="  btn btn-outline-success btn-sm  " value="Відправити">
                          
-
+                       
                     </div>
                 </form>
             </div>
@@ -72,22 +73,25 @@
 
                 <h3>Оновлення цін та кількості</h3>
                  <small>Відповідність товарів забезпечується по артикулу (SKU)</small>
-                <div class="card">
+                <div class="navbar">
                             
-                  <form zippy="upd" class="form-inline ">
-                      <label for="updcat">Категорiя</label>
-
+                  <form zippy="upd"  >
+                         <div class="row  ">
+                      <label class="col-form-label col-auto" for="updcat">Категорiя</label>
+                      <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="updcat">
                             <option value="0">Всi</option>
                         </select>
+                    </div>
+                  <div class="col-auto  ">
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
-
-                    &nbsp;&nbsp;
+                    </div>
+                    <div class="col-auto  ">s
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
                      
-
-
-                     </form>
+                     </div>
+                   </div>
+                   </form>
                 </div>
             </div>
 
@@ -96,22 +100,24 @@
                 <h3>Iмпорт товарів з магазину </h3>
                 <small>Відповідність товарів забезпечується по артикулу (SKU)</small>
               
-                <div class="card">
+                <div class="navbar">
                     
-                    <form zippy="importform" class="form-inline ">
-
+                    <form zippy="importform"  >
+                         <div class="row  ">
+                          <div class="col-auto pt-2 ">
                          <div class="form-check">
 
                             <input   class="form-check-input" type="checkbox" zippy="createcat">
                             <label class="form-check-label mr-1" for="createcat">Створювати  категорiю як в  магазинi</label>
                             <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Категорiя  повинна бути вказана як  головна"></i>
                         </div>
+                        </div>
 
-
+                         <div class="col-auto  ">
                         <input zippy="getitems" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
-                   
-
+                         </div>
+                      </div>
 
                     </form>
 

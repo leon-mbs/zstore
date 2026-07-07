@@ -12,16 +12,18 @@
                 <small>Сторiнка для ручного закриття змiни. На  випадок росходжень з фiскальним сервером (наприклад, внаслiдок  збою) 
                 можна  отримати пiдсумковi  данi (i пiдставити в z-звiт) з ФС  або  синхронiзувати  документи  з тими,  що вiдправленi на ФС
                 щоб  сформцвати  такий  самий  z-звiт </small>
-                <div class="card">
-                    <form zippy="filter" class="form-inline ">
-
-                        <label for="pos">POS термiнал</label>
+                <div class="navbar">
+                    <form zippy="filter"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="pos">POS термiнал</label>
+                       <div class="col-auto  ">
                         <select zippy="pos" class="form-control mr-sm-2">
                             <option value="0">Не обрано</option>
                         </select>
-
+                        </div>
+                        <div class="col-auto  ">
                         <input type="submit" class="  btn btn-outline-success  " value="Оновити">
-
+                      </div></div>
                     </form>
 
                 </div>

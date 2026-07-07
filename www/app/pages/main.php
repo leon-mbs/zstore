@@ -40,7 +40,7 @@ class Main extends Base
 
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-            $br = " and d.branch_id in ({$brids}) ";
+            $br = " and branch_id in ({$brids}) ";
         }
 
 

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Helper as H;
 use App\System;
+use App\Entity\Notify;
 
 /**
  * Класc-сущность   задача  в  очереди  планироващика

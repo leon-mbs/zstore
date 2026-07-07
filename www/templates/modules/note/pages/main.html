@@ -108,24 +108,35 @@
 
                 <div class="col-sm-12">
                   
-                        <div class="card">
-                            <form class="form-inline"  >
+                        <div class="nawbar">
+                            <form    >
 
-                                <div class="form-group">
-                                    <label for="skeyword">Пошук </label>
+                                <div class="row">
+                                
+                                    <label class="col-form-label col-auto" for="skeyword">Пошук </label>
+                                   <div class="col-auto  ">
                                     <input  v-model="searchText"   class="form-control mr-2" >
+                                    </div>
+                                    <div class="col-auto pt-2 ">
                                     <div class="form-check">
                                         <input  v-model="searchTitle"  type="checkbox" class="form-check-input">
                                         <label class="form-check-label mr-2" for="planned">тільки в заголовках</label>
                                     </div>
+                                    </div>
+                                    <div class="col-auto  ">
                                     <select v-model="searchType"  class="form-control mr-2">
                                         <option value="1">Фраза</option>
                                         <option value="2">Комбінація слів</option>
                                     </select>
-
+                                    </div>
+                                    <div class="col-auto  ">
                                     <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i                                        class="fa fa-search"></i></button>                     
+                                    </div>
+                                    <div class="col-auto  pt-2 ">
                                     <a v-on:click.prevent="onSearchFav" title="Знайти обрані" ><i class="fa fa-star" style="color:brown"></i></a>
+                                    
                                 </div>
+                               </div>
                             </form>
                         </div>
                   

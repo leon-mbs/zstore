@@ -9,21 +9,21 @@
                   <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевiрити  з'єднання</a>
   
 
-                <div class="navbar nav justify-content-start">
-                    <form zippy="filter" class="form-inline ">
+                <div class="navbar    ">
+                    <form zippy="filter"  >
+                       <div class="row  ">
 
-
-                        <label for="status">Статус в магазині </label>
-
+                        <label class="col-form-label col-auto" for="status">Статус в магазині </label>
+                         <div class="col-auto  ">
                         <select class="form-control mr-2" zippy="status">
                             <option value="0">Не обрано</option>
                         </select>
-
-
+                        </div>
+                         <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Завантажити">
 
-                      
+                       </div> </div>
                     </form>
                 </div>
 
@@ -54,23 +54,23 @@
 
                     </tr>
 
-                </table>
-                <div class="navbar nav justify-content-start">
-                       <form zippy="filter2" class="form-inline ">
+                </table>                
+                <div class="navbar    ">
+                       <form zippy="filter2"  >
 
-
-                        <label for="paytype"  >Тип оплати</label>
-
+                        <div class="row  ">
+                        <label class="col-form-label col-auto" for="paytype"  >Тип оплати</label>
+                       <div class="col-auto  ">
                         <select class="form-control mr-2" zippy="paytype">
                             
                         </select>
-                     
-
+                      </div>
+                       <div class="col-auto  ">
 
                         <input type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Імпортувати">
-
-
+                      </div>
+                    </div>
                     </form>
 
                 </div>

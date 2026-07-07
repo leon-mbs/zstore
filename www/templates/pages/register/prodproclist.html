@@ -6,12 +6,9 @@
   <body>
         <div class="row">
             <div class="col-12  ">
-
+   
                 <h3>Виробничі процеси</h3>
-
-
-
-            </div>
+              </div>
         </div>
 
         <div class="row" zippy="listpan">
@@ -206,24 +203,31 @@
         <div class="row" zippy="prodspan" >
             <div class="col-12 col-md-8 col-xl-6">
                 <h5>Запланована готова продукція</h5>
-                <div class="card">
-                    <form zippy="addprodform" class="form-inline ">
-                        <label  for="additem">Найменування</label>
-
+                <div class="navbar">
+                    <form zippy="addprodform"  >
+                        <div class="row  ">
+                        
+                        <label class="col-form-label col-auto"  for="additem">Найменування</label>
+                            <div class="col-auto  ">
                         <select   class="form-control mr-2" zippy="additem">
                             <option value="0">Не обрано</option>
 
                         </select>
-                        <label for="addqty">Кіл.</label>
+                          </div>
+                        <label class="col-form-label col-auto" for="addqty">Кіл.</label>
+                           <div class="col-auto  ">
                         <input style="width:60px"  class="form-control qtyprice mr-2" zippy="addqty" pattern="[0-9,\.]+"  />
+                          </div>
                            {{#usesnumber}}
-                        <label for="addsnumber">Серія, партія</label>
-                 
+                        <label class="col-form-label col-auto" for="addsnumber">Серія, партія</label>
+                           <div class="col-auto  ">
                         <input   class="form-control  mr-2" zippy="addsnumber"/>
+                          </div>
                         {{/usesnumber}} 
+                           <div class="col-auto  ">
                         <input type="submit" class="  btn btn-success  " value="+">
-
-
+                          </div>
+                       </div>
                     </form>
                 </div>               
 
@@ -402,16 +406,22 @@
 
                     <h5><b>Виконавці</b></h5>
                   
-             <form zippy="editempsform" class="form-inline">
+             <form zippy="editempsform"  >
+                        
+                        <div class="row  ">
+                           <div class="col-auto  ">
                         <select zippy="editemp" class="form-control mr-2  ">
                             <option value="0">Не обрано</option>
                         </select>
- 
-                        <label   for="editktu">КТУ</label>
+                           </div>
+                        <label  class="col-form-label col-auto"  for="editktu">КТУ</label>
+                          <div class="col-auto  ">
                         <input zippy="editktu" class="form-control qtyprice mr-2 " pattern="[0-9,\.]+" style="width:50px" >
-                       
-
+                          </div>
+                           <div class="col-auto  ">
                         <input zippy="saveemp" type="submit" value="+" class="btn btn-primary">
+                         </div>
+                          </div>
                    </form>                    
                      
                   

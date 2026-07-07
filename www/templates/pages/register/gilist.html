@@ -141,25 +141,44 @@
 
         <div class="row" zippy="statuspan">
             <div class="col-12">
-                <div class="card">
+                <div class="navbar">
                     <div class="card-body">
-                        <div class="card">
-                            <form zippy="statusform" class="form-inline ">
+                        <div class="nawbar">
+                            <form zippy="statusform"  >
+                                <div class="row  ">
+                               
                                 {{#np}}
-                                <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 " title="Створити експрес-накладну">Доставка НП</button>
+                                 <div class="col-auto  ">
+                                  <button zippy="bnp" type="submit" class="  btn btn-success  mr-2 " title="Створити експрес-накладну">Доставка НП</button>
+                                </div>
                                 {{/np}}
-
-                                <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Відправити</button>
-                                <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-1 ">Доставлено</button>
-
-                                &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                 <div class="col-auto  ">
+                                  <button zippy="bsend" type="submit" class="  btn btn-success  mr-2 ">Відправити</button>
+                                </div>
+                                 <div class="col-auto  ">
+                                   <button zippy="bdevivered" type="submit" class="  btn btn-success  mr-1 ">Доставлено</button>
+                                </div>
+                                <div class="col-auto  ">
+                                  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                </div>
+                                 <div class="col-auto  ">
                                 <button zippy="bttn" type="submit" class="  btn btn-success  mr-2 ">Створити ТТН</button>
-                                <button zippy="bgi" type="submit" class="  btn btn-success  mr-2 ">Створити ВН</button>
+                                </div>
+                                 <div class="col-auto  ">
+                                   <button zippy="bgi" type="submit" class="  btn btn-success  mr-2 ">Створити ВН</button>
+                                </div>
+                                 <div class="col-auto  ">
                                 <button zippy="bgar" type="submit" class="  btn btn-success  mr-2 ">Гарантійний талон</button>
+                                </div>
+                                 <div class="col-auto  ">
                                 <button zippy="bret" type="submit" class="  btn btn-success  mr-2 ">Повернення</button>
-                                &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларацiї </span> <i data-label="ship_number"  class="fa fa-info-circle " data-toggle="tooltip" data-placement="top" title="Номер декларацiї служби доставки."></i> 
-                                <input zippy="ship_number" style="width:250px;"  class="form-control mr-sm-2"> <input class="btn btn-outline-info" zippy="bdecl"  type="submit" value="OK">
-
+                                </div>
+                                 <div class="col-auto  ">
+                                    &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларацiї </span> <i data-label="ship_number"  class="fa fa-info-circle " data-toggle="tooltip" data-placement="top" title="Номер декларацiї служби доставки."></i> 
+                                </div>
+                                 <div class="col-auto  ">
+                                   <input zippy="ship_number" style="width:250px;"  class="form-control mr-sm-2"> <input class="btn btn-outline-info" zippy="bdecl"  type="submit" value="OK">
+                               </div></div>
                             </form>
                         </div>
                     </div>

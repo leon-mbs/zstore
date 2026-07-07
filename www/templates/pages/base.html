@@ -95,13 +95,16 @@
                 <ul class="navbar-nav ml-auto">
                     {{#usebranch}}
                     <li class="nav-item">
-                        <form zippy="nbform" class="form-inline ">
-                            Філія
+                        <form zippy="nbform"  >
+                         <div class="row  ">
+                            
+                             <label class="col-form-label col-auto"  >Філія</label>
+                            <div class="col-auto  ">
                             <select zippy="nbbranch" class="form-control ml-1 ">
                                 <option value="0">Всі доступні</option>
                             </select>
-
-
+                            </div>
+                         </div>
                         </form>
                     </li>
                     {{/usebranch}}
@@ -1411,7 +1414,28 @@
                 } )          
         }
              
-
+        function openModal(id ){
+         
+             $('#'+id).modal('show')        
+   
+           
+            
+          //  const m = new bootstrap.Modal('#'+id, {})      
+          //  m.show() 
+        }
+        
+        function closeModal(id ){
+ 
+          $('#'+id).modal('hide')                        
+       
+           
+            
+          //  const m = new bootstrap.Modal('#'+id, {})      
+          //  m.show() 
+        }
+        
+        
+        
         function sendSMSCust(phone,code) {
             
                 callPM('sendSMSCode',[phone,code],null,(data)=> 

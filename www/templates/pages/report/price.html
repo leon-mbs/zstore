@@ -7,72 +7,93 @@
         <div class="row">
             <div class="col-12   ">
                 <h3>Прайс</h3>
-                <div class="card">
-                    <form zippy="filter" class="form-inline">
-                        <div class="form-check   mr-2">
+                <div class="navbar">
+                    <form zippy="filter"  >
+                      <div class="row  ">
+                        <div class="col-auto  pt-2"> 
+                        <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="showqty">
-                            <label class="form-check-label" for="showqty"> Кіл.
-                            </label>
+                            <label class="form-check-label" for="showqty"> Кіл.     </label>
                         </div>
-                        <div class="form-check   mr-2">
+                        </div>
+                         <div class="col-auto  pt-2 ">
+                        <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="showdesc">
                             <label class="form-check-label" for="showdesc"> Опис
                             </label>
                         </div>
+                        </div>
                           {{#useimages}}
-                         <div class="form-check   mr-2">
+                           <div class="col-auto  pt-2 ">
+                         <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="showimage">
                             <label class="form-check-label" for="showimage"> Фото
                             </label>
                         </div>
+                        </div>
                           {{/useimages}}
-                        <label class="    mr-2"><b>Ціни</b></label>
-                        <div class="form-check   mr-2">
-                            <input class="form-check-input" type="checkbox" zippy="price1">
+                        <label class="col-form-label col-auto"  ><b>Ціни</b></label>
+                        <div class="col-auto  pt-2 ">
+                         <div class="form-check    ">
+                           <input class="form-check-input" type="checkbox" zippy="price1">
                             <label class="form-check-label" for="price1">
                                 {{price1name}}
                             </label>
+                          </div>
+                         </div>
+                         <div class="col-auto  pt-2 ">
+                            <div class="form-check   ">
+                                <input class="form-check-input" type="checkbox" zippy="price2">
+                                <label class="form-check-label" for="price2">
+                                    {{price2name}}
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-check   mr-2">
-                            <input class="form-check-input" type="checkbox" zippy="price2">
-                            <label class="form-check-label" for="price2">
-                                {{price2name}}
-                            </label>
+                         <div class="col-auto   pt-2">
+                            <div class="form-check   ">
+                                <input class="form-check-input" type="checkbox" zippy="price3">
+                                <label class="form-check-label" for="price3">
+                                    {{price3name}}
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-check   mr-2">
-                            <input class="form-check-input" type="checkbox" zippy="price3">
-                            <label class="form-check-label" for="price3">
-                                {{price3name}}
-                            </label>
-                        </div>
-                        <div class="form-check   mr-2">
+                         <div class="col-auto  pt-2 ">
+                        <div class="form-check    ">
                             <input class="form-check-input" type="checkbox" zippy="price4">
                             <label class="form-check-label" for="price4">
                                 {{price4name}}
                             </label>
                         </div>
-                        <div class="form-check   mr-2">
+                        </div>
+                         <div class="col-auto  pt-2 ">
+                        <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="price5">
                             <label class="form-check-label" for="price5">
                                 {{price5name}}
                             </label>
                         </div>
+                        </div>
+                         <div class="col-auto  pt-2 ">
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="onstore">
                             <label class="form-check-label mr-2" for="onstore">Тільки в наявності</label>
                         </div>
-                           <label    for="searchcat">категорія</label>
-  
-                                <select class="form-control mr-2" zippy="searchcat">
+                         </div>
+                           <label  class="col-form-label col-auto"   for="searchcat">категорія</label>
+                          <div class="col-auto  ">
+                                <select class="form-control  " zippy="searchcat">
                                     <option value="0">Не вказано</option>
                                 </select>
-                             <label    for="searchbrand">Бренд </label>
-                              <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
-                        
-                        <input class="btn btn-primary  " type="submit" value="ОК">
-
-
+                             </div>    
+                             <label   class="col-form-label col-auto"  for="searchbrand">Бренд </label>
+                             <div class="col-auto  ">
+                               <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                            </div>
+                        <div class="col-auto  ">
+                         <input class="btn btn-primary  " type="submit" value="ОК">
+                       </div>
+                      </div>
                     </form>
                 </div>
 
@@ -81,9 +102,9 @@
                     <div>
                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
                          {{^showimage}}
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/price" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/price" target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
                          {{/showimage}}
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/price" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/price" target="_blank" title="Експорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
 

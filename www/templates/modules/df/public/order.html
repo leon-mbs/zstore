@@ -195,38 +195,43 @@
             <div class="col-12 col-md-8 col-xl-8">
                  
            <div   zippy="witempan"  >  
-                <div class="card">
+                <div class="navbar">
 
-                    <form zippy="wisfilter" class="form-inline">
-
-                        <label for="wissearchkey">пошук</label>
+                    <form zippy="wisfilter"  >
+                       <div class="row  ">
+                        <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
+                        <div class="col-auto  ">
                         <input class="form-control mr-sm-2" type="text" zippy="wissearchkey">
-                        <label for="wissearchcat">категорiя</label>
-
+                         </div>
+                        <label class="col-form-label col-auto" for="wissearchcat">категорiя</label>
+                        <div class="col-auto  ">
                         <select class="form-control mr-sm-2" zippy="wissearchcat">
                             <option value="0">Не задано</option>
                         </select>
-                        <label for="wissearchmanufacturer">Бренд </label>
-                       
+                         </div>
+                        <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
+                        <div class="col-auto  ">
                         <input autocomplete="off" list="wissearchmanlist" class="form-control mr-2" zippy="wissearchmanufacturer"/>
-                        
+                         </div>
                          {{#isds}}
+                         <div class="col-auto  ">
                         <datalist id="wissearchmanlist">
                             {{#manlist}}
                             <option label="{{mitem}}" value="{{mitem}}">  </option>
                                 {{/manlist}}
                         </datalist>
-                        
+                     </div>    
                          
-                          
-                     <div class="form-check  mr-sm-2">
+                   <div class="col-auto  ">       
+                     <div class="form-check  pt-2">
                        <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
                        <input type="checkbox" zippy="wissearchonstore" class="form-check-input  mr-2"  >
-                      </div>                  
+                      </div> 
+                       </div>                 
                       {{/isds}}       
-                          
+                    <div class="col-auto  ">      
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
-
+                        </div>
                     </form>
                 </div>
                 <table class="table table-sm" zippy="witemselt">

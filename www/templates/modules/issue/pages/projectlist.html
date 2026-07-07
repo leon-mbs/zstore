@@ -5,27 +5,29 @@
     </head>
 
     <body>
-
-
     
-   
     {{={| |}=}}   
     
         <div class="row"  id="vapp" >
             <div v-show="this.mode=='list'" class="col-12   ">
                 <h2>Проекти</h2>
-                <div class="card  ">
-                    <form   class="form-inline ">
+                <div class="navbar  ">
+                    <form>    
+                       <div class="row  ">
+                         <div class="col-auto  ">
                         <input  v-model="searchtext" placeholder="Пошук..." class="form-control mr-2" type="text"  >
-
-                        <label for="searchstate">статус </label>
+                         </div>
+                        <label class="col-form-label col-auto" for="searchstate">статус </label>
+                         <div class="col-auto  ">
                         <select v-model="searchstate" class="form-control  mr-2   "  >
                             <option value="0">Відкриті</option>
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option>                            
                         </select>
-                        <label for="searchcust">замовник </label>
+                        </div>
+                        <label class="col-form-label col-auto" for="searchcust">замовник </label>
+                         <div class="col-auto  ">
                         <select v-model="searchcust" class="form-control     "  >
                            <option value="0">Не обрано</option>
                 
@@ -33,9 +35,11 @@
                               {{ option.value }}
                           </option>
                        </select>
-
-                      
+                        </div>
+                       <div class="col-auto  ">
                         <input v-on:click.prevent="onsearch" type="button" class=" ml-2   btn btn-success  " value="ОК">
+                        </div>
+                        
                     </form>
 
                 </div>
@@ -126,26 +130,31 @@
                 &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  До переліку завдань</a>
                 &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> Створити завдання</a>
 
-                <form  class="form-inline ">
-                        <label for="stlist">Статус </label>
+                <form   >
+                      <div class="row  ">
+                        <label class="col-form-label col-auto" for="stlist">Статус </label>
+                         <div class="col-auto  ">
                         <select id="stlist" v-on:change="onchstatus" v-model="currstatus" class="form-control   ml-1  " >
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option>                            
 
                         </select>
-
+                       </div>
+                     </div>
                 </form>
                  <hr>
 
-                <form id="fileaddform" class="form-inline mb-1"  enctype="multipart/form-data">
-                       
-                        <label> Вибрати файл: </label>
-
-                        <input name="pfile" class="form-control mr-2" type="file" >
-
-                        <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Додати">
-
+                <form id="fileaddform"    enctype="multipart/form-data">
+                       <div class="row  "> 
+                        <label class="col-form-label col-auto"> Вибрати файл: </label>
+                         <div class="col-auto  ">
+                          <input name="pfile" class="form-control mr-2" type="file" >
+                        </div>
+                         <div class="col-auto  ">
+                          <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Додати">
+                       </div>
+                      </div>
                     </form>
 
                     <div v-for="f in filelist"  style="float:left">
