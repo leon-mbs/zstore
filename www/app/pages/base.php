@@ -257,13 +257,14 @@ class Base extends \Zippy\Html\WebPage
 
      
         //убирать  боковое  меню
-        $this->_tvars["theme"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
-        if ($user->darkmode == 1) {
-            $this->_tvars["theme"] = $this->_tvars["theme"] . ' ' . 'dark-mode';
-        }
+        $this->_tvars["svh"] = $user->hidesidebar == 1 ? 'sidebar-without-hover' : '';
+      
 
-        $this->_tvars["darkmode"] = $user->darkmode == 1;
+        $this->_tvars["darkmode"] = $user->darkmode == 1 ?"dark":"light";
+        $this->_tvars["darkmodecss"] = $user->darkmode == 1 ?true:false;
+     
 
+    
       
         $this->_tvars["scalescript"] = $user->scalescript  ;
 
@@ -804,7 +805,7 @@ class Base extends \Zippy\Html\WebPage
          $this->pr_itemsform->pr_items->Reload();
     
          
-         $this->addJavaScript(" openModal('modalpritems')  ",true)  ;
+         $this->addJavaScript(" openModal('pr_items_pform')  ",true)  ;
     }
  
     public function pr_itemsOnRow($row) {
@@ -838,7 +839,7 @@ class Base extends \Zippy\Html\WebPage
                 $this->addJavaScript("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
                 $this->pr_items_tag->setText($ret,true);
-                $this->addJavaScript("  openModal('pr_items_pform')  ",true);
+                $this->addJavaScript("   openModal('pr_items_pform') ",true);
             }
             return;
         }

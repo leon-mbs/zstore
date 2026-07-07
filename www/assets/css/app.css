@@ -1,3 +1,73 @@
+ 
+[data-bs-theme="light"] {
+   --bs-body-bg: #f3f4f6;
+}
+[data-bs-theme="light"]  .ctable   {
+   color:#000; 
+   background-color: #fff; ;
+       
+}
+[data-bs-theme="dark"] {
+  --bs-body-bg: #14171c;        /* darker than Bootstrap's default */
+  --bs-body-color: #e9ecef; 
+}
+
+[data-bs-theme="dark"]  a {
+   color: #ccf;
+}
+[data-bs-theme="dark"]  .fa {
+   color: white;
+}
+
+[data-bs-theme="dark"]  .ctable th {
+ 
+    border: 1px solid white !important; ;
+       
+}
+[data-bs-theme="dark"]  .ctable   {
+   color:#fff; 
+    background-color: #454d55; ; ;
+       
+}
+
+
+
+/*
+
+          a {
+               color: #ccf;
+            }
+            .dark-mode .ctable th {
+                padding: 4px;
+                text-align: center;
+                border: 1px solid white !important; ;
+            }
+            .dark-mode .fa {
+               color: white;
+            }
+            .dark-mode .fas {
+               color: white;
+            }
+
+            
+            .dark-mode .form-control-plaintext {
+               color: #ccf;
+            }
+
+            .dark-mode input[type=text] {
+               color: #FFF;
+               background-color: rgb(52,58,64);
+            }
+
+            .dark-mode  pre  {
+               color:#fff; 
+             
+                 
+            }
+
+*/
+
+
 body {
     font-family: system-ui, "Segoe UI","Roboto" ; 
      
@@ -13,23 +83,12 @@ body {
       
 .logo-lg {
     font-family: "Georgia";
-    color: #00c0ef;
+   
     font-style: italic;
 }
 
-.ctable  {
-   color:#000; 
-   background-color: #fff;
-   font-family:"Segoe UI","Arial";
-}
-
-.dark-mode .ctable  {
-   color:#fff; 
-    background-color: #454d55;
-   font-family: system-ui,"Segoe UI","Arial";
-     
-}
-
+ 
+ 
 .ctable td {
     padding: 4px;
     
@@ -40,35 +99,7 @@ body {
     text-align: center;
      
 }
-.dark-mode .ctable th {
-    padding: 4px;
-    text-align: center;
-    border: 1px solid white !important; ;
-}
-.dark-mode .fa {
-   color: white;
-}
-.dark-mode .fas {
-   color: white;
-}
 
-.dark-mode a {
-   color: #ccf;
-}
-.dark-mode .form-control-plaintext {
-   color: #ccf;
-}
-
-.dark-mode input[type=text] {
-   color: #FFF;
-   background-color: rgb(52,58,64);
-}
-
-.dark-mode  pre  {
-   color:#fff; 
- 
-     
-}
 
 .icon20 {
     height: 24px; margin-left:4px;
@@ -144,9 +175,7 @@ body {
 .text-smaller{
    font-size:smaller ;
 }  
-table {
-  font-family:"Segoe UI","Arial"
-}  
+  
 .toast-header {
   
   background-color: #fff;
@@ -161,6 +190,7 @@ input[type=time] {
 
 a {
     cursor:pointer;
+    text-decoration: none;
 }
 
 small.compact {
