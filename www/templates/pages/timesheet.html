@@ -47,14 +47,14 @@
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#tcal">Календар</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#tcal">Календар</a>
                       </li>
                       
                        <li class="nav-item">
-                        <a class="nav-link " data-toggle="tab" href="#ttable"> Таблиця </a>
+                        <a class="nav-link " data-bs-toggle="tab" href="#ttable"> Таблиця </a>
                       </li>
                        <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#tstat">Статистика  </a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#tstat">Статистика  </a>
                       </li>
                   </ul>
                 <div class="tab-content"  >   
@@ -88,11 +88,11 @@
                     </div>
                    <div class="tab-pane    "  id="tstat" > 
                       <table class="table table-sm" style="width:40%">
-                            <tr><th></th><th  class="text-right">Години</th><th class="text-right">Днi</th></tr>
+                            <tr><th></th><th  class="text-end">Години</th><th class="text-end">Днi</th></tr>
                             <tr v-for="st in stat" >
                                 <td  >  {{st.name}}</td>   
-                                <td class="text-right"><span :class="st.color">  {{st.cnt}} </span></td>
-                                <td class="text-right"><span :class="st.color">  {{st.days}} </span></td>
+                                <td class="text-end"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-end"><span :class="st.color">  {{st.days}} </span></td>
 
                             </tr>
                         </table>

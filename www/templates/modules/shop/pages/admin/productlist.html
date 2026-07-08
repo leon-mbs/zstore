@@ -52,8 +52,8 @@
                                 <th>Назва</th>
                                 <th  >Код</th>
 
-                                <th class="text-right">Цiна</th>
-                                <th class="text-right">Кiл.</th>
+                                <th class="text-end">Цiна</th>
+                                <th class="text-end">Кiл.</th>
 
 
 
@@ -71,8 +71,8 @@
                                 <td zippy="lcode"></td>
 
 
-                                <td class="text-right"><span zippy="lprice"></span></td>
-                                <td class="text-right"><span zippy="lcnt"></span></td>
+                                <td class="text-end"><span zippy="lprice"></span></td>
+                                <td class="text-end"><span zippy="lcnt"></span></td>
                                    {{#useimages}}
                                 <td>&nbsp;<a zippy="imedit" title="Редагувати фото"><i class="fa fa-images"></i></a></td>
                                    {{/useimages}}
@@ -158,7 +158,7 @@
         </div>
         <script>
             $(function () {
-                $('[data-toggle="tooltip"]').tooltip();
+                $('[data-bs-toggle="tooltip"]').tooltip();
 
                 $('#edescdet').summernote({
                     height: 400,

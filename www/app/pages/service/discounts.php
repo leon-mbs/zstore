@@ -439,7 +439,7 @@ class Discounts extends \App\Pages\Base
            $sum = $sum+ $b->bonus;   
            $table = $table . "<tr><td>".  H::fd($b->paydate)."</td>";   
            $table = $table . "<td>".  $b->document_number ."</td>";   
-           $table = $table . "<td class=\"text-right\">".  $b->bonus ."</td></tr>";   
+           $table = $table . "<td class=\"text-end\">".  $b->bonus ."</td></tr>";   
         }
         
         $row->add(new  Label("lbbonus", $sum));

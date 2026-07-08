@@ -216,11 +216,11 @@
                                 {{/useexcise}}
 
 
-                                <th  style="width:40px" class="text-right">Кіл.</th>
-                                <th class="text-right"><i class="fa fa-gift"></i>,%</th>
-                                <th class="text-right">Ціна</th>
+                                <th  style="width:40px" class="text-end">Кіл.</th>
+                                <th class="text-end"><i class="fa fa-gift"></i>,%</th>
+                                <th class="text-end">Ціна</th>
 
-                                <th style=" width:75px" class="text-right">Сума</th>
+                                <th style=" width:75px" class="text-end">Сума</th>
                                 <th  ></th>
                                  
                                 <th  ></th>
@@ -240,11 +240,11 @@
                                 <td > <a zippy="editex" href="javascript:void(0)"></a> </td>
                                {{/useexcise}}           
 
-                                <td zippy="quantity" class="text-right  "> </td>
-                                <td zippy="disc" class="text-right"></td>
-                                <td zippy="price" class="text-right"></td>
+                                <td zippy="quantity" class="text-end  "> </td>
+                                <td zippy="disc" class="text-end"></td>
+                                <td zippy="price" class="text-end"></td>
 
-                                <td zippy="amount" class="text-right"></td>
+                                <td zippy="amount" class="text-end"></td>
                                 <td> 
                                 {{^simplemode}}
                                  <a zippy="edit" ><i class="fa fa-edit"></i></a> &nbsp;
@@ -269,20 +269,20 @@
                                 {{/useexcise}}
 
 
-                                <td zippy="serquantity" class="text-right"></td>
-                                <td zippy="serdisc" class="text-right"></td>
-                                <td zippy="serprice" class="text-right"></td>
+                                <td zippy="serquantity" class="text-end"></td>
+                                <td zippy="serdisc" class="text-end"></td>
+                                <td zippy="serprice" class="text-end"></td>
 
-                                <td zippy="seramount" class="text-right"></td>
+                                <td zippy="seramount" class="text-end"></td>
                                 <td><a zippy="seredit"><i class="fa fa-edit"></i></a></td>
                                 <td><a zippy="serdelete"><i class="fa fa-trash"></i></a></td>
 
                             <tr style="font-weight: bolder;" >
 
 
-                                <td colspan="{{colspan}}" class="text-right">Всього:</td>
+                                <td colspan="{{colspan}}" class="text-end">Всього:</td>
 
-                                <td zippy="total" class="text-right"></td>
+                                <td zippy="total" class="text-end"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -291,27 +291,27 @@
                            <tr style="font-weight: bolder;" >
 
 
-                                <td colspan="{{colspan}}" class="text-right">Знижка:</td>
+                                <td colspan="{{colspan}}" class="text-end">Знижка:</td>
 
-                                <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="totaldisc"></td>
+                                <td class="text-end" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="totaldisc"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                            <tr style="font-weight: bolder;" >
 
 
-                                <td colspan="{{colspan}}" class="text-right">Списати  бонуси:</td>
+                                <td colspan="{{colspan}}" class="text-end">Списати  бонуси:</td>
 
-                                <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="bonus"></td>
+                                <td class="text-end" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="bonus"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
                        <tr style="font-weight: bolder;" >
 
 
-                                <td colspan="{{colspan}}" class="text-right">Передплата:</td>
+                                <td colspan="{{colspan}}" class="text-end">Передплата:</td>
 
-                                <td class="text-right" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="prepaid"></td>
+                                <td class="text-end" ><input style="width:75px" autocomplete="off" class="form-control" type="text" zippy="prepaid"></td>
                                 <td></td>
                                 <td></td>
                             </tr>
@@ -501,7 +501,7 @@
                             &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-info">
                             {{#fiscal}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
-                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
                                               
@@ -680,7 +680,7 @@
                         <th>Автор</th>
                        
 
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                     
 
                         <th ></th>
@@ -698,7 +698,7 @@
                         <td zippy="rowauthor"></td>
                            </td>
                      
-                        <td class="text-right" zippy="rowamount"> </td>
+                        <td class="text-end" zippy="rowamount"> </td>
 
                         <td zippy="rownotes"></td>
                         <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>

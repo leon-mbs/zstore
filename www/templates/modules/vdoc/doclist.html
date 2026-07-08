@@ -59,7 +59,7 @@
                         <th style="width:30px"> <input v-model="selall" v-on:change="onSelAll"  name="chlist"  class="seldel" type="checkbox"></th>
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                         <th>Контрагент</th>
 
                     </tr>
@@ -67,7 +67,7 @@
                         <td  ><input :id="d.id" :value="d" v-model="selectedDocs"     class="seldel" type="checkbox"></td>
                         <td  >{{d.number}}</td>
                         <td  >{{d.date}}</td>
-                        <td  class="text-right">{{d.amount}}</td>
+                        <td  class="text-end">{{d.amount}}</td>
                         <td  >{{d.cname}}</td>
                     </tr>
                 </table>

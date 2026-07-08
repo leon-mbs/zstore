@@ -154,7 +154,7 @@
 
                         </div> 
                         <div    class="col-12 mb-2">
-                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">Закрити меню</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
+                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">Закрити меню</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
                         </div>           
                     </div >        
                     <div   zippy="prodpan" class="row  mt-4">
@@ -179,7 +179,7 @@
 
                         </div>   
                           <div    class="col-12 mt-2">
-                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">Закрити меню</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
+                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">Закрити меню</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
                      </div>       
                     </div > 
                     <div   zippy="varprodpan" class="row  mt-4">
@@ -193,7 +193,7 @@
                          <table class="table table-sm">
                               <tr zippy="varprodlist">
                                   <td class="  pt-2" zippy="prodvarname"></td>
-                                  <td class="text-right pt-2" zippy="prodvarprice"></td>
+                                  <td class="text-end pt-2" zippy="prodvarprice"></td>
                                   <td><a zippy="prodvaradd" class="btn btn-sm btn-success pl-2">Додати</a></td>
                               </tr>
                          </table>       
@@ -253,9 +253,9 @@
                                     <th>Код</th>
                                     <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
                                     <th class="text-center ">Кiл.</th>
-                                    <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
-                                    <th class="text-right">Цiна</th>
-                                    <th class="text-right">Сума</th>
+                                    <th class="text-end"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
+                                    <th class="text-end">Цiна</th>
+                                    <th class="text-end">Сума</th>
                                     <th >Стан </th>
                                     
                                   
@@ -287,15 +287,15 @@
                                                                               
                                 <td > {{#useexcise}}  <a zippy="editex" href="javascript:void(0)"></a>  {{/useexcise}} </td>
                                
-                                    <td class="text-right text-nowrap">
+                                    <td class="text-end text-nowrap">
                                          <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
                                         <span zippy="qty"></span>
                                         <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
                                         <i style="cursor:pointer" zippy="qtyedit" class="fa fa-edit"></i>
                                     </td>
-                                    <td zippy="disc" class="text-right"></td>
-                                    <td zippy="price" class="text-right"></td>
-                                    <td zippy="amount" class="text-right"></td>
+                                    <td zippy="disc" class="text-end"></td>
+                                    <td zippy="price" class="text-end"></td>
+                                    <td zippy="amount" class="text-end"></td>
                                     <td zippy="state"  ></td>
                                     
                                   
@@ -307,10 +307,10 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                          
-                                    <td    colspan="6"  class="text-right text-bold">Всього:</td>
+                                    <td    colspan="6"  class="text-end text-bold">Всього:</td>
                                      
                                      
-                                    <td zippy="totalamount" class="text-right text-bold"></td>
+                                    <td zippy="totalamount" class="text-end text-bold"></td>
                                     <td ></td>
                                     <td ></td>
                                 </tr>    
@@ -320,7 +320,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                       
-                                    <td colspan="6" class="text-right   ">Знижка:</td>
+                                    <td colspan="6" class="text-end   ">Знижка:</td>
                                     
                                     <td  class="d-flex justify-content-end   ">
                                       <input style="width:100px" zippy="totaldisc" class="form-control qtyprice form-control-sm">
@@ -333,7 +333,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                       
-                                    <td colspan="6" class="text-right   ">Списати  бонуси:</td>
+                                    <td colspan="6" class="text-end   ">Списати  бонуси:</td>
                                    
                                 
                                     <td  class="d-flex justify-content-end  ">
@@ -662,7 +662,7 @@
                             
                            {{#fiscal}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
-                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
                                               
@@ -735,9 +735,9 @@
                     <tr>
 
                         <th>Номер</th>
-                        <th class="text-right">Час</th>
+                        <th class="text-end">Час</th>
                         {{#tables}}
-                        <th class="text-right">Стiл</th>
+                        <th class="text-end">Стiл</th>
                         {{/tables}}
 
                         <th ></th>
@@ -747,7 +747,7 @@
                                           
                         <th >Позиції</th>
 
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                         <th ></th>
                         <th ></th>
                         <th ></th>
@@ -763,8 +763,8 @@
                        
 
                         <td ><a zippy="docnumber"></a></td>
-                        <td class="text-right" zippy="doctime"></td>
-                        {{#tables}} <td zippy="tablenumber" class="text-right"></td>  {{/tables}}
+                        <td class="text-end" zippy="doctime"></td>
+                        {{#tables}} <td zippy="tablenumber" class="text-end"></td>  {{/tables}}
                         <td ><i zippy="delivery" title="Доставка" class="fa fa-bicycle"></i></td>
 
                         <td class="text-nowrap  " zippy="state">  </td>
@@ -772,7 +772,7 @@
                       
                         <td  zippy="rtlist"></td>
 
-                        <td class="text-right" zippy="docamount"></td>
+                        <td class="text-end" zippy="docamount"></td>
   
 
                         <td zippy="docnotes"></td>
@@ -937,21 +937,21 @@
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
-                             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
                                    title="Можливiсть створювати доставку з АРМ касира (по дзвiнку клiєнта)"></i>    
                                
                             </div>
                             <div class="form-check">
                                 <input zippy="foodpack" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodpack">Вибiр можливостi упаковки з собою.</label>
-                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
                                    title="Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні"></i> 
                                 
                             </div>
                              <div class="form-check">
                                 <input zippy="diffbp" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="diffbp">Окремi замовлення для кухнi i бару</label>
-                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
                                    title="Якщо кухгя i бар  вимагають окремi  чеки"></i> 
                                 
                             </div>
@@ -1079,7 +1079,7 @@
                        <tr zippy="vardetlist">
                            <td zippy="vbdetname"></td> 
                            <td zippy="vbdetcode"></td> 
-                           <td class="text-right" zippy="vbdetprice" > </td> 
+                           <td class="text-end" zippy="vbdetprice" > </td> 
                        
                            <td  ><a zippy="vbdetdel"><i class="fa fa-trash"></a></td> 
                        </tr>

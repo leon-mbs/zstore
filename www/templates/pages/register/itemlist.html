@@ -132,18 +132,18 @@
                         <th>Од.</th>
                         <th> <i title="Комірка" class="fa fa-box"></i> </th>     
 
-                        <th class="text-right  ">Кіл.</th>
-  <th class="text-right  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
-  <th class="text-right  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
+                        <th class="text-end  ">Кіл.</th>
+  <th class="text-end  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
+  <th class="text-end  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
                         
    {{^noshowpartion}}                         
-                        <th class="text-right  ">Обл. ціна</th>
+                        <th class="text-end  ">Обл. ціна</th>
    {{/noshowpartion}}         
    
    {{^nohowprodprice}}       
-                        <th class="text-right  ">Прод. ціна</th>
+                        <th class="text-end  ">Прод. ціна</th>
    {{/nohowprodprice}}                               
-                        <th class="text-right  ">На суму</th>
+                        <th class="text-end  ">На суму</th>
 
                                            
 
@@ -156,7 +156,7 @@
                     <tr zippy="itemlist">
                         {{#useimages}}
                         <td>
-                            <a zippy="imagelistitem" data-type="image" data-toggle="lightbox" data-gallery="thumb"> <img
+                            <a zippy="imagelistitem" data-type="image" data-bs-toggle="lightbox" data-gallery="thumb"> <img
                                     style="float:left; width:64px"></a>
 
                         </td>
@@ -173,18 +173,18 @@
                         <td zippy="msr"></td>
                         <td zippy="cell"></td>
 
-                        <td zippy="iqty" class="text-right  "></td>
-                        <td zippy="iqtyr" class="text-right  "></td>
-                        <td zippy="iqtyb" class="text-right  "></td>
+                        <td zippy="iqty" class="text-end  "></td>
+                        <td zippy="iqtyr" class="text-end  "></td>
+                        <td zippy="iqtyb" class="text-end  "></td>
                         
                            {{^noshowpartion}} 
-                        <td zippy="inprice" class="text-right  "></td>
+                        <td zippy="inprice" class="text-end  "></td>
                            {{/noshowpartion}} 
          
                    {{^nohowprodprice}}       
-                        <td zippy="iprodprice" class="text-right  "></td>
+                        <td zippy="iprodprice" class="text-end  "></td>
                    {{/nohowprodprice}}                               
-                        <td zippy="iamount" class="text-right  "></td>
+                        <td zippy="iamount" class="text-end  "></td>
 
                             
 
@@ -220,14 +220,14 @@
                         <th>Спiвробiтник</th>
                          {{/storeemp}}
                         {{#usesnumber}}
-                        <th class="text-right text-nowrap">Серія</th>
+                        <th class="text-end text-nowrap">Серія</th>
 
-                        <th class="text-right text-nowrap">Придатний до</th>
+                        <th class="text-end text-nowrap">Придатний до</th>
                         {{/usesnumber}}
-                        <th class="text-right text-nowrap">Обл. ціна</th>
+                        <th class="text-end text-nowrap">Обл. ціна</th>
             
-                        <th class="text-right text-nowrap">Кіл.</th>
-                        <th class="text-right text-nowrap">На суму</th>
+                        <th class="text-end text-nowrap">Кіл.</th>
+                        <th class="text-end text-nowrap">На суму</th>
                   
                  
 
@@ -240,15 +240,15 @@
                          <td zippy="emp_name"></td>
                          {{/storeemp}}                        
                         {{#usesnumber}}
-                        <td zippy="snumber" class="text-right  "></td>
-                        <td zippy="sdate" class="text-right  "></td>
+                        <td zippy="snumber" class="text-end  "></td>
+                        <td zippy="sdate" class="text-end  "></td>
 
                         {{/usesnumber}}
-                        <td zippy="partion" class="text-right  "></td>
+                        <td zippy="partion" class="text-end  "></td>
                 
 
-                        <td zippy="qty" class="text-right  "></td>
-                        <td zippy="amount" class="text-right  "></td>
+                        <td zippy="qty" class="text-end  "></td>
+                        <td zippy="amount" class="text-end  "></td>
 
 
                          <td  ><a zippy="createmove" >Перемiстити партiю</a></td>
@@ -269,7 +269,7 @@
                      <b>Вiдпускнi цiни</b> <br>
                     <table class="ctable">
                       {{#i_plist}}
-                      <tr><td>{{i_pricename}}</td><td class="text-right">{{i_price}}</td></tr>
+                      <tr><td>{{i_pricename}}</td><td class="text-end">{{i_price}}</td></tr>
                       {{/i_plist}}
                       
                     </table> 
@@ -317,7 +317,7 @@
 
             $(document).ready(function () {
 
-                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+                $(document).on('click', '[data-bs-toggle="lightbox"]', function (event) {
                     event.preventDefault();
                     $(this).ekkoLightbox({'alwaysShowClose': true});
                 });

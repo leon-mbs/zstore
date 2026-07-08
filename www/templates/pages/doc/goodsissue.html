@@ -125,11 +125,11 @@
 
 
 
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right"><i class="fa fa-gift"></i>,%</th>
-                            <th class="text-right">Ціна</th>
+                            <th class="text-end">Кіл.</th>
+                            <th class="text-end"><i class="fa fa-gift"></i>,%</th>
+                            <th class="text-end">Ціна</th>
                           
-                            <th class="text-right">Сума</th>
+                            <th class="text-end">Сума</th>
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
@@ -141,12 +141,12 @@
   
 
 
-                            <td zippy="quantity" class="text-right"></td>
-                            <td zippy="disc" class="text-right"></td>
-                            <td zippy="price" class="text-right"></td>
+                            <td zippy="quantity" class="text-end"></td>
+                            <td zippy="disc" class="text-end"></td>
+                            <td zippy="price" class="text-end"></td>
                             
 
-                            <td zippy="amount" class="text-right"></td>
+                            <td zippy="amount" class="text-end"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp; <a zippy="delete"><i
                                         class="fa fa-trash"></i></a></td>
 
@@ -163,12 +163,12 @@
 
 
                            
-                            <td class="text-right"></td>
-                            <td class="text-right"></td>
-                            <td class="text-right">На суму:</td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td class="text-end">На суму:</td>
 
 
-                            <td zippy="total" class="text-right"></td>
+                            <td zippy="total" class="text-end"></td>
                             <td></td>
                         </tr>
                          {{#usends}} 
@@ -184,13 +184,13 @@
                       
 
 
-                            <td class="text-right"></td>
+                            <td class="text-end"></td>
                            
-                            <td class="text-right"></td>
-                            <td class="text-right">В т.ч. ПДВ:</td>
+                            <td class="text-end"></td>
+                            <td class="text-end">В т.ч. ПДВ:</td>
 
 
-                            <td zippy="totalnds" class="text-right"></td>
+                            <td zippy="totalnds" class="text-end"></td>
                             <td></td>
                         </tr>
                         {{/usends}} 
@@ -210,13 +210,13 @@
 
 
                            
-                            <td class="text-right"></td>
-                            <td class="text-right"></td>
-                            <td class="text-right">Знижка:</td>
+                            <td class="text-end"></td>
+                            <td class="text-end"></td>
+                            <td class="text-end">Знижка:</td>
 
 
-                            <td zippy="totaldisc" class="text-right"></td>
-                            <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaltotaldisc"><i
+                            <td zippy="totaldisc" class="text-end"></td>
+                            <td><a data-label="totaldisc" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modaltotaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                         {{/usends}} 
@@ -225,27 +225,27 @@
  
                         <tr style="font-weight: bolder;">
 
-                            <td colspan="8" class="text-right"><span data-label="payamount">До сплати:</span></td>
+                            <td colspan="8" class="text-end"><span data-label="payamount">До сплати:</span></td>
 
 
-                            <td zippy="payamount" class="text-right"></td>
+                            <td zippy="payamount" class="text-end"></td>
                             <td></td>
                         </tr>
                         {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan="8" class="text-right">Передплата:</td>
-                            <td zippy="prepaid" class="text-right">  {{prepaid}}</td>
+                            <td data-label="prepaid" colspan="8" class="text-end">Передплата:</td>
+                            <td zippy="prepaid" class="text-end">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}                        
                         <tr style="font-weight: bolder;">
 
-                            <td colspan="8" class="text-right"><span data-label="payed">Внесено оплату:</span></td>
+                            <td colspan="8" class="text-end"><span data-label="payed">Внесено оплату:</span></td>
 
 
-                            <td zippy="payed" class="text-right"></td>
-                            <td><a data-label="payed" href="javascript:void(0);" data-toggle="modal"
-                                   data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
+                            <td zippy="payed" class="text-end"></td>
+                            <td><a data-label="payed" href="javascript:void(0);" data-bs-toggle="modal"
+                                   data-bs-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
                         </tr>
 
                     </table>

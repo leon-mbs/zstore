@@ -42,11 +42,11 @@
          
           <div class="col-12 col-md-4 col-xl-3   "> 
              <table class="table table-sm">
-                <tr><td>Нових вiдвiдувачiв</td><td class="text-right">{{vnewv}}</td></tr>
-                <tr><td>Всього замовлень</td><td class="text-right">{{vorders}}</td></tr>
-                <tr><td>Виконаних замовлень</td><td class="text-right">{{vdoneorders}}</td></tr>
-                <tr><td>Позицiй, доданих до кошика</td><td class="text-right">{{vcart}}</td></tr>
-                <tr><td>Проданих позицiй</td><td class="text-right">{{vbayed}}</td></tr>
+                <tr><td>Нових вiдвiдувачiв</td><td class="text-end">{{vnewv}}</td></tr>
+                <tr><td>Всього замовлень</td><td class="text-end">{{vorders}}</td></tr>
+                <tr><td>Виконаних замовлень</td><td class="text-end">{{vdoneorders}}</td></tr>
+                <tr><td>Позицiй, доданих до кошика</td><td class="text-end">{{vcart}}</td></tr>
+                <tr><td>Проданих позицiй</td><td class="text-end">{{vbayed}}</td></tr>
              </table>
            </div> 
        <div class="w-100">   </div> 
@@ -56,9 +56,9 @@
                 
                   <h5>Топ проданих товарiв </h5>             
                   <table class="table table-sm">
-                    <tr> <th>Товар</th><th class="text-right">На суму</th>  </tr>
+                    <tr> <th>Товар</th><th class="text-end">На суму</th>  </tr>
                     {{#topitems}}
-                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    <tr> <td>{{n}}</td><td class="text-end">{{v}}</td>  </tr>                       
                     {{/topitems}}
                   </table>  
             </div>      
@@ -67,9 +67,9 @@
                 
                   <h5>Топ  проданих категорiй</h5>             
                   <table class="table table-sm">
-                     <tr> <th>Категорiя</th><th class="text-right">На суму</th>  </tr>
+                     <tr> <th>Категорiя</th><th class="text-end">На суму</th>  </tr>
                     {{#topcats}}
-                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    <tr> <td>{{n}}</td><td class="text-end">{{v}}</td>  </tr>                       
                     {{/topcats}}
                   </table>  
                   
@@ -79,9 +79,9 @@
                 
                   <h5>Топ переглядiв</h5>             
                   <table class="table table-sm">
-                     <tr> <th>Товар</th><th class="text-right">Кiл.</th>  </tr>
+                     <tr> <th>Товар</th><th class="text-end">Кiл.</th>  </tr>
                     {{#topview}}
-                    <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
+                    <tr> <td>{{n}}</td><td class="text-end">{{v}}</td>  </tr>                       
                     {{/topview}}
                   </table>  
                   

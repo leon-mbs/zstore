@@ -56,7 +56,7 @@
                      </td>
                        <td     > <a v-on:click.prevent="onTopic(t)">  {{t.title}}</a> </td>
                         
-                        <td   class="text-right  "><a v-on:click.prevent="onFav(t)">
+                        <td   class="text-end  "><a v-on:click.prevent="onFav(t)">
                    
                        <i v-show="t.fav==true && t.islink != true"   class="mt-2 fas fa-star fa-xs"></i>
                        <i v-show="t.fav==false && t.islink != true"  class="mt-2 far fa-star fa-xs"></i>

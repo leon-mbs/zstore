@@ -23,15 +23,15 @@
     <tr>
 
         <td>{{emp_name}}</td>
-        <td class="text-right">{{tm}}</td>
+        <td class="text-end">{{tm}}</td>
 
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Всього:</td>
+        <td class="text-end">Всього:</td>
 
-        <td class="text-right">{{total}}</td>
+        <td class="text-end">{{total}}</td>
 
     </tr>
 

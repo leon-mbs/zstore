@@ -11,8 +11,8 @@
                 {{#usefilter}}
                 <ol class="breadcrumb" >
                     <li>
-                        <a zippy="filterbtn" class="btn btn-success"    href="javascript:void(0);" data-toggle="modal"
-                           data-target="#modalfilter"><i class="fa fa-filter"></i> Фiльтр</a>
+                        <a zippy="filterbtn" class="btn btn-success"    href="javascript:void(0);" data-bs-toggle="modal"
+                           data-bs-target="#modalfilter"><i class="fa fa-filter"></i> Фiльтр</a>
                     </li>
                 </ol>
                 {{/usefilter}}  
@@ -56,7 +56,7 @@
                                 <div class="ribbon bg-warning">Акцiя</div>
                             </div>
                              {{^nouseimages}}
-                            <a zippy="simage" data-toggle="lightbox" data-gallery="simage">
+                            <a zippy="simage" data-bs-toggle="lightbox" data-gallery="simage">
                                 <img class="card-img-top"/>
                             </a>
                              {{/nouseimages}}
@@ -118,7 +118,7 @@
                     <div class="modal-body">
                         <form zippy="sfilter"  >
 
-                            <a href="#manflist" data-toggle="collapse" class="filtertiem "><b> Бренд </b> <i style="font-size:smaller" class="fa fa-angle-down"></i> </a>
+                            <a href="#manflist" data-bs-toggle="collapse" class="filtertiem "><b> Бренд </b> <i style="font-size:smaller" class="fa fa-angle-down"></i> </a>
                             <div id="manflist" class="collapse ">
                                 <div zippy="mlist"></div>
                             </div>

@@ -52,12 +52,12 @@
                        <tr zippy="fromlist">
                           <td zippy="fromname"></td>  
                           <td zippy="fromcode"></td>  
-                          <td zippy="fromqty"  class="text-right"></td>  
-                          <td zippy="fromprice" class="text-right"></td>
+                          <td zippy="fromqty"  class="text-end"></td>  
+                          <td zippy="fromprice" class="text-end"></td>
                           <td style="width:30px;" ><a zippy="fromdel"><i class="fa fa-trash"></i></a></td>
                        </tr>
                        <tr >
-                           <th colspan="3" class="text-right">На суму:</th>  <th class="text-right" zippy="fromtotal"></th>
+                           <th colspan="3" class="text-end">На суму:</th>  <th class="text-end" zippy="fromtotal"></th>
                            <td></td>
                        </tr>
                    </table>
@@ -79,14 +79,14 @@
                        <tr zippy="tolist">
                            <td zippy="toname"></td>  
                            <td zippy="tocode"></td>  
-                           <td zippy="toqty"  class="text-right"></td>  
+                           <td zippy="toqty"  class="text-end"></td>  
                            <td   ><input onblur="calcTotal()" class="form-control   qtyprice" pattern="[0-9,\.]+" zippy="toprice" style="width:100px;"   ></td>
                                                
                             <td  style="width:30px;" ><a zippy="todel"><i class="fa fa-trash"></i></a></td>
                        </tr>
                        <tr >
                        <td colspan="2"  ><a  zippy="autoprice" >Взяти  цiни з останнiх закупок</a></td> 
-                           <th   class="text-right">На суму:</th>  <th class="text-right" zippy="tototal"></th>
+                           <th   class="text-end">На суму:</th>  <th class="text-end" zippy="tototal"></th>
                             <td></td>
                        </tr>
                    </table>

@@ -7,7 +7,7 @@
 
         <form zippy="docform">
             <h3> Інвентаризація
-                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
+                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-bs-toggle="popover"
                    data-placement="bottom" data-content="Документ дозволяє ввести поточну кількість на складі і внести корективи
                    в залежності від різниці в ту чи іншу сторону. Фактичну кількість може  
                    бачити адміністратор при перегляді документа"></i>
@@ -102,7 +102,7 @@
                             <th><a zippy="sortcode">Артикул</a></th>
 
                            <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
-                           <th width="40"  class="text-right" >Кiл. </th> 
+                           <th width="40"  class="text-end" >Кiл. </th> 
 
                             <th width="40" class="text-center">Факт. кіл.</th>
 
@@ -117,7 +117,7 @@
 
                               <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
                         
-                             <td   zippy="quantity"  class="text-right" ></td> 
+                             <td   zippy="quantity"  class="text-end" ></td> 
 
                             <td  >
                                 <input class="form-control form-control-sm qtyprice"   pattern="[0-9,\.]+" style="width:100px;" zippy="qfact">

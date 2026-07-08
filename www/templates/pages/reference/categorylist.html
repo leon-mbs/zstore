@@ -17,7 +17,7 @@
                     <div zippy="categorytable">
                         <h3>Категорії (групи) товарів
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
-                               data-toggle="popover"
+                               data-bs-toggle="popover"
                                data-placement="bottom" data-content="Категорії призначені для групування товарів в Прайсі, а також для
                                визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно. Iєрархія категрій вминається  в довіднику Номенклатура"></i>
 
@@ -33,11 +33,11 @@
                                 <th > Батькiвська</th>
                                 {{/usecattree}}
                                 <th colspan="2"  style="width:20px" >  
-                                &nbsp;&nbsp;<i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                &nbsp;&nbsp;<i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
                                    title=" Порядок виводу в меню та онлайн каталозi "></i>
 
                                  </th>
-                                <th class="text-right"> ТМЦ </th>
+                                <th class="text-end"> ТМЦ </th>
 
                                 <th></th>
                                 <th></th>
@@ -46,7 +46,7 @@
                             <tr zippy="categorylist">
                                 {{#useimages}}
                                 <td>
-                                    <a zippy="imagelistitem" data-type="image" data-toggle="lightbox"  > <img
+                                    <a zippy="imagelistitem" data-type="image" data-bs-toggle="lightbox"  > <img
                                             style="float:left; width:64px"></a>
 
                                 </td>
@@ -61,7 +61,7 @@
                                 <td > 
                                   <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
                                  </td> 
-                                <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
+                                <td class="text-end"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
                                 <td> <a zippy="prices" title="Змiнити цiни">-<i class="fa fa-coins"></i>+ </a>   </td>
                                 <td> <a zippy="cfields" title="Кастомнi поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
                                 <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
@@ -192,7 +192,7 @@
                      <tr zippy="cplist">
                        <td zippy="cplname"></td>
                        <td zippy="cplcode" class="text-nowrap"></td>
-                       <td zippy="cplold" class="text-right"></td>
+                       <td zippy="cplold" class="text-end"></td>
                        <td>    <input  pattern="[0-9\.]+" style="width: 100px"   class="form-control" zippy="cplnew"/></td>    
                        </tr>
 
@@ -239,7 +239,7 @@
         <script>
 $(document).ready(function () {
 
-    $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+    $(document).on('click', '[data-bs-toggle="lightbox"]', function (event) {
         event.preventDefault();
         $(this).ekkoLightbox({'alwaysShowClose': true});
     });

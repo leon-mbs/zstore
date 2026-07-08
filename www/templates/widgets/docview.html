@@ -195,8 +195,8 @@
                                 <tr v-for="item   in docdata.paylist">
                                     <td class="text-nowrap " >{{item.paydate}}</td>
                                     <td >{{item.paymf}}</td>
-                                    <td class="text-right " >&nbsp;{{item.payamountp}}</td>
-                                    <td class="text-right " >&nbsp;{{item.payamountm}}</td>
+                                    <td class="text-end " >&nbsp;{{item.payamountp}}</td>
+                                    <td class="text-end " >&nbsp;{{item.payamountm}}</td>
                                 
 
                                 </tr>
@@ -208,23 +208,23 @@
                                 <tr>
                                     <th>ТМЦ</th>
                                     <th>Код</th>
-                                    <th class="text-right">Кiл.</th>
+                                    <th class="text-end">Кiл.</th>
                                     
-                                    <th v-show="docdata.showpartion" class="text-right">Обл. цiна</th>
+                                    <th v-show="docdata.showpartion" class="text-end">Обл. цiна</th>
                                   
-                                    <th class="text-right">Цiна</th>
-                                    <th class="text-right">Сума</th>
+                                    <th class="text-end">Цiна</th>
+                                    <th class="text-end">Сума</th>
 
                                 </tr>
                                 <tr v-for="item   in docdata.entrylist" >
                                     <td  >{{item.itname}}</td>
                                     <td  >{{item.itcode}}</td>
-                                    <td class="text-right "  >{{item.itqty}}</td>
+                                    <td class="text-end "  >{{item.itqty}}</td>
                                     
-                                    <td v-show="docdata.showpartion" class="text-right "  >{{item.itpartion}}</td>
+                                    <td v-show="docdata.showpartion" class="text-end "  >{{item.itpartion}}</td>
                                    
-                                    <td class="text-right "  >{{item.itprice}}</td>
-                                    <td class="text-right "  >{{item.itamount}}</td>
+                                    <td class="text-end "  >{{item.itprice}}</td>
+                                    <td class="text-end "  >{{item.itamount}}</td>
 
 
                                 </tr>
@@ -237,13 +237,13 @@
                                     <th>Дт</th>
                                     <th>Кт</th>
                         
-                                    <th class="text-right">Сума</th>
+                                    <th class="text-end">Сума</th>
 
                                 </tr>
                                 <tr v-for="acc   in docdata.acclist" >
                                     <td  >{{acc.dt}}</td>
                                     <td  >{{acc.ct}}</td>
-                                    <td class="text-right "  >{{acc.am}}</td>
+                                    <td class="text-end "  >{{acc.am}}</td>
                                     
 
 

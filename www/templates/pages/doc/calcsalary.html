@@ -113,7 +113,7 @@
                  <th>
                  П I Б
                  </th>
-                 <th class="text-right" v-for=" v in stlist ">
+                 <th class="text-end" v-for=" v in stlist ">
                     {{v.salname}}
                  </th>
                  <th>
@@ -124,16 +124,16 @@
                  <td >
                    {{emp.emp_name}}  
                  </td>
-                 <td class="text-right" v-for=" v in stlist  ">
+                 <td class="text-end" v-for=" v in stlist  ">
                     <input v-if="v.salcode == '_c'+opt.codebaseincom" v-on:blur="calcemp(emp)"  v-model="emp._baseval" class="form-control" style="display:inline !important;width:85px" pattern="[0-9\.]+" >
                     <!--
-                    <i v-if="v.salcode == '_c'+opt.codebaseincom" class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"                                   :title="emp.info"></i>
+                    <i v-if="v.salcode == '_c'+opt.codebaseincom" class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"                                   :title="emp.info"></i>
                     -->
                     <span v-if="v.salcode != '_c'+opt.codebaseincom">{{emp[v.salcode]}} </span>                     
 
                     
                  </td>
-                 <td class="text-right"><a   v-on:click.prevent="del(emp )"><i class="fa fa-trash"></i></a></td>
+                 <td class="text-end"><a   v-on:click.prevent="del(emp )"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 
                 

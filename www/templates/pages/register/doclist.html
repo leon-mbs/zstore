@@ -9,7 +9,7 @@
                 
                 <h3>Журнал документів
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
-                       data-toggle="popover"
+                       data-bs-toggle="popover"
                        data-placement="bottom" data-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
                        Більш детальне управління статусами проводиться у відповідних спеціалізованих журналах."></i>
                 </h3>
@@ -129,7 +129,7 @@
                         <th  ><a zippy="sortnum">Номер</a></th>
                         <th  ><a zippy="sortdate">Дата</a></th>
                         <th ><a zippy="sortcust">Контрагент</a></th>
-                        <th class="text-right   "><a zippy="sortamount">Сума</a></th>
+                        <th class="text-end   "><a zippy="sortamount">Сума</a></th>
                         <th  > Статус </th>
                         {{#usebranch}}
                         <th>Філія</th>
@@ -157,7 +157,7 @@
                             <td class="text-nowrap  "><a zippy="number"></a></td>
                             <td   class="text-nowrap" zippy="date"></td>
                             <td zippy="cust"></td>
-                            <td zippy="amount" class="text-right  "></td>
+                            <td zippy="amount" class="text-end  "></td>
 
                             <td style="white-space:  nowrap" zippy="state"></td>
                             {{#usebranch}}
@@ -165,7 +165,7 @@
                             {{/usebranch}}
 
                             <td><a zippy="parentdoc"></a></td>
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-bs-toggle="tooltip" data-placement="left"></i></td>
                             <td><i zippy="hasscan" class="far fa-image" title="Прикрiплено скан оригiналу"></i></td>
 
                             <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланований"></i></td>
@@ -186,7 +186,7 @@
                             <td>
                                 <div class="btn-group" zippy="basedon">
                                     <button title="Створити на підставі" type="button"
-                                            class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-toggle="dropdown">
+                                            class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-bs-toggle="dropdown">
                                         Створити <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu" role="menu" zippy="basedlist">

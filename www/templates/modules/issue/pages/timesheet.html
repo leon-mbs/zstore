@@ -53,11 +53,11 @@
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#ttable">Облiк часу</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#ttable">Облiк часу</a>
                       </li>
                       
                        <li class="nav-item">
-                        <a class="nav-link " data-toggle="tab" href="#tstat"> Статистика </a>
+                        <a class="nav-link " data-bs-toggle="tab" href="#tstat"> Статистика </a>
                       </li>
                       
                   </ul>
@@ -115,11 +115,11 @@
                         <tr v-for="s in stat"  >
                             <td >{{s.username}}</td>
                             <td >{{s.project_name}}</td>
-                            <td style="width:100px;"  class="text-right">{{s.amount}}</td>
+                            <td style="width:100px;"  class="text-end">{{s.amount}}</td>
                         </tr>
                         <tr>
-                            <td  colspan="2" class="text-right text-bold">Всього:</td>
-                            <td  class="text-right  text-bold">{{total}}</td>
+                            <td  colspan="2" class="text-end text-bold">Всього:</td>
+                            <td  class="text-end  text-bold">{{total}}</td>
                         </tr>
                     </table>
 

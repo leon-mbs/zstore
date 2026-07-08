@@ -50,7 +50,7 @@
                         <th>Номер</th>
                         <th>Дата</th>
                         <th>Замовник</th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                         <th>Статус</th>
                         <th>Вiдповiдальний</th>
 
@@ -69,7 +69,7 @@
                         <td class="text-nowrap" ><a zippy="number"></a></td>
                         <td class="text-nowrap" zippy="date"></td>
                         <td  class="text-nowrap"><a href="return false; void(0)" zippy="customer"></a></td>
-                        <td zippy="amount" class="text-right"></td>
+                        <td zippy="amount" class="text-end"></td>
 
 
                         <td class="text-nowrap" zippy="state"></td>
@@ -116,12 +116,12 @@
                      <tr>
                      <th>Товар</th>
                      <th>Артикул</th>
-                     <th class="text-right">Замовлено</th>
+                     <th class="text-end">Замовлено</th>
                      <th>На складi</th>
                      <th>У постачальникiв</th>
                       {{#isciprod}}
                   
-                     <th class="text-right">Гот. до вир.</th>
+                     <th class="text-end">Гот. до вир.</th>
                      {{/isciprod}}
                     
                   
@@ -131,13 +131,13 @@
                      <tr>
                         <td>{{itemname}}</td>
                         <td>{{itemcode}}</td>
-                        <td class="text-right">{{itemqty}}</td>
+                        <td class="text-end">{{itemqty}}</td>
                         <td>     
                           <table style="font-size:smaller"  class="ctable">
                               {{#citemsstore}}
                               <tr>
                                  <td>{{itstore}}</td>
-                                 <td class="text-right">{{itqty}}</td>
+                                 <td class="text-end">{{itqty}}</td>
                               </tr>
                              {{/citemsstore}} 
                           </table>
@@ -148,8 +148,8 @@
                               <tr>
                                  <td>{{itcust}}</td>
                                  <td>{{itcustcode}}</td>
-                                 <td class="text-right">{{itcustprice}}</td>
-                                 <td class="text-right">{{itcustqty}}</td>
+                                 <td class="text-end">{{itcustprice}}</td>
+                                 <td class="text-end">{{itcustqty}}</td>
                                  <td >{{itcustupdated}}</td>
                               
                               </tr>
@@ -158,7 +158,7 @@
                         </td>
                       {{#isciprod}}
                         
-                       <td class="text-right">
+                       <td class="text-end">
                            {{prqty}}
                        
                         </td>
@@ -344,7 +344,7 @@
                       <td zippy="editlistname"></td>
                       <td zippy="editlistcode"></td>
                       <td zippy="editlistbarcode"></td>
-                      <td class="text-right" zippy="editlistqty"></td>
+                      <td class="text-end" zippy="editlistqty"></td>
                    </tr> 
                  </table>         
                  <div class="form-group">
@@ -377,8 +377,8 @@
                      
                       <td zippy="splitlistcode"></td>
                       
-                      <td class="text-right" zippy="splitlistqty"></td>
-                      <td class="text-right" ><input required="om" pattern="[0-9\.]+" class="form-control form-control-sm ml-2" style="width:75px" zippy="splitlistnewqty"></td>
+                      <td class="text-end" zippy="splitlistqty"></td>
+                      <td class="text-end" ><input required="om" pattern="[0-9\.]+" class="form-control form-control-sm ml-2" style="width:75px" zippy="splitlistnewqty"></td>
                    
                    </tr> 
                  </table>         
@@ -428,7 +428,7 @@
                                   <div v-for="msg in msglist" class="col-12">
                                       <div v-show="msg.isseller ==false" class="row">
                                          <div class="col-6"><b>Замовник</b></div>
-                                         <div class="col-4 text-right"><small>{{msg.msgdate}}</small></div>
+                                         <div class="col-4 text-end"><small>{{msg.msgdate}}</small></div>
                                          <div class="col-2"> </div>
                                        </div>
                                        <div v-show="msg.isseller ==false" class="row">
@@ -439,9 +439,9 @@
                                  
                                         <div v-show="msg.isseller ==true" class="row">
                                             <div class="col-2"> </div>
-                                            <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
+                                            <div class="col-4 text-start"><small>{{msg.msgdate}}</small></div>
                                             
-                                            <div class="col-6 text-right"><b>Продавець</b></div>
+                                            <div class="col-6 text-end"><b>Продавець</b></div>
                                         </div>
                                         
                                         <div v-show="msg.isseller ==true" class="row">
@@ -451,7 +451,7 @@
                                        </div>                            
                                        
                                           <div  v-show="msg.isseller ==true" class="row">
-                                            <div class="col-12 text-right">  
+                                            <div class="col-12 text-end">  
                                               <small>   
                                              <i v-show="msg.checked==true"   class="fa fa-check-double "></i>
                                              <i v-show="msg.checked==false"   class="fa fa-check "></i>

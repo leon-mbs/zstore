@@ -16,7 +16,7 @@
 
             <div class="col-12 col-sm-8 col-lg-6 col-xl-4">
                 <div class="card mb-2">
-                    <a data-type="image" zippy="product_image" data-toggle="lightbox" data-gallery="product" class="card-link">
+                    <a data-type="image" zippy="product_image" data-bs-toggle="lightbox" data-gallery="product" class="card-link">
                         <div class="ribbon-wrap">
                             <div class="ribbon bg-warning" zippy="action">Акцiя</div>
                         </div>
@@ -27,7 +27,7 @@
                 {{#islistimage}}
                 <div>
                     <div zippy="imagelist">
-                        <a zippy="product_thumb" data-type="image" data-toggle="lightbox" data-gallery="thumb"> 
+                        <a zippy="product_thumb" data-type="image" data-bs-toggle="lightbox" data-gallery="thumb"> 
                             <img  class="m-2"   style="float:left; height:64px"></a>
                     </div>
                 </div>
@@ -72,9 +72,9 @@
                            </tr>
                            <tr zippy="varlist">
                             
-                             <td class="text-left   "> <div class="p-1 rounded  bg-secondary  ">  <a  class="footer"  zippy="vattrvalue"></a> </div> </td>
-                             <td class="text-right"> <span zippy="vprice"></span> <span   zippy="vactionprice"></span> </td>
-                             <td class="text-right" zippy="vcurr">    </td>
+                             <td class="text-start   "> <div class="p-1 rounded  bg-secondary  ">  <a  class="footer"  zippy="vattrvalue"></a> </div> </td>
+                             <td class="text-end"> <span zippy="vprice"></span> <span   zippy="vactionprice"></span> </td>
+                             <td class="text-end" zippy="vcurr">    </td>
                              
                            </tr>
                          </table>
@@ -139,7 +139,7 @@
                 <table class="table table-sm   table-stripped  ">
                     <tr zippy="attributelist">
                         <td><span zippy="attrname"></span></td>
-                        <td class="text-right"><span zippy="attrvalue"></span></td>
+                        <td class="text-end"><span zippy="attrvalue"></span></td>
                     </tr>
                 </table>
             </div>
@@ -213,7 +213,7 @@
         <script>
             $(document).ready(function () {
 
-                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+                $(document).on('click', '[data-bs-toggle="lightbox"]', function (event) {
                     event.preventDefault();
                     $(this).ekkoLightbox({'alwaysShowClose': true});
                 });
