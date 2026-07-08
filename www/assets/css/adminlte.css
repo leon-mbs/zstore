@@ -167,10 +167,10 @@
   --bs-light-border-subtle: #495057;
   --bs-dark-border-subtle: #343a40;
   --bs-heading-color: inherit;
-  --bs-link-color: rgb(109.8, 168, 253.8);
-  --bs-link-hover-color: rgb(138.84, 185.4, 254.04);
-  --bs-link-color-rgb: 110, 168, 254;
-  --bs-link-hover-color-rgb: 139, 185, 254;
+  --bs-link-color: #ccf;
+  --bs-link-hover-color: #fff;
+  --bs-link-color-rgb: 200, 200,255 ;
+  --bs-link-hover-color-rgb: 255, 255, 255;
   --bs-code-color: rgb(230.4, 132.6, 181.2);
   --bs-highlight-color: #dee2e6;
   --bs-highlight-bg: rgb(102, 77.2, 2.8);

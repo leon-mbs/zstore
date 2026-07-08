@@ -1,35 +1,4 @@
  
-[data-bs-theme="light"] {
-   --bs-body-bg: #f3f4f6;
-}
-[data-bs-theme="light"]  .ctable   {
-   color:#000; 
-   background-color: #fff; ;
-       
-}
-[data-bs-theme="dark"] {
-  --bs-body-bg: #14171c;        /* darker than Bootstrap's default */
-  --bs-body-color: #e9ecef; 
-}
-
-[data-bs-theme="dark"]  a {
-   color: #ccf;
-}
-[data-bs-theme="dark"]  .fa {
-   color: white;
-}
-
-[data-bs-theme="dark"]  .ctable th {
- 
-    border: 1px solid white !important; ;
-       
-}
-[data-bs-theme="dark"]  .ctable   {
-   color:#fff; 
-    background-color: #454d55; ; ;
-       
-}
-
 
 
 /*
