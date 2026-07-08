@@ -17,10 +17,10 @@
   
 }
 
-.logo-text:hover {
+.logo-text{
   text-decoration: none !important;
 }
-
+ 
 a.container-fluid-img   {
    font-size: 24px; 
   
@@ -48,14 +48,11 @@ a.container-fluid-img   {
   color: #000;
 }
   
- .header {
-   border-bottom: 1px solid #ced4da;
-   background-color: #eee;    
- }
- .footer {
+ 
+ .shop-footer {
   text-align: center;
-  background-color: #333;
-  color: #fff;
+ 
+   
   
   flex: 0 0 auto;
   bottom: 0;
