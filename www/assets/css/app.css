@@ -167,6 +167,8 @@ small.compact {
    display:block ;
 }
 
+ 
+
 @media print {
             @page {
               margin: 0!important;
@@ -175,4 +177,5 @@ small.compact {
               margin-top: 0mm !important;
             }
 
-
+}
+  

@@ -42,7 +42,7 @@
         <td>{{item.notes}}</td> 
         <td>
            <i v-show="item.techcard != ''"  class="fa fa-book  popinfo" style="cursor:pointer;font-size:16px;" data-container="body" data-bs-toggle="popover"
-                  data-placement="bottom" v-bind:data-content="item.techcard" ></i>          
+                  data-bs-placement="bottom" v-bind:data-bs-content="item.techcard" ></i>          
         
         </td> 
         <td><a  v-show="item.foodstate == 1"  v-on:click="onInprocess(item.document_id,item.rowid, index) " class="btn btn-info">На виготовлення</a></td> 

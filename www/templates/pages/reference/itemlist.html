@@ -13,7 +13,7 @@
                 <h3>Довідник номенклатури
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
-                        data-placement="bottom" data-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
+                        data-bs-placement="bottom" data-bs-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
                        У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
                 </h3>
 
@@ -224,7 +224,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editshortname">Скорочена назва  
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Наприклад для цінників.  Довжина визначена в загальних налаштуваннях"></i>
                                 </label>
                                 <div class="col-7">
@@ -243,7 +243,7 @@
 
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editprice1">Ціни (націнки, %)
-                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Типи цін задаються в налаштуваннях. Для націнок вказати '%'
                                         після цифри, наприклад, 20%. Націнка вираховується від облікової ціни"></i>
                                 </label>
@@ -260,7 +260,7 @@
 
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcode">Код товару (артикул)
-                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Код товару має бути унiкальним.
                                         Якщо використовується код виробника, слiд додати бренд до коду, наприклад, k123_назвабренду"></i>
                                 </label>                                
@@ -315,7 +315,7 @@
 
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcostprice">Собiвартiсть (облiкова цiна)
-                                   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="  Для виробництва має приоритет перед комплектами"></i>
                                 </label>  
                                 <div class="col-7">
@@ -357,7 +357,7 @@
                               {{#useprod}}   
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editzarp">Розцiнки (за замовчанням) 
-                                   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Нарахування оплати за одиницю при відрядній оплаті"></i>
                                 </label>  
                                 <div class="col-7">
@@ -381,19 +381,19 @@
                             <div class="form-check">
                                 <input zippy="editnoshop" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoshop">Не показувати в онлайн торгiвлi  {{#usefood}} або кафе {{/usefood}}  </label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Не показувати в онлайн каталозi, меню кафе та  IM  "></i>                                
                             </div>
                              <div class="form-check">
                                 <input zippy="editnoprint" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoprint">Не друкувати етикетки   </label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="При массовому  друцi етикеток  товар  буде  проiгноровано  "></i>                                
                             </div>
                             <div class="form-check">
                                 <input zippy="editautooutcome" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editautooutcome">Автоматичне списання комплекту</label> 
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Списання складових частин у виробництво при оприбуткуванні готової продукції.
                                    Підходить для короткого циклу виробництва, наприклад, в громадському харчуванні. Списуватиме тiльки  перший рiвень - комплект в  комплектi слiд списувати вручну"></i>
 
@@ -401,7 +401,7 @@
                             <div class="form-check">
                                 <input zippy="editautoincome" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editautoincome">Автоматичне оприходування при продажі</label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Оприбуткування готової продукції на склад перед продажем (списанням зі складу).
                                    Підходить для позаказного виробництва без необхідності оприбуткувати окремим документом"></i>
 
@@ -411,7 +411,7 @@
                             <div class="form-check">
                                 <input zippy="editisweight" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editisweight">Ваговий товар</label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Для  друку стікерів на попередньо росфасований товар. Прискануванні  гтрихкоду в  АРМ касира 
                                    товар  буде  додано з вказаною ціною і  вагою "></i>
                             </div>
@@ -426,7 +426,7 @@
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                                  <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editminqty">Мін. кількість
-                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Якщо задано, то при зменшенні кількості на складі менше вказаного,
                                         товар з'явиться у відповідному віджеті на головній сторінці"></i>
                                 </label>                                 
@@ -517,7 +517,7 @@
                          
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editlost">Вiдходи, % 
-                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Втрати при автоматичному списаннi у виробництво при оприходуваннi комплектiв. Наприклад  очистки  з картоплi у громадському харчуваннi"></i>
                                 </label>                                 
                                 <div class="col-7">
@@ -528,7 +528,7 @@
                             {{#useimages}}
                             <div class="form-group row">
                                 <label class="col-5 col-form-label">Зображення
-                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Зображення має бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M"></i>
                                 </label>   
 
@@ -545,7 +545,7 @@
                             </div>
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editimageurl"> URL зображення
-                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Посилання наприклад на зовнішнє зображення. Якщо каталог локальний можна вказати відносну адресу. При прямому посиланні не превіряється право доступу"></i>
                                                                </label>
                                 <div class="col-7">
@@ -556,7 +556,7 @@
                             {{/useimages}}
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editurl">URL для QR коду
-                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Посилання  на  товар  в  iнтернет магазинi або на  сайт  виробника"></i>
                                 </label>                                   
                                 <div class="col-7">
@@ -765,39 +765,39 @@
                              <div class="form-check">
                                 <input zippy="useimages" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="useimages">Зображення в номенклатурі </label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="   Можливість додавання зображень в довідник товарів"></i>
                             </div> 
                              <div class="form-check">
                                 <input zippy="usecattree" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="usecattree">Ієрархiя категорiй ТМЦ </label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title=" Можливість вибудовувати  ієрархію категорій. Має сенс, якщо передбачається використання в онлайн каталозі "></i>
                             </div>                                                       
                              <div class="form-check">
                                 <input zippy="nocheckarticle" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="nocheckarticle">Не перевіряти унікальність артикулів</label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Використовується, наприклад, в обліку автозапчастин, де ідентифікація товару йде по артикулу виробника й імені виробника.
                                     Не слід вмикати без необхідності - невірно буде працювати підбір зі сканером штрих коду. "></i>
                             </div> 
                              <div class="form-check">
                                 <input zippy="allowchange" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="allowchange">Дозволяти міняти використований артикул</label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Дозволяти міняти артикули ТМЦ що вже  використані в  проведених документах "></i>
                             </div> 
                              <div class="form-check ">
                                 <input zippy="autoarticle" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="autoarticle"> Автоматично створювати                                    артикули</label>
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Автоматична генерація номерів артикулів для товарів"></i>
                             </div> 
                             {{#usebranch}}
                              <div class="form-check ">
                                 <input zippy="branchprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="branchprice"> Прив'язувати ціни   до філій
-                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-placement="top"
+                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="При збереженні  ТМЦ відпускні  ціни будуть збережені окреемо для вибраної (вверху) філії"></i>
                             </div> 
                                {{/usebranch}}
@@ -968,8 +968,8 @@
                        console.log(data.data)   
                        sendPSlabel(  JSON.stringify(data.data) )  
                     }
-                    $('#pscale').modal('hide') 
-         
+                    
+                    closeModal('pscale')
                 } )
             }            
          
