@@ -427,8 +427,8 @@
             
             onAddFile:function(t){    
                 
-               $("#fileedit").modal('show') 
-                
+               
+               showModal('fileedit')     
             },
             onSaveFile:function(t){    
                 
@@ -442,8 +442,8 @@
                       this.onTopic(this.selectedTopic)  
                   });               
                   el.reset();
-                  $("#fileedit").modal('hide') 
-                     
+                  
+                  closeModal('fileedit')       
                 
             },
                 
@@ -477,8 +477,8 @@
                   this.editTitle = "";
                   this.editTags = "";
             
- 
-                  $('#topicedit').modal('show');
+                  showModal('topicedit') 
+                  
                   $('#editdetail').summernote("code","")
                   this.topicTags=[]
       
@@ -493,7 +493,9 @@
                   this.isPublic = this.selectedTopic.ispublic  ;
                   this.editDetail = this.selectedTopic.detail;
                   this.editTags = this.topicTags.join();
-                  $('#topicedit').modal('show');
+                  
+                  showModal('topicedit')
+                  
                   $('#editdetail').summernote("code",this.topicData)
                      
                
@@ -525,8 +527,8 @@
 //                   this.selectedSearchId = ret.id                   
                    this.selectedTopic = null
                    this.updateTopics(this.selectedNode.id)            
-         
-                   $('#topicedit').modal('hide');
+                   closeModal('topicedit')
+                   
           
                }  )
                     
@@ -544,7 +546,8 @@
                       this.allUsers = data.allUsers
                       this.accUsers = data.accUsers  
        
-                      $("#usersaccess").modal('show')   
+                     
+                      showModal('usersaccess') 
                    })   
 
                   
@@ -571,8 +574,8 @@
             } ,
         
             onSaveUsers:function(){
-                  $("#usersaccess").modal('hide')   
-                 
+                    
+                   closeModal('usersaccess') 
                    callPageMethod('saveUsers',[this.selectedTopic.topic_id],JSON.stringify( this.accUsers),(data)=> 
                    {    
                     
@@ -584,7 +587,8 @@
                   this.publicNode = false;
                   this.newNode = true;
                   this.nameNode = "";
-                  $('#nodeedit').modal('show');  
+                  
+                  showModal('nodeedit') 
             }   ,
             
   
@@ -607,7 +611,8 @@
                   this.publicNode = this.selectedNode.ispublic==1;
                   this.newNode = false;
                   this.nameNode = this.selectedNode.text;
-                  $('#nodeedit').modal('show');
+                  
+                  showModal('nodeedit')
             
             }   ,
             onCutTopic:function(){
@@ -677,7 +682,8 @@
                   
                         return;
                     }
-                    $('#nodeedit').modal('hide');
+                    
+                    closeModal('nodeedit') 
                     this.selectedNode=null
                     this.selectedTopic=null
                     var  ex = [];

@@ -1182,7 +1182,7 @@
                             </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#pr_items_tag').printThis();$('#pr_items_pform').modal('hide')"
+                                                      onclick="$('#pr_items_tag').printThis();   closeModal('pr_items_pform') "
                                                       class="btn btn-success  ">Друк</a></td>
                             </tr>
                         </table>
@@ -1276,8 +1276,8 @@
             
             function sendSendMsg( ){
                 
-               
-                $('#modalsendmsg').modal('hide') 
+               closeModal('modalsendmsg')
+                
                    
                 callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
@@ -1454,8 +1454,8 @@
         function itemInfo(id){
                 callPM('getItemInfo',[id],null,(data)=> 
                 {
+                    openModal('modalitinfo') 
                     
-                    $('#modalitinfo').modal('show')  
                     $('#mitinfo').html(data)  
                  
                   

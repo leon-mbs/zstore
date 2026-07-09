@@ -74,8 +74,9 @@
                
              onitem:function (item_id){
       
-               $("#modalcatitemlist").modal('hide')
-    
+               
+             closeModal('modalcatitemlist') 
+             
                _cb(item_id) 
             }
           
@@ -129,7 +130,8 @@
       function onOpenCatItemList(_f){
         _cb = _f    // каддбек  при выборе  итема
           
-        $("#modalcatitemlist").modal('show')
+      
+        openModal('modalcatitemlist') 
         
         vcatitemlist.open() 
 

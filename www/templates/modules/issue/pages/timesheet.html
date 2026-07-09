@@ -300,8 +300,8 @@
                   this.editdate = this.today;
 
 
-
-                  $('#editmodal').modal('show')   
+                  openModal('editmodal')
+                 
 
                } ,    
                save:function(i){
@@ -320,7 +320,9 @@
                   {
                          if(data=="") {
                             this.loaddata() ;                               
-                            $('#editmodal').modal('hide')   
+                             
+                            closeModal('editmodal')
+                            
                          } else {
                              toastr.error(data,'',{timeOut:5000})
                          }

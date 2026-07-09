@@ -519,7 +519,7 @@
                              {{^freg}}
                            <input   zippy="print" type="button" value="Друк чeка" class="btn  btn-primary">
                               {{/freg}}         
-                          &nbsp;&nbsp;  <button zippy="qrpaybtn" title="Оплата по QR коду" onclick=" $('#modalqr').modal('show')  " class="btn btn-success ml-2"><i class="fa fa-qrcode"></i></button>
+                          &nbsp;&nbsp;  <button zippy="qrpaybtn" title="Оплата по QR коду" onclick="   openModal('modalqr') " class="btn btn-success ml-2"><i class="fa fa-qrcode"></i></button>
                    
                            
                         
@@ -968,7 +968,8 @@
               $("#akitemid").val(item_id)   
               $("#aklist").text(stamps)   
               
-              $("#modalak").modal('show')   
+              
+              openModal('modalak')  
             }            
             
             

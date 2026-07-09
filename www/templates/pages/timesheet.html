@@ -258,8 +258,8 @@ var calendar
                   this.editto = tm.to;
                   this.editempid = tm.to;
                   
-                   
-                  $('#editmodal').modal('show')   
+                  openModal('editmodal')   
+                 
           
                } ,    
                add:function(date){
@@ -270,8 +270,8 @@ var calendar
                   this.editfrom = this.start;
                   this.editto = this.end;
                   this.editbreak = this.break;
-                  $('#editmodal').modal('show')   
-
+                 
+                  openModal('editmodal') 
                } ,    
                ontype:function(){
                 
@@ -310,10 +310,10 @@ var calendar
                   {
                           
                             this.loaddata() ;                               
-                            $('#editmodal').modal('hide')   
+                            
                           
-                         
-                      
+                            closeModal('editmodal')  
+                           
 
                   });        
                    

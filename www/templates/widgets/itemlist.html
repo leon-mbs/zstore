@@ -93,8 +93,8 @@
                 this.searchcat =  0
                 this.searchbrand =  ""
 
-    
-               $("#modalitemlist").modal('hide')
+              closeModal('modalitemlist')  
+           
     
                _cb(item_id) 
             }
@@ -174,7 +174,8 @@
       function onOpenItemList(_f){
         _cb = _f    // колбек  при выборе  итема
           
-        $("#modalitemlist").modal('show')
+     
+        openModal('modalitemlist')    
         
         vitemlist.refresh()
        

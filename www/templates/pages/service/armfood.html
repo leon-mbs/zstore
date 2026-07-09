@@ -876,7 +876,7 @@
                             </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#rtag').printThis();$('#prform').modal('hide')"
+                                                      onclick="$('#rtag').printThis();  closeModal('prform')  "
                                                       class="btn btn-success  ">Друк</a></td>
                             </tr>
                         </table>
@@ -1188,7 +1188,8 @@
           function qtyedit(id,qty){
              $('#editqtyq').val(qty)
              $('#editqtyi').val(id)
-             $('#modalqty').modal('show')
+             
+             openModal('modalqty')  
           } 
                 
           function check_btocheck(ele) {
@@ -1255,7 +1256,8 @@
               $("#akitemid").val(item_id)   
               $("#aklist").text(stamps)   
               
-              $("#modalak").modal('show')   
+             
+              showModal('modalak')  
           }  
        
           function check_vbdel() {
@@ -1270,7 +1272,8 @@
             
    
           function openTransform()  {
-              $("#modaltran").modal('show')   
+             
+              showModal('modaltran')    
           }    
                                    
         </script>
