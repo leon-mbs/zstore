@@ -32,9 +32,9 @@
 
                         <label class="col-form-label col-auto" v-show="isadmin==true" >Спiвробiтник</label>
                         <div class="col-auto  ">
-                        <select2     v-model="empid" :options="emps"   >
-
-                        </select2>
+                          <select class="form-control me-2"  v-model="empid" >
+                              <option v-for="emp in emps"  :value="emp.key">{{emp.value}}</option>
+                          </select>
                          </div>
                           <div class="col-auto  ">
                         <input v-on:click.prevent="onFilter"  type="button" class="ms-2  btn btn-success  " value="ОК">
@@ -111,18 +111,25 @@
                     <h4 v-show="edited>0">Редагування</h4>
                     <h4 v-show="edited==0">Новий запис</h4>
                     
-                    <div    class="form-group">
-                    
+                    <div    class="form-group row">
+                    <div class="col-auto mt-2">
                      <label  >Спiвробiтник</label>
-                        <select2     v-model="editempid" :options="emps"   >
-
-                       </select2>
+                        </div>
+                       <div class="col-auto">
+                          <select class="form-control "  v-model="editempid" >
+                              <option v-for="emp in emps"  :value="emp.key">{{emp.value}}</option>
+                          </select>
+                    </div>
                     </div>
 
                     
-                    <div class="form-group">
-                        <label for="editdate">Дата</label>
-                        <input v-model="editdate"  required="on"  class="form-control"  type="date" />
+                    <div class="form-group row">
+                         <div class="col-auto  mt-2">
+                           <label for="editdate">Дата</label>
+                         </div>
+                         <div class="col-auto">
+                           <input v-model="editdate"  required="on"  class="form-control"  type="date" />
+                         </div>
                     </div>
                     <div class="form-group row">
                          
@@ -263,7 +270,7 @@ var calendar
           
                } ,    
                add:function(date){
-                  console.log(date)
+                  
                   this.edited = 0;
                   this.edittype = 1;
                   this.editdate = date;
@@ -356,7 +363,7 @@ var calendar
               
          }  ,       
             components: {   
-               'select2': httpVueLoader('/assets/js/vue/select2.vue')
+            //   'select2': httpVueLoader('/assets/js/vue/select2.vue')
                      
                }            
         })  

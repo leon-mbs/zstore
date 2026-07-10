@@ -257,7 +257,7 @@ class Base extends \Zippy\Html\WebPage
 
      
         //убирать  боковое  меню
-        $this->_tvars["svh"] = $user->hidesidebar == 1 ? 'sidebar-without-hover' : '';
+      //  $this->_tvars["svh"] = $user->hidesidebar == 1 ? 'sidebar-without-hover' : '';
       
 
         $this->_tvars["darkmode"] = $user->darkmode == 1 ?"dark":"light";

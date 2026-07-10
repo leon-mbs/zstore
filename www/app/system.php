@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "8.2.4";
-    public const PREV_VERSION = "8.2.3";
+    public const CURR_VERSION = "8.2.5";
+    public const PREV_VERSION = "8.2.4";
     public const REQUIRED_DB  = "8.2.0";
    
 

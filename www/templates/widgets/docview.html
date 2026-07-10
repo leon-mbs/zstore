@@ -49,7 +49,7 @@
     
       
        
-        <div  class="docprewiev  mt-2"  id="preview" v-html="docdata.html" >  
+        <div  class="preview  mt-2"  id="preview" v-html="docdata.html" >  
         </div>
         
      
@@ -58,7 +58,7 @@
         <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
        <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print me-1"></i> </a>
             
-       <div  class="docprewiev mt-2"  id="previewpos"   v-html="docdata.htmlpos" >
+       <div  class="preview mt-2"  id="previewpos"   v-html="docdata.htmlpos" >
         </div>  
   </div>
   
@@ -424,7 +424,7 @@
                       this.loadfiles()  
              
                       $('a[href="#tprint"]').tab('show') 
-                    //  $('#preview').attr('class','docprewiev') 
+                    //  $('#preview').attr('class','preview') 
                 
                   
                   });

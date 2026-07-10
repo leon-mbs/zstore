@@ -81,17 +81,23 @@
                                 <label for="phone">Телефон</label>
                                 <input   class="form-control" zippy="phone">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="viber">Viber</label>
                                 <input   class="form-control" zippy="viber">
                             </div>   
-                   
+                           <div class="form-check">
+                                <input zippy="darkmode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="darkmode">Нiчна тема </label>
+
+                            </div>
+                           {{#hideblock}}
                            <div class="form-check">
                                 <input zippy="hidesidebar" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
 
                             </div>
-
+                           {{/hideblock}}
+                           
                            {{#usebot}}
                              <div class="form-check">
                                 <input zippy="usebotfornotify" type="checkbox" class="form-check-input">
@@ -100,11 +106,7 @@
                             </div>
                            {{/usebot}}
 
-                           <div class="form-check">
-                                <input zippy="darkmode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="darkmode">Нiчна тема </label>
-
-                            </div>
+                           
                                   <div class="form-check">
                                     <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
                                     <label class="form-check-label" for="usemobileprinter">Відкривати друк в новій вкладці  </label> 
