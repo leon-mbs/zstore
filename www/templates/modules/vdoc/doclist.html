@@ -15,7 +15,7 @@
                                   <div class="row  ">
                                     <label class="col-form-label col-auto" for="firm"> POS термiнал </label>
                                      <div class="col-auto  ">
-                                     <select class="form-control  mr-2" v-model="posid" id="pos" name="pos" >
+                                     <select class="form-control  me-2" v-model="posid" id="pos" name="pos" >
                                        <option v-for="p in poses" :value="p.key">
                                           {{ p.value }}
                                       </option>
@@ -23,7 +23,7 @@
                                     </div>
                                     <label class="col-form-label col-auto" for="customer"> Контрагент </label>
                                      <div class="col-auto  ">
-                                     <select v-model="custid" class="form-control  mr-2" id="customer" name="customer" >
+                                     <select v-model="custid" class="form-control  me-2" id="customer" name="customer" >
                                        <option value="0">Не вказано </option>
                                        
                                       <option v-for="c in clist" :value="c.key">
@@ -34,7 +34,7 @@
                         
                                     <label class="col-form-label col-auto" for="doctype"> Тип  документа </label>
                                      <div class="col-auto  ">
-                                     <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
+                                     <select v-model="doctype" class="form-control me-2" id="doctype"  name="doctype" >
                                        <option value="GoodsIssue"    >Видаткова  накладна </option>
                                        <option value="Invoice">Рахунок-фактура </option>
                                        <option value="ServiceAct">Акт виконаних робiт </option>

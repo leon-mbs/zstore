@@ -167,6 +167,12 @@ small.compact {
    display:block ;
 }
 
+ .docprewiev {
+   color:#000  ;
+   background-color :#fff  ;
+
+}
+
  
 
 @media print {

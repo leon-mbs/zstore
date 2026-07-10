@@ -21,11 +21,11 @@
        <div class="row">
          <div class="col-md-4 col-12">
                    <div class=" mb-1" style="height:30px;">
-                       <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"             ><i class="fa fa-plus-circle"></i> Новий вузол</a>
-                       <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редагувати вузол" class=" mr-2" ><i  class="fa fa-edit"></i></a>
-                       <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" mr-2"><i class="fa fa-cut"></i></a>
-                       <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставити" class=" mr-2"><i class="fa fa-paste"></i></a>
-                       <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Видалити" class=" mr-2"><i class="fa fa-trash"></i></a>
+                       <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm me-2"             ><i class="fa fa-plus-circle"></i> Новий вузол</a>
+                       <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редагувати вузол" class=" me-2" ><i  class="fa fa-edit"></i></a>
+                       <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" me-2"><i class="fa fa-cut"></i></a>
+                       <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставити" class=" me-2"><i class="fa fa-paste"></i></a>
+                       <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Видалити" class=" me-2"><i class="fa fa-trash"></i></a>
 
                     </div>
                     <div id="tree"  ></div>
@@ -43,7 +43,7 @@
                             <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копіювати для вставки  як лінк"  class="btn btn-sm btn-info  "><i       class="fa fa-share"></i></a>
                             <a v-on:click.prevent="onPasteTopic" v-show="clipboard.topic != null " title="Вставити"  class="btn btn-sm btn-info  "><i class="fa fa-paste"></i></a>
                             <a v-bind:href="extlink" v-show="selectedTopic != null && selectedTopic.ispublic && selectedTopic.isowner  && selectedTopic.islink==false" title="Зовнішнє посилання"  target="_blank" class="btn btn-sm btn-info  "><i       class="fa      fa-link"></i></a>
-                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null && selectedTopic.candelcut==true" title="Видалити"  class="ml-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
+                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null && selectedTopic.candelcut==true" title="Видалити"  class="ms-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
                             <a v-on:click.prevent="onUsers" v-show="selectedTopic != null && selectedTopic.canacc==true  && selectedTopic.islink==false" title="Доступ"  class="ml-4 btn btn-sm btn-success  "><i class="fa fa-users"></i></a>
                            </div>           
                    <table class="table table-sm table-hover">
@@ -77,7 +77,7 @@
                                 <tr>
                                     <td style="width:20px;"><i title="Теги" class="fa fa-tags"  style="font-weight:                                        bolder;font-size:16px;"></i>
                                     </td>
-                                    <td><a v-on:click.prevent="onTag(tag)" v-for="tag in topicTags" class="mr-2"  >{{tag}}</a></td>
+                                    <td><a v-on:click.prevent="onTag(tag)" v-for="tag in topicTags" class="me-2"  >{{tag}}</a></td>
 
                                     <td style="width:20px;">
                                         <i title="Прикріплені файли" class="fa           fa-paperclip"      style="font-weight:   bolder;font-size:16px;"></i>
@@ -87,7 +87,7 @@
                                             <a v-bind:href="f.link"  target="_blank" >{{f.filename}}</a>
                                             <a v-on:click.prevent="onDelFile(f.file_id)" ><i style="color:red;font-size: smaller;"   class="fa  fa-times-circle  "></i> </a>
                                         </div>
-                                        <a v-on:click.prevent="onAddFile" title="Додати файл"  ><i    class="fa   fa-upload ml-2"></i></a>
+                                        <a v-on:click.prevent="onAddFile" title="Додати файл"  ><i    class="fa   fa-upload ms-2"></i></a>
                                     </td>
                                 </tr>
                             </table>
@@ -115,22 +115,22 @@
                                 
                                     <label class="col-form-label col-auto" for="skeyword">Пошук </label>
                                    <div class="col-auto  ">
-                                    <input  v-model="searchText"   class="form-control mr-2" >
+                                    <input  v-model="searchText"   class="form-control me-2" >
                                     </div>
                                     <div class="col-auto pt-2 ">
                                     <div class="form-check">
                                         <input  v-model="searchTitle"  type="checkbox" class="form-check-input">
-                                        <label class="form-check-label mr-2" for="planned">тільки в заголовках</label>
+                                        <label class="form-check-label me-2" for="planned">тільки в заголовках</label>
                                     </div>
                                     </div>
                                     <div class="col-auto  ">
-                                    <select v-model="searchType"  class="form-control mr-2">
+                                    <select v-model="searchType"  class="form-control me-2">
                                         <option value="1">Фраза</option>
                                         <option value="2">Комбінація слів</option>
                                     </select>
                                     </div>
                                     <div class="col-auto  ">
-                                    <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i                                        class="fa fa-search"></i></button>                     
+                                    <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   me-2"><i                                        class="fa fa-search"></i></button>                     
                                     </div>
                                     <div class="col-auto  pt-2 ">
                                     <a v-on:click.prevent="onSearchFav" title="Знайти обрані" ><i class="fa fa-star" style="color:brown"></i></a>

@@ -32,35 +32,33 @@
   </li>
  
 </ul>  
-<div class="tab-content" v-show="loaded">
+<div  class="tab-content" v-show="loaded">
   
   <div class="tab-pane   show active" id="tprint"> 
        
-       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print mr-2"></i> </a>
-       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print me-2"></i> </a>
+       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print me-2"></i></a>   
     
         
-        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
-        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
-        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.xml"   :href="xml"  target="_blank" title="Експорт в XML"> <b class="  mr-2">XML</b>  </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт в Word"><i class="fa fa-file-word    "></i>   </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт в Excel"><i class="fa fa-file-excel  "></i>  </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт в PDF"> <i class="fa fa-file-pdf  "></i>  </a>
+        <a class="fw-bold me-2" v-show="docdata.exports.xml"   :href="xml"  target="_blank" title="Експорт в XML"> <b class="  me-2">XML</b>  </a>
         
-        <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode ml-2 mr-2"></i>  </a>
+        <a class="fw-bold ms-2 me-2 " v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode   "></i>  </a>
     
-               
+      
        
-       <br>
-                    
-
-        <div   id="preview" v-html="docdata.html" >  
+        <div  class="docprewiev  mt-2"  id="preview" v-html="docdata.html" >  
         </div>
+        
      
   </div>
    <div  class="tab-pane      " id="tprintpos"> 
         <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print mr-1"></i> </a>
-       <br>    
-       <div  id="previewpos"   v-html="docdata.htmlpos" >
+       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print me-1"></i> </a>
+            
+       <div  class="docprewiev mt-2"  id="previewpos"   v-html="docdata.htmlpos" >
         </div>  
   </div>
   
@@ -426,6 +424,7 @@
                       this.loadfiles()  
              
                       $('a[href="#tprint"]').tab('show') 
+                    //  $('#preview').attr('class','docprewiev') 
                 
                   
                   });

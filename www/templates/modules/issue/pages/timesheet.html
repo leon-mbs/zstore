@@ -28,7 +28,7 @@
                         </div>
                         <label class="col-form-label col-auto"   for="searchemp">виконавець </label>
                         <div class="col-auto  ">
-                        <select v-model="user_id" class="form-control  mr-2  " >
+                        <select v-model="user_id" class="form-control  me-2  " >
                             <option value="0">Не обрано</option>
                             <option v-for="u in users" :value="u.key">{{u.value}}</option>
                          
@@ -37,7 +37,7 @@
                         </div>
                         <label class="col-form-label col-auto" for="searchproject"> проект </label>
                         <div class="col-auto  ">
-                        <select v-model="project_id" class="form-control mr-2" zippy="searchproject">
+                        <select v-model="project_id" class="form-control me-2" zippy="searchproject">
                             <option value="0">Не обрано</option>
                             <option v-for="p in projects" :value="p.key">{{p.value}}</option>
                         </select>
