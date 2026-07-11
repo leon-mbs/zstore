@@ -44,7 +44,7 @@
                             <a v-on:click.prevent="onPasteTopic" v-show="clipboard.topic != null " title="Вставити"  class="btn btn-sm btn-info  "><i class="fa fa-paste"></i></a>
                             <a v-bind:href="extlink" v-show="selectedTopic != null && selectedTopic.ispublic && selectedTopic.isowner  && selectedTopic.islink==false" title="Зовнішнє посилання"  target="_blank" class="btn btn-sm btn-info  "><i       class="fa      fa-link"></i></a>
                             <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null && selectedTopic.candelcut==true" title="Видалити"  class="ms-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
-                            <a v-on:click.prevent="onUsers" v-show="selectedTopic != null && selectedTopic.canacc==true  && selectedTopic.islink==false" title="Доступ"  class="ml-4 btn btn-sm btn-success  "><i class="fa fa-users"></i></a>
+                            <a v-on:click.prevent="onUsers" v-show="selectedTopic != null && selectedTopic.canacc==true  && selectedTopic.islink==false" title="Доступ"  class="ms-4 btn btn-sm btn-success  "><i class="fa fa-users"></i></a>
                            </div>           
                    <table class="table table-sm table-hover">
                    <tr v-for="t in topics"    v-bind:class="{'bg-success':issel(t.topic_id)}" >

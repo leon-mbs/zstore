@@ -6,10 +6,10 @@
     <body>
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4">
-                <div id="newordersalert" style="display:none;"  class="alert alert-info  ml-4"  >
+                <div id="newordersalert" style="display:none;"  class="alert alert-info  ms-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
-                 <div id="tablenoalert" style="display:none;"  class="alert alert-danger  ml-4"  >
+                 <div id="tablenoalert" style="display:none;"  class="alert alert-danger  ms-4"  >
                     <span id="tablenomsg"></span>
                 </div>   
               
@@ -39,8 +39,8 @@
                     </div>
                 <div class="col-auto pt-2 lt-4">
                      {{#isadmins}}
-                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
-                        <a   zippy="variations" class="  mr-4"><i class="fa fa-check-double"></i> Варіації</a>
+                        <a   zippy="options" class="  ms-4"><i class="fa fa-cog"></i> Налаштування</a>
+                        <a   zippy="variations" class="  ms-4"><i class="fa fa-check-double"></i> Варіації</a>
                        {{/isadmins}}
                </div>    
              </div>    
@@ -194,7 +194,7 @@
                               <tr zippy="varprodlist">
                                   <td class="  pt-2" zippy="prodvarname"></td>
                                   <td class="text-end pt-2" zippy="prodvarprice"></td>
-                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success pl-2">Додати</a></td>
+                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success ps-2">Додати</a></td>
                               </tr>
                          </table>       
                        </div>      
@@ -210,13 +210,13 @@
                         <form zippy="navform"  >                   
                            <div class="row  ">
                             <div class="col-auto  ">
-                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info mr-4"> 
+                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info ms-4"> 
                            </div> 
                            <div class="col-auto  ">
                              <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            </div> 
                            <div class="col-auto  ">
-                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
+                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info ms-4">     
                             </div> 
                             {{#usescanner}}
                              <div class="col-auto  ">
@@ -288,9 +288,9 @@
                                 <td > {{#useexcise}}  <a zippy="editex" href="javascript:void(0)"></a>  {{/useexcise}} </td>
                                
                                     <td class="text-end text-nowrap">
-                                         <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
+                                         <a zippy="qtymin" class="btn btn-info btn-sm me-1">-</a>
                                         <span zippy="qty"></span>
-                                        <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
+                                        <a zippy="qtyplus" class="btn btn-info  btn-sm ms-1">+</a>
                                         <i style="cursor:pointer" zippy="qtyedit" class="fa fa-edit"></i>
                                     </td>
                                     <td zippy="disc" class="text-end"></td>
@@ -353,9 +353,9 @@
                                  
                               </div>
                                <div class="col-12">
-                                        Кiл. <a zippy="qtymin_of" class="btn btn-info btn-sm mr-1">-</a>
+                                        Кiл. <a zippy="qtymin_of" class="btn btn-info btn-sm me-1">-</a>
                                         <span zippy="qty_of"></span>
-                                        <a zippy="qtyplus_of" class="btn btn-info  btn-sm ml-1">+</a>
+                                        <a zippy="qtyplus_of" class="btn btn-info  btn-sm ms-1">+</a>
                                         &nbsp;Цiна <span zippy="price_of"></span>
                                         &nbsp;Сума <span zippy="amount_of"></span>
                               </div>
@@ -489,7 +489,7 @@
 
                         <div class="row">
                         <div class=" col-12  col-md-6 pt-4">
-                                      <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ml-4 mr-4">
+                                      <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ms-4 ms-4">
                            
                                      
                                        
@@ -510,16 +510,16 @@
                             </div>
                            <div class=" col-12 col-md-6 d-flex justify-content-end pt-4">
                                  {{^modeof}}
-                                 <div class="form-check form-check-inline mr-4">
+                                 <div class="form-check form-check-inline ms-4">
                                     <input zippy="passprod" class="form-check-input" type="checkbox"    > 
                                     <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
                                 </div>
                                   {{/modeof}}
-                            <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success mr-4">
+                            <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success ms-4">
                             
-                            <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
+                            <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success ms-4">
 
-                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success mr-4">
+                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success ms-4">
    
                         </div>
                         </div>
@@ -589,7 +589,7 @@
                 <div class="col-12   ">   
                     <form zippy="payform" class="row">
 
-                        <div class="col-12 col-md-4 col-xl-3 mr-4 ">   
+                        <div class="col-12 col-md-4 col-xl-3 ms-4 ">   
                             <div class="form-group   ">
                                 <label   >Каса, рахунок</label>
                                 <br>

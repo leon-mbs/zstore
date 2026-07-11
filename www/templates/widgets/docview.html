@@ -55,7 +55,7 @@
      
   </div>
    <div  class="tab-pane      " id="tprintpos"> 
-        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
+        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register me-1"></i></a>
        <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print me-1"></i> </a>
             
        <div  class="preview mt-2"  id="previewpos"   v-html="docdata.htmlpos" >

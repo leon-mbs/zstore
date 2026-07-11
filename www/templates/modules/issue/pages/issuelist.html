@@ -23,7 +23,7 @@
                           </div>                    
                         <label class="col-form-label col-auto" for="searchstatus">Статус </label>
                           <div class="col-auto  ">
-                        <select v-model="searchstatus"  class="form-control mr-sm-2  " >
+                        <select v-model="searchstatus"  class="form-control ms-sm-2  " >
                             <option value="0">Відкриті</option>                           
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
@@ -32,7 +32,7 @@
                          </div>
                         <label class="col-form-label col-auto" for="searchemp">виконавець </label>
                           <div class="col-auto  ">
-                        <select v-model="searchemp"   class="form-control mr-sm-2  "  >
+                        <select v-model="searchemp"   class="form-control ms-sm-2  "  >
                             <option value="0">Не обрано</option>
                            <option v-for="option in emps" :value="option.key">
                               {{ option.value }}
@@ -41,7 +41,7 @@
                          </div>
                         <label class="col-form-label col-auto" for="searchproject"> проект </label>
                           <div class="col-auto  ">
-                          <select v-model="searchproject"   class="form-control mr-sm-2  "  >
+                          <select v-model="searchproject"   class="form-control ms-sm-2  "  >
                             <option value="0">Не обрано</option>
                            <option v-for="option in projects" :value="option.key">
                               {{ option.value }}
@@ -50,7 +50,7 @@
                           </div>
                        <label class="col-form-label col-auto" for="searchproject"> сортувати </label>
                          <div class="col-auto  ">
-                          <select v-model="searchsort"   class="form-control mr-sm-2  "  >
+                          <select v-model="searchsort"   class="form-control ms-sm-2  "  >
                             <option value="0">За пріоритетом</option>
                             <option value="1">За номером</option>
                             <option value="2">За оновленням</option>
