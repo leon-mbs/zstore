@@ -166,16 +166,10 @@ class Update extends \App\Pages\Base
                         
           }          
        
-          $fv = App::$ver ?? '0.0.0';
-       
-          $this->_tvars['needvandor']  = false;    
          
-       
-          $b= version_compare($fv ,System::FRM);
-          if($b == -1) {
-             $this->_tvars['needvandor']  = true;    
-          }
-          
+          $this->_tvars['needvendor']  = !System::isVendorActual() ;    
+         
+         
           \App\Session::getSession()->migrationcheck = false; 
     }   
 

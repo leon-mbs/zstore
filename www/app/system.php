@@ -310,4 +310,16 @@ class System
  
         return $data;     
     }
+    
+    public static function isVendorActual(){
+          $fv =  \App\Application::$ver ?? '0.0.0';
+       
+          $b= version_compare($fv ,System::FRM);
+          if($b == -1) {
+             return false ;  
+          }  else {
+             return true;  
+          }
+          
+    }
 }
