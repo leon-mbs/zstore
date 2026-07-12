@@ -264,6 +264,10 @@ class ProductList extends \App\Pages\Base
 
             $image->save();
             $this->_item->productdata->images[] = $image->image_id;
+            if( intval($this->_item->image_id ) ==0) {
+                $this->_item->image_id = $image->image_id;//делаем  первое  основным
+            }
+            
             $this->_item->save();
             $sender->clean();
 

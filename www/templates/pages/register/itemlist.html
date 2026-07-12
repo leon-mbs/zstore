@@ -3,9 +3,7 @@
         <title> Товари на складі  </title>
 
    
-        <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
-        <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
-
+     
     </head>
 
     <body>
@@ -156,7 +154,7 @@
                     <tr zippy="itemlist">
                         {{#useimages}}
                         <td>
-                            <a zippy="imagelistitem" data-type="image" data-bs-toggle="lightbox" data-gallery="thumb"> <img
+                            <a zippy="imagelistitem" data-type="image" data-toggle="lightbox" data-gallery="thumb"> <img
                                     style="float:left; width:64px"></a>
 
                         </td>
@@ -315,17 +313,7 @@
                 return confirm("Видалити партію?")
             }
 
-            $(document).ready(function () {
-
-                $(document).on('click', '[data-bs-toggle="lightbox"]', function (event) {
-                    event.preventDefault();
-                    $(this).ekkoLightbox({'alwaysShowClose': true});
-                });
-
         
-
-
-            });
 
             function onSearch(ele) {
 
