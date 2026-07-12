@@ -40,7 +40,7 @@
                     <div class="col-auto">
                       <input class="form-control" zippy="fromitem" placeholder="Почнiть вводити...">
                        </div>
-                             <label class="col-auto col-form-label ml-2">  Кіл.     </label>
+                             <label class="col-auto col-form-label ms-2">  Кіл.     </label>
                                      
                         <div class="col-auto">
                             <input style="width:75px;" type="text" zippy="fromquantity" class="form-control qtyprice"
@@ -52,12 +52,12 @@
                        <tr zippy="fromlist">
                           <td zippy="fromname"></td>  
                           <td zippy="fromcode"></td>  
-                          <td zippy="fromqty"  class="text-right"></td>  
-                          <td zippy="fromprice" class="text-right"></td>
+                          <td zippy="fromqty"  class="text-end"></td>  
+                          <td zippy="fromprice" class="text-end"></td>
                           <td style="width:30px;" ><a zippy="fromdel"><i class="fa fa-trash"></i></a></td>
                        </tr>
                        <tr >
-                           <th colspan="3" class="text-right">На суму:</th>  <th class="text-right" zippy="fromtotal"></th>
+                           <th colspan="3" class="text-end">На суму:</th>  <th class="text-end" zippy="fromtotal"></th>
                            <td></td>
                        </tr>
                    </table>
@@ -66,7 +66,7 @@
                     <div class="col-auto">
                       <input class="form-control" zippy="toitem" placeholder="Почнiть вводити...">
                        </div>
-                             <label class="col-auto col-form-label ml-2">  Кіл.     </label>
+                             <label class="col-auto col-form-label ms-2">  Кіл.     </label>
                                      
                        <div class="col-auto">
                             <input style="width:75px;" type="text" zippy="toquantity" class="form-control qtyprice"
@@ -79,14 +79,14 @@
                        <tr zippy="tolist">
                            <td zippy="toname"></td>  
                            <td zippy="tocode"></td>  
-                           <td zippy="toqty"  class="text-right"></td>  
+                           <td zippy="toqty"  class="text-end"></td>  
                            <td   ><input onblur="calcTotal()" class="form-control   qtyprice" pattern="[0-9,\.]+" zippy="toprice" style="width:100px;"   ></td>
                                                
                             <td  style="width:30px;" ><a zippy="todel"><i class="fa fa-trash"></i></a></td>
                        </tr>
                        <tr >
                        <td colspan="2"  ><a  zippy="autoprice" >Взяти  цiни з останнiх закупок</a></td> 
-                           <th   class="text-right">На суму:</th>  <th class="text-right" zippy="tototal"></th>
+                           <th   class="text-end">На суму:</th>  <th class="text-end" zippy="tototal"></th>
                             <td></td>
                        </tr>
                    </table>
@@ -95,9 +95,9 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ml-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ml-2">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ml-2 ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ms-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
 
                 </div>
             </div>

@@ -39,7 +39,7 @@
                       <div class="input-group  ">
                          <input class="form-control"  placeholder="Почніть вводити..."   zippy="customer"/>
                          <div class="input-group-append">
-                           <a class="btn btn-success btn-sm mr-2" title="Додати нового" zippy="addcust">+</a>
+                           <a class="btn btn-success btn-sm me-2" title="Додати нового" zippy="addcust">+</a>
                         </div>
                         <div class="input-group-append"  >
                             <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
@@ -105,10 +105,10 @@
 
             <div class="row">
                 <div class="col-12 col-md-6  d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ml-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ml-2">
-                    <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ml-2 ">
-                    <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-success  ml-2 mr-2">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-secondary  ms-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-primary  ms-2">
+                    <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ms-2 ">
+                    <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-success  ms-2 me-2">
                      &nbsp;
                     <input zippy="editaccess" type="checkbox" >
                     <label class="form-check-label" for="editaccess"> Задати права  доступу</label>
@@ -148,7 +148,7 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
@@ -180,7 +180,7 @@
                   <table class="table table-sm">
                      <tr zippy="accshowlist">  
                        <td zippy="accshowuser">  </td>
-                       <td  class="text-right"> <a zippy="delshowuser"><i class="fa fa-trash"></i></a> </td>
+                       <td  class="text-end"> <a zippy="delshowuser"><i class="fa fa-trash"></i></a> </td>
                        </tr>
                   </table>
                </div>           
@@ -199,7 +199,7 @@
                </div> 
                 <div class="form-group">
                   <table class="table table-sm">
-                     <tr zippy="acceditlist">  <td zippy="accedituser">  </td><td class="text-right" > <a zippy="deledituser"><i class="fa fa-trash"></i></a> </td></tr>
+                     <tr zippy="acceditlist">  <td zippy="accedituser">  </td><td class="text-end" > <a zippy="deledituser"><i class="fa fa-trash"></i></a> </td></tr>
                   </table>
                </div>                   
             <h5>&nbsp;Мають пiдписати (затвердити) </h5>
@@ -217,14 +217,14 @@
                </div> 
                 <div class="form-group">
                   <table class="table table-sm">
-                     <tr zippy="accapprlist">  <td zippy="accappruser">  </td><td class="text-right" > <a zippy="delappruser"><i class="fa fa-trash"></i></a> </td></tr>
+                     <tr zippy="accapprlist">  <td zippy="accappruser">  </td><td class="text-end" > <a zippy="delappruser"><i class="fa fa-trash"></i></a> </td></tr>
                   </table>
                </div>                   
 
             <div class="row">
                 <div class="col-12">
                      <div class="form-group">
-                        <input type="button" zippy="cancelaccess" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input type="button" zippy="cancelaccess" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="saveaccess" type="submit" value="Зберегти" class="btn btn-primary">
                     </div>           
                 </div>
@@ -242,7 +242,7 @@
                 $('#doccontent').summernote({
                     height: 400,
                     lang: 'uk-UA',
-
+                   tooltip: false,
                     callbacks: {
                         onEnter: function (e) {
                             if (e.keyCode === 13) {

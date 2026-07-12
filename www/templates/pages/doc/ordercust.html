@@ -62,10 +62,10 @@
                             <th>Код постачальника</th>
                             <th>Од.</th>
                             <th  > </th>
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right">Ціна</th>
+                            <th class="text-end">Кіл.</th>
+                            <th class="text-end">Ціна</th>
 
-                            <th class="text-right">Сума</th>
+                            <th class="text-end">Сума</th>
 
                             <th  ></th>
                         </tr>
@@ -77,10 +77,10 @@
                             <td zippy="custcode"></td>
                             <td zippy="msr"></td>
                             <td zippy="desc"></td>
-                            <td zippy="quantity" class="text-right"></td>
-                            <td zippy="price" class="text-right"></td>
+                            <td zippy="quantity" class="text-end"></td>
+                            <td zippy="price" class="text-end"></td>
 
-                            <td zippy="amount" class="text-right"></td>
+                            <td zippy="amount" class="text-end"></td>
 
                             <td class="text-center"><a title="Перемістити" zippy="move"><i class="fa fa-arrow-right"></i> <i class="fa fa-file"></i></a>  </td>
                             <td class="text-center"><a title="Редагувати" zippy="edit"><i class="fa fa-edit"></i></a>  </td>
@@ -88,8 +88,8 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="7" class="text-right">Всього:</td>
-                            <td   class="text-right" zippy="total" > </td>
+                            <td colspan="7" class="text-end">Всього:</td>
+                            <td   class="text-end" zippy="total" > </td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -102,20 +102,20 @@
                
                <div class="col-9  col-lg-7  d-flex justify-content-end pt-4">
                
-                    <input type="button" zippy="backtolist" value="Скасувати"   class="btn btn-secondary  ml-2 ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary ml-2  ">
-                    <input zippy="execdoc"   type="submit" value="На виконання" class="btn btn-primary  ml-2 ">
-                     <input zippy="apprdoc"   type="submit" value="На затвердження" class="btn btn-success  ml-2 ">
+                    <input type="button" zippy="backtolist" value="Скасувати"   class="btn btn-secondary  ms-2 ">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary ms-2  ">
+                    <input zippy="execdoc"   type="submit" value="На виконання" class="btn btn-primary  ms-2 ">
+                     <input zippy="apprdoc"   type="submit" value="На затвердження" class="btn btn-success  ms-2 ">
 
                
                </div>  
-          <div id="modalmove" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+          <div id="modalmove" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  >
                     <div class="modal-dialog modal-dialog-centered  modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Перемiщення</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span >&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -126,7 +126,7 @@
 
                             </div>  
                           
-                            <input type="submit" value="Перемiстити" zippy="savemove" class="ml-2 btn btn-info  ">
+                            <input type="submit" value="Перемiстити" zippy="savemove" class="ms-2 btn btn-info  ">
           
                             </div>
 
@@ -236,7 +236,7 @@
                     </div>
 
                     <div class="form-group">
-                        <input  type="button" zippy="cancelnewitem"   value="Скасувати" class="btn btn-secondary mr-2">
+                        <input  type="button" zippy="cancelnewitem"   value="Скасувати" class="btn btn-secondary me-2">
                         <input  zippy="savenewitem"  type="button" value="Зберегти" class="btn btn-primary">
                     </div>
           
@@ -260,7 +260,7 @@
               
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary mr-2">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary me-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
@@ -287,8 +287,8 @@
               
               $("#moveitemid").val(item_id)   
              
+              openModal('modalmove')
               
-              $("#modalmove").modal('show')   
             }         
         
    </script> 

@@ -33,7 +33,7 @@
         <td>
             <b>П I Б</b>
         </td>
-        <td class="text-right">
+        <td class="text-end">
             <b>Сума</b>
         </td>
     </tr>
@@ -43,7 +43,7 @@
         <td>
             {{emp_name}}
         </td>
-        <td class="text-right">
+        <td class="text-end">
             {{amount}}
         </td>
     </tr>
@@ -53,7 +53,7 @@
         <td>
             <b>Всього:</b>
         </td>
-        <td class="text-right">
+        <td class="text-end">
             <b>{{total}}</b>
         </td>
     </tr>

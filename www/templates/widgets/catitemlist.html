@@ -3,13 +3,13 @@
          <span zippy="_catitemlist_"  ></span>   
           {{={| |}=}}    
           <div id="modalcatitemlist" class="modal fade  " tabindex="-1" role="dialog" 
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered modal-xl  ">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Вибiр ТМЦ</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div id="vcatitemlist" class="modal-body">    
@@ -74,8 +74,9 @@
                
              onitem:function (item_id){
       
-               $("#modalcatitemlist").modal('hide')
-    
+               
+             closeModal('modalcatitemlist') 
+             
                _cb(item_id) 
             }
           
@@ -129,7 +130,8 @@
       function onOpenCatItemList(_f){
         _cb = _f    // каддбек  при выборе  итема
           
-        $("#modalcatitemlist").modal('show')
+      
+        openModal('modalcatitemlist') 
         
         vcatitemlist.open() 
 

@@ -149,11 +149,11 @@
                             <th>Од.</th>
                             <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
  
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right">Ціна</th>
-                            <th class="text-right">  {{#usends}} Ціна з ПДВ {{/usends}}</th>
+                            <th class="text-end">Кіл.</th>
+                            <th class="text-end">Ціна</th>
+                            <th class="text-end">  {{#usends}} Ціна з ПДВ {{/usends}}</th>
 
-                            <th class="text-right">Сума</th>
+                            <th class="text-end">Сума</th>
 
                             <th  ></th>
                         </tr>
@@ -166,69 +166,69 @@
                             <td zippy="msr"></td>
                             <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
   
-                            <td class="text-right" zippy="quantity"></td>
+                            <td class="text-end" zippy="quantity"></td>
 
-                            <td zippy="price" class="text-right"></td>
-                            <td  class="text-right">
+                            <td zippy="price" class="text-end"></td>
+                            <td  class="text-end">
                              {{#usends}} <span zippy="pricends"></span> {{/usends}}
                             </td>
 
-                            <td zippy="amount" class="text-right"></td>
+                            <td zippy="amount" class="text-end"></td>
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp; <a zippy="delete"><i
                                         class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            <td colspan="10" class="text-right">На суму:</td>
-                            <td zippy="total" class="text-right"></td>
+                            <td colspan="10" class="text-end">На суму:</td>
+                            <td zippy="total" class="text-end"></td>
                             <td></td>
                         </tr>
                         {{^prepaid}}
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="nds" colspan="10" class="text-right">ПДВ:</td>
-                            <td zippy="nds" class="text-right"></td>
+                            <td data-label="nds" colspan="10" class="text-end">ПДВ:</td>
+                            <td zippy="nds" class="text-end"></td>
                             <td data-label="nds">
                              {{^usends}} 
-                                 <a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i class="fa fa-edit"></i></a> 
+                                 <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modalnds"><i class="fa fa-edit"></i></a> 
                              {{/usends}}
                                         </td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td data-label="disc" colspan="10" class="text-right">Знижка:</td>
-                            <td zippy="disc" class="text-right"></td>
-                            <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
+                            <td data-label="disc" colspan="10" class="text-end">Знижка:</td>
+                            <td zippy="disc" class="text-end"></td>
+                            <td data-label="disc"><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                        {{/prepaid}}
                           <tr style="font-weight: bolder;">
-                            <td data-label="delivery" colspan="10" class="text-right">Доставка:</td>
-                            <td zippy="delivery" class="text-right"></td>
-                            <td data-label="delivery"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
+                            <td data-label="delivery" colspan="10" class="text-end">Доставка:</td>
+                            <td zippy="delivery" class="text-end"></td>
+                            <td data-label="delivery"><a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
                         </tr>
 
  
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="payamount" colspan="10" class="text-right">Всього:</td>
-                            <td zippy="payamount" class="text-right"></td>
-                            <td data-label="payamount"><a href="javascript:void(0);" data-toggle="modal"
-                                                          data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
+                            <td data-label="payamount" colspan="10" class="text-end">Всього:</td>
+                            <td zippy="payamount" class="text-end"></td>
+                            <td data-label="payamount"><a href="javascript:void(0);" data-bs-toggle="modal"
+                                                          data-bs-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan="10" class="text-right">Передплата:</td>
-                            <td   class="text-right">  {{prepaid}}</td>
+                            <td data-label="prepaid" colspan="10" class="text-end">Передплата:</td>
+                            <td   class="text-end">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}
 
                         <tr style="font-weight: bolder;">
-                            <td data-label="payed" colspan="10" class="text-right">Внесено оплату:</td>
-                            <td zippy="payed" class="text-right"></td>
-                            <td data-label="payed"><a href="javascript:void(0);" data-toggle="modal"
-                                                      data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
+                            <td data-label="payed" colspan="10" class="text-end">Внесено оплату:</td>
+                            <td zippy="payed" class="text-end"></td>
+                            <td data-label="payed"><a href="javascript:void(0);" data-bs-toggle="modal"
+                                                      data-bs-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
                         </tr>
 
                     </table>
@@ -238,29 +238,29 @@
          
             <div class="row">
                 <div class="col-11  col-xl-9  d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ml-2"> 
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ml-2 ">
-                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ml-2 ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ms-2"> 
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ms-2 ">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-success  ms-2 ">
 
 
                 </div>
             </div>
 
             <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Всього</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="editpayamount" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="bpayamount" class="ms-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -271,20 +271,20 @@
             </div>
 
             <div id="modalnds" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">ПДВ</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="editnds" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bnds" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="bnds" class="ms-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -295,20 +295,20 @@
             </div>
 
             <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Знижка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="editdisc" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bdisc" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="bdisc" class="ms-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -319,13 +319,13 @@
             </div>
 
             <div id="modaldelivery" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Доставка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -341,7 +341,7 @@
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="editdelivery" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bdelivery" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="bdelivery" class="ms-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -356,20 +356,20 @@
        
 
             <div id="modalpayed" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Оплата</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="editpayed" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayed" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="bpayed" class="ms-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -463,7 +463,7 @@
                     </div>
 
                     <div class="form-group">
-                        <input  type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary  mr-2">
+                        <input  type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary  me-2">
                         <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-primary"> 
                         
                     </div>
@@ -483,14 +483,14 @@
                        <th >ТМЦ</th>
                        <th >Артикул</th>
                        <th >Штрих код</th>
-                       <th class="text-right">Цiна</th>
+                       <th class="text-end">Цiна</th>
                      </tr> 
                      <tr zippy="sllist">
                        <td zippy="sldate"></td>                     
                        <td ><a zippy="slitem"></a></td>                     
                        <td zippy="slitem_code"></td>                     
                        <td zippy="slbar_code"></td>                     
-                       <td class="text-right" zippy="slprice"></td>                     
+                       <td class="text-end" zippy="slprice"></td>                     
                      </tr>                 
                    </table>
                 </div>
@@ -543,7 +543,7 @@
                     
                     
                     <div class="form-group">
-                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
@@ -570,7 +570,7 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary mr-2">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary me-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
@@ -602,7 +602,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-secondary mr-2">
+                        <input type="button" zippy="cancelsnitem" value="Скасувати" class="btn btn-secondary me-2">
                         <input zippy="savesnitem" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>

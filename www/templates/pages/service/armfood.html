@@ -6,10 +6,10 @@
     <body>
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4">
-                <div id="newordersalert" style="display:none;"  class="alert alert-info  ml-4"  >
+                <div id="newordersalert" style="display:none;"  class="alert alert-info  ms-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
-                 <div id="tablenoalert" style="display:none;"  class="alert alert-danger  ml-4"  >
+                 <div id="tablenoalert" style="display:none;"  class="alert alert-danger  ms-4"  >
                     <span id="tablenomsg"></span>
                 </div>   
               
@@ -23,7 +23,7 @@
 
         <div style="display:none" id="ireadyp" class="row"  >
             <div   class="col-12 col-md-8 col-xl-6 mb-2"> 
-                 <b class="mr-2">Готових позицiй <span id="ireadyc"  class="badge badge-success badge-pill" > </span>                </b>
+                 <b class="me-2">Готових позицiй <span id="ireadyc"  class="badge badge-success badge-pill" > </span>                </b>
                   
              <table id="ireadyt" class="ctable"   >
             </table>
@@ -39,8 +39,8 @@
                     </div>
                 <div class="col-auto pt-2 lt-4">
                      {{#isadmins}}
-                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
-                        <a   zippy="variations" class="  mr-4"><i class="fa fa-check-double"></i> Варіації</a>
+                        <a   zippy="options" class="  ms-4"><i class="fa fa-cog"></i> Налаштування</a>
+                        <a   zippy="variations" class="  ms-4"><i class="fa fa-check-double"></i> Варіації</a>
                        {{/isadmins}}
                </div>    
              </div>    
@@ -154,7 +154,7 @@
 
                         </div> 
                         <div    class="col-12 mb-2">
-                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">Закрити меню</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
+                          <a class="btn btn-secondary btn-sm  " zippy="stopcat">Закрити меню</a> &nbsp;&nbsp;<<small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
                         </div>           
                     </div >        
                     <div   zippy="prodpan" class="row  mt-4">
@@ -179,7 +179,7 @@
 
                         </div>   
                           <div    class="col-12 mt-2">
-                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">Закрити меню</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
+                           <a class="btn btn-secondary btn-sm  " zippy="stopprod">Закрити меню</a> &nbsp;&nbsp; <small ><a onclick="openTransform()" href="javascript:void(0); ">   <i class="fa fa-bottle-water"> Розфасовка    </a>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"      title="Наприклад відкоркувати пляшку  або  пакет соку  на  розлив "></i>  </small>
                      </div>       
                     </div > 
                     <div   zippy="varprodpan" class="row  mt-4">
@@ -193,8 +193,8 @@
                          <table class="table table-sm">
                               <tr zippy="varprodlist">
                                   <td class="  pt-2" zippy="prodvarname"></td>
-                                  <td class="text-right pt-2" zippy="prodvarprice"></td>
-                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success pl-2">Додати</a></td>
+                                  <td class="text-end pt-2" zippy="prodvarprice"></td>
+                                  <td><a zippy="prodvaradd" class="btn btn-sm btn-success ps-2">Додати</a></td>
                               </tr>
                          </table>       
                        </div>      
@@ -210,13 +210,13 @@
                         <form zippy="navform"  >                   
                            <div class="row  ">
                             <div class="col-auto  ">
-                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info mr-4"> 
+                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info ms-4"> 
                            </div> 
                            <div class="col-auto  ">
                              <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            </div> 
                            <div class="col-auto  ">
-                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info mr-4">     
+                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info ms-4">     
                             </div> 
                             {{#usescanner}}
                              <div class="col-auto  ">
@@ -253,9 +253,9 @@
                                     <th>Код</th>
                                     <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
                                     <th class="text-center ">Кiл.</th>
-                                    <th class="text-right"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
-                                    <th class="text-right">Цiна</th>
-                                    <th class="text-right">Сума</th>
+                                    <th class="text-end"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
+                                    <th class="text-end">Цiна</th>
+                                    <th class="text-end">Сума</th>
                                     <th >Стан </th>
                                     
                                   
@@ -287,15 +287,15 @@
                                                                               
                                 <td > {{#useexcise}}  <a zippy="editex" href="javascript:void(0)"></a>  {{/useexcise}} </td>
                                
-                                    <td class="text-right text-nowrap">
-                                         <a zippy="qtymin" class="btn btn-info btn-sm mr-1">-</a>
+                                    <td class="text-end text-nowrap">
+                                         <a zippy="qtymin" class="btn btn-info btn-sm me-1">-</a>
                                         <span zippy="qty"></span>
-                                        <a zippy="qtyplus" class="btn btn-info  btn-sm ml-1">+</a>
+                                        <a zippy="qtyplus" class="btn btn-info  btn-sm ms-1">+</a>
                                         <i style="cursor:pointer" zippy="qtyedit" class="fa fa-edit"></i>
                                     </td>
-                                    <td zippy="disc" class="text-right"></td>
-                                    <td zippy="price" class="text-right"></td>
-                                    <td zippy="amount" class="text-right"></td>
+                                    <td zippy="disc" class="text-end"></td>
+                                    <td zippy="price" class="text-end"></td>
+                                    <td zippy="amount" class="text-end"></td>
                                     <td zippy="state"  ></td>
                                     
                                   
@@ -307,10 +307,10 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                          
-                                    <td    colspan="6"  class="text-right text-bold">Всього:</td>
+                                    <td    colspan="6"  class="text-end text-bold">Всього:</td>
                                      
                                      
-                                    <td zippy="totalamount" class="text-right text-bold"></td>
+                                    <td zippy="totalamount" class="text-end text-bold"></td>
                                     <td ></td>
                                     <td ></td>
                                 </tr>    
@@ -320,7 +320,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                       
-                                    <td colspan="6" class="text-right   ">Знижка:</td>
+                                    <td colspan="6" class="text-end   ">Знижка:</td>
                                     
                                     <td  class="d-flex justify-content-end   ">
                                       <input style="width:100px" zippy="totaldisc" class="form-control qtyprice form-control-sm">
@@ -333,7 +333,7 @@
                                    {{#baricon}}        <td     > </td>       {{/baricon}} 
                                    {{#packicon}}        <td     > </td>       {{/packicon}} 
                       
-                                    <td colspan="6" class="text-right   ">Списати  бонуси:</td>
+                                    <td colspan="6" class="text-end   ">Списати  бонуси:</td>
                                    
                                 
                                     <td  class="d-flex justify-content-end  ">
@@ -353,9 +353,9 @@
                                  
                               </div>
                                <div class="col-12">
-                                        Кiл. <a zippy="qtymin_of" class="btn btn-info btn-sm mr-1">-</a>
+                                        Кiл. <a zippy="qtymin_of" class="btn btn-info btn-sm me-1">-</a>
                                         <span zippy="qty_of"></span>
-                                        <a zippy="qtyplus_of" class="btn btn-info  btn-sm ml-1">+</a>
+                                        <a zippy="qtyplus_of" class="btn btn-info  btn-sm ms-1">+</a>
                                         &nbsp;Цiна <span zippy="price_of"></span>
                                         &nbsp;Сума <span zippy="amount_of"></span>
                               </div>
@@ -489,7 +489,7 @@
 
                         <div class="row">
                         <div class=" col-12  col-md-6 pt-4">
-                                      <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ml-4 mr-4">
+                                      <input zippy="btosave" type="submit" value="Вiдкласти"   class="btn btn-success ms-4 ms-4">
                            
                                      
                                        
@@ -510,27 +510,27 @@
                             </div>
                            <div class=" col-12 col-md-6 d-flex justify-content-end pt-4">
                                  {{^modeof}}
-                                 <div class="form-check form-check-inline mr-4">
+                                 <div class="form-check form-check-inline ms-4">
                                     <input zippy="passprod" class="form-check-input" type="checkbox"    > 
                                     <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
                                 </div>
                                   {{/modeof}}
-                            <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success mr-4">
+                            <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success ms-4">
                             
-                            <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success mr-4">
+                            <input zippy="btodel" type="submit" value="В доставку"   class="btn btn-success ms-4">
 
-                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success mr-4">
+                            <input zippy="btopay" type="submit" value="Оплатити"   class="btn btn-success ms-4">
    
                         </div>
                         </div>
                         
-               <div id="modalqty" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 aria-hidden="true">
+               <div id="modalqty" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Кількість</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -538,7 +538,7 @@
                                 <input   class="form-control qtyprice" type="text" zippy="editqtyq" pattern="[0-9,\.]+">
                                 <input    type="hidden" zippy="editqtyi" >
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="beditqty" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="beditqty" class="ms-2 btn btn-info  ">
 
                                 </div>
                                 
@@ -550,13 +550,13 @@
             </div>                               
                     
                     
-       <div id="modalak" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  aria-hidden="true">
+       <div id="modalak" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"  >
                     <div class="modal-dialog modal-dialog-centered  modal-sm">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Акцизні маркм</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span >&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -573,7 +573,7 @@
                                 <br> <small>Наприклад для алкоголю на розлив</small>
 
                             </div> 
-                            <input type="submit" value="Зберегти" zippy="saveak" class="ml-2 btn btn-info  ">
+                            <input type="submit" value="Зберегти" zippy="saveak" class="ms-2 btn btn-info  ">
           
                             </div>
 
@@ -589,7 +589,7 @@
                 <div class="col-12   ">   
                     <form zippy="payform" class="row">
 
-                        <div class="col-12 col-md-4 col-xl-3 mr-4 ">   
+                        <div class="col-12 col-md-4 col-xl-3 ms-4 ">   
                             <div class="form-group   ">
                                 <label   >Каса, рахунок</label>
                                 <br>
@@ -662,7 +662,7 @@
                             
                            {{#fiscal}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
-                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                           <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
                                               
@@ -716,11 +716,11 @@
                                 <div class="row  ">
                                 <label class="col-form-label col-auto" for="searchnumber"> № </label>
                                 <div class="col-auto  ">
-                                  <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                                  <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                                </div>
                                 <label class="col-form-label col-auto" for="searchcust"> Клiєнт </label>
                                <div class="col-auto  ">
-                                <input placeholder="Почнiть вводити..." class="form-control mr-2" type="text" zippy="searchcust"  >
+                                <input placeholder="Почнiть вводити..." class="form-control me-2" type="text" zippy="searchcust"  >
                                </div>
                                <div class="col-auto  ">
                                 <input type="submit" class="  btn btn-success  " value="Шукати">
@@ -735,9 +735,9 @@
                     <tr>
 
                         <th>Номер</th>
-                        <th class="text-right">Час</th>
+                        <th class="text-end">Час</th>
                         {{#tables}}
-                        <th class="text-right">Стiл</th>
+                        <th class="text-end">Стiл</th>
                         {{/tables}}
 
                         <th ></th>
@@ -747,7 +747,7 @@
                                           
                         <th >Позиції</th>
 
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                         <th ></th>
                         <th ></th>
                         <th ></th>
@@ -763,8 +763,8 @@
                        
 
                         <td ><a zippy="docnumber"></a></td>
-                        <td class="text-right" zippy="doctime"></td>
-                        {{#tables}} <td zippy="tablenumber" class="text-right"></td>  {{/tables}}
+                        <td class="text-end" zippy="doctime"></td>
+                        {{#tables}} <td zippy="tablenumber" class="text-end"></td>  {{/tables}}
                         <td ><i zippy="delivery" title="Доставка" class="fa fa-bicycle"></i></td>
 
                         <td class="text-nowrap  " zippy="state">  </td>
@@ -772,7 +772,7 @@
                       
                         <td  zippy="rtlist"></td>
 
-                        <td class="text-right" zippy="docamount"></td>
+                        <td class="text-end" zippy="docamount"></td>
   
 
                         <td zippy="docnotes"></td>
@@ -808,10 +808,10 @@
                         <div zippy="docnotes_of" class="col-12"> </div>
                         <div zippy="rtlist_of" class="col-12"> </div>
                         <div class="col-12">
-                          <a zippy="brrunner_of" class="btn btn-sm btn-primary mr-2">  Бiгунок</a> 
-                          <a zippy="brprint_of" class="btn btn-sm btn-info mr-2">  Рахунок</a> 
-                          <a zippy="brpay_of" class="btn btn-sm btn-primary mr-2">  Оплатити</a> 
-                          <a zippy="bredit_of" class="btn btn-sm btn-info mr-2">  Редагувати</a> 
+                          <a zippy="brrunner_of" class="btn btn-sm btn-primary me-2">  Бiгунок</a> 
+                          <a zippy="brprint_of" class="btn btn-sm btn-info me-2">  Рахунок</a> 
+                          <a zippy="brpay_of" class="btn btn-sm btn-primary me-2">  Оплатити</a> 
+                          <a zippy="bredit_of" class="btn btn-sm btn-info me-2">  Редагувати</a> 
                           <a zippy="brclose_of" class="btn btn-sm btn-success">  Закрити</a> 
                           
                        </div>   
@@ -858,15 +858,15 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Вiдмiнити" class="btn btn-outline-secondary  ml-2">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary ml-2">                        
+                        <input type="button" zippy="cancelcust" value="Вiдмiнити" class="btn btn-outline-secondary  ms-2">
+                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary ms-2">                        
                     </div>
                 </div>
             </div>
         </form>
 
         <div id="prform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
+             >
             <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -876,7 +876,7 @@
                             </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#rtag').printThis();$('#prform').modal('hide')"
+                                                      onclick="$('#rtag').printThis();  closeModal('prform')  "
                                                       class="btn btn-success  ">Друк</a></td>
                             </tr>
                         </table>
@@ -937,21 +937,21 @@
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
-                             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Можливiсть створювати доставку з АРМ касира (по дзвiнку клiєнта)"></i>    
                                
                             </div>
                             <div class="form-check">
                                 <input zippy="foodpack" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="foodpack">Вибiр можливостi упаковки з собою.</label>
-                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні"></i> 
                                 
                             </div>
                              <div class="form-check">
                                 <input zippy="diffbp" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="diffbp">Окремi замовлення для кухнi i бару</label>
-                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Якщо кухгя i бар  вимагають окремi  чеки"></i> 
                                 
                             </div>
@@ -1041,7 +1041,7 @@
                       <select  zippy="varbaseitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
                      </div>  
                       <div class="col-auto  ">
-                      <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                      <input   type="submit" class="btn btn-success  ms-2" value="Додати"  >
                     </div> </div>   
                  </form>  
                   
@@ -1069,7 +1069,7 @@
                     <select  zippy="vardetitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
                       </div> 
                      <div class="col-auto  ">
-                    <input   type="submit" class="btn btn-success  ml-2" value="Додати"  >
+                    <input   type="submit" class="btn btn-success  ms-2" value="Додати"  >
                     </div>  </div> 
                  </form>  
                   
@@ -1079,7 +1079,7 @@
                        <tr zippy="vardetlist">
                            <td zippy="vbdetname"></td> 
                            <td zippy="vbdetcode"></td> 
-                           <td class="text-right" zippy="vbdetprice" > </td> 
+                           <td class="text-end" zippy="vbdetprice" > </td> 
                        
                            <td  ><a zippy="vbdetdel"><i class="fa fa-trash"></a></td> 
                        </tr>
@@ -1088,12 +1088,12 @@
                
          </div>
 
-         <div id="modaltran" class="modal fade  " tabindex="-1" role="dialog"   aria-hidden="true" >
+         <div id="modaltran" class="modal fade  " tabindex="-1" role="dialog"    >
                 <div class="modal-dialog modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title ">Відкрити пляшку або пакет</h5> 
-                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                 <span >&times;</span>
                             </button>
                         </div>
@@ -1116,7 +1116,7 @@
                                     <input style="width:75px" pattern="[0-9\.]+" zippy="tritemqty" class="form-control"  >
                                 </div>
                                 <div class="col-auto">
-                                    <input zippy="btntr" type="submit" value="OK"   class="ml-2 btn btn-info  ">
+                                    <input zippy="btntr" type="submit" value="OK"   class="ms-2 btn btn-info  ">
                                 </div>
                                 
                             </div>
@@ -1188,7 +1188,8 @@
           function qtyedit(id,qty){
              $('#editqtyq').val(qty)
              $('#editqtyi').val(id)
-             $('#modalqty').modal('show')
+             
+             openModal('modalqty')  
           } 
                 
           function check_btocheck(ele) {
@@ -1255,7 +1256,8 @@
               $("#akitemid").val(item_id)   
               $("#aklist").text(stamps)   
               
-              $("#modalak").modal('show')   
+             
+              showModal('modalak')  
           }  
        
           function check_vbdel() {
@@ -1270,7 +1272,8 @@
             
    
           function openTransform()  {
-              $("#modaltran").modal('show')   
+             
+              showModal('modaltran')    
           }    
                                    
         </script>

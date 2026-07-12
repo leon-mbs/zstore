@@ -19,16 +19,16 @@
                        <div class="row  ">
                         <label class="col-form-label col-auto" for="from">З </label>
                         <div class="col-auto  ">
-                          <input v-model="from" type="date" class="form-control mr-sm-2  "  style="width:110px">
+                          <input v-model="from" type="date" class="form-control ms-sm-2  "  style="width:110px">
                        </div>
 
                         <label class="col-form-label col-auto" for="to"> по </label>
                         <div class="col-auto  ">
-                          <input v-model="to" type="date" class="form-control mr-sm-2 " style="width:110px" >
+                          <input v-model="to" type="date" class="form-control ms-sm-2 " style="width:110px" >
                         </div>
                         <label class="col-form-label col-auto"   for="searchemp">виконавець </label>
                         <div class="col-auto  ">
-                        <select v-model="user_id" class="form-control  mr-2  " >
+                        <select v-model="user_id" class="form-control  me-2  " >
                             <option value="0">Не обрано</option>
                             <option v-for="u in users" :value="u.key">{{u.value}}</option>
                          
@@ -37,7 +37,7 @@
                         </div>
                         <label class="col-form-label col-auto" for="searchproject"> проект </label>
                         <div class="col-auto  ">
-                        <select v-model="project_id" class="form-control mr-2" zippy="searchproject">
+                        <select v-model="project_id" class="form-control me-2" zippy="searchproject">
                             <option value="0">Не обрано</option>
                             <option v-for="p in projects" :value="p.key">{{p.value}}</option>
                         </select>
@@ -53,11 +53,11 @@
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#ttable">Облiк часу</a>
+                        <a class="nav-link active" data-bs-toggle="tab" href="#ttable">Облiк часу</a>
                       </li>
                       
                        <li class="nav-item">
-                        <a class="nav-link " data-toggle="tab" href="#tstat"> Статистика </a>
+                        <a class="nav-link " data-bs-toggle="tab" href="#tstat"> Статистика </a>
                       </li>
                       
                   </ul>
@@ -115,11 +115,11 @@
                         <tr v-for="s in stat"  >
                             <td >{{s.username}}</td>
                             <td >{{s.project_name}}</td>
-                            <td style="width:100px;"  class="text-right">{{s.amount}}</td>
+                            <td style="width:100px;"  class="text-end">{{s.amount}}</td>
                         </tr>
                         <tr>
-                            <td  colspan="2" class="text-right text-bold">Всього:</td>
-                            <td  class="text-right  text-bold">{{total}}</td>
+                            <td  colspan="2" class="text-end text-bold">Всього:</td>
+                            <td  class="text-end  text-bold">{{total}}</td>
                         </tr>
                     </table>
 
@@ -180,7 +180,7 @@
                 </form>
                  </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
                 <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
               </div>
             </div>
@@ -300,8 +300,8 @@
                   this.editdate = this.today;
 
 
-
-                  $('#editmodal').modal('show')   
+                  openModal('editmodal')
+                 
 
                } ,    
                save:function(i){
@@ -320,7 +320,9 @@
                   {
                          if(data=="") {
                             this.loaddata() ;                               
-                            $('#editmodal').modal('hide')   
+                             
+                            closeModal('editmodal')
+                            
                          } else {
                              toastr.error(data,'',{timeOut:5000})
                          }

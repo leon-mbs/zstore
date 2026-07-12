@@ -508,9 +508,9 @@ class ARMFood extends \App\Pages\Base
             if($prod->foodstate==4 )   $status="Видано";
             $t .="<tr> " ;
             $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
-         //   $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
-         //   $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->quantity) ."</td>" ;
+         //   $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->price) ."</td>" ;
+         //   $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
             $t .=  ($prod->myself==1 ? "<td style=\"padding:2px\"> <i class=\"fa fa-bag-shopping\"></i>  </td>" : "<td style=\"padding:2px\">   </td>")    ;
             $t .="<td style=\"padding:2px\"  >{$status}</td>" ;
             $t .="</tr> " ;
@@ -640,9 +640,9 @@ class ARMFood extends \App\Pages\Base
             if($prod->foodstate==4 )   $status="Видано";
             $t .="<tr> " ;
             $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
-         //   $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
-         //   $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
+            $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->quantity) ."</td>" ;
+         //   $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->price) ."</td>" ;
+         //   $t .="<td style=\"padding:2px\" class=\"text-end\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
             $t .=  ($prod->myself==1 ? "<td style=\"padding:2px\"> <i class=\"fa fa-bag-shopping\"></i>  </td>" : "<td style=\"padding:2px\">   </td>")    ;
             $t .="<td style=\"padding:2px\"  >{$status}</td>" ;
             $t .="</tr> " ;

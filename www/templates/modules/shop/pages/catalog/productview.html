@@ -72,9 +72,9 @@
                            </tr>
                            <tr zippy="varlist">
                             
-                             <td class="text-left   "> <div class="p-1 rounded  bg-secondary  ">  <a  class="footer"  zippy="vattrvalue"></a> </div> </td>
-                             <td class="text-right"> <span zippy="vprice"></span> <span   zippy="vactionprice"></span> </td>
-                             <td class="text-right" zippy="vcurr">    </td>
+                             <td class="text-start   "> <div class="p-1 rounded  bg-secondary  ">  <a  class="footer"  zippy="vattrvalue"></a> </div> </td>
+                             <td class="text-end"> <span zippy="vprice"></span> <span   zippy="vactionprice"></span> </td>
+                             <td class="text-end" zippy="vcurr">    </td>
                              
                            </tr>
                          </table>
@@ -103,7 +103,7 @@
                  <div zippy="pairlist" class="col-3">
                        <div class="card h-100">
                          {{^nouseimages}}
-                            <a zippy="pairimage"><img class="card-img-top"></a>
+                            <a zippy="pairimage"><img class="shop-img card-img-top"></a>
                              {{/nouseimages}}
                             <div class="card-body p-2">
                                 <a class="card-title card-link text-dark  clip" zippy="pairname"></a>
@@ -122,7 +122,7 @@
                  <div zippy="reclist" class="col-3">
                        <div class="card h-100">
                          {{^nouseimages}}
-                            <a zippy="rcimage"><img class="card-img-top"></a>
+                            <a zippy="rcimage"><img class="shop-img card-img-top"></a>
                              {{/nouseimages}}
                             <div class="card-body p-2">
                                 <a class="card-title card-link text-dark  clip" zippy="rcname"></a>
@@ -139,7 +139,7 @@
                 <table class="table table-sm   table-stripped  ">
                     <tr zippy="attributelist">
                         <td><span zippy="attrname"></span></td>
-                        <td class="text-right"><span zippy="attrvalue"></span></td>
+                        <td class="text-end"><span zippy="attrvalue"></span></td>
                     </tr>
                 </table>
             </div>
@@ -192,7 +192,7 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <input zippy="capchacode" required="required" class="form-control mr-4" placeholder="Введiть код">
+                        <input zippy="capchacode" required="required" class="form-control ms-4" placeholder="Введiть код">
                         <div class="input-group-append">
                             <img zippy="capcha" style="cursor:pointer" title="Оновити..."/>
                         </div>
@@ -211,15 +211,7 @@
         </div>
 
         <script>
-            $(document).ready(function () {
-
-                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-                    event.preventDefault();
-                    $(this).ekkoLightbox({'alwaysShowClose': true});
-                });
-
-
-            });
+         
 
        // $('input').rating('rate', 2.5);
         </script>

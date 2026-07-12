@@ -8,8 +8,8 @@
 
         
             <h3> Виробничий  наряд
-                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                    data-placement="bottom" data-content="Документ, що фіксує виконання виробничих завдань.
+                <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-bs-toggle="popover"
+                    data-bs-placement="bottom" data-bs-content="Документ, що фіксує виконання виробничих завдань.
                    Для списання витратних матеріалів на підставі наряду, можна створити документ  
                    'Списання на виробництво'."></i>
 
@@ -60,9 +60,9 @@
                     </div>
                  </div>  
                 <div class="col-11 col-md-7 col-xl-7 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary   ml-2">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary   ml-2">
-                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-success  ml-2 ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary   ms-2">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary   ms-2">
+                    <input zippy="execdoc" type="submit" value="На виконання" class="btn btn-success  ms-2 ">
                 </div>
               </form> 
                 </div> 
@@ -83,17 +83,17 @@
                         </select>
                          </div>
             
-                        <label class="col-form-label col-auto" class="ml-2" for="editqty">Кіл.</label>
+                        <label class="col-form-label col-auto" class="ms-2" for="editqty">Кіл.</label>
                         <div class="col-auto  ">
-                        <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"     style="width: 75px;">
+                        <input class="form-control me-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"     style="width: 75px;">
                          </div>
-                        <label class="col-form-label col-auto" title="Розцінки для  нарахування зарплати" class="ml-2" for="editcost">Вартість</label>
+                        <label class="col-form-label col-auto" title="Розцінки для  нарахування зарплати" class="ms-2" for="editcost">Вартість</label>
                         <div class="col-auto  ">
-                           <input title="Розцінки для  нарахування зарплати" class="form-control mr-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                           <input title="Розцінки для  нарахування зарплати" class="form-control me-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
                          </div>
                         <label class="col-form-label col-auto" for="editdesc">Коментар  </label>
                         <div class="col-auto  ">
-                           <input class="form-control  mr-2" type="text" zippy="editdesc"                          >
+                           <input class="form-control  me-2" type="text" zippy="editdesc"                          >
                         </div>
                         <div class="col-auto  ">
                           <input zippy="saverow" type="submit" value="+" class="btn btn-primary">
@@ -111,11 +111,11 @@
                             <td zippy="desc"  ></td>
 
 
-                            <td zippy="quantity" class="text-right"></td>
-                            <td zippy="cost" class="text-right"></td>
+                            <td zippy="quantity" class="text-end"></td>
+                            <td zippy="cost" class="text-end"></td>
 
 
-                            <td class="text-right">
+                            <td class="text-end">
 
                                 <a zippy="delete"><i class="fa fa-trash"></i></a>
 
@@ -138,21 +138,21 @@
                             <option value="0">Не обрано</option>
                         </select>
                           </div>  
-                        <label class="col-form-label col-auto" class="ml-2" for="editqtyprod">Кіл.</label>
+                        <label class="col-form-label col-auto" class="ms-2" for="editqtyprod">Кіл.</label>
                         <div class="col-auto  ">
-                        <input class="form-control mr-2" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"         style="width: 75px;">
+                        <input class="form-control me-2" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"         style="width: 75px;">
                          </div>  
-                        <label class="col-form-label col-auto" title="Розцінки для  нарахування зарплати" class="ml-2" for="editprodcost">Вартість</label>
+                        <label class="col-form-label col-auto" title="Розцінки для  нарахування зарплати" class="ms-2" for="editprodcost">Вартість</label>
                         <div class="col-auto  ">
-                          <input title="Розцінки для  нарахування зарплати" class="form-control mr-2" type="text" zippy="editprodcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                          <input title="Розцінки для  нарахування зарплати" class="form-control me-2" type="text" zippy="editprodcost" pattern="[0-9\.]+" value="0"     style="width: 75px;">
                          </div>  
-                        <label class="col-form-label col-auto" title="Облікова  ціна  при оприходуванні на  склад" class="ml-2" for="editprodprice">Собівартість</label>
+                        <label class="col-form-label col-auto" title="Облікова  ціна  при оприходуванні на  склад" class="ms-2" for="editprodprice">Собівартість</label>
                         <div class="col-auto  ">
-                          <input title="Облікова  ціна  при оприходуванні на  склад" class="form-control mr-2" type="text" zippy="editprodprice" pattern="[0-9\.]+" value="0"     style="width: 75px;">
+                          <input title="Облікова  ціна  при оприходуванні на  склад" class="form-control me-2" type="text" zippy="editprodprice" pattern="[0-9\.]+" value="0"     style="width: 75px;">
                         </div>    
                         <label class="col-form-label col-auto" for="editdescprod">Коментар  </label>
                         <div class="col-auto  ">
-                        <input class="form-control  mr-2" type="text" zippy="editdescprod"                          >
+                        <input class="form-control  me-2" type="text" zippy="editdescprod"                          >
                        </div>  
                        <div class="col-auto  ">
                         <input zippy="saverowprod" type="submit" value="+" class="btn btn-primary">
@@ -170,12 +170,12 @@
 
 
                             <td zippy="descprod"  ></td>
-                            <td zippy="quantityprod" class="text-right"></td>
-                            <td zippy="costprod" class="text-right"></td>
-                            <td zippy="priceprod" class="text-right"></td>
+                            <td zippy="quantityprod" class="text-end"></td>
+                            <td zippy="costprod" class="text-end"></td>
+                            <td zippy="priceprod" class="text-end"></td>
 
 
-                            <td class="text-right">
+                            <td class="text-end">
 
                                 <a zippy="deleteprod"><i class="fa fa-trash"></i></a>
 
@@ -193,13 +193,13 @@
                 <form zippy="editdetail3"  >
                 <div class="row">
                      <div class="col-auto  ">
-                        <select zippy="editemp" class="form-control mr-2  ">
+                        <select zippy="editemp" class="form-control me-2  ">
                             <option value="0">Не обрано</option>
                         </select>
                      </div>
                         <label class="col-form-label col-auto"   for="editktu">КТУ</label>
                        <div class="col-auto  ">
-                        <input zippy="editktu" class="form-control qtyprice mr-2 " pattern="[0-9,\.]+" style="width:50px" >
+                        <input zippy="editktu" class="form-control qtyprice me-2 " pattern="[0-9,\.]+" style="width:50px" >
                        </div>     
                         <div class="col-auto  ">
                           <input zippy="saverow3" type="submit" value="+" class="btn btn-primary">
@@ -214,7 +214,7 @@
 
                             <td zippy="empname"></td>
                             <td zippy="empktu"  ></td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <a zippy="delete3"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
@@ -234,7 +234,7 @@
                        </div>
                          
                        <div class="col-auto  ">
-                         <input zippy="saverow4" type="submit" value="+" class="btn btn-primary ml-2">
+                         <input zippy="saverow4" type="submit" value="+" class="btn btn-primary ms-2">
                       </div>
                     </div> 
                         
@@ -247,7 +247,7 @@
 
                             <td zippy="eq_name"></td>
                             <td zippy="eq_code"></td>
-                            <td class="text-right">
+                            <td class="text-end">
                                 <a zippy="delete4"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>

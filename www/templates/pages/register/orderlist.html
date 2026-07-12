@@ -17,21 +17,21 @@
                        <div class="row  ">
                         <label class="col-form-label col-auto" for="searchnumber"> № </label>
                          <div class="col-auto  ">
-                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                        <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                           </div>
                         <label class="col-form-label col-auto" for="status">Статус</label>
                          <div class="col-auto  ">
-                        <select class="form-control mr-2" zippy="status">
+                        <select class="form-control me-2" zippy="status">
                         </select>
                           </div>
                         <label class="col-form-label col-auto" for="salesource">Джерело продаж</label>
                          <div class="col-auto  ">
-                        <select class="form-control mr-2" zippy="salesource">
+                        <select class="form-control me-2" zippy="salesource">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
                          <div class="col-auto  ">
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
                          </div>
                         <div class="col-auto  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
@@ -50,7 +50,7 @@
                         <th>Номер</th>
                         <th>Дата</th>
                         <th>Замовник</th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                         <th>Статус</th>
                         <th>Вiдповiдальний</th>
 
@@ -69,7 +69,7 @@
                         <td class="text-nowrap" ><a zippy="number"></a></td>
                         <td class="text-nowrap" zippy="date"></td>
                         <td  class="text-nowrap"><a href="return false; void(0)" zippy="customer"></a></td>
-                        <td zippy="amount" class="text-right"></td>
+                        <td zippy="amount" class="text-end"></td>
 
 
                         <td class="text-nowrap" zippy="state"></td>
@@ -116,12 +116,12 @@
                      <tr>
                      <th>Товар</th>
                      <th>Артикул</th>
-                     <th class="text-right">Замовлено</th>
+                     <th class="text-end">Замовлено</th>
                      <th>На складi</th>
                      <th>У постачальникiв</th>
                       {{#isciprod}}
                   
-                     <th class="text-right">Гот. до вир.</th>
+                     <th class="text-end">Гот. до вир.</th>
                      {{/isciprod}}
                     
                   
@@ -131,13 +131,13 @@
                      <tr>
                         <td>{{itemname}}</td>
                         <td>{{itemcode}}</td>
-                        <td class="text-right">{{itemqty}}</td>
+                        <td class="text-end">{{itemqty}}</td>
                         <td>     
                           <table style="font-size:smaller"  class="ctable">
                               {{#citemsstore}}
                               <tr>
                                  <td>{{itstore}}</td>
-                                 <td class="text-right">{{itqty}}</td>
+                                 <td class="text-end">{{itqty}}</td>
                               </tr>
                              {{/citemsstore}} 
                           </table>
@@ -148,8 +148,8 @@
                               <tr>
                                  <td>{{itcust}}</td>
                                  <td>{{itcustcode}}</td>
-                                 <td class="text-right">{{itcustprice}}</td>
-                                 <td class="text-right">{{itcustqty}}</td>
+                                 <td class="text-end">{{itcustprice}}</td>
+                                 <td class="text-end">{{itcustqty}}</td>
                                  <td >{{itcustupdated}}</td>
                               
                               </tr>
@@ -158,7 +158,7 @@
                         </td>
                       {{#isciprod}}
                         
-                       <td class="text-right">
+                       <td class="text-end">
                            {{prqty}}
                        
                         </td>
@@ -200,31 +200,31 @@
                        <div class="col-12 mb-2">      
                           <div class="row"> 
                          <div class="col-auto  ">
-                         <button zippy="binp" class="btn btn-success  mr-2">  На виконання</button>
+                         <button zippy="binp" class="btn btn-success  me-2">  На виконання</button>
                           </div>
                          <div class="col-auto  ">
-                         <button zippy="bscan" class="btn btn-primary  mr-2">  Зiбрати</button>
+                         <button zippy="bscan" class="btn btn-primary  me-2">  Зiбрати</button>
                          </div>
                         <div class="col-auto  ">
-                         <button zippy="bsplit" class="btn btn-primary  mr-2">  Роздiлити</button>
+                         <button zippy="bsplit" class="btn btn-primary  me-2">  Роздiлити</button>
                          </div>
                          <div class="col-auto  ">
-                         <button zippy="brd" class="btn btn-success  mr-2">  Готовий до вiдправки</button>
+                         <button zippy="brd" class="btn btn-success  me-2">  Готовий до вiдправки</button>
                          </div>
                          <div class="col-auto  ">
-                         <button zippy="bsent" class="btn btn-success  mr-2">  Вiдправлений</button>
+                         <button zippy="bsent" class="btn btn-success  me-2">  Вiдправлений</button>
                          </div>
                          <div class="col-auto  ">
-                         <button zippy="brec" class="btn btn-success  mr-2">  Доставлений</button>
+                         <button zippy="brec" class="btn btn-success  me-2">  Доставлений</button>
                          </div>
                          <div class="col-auto  ">
-                         <button zippy="bclose"   class="  btn btn-success  mr-2 ">  Закрити                </button>
+                         <button zippy="bclose"   class="  btn btn-success  me-2 ">  Закрити                </button>
                          </div>
                          <div class="col-auto  ">
-                         <a zippy="btopay" class="  btn btn-success  mr-4 "> Сплатити</a>
+                         <a zippy="btopay" class="  btn btn-success  ms-4 "> Сплатити</a>
                          </div>
                          <div class="col-auto  ">
-                         <button zippy="bref" class="btn btn-danger  mr-2">  Анулювати                </button>
+                         <button zippy="bref" class="btn btn-danger  me-2">  Анулювати                </button>
                          </div>
                        </div>
                        </div>
@@ -234,27 +234,27 @@
                         
                            <label class="col-form-label col-auto"  >Створити</label>
                            <div class="col-auto  ">
-                        <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
+                        <button zippy="bttn" class="btn btn-info  me-2">  ТТН</button>
                         </div>
                           <div class="col-auto  ">
-                          <button zippy="bpos" class="btn btn-info  mr-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
+                          <button zippy="bpos" class="btn btn-info  me-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
                           </div>
                           <div class="col-auto  ">
-                          <button zippy="bgi" class="btn btn-info  mr-2">  Видаткову накладну                </button>
+                          <button zippy="bgi" class="btn btn-info  me-2">  Видаткову накладну                </button>
                           </div>
                           <div class="col-auto  ">
-                          <button zippy="bginv" class="btn btn-info  mr-2">  Рахунок-фактуру                </button>
+                          <button zippy="bginv" class="btn btn-info  me-2">  Рахунок-фактуру                </button>
                           </div>
                           <div class="col-auto  ">
-                          <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику                                       </button>
+                          <button zippy="bco" class="btn btn-info  me-2">  Заявку постачальнику                                       </button>
                           </div>
                         {{#useprod}} 
                           <div class="col-auto  ">
-                          <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">  Наряд</button>
+                          <button zippy="btask" type="submit" class=" btn btn-info me-2 ">  Наряд</button>
                           </div>
                             {{/useprod}}
                          <div class="col-auto  ">
-                          <button zippy="bcopy" class="btn btn-info  mr-4">  Копію</button>
+                          <button zippy="bcopy" class="btn btn-info  ms-4">  Копію</button>
                           </div>
                        </div>     
                        </div>     
@@ -272,7 +272,7 @@
                          <div class="row  ">
                         <label class="col-form-label col-auto" data-label="bres">Резервувати товари </label>
                         <div class="col-auto  ">
-                        <select class="form-control mr-2"  zippy="store"></select>
+                        <select class="form-control me-2"  zippy="store"></select>
                         </div>
                        <div class="col-auto  ">  
                         <button zippy="bres" class="btn btn-info  ">OK                 </button>
@@ -285,14 +285,14 @@
                       </div>
                        <div class="col-auto"> 
                     
-                    <form zippy="moveform" class="  mt-1 ml-4">
+                    <form zippy="moveform" class="  mt-1 ms-4">
                         <div class="row  ">
-                        <label class="col-form-label col-auto" class="mr-2">Перевести на: </label>
+                        <label class="col-form-label col-auto" class="me-2">Перевести на: </label>
                        {{#usebranch}}
 
                         <label class="col-form-label col-auto" for="brmove">фiлiю </label>
                          <div class="col-auto  ">
-                        <select zippy="brmove" class="form-control mr-2 ">
+                        <select zippy="brmove" class="form-control me-2 ">
                             <option value="0">Не вказано</option>
                         </select>
                          </div>
@@ -300,11 +300,11 @@
                   
                         <label class="col-form-label col-auto" for="usmove">користувача </label>
                          <div class="col-auto  ">
-                         <select class="form-control mr-2" zippy="usmove"  >
+                         <select class="form-control me-2" zippy="usmove"  >
 
                         </select>  </div>
                          <div class="col-auto  ">
-                        <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
+                        <button zippy="bmove" type="submit" class="btn btn-info  ms-4 ">OK                 </button>
                          </div></div>
                      </form>                
                     </div>
@@ -344,13 +344,13 @@
                       <td zippy="editlistname"></td>
                       <td zippy="editlistcode"></td>
                       <td zippy="editlistbarcode"></td>
-                      <td class="text-right" zippy="editlistqty"></td>
+                      <td class="text-end" zippy="editlistqty"></td>
                    </tr> 
                  </table>         
                  <div class="form-group">
-                    <button zippy="editcancel" type="submit" class="  btn btn-secondary  mr-2 ">Скасувати</button>                 
-                    <button zippy="editsave" type="submit" class="  btn btn-info  mr-2 ">Зберегти</button>                 
-                    <button zippy="editready" type="submit" class="  btn btn-success  mr-4 ">Зiбрано</button>                 
+                    <button zippy="editcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
+                    <button zippy="editsave" type="submit" class="  btn btn-info  me-2 ">Зберегти</button>                 
+                    <button zippy="editready" type="submit" class="  btn btn-success  ms-4 ">Зiбрано</button>                 
 
                     <i style="cursor:pointer" title="Вiдправити запитання" zippy="editchat" class="fa fa-comments"></i>
 
@@ -377,14 +377,14 @@
                      
                       <td zippy="splitlistcode"></td>
                       
-                      <td class="text-right" zippy="splitlistqty"></td>
-                      <td class="text-right" ><input required="om" pattern="[0-9\.]+" class="form-control form-control-sm ml-2" style="width:75px" zippy="splitlistnewqty"></td>
+                      <td class="text-end" zippy="splitlistqty"></td>
+                      <td class="text-end" ><input required="om" pattern="[0-9\.]+" class="form-control form-control-sm ms-2" style="width:75px" zippy="splitlistnewqty"></td>
                    
                    </tr> 
                  </table>         
                  <div class="form-group">
-                    <button zippy="splitcancel" type="submit" class="  btn btn-secondary  mr-2 ">Скасувати</button>                 
-                    <button zippy="splitsave" type="submit" class="  btn btn-info  mr-2 ">Розділити</button>                 
+                    <button zippy="splitcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
+                    <button zippy="splitsave" type="submit" class="  btn btn-info  me-2 ">Розділити</button>                 
                   
                     
                  </div>
@@ -405,8 +405,8 @@
                             <div class="modal-header">
                                 <h5 class="modal-title">Чат  з замовником</h5>
                                 
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span >&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
@@ -428,7 +428,7 @@
                                   <div v-for="msg in msglist" class="col-12">
                                       <div v-show="msg.isseller ==false" class="row">
                                          <div class="col-6"><b>Замовник</b></div>
-                                         <div class="col-4 text-right"><small>{{msg.msgdate}}</small></div>
+                                         <div class="col-4 text-end"><small>{{msg.msgdate}}</small></div>
                                          <div class="col-2"> </div>
                                        </div>
                                        <div v-show="msg.isseller ==false" class="row">
@@ -439,9 +439,9 @@
                                  
                                         <div v-show="msg.isseller ==true" class="row">
                                             <div class="col-2"> </div>
-                                            <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
+                                            <div class="col-4 text-start"><small>{{msg.msgdate}}</small></div>
                                             
-                                            <div class="col-6 text-right"><b>Продавець</b></div>
+                                            <div class="col-6 text-end"><b>Продавець</b></div>
                                         </div>
                                         
                                         <div v-show="msg.isseller ==true" class="row">
@@ -451,7 +451,7 @@
                                        </div>                            
                                        
                                           <div  v-show="msg.isseller ==true" class="row">
-                                            <div class="col-12 text-right">  
+                                            <div class="col-12 text-end">  
                                               <small>   
                                              <i v-show="msg.checked==true"   class="fa fa-check-double "></i>
                                              <i v-show="msg.checked==false"   class="fa fa-check "></i>

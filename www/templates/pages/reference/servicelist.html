@@ -14,17 +14,17 @@
                   
                             <label class="col-form-label col-auto" for="searchkey">Пошук</label>
                              <div class="col-auto  ">
-                                <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                                <input class="form-control ms-sm-2" type="text" zippy="searchkey">
                              </div>
                             <label class="col-form-label col-auto" for="searchcat">Категорiя</label>
                              <div class="col-auto  ">
-                                <input class="form-control mr-sm-2" type="text" zippy="searchcat">
+                                <input class="form-control ms-sm-2" type="text" zippy="searchcat">
                              </div>
                              <div class="col-auto  ">
                               <div class="form-check">
 
                                 <input title="Показати неактуальні" class="form-check-input" type="checkbox" zippy="showdis">
-                                <label class="form-check-label mr-sm-3" for="showdis">Всі</label>
+                                <label class="form-check-label me-sm-3" for="showdis">Всі</label>
                               </div>
                             </div>
                              <div class="col-auto  ">
@@ -34,16 +34,16 @@
                         </form>
                     </div>
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a> 
-                    <a zippy="toexport" class="ml-3 ">   Експорт (прайс) <i class="fa fa-upload"></i></a> 
-                    <a zippy="toimport" class="ml-3 ">   Iмпорт <i class="fa fa fa-download"></i></a> 
+                    <a zippy="toexport" class="ms-3 ">   Експорт (прайс) <i class="fa fa-upload"></i></a> 
+                    <a zippy="toimport" class="ms-3 ">   Iмпорт <i class="fa fa fa-download"></i></a> 
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Назва</th>
                             <th>Од. </th>    
                             <th  ></th>
-                            <th class="text-right">Вартість</th>
-                            <th class="text-right">Розцiнки</th>
-                            <th class="text-right">Години</th>
+                            <th class="text-end">Вартість</th>
+                            <th class="text-end">Розцiнки</th>
+                            <th class="text-end">Години</th>
                             
                             <th></th>
                             <th></th>
@@ -53,9 +53,9 @@
                             <td  > <a zippy="service_name"  > </a></td>
                             <td zippy="msr"></td>
                             <td  ><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
-                            <td class="text-right" zippy="price"></td>
-                            <td class="text-right" zippy="cost"></td>
-                            <td class="text-right" zippy="hours"></td>
+                            <td class="text-end" zippy="price"></td>
+                            <td class="text-end" zippy="cost"></td>
+                            <td class="text-end" zippy="hours"></td>
                             <td    >
                           
                               <small zippy="notes"  > </small>
@@ -145,7 +145,7 @@
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не використовується</label>
                 </div>
-                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  mr-2">
+                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary  me-2">
                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
                 
 
@@ -162,12 +162,12 @@
                      
                     <label class="col-form-label col-auto" for="editsname">ТМЦ</label>
                      <div class="col-auto  ">
-                       <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
+                       <input placeholder="Почніть вводити.." class="form-control  ms-sm-2" zippy="editsname"/>
                      </div>                    
                     <label class="col-form-label col-auto" for="editsqty">Кіл.</label>
                       <div class="col-auto  ">
                     
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on" 
+                    <input autocomplete="off" class="form-control  qtyprice  ms-sm-2" type="text" zippy="editsqty"  required="on" 
                            pattern="[0-9,\.]+" style="width:60px">
                      </div>
                      <div class="col-auto  ">
@@ -180,13 +180,13 @@
                     <tr>
                         <th>Найменування</th>
                         <th>Код</th>
-                        <th class="text-right">Кіл.</th>
+                        <th class="text-end">Кіл.</th>
                         <th></th>
                     </tr>
                     <tr zippy="setlist">
                         <td zippy="sname"></td>
                         <td zippy="scode"></td>
-                        <td class="text-right" zippy="sqty"></td>
+                        <td class="text-end" zippy="sqty"></td>
                         <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
@@ -208,9 +208,9 @@
                  <a zippy="eback"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>  <br>
                         <div>
 
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/servicelist" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/servicelist" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/servicelist" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel me-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/servicelist" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf me-2"></i></a>
 
                     </div>
 
@@ -290,7 +290,7 @@
                             <tr>
                                 <th>Найменування</th>
                                 <th>Категорія</th>
-                                <th class="text-right">Ціна</th>
+                                <th class="text-end">Ціна</th>
                                 <th>Примітка</th>
                                
 
@@ -299,7 +299,7 @@
                             <tr>
                                 <td>{{colname}}</td>
                                 <td>{{colcat}}</td>
-                                <td  class="text-right">{{colprice}}</td>
+                                <td  class="text-end">{{colprice}}</td>
                                 <td>{{colnotes}}</td>
                                 
                               </tr>
@@ -314,14 +314,14 @@
         </div>
         
          <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
+             >
             <div class="modal-dialog  ">
                 <div  class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title">Тех. карта</h5>
                    
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span >&times;</span>
                         </button>
                     </div>
                     <div id="idesccontent" class="modal-body">

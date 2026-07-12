@@ -123,7 +123,7 @@
         <td>Проход:</td>
         <td align="right"> {{tu}} </td>
         <td>
-            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                title="Виручка (відпускна ціна на кількість) мінус витрати основної діяльності   (затрати на закупку)"></i>
         </td>
     </tr>
@@ -131,7 +131,7 @@
         <td>Змiннi витрати :</td>
         <td align="right"> {{tvc}} </td>
         <td>
-            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                title="Витрати основної діяльності"></i>
         </td>
     </tr>
@@ -139,7 +139,7 @@
         <td>Операцiйнi витрати:</td>
         <td align="right">{{OP}}  </td>
         <td>
-            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                title="Всі витрати мінус змінні витрати "></i>
         </td>
     </tr>
@@ -147,7 +147,7 @@
         <td>Чистий прибуток:</td>
         <td align="right"> {{PR}} </td>
         <td>
-            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                title="Проход мiнус операцiйнi витрати (виручка мiнус всi витрати)"></i>
         </td>
     </tr>
@@ -156,7 +156,7 @@
         <td>Інвестиції:</td>
         <td align="right"> {{inv}} </td>
         <td>
-            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                title="ТМЦ на складі та основні фонди на балансі"></i>
         </td>
     </tr>
@@ -164,7 +164,7 @@
         <td>Вiддача вiд iнвестицiй (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
-            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                title="Проход на iнвестицiї"></i>
         </td>
     </tr>

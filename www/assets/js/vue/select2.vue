@@ -14,7 +14,7 @@ module.exports = {
     mounted: function() {
           var vm = this;
                setTimeout(() => { 
-               $(vm.$el).select2({theme:'bootstarp4'})
+               $(vm.$el).select2({theme:'bootstrap-5'})
                .on("change", function() {
                vm.$emit("input", this.value);
                 });

@@ -3,13 +3,13 @@
          <span zippy="_itemlist_"  ></span>   
           {{={| |}=}}    
           <div id="modalitemlist" class="modal fade  " tabindex="-1" role="dialog" 
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered modal-xl  ">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Вибiр ТМЦ</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div id="vitemlist" class="modal-body">    
@@ -17,11 +17,11 @@
                                <div class="row  ">
                                 <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
                                  <div class="col-auto  ">
-                                    <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
+                                    <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control ms-sm-2" type="text"  >
                                   </div> 
                                 <label class="col-form-label col-auto" for="wissearchcat">категорiя</label>
                                   <div class="col-auto  ">
-                                <select v-model="wissearchcat" class="form-control mr-sm-2"  >
+                                <select v-model="wissearchcat" class="form-control ms-sm-2"  >
                                     <option value="0">Не задано</option>
                                     <option v-for="cat in cats"    v-bind:value="cat.key">{{cat.value}}</option>
                                                                        
@@ -29,16 +29,16 @@
                                   </div> 
                                 <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
                                  <div class="col-auto  ">
-                                    <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
+                                    <input v-model="wissearchbrand" autocomplete="off" list="wissearchmanlist" class="form-control ms-sm-2" zippy="wissearchmanufacturer"/>
                                     <datalist id="wissearchmanlist">
                                           <option v-for="br in brands" v-bind:value="br.value" v-bind:label="br.value" ></option>
                 
                                     </datalist>
                                  </div> 
                                  <div class="col-auto  pt-2`">
-                                   <div class="form-check  mr-sm-2">
+                                   <div class="form-check  ms-sm-2">
                                      <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
-                                     <input type="checkbox" v-model="wissearchonstore" id="wissearchonstore" class="form-check-input  mr-2"  >
+                                     <input type="checkbox" v-model="wissearchonstore" id="wissearchonstore" class="form-check-input  me-2"  >
                                   </div> 
                                  </div> 
                                  <div class="col-auto  ">
@@ -93,8 +93,8 @@
                 this.searchcat =  0
                 this.searchbrand =  ""
 
-    
-               $("#modalitemlist").modal('hide')
+              closeModal('modalitemlist')  
+           
     
                _cb(item_id) 
             }
@@ -174,7 +174,8 @@
       function onOpenItemList(_f){
         _cb = _f    // колбек  при выборе  итема
           
-        $("#modalitemlist").modal('show')
+     
+        openModal('modalitemlist')    
         
         vitemlist.refresh()
        

@@ -16,14 +16,14 @@
 
                         <label class="col-form-label col-auto" for="searchnumber"> № </label>
                          <div class="col-auto  ">
-                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                        <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                         </div>
                          <div class="col-auto  ">
-                        <select class="form-control mr-2" zippy="status">
+                        <select class="form-control me-2" zippy="status">
                         </select>
                         </div>
                         <div class="col-auto  ">
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
+                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
                         </div>
                          <div class="col-auto  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
@@ -42,7 +42,7 @@
                         <th>Дата</th>
                         <th>Клієнт</th>
                         <th> </th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
 
                         <th>Статус</th>
 
@@ -59,11 +59,11 @@
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="customer"></td>
                         <td zippy="customerphone"></td>
-                        <td zippy="amount" class="text-right"></td>
+                        <td zippy="amount" class="text-end"></td>
 
 
                         <td class="text-nowrap" zippy="state"></td>
-       <td>
+                        <td>
                             <i  zippy="ispay"   class="fa fa-credit-card "></i>
                         </td>
                                         
@@ -96,31 +96,31 @@
                     <form zippy="statusform"  >
                       <div class="row  ">
                         <div class="col-auto  ">
-                         <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На виконання</button>
+                         <button zippy="binproc" type="submit" class="  btn btn-success  me-2 ">На виконання</button>
                          </div>
                         <div class="col-auto  ">
-                         <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Виконано</button>
+                         <button zippy="bfin" type="submit" class="  btn btn-success  me-2 ">Виконано</button>
                          </div>
                         <div class="col-auto  ">
-                         <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
+                         <a zippy="btopay" class="  btn btn-success  me-2 ">Оплатити</a>
                          </div>
                         <div class="col-auto  ">
-                         <button zippy="bpos" class="btn btn-info  mr-2">   {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}    </button>
+                         <button zippy="bpos" class="btn btn-info  me-2">   {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}    </button>
                          </div>
                          <div class="col-auto  ">
-                        <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Рахунок  </button>
-                        v
+                           <button zippy="binvoice" type="submit" class="  btn btn-info me-2 "  >Рахунок  </button>
+                        </div> 
                          <div class="col-auto  ">
-                         <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гар. талон  </button>
+                         <button zippy="bwarranty" type="submit" class="  btn btn-info me-2 "  >Гар. талон  </button>
                          </div>
                           {{#useprod}}
                          <div class="col-auto  ">
-                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Наряд</button>
+                         <button zippy="btask" type="submit" class=" btn btn-info me-2 ">Наряд</button>
                          </div>
                          {{/useprod}}
                        
                         <div class="col-auto  "> 
-                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Анулювано</button>
+                          <button zippy="bref" type="submit" class="  btn btn-danger me-2 ">Анулювано</button>
                        </div>
                        </div>
                     </form>
@@ -139,11 +139,11 @@
                         <th>Назва</th>
                  
                         <th> </th>
-                        <th class="text-right">Кiл.</th>
+                        <th class="text-end">Кiл.</th>
 
-                        <th class="text-right"><i class="fa fa-gift"></i>,%</th>
-                        <th class="text-right">Ціна</th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-end"><i class="fa fa-gift"></i>,%</th>
+                        <th class="text-end">Ціна</th>
+                        <th class="text-end">Сума</th>
 
                         <th  ></th>
                            
@@ -179,10 +179,10 @@
                                 <td zippy="rsservice_name"></td>
                               
                                 <td zippy="rsdesc"></td>
-                                <td zippy="rsquantity" class="text-right"> </td>
-                                <td zippy="rsdisc"  class="text-right"></td>
-                                <td zippy="rsprice"  class="text-right"></td>
-                                <td zippy="rsamount"  class="text-right"></td>
+                                <td zippy="rsquantity" class="text-end"> </td>
+                                <td zippy="rsdisc"  class="text-end"></td>
+                                <td zippy="rsprice"  class="text-end"></td>
+                                <td zippy="rsamount"  class="text-end"></td>
 
 
                                 <td> <a  zippy="rsdel" ><i class="fa fa-trash"></i></a>
@@ -223,23 +223,23 @@
                                 <td zippy="ricode"   ></td>
                             
 
-                                <td zippy="riquantity"  class="text-right"></td>
+                                <td zippy="riquantity"  class="text-end"></td>
 
-                                <td  zippy="ridisc" class="text-right"></td>
-                                <td  zippy="riprice" class="text-right"></td>
-                                <td  zippy="riamount" class="text-right"></td>
+                                <td  zippy="ridisc" class="text-end"></td>
+                                <td  zippy="riprice" class="text-end"></td>
+                                <td  zippy="riamount" class="text-end"></td>
 
 
                                 <td> <a  zippy="ridel"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>                 
                              <tr style="font-weight: bolder;">
-                                <td colspan="5" class="text-right">На суму:</td>
-                                <td zippy="etotal"  class="text-right"></td>
+                                <td colspan="5" class="text-end">На суму:</td>
+                                <td zippy="etotal"  class="text-end"></td>
                                 <td></td>
                             </tr>                                 
                       <tr><td colspan="7">
-                          <a zippy="closeedit"  class="btn btn-outline-info mr-2">Скасувати</a>
+                          <a zippy="closeedit"  class="btn btn-outline-info me-2">Скасувати</a>
                           <a zippy="saveedit" class="btn btn-success ">Зберегти</a>
                     </td></tr>           
                                            

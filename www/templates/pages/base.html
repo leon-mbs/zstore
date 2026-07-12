@@ -8,24 +8,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
-      <!--  <link rel="stylesheet" href="/assets/css/bootstrap-icons.css">  -->
+      
 
         <link rel="stylesheet" href="/assets/css/adminlte.css">
    
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
         <link rel="stylesheet" href="/assets/css/toastr.min.css">
         <link rel="stylesheet" href="/assets/css/select2.css">
-        <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
-        <link rel="stylesheet" href="/assets/js/summernote/summernote-bs4.css">
+ 
+        <link rel="stylesheet" href="/assets/css/select2-bootstrap-5-theme.css">
+        <link rel="stylesheet" href="/assets/js/summernote/summernote-bs5.css">
         <link rel="stylesheet" href="/assets/css/app.css">
 
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
         <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?t=4" type="text/javascript"></script>
         <script src="/assets/js/select2.js" type="text/javascript"></script>
+        <script src="/assets/js/select2-uk.js" type="text/javascript"></script>
+
         <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
         <script src="/assets/js/printThis.js" type="text/javascript"></script>
-        <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
+        <script src="/assets/js/summernote/summernote-bs5.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
         <script src="/assets/js/app.js?t=2"></script>     
@@ -64,19 +67,30 @@
 
   
     </head>
-    <body class="{{theme}} ">
- 
-    
    
+    <body class="  sidebar-mini  sidebar-collapse bg-body-tertiary"   data-bs-theme="{{darkmode}}">
+      
+    
+         
         <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
         <a id="top"></a>
-        <div class="wrapper">
+        <div class="app-wrapper"   >
             <!-- Navbar -->
-            <nav class="main-header navbar navbar-expand   ">
-               {{#showsidemenu}}
+        <nav class="app-header navbar navbar-expand bg-body">
+            <div class="container-fluid">
+           
+         
+             {{#showsidemenu}}
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                
+                           <a
+                class="nav-link"
+                data-lte-toggle="sidebar"
+                href="#"
+                role="button"
+                aria-label="Toggle sidebar"
+              >  <i class="fas fa-bars"></i>
                     </li>
 
                 </ul>
@@ -92,15 +106,15 @@
                {{/showsidemenu}}   
                
                
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ms-auto">
                     {{#usebranch}}
                     <li class="nav-item">
                         <form zippy="nbform"  >
-                         <div class="row  ">
+                        <div class="row  ">
                             
                              <label class="col-form-label col-auto"  >Філія</label>
                             <div class="col-auto  ">
-                            <select zippy="nbbranch" class="form-control ml-1 ">
+                            <select zippy="nbbranch" class="form-control ms-1 ">
                                 <option value="0">Всі доступні</option>
                             </select>
                             </div>
@@ -116,7 +130,7 @@
                         <a class="nav-link  " href="/index.php?p=App/Pages/Jobs">
                             <i title="Мої завдання" class="fa fa-gavel "></i>
 
-                            <span class="badge badge-danger  navbar-badge">{{taskcnt}}</span>
+                            <span class="navbar-badge badge text-bg-warning">{{taskcnt}}</span>
 
                         </a>
                     </li>
@@ -126,14 +140,16 @@
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
                             <i title="Повiдомлення" class="fa fa-bell "></i>
                             {{#notcnt}}
-                            <span class="badge badge-danger  navbar-badge">{{notcnt}}</span>
+                            <span class="navbar-badge badge text-bg-warning">{{notcnt}}</span>
                             {{/notcnt}}
+                            
+                           
                         </a>
                     </li>
                     <li class="nav-item dropdown  ">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span
-                                zippy="loginname"></span> </a>
-                        <ul class="dropdown-menu">
+                        <a href="#" class="nav-link dropdown"    data-bs-toggle="dropdown"><i class="fa fa-user"></i> 
+                        <span zippy="loginname"></span> <i class="fa fa-angle-down"></i>  </a>
+                        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/Jobs"><i
                                         class="fa fa-gavel"></i>  Мої завдання</a>
@@ -166,20 +182,25 @@
                     </li>
                 </ul>
 
-
+             </div>
             </nav>
             {{#showsidemenu}}
-            <aside class="main-sidebar sidebar-dark-primary elevation-4">
-                <!-- Brand Logo -->
-                <a href="/index.php" class="brand-link">
+            <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+                
+              
+             <div class="sidebar-brand">
+            <a href="/index.php" class="brand-link">
 
                     <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy CRM</span>
                 </a>
+        </div>
 
-                <!-- Sidebar -->
-                <div class="sidebar">
+                <div class="sidebar-wrapper">
                     <nav class="mt-2">
-                        <ul class="nav  nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <ul  class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              data-accordion="false"
+              id="navigation">
 
                             <li class="nav-item  ">
                                 <a href="/index.php" class="nav-link">
@@ -204,7 +225,7 @@
                                     <i class="nav-icon fa fa-file"></i>
                                     <p>
                                         Документи
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -215,7 +236,8 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>{{grname}}
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
+                                                  
                                             </p>
 
                                         </a>
@@ -252,7 +274,7 @@
                                     <i class="nav-icon fa fa-chart-bar"></i>
                                     <p>
                                         Звіти
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -263,7 +285,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>{{grname}}
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -301,7 +323,7 @@
                                     <i class="nav-icon fa fa-list"></i>
                                     <p>
                                         Журнали
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -311,7 +333,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>{{grname}}
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -348,7 +370,7 @@
                                     <i class="nav-icon fa fa-book"></i>
                                     <p>
                                         Довідники
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -358,7 +380,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>{{grname}}
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -398,7 +420,7 @@
                                     <i class="nav-icon fas fa-project-diagram"></i>
                                     <p>
                                         Сервісні сторінки
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -408,7 +430,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>{{grname}}
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -446,7 +468,7 @@
                                     <i class="nav-icon fa fa-puzzle-piece"></i>
                                     <p>
                                         Модулі
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -456,7 +478,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Онлайн каталог
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -521,7 +543,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Обмін з ОпенКарт
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -555,7 +577,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Обмін з Woocommerce
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -589,7 +611,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Обмін з Хорошоп
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -631,7 +653,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Проекти та завдання
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -664,7 +686,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Фiскалізацiя
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -709,7 +731,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Чекбокс 
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -733,7 +755,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Дропшипінг та  фулфілмент 
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -763,7 +785,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Нова Пошта
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -792,7 +814,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Вчасно Документооборот
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -824,7 +846,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Обмін з PromUa
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -866,7 +888,7 @@
                                     <i class="nav-icon fa fa-cog"></i>
                                     <p>
                                         Система
-                                        <i class="right fas fa-angle-left"></i>
+                                        <i class="nav-arrow fas fa-angle-left"></i>
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
@@ -876,7 +898,7 @@
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>Налаштування
-                                                <i class="right fas fa-angle-left"></i>
+                                                <i class="nav-arrow fas fa-angle-left"></i>
                                             </p>
 
                                         </a>
@@ -1007,13 +1029,18 @@
                         </ul>
                     </nav>
                 </div>
-                <!-- /.sidebar -->     
+                 
             </aside>
             {{/showsidemenu}}
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper mb-4">
-                <!-- Main content -->
-                <section class="content"> <a id="topankor" ></a>
+         <main class="app-main mb-4" >
+              <!-- Main content -->
+           <div class="app-content">
+          <!--begin::Container-->
+              <div class="container-fluid">
+              
+              
+              
                     <!--
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
@@ -1054,8 +1081,11 @@
                             <childpage/>
                         </div>
                     </div>
-                </section>
-                <!-- /.content -->
+              </div>
+              <!--end::Container-->
+            </div>
+            <!--end::App Content-->
+          </main>
             </div>
             <!-- /.content-wrapper -->
 
@@ -1064,40 +1094,40 @@
 
        
             <div id="modalcinfo" class="modal fade  " tabindex="-1"  
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Інформація про контрагента</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <h5 class="modal-title">Інформація про контрагента </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div id="mcinfo" class="modal-body">
                              
                         </div>
                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
 
                       </div>
                     </div>
                 </div>
             </div>
              <div id="modalitinfo" class="modal fade  " tabindex="-1"  
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div id="mitinfo" class="modal-body">
                              
                         </div>
                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
 
                       </div>
                     </div>
@@ -1105,14 +1135,14 @@
             </div>
            
            
-             <div id="modalpritems" class="modal fade  " tabindex="-1"                   aria-hidden="true">
+             <div id="modalpritems" class="modal fade  " tabindex="-1"                   >
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Друк етикеток</h5>
                          
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div   class="modal-body">
@@ -1129,7 +1159,7 @@
                        
                              <tr><td colspan="3" align="right">
                              
-                             <button type="button" class="btn btn-secondary mr-4" data-dismiss="modal">Закрити</button>
+                             <button type="button" class="btn btn-secondary ms-4" data-bs-dismiss="modal">Закрити</button>
                              <button type="submit" class="btn btn-primary"  >Друкувати</button>
                                </td></tr>
                             </table>
@@ -1142,7 +1172,7 @@
 
             
         <div id="pr_items_pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
+             >
             <div class="modal-dialog  ">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -1152,7 +1182,7 @@
                             </tr>
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
-                                                      onclick="$('#pr_items_tag').printThis();$('#pr_items_pform').modal('hide')"
+                                                      onclick="$('#pr_items_tag').printThis();   closeModal('pr_items_pform') "
                                                       class="btn btn-success  ">Друк</a></td>
                             </tr>
                         </table>
@@ -1174,7 +1204,8 @@
     
          <script>
    
-       
+            
+ 
                     toastr.options = {
                     "closeButton": true,
                             "debug": false,
@@ -1195,10 +1226,37 @@
         
             
             $(document).ready(function (){
-                $('[data-toggle="popover"]').popover();
-                $('[data-toggle="tooltip"]').tooltip();
-                $('.select2').select2({theme:'bootstarp4'});
-     
+               
+                {{#darkmodecss}}
+                 
+                 $('.select2').select2({theme:'bootstrap-5-dark'});
+                
+               //  $('[data-bs-toggle="tooltip"]').attr('data-bs-custom-class','custom-tooltip') 
+        
+                 
+                {{/darkmodecss}}
+               
+               {{^darkmodecss}}
+                 
+                 $('.select2').select2({theme:'bootstrap-5'});
+                 
+                {{/darkmodecss}}
+             
+             
+                
+             
+             //  $('[data-bs-toggle="tooltip"]').each(function (index, value) {
+              //      $(this).attr('data-bs-custom-class','custom-tooltip') 
+             //   });   
+                    
+               const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+               const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+           
+               const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+               const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl,{html: true}))        
+               
+                             
             })              
  
             $(window).scroll(function () {
@@ -1218,8 +1276,8 @@
             
             function sendSendMsg( ){
                 
-               
-                $('#modalsendmsg').modal('hide') 
+               closeModal('modalsendmsg')
+                
                    
                 callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
@@ -1379,20 +1437,25 @@
                 callPM('getCustomerInfo',[id],null,(data)=> 
                 {
                     
-                    $('#modalcinfo').modal('show')  
+                   // $('#modalcinfo').modal('show')  
+                    openModal('modalcinfo')   
+                    
                     $('#mcinfo').html(data)  
                  
-                  
+                
          
                 } )          
         }
+
+
+   
         
       //инфо о  ТМЦ
         function itemInfo(id){
                 callPM('getItemInfo',[id],null,(data)=> 
                 {
+                    openModal('modalitinfo') 
                     
-                    $('#modalitinfo').modal('show')  
                     $('#mitinfo').html(data)  
                  
                   
@@ -1414,28 +1477,7 @@
                 } )          
         }
              
-        function openModal(id ){
-         
-             $('#'+id).modal('show')        
-   
-           
-            
-          //  const m = new bootstrap.Modal('#'+id, {})      
-          //  m.show() 
-        }
-        
-        function closeModal(id ){
- 
-          $('#'+id).modal('hide')                        
-       
-           
-            
-          //  const m = new bootstrap.Modal('#'+id, {})      
-          //  m.show() 
-        }
-        
-        
-        
+
         function sendSMSCust(phone,code) {
             
                 callPM('sendSMSCode',[phone,code],null,(data)=> 
@@ -1452,14 +1494,30 @@
            
         }
  
- 
+        function openModal(id ){
+          //   $('#'+id).modal('show')   
+  
+            const m = new bootstrap.Modal('#'+id, {})      
+            m.show()      
+           
+        }
+      
+        function closeModal(id ){
+          //   $('#'+id).modal('show')   
+  
+            const m = new bootstrap.Modal('#'+id, {})      
+            m.hide()      
+           
+        }
+        
+        
        //  обработчмк весов
-        {{#usescale}}
+         
             function callScale(callback) {
                 {{{scalescript}}}   
             }
      
-        {{/usescale}}
+      
  
 
       //  фискальный регистратор
@@ -1516,6 +1574,11 @@
     
     {{/smsscript}}
  
+// сообшения  для ajax обработчиков
+ 
+ 
+ 
+ 
  {{#cron}}
  
   
@@ -1527,6 +1590,7 @@
  
  
         </script>
+<script src="/assets/js/lightbox.js"  ></script>
      
     </body>
 </html>

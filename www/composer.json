@@ -17,10 +17,10 @@
     "endroid/qr-code": "~5.1.0",
     "masterexploder/phpthumb": "2.1",
     "phpoffice/phpspreadsheet": "^5.5.0",
-    "automattic/woocommerce": "3.1.0",
+    "automattic/woocommerce": "~3.1.0",
     "symfony/polyfill-mbstring": "^1.29.0",
     "symfony/polyfill-uuid": "^1.29.0",
-    "leon-mbs/zippy": "~2.7.2",
+    "leon-mbs/zippy": "~2.8.0",
     "leon-mbs/ppolib": "~1.6.0",
 
     "ext-mysqli": "*",

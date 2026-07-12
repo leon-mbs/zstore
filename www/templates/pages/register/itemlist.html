@@ -3,9 +3,7 @@
         <title> Товари на складі  </title>
 
    
-        <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
-        <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
-
+     
     </head>
 
     <body>
@@ -17,7 +15,7 @@
                     <form zippy="filter" class="row   g-2 align-items-center">
                         <div class="col-auto">
        
-                        <input autofocus="on" autocomplete="off" placeholder="Пошук..." class="form-control mr-sm-2" type="search"     onkeydown="onSearch()" zippy="searchkey">
+                        <input autofocus="on" autocomplete="off" placeholder="Пошук..." class="form-control ms-sm-2" type="search"     onkeydown="onSearch()" zippy="searchkey">
                        </div>
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
@@ -25,7 +23,7 @@
                         <label class="col-auto mt-2" for="searchcat">категорія</label>
                                  <div class="col-auto">
 
-                        <select class="form-control mr-sm-2" zippy="searchcat">
+                        <select class="form-control ms-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
                         </select>
                         </div>
@@ -35,7 +33,7 @@
                            <div class=" row no-gutters"> 
                                <label class="col-auto mt-2" for="searchstore">Склад</label>
                                <div class="col-auto">
-                                    <select class="form-control mr-sm-2" zippy="searchstore">
+                                    <select class="form-control ms-sm-2" zippy="searchstore">
                                         <option value="0">По всім</option>
                                     </select>
                               </div>
@@ -46,7 +44,7 @@
                            <div class=" row no-gutters"> 
                                <label class="col-auto mt-2" for="searchemp">Співробітник</label>
                                <div class="col-auto">
-                                    <select class="form-control mr-sm-2" zippy="searchemp">
+                                    <select class="form-control ms-sm-2" zippy="searchemp">
                                         <option value="0">Не вказано</option>
                                     </select>
                               </div>
@@ -58,7 +56,7 @@
                       <label class="col-auto mt-2" for="searchprice">Сума по  </label>
 
                                  <div class="col-auto">
-                      <select class="form-control mr-sm-2" zippy="searchprice">
+                      <select class="form-control ms-sm-2" zippy="searchprice">
                             
                         </select>
                           </div>
@@ -68,12 +66,12 @@
                            <div class=" row no-gutters"> 
                       <label class="col-auto mt-2" for="searchbrand">Бренд </label>
                          <div class="col-auto">
-                      <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                      <input autocomplete="off"   class="form-control me-2" zippy="searchbrand"/>
                      </div>
                      </div>
                      </div>
                            <div class="col-auto">
-                       <select class="form-control mr-sm-2" zippy="searchqty">
+                       <select class="form-control ms-sm-2" zippy="searchqty">
                             <option value="0">На  складі </option>
                             <option value="1">В  мінусі </option>
                             <option value="2">Всі </option>
@@ -85,7 +83,7 @@
                           <div class=" row no-gutters"> 
                               <label class="col-auto mt-2"  for="searchtype">Тип</label>
                           <div class="col-auto">
-                            <select zippy="searchtype" class="form-control mr-sm-2">
+                            <select zippy="searchtype" class="form-control ms-sm-2">
                                 <option value="0">Всі</option>
                                 <option value="1">Товари</option>
                                 <option value="2">Матеріали та комплектуючі</option>
@@ -113,7 +111,7 @@
                    </form>
                 </div>
                 <a zippy="csv">Експорт у Excel</a>
-                <a zippy="printqty" class=" ml-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
+                <a zippy="printqty" class=" ms-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
                 <table class="table      table-sm  table-hover ">
                     <tr>
                         {{#useimages}}
@@ -132,18 +130,18 @@
                         <th>Од.</th>
                         <th> <i title="Комірка" class="fa fa-box"></i> </th>     
 
-                        <th class="text-right  ">Кіл.</th>
-  <th class="text-right  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
-  <th class="text-right  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
+                        <th class="text-end  ">Кіл.</th>
+  <th class="text-end  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
+  <th class="text-end  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
                         
    {{^noshowpartion}}                         
-                        <th class="text-right  ">Обл. ціна</th>
+                        <th class="text-end  ">Обл. ціна</th>
    {{/noshowpartion}}         
    
    {{^nohowprodprice}}       
-                        <th class="text-right  ">Прод. ціна</th>
+                        <th class="text-end  ">Прод. ціна</th>
    {{/nohowprodprice}}                               
-                        <th class="text-right  ">На суму</th>
+                        <th class="text-end  ">На суму</th>
 
                                            
 
@@ -173,18 +171,18 @@
                         <td zippy="msr"></td>
                         <td zippy="cell"></td>
 
-                        <td zippy="iqty" class="text-right  "></td>
-                        <td zippy="iqtyr" class="text-right  "></td>
-                        <td zippy="iqtyb" class="text-right  "></td>
+                        <td zippy="iqty" class="text-end  "></td>
+                        <td zippy="iqtyr" class="text-end  "></td>
+                        <td zippy="iqtyb" class="text-end  "></td>
                         
                            {{^noshowpartion}} 
-                        <td zippy="inprice" class="text-right  "></td>
+                        <td zippy="inprice" class="text-end  "></td>
                            {{/noshowpartion}} 
          
                    {{^nohowprodprice}}       
-                        <td zippy="iprodprice" class="text-right  "></td>
+                        <td zippy="iprodprice" class="text-end  "></td>
                    {{/nohowprodprice}}                               
-                        <td zippy="iamount" class="text-right  "></td>
+                        <td zippy="iamount" class="text-end  "></td>
 
                             
 
@@ -220,14 +218,14 @@
                         <th>Спiвробiтник</th>
                          {{/storeemp}}
                         {{#usesnumber}}
-                        <th class="text-right text-nowrap">Серія</th>
+                        <th class="text-end text-nowrap">Серія</th>
 
-                        <th class="text-right text-nowrap">Придатний до</th>
+                        <th class="text-end text-nowrap">Придатний до</th>
                         {{/usesnumber}}
-                        <th class="text-right text-nowrap">Обл. ціна</th>
+                        <th class="text-end text-nowrap">Обл. ціна</th>
             
-                        <th class="text-right text-nowrap">Кіл.</th>
-                        <th class="text-right text-nowrap">На суму</th>
+                        <th class="text-end text-nowrap">Кіл.</th>
+                        <th class="text-end text-nowrap">На суму</th>
                   
                  
 
@@ -240,15 +238,15 @@
                          <td zippy="emp_name"></td>
                          {{/storeemp}}                        
                         {{#usesnumber}}
-                        <td zippy="snumber" class="text-right  "></td>
-                        <td zippy="sdate" class="text-right  "></td>
+                        <td zippy="snumber" class="text-end  "></td>
+                        <td zippy="sdate" class="text-end  "></td>
 
                         {{/usesnumber}}
-                        <td zippy="partion" class="text-right  "></td>
+                        <td zippy="partion" class="text-end  "></td>
                 
 
-                        <td zippy="qty" class="text-right  "></td>
-                        <td zippy="amount" class="text-right  "></td>
+                        <td zippy="qty" class="text-end  "></td>
+                        <td zippy="amount" class="text-end  "></td>
 
 
                          <td  ><a zippy="createmove" >Перемiстити партiю</a></td>
@@ -269,7 +267,7 @@
                      <b>Вiдпускнi цiни</b> <br>
                     <table class="ctable">
                       {{#i_plist}}
-                      <tr><td>{{i_pricename}}</td><td class="text-right">{{i_price}}</td></tr>
+                      <tr><td>{{i_pricename}}</td><td class="text-end">{{i_price}}</td></tr>
                       {{/i_plist}}
                       
                     </table> 
@@ -315,17 +313,7 @@
                 return confirm("Видалити партію?")
             }
 
-            $(document).ready(function () {
-
-                $(document).on('click', '[data-toggle="lightbox"]', function (event) {
-                    event.preventDefault();
-                    $(this).ekkoLightbox({'alwaysShowClose': true});
-                });
-
         
-
-
-            });
 
             function onSearch(ele) {
 

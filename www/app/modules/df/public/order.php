@@ -116,7 +116,7 @@ class Order extends  Base
         $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
         if($this->_tvars["isff"]==true ) {
-           $table->AddColumn(new \Zippy\Html\DataList\Column('onstore', "На складi", false, true, false,'text-right','text-right'));
+           $table->AddColumn(new \Zippy\Html\DataList\Column('onstore', "На складi", false, true, false,'text-end','text-end'));
         }
         $table->setCellClickEvent($this, 'OnSelect');
 

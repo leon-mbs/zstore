@@ -9,8 +9,8 @@
                 
                 <h3>Журнал документів
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
-                       data-toggle="popover"
-                       data-placement="bottom" data-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
+                       data-bs-toggle="popover"
+                       data-bs-placement="bottom" data-bs-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
                        Більш детальне управління статусами проводиться у відповідних спеціалізованих журналах."></i>
                 </h3>
 
@@ -67,7 +67,7 @@
                                 <div class=" row  no-gutters"> 
                                 <label class="col-auto mt-2" for="searchcust"> Контрагент </label>
                                              <div class="col-auto">
-                                  <input placeholder="Почніть вводити..." class="form-control mr-1" type="text" zippy="searchcust">
+                                  <input placeholder="Почніть вводити..." class="form-control me-1" type="text" zippy="searchcust">
 
                            </div>
                            </div>
@@ -88,7 +88,7 @@
                            <div class=" row no-gutters"> 
                       <label class="col-auto mt-2" for="store">Склад</label>
                                <div class="col-auto">
-                        <select class="form-control mr-sm-2" zippy="store">
+                        <select class="form-control ms-sm-2" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
@@ -99,7 +99,7 @@
                            <div class=" row no-gutters"> 
                       <label class="col-auto mt-2" for="mfund">Рахунок</label>
                                <div class="col-auto">
-                        <select class="form-control mr-sm-2" zippy="mfund">
+                        <select class="form-control ms-sm-2" zippy="mfund">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
@@ -107,12 +107,12 @@
                         </div>                           
                            
                            <div class="col-auto"> 
-                        <input class="form-control ml-2  mr-2" type="search" zippy="searchtext" placeholder="Пошук по контенту"   >
+                        <input class="form-control ms-2  me-2" type="search" zippy="searchtext" placeholder="Пошук по контенту"   >
 
                            </div>
                            <div class="col-auto"> 
 
-                        <input type="submit" class="  ml-2  mr-2  btn btn-success  " value="ОК">
+                        <input type="submit" class="  ms-2  me-2  btn btn-success  " value="ОК">
                         <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
                            
                        </div>
@@ -129,7 +129,7 @@
                         <th  ><a zippy="sortnum">Номер</a></th>
                         <th  ><a zippy="sortdate">Дата</a></th>
                         <th ><a zippy="sortcust">Контрагент</a></th>
-                        <th class="text-right   "><a zippy="sortamount">Сума</a></th>
+                        <th class="text-end   "><a zippy="sortamount">Сума</a></th>
                         <th  > Статус </th>
                         {{#usebranch}}
                         <th>Філія</th>
@@ -157,7 +157,7 @@
                             <td class="text-nowrap  "><a zippy="number"></a></td>
                             <td   class="text-nowrap" zippy="date"></td>
                             <td zippy="cust"></td>
-                            <td zippy="amount" class="text-right  "></td>
+                            <td zippy="amount" class="text-end  "></td>
 
                             <td style="white-space:  nowrap" zippy="state"></td>
                             {{#usebranch}}
@@ -165,7 +165,7 @@
                             {{/usebranch}}
 
                             <td><a zippy="parentdoc"></a></td>
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
+                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-bs-toggle="tooltip" data-bs-placement="left"></i></td>
                             <td><i zippy="hasscan" class="far fa-image" title="Прикрiплено скан оригiналу"></i></td>
 
                             <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланований"></i></td>
@@ -186,7 +186,7 @@
                             <td>
                                 <div class="btn-group" zippy="basedon">
                                     <button title="Створити на підставі" type="button"
-                                            class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-toggle="dropdown">
+                                            class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-bs-toggle="dropdown">
                                         Створити <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu" role="menu" zippy="basedlist">
@@ -206,39 +206,39 @@
                        <div class="row  ">
                          <label class="col-form-label col-auto" data-label="mstates" for="mstates"> Статус </label>
                            <div class="col-auto  ">
-                           <select zippy="mstates" class="form-control mr-2">
+                           <select zippy="mstates" class="form-control me-2">
                              <option value="0">Не обрано</option>
                              </select>
                          </div>
                            <div class="col-auto  ">
-                             <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
+                             <button zippy="bstatus" class="btn btn-success  me-2"> Застосувати</button>
                            </div>
                          <label class="col-form-label col-auto" data-label="musers" for="musers"> Відповідальний </label>
                            <div class="col-auto  ">
-                           <select zippy="musers" class="form-control mr-2">
+                           <select zippy="musers" class="form-control me-2">
                              <option value="0">Не обрано</option>
                              </select>
                          </div>
                            <div class="col-auto  ">
-                            <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+                            <button zippy="buser" class="btn btn-success  me-2"> Перевести</button>
                          </div>
                            <div class="col-auto  ">
-                              <a zippy="btopay" class="  btn btn-primary  mr-2 ">Сплатити</a>
+                              <a zippy="btopay" class="  btn btn-primary  me-2 ">Сплатити</a>
                            </div>
                           <div class="col-auto  ">
-                             <button zippy="bap" class="btn btn-primary  mr-2"><i class="fas fa-thumbs-up"></i> Затвердити</button>
+                             <button zippy="bap" class="btn btn-primary  me-2"><i class="fas fa-thumbs-up"></i> Затвердити</button>
                           </div>
                           <div class="col-auto  ">
-                             <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Відхилити</button>
+                             <button zippy="bref" class="btn btn-danger  me-2"><i class="fas fa-thumbs-down"></i> Відхилити</button>
                           </div>
                           <div class="col-auto  ">
                              <input class="form-control  " zippy="refcomment" placeholder="Коментар до вiдхилення">
                           </div>
                             <div class="col-auto  ">
-                            <button zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Друк етикеток</button>
+                            <button zippy="bprint" class="btn btn-success  me-2 ms-4"><i class="fa fa-print"></i> Друк етикеток</button>
                          </div>
                         <div class="col-auto  ">   
-                          <button zippy="bcopy" class="btn btn-info  ml-2"><i class="fas fa-copy"></i> Копія</button>                         
+                          <button zippy="bcopy" class="btn btn-info  ms-2"><i class="fas fa-copy"></i> Копія</button>                         
                        </div>
                       </div>
                     </form> 
@@ -253,13 +253,13 @@
             </div>
         </div>
  
-    <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog"                    aria-hidden="true">
+    <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog"                    >
                 <div class="modal-dialog modal-dialog-centered   ">
                     <div class="modal-content">
                         <div class="modal-header">
                             
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body  ">

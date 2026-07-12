@@ -93,13 +93,13 @@
                             <th>Од.</th>
                             <th  > </th>
 
-                            <th class="text-right">Кіл.</th>
+                            <th class="text-end">Кіл.</th>
                             {{#isds}}
-                            <th class="text-right"> Склад. ціна</th>                            
+                            <th class="text-end"> Склад. ціна</th>                            
                             {{/isds}}
-                            <th class="text-right">Прод. ціна</th>
+                            <th class="text-end">Прод. ціна</th>
 
-                            <th class="text-right">Сума</th>
+                            <th class="text-end">Сума</th>
 
                             <th  ></th>
                         </tr>
@@ -109,25 +109,25 @@
                             <td zippy="msr"></td>
                             <td zippy="desc"  ></td>
 
-                            <td zippy="quantity" class="text-right"></td>
+                            <td zippy="quantity" class="text-end"></td>
                             {{#isds}}
-                            <td zippy="pricefrom" class="text-right"></td>
+                            <td zippy="pricefrom" class="text-end"></td>
                             {{/isds}}
-                            <td zippy="price" class="text-right"></td>
+                            <td zippy="price" class="text-end"></td>
 
-                            <td zippy="amount" class="text-right"></td>
+                            <td zippy="amount" class="text-end"></td>
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp; <a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right">На суму:</td>
+                            <td colspan="5" class="text-end">На суму:</td>
                             {{#isds}}
-                            <td zippy="totalfrom" class="text-right">     </td>
+                            <td zippy="totalfrom" class="text-end">     </td>
                             {{/isds}}
                             <td></td>
-                            <td zippy="total" class="text-right"></td>
+                            <td zippy="total" class="text-end"></td>
                             <td></td>
                         </tr>
                      
@@ -137,9 +137,9 @@
             </div>
             <div class="row">
                 <div class="col-9 d-flex justify-content-end pt-4">
-                    <a   class="btn btn-secondary  ml-2 " href="/partner">Скасувати</a>
-                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ml-2 ">
-                     <input zippy="execdoc" type="submit"   value="В обробку" class="btn btn-success  ml-2 ">
+                    <a   class="btn btn-secondary  ms-2 " href="/partner">Скасувати</a>
+                      <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ms-2 ">
+                     <input zippy="execdoc" type="submit"   value="В обробку" class="btn btn-success  ms-2 ">
 
                    
 
@@ -201,17 +201,17 @@
                        <div class="row  ">
                         <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
                         <div class="col-auto  ">
-                        <input class="form-control mr-sm-2" type="text" zippy="wissearchkey">
+                        <input class="form-control ms-sm-2" type="text" zippy="wissearchkey">
                          </div>
                         <label class="col-form-label col-auto" for="wissearchcat">категорiя</label>
                         <div class="col-auto  ">
-                        <select class="form-control mr-sm-2" zippy="wissearchcat">
+                        <select class="form-control ms-sm-2" zippy="wissearchcat">
                             <option value="0">Не задано</option>
                         </select>
                          </div>
                         <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
                         <div class="col-auto  ">
-                        <input autocomplete="off" list="wissearchmanlist" class="form-control mr-2" zippy="wissearchmanufacturer"/>
+                        <input autocomplete="off" list="wissearchmanlist" class="form-control me-2" zippy="wissearchmanufacturer"/>
                          </div>
                          {{#isds}}
                          <div class="col-auto  ">
@@ -225,7 +225,7 @@
                    <div class="col-auto  ">       
                      <div class="form-check  pt-2">
                        <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
-                       <input type="checkbox" zippy="wissearchonstore" class="form-check-input  mr-2"  >
+                       <input type="checkbox" zippy="wissearchonstore" class="form-check-input  me-2"  >
                       </div> 
                        </div>                 
                       {{/isds}}       

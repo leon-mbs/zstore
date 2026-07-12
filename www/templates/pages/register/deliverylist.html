@@ -8,7 +8,7 @@
 
             <div class="col-12 col-md-4 col-xl-3   " >
                 <h3>Журнал доставок</h3>
-                <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
+                <div id="newordersalert" style="display:none;"  class="alert alert-success  ms-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
 
@@ -21,7 +21,7 @@
                                    <div class="row  ">
                                     <label class="col-form-label col-auto" for="searchnumber"> № </label>
                                        <div class="col-auto  ">
-                                    <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                                    <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                                     </div>
                                        <div class="col-auto  ">
                                     <input type="submit" class="  btn btn-outline-success  " value="Шукати">
@@ -44,7 +44,7 @@
                             <th >Адреса </th>
                             <th >Контакт </th>
                             <th >Вiдповiдальний </th>
-                            <th class="text-right">Сума</th>
+                            <th class="text-end">Сума</th>
 
                             <th ></th>
                             <th ></th>
@@ -61,7 +61,7 @@
                             <td  zippy="emp_name">   </td>
 
 
-                            <td class="text-right" zippy="docamount"></td>
+                            <td class="text-end" zippy="docamount"></td>
 
                             <td   ><i   zippy="wp" class="fa fa-credit-card" ></i></td>
                             <td zippy="docnotes"></td>
@@ -79,15 +79,15 @@
                                     <form zippy="statusform"  >
                                     <div class="row  ">
                                           <div class="col-auto  ">
-                                        <button zippy="bdelivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>   
+                                        <button zippy="bdelivered" type="submit" class="  btn btn-success  me-2 ">Доставлено</button>   
                                         </div>
                                         <label class="col-form-label col-auto" data-label="emp" for="emp">Вiдповiдальний</label>
                                            <div class="col-auto  ">
-                                        <select zippy="emp" class="form-control mr-2">
+                                        <select zippy="emp" class="form-control me-2">
                                             <option value="0">Не вказано</option>
                                         </select>   </div>
                                            <div class="col-auto  ">
-                                        <button zippy="bsend" type="submit" class="  btn btn-success ml-2  mr-2 ">Вiдправити</button>   
+                                        <button zippy="bsend" type="submit" class="  btn btn-success ms-2  me-2 ">Вiдправити</button>   
                                        </div></div>
                                     </form>
 
@@ -95,7 +95,7 @@
                                     <div class="row  ">
                                         <label class="col-form-label col-auto" data-label="payamount" for="payamount">До сплати</label>
                                           <div class="col-auto  ">
-                                       <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice mr-2">
+                                       <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice me-2">
                                         </div>
                                         <label class="col-form-label col-auto" data-label="mf" for="mf">Рахунок</label>
                                            <div class="col-auto  ">
@@ -103,7 +103,7 @@
                                             <option value="0">Не вказано</option>
                                         </select>   </div>
                                           <div class="col-auto  ">
-                                        <button zippy="bpay" type="submit" class="  btn btn-primary ml-2  mr-2 ">Внести оплату</button>
+                                        <button zippy="bpay" type="submit" class="  btn btn-primary ms-2  me-2 ">Внести оплату</button>
                                        </div></div> 
                                     </form>
                                 </div>

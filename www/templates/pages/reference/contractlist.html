@@ -16,18 +16,18 @@
                          <div class="row">
                             <label  class="col-form-label col-auto" for="searchkey" >Пошук</label>
                              <div class="col-auto  ">
-                               <input class="form-control mr-sm-2" type="text" zippy="searchkey">
+                               <input class="form-control ms-sm-2" type="text" zippy="searchkey">
                             </div>
                             <label  class="col-form-label col-auto" for="searchcust">Контрагент</label>
                              <div class="col-auto  ">
-                               <input placeholder="Почнiть вводити..." class="form-control mr-sm-2" zippy="searchcust"/>
+                               <input placeholder="Почнiть вводити..." class="form-control ms-sm-2" zippy="searchcust"/>
                             </div>
 
                           
                              <div class="col-auto pt-2 ">
                                 <div class="form-check">
                                    <input title="Показати також не актуальнi" class="form-check-input" type="checkbox" zippy="showdis">
-                                    <label class="form-check-label mr-sm-3" for="showdis">Всi</label>
+                                    <label class="form-check-label me-sm-3" for="showdis">Всi</label>
                                 </div>
                             </div>
                              <div class="col-auto  ">
@@ -45,7 +45,7 @@
 
                             
                             <th>Статус</th>
-                           <th class="text-right"  >Сума</th>
+                           <th class="text-end"  >Сума</th>
                          
                      
                            
@@ -65,7 +65,7 @@
 
                           
                             <td zippy="state"></td>
-                            <td class="text-right" zippy="amount"></td>
+                            <td class="text-end" zippy="amount"></td>
                          
 
 
@@ -146,7 +146,7 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary me-2 ">
                     <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                     
                 </div>
@@ -166,22 +166,22 @@
                       
                          <label class="col-form-label col-auto" data-label="mstates" for="mstates"> Статус </label>
                          <div class="col-auto  ">
-                         <select zippy="mstates" class="form-control mr-2">
+                         <select zippy="mstates" class="form-control me-2">
                         
                          </select>
                            </div>
                           <div class="col-auto  ">
-                         <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
+                         <button zippy="bstatus" class="btn btn-success  me-2"> Застосувати</button>
                            </div>
                          <label class="col-form-label col-auto" data-label="musers" for="mstates"> Відповідальний </label>
                             
                             <div class="col-auto  ">
-                         <select zippy="musers" class="form-control mr-2">
+                         <select zippy="musers" class="form-control me-2">
                            <option value="0">Не обрано</option>
                          </select>
                              </div>
                             <div class="col-auto  ">
-                         <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+                         <button zippy="buser" class="btn btn-success  me-2"> Перевести</button>
                         </div>
                        </div>
                     </form>
@@ -250,7 +250,7 @@
                         <td  > {{dtype}}</td>
                         <td  >{{dnum}}</td>
                         <td   class="text-nowrap">{{ddate}}</td>
-                        <td   class="text-right">{{dsumma}}</td>
+                        <td   class="text-end">{{dsumma}}</td>
 
                     </tr>
                      {{/dtable}}
@@ -267,7 +267,7 @@
                         <td  >{{pmfname}}</td>
 
                         <td   class="text-nowrap">{{pdate}}</td>
-                        <td   class="text-right">{{psumma}}</td>
+                        <td   class="text-end">{{psumma}}</td>
                         <td  >{{pnotes}}</td> 
                     </tr>
                     {{/ptable}}

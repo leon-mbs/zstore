@@ -484,8 +484,8 @@ class Order extends \App\Entity\Doc\Document
         );                                                                               
         $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
     
-        $header["isds"] = $this->headerdata['dsff'] ==1;
-        $header["isff"] = $this->headerdata['dsff'] ==2;
+        $header["isds"] = $this->getHD('dsff',0) == 1;
+        $header["isff"] = $this->getHD('dsff',0) == 2;
    
 
 

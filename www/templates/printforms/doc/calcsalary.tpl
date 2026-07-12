@@ -31,7 +31,7 @@
             <b>П I Б</b>
         </td>
         {{#stnames}}
-        <td class="text-right">
+        <td class="text-end">
             <b>{{name}}</b>
         </td>
         {{/stnames}}
@@ -43,7 +43,7 @@
             {{emp_name}}
         </td>
         {{#amounts}}
-                <td class="text-right">
+                <td class="text-end">
             {{am}}
         </td>
         {{/amounts}}

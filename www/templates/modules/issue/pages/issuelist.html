@@ -19,11 +19,11 @@
                     <form    >
                       <div class="row  ">
                          <div class="col-auto  ">
-                        <input v-model="searchnumber" placeholder="Пошук..." class="form-control mr-2" >
+                        <input v-model="searchnumber" placeholder="Пошук..." class="form-control me-2" >
                           </div>                    
                         <label class="col-form-label col-auto" for="searchstatus">Статус </label>
                           <div class="col-auto  ">
-                        <select v-model="searchstatus"  class="form-control mr-sm-2  " >
+                        <select v-model="searchstatus"  class="form-control ms-sm-2  " >
                             <option value="0">Відкриті</option>                           
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
@@ -32,7 +32,7 @@
                          </div>
                         <label class="col-form-label col-auto" for="searchemp">виконавець </label>
                           <div class="col-auto  ">
-                        <select v-model="searchemp"   class="form-control mr-sm-2  "  >
+                        <select v-model="searchemp"   class="form-control ms-sm-2  "  >
                             <option value="0">Не обрано</option>
                            <option v-for="option in emps" :value="option.key">
                               {{ option.value }}
@@ -41,7 +41,7 @@
                          </div>
                         <label class="col-form-label col-auto" for="searchproject"> проект </label>
                           <div class="col-auto  ">
-                          <select v-model="searchproject"   class="form-control mr-sm-2  "  >
+                          <select v-model="searchproject"   class="form-control ms-sm-2  "  >
                             <option value="0">Не обрано</option>
                            <option v-for="option in projects" :value="option.key">
                               {{ option.value }}
@@ -50,14 +50,14 @@
                           </div>
                        <label class="col-form-label col-auto" for="searchproject"> сортувати </label>
                          <div class="col-auto  ">
-                          <select v-model="searchsort"   class="form-control mr-sm-2  "  >
+                          <select v-model="searchsort"   class="form-control ms-sm-2  "  >
                             <option value="0">За пріоритетом</option>
                             <option value="1">За номером</option>
                             <option value="2">За оновленням</option>
                         </select>
                          </div>
                           <div class="col-auto  ">
-                        <input v-on:click.prevent="onfilter" type="button" class="mr-2  btn btn-outline-success  " value="ОК">
+                        <input v-on:click.prevent="onfilter" type="button" class="me-2  btn btn-outline-success  " value="ОК">
                          </div> </div>
                     </form>
                 </div>
@@ -78,7 +78,7 @@
                                 <tr>
                                     <td><a :class="issue.prcl" :href="issue.url"  title="Пряме посилання"  >{{issue.issue_id}}</a></td>
 
-                                    <td class="text-right"><h5><span :title="issue.emptitle"  class="badge badge-info badge-pill">{{issue.emp}}</span>
+                                    <td class="text-end"><h5><span :title="issue.emptitle"  class="badge badge-info badge-pill">{{issue.emp}}</span>
                                         </h5></td>
                                 </tr>
                                 <tr>
@@ -113,7 +113,7 @@
                           <div class="row  ">
                             <label  class="col-form-label col-auto"> Вибрати файл: </label>
                              <div class="col-auto  ">
-                            <input name="pfile" class="form-control mr-2" type="file"  >
+                            <input name="pfile" class="form-control me-2" type="file"  >
                              </div>
                              <div class="col-auto  ">
                             <input v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Додати:">
@@ -644,7 +644,7 @@
                 $('#editdesc').summernote({
                     height: 200,
                     lang: 'uk-UA',
-
+                  tooltip: false,
                     callbacks: {
                
                         onPaste: function (e) {

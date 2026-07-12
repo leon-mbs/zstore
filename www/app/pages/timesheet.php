@@ -227,15 +227,17 @@ class TimeSheet extends \App\Pages\Base
 
         $v = $time->isValid();
         if (strlen($v) > 0) {
-            return  $v;
-
+            
+           return $this->jsonError($v) ;
+     
         }
 
         if ($this->_tvars["usebranch"]) {
             if ($this->branch_id == 0) {
 
-                return "Виберіть філію";
-
+             
+              return $this->jsonError("Виберіть філію") ;
+     
             }
             $time->branch_id = $this->branch_id;
         }

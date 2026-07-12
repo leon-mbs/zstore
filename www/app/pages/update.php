@@ -166,7 +166,11 @@ class Update extends \App\Pages\Base
                         
           }          
        
-         \App\Session::getSession()->migrationcheck = false; 
+         
+          $this->_tvars['needvendor']  = !System::isVendorActual() ;    
+         
+         
+          \App\Session::getSession()->migrationcheck = false; 
     }   
 
 
@@ -241,7 +245,7 @@ class Update extends \App\Pages\Base
             $phpv =   phpversion()  ;
             $b= version_compare( $phpv, "8.1.0" );
             if($b==1) {
-                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
+                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor.zip")) ;
             }   else {
                 $this->setError('Тiльки для версiй PHP > 8.1.0');
                 return;  

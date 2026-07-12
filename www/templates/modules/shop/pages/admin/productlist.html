@@ -28,12 +28,12 @@
                             <form zippy="searchform"  >
                              <div class="row  ">
                                  <div class="col-auto  ">
-                                <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control mr-sm-2">
+                                <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control ms-sm-2">
                                  </div>
 
                                 <label class="col-form-label col-auto"> Бренд</label>
                                  <div class="col-auto  ">
-                                <input zippy="smanuf" class="form-control mr-sm-2    ">
+                                <input zippy="smanuf" class="form-control ms-sm-2    ">
                                  </div>
                                  <div class="col-auto  ">
                                 <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
@@ -52,8 +52,8 @@
                                 <th>Назва</th>
                                 <th  >Код</th>
 
-                                <th class="text-right">Цiна</th>
-                                <th class="text-right">Кiл.</th>
+                                <th class="text-end">Цiна</th>
+                                <th class="text-end">Кiл.</th>
 
 
 
@@ -71,8 +71,8 @@
                                 <td zippy="lcode"></td>
 
 
-                                <td class="text-right"><span zippy="lprice"></span></td>
-                                <td class="text-right"><span zippy="lcnt"></span></td>
+                                <td class="text-end"><span zippy="lprice"></span></td>
+                                <td class="text-end"><span zippy="lcnt"></span></td>
                                    {{#useimages}}
                                 <td>&nbsp;<a zippy="imedit" title="Редагувати фото"><i class="fa fa-images"></i></a></td>
                                    {{/useimages}}
@@ -134,7 +134,7 @@
                         <form   zippy="addimageform" enctype="multipart/form-data">
                            <div class="row  ">
                              <div class="col-auto  ">
-                            <input  accept="image/png,image/jpeg" zippy="photo" type="file" class="form-control mr-2">
+                            <input  accept="image/png,image/jpeg" zippy="photo" type="file" class="form-control me-2">
                              </div>
                                <div class="col-auto  ">
                             <input type="submit" class="btn btn-success   " value="Додати">
@@ -158,12 +158,11 @@
         </div>
         <script>
             $(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-
+                
                 $('#edescdet').summernote({
                     height: 400,
                     lang: 'uk-UA',
-
+                    tooltip: false,
                     callbacks: {
                  
                         onPaste: function (e) {

@@ -24,16 +24,16 @@
     <tr>
 
         <td>{{k}}</td>
-        <td class="text-right">{{v}}</td>
+        <td class="text-end">{{v}}</td>
         <td></td>
 
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Всього:</td>
+        <td class="text-end">Всього:</td>
 
-        <td class="text-right">{{total}}</td>
+        <td class="text-end">{{total}}</td>
       <td></td>
     </tr>
      <tr >
@@ -47,7 +47,7 @@
 
         <td>{{code}}</td>
         <td>{{name}}</td>
-        <td class="text-right">{{am}}</td>
+        <td class="text-end">{{am}}</td>
 
     </tr>
     {{/_detail2}}    

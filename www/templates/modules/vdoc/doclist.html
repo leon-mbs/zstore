@@ -15,7 +15,7 @@
                                   <div class="row  ">
                                     <label class="col-form-label col-auto" for="firm"> POS термiнал </label>
                                      <div class="col-auto  ">
-                                     <select class="form-control  mr-2" v-model="posid" id="pos" name="pos" >
+                                     <select class="form-control  me-2" v-model="posid" id="pos" name="pos" >
                                        <option v-for="p in poses" :value="p.key">
                                           {{ p.value }}
                                       </option>
@@ -23,7 +23,7 @@
                                     </div>
                                     <label class="col-form-label col-auto" for="customer"> Контрагент </label>
                                      <div class="col-auto  ">
-                                     <select v-model="custid" class="form-control  mr-2" id="customer" name="customer" >
+                                     <select v-model="custid" class="form-control  me-2" id="customer" name="customer" >
                                        <option value="0">Не вказано </option>
                                        
                                       <option v-for="c in clist" :value="c.key">
@@ -34,7 +34,7 @@
                         
                                     <label class="col-form-label col-auto" for="doctype"> Тип  документа </label>
                                      <div class="col-auto  ">
-                                     <select v-model="doctype" class="form-control mr-2" id="doctype"  name="doctype" >
+                                     <select v-model="doctype" class="form-control me-2" id="doctype"  name="doctype" >
                                        <option value="GoodsIssue"    >Видаткова  накладна </option>
                                        <option value="Invoice">Рахунок-фактура </option>
                                        <option value="ServiceAct">Акт виконаних робiт </option>
@@ -59,7 +59,7 @@
                         <th style="width:30px"> <input v-model="selall" v-on:change="onSelAll"  name="chlist"  class="seldel" type="checkbox"></th>
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-end">Сума</th>
                         <th>Контрагент</th>
 
                     </tr>
@@ -67,7 +67,7 @@
                         <td  ><input :id="d.id" :value="d" v-model="selectedDocs"     class="seldel" type="checkbox"></td>
                         <td  >{{d.number}}</td>
                         <td  >{{d.date}}</td>
-                        <td  class="text-right">{{d.amount}}</td>
+                        <td  class="text-end">{{d.amount}}</td>
                         <td  >{{d.cname}}</td>
                     </tr>
                 </table>
@@ -78,8 +78,8 @@
                 <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Вiдправити  в Вчасно  </a>
                 
 
-                                    <input  v-model="kep"   name="kep" class="ml-3" type="checkbox"  >
-                                    <label class="form-check-label mr-sm-2" for="fref">Накласти КЕП</label>
+                                    <input  v-model="kep"   name="kep" class="ms-3" type="checkbox"  >
+                                    <label class="form-check-label ms-sm-2" for="fref">Накласти КЕП</label>
                                       
                 <div v-show="showsp2" class="spinner-border spinner-border-sm"></div>
                 <div v-html="log" class="mb-4"> </div>

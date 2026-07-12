@@ -15,11 +15,11 @@
                     <form>    
                        <div class="row  ">
                          <div class="col-auto  ">
-                        <input  v-model="searchtext" placeholder="Пошук..." class="form-control mr-2" type="text"  >
+                        <input  v-model="searchtext" placeholder="Пошук..." class="form-control me-2" type="text"  >
                          </div>
                         <label class="col-form-label col-auto" for="searchstate">статус </label>
                          <div class="col-auto  ">
-                        <select v-model="searchstate" class="form-control  mr-2   "  >
+                        <select v-model="searchstate" class="form-control  me-2   "  >
                             <option value="0">Відкриті</option>
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
@@ -37,7 +37,7 @@
                        </select>
                         </div>
                        <div class="col-auto  ">
-                        <input v-on:click.prevent="onsearch" type="button" class=" ml-2   btn btn-success  " value="ОК">
+                        <input v-on:click.prevent="onsearch" type="button" class=" ms-2   btn btn-success  " value="ОК">
                         </div>
                         
                     </form>
@@ -98,7 +98,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="editdesc"> Опис </label>
-                                <div  id="editdesc" class="form-control mr-2"  ></div>
+                                <div  id="editdesc" class="form-control me-2"  ></div>
                             </div>
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
@@ -117,7 +117,7 @@
 
                             <div class="form-group">
                                 <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-outline-secondary ">
-                                <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-primary ml-2 "> 
+                                <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-primary ms-2 "> 
                             </div>
 
                         </div>
@@ -134,7 +134,7 @@
                       <div class="row  ">
                         <label class="col-form-label col-auto" for="stlist">Статус </label>
                          <div class="col-auto  ">
-                        <select id="stlist" v-on:change="onchstatus" v-model="currstatus" class="form-control   ml-1  " >
+                        <select id="stlist" v-on:change="onchstatus" v-model="currstatus" class="form-control   ms-1  " >
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option>                            
@@ -149,7 +149,7 @@
                        <div class="row  "> 
                         <label class="col-form-label col-auto"> Вибрати файл: </label>
                          <div class="col-auto  ">
-                          <input name="pfile" class="form-control mr-2" type="file" >
+                          <input name="pfile" class="form-control me-2" type="file" >
                         </div>
                          <div class="col-auto  ">
                           <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Додати">

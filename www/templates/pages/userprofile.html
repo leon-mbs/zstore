@@ -81,17 +81,23 @@
                                 <label for="phone">Телефон</label>
                                 <input   class="form-control" zippy="phone">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="viber">Viber</label>
                                 <input   class="form-control" zippy="viber">
                             </div>   
-                   
+                           <div class="form-check">
+                                <input zippy="darkmode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="darkmode">Нiчна тема </label>
+
+                            </div>
+                           {{#hideblock}}
                            <div class="form-check">
                                 <input zippy="hidesidebar" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
 
                             </div>
-
+                           {{/hideblock}}
+                           
                            {{#usebot}}
                              <div class="form-check">
                                 <input zippy="usebotfornotify" type="checkbox" class="form-check-input">
@@ -100,15 +106,11 @@
                             </div>
                            {{/usebot}}
 
-                           <div class="form-check">
-                                <input zippy="darkmode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="darkmode">Нiчна тема </label>
-
-                            </div>
+                           
                                   <div class="form-check">
                                     <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
                                     <label class="form-check-label" for="usemobileprinter">Відкривати друк в новій вкладці  </label> 
-                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділитись. 
                                     Стосується тільки системних принтерів"></i>
 
@@ -172,7 +174,7 @@
                     <span>Резервний код:</span> <b zippy="otpcode">44444</b> 
                      <small> 
                     <a zippy="otprefresh" >  <i title="Оновити" class="fa fa-refresh"></i> </a>  
-                        <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                        <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                 title=" Зберегти на випадок якщо відправка не спрацює "></i>
                    </small>    
                    

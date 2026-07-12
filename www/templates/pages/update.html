@@ -6,7 +6,7 @@
 <body>
  <div class="row">
         
-    <div class="col-12 col-lg-10 col-xl-6 ml-2"   >
+    <div class="col-12 col-lg-10 col-xl-6 ms-2"   >
         <h2>Оновлення</h2>
   
            <div class="row  mb-4  ">
@@ -133,7 +133,7 @@
             {{/showdb}}       
          
        
-       <div class="col-12  mt-2">
+       <div class="col-12  mt-4">
           {{#reinstall}}    
         <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
         <br><small>Повторити останнє оновлення файлiв, наприклад пiсля виходу виправлення (хотфiксу)</small>
@@ -143,11 +143,28 @@
         <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити код до попередньої версії </b> </a> 
         <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
           {{/rollback}}        
+       
+        
+          
+                
+     </div> 
+      <div class="col-12  mt-4">
+        {{#needvendor}}
+      
+      <i class="fa fa-exclamation-triangle"></i>  
+        Були оновленi стороннi бiблiотеки. Для коректної роботи наступних версій рекомендується  оновити  папку  vendor   {{#oldphp}} (необхідно оновити попередньо PHP до 8.1+ )  {{/oldphp}}   
+      
+     
+          
+        <br> 
          {{^oldphp}}
-        <br>  <br> 
          <a zippy="updatevendor"><i class="fa fa-download"></i> <b>Оновити папку  vendor</b> </a> 
-        <br><small>Якщо були оновленi стороннi бiблiотеки</small>
-          {{/oldphp}}        
+          <br>
+          {{/oldphp}}  
+        <small>Можна  виконати composer або <a target="_blank" href="https://zippy.com.ua/download/vendor.zip"  >завантажити</a> та оновити вручну
+         {{/needvendor}}    
+          
+           
      </div>  
                    
                       

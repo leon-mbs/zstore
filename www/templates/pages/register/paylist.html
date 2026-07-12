@@ -16,7 +16,7 @@
                        <div class="  row no-gutters"> 
                          <label class="col-auto mt-2" for="from">З </label>
                           <div class="col-auto">
-                            <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
+                            <input type="text" class="form-control me-sm-1  " zippy="from" style="width:110px">
                          </div>
                        </div>
                       </div>     
@@ -25,7 +25,7 @@
  
                          <label class="col-auto mt-2" for="to"> по </label>
                             <div class="col-auto">
-                           <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
+                           <input type="text" class="form-control me-sm-1 " style="width:110px" zippy="to">
                           </div>
                        </div>
                       </div>     
@@ -34,7 +34,7 @@
     
                         <label class="col-auto mt-2" for="fmfund"> рахунок </label>
                             <div class="col-auto">
-                      <select class="form-control mr-2" zippy="fmfund">
+                      <select class="form-control me-2" zippy="fmfund">
                             <option value="0">Не обрано</option>
                         </select>
                      </div>
@@ -45,7 +45,7 @@
                         
                         <label class="col-auto mt-2" for="fuser"> створив </label>
                                <div class="col-auto">
-                         <select class="form-control mr-2" zippy="fuser">
+                         <select class="form-control me-2" zippy="fuser">
                             <option value="0">Не обрано</option>
                         </select>
                         </div>
@@ -56,7 +56,7 @@
 
                         <label class="col-auto mt-2" for="fcustomer"> контрагент </label>
                                <div class="col-auto">
-                          <input placeholder="Почніть вводити..." type="text" class="form-control  mr-2 " zippy="fcustomer">
+                          <input placeholder="Почніть вводити..." type="text" class="form-control  me-2 " zippy="fcustomer">
                        </div>
                       </div>     
                      </div>
@@ -77,7 +77,7 @@
                         
                         <label class="col-auto mt-2" for="fsort"> сортувати </label>
                            <div class="col-auto">
-                             <select class="form-control mr-2" zippy="fsort">
+                             <select class="form-control me-2" zippy="fsort">
                                 <option value="0">За датою</option>
                                 <option value="1">За прибутком</option>
                                 <option value="2">За видатком</option>
@@ -98,7 +98,7 @@
                 <small>Скасування оплати виконується методом  сторно користувачами  ролi admins </small>
 
                 <br><a zippy="csv"><i  class="fa fa-upload" ></i> Експорт у Excel</a>
-                <a zippy="import" class="ml-4"><i  class="fa fa-download" ></i> Iмпорт виписок</a>
+                <a zippy="import" class="ms-4"><i  class="fa fa-download" ></i> Iмпорт виписок</a>
       
                 <table class="table   table-sm   ">
                     <tr>
@@ -107,8 +107,8 @@
                         <th>Дата</th>
                         <th>Створив</th>
                         <th>Рахунок</th>
-                        <th class="text-right">Прибуток</th>
-                        <th class="text-right">Видаток</th>
+                        <th class="text-end">Прибуток</th>
+                        <th class="text-end">Видаток</th>
                         <th>Номер</th>
                         <th>Дата. док.</th>
                         
@@ -127,8 +127,8 @@
                        <td class="text-nowrap" zippy="date"></td>
                         <td zippy="username"></td>
                         <td zippy="mf_name"></td>
-                        <td zippy="amountp" class="text-right"></td>
-                        <td zippy="amountm" class="text-right"></td>
+                        <td zippy="amountp" class="text-end"></td>
+                        <td zippy="amountm" class="text-end"></td>
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="docdate"></td>
                  
@@ -152,9 +152,9 @@
 
                 <div zippy="pag"></div>
                  <table class="ctable" >
-                   <tr><td>Прибуток </td><td zippy="totp" class="text-right text-bold"></td></tr>
-                   <tr><td>Видаток </td><td zippy="totm" class="text-right text-bold"></td></tr>
-                   <tr><td class="text-bold">Разом </td><td zippy="tottot" class="text-right text-bold"></td></tr>
+                   <tr><td>Прибуток </td><td zippy="totp" class="text-end text-bold"></td></tr>
+                   <tr><td>Видаток </td><td zippy="totm" class="text-end text-bold"></td></tr>
+                   <tr><td class="text-bold">Разом </td><td zippy="tottot" class="text-end text-bold"></td></tr>
                  
                  </table>
                 <div class="row" id="dankor">
@@ -170,7 +170,7 @@
         </div>
 
         <div id="dform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             aria-hidden="true">
+             >
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -183,7 +183,7 @@
                             </div>
                             <div class="form-group">
 
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
                                 <input   type="submit" value="Виконати" class="btn btn-primary  ">
                             </div>
                         </form>
@@ -265,7 +265,7 @@
                                                                                                       
                      
                          <div class="form-group">
-                           <a zippy="biback" class="btn btn-secondary  mr-4 " >Скасувати</a>                          
+                           <a zippy="biback" class="btn btn-secondary  ms-4 " >Скасувати</a>                          
                                 
                             <input zippy="bipreview"    type="submit" value="Завантажити" class="btn btn-primary  "> 
                           
@@ -273,7 +273,7 @@
                         </div> 
                       
                         <div class="col-12 col-md-8 col-xl-6">
-                           <a zippy="biload" class="btn btn-success  mr-4 " >Iмпортувати</a>                          
+                           <a zippy="biload" class="btn btn-success  ms-4 " >Iмпортувати</a>                          
                            <table class="ctable">
                               {{#ilist}}
                               <tr>
@@ -297,7 +297,9 @@
         <script>
             function delpay(id) {
                 $('#pl_id').val(id);
-                $('#dform').modal()
+                
+                openModal('dform')
+                
             }
         </script>
 

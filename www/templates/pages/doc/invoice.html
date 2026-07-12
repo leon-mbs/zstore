@@ -116,11 +116,11 @@
                             <th>Од.</th>
 
 
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right"><i class="fa fa-gift"></i>,%</th>
-                           <th class="text-right">Ціна</th>
+                            <th class="text-end">Кіл.</th>
+                            <th class="text-end"><i class="fa fa-gift"></i>,%</th>
+                           <th class="text-end">Ціна</th>
                         
-                            <th class="text-right">Сума</th>
+                            <th class="text-end">Сума</th>
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
@@ -129,40 +129,40 @@
                             <td zippy="msr"></td>
 
 
-                            <td zippy="quantity" class="text-right"></td>
-                            <td zippy="disc" class="text-right"></td>
+                            <td zippy="quantity" class="text-end"></td>
+                            <td zippy="disc" class="text-end"></td>
                           
-                            <td zippy="price" class="text-right"></td>
+                            <td zippy="price" class="text-end"></td>
                              
 
-                            <td zippy="amount" class="text-right"></td>
+                            <td zippy="amount" class="text-end"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="6" class="text-right">Всього:</td>
-                            <td zippy="total" class="text-right"></td>
+                            <td colspan="6" class="text-end">Всього:</td>
+                            <td zippy="total" class="text-end"></td>
                             <td></td>
                         </tr>
                            {{#usends}} 
                        <tr style="font-weight: bolder;">
-                            <td colspan="6" class="text-right"> В т.ч. ПДВ:</td>
-                            <td zippy="totalnds" class="text-right"></td>
+                            <td colspan="6" class="text-end"> В т.ч. ПДВ:</td>
+                            <td zippy="totalnds" class="text-end"></td>
                             <td></td>
                         </tr>
                           {{/usends}} 
                        {{^usends}} 
                        <tr style="font-weight: bolder;">
-                            <td colspan="6" class="text-right">Знижка:</td>
-                            <td zippy="totaldisc" class="text-right"></td>
-                            <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal"
-                                   data-target="#modaltotaldisc"><i class="fa fa-edit"></i></a></td>
+                            <td colspan="6" class="text-end">Знижка:</td>
+                            <td zippy="totaldisc" class="text-end"></td>
+                            <td><a data-label="totaldisc" href="javascript:void(0);" data-bs-toggle="modal"
+                                   data-bs-target="#modaltotaldisc"><i class="fa fa-edit"></i></a></td>
                         </tr>
                           {{/usends}} 
                         <tr style="font-weight: bolder;">
-                            <td colspan="6" class="text-right"><span data-label="payamount">До сплати:</span></td>
-                            <td zippy="payamount" class="text-right"></td>
+                            <td colspan="6" class="text-end"><span data-label="payamount">До сплати:</span></td>
+                            <td zippy="payamount" class="text-end"></td>
                             <td></td>
                         </tr>
                   
@@ -172,29 +172,29 @@
             </div>
             <div class="row">
                 <div class="col-9 col-lg-7 d-flex justify-content-end pt-4">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ml-2 ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ml-2 ">
-                     <input zippy="execdoc" type="submit" value="До сплати" class="btn btn-primary  ml-2 ">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-secondary  ms-2 ">
+                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-primary  ms-2 ">
+                     <input zippy="execdoc" type="submit" value="До сплати" class="btn btn-primary  ms-2 ">
 
                 </div>
             </div>
           
 
             <div id="modaltotaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
+                 >
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Знижка</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                <span >&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="edittotaldisc" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="btotaldisc" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="btotaldisc" class="ms-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -234,7 +234,7 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-secondary  me-2">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
                         
                     </div>
@@ -274,7 +274,7 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelserrow" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input type="button" zippy="cancelserrow" value="Скасувати" class="btn btn-secondary  me-2">
                         <input type="submit" zippy="submitserrow" value="Зберегти" class="btn btn-primary ">
                         
                     </div>
@@ -299,7 +299,7 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  mr-2">
+                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
                         
                     </div>
