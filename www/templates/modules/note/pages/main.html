@@ -159,7 +159,7 @@
 
                         <div class="modal-header">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
+                                     >&times;</span></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -188,7 +188,7 @@
 
                         <div class="modal-header">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
+                                     >&times;</span></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -214,7 +214,7 @@
 
                         <div class="modal-header">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
+                                    >&times;</span></button>
                         </div>
                         <div class="modal-body">
                        <div class="form-group">
@@ -256,7 +256,7 @@
                         <div   class="modal-header">
                             <h5 v-show="selectedTopic != null && selectedTopic.ispublic==false" class="modal-title">Право  перегляду</h5>
                             <h5 v-show="selectedTopic != null && selectedTopic.ispublic==true" class="modal-title">Право  редагування</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span      aria-hidden="true">&times;</span></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><span      >&times;</span></button>
                         </div>
                         
                         <div class="input-group  ">
@@ -428,7 +428,7 @@
             onAddFile:function(t){    
                 
                
-               showModal('fileedit')     
+               openModal('fileedit')     
             },
             onSaveFile:function(t){    
                 
@@ -477,7 +477,7 @@
                   this.editTitle = "";
                   this.editTags = "";
             
-                  showModal('topicedit') 
+                  openModal('topicedit') 
                   
                   $('#editdetail').summernote("code","")
                   this.topicTags=[]
@@ -494,7 +494,7 @@
                   this.editDetail = this.selectedTopic.detail;
                   this.editTags = this.topicTags.join();
                   
-                  showModal('topicedit')
+                  openModal('topicedit')
                   
                   $('#editdetail').summernote("code",this.topicData)
                      
@@ -547,7 +547,7 @@
                       this.accUsers = data.accUsers  
        
                      
-                      showModal('usersaccess') 
+                      openModal('usersaccess') 
                    })   
 
                   
@@ -588,7 +588,7 @@
                   this.newNode = true;
                   this.nameNode = "";
                   
-                  showModal('nodeedit') 
+                  openModal('nodeedit') 
             }   ,
             
   
@@ -612,7 +612,7 @@
                   this.newNode = false;
                   this.nameNode = this.selectedNode.text;
                   
-                  showModal('nodeedit')
+                  openModal('nodeedit')
             
             }   ,
             onCutTopic:function(){
@@ -804,7 +804,7 @@
             $('#editdetail').summernote({
                 height: 400,
                 lang: 'uk-UA',
-
+                tooltip: false, 
                 callbacks: {
           
                     onPaste: function (e) {

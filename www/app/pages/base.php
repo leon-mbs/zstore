@@ -1153,6 +1153,18 @@ class Base extends \Zippy\Html\WebPage
         }
     }    
   
+   /**
+   * вызов  JS фунуции после  ajax запроса
+   * 
+   * @param mixed $fnname
+   * @param mixed $plist
+   */
+   protected function addAjaxAnswer($fnname,$plist=[]) {
+       $js=["id"=>$this->id,"type"=>"Function","name"=> $fnname,"data"=> $plist];
+
+       App::$app->getResponse()->addAjaxResponse($js);  
+   }    
+  
     protected function isAjaxRequest( ) {
        return App::$app->getRequest()->isAjaxRequest()   ;
     }   

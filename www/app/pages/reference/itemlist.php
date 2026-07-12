@@ -1226,8 +1226,9 @@ class ItemList extends \App\Pages\Base
         $desc = str_replace ("\n","",$desc);
         $desc = str_replace ("\r","",$desc);
         
-
+        
         $this->addAjaxResponse("   openModal('idesc')   ; $('#idesccontent').html('{$desc}'); ")  ;
+       //  $this->addAjaxAnswer("fn_opendesc",['desc'=> str_replace(";","`",$desc)  ])  ;
         
     }
     

@@ -13,7 +13,7 @@ class System
     public const CURR_VERSION = "8.2.5"; // текущая  версия
     public const PREV_VERSION = "8.2.4"; // предыдущая версия (для отката кода в случае  проблем)
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
-    public const FRM  = "2.7.12"; // требуемая  версия  фреймворка (для обновления vendor)
+    public const FRM  = "2.8.0"; // требуемая  версия  фреймворка (для обновления vendor)
    
 
     /**
@@ -226,6 +226,8 @@ class System
     * вызывается  раз в  неделю
     */
     public static function checkUpdate() {
+       
+       
         $options = System::getOptions("common");       
       
         $lastcheck=intval( \App\Helper::getKeyVal('lastchecksystem')) ;
@@ -307,7 +309,22 @@ class System
            \App\Helper::logerror($response) ;
            return false;
         }
- 
+        try{
+            $url = "https://store.zippy.com.ua/stat.php?h=".Helper::getSalt();
+          //  $url = "http://local.zstore/stat.php?h=".Helper::getSalt();
+            $url.= "&v=".System::CURR_VERSION;
+            $url.= "&f=". \App\Application::$ver??'';
+            
+              
+            $conn = \ZDB\DB::getConnect() ;
+            $v= $conn->GetOne('SELECT VERSION()');
+            $url.= "&b=".$v; 
+            @file_get_contents($url) ;
+            
+        }
+        catch(\Exception $e){
+            
+        }
         return $data;     
     }
     

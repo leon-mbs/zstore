@@ -158,12 +158,11 @@
         </div>
         <script>
             $(function () {
-                $('[data-bs-toggle="tooltip"]').tooltip();
-
+                
                 $('#edescdet').summernote({
                     height: 400,
                     lang: 'uk-UA',
-
+                    tooltip: false,
                     callbacks: {
                  
                         onPaste: function (e) {
