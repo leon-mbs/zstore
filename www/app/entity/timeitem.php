@@ -61,12 +61,14 @@ class TimeItem extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $t_start = $conn->DBTimeStamp($this->t_start);
         $t_end = $conn->DBTimeStamp($this->t_end);
-        $sql = " select  count(*) from timesheet where  time_id <> {$this->time_id}  and   emp_id={$this->emp_id}  ";
+        $sql = " select  *  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and       (( t_start >  {$t_start}    and  t_start < {$t_end}  ) or ( t_end >  {$t_start}    and  t_end < {$t_end}   ) or (   {$t_start} <= t_start   and  t_end <= {$t_end}   )   )";
+        \App\Helper::log($sql);
+       
+        $sql = " select  count(*)  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and       (( t_start >  {$t_start}    and  t_start < {$t_end}  ) or ( t_end >  {$t_start}    and  t_end < {$t_end}   ) or (   {$t_start} <= t_start   and  t_end <= {$t_end}   )   )";
+       
         $cnt = $conn->GetOne($sql);
-        $sql = " select  count(*)  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and   (( {$t_start}  >= t_end  and  {$t_end}  > t_end) or (  {$t_start}  < t_start  and  {$t_end}  <= t_start))";
-        $cnt1 = $conn->GetOne($sql);
 
-        if ($cnt > $cnt1) {
+        if ($cnt > 0) {
             return "Інтервал перетинається з існуючим";
         }
 

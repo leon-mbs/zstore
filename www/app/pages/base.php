@@ -805,7 +805,7 @@ class Base extends \Zippy\Html\WebPage
          $this->pr_itemsform->pr_items->Reload();
     
          
-         $this->addJavaScript(" openModal('pr_items_pform')  ",true)  ;
+         $this->addJavaScript(" openModal('modalpritems')  ",true )  ;
     }
  
     public function pr_itemsOnRow($row) {

@@ -44,7 +44,7 @@ class TimeSheet extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $ret = array();
-        $ret['empid']  =  $user->employee_id;
+        $ret['empid']  = intval( $user->employee_id);
         $ret['isadmin']  =  $user->rolename=="admins";
         $ret['types']  =  \App\Util::tokv(TimeItem::getTypeTime());
         $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")) ;
@@ -71,7 +71,7 @@ class TimeSheet extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $emp_id = $post->empid;
+        $emp_id = intval($post->empid);
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
 
@@ -111,6 +111,7 @@ class TimeSheet extends \App\Pages\Base
             $ret['stat'][] = array(
             "color"=> $color,
             "days"=> $row['dd'],
+            "emp_id"=> $row['emp_id'],
             "cnt"=> number_format($row['tm'] / 3600, 2, '.', '') ,
             "name"=>$tn[$row['t_type']]
             );
@@ -170,6 +171,7 @@ class TimeSheet extends \App\Pages\Base
              "desc"=> $tm->description,
              "type"=> $tm->t_type,
              "break"=> $tm->t_break,
+             "emp_id"=> $emp_id,
              "dur"=> $diff,
              "color"=> $color,
              "branch"=> $tm->branch_id > 0 ? $tm->branch_name : '',
@@ -183,6 +185,7 @@ class TimeSheet extends \App\Pages\Base
 
                "backgroundColor"=>$colorcal ,
                "title"=>$tm->description ,
+               "emp_id"=>$tm->emp_id ,
                "id"=>$tm->time_id
               );
 

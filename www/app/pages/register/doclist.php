@@ -156,7 +156,13 @@ class DocList extends \App\Pages\Base
         $this->filter->author->setValue(0);
         $this->filter->searchnumber->setText("") ;
         $this->filter->searchtext->setText("") ;
+       
+       
         $this->filterOnSubmit($this->filter);
+        
+       
+             
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -180,6 +186,7 @@ class DocList extends \App\Pages\Base
         $this->filter->searchtext->setText('');
         $this->doclist->setCurrentPage(1);
         //$this->doclist->setPageSize($this->filter->rowscnt->getValue());
+        $this->statusform->setVisible(false);       
 
         $this->doclist->Reload();
     }

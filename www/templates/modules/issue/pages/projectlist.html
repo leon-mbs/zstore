@@ -39,6 +39,7 @@
                        <div class="col-auto  ">
                         <input v-on:click.prevent="onsearch" type="button" class=" ms-2   btn btn-success  " value="ОК">
                         </div>
+                     </div>
                         
                     </form>
 
@@ -485,7 +486,7 @@
                 $('#editdesc').summernote({
                     height: 400,
                     lang: 'uk-UA',
-
+                    tooltip: false, 
                     callbacks: {
           
                         onPaste: function (e) {
