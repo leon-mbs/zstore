@@ -78,7 +78,7 @@
                                 <tr>
                                     <td><a :class="issue.prcl" :href="issue.url"  title="Пряме посилання"  >{{issue.issue_id}}</a></td>
 
-                                    <td class="text-end"><h5><span :title="issue.emptitle"  class="badge badge-info badge-pill">{{issue.emp}}</span>
+                                    <td class="text-end"><h5><span :title="issue.emptitle"  class="badge text-bg-info  rounded-pill">{{issue.emp}}</span>
                                         </h5></td>
                                 </tr>
                                 <tr>
@@ -644,7 +644,7 @@
                 $('#editdesc').summernote({
                     height: 200,
                     lang: 'uk-UA',
-                  tooltip: false,
+                    tooltip: false,
                     callbacks: {
                
                         onPaste: function (e) {

@@ -56,7 +56,7 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $this->witempan->wisfilter->add(new DropDownChoice('searchtype', array( ), 0));
 
-        $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
+        $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, false));
         $table->setPageSize(H::getPG());
         $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
         $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
@@ -85,7 +85,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->_pricetype = $pricetype;
         $this->_store = $store;
         if (strlen($this->_pricetype) > 0) {
-            $this->witempan->witemselt->AddColumn(new \Zippy\Html\DataList\Column('price', 'Цiна', true, true, false, "text-end", "text-end"));
+            $this->witempan->witemselt->AddColumn(new \Zippy\Html\DataList\Column('price', 'Цiна', false, true, false, "text-end", "text-end"));
         }
     }
 
@@ -238,8 +238,9 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         if($sortfield==null)  $sortfield='itemname';
+        if($asc==null)  $asc='asc';
         $list = array();
-        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start) as $item) {
+        foreach (Item::findYield($this->getWhere(), $sortfield. ' ' . $asc, $count, $start) as $item) {
 
             if (strlen($this->page->_pricetype) > 0) {
                 $item->price = $item->getPrice($this->page->_pricetype, $this->page->_store);

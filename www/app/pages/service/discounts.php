@@ -264,13 +264,13 @@ class Discounts extends \App\Pages\Base
 
     public function onTab($sender) {
 
-        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
+        $this->_tvars['tabobadge'] = $sender->id == 'tabo' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
+        $this->_tvars['tabibadge'] = $sender->id == 'tabi' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
 
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabebadge'] = $sender->id == 'tabe' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
+        $this->_tvars['tabpbadge'] = $sender->id == 'tabp' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
+        $this->_tvars['tabebadge'] = $sender->id == 'tabe' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
 
 
         $this->ctab->setVisible($sender->id == 'tabc');
@@ -476,13 +476,13 @@ class Discounts extends \App\Pages\Base
         $row->add(new  Label("sdisc"))->setText($s->actionprice);
 
         if ($s->fromdate < time() && $s->todate > time()) {
-            $row->sdisc->setAttribute("class", "badge badge-success");
+            $row->sdisc->setAttribute("class", "badge  text-bg-success");
         }
         if ($s->fromdate > time()) {
-            $row->sdisc->setAttribute("class", "badge badge-warning");
+            $row->sdisc->setAttribute("class", "badge  text-bg-warning");
         }
         if ($s->todate < time()) {
-            $row->sdisc->setAttribute("class", "badge badge-secondary");
+            $row->sdisc->setAttribute("class", "badge  text-bg-secondary");
         }
 
         $row->add(new  Label("sfrom"))->setText(H::fd($s->fromdate));
@@ -621,24 +621,24 @@ class Discounts extends \App\Pages\Base
         $row->add(new  Label("iprice"))->setText($i->actionprice);
         $row->iprice->setVisible($i->actionprice > 0);
         if ($i->fromdate < time() && $i->todate > time()) {
-            $row->iprice->setAttribute("class", "badge badge-success");
+            $row->iprice->setAttribute("class", "badge  text-bg-success");
         }
         if ($i->fromdate > time()) {
-            $row->iprice->setAttribute("class", "badge badge-warning");
+            $row->iprice->setAttribute("class", "badge  text-bg-warning");
         }
         if ($i->todate < time()) {
-            $row->iprice->setAttribute("class", "badge badge-secondary");
+            $row->iprice->setAttribute("class", "badge  text-bg-secondary");
         }
         $row->add(new  Label("idisc"))->setText($i->actiondisc);
         $row->idisc->setVisible($i->actiondisc > 0);
         if ($i->fromdate < time() && $i->todate > time()) {
-            $row->idisc->setAttribute("class", "badge badge-success");
+            $row->idisc->setAttribute("class", "badge  text-bg-success");
         }
         if ($i->fromdate > time()) {
-            $row->idisc->setAttribute("class", "badge badge-warning");
+            $row->idisc->setAttribute("class", "badge  text-bg-warning");
         }
         if ($i->todate < time()) {
-            $row->idisc->setAttribute("class", "badge badge-secondary");
+            $row->idisc->setAttribute("class", "badge  text-bg-secondary");
         }
 
         $row->add(new  Label("ifrom"))->setText(H::fd($i->fromdate));

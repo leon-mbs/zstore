@@ -39,6 +39,7 @@
                        <div class="col-auto  ">
                         <input v-on:click.prevent="onsearch" type="button" class=" ms-2   btn btn-success  " value="ОК">
                         </div>
+                     </div>
                         
                     </form>
 
@@ -61,9 +62,9 @@
                         <td  >{{project.project_name}}</td>
                         <td  >{{project.customer_name}}</td>
                         <td  >{{project.status}}</td>
-                        <td style="width:40px" ><span   title="Нові" class="badge badge-success  " v-show="project.inew>0">{{project.inew}}</span></td>
-                        <td style="width:40px"><span   title="В роботі" class="badge badge-primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
-                        <td style="width:40px"><span   title="Закриті" class="badge badge-secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
+                        <td style="width:40px" ><span   title="Нові" class="badge text-bg success  " v-show="project.inew>0">{{project.inew}}</span></td>
+                        <td style="width:40px"><span   title="В роботі" class="badge text-bg primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
+                        <td style="width:40px"><span   title="Закриті" class="badge text-bg secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
 
                         <td>
                             <a  v-show="project.allowedit" v-on:click.prevent="show(project.project_id)"   title="Перегляд" href="javascript:void(0)" ><i class="fa fa-eye"></i></a>
@@ -485,7 +486,7 @@
                 $('#editdesc').summernote({
                     height: 400,
                     lang: 'uk-UA',
-
+                    tooltip: false, 
                     callbacks: {
           
                         onPaste: function (e) {

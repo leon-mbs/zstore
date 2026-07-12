@@ -44,7 +44,7 @@ class TimeSheet extends \App\Pages\Base
         $common = System::getOptions("common");
 
         $ret = array();
-        $ret['empid']  =  $user->employee_id;
+        $ret['empid']  = intval( $user->employee_id);
         $ret['isadmin']  =  $user->rolename=="admins";
         $ret['types']  =  \App\Util::tokv(TimeItem::getTypeTime());
         $ret['emps']  =  \App\Util::tokv(\App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")) ;
@@ -71,7 +71,7 @@ class TimeSheet extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $emp_id = $post->empid;
+        $emp_id = intval($post->empid);
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
 
@@ -86,31 +86,32 @@ class TimeSheet extends \App\Pages\Base
 
             $color="";
             if ($row['t_type'] == TimeItem::TIME_WORK) {
-                $color=  'badge badge-primary' ;
+                $color=  'badge  text-bg-primary' ;
             }
             if ($row['t_type'] == TimeItem::TINE_BT) {
 
-                $color=  'badge badge-info'   ;
+                $color=  'badge  text-bg-info'   ;
             }
             if ($row['t_type'] == TimeItem::TINE_HL) {
-                $color=  'badge badge-success'  ;
+                $color=  'badge  text-bg-success'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_ILL) {
-                $color=  'badge badge-warning'  ;
+                $color=  'badge  text-bg-warning'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_OVER) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_WN) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_OTHER) {
-                $color=  'badge badge-light'   ;
+                $color=  'badge  text-bg-light'   ;
             }
 
             $ret['stat'][] = array(
             "color"=> $color,
             "days"=> $row['dd'],
+            "emp_id"=> $row['emp_id'],
             "cnt"=> number_format($row['tm'] / 3600, 2, '.', '') ,
             "name"=>$tn[$row['t_type']]
             );
@@ -132,32 +133,32 @@ class TimeSheet extends \App\Pages\Base
             $color="";
             $colorcal="";
             if ($tm->t_type == TimeItem::TIME_WORK) {
-                $color=  'badge badge-primary' ;
+                $color=  'badge  text-bg-primary' ;
                 $colorcal=  "#007bff" ;
             }
             if ($tm->t_type == TimeItem::TINE_BT) {
 
-                $color=  'badge badge-info'   ;
+                $color=  'badge  text-bg-info'   ;
                 $colorcal=  "#17a2b8" ;
             }
             if ($tm->t_type == TimeItem::TINE_HL) {
-                $color=  'badge badge-success'  ;
+                $color=  'badge  text-bg-success'  ;
                 $colorcal=  "#28a745" ;
             }
             if ($tm->t_type == TimeItem::TINE_ILL) {
-                $color=  'badge badge-warning'  ;
+                $color=  'badge  text-bg-warning'  ;
                 $colorcal=  "#ffc107" ;
             }
             if ($tm->t_type == TimeItem::TINE_OVER) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
                 $colorcal=  "#dc3545" ;
             }
             if ($tm->t_type == TimeItem::TINE_WN) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
                 $colorcal=  "#dc3545" ;
             }
             if ($tm->t_type == TimeItem::TINE_OTHER) {
-                $color=  'badge badge-light'   ;
+                $color=  'badge  text-bg-light'   ;
                 $colorcal=  "#bbb" ;
             }
             $diff = $tm->t_end - $tm->t_start - ($tm->t_break * 60);
@@ -170,6 +171,7 @@ class TimeSheet extends \App\Pages\Base
              "desc"=> $tm->description,
              "type"=> $tm->t_type,
              "break"=> $tm->t_break,
+             "emp_id"=> $emp_id,
              "dur"=> $diff,
              "color"=> $color,
              "branch"=> $tm->branch_id > 0 ? $tm->branch_name : '',
@@ -183,6 +185,7 @@ class TimeSheet extends \App\Pages\Base
 
                "backgroundColor"=>$colorcal ,
                "title"=>$tm->description ,
+               "emp_id"=>$tm->emp_id ,
                "id"=>$tm->time_id
               );
 

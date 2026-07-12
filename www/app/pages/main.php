@@ -318,9 +318,9 @@ class Main extends Base
         $row->add(new Label('wsd_snumber', $stock->snumber));
         $row->add(new Label('wsd_edate', H::fd($stock->sdate)));
         $row->add(new Label('wsd_qty', H::fqty($stock->qty)));
-        $row->wsd_edate->setAttribute('class', 'badge badge-danger');
+        $row->wsd_edate->setAttribute('class', 'badge  text-bg-danger');
         if ($stock->sdate > time()) {
-            $row->wsd_edate->setAttribute('class', 'badge badge-warning');
+            $row->wsd_edate->setAttribute('class', 'badge  text-bg-warning');
         }
     }
 

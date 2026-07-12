@@ -33,6 +33,7 @@
                         <label class="col-form-label col-auto" v-show="isadmin==true" >Спiвробiтник</label>
                         <div class="col-auto  ">
                           <select class="form-control me-2"  v-model="empid" >
+                              <option value="0">Не вибрано</option>
                               <option v-for="emp in emps"  :value="emp.key">{{emp.value}}</option>
                           </select>
                          </div>
@@ -102,14 +103,19 @@
                 </div>
    
  
-<div class="modal" tabindex="-1" id="editmodal">
+<div class="modal"   id="editmodal">
   <div class="modal-dialog">
     <div class="modal-content">
- 
-      <div class="modal-body">
+   <div class="modal-header">
+                        <h4 v-show="edited>0">Редагування</h4>
+                        <h4 v-show="edited==0">Новий запис</h4>
+                   
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span >&times;</span>
+                        </button>
+                    </div>
+      <div  class="modal-body">
     <form id="fval" >
-                    <h4 v-show="edited>0">Редагування</h4>
-                    <h4 v-show="edited==0">Новий запис</h4>
                     
                     <div    class="form-group row">
                     <div class="col-auto mt-2">
@@ -117,6 +123,8 @@
                         </div>
                        <div class="col-auto">
                           <select class="form-control "  v-model="editempid" >
+                              <option value="0">Не вибрано</option>
+                       
                               <option v-for="emp in emps"  :value="emp.key">{{emp.value}}</option>
                           </select>
                     </div>
@@ -263,10 +271,9 @@ var calendar
                   this.editdate = tm.date;
                   this.editfrom = tm.from;
                   this.editto = tm.to;
-                  this.editempid = tm.to;
-                  
+                  this.editempid = this.empid;
+                    
                   openModal('editmodal')   
-                 
           
                } ,    
                add:function(date){
@@ -277,7 +284,10 @@ var calendar
                   this.editfrom = this.start;
                   this.editto = this.end;
                   this.editbreak = this.break;
-                 
+                  this.editdesc = ""
+                  this.editempid = this.empid;    
+               
+                
                   openModal('editmodal') 
                } ,    
                ontype:function(){
@@ -293,8 +303,9 @@ var calendar
                 
 
                } ,    
-               save:function(i){
-                
+               save:function( ){
+                 
+                   
 
                     var v = checkFormInput('fval');
                     if(!v) return
@@ -315,11 +326,12 @@ var calendar
                      
                   callPM('save',[this.edited], body,(data)=> 
                   {
-                          
+                            closeModal('editmodal') 
+                            
                             this.loaddata() ;                               
                             
                           
-                            closeModal('editmodal')  
+                             
                            
 
                   });        
@@ -329,7 +341,8 @@ var calendar
                } ,    
                loaddata:function(){
                    
-          
+                  if(this.empid==0) return
+                  
                   let body={
                      empid:this.empid ,
                      from:this.from  ,
