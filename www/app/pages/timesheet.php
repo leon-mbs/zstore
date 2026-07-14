@@ -86,26 +86,26 @@ class TimeSheet extends \App\Pages\Base
 
             $color="";
             if ($row['t_type'] == TimeItem::TIME_WORK) {
-                $color=  'badge badge-primary' ;
+                $color=  'badge  text-bg-primary' ;
             }
             if ($row['t_type'] == TimeItem::TINE_BT) {
 
-                $color=  'badge badge-info'   ;
+                $color=  'badge  text-bg-info'   ;
             }
             if ($row['t_type'] == TimeItem::TINE_HL) {
-                $color=  'badge badge-success'  ;
+                $color=  'badge  text-bg-success'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_ILL) {
-                $color=  'badge badge-warning'  ;
+                $color=  'badge  text-bg-warning'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_OVER) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_WN) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
             }
             if ($row['t_type'] == TimeItem::TINE_OTHER) {
-                $color=  'badge badge-light'   ;
+                $color=  'badge  text-bg-light'   ;
             }
 
             $ret['stat'][] = array(
@@ -133,32 +133,32 @@ class TimeSheet extends \App\Pages\Base
             $color="";
             $colorcal="";
             if ($tm->t_type == TimeItem::TIME_WORK) {
-                $color=  'badge badge-primary' ;
+                $color=  'badge  text-bg-primary' ;
                 $colorcal=  "#007bff" ;
             }
             if ($tm->t_type == TimeItem::TINE_BT) {
 
-                $color=  'badge badge-info'   ;
+                $color=  'badge  text-bg-info'   ;
                 $colorcal=  "#17a2b8" ;
             }
             if ($tm->t_type == TimeItem::TINE_HL) {
-                $color=  'badge badge-success'  ;
+                $color=  'badge  text-bg-success'  ;
                 $colorcal=  "#28a745" ;
             }
             if ($tm->t_type == TimeItem::TINE_ILL) {
-                $color=  'badge badge-warning'  ;
+                $color=  'badge  text-bg-warning'  ;
                 $colorcal=  "#ffc107" ;
             }
             if ($tm->t_type == TimeItem::TINE_OVER) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
                 $colorcal=  "#dc3545" ;
             }
             if ($tm->t_type == TimeItem::TINE_WN) {
-                $color=  'badge badge-danger'  ;
+                $color=  'badge  text-bg-danger'  ;
                 $colorcal=  "#dc3545" ;
             }
             if ($tm->t_type == TimeItem::TINE_OTHER) {
-                $color=  'badge badge-light'   ;
+                $color=  'badge  text-bg-light'   ;
                 $colorcal=  "#bbb" ;
             }
             $diff = $tm->t_end - $tm->t_start - ($tm->t_break * 60);
