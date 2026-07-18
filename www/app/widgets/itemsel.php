@@ -56,7 +56,7 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $this->witempan->wisfilter->add(new DropDownChoice('searchtype', array( ), 0));
 
-        $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, false));
+        $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
         $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
         $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));

@@ -164,8 +164,12 @@ class ReturnIssue extends \App\Pages\Base
 
 
                     }
-                }
+                             
                 
+                    $this->docform->notes->setText("Пiдстава ".$basedoc->document_number);
+                }
+
+              
             }
         }
         $this->calcTotal();

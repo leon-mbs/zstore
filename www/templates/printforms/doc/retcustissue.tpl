@@ -1,20 +1,66 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
 
 
+ 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-            Повернення постачальнику № {{document_number}} від {{date}} <br>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td><b>Постачальник</b></td>
+      
+        <td colspan="2" ><b>Постачальник</b></td>
         <td colspan="4">{{customer_name}}</td>
     </tr>
+   {{#edrpou}}
+    <tr>
+      <td></td>  
+        <td   valign="top">ЄДРПОУ</td>
+        <td colspan="4">{{edrpou}}</td>
+    </tr>
+     {{/edrpou}}      
+    <tr>
+  
+        <td colspan="2" valign="top"><b>Покупець</b></td>
+        <td colspan="4"> {{firm_name}}                    </td>
+
+    </tr>
+    {{#fedrpou}}
+    <tr>
+      <td></td> 
+        <td valign="top">ЄДРПОУ</td>
+        <td colspan="4">{{fedrpou}}</td>
+    </tr>
+     {{/fedrpou}}  
+    {{#finn}}
+    <tr>
+        <td></td>
+        <td valign="top">IПН</td>
+        <td colspan="4">{{finn}}</td>
+    </tr>
+     {{/finn}} 
+     {{#isbank}}
+    <tr>
+
+        <td></td>
+        <td> р/р</td>
+        <td colspan="4">{{bankacc}}    {{bank}}</td>
+
+    </tr>
+    {{/isbank}}  
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="4">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}  
+
    <tr>
         <td colspan="6">{{{notes}}}</td>
     </tr>
-    
+      <tr>
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
+            Повернення постачальнику № {{document_number}} від {{date}} <br>
+        </td>
+    </tr>  
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
@@ -48,10 +94,22 @@
     </tr>
       {{/nds}}
    <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="5" align="right">Сплачено:</td>
-        <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">До сплати:</td>
+        <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
     </tr>
+         {{#totalstr}}
+    <tr>
+        <td colspan="6">На суму <b>{{totalstr}}</b></td>
+   </tr>
+   {{/totalstr}}  
+         <tr>
+                        <td colspan="3" > 
+                            Продавець ___________
+                        </td>
+                        <td colspan="3"> 
+                            Покупець ___________
+                        </td>
 
-
+                    </tr>
 </table>
 

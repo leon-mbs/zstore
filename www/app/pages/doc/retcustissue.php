@@ -125,6 +125,7 @@ class RetCustIssue extends \App\Pages\Base
                             $i->price = $i->price * $rate;
                             $this->_itemlist[]=$i;
                         }
+                        $this->docform->notes->setText("Пiдстава ".$basedoc->document_number);
 
 
                     }
