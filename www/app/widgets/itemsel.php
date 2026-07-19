@@ -9,11 +9,12 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
-
+use Zippy\Html\Form\Button;
 use Zippy\Html\DataList\DataTable;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Image;
 
@@ -24,8 +25,9 @@ class ItemSel extends \Zippy\Html\PageFragment
 {
     private $_page;
     private $_event;
-    public $_pricetype;
+    public $_pricetype='price1';
     public $_store = 0;
+    public $_edititem  ;
  
     public $_catlist  = array();
     public $_prodlist = array();
@@ -58,21 +60,35 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, false));
         $table->setPageSize(H::getPG());
+ 
         $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
         $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
-
+        $table->AddColumn(new \Zippy\Html\DataList\Column('edit', " ", false, true, true));      
+        $table->AddColumn(new \Zippy\Html\DataList\Column('edit', " ", false, true, true));
+       
         $table->setCellClickEvent($this, 'OnSelect');
+        $table->setSelectedClass("table-success" );
 
 
 
         $this->add(new Panel('wcatpan'))->setVisible(false);
         $this->wcatpan->add(new DataView('wcatlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
 
+     
         $this->add(new Panel('wprodpan'))->setVisible(false);
         $this->wprodpan->add(new DataView('wprodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
 
+        $this->add(new Panel('weditpan'))->setVisible(false);
+        $this->weditpan->add(new Form('weditform'))->onSubmit($this, 'saveEdit'); 
+        $this->weditpan->weditform->add(new Button('weditcancel'))->onClick($this, 'cancelEdit'); 
+        $this->weditpan->weditform->add(new TextInput('weditname'));
+        $this->weditpan->weditform->add(new TextInput('weditbarcode'));
+        $this->weditpan->weditform->add(new TextInput('weditprice'));
+        $this->weditpan->weditform->add(new TextArea('weditdescription'));
+     
+        
     }
 
     /**
@@ -84,9 +100,7 @@ class ItemSel extends \Zippy\Html\PageFragment
     public function setPriceType($pricetype, $store = 0) {
         $this->_pricetype = $pricetype;
         $this->_store = $store;
-        if (strlen($this->_pricetype) > 0) {
-            $this->witempan->witemselt->AddColumn(new \Zippy\Html\DataList\Column('price', 'Цiна', false, true, false, "text-end", "text-end"));
-        }
+ 
     }
 
     /**
@@ -112,15 +126,29 @@ class ItemSel extends \Zippy\Html\PageFragment
         }
     }
 
-    public function OnSelect($sender, $data) {
-        $item = $data['dataitem'];
+    public function OnSelect($sender, $data ) {
+        $item = $data['dataitem'];  
+        $field = $data['field'];
+        if($field=='edit') {
+            
+            
+            $this->_edititem  = Item::load($item->item_id) ;
+            $this->weditpan->weditform->weditname->setText($this->_edititem->itemname);
+            $this->weditpan->weditform->weditbarcode->setText($this->_edititem->bar_code);
+            $this->weditpan->weditform->weditprice->setText($this->_edititem->getPrice($this->_pricetype ));
+            $this->weditpan->weditform->weditdescription->setText($this->_edititem->description);
+         
+            
+            $this->weditpan->setVisible(true); 
+            $this->witempan->setVisible(false);
+            return;
+        }
+        
         $this->_page->{$this->_event}($item->item_id, $item->itemname);
     }
 
     public function ReloadData($sender) {
-
    
-  
         $this->witempan->witemselt->Reload();
     }
     //категории
@@ -136,7 +164,13 @@ class ItemSel extends \Zippy\Html\PageFragment
         //  $store_id = $this->setupform->store->getValue();
 
         $prod = $row->getDataItem();
-        $prod->price = $prod->getPrice($this->_pricetype);
+        
+        
+        $prod->price ="";
+        if($this->_pricetype > 0) {
+           $prod->price = $prod->getPrice($this->_pricetype);     
+        }
+       
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
@@ -177,6 +211,30 @@ class ItemSel extends \Zippy\Html\PageFragment
 
     }
 
+    public function saveEdit($sender ) {
+      
+        $this->_edititem->itemname =  $this->weditpan->weditform->weditname->getText();
+        $this->_edititem->bar_code =  $this->weditpan->weditform->weditbarcode->getText();
+        $this->_edititem->description =  $this->weditpan->weditform->weditdescription->getText();
+        $this->_edititem->{$this->_pricetype} =  $this->weditpan->weditform->weditprice->getText();
+        $this->_edititem->save();
+
+        $this->witempan->witemselt->Reload(false);
+   
+        $this->weditpan->setVisible(false); 
+        $this->witempan->setVisible(true);
+        
+        $this->_page->{$this->_event}($this->_edititem->item_id, $this->_edititem->itemname);
+  
+        
+    }
+    public function cancelEdit($sender ) {
+        $this->weditpan->setVisible(false); 
+        $this->witempan->setVisible(true);
+       
+    }
+    
+    
 
 }
 class WISDataSource implements \Zippy\Interfaces\DataSource
@@ -241,11 +299,10 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
         if($asc==null)  $asc='asc';
         $list = array();
         foreach (Item::findYield($this->getWhere(), $sortfield. ' ' . $asc, $count, $start) as $item) {
-
-            if (strlen($this->page->_pricetype) > 0) {
-                $item->price = $item->getPrice($this->page->_pricetype, $this->page->_store);
-            }
-
+      
+            $item->price = $item->getPrice($this->page->_pricetype, $this->page->_store);
+           
+            $item->edit="<i class=\"fa fa-edit\" > </i>" ;
             $list[] = $item;
         }
         return $list;

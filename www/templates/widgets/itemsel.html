@@ -53,7 +53,49 @@
         </table>
 
          </div>
-        
+       
+         <div   zippy="weditpan" class="row">  
+           <div   class="col-12 col-md-10 col-xxl-8">  
+       
+             <form zippy="weditform"  >
+                 <h4>Редагування ТМЦ  </h4>
+                 <small> Зміни оновлять також довідник номенклатури  </small>
+              
+                 <div class="form-group row">
+                    <label class="col-5 col-form-label" for="weditname">Найменування</label>
+                    <div class="col-7">
+                        <input required="on" autofocus="on"   class="form-control" zippy="weditname"/>
+                    </div>
+                </div>
+                 <div class="form-group row">
+                        <label class="col-5 col-form-label" for="weditbarcode">Штрих код </label>
+                        <div class="col-5">
+                            <input class="form-control" zippy="weditbarcode"/>
+                            <small   >Латинскi  букви i цифри</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="weditprice">Цiна</label>
+                        <div class="col-5">
+                              <input style="width: 100px" pattern="[0-9,\.\%]+" class="form-control" zippy="weditprice"/>
+                          
+                            
+                        </div>
+                    </div>
+                     <div class="form-group row ">
+                        <label class="col-5 col-form-label" for="weditdescription">Опис</label>
+                        <div class="col-7">
+                            <textarea style="height:100px" class="form-control" zippy="weditdescription"></textarea>
+                        </div>
+                    </div> 
+                            
+                    <div class=" form-group  mt-4   ">
+                         <input zippy="weditcancel"   value="Скасувати" class="btn btn-secondary ms-4 "> 
+                         <input   type="submit" value="Зберегти" class="btn btn-primary  ">
+                   </div>                            
+               </form>   
+            </div>
+         </div>
 
           <div   zippy="wcatpan" class="row">                    
                       <div   zippy="wcatlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
@@ -76,7 +118,7 @@
 
                         </div >  
                         </div >  
-                        <div   zippy="wprodpan" class="row">
+          <div   zippy="wprodpan" class="row">
                           <div   zippy="wprodlist" class="col-12 col-sm-6 col-md-4  col-xl-3">
                             <div class="card mb-2" zippy="prodbtn" style="cursor:pointer;;">
                                 <table style="height:100%;width:100%;"  >
