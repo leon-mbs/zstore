@@ -19,7 +19,7 @@
                         </select>
                        </div>
                          <div class="col-auto  ">
-                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" me-2 btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" me-2 btn btn-success  "
                                value="Завантажити">
                       
                         </div>
@@ -63,13 +63,15 @@
                          </div>
                        <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit"
-                                     class="  btn btn-outline-success btn-sm  " value="Відправити">
+                                     class="  btn btn-success btn-sm  " value="Відправити">
                          
                        
                     </div>
+                   </div>
                 </form>
+                <a  zippy="updatenamestooc" >Оновити назви в магазані<a>
             </div>
-            <div class="col-12 col-md-8  ">
+            <div class="col-12 col-md-8  mt-4 ">
 
                 <h3>Оновлення цін та кількості</h3>
                  <small>Відповідність товарів забезпечується по артикулу (SKU)</small>
@@ -84,10 +86,10 @@
                         </select>
                     </div>
                   <div class="col-auto  ">
-                    <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
+                    <a zippy="updateqty" class="  btn btn-success  ">Оновити кількість</a>
                     </div>
-                    <div class="col-auto  ">s
-                    <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
+                    <div class="col-auto  "> 
+                    <a zippy="updateprice" class="  btn btn-success  ">Оновити ціни</a>
                      
                      </div>
                    </div>
@@ -95,7 +97,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-8  ">
+            <div class="col-12 col-md-8    mt-4 ">
 
                 <h3>Iмпорт товарів з магазину </h3>
                 <small>Відповідність товарів забезпечується по артикулу (SKU)</small>
@@ -114,7 +116,7 @@
                         </div>
 
                          <div class="col-auto  ">
-                        <input zippy="getitems" type="submit" class=" me-2 btn btn-outline-success  "
+                        <input zippy="getitems" type="submit" class=" me-2 btn btn-success  "
                                value="Завантажити">
                          </div>
                       </div>
@@ -122,6 +124,8 @@
                     </form>
 
                 </div>
+                
+                <a  zippy="updatenamesfromoc" >Оновити назви з магазану<a>
             </div>
         </div>
         <script>
@@ -140,6 +144,18 @@
                 if(confirm("Оновити?") == false)    return false;
                 document.getElementById('dialogwait').showModal()
             }
+            function check_updatenamestooc() {
+                if(confirm("Оновити?") == false)    return false;
+                document.getElementById('dialogwait').showModal()
+            }
+            
+            function check_updatenamesfromoc() {
+                if(confirm("Оновити?") == false)    return false;
+                document.getElementById('dialogwait').showModal()
+            }
+            
+            
+            
 
             function chclick() {
                 var ch = $("#chall").prop('checked');
