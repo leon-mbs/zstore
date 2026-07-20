@@ -11,10 +11,8 @@
             <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
                     <h2>Довідник контрагентів </h2>
-                    <div class="card  ">
-                        
-                    </div>
-                    <div class="card ">
+                    
+                    <div class="navbar ">
                        <form zippy="leadf" class="row"  >
                           <div class="col-auto pt-2 ">
                             <div class="form-check ">
@@ -23,6 +21,7 @@
                             </div>
                           </div>  
                         </form>
+                         </div>  
                           <div class="navbar  ">
               
                         <form zippy="filter"  >
@@ -93,14 +92,16 @@
                        </div>  
                         {{/leadmode}}            
                     
-                   
+                     
                     
-                    
+                    <div class=" row  ">
+                         <div class="col-auto  ">
+                      
                      <details class="mb-2 ms-2">
                         <summary >Теги</summary>
                         <small zippy="taglist"></small>
                      </details>
-                    
+                     </div>   </div>  
                     
                     <a zippy="addnew" class="btn btn-primary">Додати нового</a>
                            
@@ -538,8 +539,8 @@
                             <td><a zippy="delsource"> <i class="fa fa-trash"></i></a></td>
                          </tr>   
                     </table>
-                    <a  zippy="leadsourcecancel" class="btn btn-primary me-2">Скасувати</a>
-                    <input zippy="leadsourcesave"  type="submit"  value="Зберегти" class="btn  btn-info">
+                    <a  zippy="leadsourcecancel" class="btn btn-secondary me-2">Скасувати</a>
+                    <input zippy="leadsourcesave"  type="submit"  value="Зберегти" class="btn  btn-success">
                     
                 </div>
             </div>
@@ -558,8 +559,8 @@
                             <td><a zippy="delstatus"> <i class="fa fa-trash"></i></a></td>
                               </tr> 
                     </table>
-                    <a  zippy="leadstatuscancel" class="btn btn-primary  me-2">Скасувати</a>
-                    <input zippy="leadstatussave"  type="submit"  value="Зберегти" class="btn  btn-info">
+                    <a  zippy="leadstatuscancel" class="btn btn-secondary  me-2">Скасувати</a>
+                    <input zippy="leadstatussave"  type="submit"  value="Зберегти" class="btn  btn-success">
                     
                 </div>
             </div>
