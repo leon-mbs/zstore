@@ -48,7 +48,7 @@ class System
 
     public static function getCustomer() {
 
-        return (int)Session::getSession()->customer_id;
+        return intval(Session::getSession()->customer_id);
     }
 
     public static function setCustomer(int $customer_id) {

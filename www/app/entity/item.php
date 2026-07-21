@@ -70,7 +70,7 @@ class Item extends \ZCL\DB\Entity
         $this->volume = (string)$xml->volume[0];
         $this->lost = (string)$xml->lost[0];
         $this->customsize = (string)$xml->customsize[0];
-        $this->manufacturer = (string)$xml->manufacturer[0];
+     //   $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
         $this->term = (string)$xml->term[0];
