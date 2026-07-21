@@ -169,7 +169,7 @@ class Invoice extends \App\Entity\Doc\Document
                  $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0-$ser->quantity);
                  $sc->setService($ser->service_id);
                 
-                 $sc->setOutPrice( $ser->price * $k);
+                 $sc->setOutPrice( $ser->price *  $k);
                  $sc->cost= $ser->cost;
             
                  $sc->save();    
@@ -238,7 +238,7 @@ class Invoice extends \App\Entity\Doc\Document
             $amount= 0;
             $ss = Entry::findYield("service_id > 0 and document_id=". $this->document_id) ;
             foreach($ss as $ser) {
-                $amount += doubleval($ser->outprice);
+                $amount += doubleval($ser->outprice * $ser->quantity);
             }
             
             if($amount > 0)  {

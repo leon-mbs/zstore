@@ -51,7 +51,7 @@ class Items extends \App\Pages\Base
 
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-
+     
 
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
 
@@ -60,6 +60,8 @@ class Items extends \App\Pages\Base
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
         $this->importform->add(new CheckBox('createcat'));
 
+        $this->add(new ClickLink('updatenamestooc'))->onClick($this, 'onExportNames');
+        $this->add(new ClickLink('updatenamesfromoc'))->onClick($this, 'onImportNames');
 
     }
 
@@ -223,6 +225,7 @@ class Items extends \App\Pages\Base
         $this->setSuccess('Оновлено');
     }
 
+
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->upd->updcat->getValue();
@@ -381,4 +384,101 @@ class Items extends \App\Pages\Base
         $this->setSuccess("Завантажено {$i} товарів");
     }
 
+    
+    public function onImportNames($sender) {
+        $modules = System::getOptions("modules");
+        $common = System::getOptions("common");
+  
+        $elist = array();
+
+        $url = $modules['ocsite'] . '/index.php?route=api/zstore/getnames&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.getnames&' . System::getSession()->octoken;
+        }
+
+        $json = Helper::do_curl_request($url);
+        if ($json === false) {
+            return;
+        }
+        $data = json_decode($json, true);
+
+        if ($data['error'] != "") {
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
+            $this->setErrorTopPage($data['error']);
+            return;
+        }
+        //  $this->setInfo($json);
+        $i = 0;
+        foreach ($data['names'] as  $name) {
+
+            if (strlen($name['name']) == 0) {
+                continue;
+            }
+            
+            $name['name']  = str_replace("&quot;","",$name['name']) ; 
+            
+            $item = Item::getFirst("item_code=" . Item::qstr($name['sku']));
+            if ($item == null) {
+                continue;
+            }   
+            if ($item->itemname===$name['name']) {
+                continue;
+            }   
+            
+            $item->itemname=$name['name']; 
+            $item->save(); 
+            
+        }  
+        $this->setSuccess("Оновлено ");
+  
+    }    
+    public function onExportNames($sender) {
+        $modules = System::getOptions("modules");
+        $common = System::getOptions("common");
+  
+        $names = array();
+
+        foreach(Item::findYield("disabled<>1") as $item){
+            if($item->noshop ==1)  continue;
+            if(strlen($item->item_code) ==0)  continue;
+                
+            $names[$item->item_code]=  $item->itemname ;
+        }
+        
+        if (count($names) == 0) {
+
+             
+            return;
+        }
+        $data = json_encode($names);
+
+        $fields = array(
+            'data' => $data 
+             
+        );     
+        
+        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatenames&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updatenames&' . System::getSession()->octoken;
+        }
+
+        $json = Helper::do_curl_request($url,$fields);
+        if ($json === false) {
+            return;
+        }
+        $data = json_decode($json, true);
+
+        if ($data['error'] != "") {
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
+            $this->setErrorTopPage($data['error']);
+            return;
+        }
+  
+        $this->setSuccess("Оновлено ");
+  
+    }    
+    
+    
 }

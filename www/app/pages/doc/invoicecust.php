@@ -491,7 +491,8 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->editnewitem->editnewitemname->setText('');
         $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
-        
+        $this->wselitem->setVisible(false);
+         
     }
 
     public function savenewitemOnClick($sender) {

@@ -57,12 +57,12 @@
                         </select>
                          </div>
                           <div class="col-auto  ">
-                        <input v-on:click.prevent="onfilter" type="button" class="me-2  btn btn-outline-success  " value="ОК">
+                        <input v-on:click.prevent="onfilter" type="button" class="me-2  btn btn-success  " value="ОК">
                          </div> </div>
                     </form>
                 </div>
 
-                <a v-on:click.prevent="addnew" class="btn btn-sm btn-outline-success">Нове завдання</a>
+                <a v-on:click.prevent="addnew" class="btn btn-sm btn-success">Нове завдання</a>
 
             </div>
     
@@ -78,7 +78,7 @@
                                 <tr>
                                     <td><a :class="issue.prcl" :href="issue.url"  title="Пряме посилання"  >{{issue.issue_id}}</a></td>
 
-                                    <td class="text-end"><h5><span :title="issue.emptitle"  class="badge badge-info badge-pill">{{issue.emp}}</span>
+                                    <td class="text-end"><h5><span :title="issue.emptitle"  class="badge text-bg-info  rounded-pill">{{issue.emp}}</span>
                                         </h5></td>
                                 </tr>
                                 <tr>
@@ -286,8 +286,8 @@
 
 
                     <div class="form-group">
-                        <a  v-on:click.prevent="cancel" class="btn btn-outline-secondary">Скасувати</a>&nbsp;
-                        <input  v-on:click.prevent="save" type="button" class="btn btn-outline-primary" value="Зберегти">
+                        <a  v-on:click.prevent="cancel" class="btn btn-secondary">Скасувати</a>&nbsp;
+                        <input  v-on:click.prevent="save" type="button" class="btn btn-primary" value="Зберегти">
                     </div>
                 </form>
 
@@ -644,7 +644,7 @@
                 $('#editdesc').summernote({
                     height: 200,
                     lang: 'uk-UA',
-                  tooltip: false,
+                    tooltip: false,
                     callbacks: {
                
                         onPaste: function (e) {

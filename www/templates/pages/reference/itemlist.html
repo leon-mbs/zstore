@@ -565,20 +565,23 @@
                                                           
                             </div>
                            
-                            <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editnotes">Примітка</label>
-                                <div class="col-7">
-                                    <input class="form-control" zippy="editnotes"/>
-                                    <small>Наприклад для прайсу</small>
-                                </div>
-                                
-                            </div>                            
+                                                    
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editdescription">Опис</label>
                                 <div class="col-7">
                                     <textarea style="height:100px" class="form-control" zippy="editdescription"></textarea>
                                 </div>
-                            </div>    
+                            </div>  
+                               <div class="form-group row">
+                                <label class="col-5 col-form-label" for="editnotes">Примітка</label>
+                                <div class="col-7">
+                                    <input class="form-control" zippy="editnotes"/>
+                                    <small>Коротка альтернатива опису, наприклад для прайсу</small>
+                                </div>
+                                
+                            </div> 
+                            
+                              
                            <div class="form-group row">
                                <label class="col-5 col-form-label" for="edittags">Теги</label>
                                 <div class="col-7">
@@ -627,7 +630,7 @@
                               </tr>
                              </table>             
                             <div class="form-group">
-                                <input zippy="cancelca" type="button" value="Скасувати" class="btn btn-outline-secondary me-2 "> 
+                                <input zippy="cancelca" type="button" value="Скасувати" class="btn btn-secondary me-2 "> 
                                 <input zippy="saveca" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 
                             </div>
@@ -822,7 +825,7 @@
                          </tr>    
                       </table>                       
                         <div class="form-group mt-2">
-                                <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-outline-secondary me-2 "> 
+                                <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-secondary me-2 "> 
                                 <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 
                       </div>         
@@ -832,7 +835,7 @@
  
 
         
-     <div id="pscale" class="modal fade   " tabindex="-1" role="dialog"   >
+     <div id="pscale" class="modal" tabindex="-1"        >
             <div class="modal-dialog modal-sm ">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -884,8 +887,7 @@
         
            
         
-        <div id="idesc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-             >
+        <div id="idesc" class="modal fade  " tabindex="-1"               >
             <div class="modal-dialog  ">
                 <div  class="modal-content">
                         <div class="modal-header">

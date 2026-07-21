@@ -81,8 +81,8 @@ class TaskList extends \App\Pages\Base
 
     public function onTab($sender) {
 
-        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge badge-dark  badge-pill " : "badge badge-light  badge-pill  ";
+        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
+        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
 
         $this->caltab->setVisible($sender->id == 'tabc');
         $this->tasktab->setVisible($sender->id == 'tabs');
@@ -104,16 +104,16 @@ class TaskList extends \App\Pages\Base
         $row->add(new Label('taskstatus', $stname));
 
         if ($task->state == Document::STATE_EXECUTED) {
-            $row->taskstatus->setText('<span class="badge badge-success">' . $stname . '</span>', true);
+            $row->taskstatus->setText('<span class="badge  text-bg-success">' . $stname . '</span>', true);
         }
         if ($task->state == Document::STATE_INPROCESS) {
-            $row->taskstatus->setText('<span class="badge badge-info">' . $stname . '</span>', true);
+            $row->taskstatus->setText('<span class="badge  text-bg-info">' . $stname . '</span>', true);
         }
         if ($task->state == Document::STATE_SHIFTED) {
-            $row->taskstatus->setText('<span class="badge badge-warning">' . $stname . '</span>', true);
+            $row->taskstatus->setText('<span class="badge  text-bg-warning">' . $stname . '</span>', true);
         }
         if ($task->state == Document::STATE_CLOSED) {
-            $row->taskstatus->setText('<span class="badge badge-secondary">' . $stname . '</span>', true);
+            $row->taskstatus->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
         }
 
         $emps = array();

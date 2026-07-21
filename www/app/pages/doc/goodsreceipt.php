@@ -1018,7 +1018,8 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editnewitem->editnewmanufacturer->setDataList(Item::getManufacturers());
         $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
-
+        $this->wselitem->setVisible(false);
+   
     }
 
     public function savenewitemOnClick($sender) {

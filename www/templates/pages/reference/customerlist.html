@@ -11,10 +11,8 @@
             <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
                     <h2>Довідник контрагентів </h2>
-                    <div class="card  ">
-                        
-                    </div>
-                    <div class="card ">
+                    
+                    <div class="navbar ">
                        <form zippy="leadf" class="row"  >
                           <div class="col-auto pt-2 ">
                             <div class="form-check ">
@@ -23,6 +21,7 @@
                             </div>
                           </div>  
                         </form>
+                         </div>  
                           <div class="navbar  ">
               
                         <form zippy="filter"  >
@@ -85,22 +84,24 @@
                            <a zippy="showstat"><i class="fa fa-chart-area"></i> Статистика</a>
                          </div>
                          <div class="col-auto  ">
-                            <a class="btn btn-outline-success me-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
+                            <a class="btn btn-success me-2"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
                          </div>
                          <div class="col-auto  ">
-                           <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
+                           <a class="btn btn-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
                          </div>  
                        </div>  
                         {{/leadmode}}            
                     
-                   
+                     
                     
-                    
+                    <div class=" row  ">
+                         <div class="col-auto  ">
+                      
                      <details class="mb-2 ms-2">
                         <summary >Теги</summary>
                         <small zippy="taglist"></small>
                      </details>
-                    
+                     </div>   </div>  
                     
                     <a zippy="addnew" class="btn btn-primary">Додати нового</a>
                            
@@ -135,7 +136,7 @@
                                 <td zippy="customerphone" class="text-nowrap"></td>
                                 <td zippy="customeremail" class="text-nowrap"></td>
                                 <td zippy="customeredrpou" class="text-nowrap"></td>
-                                {{^leadmode}}    <td class="text-end" > <span zippy="docs" class="badge badge-secondary badge-pill"></span> </td>  {{/leadmode}}
+                                {{^leadmode}}    <td class="text-end" > <span zippy="docs" class="badge text-bg-secondary rounded-pill"></span> </td>  {{/leadmode}}
                                 {{#leadmode}}  
                                 <td zippy="leadstatus">  </td>  
                                 {{/leadmode}}    
@@ -330,7 +331,7 @@
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
                 <div class="form-group">
-                    <button zippy="cancel" type="button" class="btn btn-outline-secondary me-2">Скасувати</button>
+                    <button zippy="cancel" type="button" class="btn btn-secondary me-2">Скасувати</button>
                     <button zippy="save" type="submit" class="btn btn-primary ">Зберегти</button> 
                     
 
@@ -428,7 +429,7 @@
                                     <option value="24">24 години</option>
                              </select>
                             </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="Додати">
                         </form>
                 
                
@@ -452,7 +453,7 @@
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="Додати">
                         </form>
             </div>
             <div class="col-6 col-md-4 col-xl-3 card">
@@ -477,7 +478,7 @@
                             </div>
 
 
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-success  " type="submit" value="Додати">
 
                         </form>
             </div>
@@ -538,8 +539,8 @@
                             <td><a zippy="delsource"> <i class="fa fa-trash"></i></a></td>
                          </tr>   
                     </table>
-                    <a  zippy="leadsourcecancel" class="btn btn-outline-primary me-2">Скасувати</a>
-                    <input zippy="leadsourcesave"  type="submit"  value="Зберегти" class="btn  btn-info">
+                    <a  zippy="leadsourcecancel" class="btn btn-secondary me-2">Скасувати</a>
+                    <input zippy="leadsourcesave"  type="submit"  value="Зберегти" class="btn  btn-success">
                     
                 </div>
             </div>
@@ -558,8 +559,8 @@
                             <td><a zippy="delstatus"> <i class="fa fa-trash"></i></a></td>
                               </tr> 
                     </table>
-                    <a  zippy="leadstatuscancel" class="btn btn-outline-primary  me-2">Скасувати</a>
-                    <input zippy="leadstatussave"  type="submit"  value="Зберегти" class="btn  btn-info">
+                    <a  zippy="leadstatuscancel" class="btn btn-secondary  me-2">Скасувати</a>
+                    <input zippy="leadstatussave"  type="submit"  value="Зберегти" class="btn  btn-success">
                     
                 </div>
             </div>

@@ -58,7 +58,7 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
-        $this->OnSubmit($this->filter->show);
+      //  $this->OnSubmit($this->filter->show);
 
     }
 

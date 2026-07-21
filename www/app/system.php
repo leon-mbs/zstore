@@ -13,8 +13,7 @@ class System
     public const CURR_VERSION = "8.2.5"; // текущая  версия
     public const PREV_VERSION = "8.2.4"; // предыдущая версия (для отката кода в случае  проблем)
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
-    public const FRM  = "2.8.0"; // требуемая  версия  фреймворка (для обновления vendor)
-   
+     
 
     /**
      * Возвращает  текущего  юзера
@@ -311,10 +310,15 @@ class System
         }
         try{
             $url = "https://store.zippy.com.ua/stat.php?h=".Helper::getSalt();
-          //  $url = "http://local.zstore/stat.php?h=".Helper::getSalt();
+        
             $url.= "&v=".System::CURR_VERSION;
-            $url.= "&f=". \App\Application::$ver??'';
-            
+            $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
+            if(strlen($json)>0) {
+                $json = json_decode($json,true) ;
+                $fv  = $json['ver'] ?? '0.0.0';
+                $url.= "&f=".$fv;
+                    
+            }    
               
             $conn = \ZDB\DB::getConnect() ;
             $v= $conn->GetOne('SELECT VERSION()');
@@ -329,14 +333,22 @@ class System
     }
     
     public static function isVendorActual(){
-          $fv =  \App\Application::$ver ?? '0.0.0';
-       
-          $b= version_compare($fv ,System::FRM);
-          if($b == -1) {
-             return false ;  
-          }  else {
-             return true;  
+         
+          $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
+          if(strlen($json)>0) {
+              $json = json_decode($json,true) ;
+              $fv  = $json['ver'] ?? '0.0.0';
+            
+              $b= version_compare($fv ,'2.8.2');
+              if($b == -1) {
+                 return false ;  
+              }  else {
+                 return true;  
+              }    
+             
           }
+       
+        return true;  
           
     }
 }

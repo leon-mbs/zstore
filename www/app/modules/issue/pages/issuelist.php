@@ -150,15 +150,15 @@ class IssueList extends \App\Pages\Base
             $ia = array();
             $ia['issue_id']  =  $i->issue_id;
             $ia['issue_name']  =  $i->issue_name;
-            $ia['prcl'] = "badge badge-success";
+            $ia['prcl'] = "badge  text-bg-success";
             if ($i->priority == Issue::PRIORITY_HIGH) {
-                $ia['prcl'] = "badge badge-danger";
+                $ia['prcl'] = "badge  text-bg-danger";
             }
             if ($i->priority == Issue::PRIORITY_LOW) {
-                $ia['prcl'] = "badge badge-warning";
+                $ia['prcl'] = "badge  text-bg-warning";
             }
             if ($i->status == Issue::STATUS_CLOSED) {
-                $ia['prcl'] = "badge badge-secondary";
+                $ia['prcl'] = "badge  text-bg-secondary";
             }
             $ia['url'] = "/index.php?p=App/Modules/Issue/Pages/IssueList&args=".$i->issue_id;
             $ia["emp"] =  \App\Util::getLabelName($i->username) ;

@@ -38,9 +38,18 @@ class RetCustIssue extends Document
                 );
             }
         }
-
+        $totalstr =  \App\Util::money2str($this->payamount);
+    
+        $firm = H::getFirmData(  $this->branch_id);
+        $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
 
         $customer = \App\Entity\Customer::load($this->customer_id);
+      
+        $iban=$mf->iban??'';
+        if(strlen($mf->payname ??'') > 0) $firm['firm_name']   = $mf->payname;
+        if(strlen($mf->address ??'') > 0) $firm['address']   = $mf->address;
+        if(strlen($mf->tin ??'') > 0) $firm['fedrpou']   = $mf->tin;
+        if(strlen($mf->inn ??'') > 0) $firm['finn']   = $mf->inn;
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -48,11 +57,27 @@ class RetCustIssue extends Document
                         "customer_name"   => $this->customer_name,
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
+                        "bank"            => $mf->bank ?? "",
+                        "bankacc"         => $mf->bankacc ?? "",
+                        "isbank"          => (strlen($mf->bankacc) > 0 || strlen($mf->bank) > 0),
                         "total"           => H::fa($this->amount),
+                        "totalstr"        => $totalstr,
+                        "payamount"           => H::fa($this->payamount),
                         "nds"           =>   $this->getHD('nds',0) >0 ? H::fa($this->getHD('nds' )) : false,  
+                        "iban"             => strlen($iban) > 0 ? $iban : false,
                         "payed"           => H::fa($this->headerdata["payed"])
         );
 
+        $header["edrpou"] = false;
+        $header["fedrpou"] = false;
+        if (strlen($customer->edrpou) > 0) {
+            $header["edrpou"] = $customer->edrpou;
+        }   
+        if (strlen($firm['tin']) > 0) {
+            $header["fedrpou"] = $firm['tin'];
+        }
+       
+        
         $report = new \App\Report('doc/retcustissue.tpl');
 
         $html = $report->generate($header);

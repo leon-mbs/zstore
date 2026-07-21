@@ -39,6 +39,7 @@
                        <div class="col-auto  ">
                         <input v-on:click.prevent="onsearch" type="button" class=" ms-2   btn btn-success  " value="ОК">
                         </div>
+                     </div>
                         
                     </form>
 
@@ -61,9 +62,9 @@
                         <td  >{{project.project_name}}</td>
                         <td  >{{project.customer_name}}</td>
                         <td  >{{project.status}}</td>
-                        <td style="width:40px" ><span   title="Нові" class="badge badge-success  " v-show="project.inew>0">{{project.inew}}</span></td>
-                        <td style="width:40px"><span   title="В роботі" class="badge badge-primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
-                        <td style="width:40px"><span   title="Закриті" class="badge badge-secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
+                        <td style="width:40px" ><span   title="Нові" class="badge text-bg success  " v-show="project.inew>0">{{project.inew}}</span></td>
+                        <td style="width:40px"><span   title="В роботі" class="badge text-bg primary" v-show="project.iproc>0">{{project.iproc}}</span></td>
+                        <td style="width:40px"><span   title="Закриті" class="badge text-bg secondary" v-show="project.iclose>0">{{project.iclose}}</span></td>
 
                         <td>
                             <a  v-show="project.allowedit" v-on:click.prevent="show(project.project_id)"   title="Перегляд" href="javascript:void(0)" ><i class="fa fa-eye"></i></a>
@@ -116,7 +117,7 @@
                         <div class="col-12 col-md-4  col-xl-4">
 
                             <div class="form-group">
-                                <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-outline-secondary ">
+                                <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-secondary ">
                                 <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-primary ms-2 "> 
                             </div>
 
@@ -152,7 +153,7 @@
                           <input name="pfile" class="form-control me-2" type="file" >
                         </div>
                          <div class="col-auto  ">
-                          <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Додати">
+                          <input  v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Додати">
                        </div>
                       </div>
                     </form>
@@ -185,7 +186,7 @@
                         <div class="form-group">
                             <textarea v-model="msg" class="form-control"  style="width:400px;height:120px;"></textarea>
                         </div>
-                        <input   v-on:click.prevent="onmsg"  class="btn btn-outline-success  " type="button" value="Додати">
+                        <input   v-on:click.prevent="onmsg"  class="btn btn-success  " type="button" value="Додати">
                     </form>
  
                          
@@ -485,7 +486,7 @@
                 $('#editdesc').summernote({
                     height: 400,
                     lang: 'uk-UA',
-
+                    tooltip: false, 
                     callbacks: {
           
                         onPaste: function (e) {

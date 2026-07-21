@@ -34,7 +34,7 @@ class PayActivity extends \App\Pages\Base
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+       
     }
 
     public function OnSubmit($sender) {
@@ -42,14 +42,11 @@ class PayActivity extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-
+       
 
         $this->detail->setVisible(true);
 
-        $this->detail->preview->setText("<b >Загрузка...</b>", true);
-        \App\Session::getSession()->printform = "";
-        \App\Session::getSession()->issubmit = true;
+ 
     }
 
     private function generateReport() {
@@ -138,20 +135,8 @@ class PayActivity extends \App\Pages\Base
         return $html;
     }
 
-    public function OnAutoLoad($sender) {
+    
 
-        if (\App\Session::getSession()->issubmit === true) {
-            $html = $this->generateReport();
-            \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-            $this->detail->preview->setText($html, true);
-
-        }
-    }
-
-    public function beforeRender() {
-        parent::beforeRender();
-
-        App::addJavaScript("\$('#autoclick').click()", true);
-    }
+     
 
 }
