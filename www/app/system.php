@@ -310,10 +310,15 @@ class System
         }
         try{
             $url = "https://store.zippy.com.ua/stat.php?h=".Helper::getSalt();
-          //  $url = "http://local.zstore/stat.php?h=".Helper::getSalt();
+        
             $url.= "&v=".System::CURR_VERSION;
-         //   $url.= "&f=". \App\Application::$ver??'';
-            
+            $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
+            if(strlen($json)>0) {
+                $json = json_decode($json,true) ;
+                $fv  = $json['ver'] ?? '0.0.0';
+                $url.= "&f=".$fv;
+                    
+            }    
               
             $conn = \ZDB\DB::getConnect() ;
             $v= $conn->GetOne('SELECT VERSION()');
@@ -329,7 +334,7 @@ class System
     
     public static function isVendorActual(){
          
-          $json = file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
+          $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
           if(strlen($json)>0) {
               $json = json_decode($json,true) ;
               $fv  = $json['ver'] ?? '0.0.0';
