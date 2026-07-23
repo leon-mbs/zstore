@@ -81,8 +81,8 @@ class TaskList extends \App\Pages\Base
 
     public function onTab($sender) {
 
-        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
-        $this->_tvars['tabsbadge'] = $sender->id == 'tabs' ? "badge  text-bg-dark   text-bg-pill " : "badge  text-bg-light   text-bg-pill  ";
+        $this->_tvars['tabcbadge'] = $sender->id == 'tabc' ? "badge  text-bg-secondary   text-bg-pill " : "badge  text-bg-info   text-bg-pill  ";
+        $this->_tvars['tababadge'] = $sender->id == 'tabs' ? "badge  text-bg-secondary   text-bg-pill " : "badge  text-bg-info   text-bg-pill  ";
 
         $this->caltab->setVisible($sender->id == 'tabc');
         $this->tasktab->setVisible($sender->id == 'tabs');

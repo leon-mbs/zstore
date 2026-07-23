@@ -40,17 +40,25 @@ class Items extends Base
             http_response_code(404);
             die;
         } 
+    
+        $conn = \ZDB\DB::getConnect();
   
         $catlist = array();
         $catlist[-1] = "Без категорії";
-        foreach (Category::getList() as $k => $v) {
+        foreach (Category::findArray("cat_name","cat_id in (select cat_id from items where detail like   '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'  ) ") as $k => $v) {
             $catlist[$k] = $v;
         }
+        $brands= $conn->GetCol("  select distinct manufacturer from  items  where  disabled<> 1 and detail like   '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%' order  by manufacturer") ;
+   
+        
         $this->add(new Panel('itemtable')) ;
         $this->itemtable->add(new Form('filter'))->onSubmit($this, 'OnFilter');
  
         $this->itemtable->filter->add(new TextInput('searchkey'));
+      
         $this->itemtable->filter->add(new TextInput('searchbrand'));
+        $this->itemtable->filter->searchbrand->setDataList($brands);
+
         $this->itemtable->filter->add(new DropDownChoice('searchcat', $catlist, 0));
 
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
@@ -210,7 +218,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
                 $ch[]=$cat;
 
                 $cats = implode(",", $ch)  ;
-                $where = $where . " and cat_id in ({$cats}) " ;
+                $where  = $where . " and cat_id in ({$cats}) " ;
             }
         }
 
@@ -223,7 +231,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
          if (strlen($text) > 0) {
 
              $text = Item::qstr('%' . $text . '%');
-             $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or detail like {$det} )  ";
+             $where =   "   (itemname like {$text} or item_code like {$text}  or bar_code like {$text} ) and detail like  '%<ffpartner>". \App\System::getCustomer() ."</ffpartner>%'   ";
            
          }     
         
@@ -237,6 +245,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
+   
         $items = Item::find($this->getWhere(), "itemname,disabled  ", $count, $start);         //         $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
 
         return $items;
