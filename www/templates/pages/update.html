@@ -189,9 +189,17 @@
         function check_rollback(ele){
            return confirm("Вiдкотити версію?")
         } 
+ 
         function check_reload(ele){
            return confirm("Повторити оновлення?")
         } 
+        
+        function check_updatevendor(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }         
         function check_updatevendor(ele){
             var b = confirm("Оновити vendor?")
             if(b==true) {     

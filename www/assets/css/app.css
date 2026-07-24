@@ -1,40 +1,4 @@
- 
 
-
-/*
-
-          a {
-               color: #ccf;
-            }
-            .dark-mode .ctable th {
-                padding: 4px;
-                text-align: center;
-                border: 1px solid white !important; ;
-            }
-            .dark-mode .fa {
-               color: white;
-            }
-            .dark-mode .fas {
-               color: white;
-            }
-
-            
-            .dark-mode .form-control-plaintext {
-               color: #ccf;
-            }
-
-            .dark-mode input[type=text] {
-               color: #FFF;
-               background-color: rgb(52,58,64);
-            }
-
-            .dark-mode  pre  {
-               color:#fff; 
-             
-                 
-            }
-
-*/
 
 
 body {
@@ -167,13 +131,25 @@ small.compact {
    display:block ;
 }
 
- .preview {
-   color:#000  ;
-   background-color :#fff  ;
-     
+.login-page,
+.register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+} 
+.login-box,
+.register-box {
+  width: 400px;
 }
-
- 
+.login-card-body,
+.register-card-body {
+  padding: 20px;
+  color: var(--bs-secondary-color);
+  background-color: var(--bs-body-bg);
+  border-top: 0;
+}
 
 @media print {
             @page {
