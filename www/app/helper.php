@@ -136,7 +136,8 @@ class Helper
             }
 
 
-            $arraymenu['groups'][] = array('grname' => $gname, 'items' => $items);
+            $arraymenu['groups'][] = array('grname' => $gname, 'items' => $items, 'grtarget' => "#mn{$meta_type}grp{$i}", 'grtargetid' => "mn{$meta_type}grp{$i}");
+            $i++;
         }
 
         return $arraymenu;

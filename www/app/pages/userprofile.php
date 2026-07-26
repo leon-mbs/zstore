@@ -41,7 +41,7 @@ class UserProfile extends \App\Pages\Base
 
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
-        $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
+        $form->add(new CheckBox('collapsesidebar', $this->user->collapsesidebar));
         $form->add(new CheckBox('usebotfornotify', $this->user->usebotfornotify));
 
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
@@ -170,7 +170,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->viber = $sender->viber->getText();
 
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
-        $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
+        $this->user->collapsesidebar = $sender->collapsesidebar->isChecked() ? 1 : 0;
         $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;
 
 
