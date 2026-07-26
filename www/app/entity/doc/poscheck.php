@@ -66,7 +66,7 @@ class POSCheck extends Document
         
         $printer = System::getOptions('printer');
  
-        $pp = doubleval($this->headerdata['payed'])+ doubleval($this->headerdata['payedcard']);
+        $pp = doubleval($this->headerdata['payed']??0)+ doubleval($this->headerdata['payedcard']??0);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,

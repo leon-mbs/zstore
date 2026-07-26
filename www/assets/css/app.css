@@ -3,8 +3,22 @@
 
 body {
     font-family: system-ui, "Segoe UI","Roboto" ; 
-     
+    margin: 0;     
 }
+   
+   
+.wrapper {
+    align-items: stretch;
+    display: flex;
+    width: 100%;
+}
+
+
+.content {
+    flex: 1;
+    max-width: 100vw;
+    width: 100vw;
+}   
       
 .brand-logo {
     width: 115px;
@@ -150,6 +164,92 @@ small.compact {
   background-color: var(--bs-body-bg);
   border-top: 0;
 }
+
+
+.container-fluid {
+   
+   padding-left: 0;  
+} 
+
+#sidebar {
+    max-width: 300px;
+    min-width: 300px;
+    background-color: #101010;
+    transition: all 0.35s ease-in-out;
+    box-shadow: 0 0 35px 0 rgba(49, 57, 66, 0.5);
+    z-index: 1111;
+}
+
+.sidebar-logo a {
+    color: #e9ecef;
+    font-size: 1.25rem;
+    font-weight: 600;
+}/* Sidebar collapse */
+
+#sidebar.collapsed {
+    margin-left: -300px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.35s ease-in-out;
+}
+
+.sidebar-logo {
+    padding: 1.15rem 1.5rem;
+}
+
+ 
+
+.sidebar-nav {
+    padding: 0;
+}
+
+.sidebar-header {
+   color: #e9ecef;
+    font-size: .75rem;
+    padding: 1.5rem 1.5rem .375rem;
+}
+
+a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #e9ecef;
+    position: relative;
+    display: block;
+    font-size: 1rem;
+}
+
+.sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+.sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+} 
+
+.navbar-badge {
+  position: relative;
+  top: -9px;
+  right: 5px;
+  padding: 2px 4px;
+  font-size: 0.6rem;
+  font-weight: 400;
+}
+
 
 @media print {
             @page {

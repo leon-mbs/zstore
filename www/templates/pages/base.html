@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css?v=825">
       
 
-        <link rel="stylesheet" href="/assets/css/adminlte.css?v=825">
+        <link rel="stylesheet" href="/assets/css/bootstrap.css?v=826">
    
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css?v=825">
         <link rel="stylesheet" href="/assets/css/toastr.min.css?v=825">
@@ -18,10 +18,11 @@
  
         <link rel="stylesheet" href="/assets/css/select2-bootstrap-5-theme.css?v=825">
         <link rel="stylesheet" href="/assets/js/summernote/summernote-bs5.css?v=825">
-        <link rel="stylesheet" href="/assets/css/app.css?v=826">
+        <link rel="stylesheet" href="/assets/css/app.css?v=828">
 
-        <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js?v=825" type="text/javascript"></script>
+
         <script src="/assets/js/bootstrap.bundle.js?v=825" type="text/javascript"></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js?v=825" type="text/javascript"></script>
         <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/select2.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/select2-uk.js?v=825" type="text/javascript"></script>
@@ -30,7 +31,7 @@
         <script src="/assets/js/printThis.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/summernote/summernote-bs5.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js?v=825" type="text/javascript"></script>
-        <script src="/assets/js/adminlte.js?v=825" type="text/javascript"></script>
+
         <script src="/assets/js/app.js?v=825"></script>     
         <script src="/assets/js/vue/vue.min.js?v=825"></script>     
         <script src="/assets/js/vue/httpvueloader.js?v=825"></script>     
@@ -68,15 +69,759 @@
   
     </head>
    
-    <body class="  sidebar-mini  sidebar-collapse bg-body-tertiary"   data-bs-theme="{{darkmode}}">
+    <body class="  bg-body-tertiary"   data-bs-theme="{{darkmode}}">
       
     
          
         <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
         <a id="top"></a>
-        <div class="app-wrapper"   >
-            <!-- Navbar -->
-        <nav class="app-header navbar navbar-expand bg-body">
+        <div class="container-fluid"   >
+        <div class="wrapper"   >
+            
+             
+           {{#collapsesidebar}}  
+         <aside   class="collapsed"  id="sidebar"  >
+          {{/collapsesidebar}}
+           {{^collapsesidebar}}  
+         <aside  id="sidebar"  >
+          {{/collapsesidebar}}
+         
+            <div class="h-100">
+                <div class="sidebar-logo">
+                   <a href="/index.php">  <i class="fa fa-home"></i> </a>
+                   
+                </div>
+                <! 
+                <ul class="sidebar-nav">
+                       <li class="sidebar-item  ">
+                            <a class="sidebar-link  "  href="/index.php?p=/App/Pages/Main"     >
+                              <i class="nav-icon fa fa-chart-pie"></i>    Дашборд    
+                            </a>
+                        </li>
+                        
+                       {{#showdocmenu}}  
+                        
+                        <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mndocs"                           >
+                              <i class="nav-icon fa fa-file"></i>
+                                 Документи   
+                        </a> 
+                          <ul id="mndocs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                               {{#docmenu}}
+                                    {{#groups}}
+                             
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
+                       
+                                         {{grname}}    
+                                    </a>
+                            
+                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mndocs">
+                                    {{#items}}
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                            {{name}}   
+                                        </a>
+                                    </li>
+                                   {{/items}} 
+                               
+                               </ul>
+                             </li>
+                              {{/groups}}
+                              {{#items}} 
+                               <li class="sidebar-item  ps-4">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                             {{name}}    
+                                        </a>
+                                    </li>
+                               {{/items}}
+                                    {{/docmenu}}        
+                           </ul>       
+                       </li>
+                         {{/showdocmenu}} 
+                        {{#showrepmenu}}  
+                        
+                        <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnreps"                           >
+                              <i class="nav-icon fa fa-chart-bar"></i>
+                                  
+                                 Звіти   
+                        </a> 
+                          <ul id="mnreps" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                               {{#repmenu}}
+                                    {{#groups}}
+                             
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
+                       
+                                         {{grname}}    
+                                    </a>
+                            
+                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnreps">
+                                    {{#items}}
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                            {{name}}   
+                                        </a>
+                                    </li>
+                                   {{/items}} 
+                               
+                               </ul>
+                             </li>
+                              {{/groups}}
+                              {{#items}} 
+                               <li class="sidebar-item  ps-4">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                             {{name}}    
+                                        </a>
+                                    </li>
+                               {{/items}}
+                                    {{/repmenu}}        
+                           </ul>       
+                       </li>
+                         {{/showrepmenu}} 
+                       
+                         {{#showregmenu}}  
+                        
+                        <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnregs"                           >
+                              <i class="nav-icon fa fa-list"></i>
+                                        
+                                 Журнали   
+                        </a> 
+                          <ul id="mnregs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                               {{#regmenu}}
+                                    {{#groups}}
+                             
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
+                       
+                                         {{grname}}    
+                                    </a>
+                            
+                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnregs">
+                                    {{#items}}
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                            {{name}}   
+                                        </a>
+                                    </li>
+                                   {{/items}} 
+                               
+                               </ul>
+                             </li>
+                              {{/groups}}
+                              {{#items}} 
+                               <li class="sidebar-item  ps-4">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                             {{name}}    
+                                        </a>
+                                    </li>
+                               {{/items}}
+                                    {{/regmenu}}        
+                           </ul>       
+                       </li>
+                         {{/showregmenu}} 
+                      
+                        {{#showregmenu}}  
+                        
+                        <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnregs"                           >
+                              <i class="nav-icon fa fa-list"></i>
+                                        
+                                 Журнали   
+                        </a> 
+                          <ul id="mnregs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                               {{#regmenu}}
+                                    {{#groups}}
+                             
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
+                       
+                                         {{grname}}    
+                                    </a>
+                            
+                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnregs">
+                                    {{#items}}
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                            {{name}}   
+                                        </a>
+                                    </li>
+                                   {{/items}} 
+                               
+                               </ul>
+                             </li>
+                              {{/groups}}
+                              {{#items}} 
+                               <li class="sidebar-item  ps-4">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                             {{name}}    
+                                        </a>
+                                    </li>
+                               {{/items}}
+                                    {{/regmenu}}        
+                           </ul>       
+                       </li>
+                         {{/showregmenu}} 
+                      
+                        {{#showrefmenu}}  
+                        
+                        <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnrefs"                           >
+                                <i class="nav-icon fa fa-book"></i>
+                                           
+                                 Довідники   
+                        </a> 
+                          <ul id="mnrefs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                               {{#refmenu}}
+                                    {{#groups}}
+                             
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
+                       
+                                         {{grname}}    
+                                    </a>
+                            
+                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnrefs">
+                                    {{#items}}
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                            {{name}}   
+                                        </a>
+                                    </li>
+                                   {{/items}} 
+                               
+                               </ul>
+                             </li>
+                              {{/groups}}
+                              {{#items}} 
+                               <li class="sidebar-item  ps-4">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                             {{name}}    
+                                        </a>
+                                    </li>
+                               {{/items}}
+                                    {{/refmenu}}        
+                           </ul>       
+                       </li>
+                         {{/showrefmenu}} 
+                      
+                     
+                        {{#showsermenu}}  
+                        
+                        <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnsers"                           >
+                               <i class="nav-icon fas fa-project-diagram"></i>
+                                               
+                                   Сервісні сторінки   
+                        </a> 
+                          <ul id="mnsers" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                               {{#sermenu}}
+                                    {{#groups}}
+                             
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
+                       
+                                         {{grname}}    
+                                    </a>
+                            
+                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnsers">
+                                    {{#items}}
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                            {{name}}   
+                                        </a>
+                                    </li>
+                                   {{/items}} 
+                               
+                               </ul>
+                             </li>
+                              {{/groups}}
+                              {{#items}} 
+                               <li class="sidebar-item  ps-4">
+                                        <a class="sidebar-link  "  href="{{link}}"     >
+                                             {{name}}    
+                                        </a>
+                                    </li>
+                               {{/items}}
+                                    {{/sermenu}}        
+                           </ul>       
+                       </li>
+                         {{/showsermenu}} 
+                      
+                      
+                      
+                        {{#showmodmenu}} 
+                       <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmosules"
+                            aria-expanded="false" aria-controls="pages">
+                            
+                              <i class="nav-icon fa fa-puzzle-piece"></i>
+                                 
+                              <span>  Модулі  </span>  
+                        </a>
+                        <ul id="mnmosules" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              
+                          {{#shop}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodshop"     >
+                                         Онлайн каталог    
+                                    </a>
+                            
+                                   <ul id="mnmodshop" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/shop"     >
+                                                 Перейти до каталогу    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/GroupList"     >
+                                                 Атрибути товарiв    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/ProductList"     >
+                                                 Значення атрибутiв    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/VarList"     >
+                                                 Варiацiї товарiв   
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/RecList"     >
+                                                 Рекомендованi товари    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/Dashboard"     >
+                                                 Дашборд    
+                                            </a>
+                                        </li>
+                                        {{#isadmins}}
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/Custom"     >
+                                                 Кастомiзацiя    
+                                            </a>
+                                        </li>
+                                     
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Shop/Pages/Admin/Options"     >
+                                                 Налаштування    
+                                            </a>
+                                        </li>
+                                    {{/isadmins}}  
+                                  
+                                   
+                                   </ul>
+                               
+                          </li> 
+                         {{/shop}}       
+                         {{#ocstore}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodocstore"     >
+                                         Обмін з ОпенКарт    
+                                    </a>
+                            
+                                   <ul id="mnmodocstore" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Orders"     >
+                                                 Замовлення    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Items"     >
+                                                 Товари    
+                                            </a>
+                                        </li>
+                                      
+                                        {{#isadmins}}
+                                    
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Options"     >
+                                                 Налаштування    
+                                            </a>
+                                        </li>
+                                    {{/isadmins}}  
+                                   </ul>
+                          </li> 
+                         {{/ocstore}}       
+       
+                          {{#woocomerce}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodwc"     >
+                                         Обмін з Woocommerce    
+                                    </a>
+                            
+                                   <ul id="mnmodwc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Orders"     >
+                                                 Замовлення    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Items"     >
+                                                 Товари    
+                                            </a>
+                                        </li>
+                                      
+                                        {{#isadmins}}
+                                    
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Options"     >
+                                                 Налаштування    
+                                            </a>
+                                        </li>
+                                    {{/isadmins}}  
+                                   </ul>
+                          </li> 
+                         {{/woocomerce}}       
+                         {{#horoshop}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodhor"     >
+                                         Обмін з Хорошоп    
+                                    </a>
+                            
+                                   <ul id="mnmodhor" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Orders"     >
+                                                 Замовлення    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Items"     >
+                                                 Товари    
+                                            </a>
+                                        </li>
+                                      
+                                        {{#isadmins}}
+                                    
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Options"     >
+                                                 Налаштування    
+                                            </a>
+                                        </li>
+                                    {{/isadmins}}  
+                                   </ul>
+                          </li> 
+                         {{/horoshop}}       
+       
+                         {{#note}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="/index.php?p=App/Modules/Note/Pages/Main" class="sidebar-link  "      >
+                                         База знань    
+                                    </a>
+                          </li> 
+                         {{/note}}       
+       
+                         {{#issue}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodissue"     >
+                                         Проекти та завдання    
+                                    </a>
+                            
+                                   <ul id="mnmodissue" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/ProjectList"     >
+                                                 Проекти    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/IssueList"     >
+                                                 Завдання    
+                                            </a>
+                                        </li>
+                                      
+                                       
+                                    
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/TimeSheet"     >
+                                                 Облік часу    
+                                            </a>
+                                        </li>
+                                    
+                                   </ul>
+                          </li> 
+                         {{/issue}}   
+       
+                         {{#ppo}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodppo"     >
+                                         ПРРО    
+                                    </a>
+                            
+                                   <ul id="mnmodppo" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/PPOList"     >
+                                                 Зареєстровані РРО    
+                                            </a>
+                                        </li>
+                                       <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/ZList"     >
+                                                 Журнал z-звiтiв    
+                                            </a>
+                                        </li>
+                                      
+                                       
+                                    
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/DocList"     >
+                                                 Список чекiв    
+                                            </a>
+                                        </li>
+                                      <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/ZForm"     >
+                                                 Ручне закриття змiни    
+                                            </a>
+                                        </li>
+                                    
+                                   </ul>
+                          </li> 
+                         {{/ppo}}   
+
+                           {{#checkbox}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodcb"     >
+                                         Чекбокс    
+                                    </a>
+                            
+                                   <ul id="mnmodcb" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/CB/Reports"     >
+                                                 Х-Звiт    
+                                            </a>
+                                        </li>
+                                   </ul>
+                          </li> 
+                         {{/checkbox}}   
+                         
+                          {{#df}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmoddf"     >
+                                         Дропшипінг та  фулфілмент    
+                                    </a>
+                            
+                                   <ul id="mnmoddf" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        {{#isadmins}}
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/DF/Admin/Options"     >
+                                                Налаштування  
+                                            </a>
+                                        </li>
+                                          {{/isadmins}}
+                                    <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/DF/Admin/Orders"     >
+                                                Замовлення  
+                                            </a>
+                                        </li>
+                                   </ul>
+                          </li> 
+                          {{/df}}   
+                         
+                          {{#np}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodnp"     >
+                                         Нова Пошта    
+                                    </a>
+                            
+                                   <ul id="mnmodnp" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        {{#isadmins}}
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/NP/Options"     >
+                                                Налаштування  
+                                            </a>
+                                        </li>
+                                          {{/isadmins}}
+                                    <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/NP/TTNList"     >
+                                                Перелiк доставок  
+                                            </a>
+                                        </li>
+                                   </ul>
+                          </li> 
+                          {{/np}}   
+                     
+                          {{#vdoc}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodvdoc"     >
+                                         Вчасно Документооборот    
+                                    </a>
+                            
+                                   <ul id="mnmodvdoc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        {{#isadmins}}
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/VDoc/Options"     >
+                                                Налаштування  
+                                            </a>
+                                        </li>
+                                          {{/isadmins}}
+                                    <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/VDoc/DocList"     >
+                                               Документи
+                                            </a>
+                                        </li>
+                                   </ul>
+                          </li> 
+                          {{/vdoc}}   
+                         {{#promua}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodprom"     >
+                                         Обмін з PromUa 
+                                    </a>
+                            
+                                   <ul id="mnmodprom" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        {{#isadmins}}
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Options"     >
+                                                Налаштування  
+                                            </a>
+                                        </li>
+                                          {{/isadmins}}
+                                         <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Orders"     >
+                                               Замовлення
+                                            </a>
+                                        </li>
+                                         <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Items"     >
+                                               Товари
+                                            </a>
+                                        </li>
+                                        
+                                   </ul>
+                          </li> 
+                          {{/promua}}   
+                     
+         </ul>
+                        
+                       
+                          
+                    </li>
+                    
+                        {{/showmodmenu}}   
+                         {{#isadmins}}
+                       <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnsystem"
+                            aria-expanded="false" aria-controls="pages">
+                            
+                             <i class="nav-icon fa fa-cog"></i>
+                                Система    
+                        </a>
+                        <ul id="mnsystem" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                              <li class="sidebar-item  ps-3">
+                              <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnsettings"
+                               aria-expanded="false" aria-controls="pages">
+                       
+                                         Налаштування    
+                                    </a>
+                            
+                               <ul id="mnsettings" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnsystem">
+                                    <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="/index.php?p=App/Pages/Options"     >
+                                             Загальнi    
+                                        </a>
+                                    </li>
+                                  <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="/index.php?p=App/Pages/Admin"     >
+                                             Адмiнiстратор    
+                                        </a>
+                                    </li>
+                                  <li class="sidebar-item  ">
+                                        <a class="sidebar-link  "  href="/index.php?p=App/Pages/MenuList"     >
+                                             Налаштування меню    
+                                        </a>
+                                    </li>
+                              
+                               
+                               </ul>
+                               
+                          </li> 
+                               
+                          <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/Firm"     >
+                                    Данi компанiї   
+                            </a>
+                         </li>  
+                          {{#usebranch}}    
+                         <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/BranchList"     >
+                                    Філії  
+                            </a>
+                         </li>   
+                           {{/usebranch}}   
+                         <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/Users"     >
+                                    Користувачі  
+                            </a>
+                         </li>      
+                         
+                          <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/Roles"     >
+                                    Ролі  
+                            </a>
+                         </li>      
+                         <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/PosList"     >
+                                    Каси (POS термінали)  
+                            </a>
+                         </li>      
+                         <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/Subscribes"     >
+                                    Пiдписки  
+                            </a>
+                         </li>      
+                         <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/CronTab"     >
+                                    Планувальник  
+                            </a>
+                         </li>      
+                       <li class="sidebar-item ps-4">
+                             <a class="sidebar-link  "  href="/index.php?p=App/Pages/SystemLog"     >
+                                    Системний лог  
+                            </a>
+                         </li>      
+                          {{#isadmin}} 
+                            {{^noupdate}}  
+                             <li class="sidebar-item ps-4">
+                              <a class="sidebar-link  "  href="/index.php?p=App/Pages/Update"     >
+                                    Оновлення  
+                             </a>
+                           </li>      
+                            {{/noupdate}}     
+                           {{/isadmin}}  
+                        </ul>
+                        
+                       
+                          
+                    </li>
+                  
+                      
+                      
+                      
+                      <li class="sidebar-item  ">
+                                     
+                         <a class="sidebar-link  " target="_blank" href="https://zippy.com.ua/contacts"     >
+                            <i class="nav-icon fas fa-phone-alt"></i>
+                                Тех. пiдтримка   
+                        </a>
+                     </li>   
+                        {{/isadmins}}  
+                     <li class="sidebar-item  ">
+                                     
+                         <a class="sidebar-link  " target="_blank" href="https://zippy.com.ua/zstoreusage"     >
+                            <i class="nav-icon fa fa-info-circle"></i>
+                                 Документація    
+                        </a>
+                     </li>     
+              </ul>
+            </div>
+        </aside>            
+            
+            
+         <div class="main mb-4" >
+<nav class="header navbar navbar-expand bg-body">
             <div class="container-fluid">
            
          
@@ -84,13 +829,8 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                 
-                           <a
-                class="nav-link"
-                data-lte-toggle="sidebar"
-                href="#"
-                role="button"
-                aria-label="Toggle sidebar"
-              >  <i class="fas fa-bars"></i>
+                <a     class="nav-link"      id="barbtn"    href="#"     role="button"                aria-label="Toggle sidebar"               > 
+                 <i class="fas fa-bars"></i>
                     </li>
 
                 </ul>
@@ -99,9 +839,8 @@
                {{^showsidemenu}}   
                <ul class="navbar-nav">
                 <li class="nav-item">   
-                <a href="/index.php" class="brand-link">
-                    <span  > Zippy CRM</span>
-                </a>     </li>
+                 <a href="/index.php">  <i class="fa fa-home"></i> </a>
+                     </li>
                </ul>   
                {{/showsidemenu}}   
                
@@ -183,860 +922,10 @@
                 </ul>
 
              </div>
-            </nav>
-            {{#showsidemenu}}
-            <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
-                
-              
-             <div class="sidebar-brand">
-            <a href="/index.php" class="brand-link">
-
-                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy CRM</span>
-                </a>
-        </div>
-
-                <div class="sidebar-wrapper">
-                    <nav class="mt-2">
-                        <ul  class="nav sidebar-menu flex-column"
-              data-lte-toggle="treeview"
-              data-accordion="false"
-              id="navigation">
-
-                            <li class="nav-item  ">
-                                <a href="/index.php" class="nav-link">
-                                    <i class="nav-icon fa fa-home"></i>
-                                    <p>
-                                        Головна
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item  ">
-                                <a href="?p=/App/Pages/Main" class="nav-link">
-                                    <i class="nav-icon fa fa-chart-pie"></i>
-                                    <p>
-                                        Дашборд
-                                    </p>
-                                </a>
-                            </li>
-                            {{#showdocmenu}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-file"></i>
-                                    <p>
-                                        Документи
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-
-                                    {{#docmenu}}
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>{{grname}}
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                                  
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href="{{link}}" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>
-                                            {{/items}}
-                                        </ul>
-
-                                        </li>
-                                        {{/groups}}
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="{{link}}" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>
-                                    {{/items}}
-                                    {{/docmenu}}
-                                </ul>
-
-                            </li>
-                            {{/showdocmenu}}
-                            {{#showrepmenu}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-chart-bar"></i>
-                                    <p>
-                                        Звіти
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-
-                                    {{#repmenu}}
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>{{grname}}
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href="{{link}}" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>
-                                            {{/items}}
-                                        </ul>
-
-                                        </li>
-                                        {{/groups}}
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="{{link}}" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>
-                                    {{/items}}
-                                    {{/repmenu}}
-
-                                </ul>
-
-                            </li>
-                            {{/showrepmenu}}
-                            {{#showregmenu}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-list"></i>
-                                    <p>
-                                        Журнали
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {{#regmenu}}
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>{{grname}}
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href="{{link}}" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>
-                                            {{/items}}
-                                        </ul>
-
-                                        </li>
-                                        {{/groups}}
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="{{link}}" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>
-                                    {{/items}}
-                                    {{/regmenu}}
-                                </ul>
-
-                            </li>
-                            {{/showregmenu}}
-                            {{#showrefmenu}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-book"></i>
-                                    <p>
-                                        Довідники
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {{#refmenu}}
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>{{grname}}
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href="{{link}}" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>
-                                            {{/items}}
-                                        </ul>
-
-                                        </li>
-                                        {{/groups}}
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="{{link}}" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>
-                                    {{/items}}
-
-
-                                    {{/refmenu}}
-
-                                </ul>
-
-                            </li>
-                            {{/showrefmenu}}
-                            {{#showsermenu}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-project-diagram"></i>
-                                    <p>
-                                        Сервісні сторінки
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {{#sermenu}}
-                                    {{#groups}}
-                                    <li class="nav-item has-treeview">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>{{grname}}
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            {{#items}}
-                                            <li class="nav-item  has-treeview">
-                                                <a href="{{link}}" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
-                                                </a>
-                                            </li>
-                                            {{/items}}
-                                        </ul>
-
-                                        </li>
-                                        {{/groups}}
-
-                                        {{#items}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="{{link}}" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;{{name}}</p>
-                                        </a>
-                                    </li>
-                                    {{/items}}
-
-                                    {{/sermenu}}
-                                </ul>
-
-                            </li>
-                            {{/showsermenu}}
-                            {{#showmodmenu}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-puzzle-piece"></i>
-                                    <p>
-                                        Модулі
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                
-                                    {{#shop}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Онлайн каталог
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/shop" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Перейти до каталогу</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/GroupList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Атрибути товарiв</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/ProductList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Значення атрибутiв</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/VarList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Варiацiї товарiв</p>
-                                                </a>
-                                            </li>
-                                             <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/RecList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Рекомендованi товари</p>
-                                                </a>
-                                            </li>               
-                                           <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Dashboard" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Дашборд</p>
-                                                </a>
-                                            </li>
-                                                
-                                             {{#isadmins}}
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Custom" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Кастомiзацiя</p>
-                                                </a>
-                                            </li>     
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>     
-                                            {{/isadmins}}
-                                        </ul>
-
-                                    </li>
-                                    {{/shop}}
-                                    {{#ocstore}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Обмін з ОпенКарт
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                              {{#isadmins}}
-                                               <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/OCStore/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>
-                                               {{/isadmins}}
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/OCStore/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/OCStore/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/ocstore}}
-                                    {{#woocomerce}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Обмін з Woocommerce
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                               {{#isadmins}}
-                                               <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                                 {{/isadmins}}
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/WC/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/WC/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/woocomerce}}
-                                    {{#horoshop}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Обмін з Хорошоп
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                              {{#isadmins}}
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/HR/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>
-                                              {{/isadmins}}
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/HR/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/HR/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/horoshop}}                                       
-                                    {{#note}}
-                                    <li class="nav-item  has-treeview">
-                                        <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>База знань</p>
-                                        </a>
-                                    </li>
-                                    {{/note}}
-                                    {{#issue}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Проекти та завдання
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/ProjectList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Проекти</p>
-                                                </a>
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/IssueList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Завдання</p>
-                                                </a>
-                                               
-                                                <a href="/index.php?p=App/Modules/Issue/Pages/TimeSheet" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Облік часу</p>
-                                                </a>
-                                              
-                                             
-
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/issue}}
-                       
-                                    {{#ppo}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Фiскалізацiя
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/PPO/PPOList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Зареєстровані РРО</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/PPO/ZList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Журнал z-звiтiв</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/PPO/DocList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Список чекiв</p>
-                                                </a>
-                                            </li>
-                                                                                           
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/PPO/ZForm" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Закриття змiни</p>
-                                                </a>
-                                            </li>
-                                                   
-                                        </ul>
-
-                                    </li>
-                                    {{/ppo}}
-                             
-                             
-                                    {{#checkbox}}
-                                    <li class="nav-item  has-treeview">
-                                       
-                                        
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Чекбокс 
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                 <a href="/index.php?p=App/Modules/CB/Reports" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Х-Звiт</p>
-                                                </a>
-                                            </li>   
-                  
-                                        </ul>    
-                                        
-                                    </li>
-                                    {{/checkbox}}
-                                 
-                                    {{#df}}
-                                    <li class="nav-item  has-treeview">
-                                       
-                                        
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Дропшипінг та  фулфілмент 
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                              {{#isadmins}}
-                                            <li class="nav-item">
-                                                 <a href="/index.php?p=App/Modules/DF/Admin/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>   
-                                             {{/isadmins}}
-                                            <li class="nav-item">
-                                                 <a href="/index.php?p=App/Modules/DF/Admin/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
-                                                </a>
-                                            </li>                                               
-                                        </ul>    
-                                        
-                                    </li>
-                                    {{/df}}
-                                    
-                                    
-                                    {{#np}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Нова Пошта
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/NP/TTNList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Перелiк доставок</p>
-                                                </a>
-                                            </li>     {{#isadmins}}
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/NP/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>      {{/isadmins}}
-
-                                        </ul>
-
-                                    </li>
-                                    {{/np}}
-                 
-                                    
-                                  {{#vdoc}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Вчасно Документооборот
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/VDoc/DocList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Документи</p>
-                                                </a>
-                                            </li>   
-                                            
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/VDoc/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>    
-                                           
-
-                                        </ul>
-
-                                    </li>
-                                    {{/vdoc}}                                    
-                                    
-                                                  
-                                      
-                                  {{#promua}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Обмін з PromUa
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                              {{#isadmins}}
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/PU/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
-                                                </a>
-                                            </li>
-                                              {{/isadmins}}
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/PU/Orders" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="/index.php?p=App/Modules/PU/Items" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
-                                                </a>
-                                            </li>
-                                        </ul>
-
-                                    </li>
-                                    {{/promua}}
-                                                              
-                                    
-                                </ul>
-
-                            </li>
-                            {{/showmodmenu}}
-
-                            {{#isadmins}}
-                            <li class="nav-item has-treeview">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fa fa-cog"></i>
-                                    <p>
-                                        Система
-                                        <i class="nav-arrow fas fa-angle-left"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-
-                                    {{#isadmin}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Налаштування
-                                                <i class="nav-arrow fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Pages/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Загальнi</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Pages/MenuList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Налаштування меню</p>
-                                                </a>
-                                            </li>
-                                            
-                                                                         
-                                              <li class="nav-item">
-                                                    <a href="/index.php?p=App/Pages/Admin" class="nav-link">
-                                                        <i class="fa    nav-icon"></i>
-                                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;Адмiнiстратор</p>
-                                                    </a>
-                                              </li>
-                                               
-                                            
-                                        </ul>
-
-                                    </li>
-
-                               
-
-                                     <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Firm" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Данi компанiї</p>
-                                        </a>
-                                    </li>
-
-
-                                    {{#usebranch}}
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Філії</p>
-                                        </a>
-                                    </li>
-                                    {{/usebranch}}
-
-
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Roles" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Ролі</p>
-                                        </a>
-                                    </li>
-                                    {{/isadmin}}
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Users" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Користувачі</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/PosList" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Каси (POS термінали)</p>
-                                        </a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Subscribes" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Пiдписки</p>
-                                        </a>
-                                    </li>                            
-
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/CronTab" class="nav-link ">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Планувальник</p>
-                                        </a>
-                                    </li>                            
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/SystemLog" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Системний лог</p>
-                                        </a>
-                                    </li>
-                                     {{#isadmin}}   
-                                    {{^noupdate}}                              
-                                   <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/Update" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Оновлення</p>
-                                        </a>
-                                    </li>
-                                      {{/noupdate}}     
-                                      
-                                     {{/isadmin}}  
-                                
-                                </ul>
-
-                            </li>
-                         
-                            <li class="nav-item  ">
-                                <a target="_blank" href="https://zippy.com.ua/contacts" class="nav-link">
-                                    <i class="nav-icon fas fa-phone-alt"></i>
-                                    <p>
-                                        Тех. пiдтримка 
-
-                                    </p>
-                                </a>
-                            </li>
-                      
-                            {{/isadmins}}
-                          <li class="nav-item  ">
-                                <a target="_blank" href="https://zippy.com.ua/zstoreusage" class="nav-link">
-                                    <i class="nav-icon fa fa-info-circle"></i>
-                                    <p>
-                                        Документація  
-
-                                    </p>
-                                </a>
-                            </li>
-
-                        </ul>
-                    </nav>
-                </div>
-                 
-            </aside>
-            {{/showsidemenu}}
-            <!-- Content Wrapper. Contains page content -->
-         <main class="app-main mb-4" >
+            </nav>         
               <!-- Main content -->
-           <div class="app-content">
-          <!--begin::Container-->
+        <main class="content px-3 py-2">
+              <!--begin::Container-->
               <div class="container-fluid">
               
               
@@ -1083,15 +972,15 @@
                     </div>
               </div>
               <!--end::Container-->
-            </div>
+             
             <!--end::App Content-->
           </main>
             </div>
-            <!-- /.content-wrapper -->
+         
 
         </div>
-        <!-- ./wrapper -->
-
+    
+ </div>
        
             <div id="modalcinfo" class="modal fade  " tabindex="-1"                   >
                 <div class="modal-dialog  ">
@@ -1112,7 +1001,8 @@
                     </div>
                 </div>
             </div>
-             <div id="modalitinfo" class="modal fade  " tabindex="-1"  
+   
+            <div id="modalitinfo" class="modal fade  " tabindex="-1"  
                  >
                 <div class="modal-dialog  ">
                     <div class="modal-content">
@@ -1133,8 +1023,7 @@
                 </div>
             </div>
            
-           
-             <div id="modalpritems" class="modal fade  " tabindex="-1"                   >
+            <div id="modalpritems" class="modal fade  " tabindex="-1"                   >
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1263,6 +1152,11 @@
                const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
                const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl,{html: true}))        
                
+              
+     const toggler = document.querySelector("#barbtn");
+toggler.addEventListener("click",function(){
+    document.querySelector("#sidebar").classList.toggle("collapsed");
+});              
                              
             })              
  
