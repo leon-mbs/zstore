@@ -844,7 +844,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and document_id in(select document_id from paylist where mf_id = {$filter->mfund}   )  ";
         }
         if ($filter->store > 0) {
-            $where .= " and document_id in(select document_id from entrylist where stock_id in ( select stock_id from store_stock  where   store_id= {$filter->store} )  )  ";
+            $where .= " and ( document_id in(select document_id from entrylist where stock_id in ( select stock_id from store_stock  where   store_id= {$filter->store} )  ) or content like '%<store>{$filter->store}</store%' )   ";
         }
         $st = $filter->searchtext;
         if (strlen($st) > 2) {
