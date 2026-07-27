@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css?v=825">
       
 
-        <link rel="stylesheet" href="/assets/css/bootstrap.css?v=826">
+        <link rel="stylesheet" href="/assets/css/bootstrap.css?v=827">
    
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css?v=825">
         <link rel="stylesheet" href="/assets/css/toastr.min.css?v=825">
@@ -18,12 +18,12 @@
  
         <link rel="stylesheet" href="/assets/css/select2-bootstrap-5-theme.css?v=825">
         <link rel="stylesheet" href="/assets/js/summernote/summernote-bs5.css?v=825">
-        <link rel="stylesheet" href="/assets/css/app.css?v=828">
+        <link rel="stylesheet" href="/assets/css/app.css?v=829">
 
 
         <script src="/assets/js/bootstrap.bundle.js?v=825" type="text/javascript"></script>
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js?v=825" type="text/javascript"></script>
-        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?v=825" type="text/javascript"></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js?v=826" type="text/javascript"></script>
         <script src="/assets/js/select2.js?v=825" type="text/javascript"></script>
         <script src="/assets/js/select2-uk.js?v=825" type="text/javascript"></script>
 
@@ -223,48 +223,7 @@
                        </li>
                          {{/showregmenu}} 
                       
-                        {{#showregmenu}}  
-                        
-                        <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnregs"                           >
-                              <i class="nav-icon fa fa-list"></i>
-                                        
-                                 Журнали   
-                        </a> 
-                          <ul id="mnregs" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                               {{#regmenu}}
-                                    {{#groups}}
-                             
-                              <li class="sidebar-item  ps-3">
-                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"  data-bs-target="{{grtarget}}"   >
                        
-                                         {{grname}}    
-                                    </a>
-                            
-                               <ul  id="{{grtargetid}}"  class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnregs">
-                                    {{#items}}
-                                    <li class="sidebar-item  ">
-                                        <a class="sidebar-link  "  href="{{link}}"     >
-                                            {{name}}   
-                                        </a>
-                                    </li>
-                                   {{/items}} 
-                               
-                               </ul>
-                             </li>
-                              {{/groups}}
-                              {{#items}} 
-                               <li class="sidebar-item  ps-4">
-                                        <a class="sidebar-link  "  href="{{link}}"     >
-                                             {{name}}    
-                                        </a>
-                                    </li>
-                               {{/items}}
-                                    {{/regmenu}}        
-                           </ul>       
-                       </li>
-                         {{/showregmenu}} 
-                      
                         {{#showrefmenu}}  
                         
                         <li class="sidebar-item">
