@@ -403,7 +403,7 @@ class DocList extends \App\Pages\Base
 
         }          
         
-          $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-success') ",true)  ;
+          $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-active') ",true)  ;
     }
 
     //редактирование

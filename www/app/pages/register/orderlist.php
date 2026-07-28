@@ -758,7 +758,7 @@ class OrderList extends \App\Pages\Base
         $this->onBranch($this->statuspan->moveform->brmove);
         $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);
         
-        $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-success') ",true)  ;
+        $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-active') ",true)  ;
  
     }
 
