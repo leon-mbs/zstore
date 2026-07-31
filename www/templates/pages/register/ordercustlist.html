@@ -88,22 +88,34 @@
 
                 <div class="card">
                     <form zippy="statusform">   
-                         <div class="form-group row">
+                       <div class="row  ">
+                             <div class="  col-auto">
                             <button zippy="bcan" type="submit" class="  btn btn-secondary  me-2 "><i class="fa fa-undo"></i>
                                 Скасувати
-                            </button>
-                       
+                            </button>      </div>
+                             <div class="  col-auto">    
                              <button zippy="binp" class="btn btn-primary  me-2"><i class="fa fa-cog"></i> На виконання</button>
-                                                    
+                               </div> 
+                             <div class="  col-auto">                    
                             <button zippy="bclose" type="submit" class="  btn btn-success  me-2 "><i class="fa fa-gavel"></i>
                                 Закрити
-                            </button>
+                            </button>   </div>
+                            <div class="  col-auto">
                             <button zippy="bttn" class="btn btn-primary  me-2"><i class="fa fa-truck"></i> Створити прихід</button>
+                              </div> 
+                            <div class="  col-auto">
                             <button zippy="binv" class="btn btn-primary  me-2"><i class="fa fa-credit-card"></i> Створити рахунок </button>
+                            
+                            </div>
+                          <div class="  col-auto">
+                              <div class="  row">
+                               
+                                 <div class="col-auto mt-2"><label data-label="deldate"  for="deldate">Доставка</label></div>
+                                 <div class="col-auto"> <input zippy="deldate" style="width:120px" class="form-control  me-2" ></div> <div class="col-auto"><button zippy="bdeldate" data-label="deldate" class="btn btn-success  me-2">Задати</button></div>
+                              
+                             </div>
                          </div>
-                          <div class="form-group row">
-                             <div class="col-auto mt-2"><label data-label="deldate"  for="deldate">Доставка</label></div><div class="col-auto"> <input zippy="deldate" style="width:120px" class="form-control  me-2" ></div> <div class="col-auto"><button zippy="bdeldate" data-label="deldate" class="btn btn-info  me-2">Задати</button></div>
-                         </div>
+                       </div>
                     </form>
                 </div>
 

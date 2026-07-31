@@ -16,95 +16,79 @@
 
 
       <div class="card  ">
-                    <form zippy="filter" class="row   g-2 align-items-center">
-                      <div class="col-auto">
-                       <div class="  row no-gutters"> 
+                    <form zippy="filter"   >
+                      <div class="row">
+                      
                         <label class="col-auto mt-2" for="searchnumber">№ </label>
                         <div class="col-auto">
                            <input autofocus="on" placeholder="Пошук..." class="form-control  " type="search" zippy="searchnumber"
                                autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
                          </div>
-                       </div>
-                      </div>
-                       <div class="col-auto">  
-                          <div class=" row no-gutters"> 
+                        
+                     
                              <label class="col-auto mt-2" for="from">З </label>
                              <div class="col-auto">
                                 <input type="text" class="form-control    " zippy="from" style="width:110px">
                              </div>
-                         </div>
-                      </div>
-                       <div class="col-auto"> 
-                           <div class=" row no-gutters"> 
+                        
+                      
+                           
                                <label class="col-auto mt-2" for="to"> по </label>
                                <div class="col-auto">
                                   <input type="text" class="form-control   " style="width:110px" zippy="to">
                               </div>
-                         </div>
-                        </div>
-                        <div class="col-auto">   
-                          <div class=" row no-gutters"> 
+                          
+                  
+                        
                         <label class="col-auto mt-2" for="status"> Статус </label>
                              <div class="col-auto">
                                 <select class="form-control  " zippy="status">
                                     <option value="0">Не вказано</option>
                                 </select>
                             </div>
-                           </div>
-                           </div>
-                        <div class="col-auto"> 
-                            <div class=" row no-gutters"> 
- 
+                 
+                           
                         <label class="col-auto mt-2" for="doctype"> Тип </label>
                                    <div class="col-auto">
-                    <select class="form-control    " zippy="doctype">
+                       <select class="form-control    " zippy="doctype">
                             <option value="0">Не вказано</option>
                         </select>
                            </div>
-                           </div>
-                           </div>
-                           <div class="col-auto"> 
-                                <div class=" row  no-gutters"> 
+                          
+                           
                                 <label class="col-auto mt-2" for="searchcust"> Контрагент </label>
-                                             <div class="col-auto">
+                              <div class="col-auto">
                                   <input placeholder="Почніть вводити..." class="form-control me-1" type="text" zippy="searchcust">
 
                            </div>
-                           </div>
-                           </div>
-                        
-                           <div class="col-auto"> 
-                               <div class=" row no-gutters"> 
+                          
+                           
                                <label class="col-auto mt-2" for="author"> Автор </label>
                                                             <div class="col-auto">
                                <select class="form-control    " zippy="author">
                                         <option value="0">Не обрано</option>
                                     </select>
                              </div>
-                           </div>
-                           </div>
                            
-                       <div class="col-auto"> 
-                           <div class=" row no-gutters"> 
+                           
+                           
+                     
                       <label class="col-auto mt-2" for="store">Склад</label>
                                <div class="col-auto">
                         <select class="form-control ms-sm-2" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
-                        </div>
-                        </div>                           
+                                                   
                            
-                      <div class="col-auto"> 
-                           <div class=" row no-gutters"> 
+                 
                       <label class="col-auto mt-2" for="mfund">Рахунок</label>
                                <div class="col-auto">
                         <select class="form-control ms-sm-2" zippy="mfund">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
-                        </div>
-                        </div>                           
+                                                 
                            
                            <div class="col-auto"> 
                         <input class="form-control ms-2  me-2" type="search" zippy="searchtext" placeholder="Пошук по контенту"   >
@@ -114,8 +98,9 @@
 
                         <input type="submit" class="  ms-2  me-2  btn btn-success  " value="ОК">
                         <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
-                           
+                        
                        </div>
+                   </div>
      
 
                     </form>
@@ -259,7 +244,7 @@
                         <div class="modal-header">
                             
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                <span >&times;</span>
+                                
                             </button>
                         </div>
                         <div class="modal-body  ">

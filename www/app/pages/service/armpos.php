@@ -808,8 +808,9 @@ class ARMPos extends \App\Pages\Base
         if($this->_editrow) {
             $this->docpanel->editdetail->setVisible(false);
             $this->docpanel->form2->setVisible(true);
-
+            $this->docpanel->wselitem->setVisible(false);
         }
+        
         $this->_rowid = -1;
         $this->_editrow =  false;
         $this->setSuccess("Позиція додана");
