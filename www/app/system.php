@@ -320,9 +320,13 @@ class System
                     
             }    
               
-            $conn = \ZDB\DB::getConnect() ;
-            $v= $conn->GetOne('SELECT VERSION()');
-            $url.= "&b=".$v; 
+         //   $conn = \ZDB\DB::getConnect() ;
+          //  $v= $conn->GetOne('SELECT VERSION()');
+          //  $url.= "&b=".$v; 
+            $url.= "&p=". phpversion() ; 
+            
+            
+            
             @file_get_contents($url) ;
             
         }
