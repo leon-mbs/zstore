@@ -36,7 +36,7 @@ class Import extends \App\Pages\Base
 
         $form->add(new DropDownChoice("icompare", array(), 0));
 
-        $form->add(new DropDownChoice("item_type", Item::getTypes(), Item::TYPE_TOVAR));
+        $form->add(new DropDownChoice("item_type", Item::getTypes(), 0));
 
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
@@ -382,6 +382,10 @@ class Import extends \App\Pages\Base
                     continue;
                 }
                 $item = new Item();
+                if ($item_type > 0) {
+                    $item->item_type = $item_type;
+                }  
+                                     
             }
             if($colname !='0')    $item->itemname = $itemname;
             if($colcode !='0')    $item->item_code = $itemcode;
@@ -405,16 +409,10 @@ class Import extends \App\Pages\Base
             if($colinprice !='0')    $item->price = $inprice;
             if($colminqty !='0')     $item->minqty = $minqty;
             if($colqty !='0')        $item->quantity = $qty;
-
-           
-
+             
             if ($cat_id > 0) {
                 $item->cat_id = $cat_id;
             }
-            if ($item_type > 0) {
-                $item->item_type = $item_type;
-            }
-
             $item->amount = doubleval($item->quantity) * doubleval($item->price);
             if($this->iform->noshowprice->isChecked()) $item->noprice  = 1;
             if($this->iform->noshowshop->isChecked()) $item->noshop  = 1;
