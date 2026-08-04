@@ -38,7 +38,7 @@ class Orders extends \App\Pages\Base
             $this->setWarn('Нажміть перевірити з`єднання  ');
         }
 
-        $defpaytype=intval($modules['ocpaytype']??2);
+        $defpaytype=intval($modules['ocpaytype']??0);
         $defstore=intval($modules['ocstore']);
         $defmf=intval($modules['ocmf']??0);
            
@@ -136,7 +136,11 @@ class Orders extends \App\Pages\Base
     }
 
     public function onImport($sender) {
-          
+        $pt=$sender->paytype->getValue() ;
+        if($pt==0){
+            $this->setError('Не вказано тип оплати')  ;
+            return;
+        } 
         if($sender->paytype->getValue() ==4) {
             $this->onOutcome( );            
         }   else{
