@@ -325,7 +325,7 @@ class Order extends Base
             \App\Helper::insertstat(\App\Helper::STAT_ORDER_SHOP, 0, 0) ;
 
 
-            $this->orderid = intval(preg_replace('/[^0-9]/', '', $order->document_number));
+          //  $this->orderid = intval(preg_replace('/[^0-9]/', '', $order->document_number));
             $order->updateStatus(Document::STATE_NEW);
 
             if ($shop['ordertype'] == 1) {  //Кассовый чек

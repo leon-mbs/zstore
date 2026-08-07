@@ -436,7 +436,8 @@ class Subscribe extends \ZCL\DB\Entity
             return "Помилка розмітки";
         }        
     }
- /**
+ 
+   /**
      * возвращает текст  с  учетом разметки
      *
      * @param mixed $c

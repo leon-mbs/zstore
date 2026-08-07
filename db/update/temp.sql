@@ -27,6 +27,7 @@ FROM  acc_entry e
   JOIN documents d
     ON  d.document_id = e.document_id ; 
  
+история  подписок
  
 delete from options where  optname='version' ;
 insert into options (optname,optvalue) values('version','8.3.0'); 
