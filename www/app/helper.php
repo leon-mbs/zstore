@@ -18,6 +18,7 @@ class Helper
     public const STAT_CARD_SHOP    = 6;     //позиций в  корзине
     public const STAT_DOC_ISEDITED = 7;     //редактируется документ
     public const STAT_DOC_TMP      = 8;     //временные  данные
+    public const STAT_SUBS_FIRE    = 9;     //событие подписки
 
     private static $meta = array(); //кеширует метаданные
 
@@ -1376,8 +1377,7 @@ class Helper
             $dt = $conn->DBDate(strtotime('-1 month', time())) ;
             $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
             
-            //todo история  подписок  
-            
+          
             //очистка товаров у поставщика
             $days = $options['ci_clean'] ?? 0;
             if($days >0) {

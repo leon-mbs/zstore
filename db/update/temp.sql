@@ -27,30 +27,8 @@ FROM  acc_entry e
   JOIN documents d
     ON  d.document_id = e.document_id ; 
  
-CREATE TABLE subscribe_history (
-  id bigint(20) NOT NULL AUTO_INCREMENT,
-  sub_id int(11) NOT NULL,
  
-  createdon date  ,
-  PRIMARY KEY (id),
-  KEY customer_id (sub_id),
  
-) ENGINE = INNODB  DEFAULT CHARSET = utf8;   
-
-
-CREATE VIEW subscribe_history_view
-AS
-SELECT
-  h.id AS id,
-  h.sub_id AS sub_id 
-  h.createdon AS createdon 
-  
-FROM subscribe_history h 
-  LEFT JOIN subscribes s
-    ON  h.sub_id = s.sub_id 
-  ;    
-    
-    
  
 delete from options where  optname='version' ;
 insert into options (optname,optvalue) values('version','8.3.0'); 

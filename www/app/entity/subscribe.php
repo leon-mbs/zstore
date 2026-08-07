@@ -250,10 +250,10 @@ class Subscribe extends \ZCL\DB\Entity
             
             $text = $sub->getTextDoc($doc);
             
+            $sub->sendmsg($text,$options);
             
-            $text = $sub->sendmsg($text,$options);
-            
-            
+            H::insertstat(\App\Helper::STAT_SUBS_FIRE, $sub->sub_id, 0) ;
+         
  
 
         }
@@ -301,9 +301,10 @@ class Subscribe extends \ZCL\DB\Entity
             
             $text = $sub->getTextCust($c);
             
-            
             $sub->sendmsg($text,$options);
- 
+          
+            H::insertstat(\App\Helper::STAT_SUBS_FIRE, $sub->sub_id, 0) ;
+   
         }
     }
 
@@ -347,6 +348,7 @@ class Subscribe extends \ZCL\DB\Entity
             
             $sub->sendmsg($text,$options);
             
+            H::insertstat(\App\Helper::STAT_SUBS_FIRE, $sub->sub_id, 0) ;
             
  
 

@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "8.2.5"; // текущая  версия
-    public const PREV_VERSION = "8.2.4"; // предыдущая версия (для отката кода в случае  проблем)
+    public const CURR_VERSION = "8.2.6"; // текущая  версия
+    public const PREV_VERSION = "8.2.5"; // предыдущая версия (для отката кода в случае  проблем)
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
      
 
