@@ -125,7 +125,8 @@ class UserLogin extends \Zippy\Html\WebPage
             System::getSession()->defbranch = $_COOKIE['branch_id'];
         }
         if($this->_user->rolename=="admins") {
-             \App\System::checkUpdate()  ; 
+             System::checkUpdate()  ; 
+             Helper::cleanDB()  ; 
         }
       
         

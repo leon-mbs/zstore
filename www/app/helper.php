@@ -1256,7 +1256,10 @@ class Helper
         }
     }
 
-    //"соль" для  шифрования
+   
+    /**
+    * "соль" для  шифрования
+    */
     public static function getSalt() {
         $salt = self::getKeyVal('salt');
         if(strlen($salt ?? '') == 0) {
@@ -1355,6 +1358,48 @@ class Helper
         return $response;        
     }
  
+ 
+    /**
+    * очистка неактуальных данных
+    * 
+    */
+    public static function cleanDB() {
+       $last =  intval(\App\Helper::getKeyVal('lastcleandb'));
+       if(date('W') === date('W', $last)) {
+           return;
+       }
+      
+        \App\Helper::setKeyVal('lastcleandb', time()) ;
+        $conn = \ZDB\DB::getConnect()  ;
+ 
+        //очищаем  уведомления
+            $dt = $conn->DBDate(strtotime('-1 month', time())) ;
+            $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
+            
+            //todo история  подписок  
+            
+            //очистка товаров у поставщика
+            $days = $options['ci_clean'] ?? 0;
+            if($days >0) {
+                $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
+                $conn->Execute("optimize table custitems ")   ;
+          
+            }  
+            
+
+            //очищаем статистику
+            $dt = $conn->DBDate(strtotime('-12 month', time())) ;
+            $conn->Execute("delete  from stats  where category not in   (4) and  dt < ". $dt) ;
+            $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
+            $conn->Execute("optimize table substitems ")   ;
+          //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
+          
+                    
+               
+        
+                 
+ 
+    }
  
     /**
      * выполняет перенос  данных на  новой  версии

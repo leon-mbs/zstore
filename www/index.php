@@ -24,13 +24,16 @@ try {
             \App\System::setUser($user);
             $user->lastactive = time();
             $user->save() ;
-            \App\System::checkUpdate()  ;
-        }
+            if($this->_user->rolename=="admins") {
+                 \App\System::checkUpdate()  ; 
+                 \App\System::cleanDB()  ; 
+            } 
+        } 
     }
-
+     
     $mainpage='\App\Pages\Blank';
     $user=\App\System::getUser() ;
-    if(strlen($user->mainpage)>0) {
+    if(strlen($user->mainpage ??'')>0) {
         $mainpage = $user->mainpage;
     }
 
