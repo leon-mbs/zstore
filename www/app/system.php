@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "8.2.5"; // текущая  версия
-    public const PREV_VERSION = "8.2.4"; // предыдущая версия (для отката кода в случае  проблем)
+    public const CURR_VERSION = "8.2.6"; // текущая  версия
+    public const PREV_VERSION = "8.2.5"; // предыдущая версия (для отката кода в случае  проблем)
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
      
 
@@ -320,9 +320,13 @@ class System
                     
             }    
               
-            $conn = \ZDB\DB::getConnect() ;
-            $v= $conn->GetOne('SELECT VERSION()');
-            $url.= "&b=".$v; 
+         //   $conn = \ZDB\DB::getConnect() ;
+          //  $v= $conn->GetOne('SELECT VERSION()');
+          //  $url.= "&b=".$v; 
+            $url.= "&p=". phpversion() ; 
+            
+            
+            
             @file_get_contents($url) ;
             
         }

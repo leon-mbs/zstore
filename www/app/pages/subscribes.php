@@ -35,7 +35,13 @@ class Subscribes extends \App\Pages\Base
         $this->plist->add(new ClickLink('addnew', $this, 'onAdd'));
 
         $this->plist->add(new DataView('subslist', new ArrayDataSource($this, '_subslist'), $this, 'sublistOnRow'));
-
+       
+        $this->plist->add(new DataView('subslisthist', new SHDataSource( ), $this, 'sublisthOnRow'));
+        $this->plist->subslisthist->setPageSize(20);
+        $this->plist->add(new \Zippy\Html\DataList\Paginator('pagsh', $this->plist->subslisthist));
+    
+        
+        
         $this->add(new Form('editform'))->setVisible(false);
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new CheckBox('editattach'));
@@ -62,7 +68,7 @@ class Subscribes extends \App\Pages\Base
         $this->update($this->editform->editmsgtype) ;    
      
         $this->Reload();
-
+        $this->plist->subslisthist->Reload()   ;
     }
 
     public function update($sender) {
@@ -179,6 +185,27 @@ class Subscribes extends \App\Pages\Base
 
         $row->add(new ClickLink('edit', $this, 'OnEdit'));
         $row->setAttribute('style', $sub->disabled == 1 ? 'color: #aaa' : null);
+    }
+  
+    public function sublisthOnRow($row) {
+        $sub = $row->getDataItem();
+
+        $row->add(new Label('sub_typenamehis', $sub->sub_typename));
+        $row->add(new Label('msg_typenamehis', $sub->msg_typename));
+        $row->add(new Label('reciever_typenamehis', $sub->reciever_typename));
+        $desc = array();
+        if ($sub->doctype > 0) {
+            $desc[] = $sub->doctypename;
+        }
+        if ($sub->state > 0) {
+            $desc[] = $sub->statename;
+        }
+        if ($sub->user_id > 0) {
+            $desc[] = $sub->username;
+        }
+        $row->add(new Label('deschis', implode(', ', $desc)));
+        $row->add(new Label('sub_dthis', H::fdt($sub->dt) ));
+
     }
 
     public function onAdd($sender) {
@@ -331,6 +358,51 @@ class Subscribes extends \App\Pages\Base
         $this->_subslist = Subscribe::find('');
 
         $this->plist->subslist->Reload();
+    }
+
+}
+
+
+
+class SHDataSource implements \Zippy\Interfaces\DataSource
+{
+  
+   
+    private function getWhere( ) {
+        $conn = \ZDB\DB::getConnect();
+    
+        $dt = $conn->DBDate(strtotime('-20 day', time())) ;
+          
+        return  "category = 9 and  dt >= ". $dt ;
+    }
+
+    public function getItemCount() {
+        $conn = \ZDB\DB::getConnect();
+    
+       
+        return  $conn->GetOne( "select count(*) from stats where ". $this->getWhere() );
+    }
+
+    public function getItems($start, $count, $sortfield = null, $asc = null) {
+        $sortfield = "itemname asc";
+        
+        $conn = \ZDB\DB::getConnect();
+    
+        $rs=$conn->Execute( "select * from stats where ". $this->getWhere() ." order by id desc  limit {$start},{$count}  ") ; 
+        $ret=[];  
+        foreach ($rs as $res){
+           $sub= Subscribe::load($res['keyd']) ;
+           if($sub != null) {
+              $sub->dt  = strtotime($res['dt']); 
+              $ret[] = $sub;               
+           }
+
+        }
+        return $ret;
+    }
+
+    public function getItem($id) {
+        return Item::load($id);
     }
 
 }

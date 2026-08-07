@@ -266,8 +266,8 @@ class ItemList extends \App\Pages\Base
             }
             $row->hasaction->setAttribute('title', $title)  ;
         }
-        $row->add(new ClickLink('shownotes'))->onClick($this, 'shownotesOnClick',true);
-        $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
+        $row->add(new ClickLink('showdesc'))->onClick($this, 'showdescOnClick',true);
+        $row->showdesc->setVisible(strlen($item->description ?? '') > 0);
         
         
 
@@ -1218,7 +1218,7 @@ class ItemList extends \App\Pages\Base
     }    
        
     
-    public function  shownotesOnClick($sender){
+    public function  showdescOnClick($sender){
         $item = $sender->getOwner()->getDataItem();
         $desc = str_replace("'","`",$item->description);
         $desc = str_replace("\"","`",$desc);

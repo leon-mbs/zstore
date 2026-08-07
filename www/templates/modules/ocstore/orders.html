@@ -62,7 +62,7 @@
                         <label class="col-form-label col-auto" for="paytype"  >Тип оплати</label>
                        <div class="col-auto  ">
                         <select class="form-control me-2" zippy="paytype">
-                            
+                              <option value="0">Не вибрано</option>
                         </select>
                       </div>
                        <div class="col-auto  ">
@@ -112,17 +112,18 @@
                     </table>
 
 
-                    <div class="ms-2 form-group row  ">
-                        <label for="estatus">Статус в магазині </label>
-
-                        <select class="  me-2" zippy="estatus">
+                    <div class="ms-2   row  ">
+                        <label  class="col-form-label col-auto" for="estatus">Статус в магазині </label>
+                          <div class="col-auto  ">
+                        <select class=" form-control me-2" zippy="estatus">
                             <option value="0">Не обрано</option>
-                        </select>
-              
-
+                        </select>   
+                        </div>
+                         <div class="col-auto  ">
                         <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="  btn btn-success  "
                                value="Відправити">
 
+                    </div>
                     </div>
                 </form>
 

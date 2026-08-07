@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css?v=825">
       
 
-        <link rel="stylesheet" href="/assets/css/bootstrap.css?v=828">
+        <link rel="stylesheet" href="/assets/css/bootstrap.css?v=825">
    
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css?v=825">
         <link rel="stylesheet" href="/assets/css/toastr.min.css?v=825">
@@ -18,7 +18,7 @@
  
         <link rel="stylesheet" href="/assets/css/select2-bootstrap-5-theme.css?v=825">
         <link rel="stylesheet" href="/assets/js/summernote/summernote-bs5.css?v=825">
-        <link rel="stylesheet" href="/assets/css/app.css?v=839">
+        <link rel="stylesheet" href="/assets/css/app.css?v=826">
 
 
         <script src="/assets/js/bootstrap.bundle.js?v=827" type="text/javascript"></script>
@@ -889,7 +889,10 @@
               
            
                     <div class="row">
+                      
                         <div class="col-12    ">
+                     
+                       
                             {{#smart}}
 
                             <div style="justify-content: space-between" class="  navbar   d-none d-sm-block">
@@ -1003,9 +1006,14 @@
                 <div class="modal-content">
                     <div class="modal-body ">   
                          
+                       <div  class="  d-flex justify-content-center"> 
+                                <a href="javascript:void(0)"
+                                                      onclick="$('#pr_items_table').printThis();   closeModal('pr_items_pform') "
+                                                      class="btn btn-success  ">Друк</a>
+                       </div>  
+
                     
-                    
-                        <div id="pr_items_table">
+                        <div class="my-1" id="pr_items_table">
                         
                             <div zippy="pr_items_tag">
                                 <div   zippy="pr_item_tag"></div>
@@ -1013,12 +1021,11 @@
                           
                         </div>
                         
-                        <div  class="form-group d-flex justify-content-center"> 
+                        <div  class="  d-flex justify-content-center"> 
                                 <a href="javascript:void(0)"
                                                       onclick="$('#pr_items_table').printThis();   closeModal('pr_items_pform') "
                                                       class="btn btn-success  ">Друк</a>
-                                
-                                </div>  
+                       </div>  
                         
                     </div>
                 </div>

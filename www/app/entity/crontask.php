@@ -91,19 +91,8 @@ class CronTask extends \ZCL\DB\Entity
             if(date('Y-m-d') != date('Y-m-d', $last)) {
                 \App\Helper::setKeyVal('lastcrond', time()) ;
 
-                //очищаем  уведомления
-                $dt = $conn->DBDate(strtotime('-1 month', time())) ;
-                $conn->Execute("delete  from notifies  where  dateshow < ". $dt) ;
-                  
-                
-                //очистка товаров у поставщика
-                $days = $options['ci_clean'] ?? 0;
-                if($days >0) {
-                    $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
-                    $conn->Execute("optimize table custitems ")   ;
-              
-                }
-             ;
+           
+           
                 
             }
             
@@ -111,15 +100,9 @@ class CronTask extends \ZCL\DB\Entity
             $last =  intval(\App\Helper::getKeyVal('lastcronm'));
             if(date('m') != date('m', $last)) {
                 \App\Helper::setKeyVal('lastcronm', time()) ;
-
-                //очищаем статистику
-                $dt = $conn->DBDate(strtotime('-12 month', time())) ;
-                $conn->Execute("delete  from stats  where category not in   (4) and  dt < ". $dt) ;
-                $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
-                $conn->Execute("optimize table substitems ")   ;
-              //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
-              
-        
+               
+                \App\Helper::cleanDB() ;
+            
                 
             }
 
