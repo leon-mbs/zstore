@@ -85,6 +85,7 @@ class Update extends \App\Pages\Base
         } else {
            $this->_tvars['actual']  = false   ;
            $this->_tvars['show']  = true   ;
+           $this->_tvars['reqversionprg']  = $n   ;
            $this->_tvars['tooold']  = true;  
               
         } 
@@ -120,7 +121,7 @@ class Update extends \App\Pages\Base
           
         //обновление  БД
         $requireddb=  System::REQUIRED_DB ;
-        $this->_tvars['reqversion']  = '';
+        $this->_tvars['reqversiondb']  = '';
         $this->_tvars['actualdb'] =true;         
         
         $b= version_compare($requireddb,$this->_tvars['curversiondb']   );
@@ -137,7 +138,7 @@ class Update extends \App\Pages\Base
               }
 
               $this->_tvars['sqlurl']  =  $sqlurl  ;
-              $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
+              $this->_tvars['reqversiondb']  =  $requireddb ;                
               $this->_tvars['actualdb'] = false;  
            
         }  
