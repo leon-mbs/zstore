@@ -26,7 +26,7 @@ try {
             $user->save() ;
             if($user->rolename=="admins") {
                  \App\System::checkUpdate()  ; 
-                 \App\System::cleanDB()  ; 
+                 \App\Helper::cleanDB()  ; 
             } 
         } 
     }
