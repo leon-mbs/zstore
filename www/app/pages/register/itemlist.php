@@ -586,7 +586,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
 
                 $c = Category::load($cat) ;
-                $ch = $c->getChildren();
+                $ch = $c==null ? [] :  $c->getChildren();
                 $ch[]=$cat;
 
                 $cats = implode(",", $ch)  ;
