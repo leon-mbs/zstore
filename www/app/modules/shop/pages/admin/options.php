@@ -68,7 +68,7 @@ class Options extends \App\Pages\Base
 
 
 
-         if (!is_array($shop)) {
+        if (!is_array($shop)) {
             $shop = array();
         }
         $this->_pages =    $shop['pages'];
