@@ -242,6 +242,25 @@ class Util
         return $lines;
     }
     
+    /**
+    * разбмвка текста на  строки  по переносу (например  из  textarea)
+    * 
+    * @param mixed $text
+    */
+    public static function splitText($text) {
+       $ret=[];
+       $list= explode(PHP_EOL, $text  ) ;
+       foreach($list as $l) {
+           $l = trim($l,"\r");
+           $l = trim($l,"\n");
+           $l = trim($l);
+           $l = trim($l);
+           if(strlen($l) >0 ) {
+             $ret[]= $l; 
+           }
+       }
+       return $ret;
+    }
  
     
 }

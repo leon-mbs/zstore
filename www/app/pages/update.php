@@ -85,6 +85,7 @@ class Update extends \App\Pages\Base
         } else {
            $this->_tvars['actual']  = false   ;
            $this->_tvars['show']  = true   ;
+           $this->_tvars['reqversionprg']  = $n   ;
            $this->_tvars['tooold']  = true;  
               
         } 
@@ -120,7 +121,7 @@ class Update extends \App\Pages\Base
           
         //обновление  БД
         $requireddb=  System::REQUIRED_DB ;
-        $this->_tvars['reqversion']  = '';
+        $this->_tvars['reqversiondb']  = '';
         $this->_tvars['actualdb'] =true;         
         
         $b= version_compare($requireddb,$this->_tvars['curversiondb']   );
@@ -137,7 +138,7 @@ class Update extends \App\Pages\Base
               }
 
               $this->_tvars['sqlurl']  =  $sqlurl  ;
-              $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
+              $this->_tvars['reqversiondb']  =  $requireddb ;                
               $this->_tvars['actualdb'] = false;  
            
         }  
@@ -171,6 +172,34 @@ class Update extends \App\Pages\Base
          
          
           \App\Session::getSession()->migrationcheck = false; 
+          
+      try{
+            $url = "https://store.zippy.com.ua/stat.php?h=".H::getSalt();
+        
+            $url.= "&v=".System::CURR_VERSION;
+            $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
+            if(strlen($json)>0) {
+                $json = json_decode($json,true) ;
+                $fv  = $json['ver'] ?? '0.0.0';
+                $url.= "&f=".$fv;
+                    
+            }    
+              
+         //   $conn = \ZDB\DB::getConnect() ;
+          //  $v= $conn->GetOne('SELECT VERSION()');
+          //  $url.= "&b=".$v; 
+            $url.= "&p=". phpversion() ; 
+            
+            
+            
+            @file_get_contents($url) ;
+            
+        }
+        catch(\Exception $e){
+            
+        }          
+          
+          
     }   
 
 

@@ -190,7 +190,7 @@ class DocView extends \Zippy\Html\PageFragment
 
 
         $docs = array();
-        foreach($doc->getChildren() as $d) {
+        foreach(( $doc==null ? [] :  $doc->getChildren() ) as $d) {
             
             if(\App\ACL::checkShowDoc($d) ==false) return;
             

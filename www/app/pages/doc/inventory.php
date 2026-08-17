@@ -361,12 +361,13 @@ class Inventory extends \App\Pages\Base
         if($common['usecattree'] != 1 || $cat_id==0) {
             return Item::findArrayAC($text, $store_id, $cat_id);
         }
-
+        $ret = array();
+        
         $c = Category::load($cat_id) ;
-        $ch = $c->getChildren();
+        $ch = $c==null ? [] :  $c->getChildren();
         $ch[]=$cat_id;
         $ch[] = 0;
-        $ret = array();
+      
         foreach($ch as $id) {
             foreach(Item::findArrayAC($text, $store_id, intval( $id )) as $k=>$v) {
                 $ret[$k]=$v;

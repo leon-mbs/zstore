@@ -861,7 +861,7 @@ class Item extends \ZCL\DB\Entity
 
 
                 $c = Category::load($cat_id) ;
-                $ch = $c->getChildren();
+                $ch = $c==null ? [] : $c->getChildren();
                 $ch[]=$cat_id;
                 $cats = implode(",", $ch)  ;
 

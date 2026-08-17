@@ -330,7 +330,8 @@ class IncomeItem extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
-            App::RedirectBack();
+            App::Redirect("\\App\\Pages\\Reference\\ItemList" );
+ 
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -572,6 +573,7 @@ class IncomeItem extends \App\Pages\Base
 
         $this->wselitem->Reload();
     }    
+
     public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);

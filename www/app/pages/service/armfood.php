@@ -1931,7 +1931,7 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->_store;
         $this->_doc->headerdata['pricetype'] = $this->_pricetype;
 
-        $frases = explode(PHP_EOL,  \App\System::getOption('common','checkslogan')  ) ;
+        $frases =  \App\Util::splitText(\App\System::getOption('common','checkslogan') )   ;
         if(count($frases) >0) {
             $i=  rand(0, count($frases) -1)  ;
             $this->_doc->headerdata['checkslogan']   =   $frases[$i];

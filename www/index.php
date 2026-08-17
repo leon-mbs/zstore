@@ -24,9 +24,9 @@ try {
             \App\System::setUser($user);
             $user->lastactive = time();
             $user->save() ;
-            if($this->_user->rolename=="admins") {
+            if($user->rolename=="admins") {
                  \App\System::checkUpdate()  ; 
-                 \App\System::cleanDB()  ; 
+                 \App\Helper::cleanDB()  ; 
             } 
         } 
     }

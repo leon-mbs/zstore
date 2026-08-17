@@ -9,29 +9,63 @@
     <div class="col-12 col-lg-10 col-xl-6 ms-2"   >
         <h2>Оновлення</h2>
   
-           <div class="row  mb-4  ">
+           <div class="row  ">
             
              <div class="col-12  "  >
-             <span>  Поточна версiя програми <b>{{curversion}}</b>. </span>
-             {{#actual}}
-             &nbsp; <span> Версiя   актуальна</span>
-             {{/actual}}   
-             {{#show}} 
-             &nbsp; <span> Доступна       <a href="https://zippy.com.ua/update">нова версiя</a>   </span>
-             {{/show}}  
-                 
-            </div>
-            <div class="col-12  "  >
-                Поточна версiя БД <b>{{curversiondb}}</b> 
-               &nbsp;  <span class="text-danger"> {{{reqversion}}} </span>
-                 {{#actualdb}}
-                  <span>Версія   актуальна</span>
-                 {{/actualdb}}    
-            </div>
+             <div class="navbar  nav "  >
             
-          <div class="col-12  "  >
-                Поточна версiя PHP <b> {{currphpv}}</b> 
-                   
+             <table class="ctable">
+                <tr>
+                <td>Поточна версiя програми  
+                </td>
+                 <td> 
+                  <b> {{curversion}}</b>
+                </td> 
+                <td> 
+                 {{#actual}}
+              Версiя   актуальна  
+             {{/actual}}  
+                </td>
+              <td> 
+             {{#show}} 
+               Доступна       <a href="https://zippy.com.ua/update">нова версiя <b>{{reqversionprg}}</b> </a>   
+             {{/show}}  
+                </td>
+                </tr>
+            <tr>
+                <td> Поточна версiя БД  
+                </td>
+                  <td> 
+                  <b> {{curversiondb}}</b>
+                </td> 
+                <td> 
+                 {{#actualdb}}
+                    Версія   актуальна  
+                 {{/actualdb}} 
+               
+                 
+                </td>  
+                <td>  {{^actualdb}}
+                    Версiя БД має  бути <b>{{reqversiondb}}</b>  
+                 {{/actualdb}}  </td>
+              </tr>      
+            
+          <tr>
+                <td>  Поточна версiя PHP 
+                </td>
+                <td> 
+                  <b> {{currphpv}}</b>
+                </td>  
+              <td> 
+                
+                </td>  
+                <td> </td>
+              </tr>           
+              
+             </table>
+             
+               
+            </div>
             </div>
             
           </div>

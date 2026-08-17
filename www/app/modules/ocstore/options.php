@@ -28,11 +28,11 @@ class Options extends \App\Pages\Base
         $form = $this->add(new Form("cform"));
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
-        $form->add(new CheckBox('ssl', $modules['ocssl']));
+        $form->add(new CheckBox('ssl', $modules['ocssl'] ?? 0));
 
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
 
-        $form->add(new CheckBox('v4', $modules['ocv4']));
+        $form->add(new CheckBox('v4', $modules['ocv4'] ?? 0));
         $form->add(new TextArea('key', $modules['ockey']));
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));

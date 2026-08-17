@@ -361,17 +361,19 @@ class Import extends \App\Pages\Base
             }
             $item = null;
 
-            //поиск существующих
+            //поиск существующих  по коду
             if($cmp==0 && strlen($itemcode) > 0) {
                 $item = Item::getFirst('item_code=' . Item::qstr($itemcode));
             }
+            //   по названию
             if($cmp==1 && strlen($itemname) > 0) {
                 $item = Item::getFirst('itemname=' . Item::qstr($itemname));
             }
+            //   по названию  и бренду
             if($cmp==2 && strlen($itemname) > 0 && strlen($brand) > 0) {
                 $item = Item::getFirst('itemname=' . Item::qstr($itemname). ' and manufacturer='. Item::qstr($brand));
             }
-
+            //   по коду  и бренду
             if($cmp==3 && strlen($itemcode) > 0 && strlen($brand) > 0) {
                 $item = Item::getFirst('item_code=' . Item::qstr($itemcode). ' and manufacturer='. Item::qstr($brand));
             }
@@ -382,6 +384,7 @@ class Import extends \App\Pages\Base
                     continue;
                 }
                 $item = new Item();
+                $item->item_code = Item::getNextArticle()  ;
                 if ($item_type > 0) {
                     $item->item_type = $item_type;
                 }  

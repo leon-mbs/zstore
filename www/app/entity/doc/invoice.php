@@ -245,7 +245,7 @@ class Invoice extends \App\Entity\Doc\Document
                 $b = new \App\Entity\CustAcc();
                 $b->customer_id = $this->customer_id;
                 $b->document_id = $this->document_id;
-                $b->amount = 0-$amount;
+                $b->amount = 0- abs( $amount);
                 $b->optype = \App\Entity\CustAcc::BUYER;
                 $b->save();
             }
