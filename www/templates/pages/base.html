@@ -1433,7 +1433,17 @@ toggler.addEventListener("click",function(){
  
  {{/cron}} 
  
-
+     //dввод штрих коди  по  enter
+     function onBarCode(ele) {
+                  
+               
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                   
+                    $('#addcode').click()
+                }
+            }
+ 
+ 
       function isMobileDevice() {
           return (   
             /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 

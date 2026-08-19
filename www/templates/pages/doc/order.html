@@ -162,8 +162,9 @@
                      {{#usescanner}}
                     
                     <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
-                                         <a zippy="addcode" class="btn btn-primary btn-sm">+</a>
-                     &nbsp; &nbsp; 
+                             <a zippy="addcode" class="btn btn-success btn-sm me-1">+</a>
+                       
+                  
                     {{/usescanner}}                     
                     <a zippy="addrow" class="btn btn-primary  ">Додати товар</a>
                     <table class="table table-sm">
@@ -507,13 +508,7 @@
           });   
           
           
-            function onBarCode(ele) {
-
-                if (event.key === 'Enter' || event.keyCode == 13) {
-                    // alert($('#barcode').val());
-                    $('#addcode').click()
-                }
-            }              
+                      
          </script> 
 
     </body>
