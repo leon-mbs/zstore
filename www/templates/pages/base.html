@@ -1045,7 +1045,8 @@
     
          <script>
    
-            
+
+        
  
                     toastr.options = {
                     "closeButton": true,
@@ -1432,10 +1433,21 @@ toggler.addEventListener("click",function(){
  
  {{/cron}} 
  
- 
- 
- 
-        </script>
+
+      function isMobileDevice() {
+          return (   
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+            ||     (navigator.userAgentData?.mobile  == true )
+            ||     ('ontouchstart' in window     ||     navigator.maxTouchPoints > 0)
+             
+            
+          );
+       }
+         
+     
+     
+</script>
+        
 <script src="/assets/js/lightbox.js"  ></script>
      
     </body>
