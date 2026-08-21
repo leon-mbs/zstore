@@ -1484,7 +1484,7 @@ toggler.addEventListener("click",function(){
  
      var cameraId;
  
- 
+      //по иконке
       function showScanner()  {
           openModal("modalcamera")   
           openCamera() 
@@ -1552,8 +1552,9 @@ toggler.addEventListener("click",function(){
           
           
       }
+ 
       function checkCamera()  {
-     const html5QrCode = new Html5Qrcode("cameraview");
+         const html5QrCode = new Html5Qrcode("cameraview");
             
    
       
@@ -1603,8 +1604,13 @@ toggler.addEventListener("click",function(){
             
           );
        }
+    
+    
+   if(isMobileDevice() ) {
+       checkCamera() 
+   }
          
-   checkCamera() 
+    
 
    {{/usescanner}}
 </script>

@@ -60,9 +60,18 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchtype', array( ), 0));
 
         $this->add(new Panel('itemtable'))->setVisible(true);
-        $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-        $this->itemtable->add(new ClickLink('options'))->onClick($this, 'optionsOnClick');
+      
+        $this->itemtable->add(new Form('addform'));
+        $this->itemtable->addform->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
+     
+        $this->itemtable->addform->add(new TextInput('barcode'));
+        $this->itemtable->addform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
+           
+     
+     
+        $this->itemtable->addform->add(new ClickLink('options'))->onClick($this, 'optionsOnClick');
 
+     
         $this->itemtable->add(new Form('listform'));
 
         $this->itemtable->listform->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
@@ -329,7 +338,14 @@ class ItemList extends \App\Pages\Base
         $this->_copy = 0;
         $item = $sender->owner->getDataItem();
         $this->_item = Item::load($item->item_id);
-
+        $this->itemtable->listform->itemlist->setSelectedRow($sender->getOwner());
+        $this->itemtable->listform->itemlist->Reload(false);
+          
+        $this->openEdit( ) ;
+       
+    }
+    public function openEdit( ) {
+     
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
 
@@ -391,9 +407,7 @@ class ItemList extends \App\Pages\Base
             $this->itemdetail->editimage->setVisible(false);
         }
 
-        $this->itemtable->listform->itemlist->setSelectedRow($sender->getOwner());
-        $this->itemtable->listform->itemlist->Reload(false);
-
+       
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
         if (strlen($this->_item->item_code)==0  ) {
             $this->itemdetail->editcode->setText(Item::getNextArticle());
@@ -1166,8 +1180,7 @@ class ItemList extends \App\Pages\Base
 
     }
 
-    
-   public function OnPriceAll($sender) {
+    public function OnPriceAll($sender) {
        if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
        }   
@@ -1194,7 +1207,7 @@ class ItemList extends \App\Pages\Base
  
    }    
    
-   public function caOnRow(\Zippy\Html\DataList\DataRow $row) {
+    public function caOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('editallname', $item->name));
         $row->add(new TextInput('editallprice', new \Zippy\Binding\PropertyBinding($item, 'price')));
@@ -1216,7 +1229,6 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->setVisible(true);
         $this->changeall->setVisible(false);        
     }    
-       
     
     public function  showdescOnClick($sender){
         $item = $sender->getOwner()->getDataItem();
@@ -1437,6 +1449,36 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editnds->setVisible($id==2);
    
     }
+     
+     
+    //поиск  сканером
+    public function addcodeOnClick($sender) {
+     //   $common = \App\System::getOptions("common");
+        
+        $code = trim($this->itemtable->addform->barcode->getText());
+
+        if ($code == '') {
+            return;
+        }
+        
+        $this->itemtable->addform->barcode->setText('');
+        
+ 
+
+        $code_ = Item::qstr($code);
+        $this->_item = Item::findBarCode($code );
+ 
+     
+        if ($this->_item != null) { 
+            $this->openEdit();
+            return;
+        }
+        $this->addOnClick(null);
+ 
+ 
+    }
+     
+     
      
 }
 

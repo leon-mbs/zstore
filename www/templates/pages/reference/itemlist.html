@@ -92,22 +92,35 @@
                     <summary >Теги</summary>
                     <small zippy="taglist"></small>
                  </details>
-                   
+              <form zippy="addform">     
                  <div class="row mb-2"  >
-                 <div class="col-2   "  >
+                 <div class="col-auto   "  >
                                 
                 <a zippy="addnew" class="btn btn-primary ms-4  "> <i class="fa fa-plus-circle"></i> Додати новий</a>
                  </div>  
+                 
+   {{#usescanner}}
+                    <div class="col-auto">
+                        Штрих код &nbsp; <input autofocus="on"   style="width:150px;" autocomplete="off"  type="text" zippy="barcode"  onkeydown="onBarCode()">
+                        <a zippy="addcode" class="btn btn-success btn-sm me-1"><i class="fa fa fa-search"></i></a>
+                        <i  id="mscannericon" onclick="showScanner()" class="fa fa-mobile-alt fw-bold  me-2 " style="display:none;cursor:pointer" ></i>
+                 
+
+                    </div>
+                    {{/usescanner}}                 
+                 
+                 
                 <div class="col-1   "  >
                                 
-                <a   href="/index.php?p=App/Pages/Service/Import"> <i class="fa fa-download"></i> Iмпорт</a>
+                <a class="  ms-4  "  href="/index.php?p=App/Pages/Service/Import"> <i class="fa fa-download"></i> Iмпорт</a>
                  </div>  
                  <div class="col-2  "  >
                  
                    <a     zippy="options"  ><i class="fa fa-cog"> </i> Налаштування</a>
                 
                 </div>               
-                </div>               
+                </div>   
+                </form>            
                 <form zippy="listform">
                    <div class="table-responsive-lg  "    >
              
