@@ -12,9 +12,12 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Button;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Link\BookmarkableLink  ;
 use Zippy\Html\Panel;
 
 /**
@@ -23,7 +26,8 @@ use Zippy\Html\Panel;
 class OrderCustList extends \App\Pages\Base
 {
     private $_doc = null;
-
+    public $_explist =[] ;
+    
     /**
      *
 
@@ -52,9 +56,9 @@ class OrderCustList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bclose'))->onClick($this, 'statusOnSubmit');
 
-        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new BookmarkableLink('bttn')) ;
         $this->statuspan->statusform->add(new SubmitButton('binp'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('binv'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new BookmarkableLink('binv')) ;
         $this->statuspan->statusform->add(new SubmitButton('bcan'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bdeldate'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new \Zippy\Html\Form\Date('deldate'));
@@ -63,6 +67,14 @@ class OrderCustList extends \App\Pages\Base
 
         $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
+        
+        $this->add(new Form('formexp'));
+      
+        $this->formexp->add(new TextInput('typeexp'));
+        $this->formexp->add(new SubmitButton('expcreate'))->onClick($this, 'expOnSubmit');
+        $this->formexp->add(new DataView('exptitemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_explist'), $this, 'explistOnRow'));
+       
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -115,31 +127,7 @@ class OrderCustList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        //проверяем  что есть ТТН
-        $d = $this->_doc->getChildren('GoodsReceipt');
-        $ttn = count($d) > 0;
-        if ($sender->id == "bttn") {
-
-            if ($ttn) {
-                $this->setWarn('Вже існує документ Прибуткова накладна');
-            }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
-            return;
-        }
-        if ($sender->id == "binv") {
-
-            if ($ttn) {
-                $this->setWarn('Вже існує документ Прибуткова накладна');
-            }
-            $d = $this->_doc->getChildren('InvoiceCust');
-            if (count($d) > 0) {
-
-                $this->setWarn('Вже існує документ Рахунок');
-            }
-
-            App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", 0, $this->_doc->document_id);
-            return;
-        }
+     
 
 
         if ($sender->id == "binp") {
@@ -170,6 +158,7 @@ class OrderCustList extends \App\Pages\Base
 
         $this->doclist->Reload(false);
         $this->statuspan->statusform->setVisible(false);
+        $this->statuspan->docview->setVisible(false);
      
     }
 
@@ -246,6 +235,7 @@ class OrderCustList extends \App\Pages\Base
             $this->statuspan->statusform->bcan->setVisible(false);
 
             $this->statuspan->statusform->setVisible(false);
+            $this->statuspan->docview->setVisible(false);
         }
     }
 
@@ -259,12 +249,17 @@ class OrderCustList extends \App\Pages\Base
 
         $this->statuspan->setVisible(true);
         $this->statuspan->statusform->setVisible(true);
+        $this->statuspan->docview->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
         $this->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
+
+        $this->_explist = $this->_doc->unpackDetails('detaildata');
+        
+        $this->formexp->exptitemlist->Reload();
     }
 
     public function editOnClick($sender) {
@@ -297,6 +292,65 @@ class OrderCustList extends \App\Pages\Base
         H::exportExcel($data, $header, 'ordercustlist.xlsx');
     }
 
+    
+   public function expOnSubmit($sender) {
+        $dtype=   $this->formexp->typeexp->getInt() ;
+        
+        $list=[];
+        foreach($this->_explist as $it) {
+           if($it->checked)  {
+              $list[$it->item_id]= $it;
+           }
+        }
+        if(count($list)==0) {
+            return;
+        }
+        
+        \App\Session::getSession()->clipboard = $list;
+
+        
+        
+        //проверяем  что есть ТТН
+        $d = $this->_doc->getChildren('GoodsReceipt');
+        $ttn = count($d) > 0;
+        if ($dtype==1) {
+
+            if ($ttn) {
+                $this->setWarn('Вже існує документ Прибуткова накладна');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
+            return;
+        }
+        if ($dtype==2) {
+
+            if ($ttn) {
+                $this->setWarn('Вже існує документ Прибуткова накладна');
+            }
+            $d = $this->_doc->getChildren('InvoiceCust');
+            if (count($d) > 0) {
+
+                $this->setWarn('Вже існує документ Рахунок');
+            }
+
+            App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", 0, $this->_doc->document_id);
+            return;
+        } 
+        
+    }
+     
+  public function explistOnRow($row) {
+        $item = $row->getDataItem();
+        $item->checked=true;
+        
+        $row->add(new  Label('editlistname', $item->itemname));
+        $row->add(new  Label('editlistcode', $item->item_code));
+        $row->add(new  TextInput('editlistqty',new \Zippy\Binding\PropertyBinding($item, 'quantity')  ));
+        $row->add(new  TextInput('editlistprice', new \Zippy\Binding\PropertyBinding($item, 'price')  ));
+        $row->add(new CheckBox('checkscan', new \Zippy\Binding\PropertyBinding($item, 'checked')));
+        $row->checkscan->setAttribute("rn","".$item->item_id);
+        $row->editlistqty->setAttribute("rn","q".$item->item_id);
+        $row->editlistprice->setAttribute("rn","p".$item->item_id);
+    }    
 }
 
 /**

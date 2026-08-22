@@ -101,12 +101,12 @@
                                 Закрити
                             </button>   </div>
                             <div class="  col-auto">
-                            <button zippy="bttn" class="btn btn-primary  me-2"><i class="fa fa-truck"></i> Створити прихід</button>
-                              </div> 
+                               <a onclick="openexp(1)" title="Створити прибуткову  накладну" zippy="bttn" class="btn btn-primary  me-2"><i class="fa fa-truck"></i> Створити ПН</a>
+                             </div> 
                             <div class="  col-auto">
-                            <button zippy="binv" class="btn btn-primary  me-2"><i class="fa fa-credit-card"></i> Створити рахунок </button>
+                               <a  onclick="openexp(2)" title="Створити рахунок вхiдний" zippy="binv" class="btn btn-primary  me-2"><i class="fa fa-credit-card"></i> Створити РВ </a>
                             
-                            </div>
+                           </div>
                           <div class="  col-auto">
                               <div class="  row">
                                
@@ -124,7 +124,103 @@
 
             </div>
         </div>
+   
+   
+      <div id="modalexp" class="modal fade  " tabindex="-1"                   >
+                <div class="modal-dialog  modal-dialog-scrollable modal-lg   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 id="titleexp" class="modal-title"> </h5>
+                         
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div   class="modal-body">
+                         <form zippy="formexp"  >
+                          <input type="hidden" zippy="typeexp"> 
+                           <table class="table table-sm">
+                           <tr   >
+                           <th>
+                              <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                        style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                            class="fa fa-check-double "></i>                   
+                           </th>
+                           <th colspan="4"></th>
+                           </tr>
+                           <tr  zippy="exptitemlist">
+                              <td style="width:20px"><input zippy="checkscan" class="seldel mt-1" type="checkbox"></td>
+                              <td zippy="editlistname"></td>
+                              <td zippy="editlistcode"></td>
+                              <td align="right"  > <input pattern="[0-9\.]+" style="width:75px;" zippy="editlistqty">  </td>
+                              <td  align="right"  ><input pattern="[0-9\.]+" style="width:100px;" zippy="editlistprice"></td>
+                           </tr> 
+                            <tr   >
+                        
+                           <td align="right" colspan="5"></th>
+                               <b id="total" ></b>
+                           </td>
+                           </tr>
+                         </table>         
+                         <div class="form-group d-flex  justify-content-end">
+                            <button onclick="closeModal('modalexp')"   class="  btn btn-secondary  me-2 ">Скасувати</button>                 
+                            <button zippy="expcreate" type="submit" class="  btn btn-success  ms-4 ">Зiбрано</button>                 
 
+                            
+         
+                         </div>
+
+
+                       </form>
+                        </div>
+                     
+                    </div>
+                </div>
+            </div>    
+   
+    <script>
+       function openexp(dtype){
+           
+           if(dtype==1) {
+               $("#titleexp").text("Створити ПН")
+           }
+           if(dtype==2) {
+               $("#titleexp").text("Створити РВ")
+           }
+           
+           $("#typeexp").val(dtype)  
+         
+           openModal('modalexp')
+            
+           
+           setInterval(()=>
+           {
+               var cnt=0;
+               var sum=0;
+               $('.seldel').each(function(index, element) {
+ 
+                  if( $(element).prop('checked') == true) {
+                     cnt++; 
+                     var row=  $(element).attr('rn')
+                
+                     var q=  parseVal(  $("[rn='q"+row+"']").val() )
+                     var p=  parseVal(  $("[rn='p"+row+"']").val()  )
+                     sum =  sum+(q*p)
+                     $("#total").text(  "Вибрано "+cnt+ " строка на  суму "+ fa( sum))                       
+                  }
+                  
+                 
+                  
+                });
+                               
+               
+               
+           }, 500);
+           
+           
+       }
+    </script>
+    
 
     </body>
 </html>
