@@ -70,6 +70,7 @@ class OrderCustList extends \App\Pages\Base
         
         $this->add(new Form('formexp'));
       
+        $this->formexp->add(new CheckBox('expclose'));
         $this->formexp->add(new TextInput('typeexp'));
         $this->formexp->add(new SubmitButton('expcreate'))->onClick($this, 'expOnSubmit');
         $this->formexp->add(new DataView('exptitemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_explist'), $this, 'explistOnRow'));
@@ -295,6 +296,7 @@ class OrderCustList extends \App\Pages\Base
     
    public function expOnSubmit($sender) {
         $dtype=   $this->formexp->typeexp->getInt() ;
+       
         
         $list=[];
         foreach($this->_explist as $it) {
@@ -309,7 +311,9 @@ class OrderCustList extends \App\Pages\Base
         \App\Session::getSession()->clipboard = $list;
 
         
-        
+        if( $this->formexp->expclose->isChecked() ) {
+            $this->_doc->updateStatus(Document::STATE_CLOSED); 
+        }
         //проверяем  что есть ТТН
         $d = $this->_doc->getChildren('GoodsReceipt');
         $ttn = count($d) > 0;

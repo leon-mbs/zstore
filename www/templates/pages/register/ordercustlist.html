@@ -162,9 +162,10 @@
                            </td>
                            </tr>
                          </table>         
-                         <div class="form-group d-flex  justify-content-end">
+                         <div class="navbar d-flex  justify-content-end">
                             <button onclick="closeModal('modalexp')"   class="  btn btn-secondary  me-2 ">Скасувати</button>                 
-                            <button zippy="expcreate" type="submit" class="  btn btn-success  ms-4 ">Зiбрано</button>                 
+                            <button zippy="expcreate" type="submit" class="  btn btn-success  ms-4 me-2 ">Створити</button>                 
+                            <input type="checkbox"  zippy="expclose"> &nbsp; <label for="expclose">Закрити заявку</label>
 
                             
          
@@ -189,6 +190,7 @@
            }
            
            $("#typeexp").val(dtype)  
+           $("#expclose").prop('checked',false) 
          
            openModal('modalexp')
             
