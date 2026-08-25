@@ -40,7 +40,7 @@ $logger = new \Monolog\Logger("main");
 $level = $_config['common']['loglevel'] ??200;
 
 $output = "%datetime%  %level_name%: %message% \n";
-$formatter = new \Monolog\Formatter\LineFormatter($output, "Y-m-d H:i");
+$formatter = new \Monolog\Formatter\LineFormatter($output, "Y-m-d H:i:s");
 $h1 = new \Monolog\Handler\RotatingFileHandler(_ROOT . "logs/log.txt", 7, $level);
 $h1->setFormatter($formatter);
 $logger->pushHandler($h1);
