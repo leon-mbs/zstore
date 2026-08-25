@@ -12,6 +12,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * OLAP анализ
@@ -19,6 +20,7 @@ use Zippy\Html\Panel;
 class OLAP extends \App\Pages\Base
 {
     private $br       = '';
+    private $isbigperiod       = '';
 
     public function __construct() {
         parent::__construct();
@@ -47,7 +49,7 @@ class OLAP extends \App\Pages\Base
 
         $this->reppan->add(new ClickLink('back'))->onClick($this, 'OnBack');
 
-        $this->reppan->add(new Form('filter'))->onSubmit($this, 'OnFilter');
+        $this->reppan->add(new Form('filter')) ;
         $this->reppan->filter->add(new DropDownChoice('slcat_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slitemname', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slcustomer_name', array(), 0));
@@ -58,12 +60,13 @@ class OLAP extends \App\Pages\Base
         $this->reppan->filter->add(new DropDownChoice('slmf_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slstorename', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slbranch_name', array(), 0));
+        $this->reppan->filter->add(new SubmitButton('show'))->onClick($this, 'OnFilter');
 
         $this->reppan->add(new Panel('detail'))->setVisible(false);
 
         $this->reppan->detail->add(new Label('preview'));
 
-
+  
     }
 
     public function OnType($sender) {
@@ -160,7 +163,18 @@ class OLAP extends \App\Pages\Base
         $this->_tvars['mf_name']  = in_array('mf_name', $cols);
         $this->_tvars['username']  = in_array('username', $cols);
         $this->_tvars['branch_name']  = in_array('branch_name', $cols);
-
+     
+        $from = $this->startform->stfrom->getDate();
+        $to = $this->startform->stto->getDate();
+        
+        $fr =  strtotime("+15 day",$from) ;
+         
+        
+        $this->isbigperiod = false;
+        if($fr <= $to)  {
+           $this->isbigperiod = true;
+            
+        }
 
         $colsdata=[];
         foreach($cols as $d) {
@@ -281,7 +295,8 @@ class OLAP extends \App\Pages\Base
 
         $sql = "select {$ver},{$hor}, {$data} as amount from ({$sql} ) t {$where} group by  {$ver},{$hor}  ";
 
-
+        H::log($sql);
+        
         $detail = [];
         $detailv = [];
         $h = [];
@@ -300,8 +315,14 @@ class OLAP extends \App\Pages\Base
         foreach($dhor as $n) {
 
             if($hor=="document_date") {
-                $a = explode('-', $n);
-                $n =   $m[ intval($a[1]) ] .', '.$a[0]  ;
+             
+              if($this->isbigperiod==false) {
+                  $n = H::fd( strtotime($n) );     
+              } else{
+                  $a = explode('-', $n);
+                  $n =   $m[ intval($a[1]) ] .', '.$a[0]  ;
+              }
+              
             }
 
             $h[]=array('name'=>$n)  ;
@@ -348,7 +369,10 @@ class OLAP extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
 
         $concat=" concat(year(dv.document_date),'-',( case when month(dv.document_date)< 10 then concat('0',month(dv.document_date) )  else concat('',month(dv.document_date) ) end  ) )  ";
-
+    
+        if($this->isbigperiod==false) { 
+           $concat =" dv.document_date " ;  
+        }
  
 
         $where = "  dv.document_date >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
@@ -381,7 +405,7 @@ class OLAP extends \App\Pages\Base
                 $where .=  " and   ev.tag in(-1, -4 ) ";
             }
 
-            $sql = "SELECT iv.itemname,
+            $sql = "SELECT concat(iv.itemname,', ',iv.item_code)   as itemname,
                 ssv.storename,
                 iv.cat_name,
                 COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
@@ -433,7 +457,11 @@ class OLAP extends \App\Pages\Base
 
             $concat=" concat(year(pv.paydate),'-',( case when month(pv.paydate)< 10 then concat('0',month(pv.paydate) )  else concat('',month(pv.paydate) ) end  ) )  ";
 
-
+          
+           if($this->isbigperiod==false) { 
+               $concat =" dv.paydate " ;  
+           }
+           
             $where = " pv.amount <> 0  and  pv.paydate >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 
                         AND pv.paydate <= " . $conn->DBDate($this->startform->stto->getDate()) ;
 

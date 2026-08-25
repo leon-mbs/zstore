@@ -44,6 +44,7 @@ class Outcome extends \App\Pages\Base
         $types[6] = "Товари за покупцями";
         $types[2] = "За покупцями";
         $types[3] = "За датами";
+        $types[14] = "Товар за датами";
         $types[4] = "Послуги, роботи";
         $types[7] = "Послуги за покупцями";
         $types[5] = "За категоріями";
@@ -58,10 +59,12 @@ class Outcome extends \App\Pages\Base
         $types[13] = "За постачальниками" ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
-        $this->filter->add(new CheckBox('shownotes' )) ;
+        $this->filter->add(new CheckBox('shownotes' ))->setVisible(false) ;
 
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->cust->setVisible(false);
+        $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
+        $this->filter->item->setVisible(false);
 
         $this->filter->add(new \Zippy\Html\Form\TextInput('brand'));
         $this->filter->brand->setDataList(Item::getManufacturers());
@@ -84,6 +87,8 @@ class Outcome extends \App\Pages\Base
         //  $this->filter->holding->setVisible($type == 7);
 
         $this->filter->brand->setVisible($type == 12);
+        $this->filter->shownotes->setVisible($type == 6 || $type == 1);
+        $this->filter->item->setVisible($type == 14);
 
     }
 
@@ -122,10 +127,12 @@ class Outcome extends \App\Pages\Base
         $salesource = $this->filter->salesource->getValue();
         //   $hold_id = $this->filter->holding->getValue();
         $cust_id = $this->filter->cust->getKey();
+        $item_id = $this->filter->item->getKey();
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
         
+        $detname="";
         $brand="";
         $u = "";
 
@@ -148,6 +155,8 @@ class Outcome extends \App\Pages\Base
         $cust = "";
 
         if (($type == 6 || $type == 7) && $cust_id > 0) {
+            $detname =  $this->filter->cust->getText();
+        
             $cust = " and d.customer_id=" . $cust_id;
             $c = \App\Entity\Customer::load($cust_id);
             if ($c->isholding == 1) {
@@ -196,7 +205,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 3) {   //по датам
             $sql = "
-          select e.document_date as dt  , count(e.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select e.document_date as dt  , count(e.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar      
               from entrylist_view  e
 
               join items i on e.item_id = i.item_id
@@ -374,10 +383,36 @@ class Outcome extends \App\Pages\Base
         
         }
 
+        
+        
+        if ($type == 14 && $item_id > 0) {   //товар по датам
+        
+           $detname =  $this->filter->item->getText();
+        
+        
+            $sql = "
+          select e.document_date as dt  , count(e.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar      , sum( 0-e.quantity ) as qty      
+              from entrylist_view  e
+
+              join items i on e.item_id = i.item_id
+             join documents_view d on d.document_id = e.document_id
+               where e.item_id ={$item_id}  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood','Order')           
+               {$br} {$u} AND  (e.document_date) >= " . $conn->DBDate($from) . "
+              AND  (e.document_date) <= " . $conn->DBDate($to) . "
+         group by  e.document_date
+  having qty > 0
+  order  by e.document_date
+        ";
+        }
+        
+        
+        
         $totsum = 0;
         $totsumself = 0;
         $totnavar = 0;
         $totnavarproc = 0;
+        $totqty = 0;
 
         if (strlen($sql) > 0) {
             $rs = $conn->Execute($sql);
@@ -428,8 +463,9 @@ class Outcome extends \App\Pages\Base
                 
                 $detail[] = $det;
                 
-                $totnavar += $row['navar'];
-                $totsumself += $row['summa'];
+                $totqty += ($row['qty'] ??0); 
+                $totnavar += ($row['navar']??0); 
+                $totsumself += ($row['summa']??0); 
                 $totsum += ($row['summa'] + $row['navar']);
             }
         }
@@ -446,8 +482,10 @@ class Outcome extends \App\Pages\Base
         $header['totnavarproc'] = $totnavarproc > 0 ?  number_format($totnavarproc, 1, '.', '') : "";
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
+        $header['totqty'] = H::fqty($totqty);
  
         $header['totall'] = H::fa($totsum );
+        $header['detname'] =  $detname  ;
 
         $header['noshowpartion'] = $this->_tvars['noshowpartion'] ;
 
@@ -462,6 +500,7 @@ class Outcome extends \App\Pages\Base
         $header['_type9'] = false;
         $header['_type12'] = false;
         $header['_type13'] = false;
+        $header['_type14'] = false;
       
 
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {
@@ -493,6 +532,9 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 13) {
             $header['_type13'] = true;
+        }
+        if ($type == 14) {
+            $header['_type14'] = true;
         }
 
 

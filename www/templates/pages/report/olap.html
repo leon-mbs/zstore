@@ -62,7 +62,7 @@
                 </div> 
                 <div class="col-12">                
                 <div zippy="reppan">
-                    <a class="btn btn-info mb-2" zippy="back">&lt; Назад</a> 
+                    <a class="btn btn-secondary mb-2" zippy="back">&lt; Назад</a> 
                     <br><b style="font-size:larger">Зріз (фільтр) по:</b>
                     
                         <form zippy="filter" class="row" >
@@ -169,12 +169,12 @@
                                 </div>
                                {{/branch_name}}
                                
-                    
+                            
                             </div>
                             
                              <div class="col-12">
           
-                               <input   type="submit" value="Оновити" class="btn btn-primary  ">
+                               <input zippy="show"  type="submit" value="Оновити" class="btn btn-primary  ">
                         
                             </div>
                          
@@ -202,6 +202,14 @@
                </div>
             
         </div>
+           <script>      
+        function check_show(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }                  
+        </script>  
     </body>
 
 </html>

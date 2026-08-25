@@ -218,14 +218,35 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->basedoc->setText($basedoc->document_number);
 
                         $order = $basedoc->cast();
-                        $nr=$order->getNotReceivedItems();
-                        if(count($nr)==0) {
-                           $this->setWarn('Всі позиції вже доставлені') ;
+                        $list =\App\Session::getSession()->clipboard ??[] ; //отобранные
+                        \App\Session::getSession()->clipboard=null;
+                        $nr=[];                   
+                        if(count($list) ==0){
+                            $nr=$order->getNotReceivedItems();
+                            if(count($nr)==0) {
+                               $this->setWarn('Всі позиції вже доставлені') ;
+                            }
+                            
                         }
                         $this->_itemlist = [];
-                      
+                         
+                         
                         foreach($order->unpackDetails('detaildata') as $item){
-                            if($nr[$item->item_id] ??0 > 0 )  {
+                           
+                            if(count($list) >0){
+                                if( ( $list[$item->item_id] ?? null) != null )  {
+                                    $it=   $list[$item->item_id] ;
+                                    $item->quantity =  $it->quantity ;
+                                    $item->price =  $it->price ;
+                                    $this->_itemlist[] = $item;   
+                                }  
+                                 
+                              
+                                continue;
+                            }
+                           
+                           
+                            if( ( $nr[$item->item_id] ??0  )> 0 )  {
                                 $item->quantity =   $nr[$item->item_id] ;
                                 $this->_itemlist[] = $item; 
                                 

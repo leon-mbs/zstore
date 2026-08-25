@@ -64,7 +64,9 @@
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
                         Штрих код &nbsp;<input  autofocus="on"   autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
-                        &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                        <a zippy="addcode" class="btn btn-success btn-sm me-1">+</a>
+                        <i  id="mscannericon" onclick="showScanner()" class="fa fa-mobile-alt fw-bold  me-2 " style="display:none;cursor:pointer" ></i>
+                 
 
 
                     </div>
@@ -273,13 +275,7 @@
         }); 
 
  
-        function onBarCode(ele) {
-
-            if (event.key === 'Enter' || event.keyCode == 13) {
-                // alert($('#barcode').val());
-                $('#addcode').click()
-            }
-        }
+     
     </script>
 
 </body>

@@ -35,10 +35,10 @@
         <script src="/assets/js/app.js?v=825"></script>     
         <script src="/assets/js/vue/vue.min.js?v=825"></script>     
         <script src="/assets/js/vue/httpvueloader.js?v=825"></script>     
-        
-
-
-       
+     
+        <script src="/assets/js/html5-qrcode.min.js"></script>     
+        <script src="/assets/js/jquery.cookie.min.js"></script>
+    
         <!-- Google Font 
         <link rel="stylesheet"               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         -->
@@ -935,6 +935,8 @@
                         <div id="mcinfo" class="modal-body">
                              
                         </div>
+                        
+                        
                      <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
 
@@ -1031,6 +1033,36 @@
                 </div>
             </div>
         </div>            
+   
+      {{#usescanner}}
+      <div id="modalcamera" class="modal fade  " tabindex="-1"  
+                 >
+                <div class="modal-dialog  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div   class="modal-body">
+                          <div id="cameraview"  >
+                             
+                        </div>
+                        <div   class="mt-2">
+                             <span>Камера:</span> <select onchange="sel_camera()" id="camera_list"> </select>
+                         </div>  
+                     </div>
+                     <div class="modal-footer">
+                  
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+
+                      </div>
+                    </div>
+                </div>
+            </div>
+        
+      {{/usescanner}}
                     
             
     <dialog id="dialogwait">
@@ -1045,7 +1077,8 @@
     
          <script>
    
-            
+
+        
  
                     toastr.options = {
                     "closeButton": true,
@@ -1113,7 +1146,7 @@ toggler.addEventListener("click",function(){
                 }).fadeIn('slow');
                 }
                 } else {
-                $('#upbutton').stop(true, false).fadeOut('fast');
+                   $('#upbutton').stop(true, false).fadeOut('fast');
                 }
             });
             
@@ -1432,10 +1465,157 @@ toggler.addEventListener("click",function(){
  
  {{/cron}} 
  
+     //dввод штрих коди  по  enter
+     function onBarCode(ele) {
+                  
+               
+                if (event.key === 'Enter' || event.keyCode == 13) {
+                   
+                    $('#addcode').click()
+                }
+            }
  
  
  
-        </script>
+ 
+     
+ 
+ {{#usescanner}}
+ 
+     var cameraId;
+ 
+      //по иконке
+      function showScanner()  {
+          openModal("modalcamera")   
+          openCamera() 
+      } 
+ 
+      function openCamera()  {
+          
+          const html5QrCode = new Html5Qrcode("cameraview");
+       
+          const config = {
+            fps: 4, // Frames per second
+            qrbox: { width: 250, height: 250 }, // UI scanning box
+          };            
+      
+         cameraId = $.cookie('camera_id');
+         $("#camera_list").val(cameraId) 
+        
+         html5QrCode.start(
+            cameraId,
+            config,
+            (decodedText, decodedResult) => {
+              // Success callback: Executed when a QR code is detected
+             // console.log(decodedText);
+            //  console.log( decodedResult );
+              
+              html5QrCode.stop();
+              closeModal("modalcamera")  
+              
+              
+              $("#barcode").val(decodedText)   
+              $("#addcode").click()
+              
+              
+            } 
+          );       
+       
+             
+      }
+      
+      
+      
+      function sel_camera()  {
+          
+          cameraId =   $("#camera_list").val()  
+        
+          $.cookie('camera_id', cameraId)           
+          
+      window.location.reload(true);     
+         return
+          
+          const html5QrCode = new Html5Qrcode("cameraview");
+          if (html5QrCode.isScanning) {
+          
+
+            html5QrCode.stop().then(() => {
+              html5QrCode.clear();
+              openCamera()
+            })             
+             
+          }    else {
+              openCamera()
+          }
+        
+          
+          
+          
+      }
+ 
+      function checkCamera()  {
+         const html5QrCode = new Html5Qrcode("cameraview");
+            
+   
+      
+      Html5Qrcode.getCameras().then(devices => {
+       
+          
+        $("#camera_list").empty()       
+      
+        if (devices && (devices.length > 0) ) {
+        
+                
+            for (const d of devices) {
+                 $("#camera_list").append("<option value=\""+d.id+"\">"+d.label+"</option>")    
+            }              
+            
+            cameraId = devices[0].id;
+            
+
+            if ($.cookie('camera_id') === undefined) {
+               $.cookie('camera_id', cameraId)
+              
+            }            
+        
+                         
+            
+            $("#mscannericon").show()
+            
+
+  
+   
+            
+            
+        }
+    }).catch(err => {
+        // Handle camera access errors or permissions denied
+        console.error("Error getting cameras:", err);
+            toastr.error(err,"",{timeOut:5000})
+    });
+
+  }   
+      function isMobileDevice() {
+          return (   
+            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+            ||     (navigator.userAgentData?.mobile  == true )
+            ||     ('ontouchstart' in window     ||     navigator.maxTouchPoints > 0)
+             
+            
+          );
+       }
+    
+    
+   if(isMobileDevice() ) {
+       checkCamera() 
+   }
+         
+    
+
+   {{/usescanner}}
+</script>
+ 
+        
 <script src="/assets/js/lightbox.js"  ></script>
      
     </body>

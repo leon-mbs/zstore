@@ -159,7 +159,8 @@
                             </div>
                               <div class="col-auto">
                             <input autofocus="on" autocomplete="off" style="width:120px"  type="text" zippy="barcode" onkeydown="onBarCode()">
-                            <a zippy="addcode"  ></a>
+                             <a zippy="addcode" class="btn btn-success btn-sm me-1">+</a>
+                       
                             
                             </div> 
                             
@@ -869,13 +870,7 @@
                 
             });
   
-            function onBarCode(ele) {
-
-                if (event.key === 'Enter' || event.keyCode == 13) {
-                  
-                    $('#addcode').click()
-                }
-            }
+          
             
             
                 $("#promocode").blur(function () {
