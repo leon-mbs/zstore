@@ -295,7 +295,7 @@ class OLAP extends \App\Pages\Base
 
         $sql = "select {$ver},{$hor}, {$data} as amount from ({$sql} ) t {$where} group by  {$ver},{$hor}  ";
 
-        H::log($sql);
+      
         
         $detail = [];
         $detailv = [];

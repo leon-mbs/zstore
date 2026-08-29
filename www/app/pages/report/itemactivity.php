@@ -50,6 +50,7 @@ class ItemActivity extends \App\Pages\Base
         
         $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
         $this->filter->add(new CheckBox('fdet' ));
+        $this->filter->add(new CheckBox('fitem' ));
    
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
         $this->filter->item->onChange($this, "onItem");
@@ -112,6 +113,7 @@ class ItemActivity extends \App\Pages\Base
         $emp = $this->filter->searchemp->getValue();
         $cat = $this->filter->searchcat->getValue();
         $det = $this->filter->fdet->isChecked();
+        $fitem = $this->filter->fitem->isChecked();
 
 
         $it = "1=1";
@@ -196,8 +198,11 @@ class ItemActivity extends \App\Pages\Base
           st.item_code,   
 
                        DATE(sc.document_date) ) t
-              ORDER BY t.dt  
-        ";
+              ORDER BY    ";
+        
+       $sql .= (  $fitem ? " t.itemname,t.dt " : " t.dt,t.itemname " );
+        
+        
         //  H::log($sql)  ;
         $rs = $conn->Execute($sql);
         $ba = 0;
