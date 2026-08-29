@@ -194,121 +194,116 @@
                  {{/issitems}} 
             </div>
              <div class="col-12 col-xl-10 mt-2">      
-                <div class="navbar">
+                 
                     <form zippy="statusform"  >
-                       <div class="row">      
-                       <div class="col-12 mb-2">      
-                          <div class="row"> 
-                         <div class="col-auto  ">
-                         <button zippy="binp" class="btn btn-success  me-2">  На виконання</button>
-                          </div>
-                         <div class="col-auto  ">
-                         <button zippy="bscan" class="btn btn-primary  me-2">  Зiбрати</button>
-                         </div>
-                        <div class="col-auto  ">
-                         <button zippy="bsplit" class="btn btn-primary  me-2">  Роздiлити</button>
-                         </div>
-                         <div class="col-auto  ">
-                         <button zippy="brd" class="btn btn-success  me-2">  Готовий до вiдправки</button>
-                         </div>
-                         <div class="col-auto  ">
-                         <button zippy="bsent" class="btn btn-success  me-2">  Вiдправлений</button>
-                         </div>
-                         <div class="col-auto  ">
-                         <button zippy="brec" class="btn btn-success  me-2">  Доставлений</button>
-                         </div>
-                         <div class="col-auto  ">
-                         <button zippy="bclose"   class="  btn btn-success  me-2 ">  Закрити                </button>
-                         </div>
-                         <div class="col-auto  ">
-                         <a zippy="btopay" class="  btn btn-success  ms-4 "> Сплатити</a>
-                         </div>
-                         <div class="col-auto  ">
-                         <button zippy="bref" class="btn btn-danger  me-2">  Анулювати                </button>
-                         </div>
-                       </div>
-                       </div>
-                       </div>
-                       <div class="col-12"> 
-                         <div class="row"> 
-                        
-                           <label class="col-form-label col-auto"  >Створити</label>
-                           <div class="col-auto  ">
-                        <button zippy="bttn" class="btn btn-primary  me-2">  ТТН</button>
-                        </div>
-                          <div class="col-auto  ">
-                          <button zippy="bpos" class="btn btn-primary  me-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
-                          </div>
-                          <div class="col-auto  ">
-                          <button zippy="bgi" class="btn btn-primary  me-2">  Видаткову накладну                </button>
-                          </div>
-                          <div class="col-auto  ">
-                          <button zippy="bginv" class="btn btn-primary  me-2">  Рахунок-фактуру                </button>
-                          </div>
-                          <div class="col-auto  ">
-                          <button zippy="bco" class="btn btn-primary  me-2">  Заявку постачальнику                                       </button>
-                          </div>
-                        {{#useprod}} 
-                          <div class="col-auto  ">
-                          <button zippy="btask" type="submit" class=" btn btn-primary me-2 ">  Наряд</button>
-                          </div>
-                            {{/useprod}}
-                         <div class="col-auto  ">
-                          <button zippy="bcopy" class="btn btn-primary  ms-4">  Копію</button>
-                          </div>
-                       </div>     
-                       </div>     
-                        </div>      
-                    </form> 
-                     </div>
-                       <div class="col-12 mb-2">      
-                      
-                       <div class="row"> 
-                       <div class="col-auto"> 
-                          
-              
+                       <div class="navbar justify-content-start">      
                      
-                     <form zippy="resform" class="  mt-1">
-                         <div class="row  ">
-                        <label class="col-form-label col-auto" data-label="bres">Резервувати товари </label>
-                        <div class="col-auto  ">
-                        <select class="form-control me-2"  zippy="store"></select>
+                         <button zippy="binp" class="btn btn-success  me-2">  На виконання</button>
+                     
+                         <button zippy="bscan" class="btn btn-primary  me-2">  Зiбрати</button>
+                  
+                         <button zippy="bsplit" class="btn btn-primary  me-2">  Роздiлити</button>
+                         
+                         <button zippy="brd" class="btn btn-success  me-2">  Готовий до вiдправки</button>
+                        
+                         
+                         <button zippy="bsent" class="btn btn-success  me-2">  Вiдправлений</button>
+                        
+                         
+                         <button zippy="brec" class="btn btn-success  me-2">  Доставлений</button>
+                         
+                         
+                         <button zippy="bclose"   class="  btn btn-success  me-2 ">  Закрити                </button>
+                         
+                         <a zippy="btopay" class="  btn btn-success  ms-4 "> Сплатити</a>
+                     
+                         <button zippy="bref" class="btn btn-danger  me-2">  Анулювати                </button>
+                       
+                       
+                       </div>
+                       <div class="navbar  justify-content-start"> 
+                           
+                        
+                           <label     >Створити </label>
+                         
+                        <button zippy="bttn" class="btn btn-primary  me-2">  ТТН</button>
+                        
+                     
+                          <button zippy="bpos" class="btn btn-primary  me-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
+                          
+                          <button zippy="bgi" class="btn btn-primary  me-2">  Видаткову накладну                </button>
+                        
+                          <button zippy="bginv" class="btn btn-primary  me-2">  Рахунок-фактуру                </button>
+                          
+                          <button zippy="bco" class="btn btn-primary  me-2">  Заявку постачальнику                                       </button>
+                           
+                        {{#useprod}} 
+                         
+                          <button zippy="btask" type="submit" class=" btn btn-primary me-2 ">  Наряд</button>
+                           
+                            {{/useprod}}
+                        
+                          <button zippy="bcopy" class="btn btn-primary  ms-4">  Копію</button>
+                          
+                       </div>     
+                          
+                            
+                    </form> 
+                       </div>
+                       <div class="col-12 mb-2">      
+                       
+                       <div class="row mt-1"> 
+                       <div class="col-auto"> 
+                     <form zippy="resform" class="row align-items-start " >
+                         <div class="col-auto"> 
+                                   
+                        <label class=" form-label   me-2"  data-label="bres">Резервувати товари </label>
                         </div>
-                       <div class="col-auto  ">  
+                         <div class="col-auto">  
+                        <select class=" form-control me-2"  zippy="store"></select>
+                          </div>
+                         <div class="col-auto"> 
                         <button zippy="bres" class="btn btn-success  ">OK                 </button>
-                        </div>
-                       <div class="col-auto  ">
+                         </div>
+                         <div class="col-auto">  
+                       
                         <button zippy="bunres" class="btn btn-primary "> Зняти з резерву                </button>
-
-                      </div>  </div>
+                          </div>
+                         
                     </form>       
                       </div>
                        <div class="col-auto"> 
                     
-                    <form zippy="moveform" class="  mt-1 ms-4">
-                        <div class="row  ">
-                        <label class="col-form-label col-auto" class="me-2">Перевести на: </label>
+                    <form zippy="moveform" class="row align-items-start "  >
+                        <div class="col-auto"> 
+                                
+                        <label   class="form-label me-2">Перевести на: </label>
+                           </div> 
                        {{#usebranch}}
-
-                        <label class="col-form-label col-auto" for="brmove">фiлiю </label>
-                         <div class="col-auto  ">
+                         <div class="col-auto"> 
+                        <label   for="brmove">фiлiю </label>
+                          </div> 
+                         <div class="col-auto">  
                         <select zippy="brmove" class="form-control me-2 ">
                             <option value="0">Не вказано</option>
                         </select>
-                         </div>
+                         </div>   
                        {{/usebranch}}
-                  
-                        <label class="col-form-label col-auto" for="usmove">користувача </label>
-                         <div class="col-auto  ">
+                         <div class="col-auto"> 
+                        <label  class="form-label me-2" for="usmove">користувача </label>
+                           </div> 
+                          <div class="col-auto"> 
                          <select class="form-control me-2" zippy="usmove"  >
 
-                        </select>  </div>
-                         <div class="col-auto  ">
+                        </select>   
+                           </div> 
+                          <div class="col-auto"> 
                         <button zippy="bmove" type="submit" class="btn btn-success  ms-4 ">OK                 </button>
-                         </div></div>
+                         </div> 
                      </form>                
                     </div>
-                       </div>  
+                    </div>
+                     </div>  
                    
                     
                 </div>
