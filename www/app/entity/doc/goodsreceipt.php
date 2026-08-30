@@ -271,7 +271,7 @@ class GoodsReceipt extends Document
                       $oitems =  $order->unpackDetails('detaildata');
                       $items =  $this->unpackDetails('detaildata');
                       if(count($oitems)=== count($items) ){
-                          $order->updateStatus(Document::STATE_CLOSED);    
+                         // $order->updateStatus(Document::STATE_CLOSED);    
                       }
                       
                       

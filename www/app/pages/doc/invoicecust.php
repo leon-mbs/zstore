@@ -143,32 +143,23 @@ class InvoiceCust extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $order = $basedoc->cast();
+                        $list =  $order->unpackDetails('detaildata');
                        
-                        $list =\App\Session::getSession()->clipboard ??[] ; //отобранные
+                        $cp =\App\Session::getSession()->clipboard ??[] ; //отобранные
                         \App\Session::getSession()->clipboard=null;
+                        if(isset($cp['co'])) {
+                           $list = $cp['co'] ;
+                        }
                       
                         $this->_itemlist = [];
-                        if(count($list)==0) {
-                           $order->updateStatus(Document::STATE_CLOSED);      
-                        }
-                       
                          
-                        foreach($order->unpackDetails('detaildata') as $item){
-                           
-                            if(count($list) >0){
-                                if( ( $list[$item->item_id] ?? null) != null )  {
-                                    $it=   $list[$item->item_id] ;
-                                    $item->quantity =  $it->quantity ;
-                                    $item->price =  $it->price ;
-                                    $this->_itemlist[] = $item;   
-                                }  
-                                 
-                              
-                                continue;
-                            }
-                            $this->_itemlist[] = $item;     
-                           
-                     
+                         
+                        foreach($list as $item){
+                            $it = Item::load($item->item_id) ;
+                            $it->quantity =  $item->quantity;
+                            $it->price =  $item->price ;   
+                      
+                            $this->_itemlist[] = $it;     
                            
                         }
                               
