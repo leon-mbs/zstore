@@ -1301,12 +1301,20 @@ class Document extends \ZCL\DB\Entity
     * 
     */
     public function getAmountReg() {
+     
+        if($this->meta_name == "Inventory" 
+          ||  $this->meta_name == "Task"    
+          ||  $this->meta_name == "Warranty"    
+          ||  $this->meta_name == "OfficeDoc" )  {
+            return  ""; 
+        }  
+           
         $am=$this->amount;
         $am = $am - $this->getHD("totaldisc",0) ; 
         $am = $am - $this->getHD("bonus",0) ; 
 
 
-        return  $am;
+        return $am;
     }
 
     /**

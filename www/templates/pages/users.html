@@ -8,7 +8,7 @@
         <div class="row">
 
 
-            <div zippy="listpan" class="col-12 col-md-10 col-xl-8">
+            <div zippy="listpan" class="col-12   col-xl-10">
                 <h3>Користувачі системи</h3>
                 <div class="navbar">
 
@@ -40,8 +40,8 @@
                             <th>Ост. логiн</th>   
 
 
-                            <th width="24">&nbsp;</th>
-                            <th width="24">&nbsp;</th>
+                            <th  > </th>
+                            <th  > </th>
                         </tr>
                     </thead>
 
@@ -53,10 +53,10 @@
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"></td>
-             <td zippy="lastactive" align="center" style="white-space:nowrap"></td>  
+                            <td zippy="lastactive" align="center" style="white-space:nowrap"></td>  
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
-                            <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
+                            <td  align="right"><a zippy="remove"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -64,9 +64,13 @@
             </div>
 
 
-            <div zippy="editpan" class="col-12 col-sm-10  col-md-6    col-xl-3">
+            <div zippy="editpan" class="col-12     col-xl-8 col-xll-6 ">
                 <h4> Редагування користувача</h4>
                 <form zippy="editform" role="form">
+                   
+                    <div class="row">
+                    <div class="col-6">
+                    
                     <div class="form-group">
                         <label for="editlogin">Логін</label>
                         <input pattern="[_a-zA-Z0-9]+" style="width:200px" class="form-control" zippy="editlogin"
@@ -99,26 +103,9 @@
                        <br> <small  >Якщо двофакторна аутентифікація</small>
                     </div>
                      {{/otpcode}}
-                    {{#usebranch}}
-
 
                     <div class="form-group">
-                        <label for="acl">Налаштування доступу до філій</label>
-                        <table class="table table-sm table-striped">
-                            <tr zippy="brow">
-                                <td zippy="branch_name"></td>
-                                <td><input zippy="editbr" class="acl" type="checkbox"></td>
-                            </tr>
-
-                        </table>
-                    </div>
-                    {{/usebranch}}
-                    <div class="form-group">
-                        <div class="form-check   ">
-
-                            <input class="form-check-input" type="checkbox" zippy="editonlymy">
-                            <label class="form-check-label ms-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
-                        </div>
+  
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="edithidemenu">
@@ -130,14 +117,49 @@
                             <input class="form-check-input" type="checkbox" zippy="editdisabled">
                             <label class="form-check-label ms-sm-2 text-danger" for="editdisabled"> Не активний</label>
                         </div>
-                  </div>
+                   </div>
+                   </div>
+                    <div class="col-4">
+                  
 
-
+                     {{#usebranch}}
                     <div class="form-group">
-                      <a zippy="cancel" class="btn btn-secondary  me-2   ">Скасувати</a>
+                        <label for="acl"> Доступ до філій</label>
+                        <table class="table table-sm table-striped">
+                            <tr zippy="brow">
+                                <td zippy="branch_name"></td>
+                                <td align="right"><input zippy="editbr" class="acl" type="checkbox"></td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    {{/usebranch}} 
+                   {{#hideblock}}
+                    <div class="form-group">
+                        <label for="acl">Доступ  до складів</label>
+                       
+                    </div>
+                    <div class="form-group">
+                        <label for="acl">Доступ  до грошових рахунків</label>
+                       
+                    </div>
+                    
+                    {{/hideblock}} 
+                      <div class="form-group">
+                         <div class="form-check   ">
+                            <input class="form-check-input" type="checkbox" zippy="editonlymy">
+                            <label class="form-check-label ms-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
+                        </div>
+                     </div>   
+                   </div>
+                    <div class="col-12 mt-2">
+                      
+                        <a zippy="cancel" class="btn btn-secondary  me-2   ">Скасувати</a>
                         <button type="submit" class="btn btn-primary   ">Зберегти</button>
                       
+                    
                     </div>
+                   </div>
                 </form>
             </div>
 
