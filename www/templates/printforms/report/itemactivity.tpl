@@ -20,11 +20,12 @@
 
         <th style="border: solid black 1px">Дата</th>
 
-        <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Найменування</th>
+         <th style="border: solid black 1px">Найменування</th>
+         <th style="border: solid black 1px">Код</th>
+ 
           {{#docs}}  <th style="border: solid black 1px">Документ</th>     {{/docs}} 
                
- 
+       
         <th align="right" style="border: solid black 1px">Поч.</th>
         <th style="border: solid black 1px">Прих.</th>
         <th align="right" style="border: solid black 1px">Витр.</th>
@@ -36,8 +37,9 @@
 
         <td>{{date}}</td>
 
-        <td>{{code}}</td>
+      
         <td>{{name}}</td>
+        <td>{{code}}</td>
           {{#docs}}  <td> {{docnumber}}</td>       {{/docs}} 
  
         <td align="right"  {{#itemrow}} style="font-weight:bolder"   {{/itemrow}} >{{in}}</td>

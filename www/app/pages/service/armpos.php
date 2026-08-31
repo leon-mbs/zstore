@@ -774,6 +774,7 @@ class ARMPos extends \App\Pages\Base
         } else {
             $this->_itemlist[$this->_rowid] = $item;
         }
+        $this->_rowid = -1;
 
 
         //   $this->docpanel->editdetail->setVisible(false);
@@ -2099,18 +2100,21 @@ class ARMPos extends \App\Pages\Base
 
        \App\Application::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
         $qty = $item->getQuantity($store);
-      
+        
+     
        
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code) {
+              
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docpanel->form2->detail->Reload();
                 $this->calcTotal();
                 $this->checkQty($item);
+               
                 return;
             }
         }
-
+     
         $this->checkQty($item);
         $customer_id = $this->docpanel->form2->customer->getKey();
 
@@ -2152,7 +2156,7 @@ class ARMPos extends \App\Pages\Base
             }
         }
 
-
+      
         $this->_itemlist[ ] = $item;
 
         $this->docpanel->form2->detail->Reload();
@@ -2223,12 +2227,9 @@ class ARMPos extends \App\Pages\Base
         }
  
  
-        if($this->_rowid == -1) {
-            $this->_itemlist[] = $item;
-        } else {
-            $this->_itemlist[$this->_rowid] = $item;
-        }
-
+  
+        $this->_itemlist[] = $item;
+     
   
         $this->docpanel->form2->detail->Reload();
 
@@ -2253,7 +2254,7 @@ class ARMPos extends \App\Pages\Base
             if ($item->item_id ==  $_item->item_id ) {
                 
                $qty = $qty - $_item->quantity;
-                
+               break;
             }
         }
         

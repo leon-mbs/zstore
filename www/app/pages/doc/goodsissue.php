@@ -94,9 +94,7 @@ class GoodsIssue extends \App\Pages\Base
         }
         $this->docform->add(new DropDownChoice('fop', $fops,0))->setVisible(count($fops)>0) ;
 
-        $cp = \App\Session::getSession()->clipboard;
-        $this->docform->add(new ClickLink('paste', $this, 'onPaste'))->setVisible(is_array($cp) && count($cp) > 0);
-
+       
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -1136,29 +1134,7 @@ class GoodsIssue extends \App\Pages\Base
 
     }
 
-    public function onPaste($sender) {
-        $store_id = $this->docform->store->getValue();
-
-        $cp = \App\Session::getSession()->clipboard;
-
-        foreach ($cp as $it) {
-            $item = Item::load($it->item_id);
-            if ($item == null) {
-                continue;
-            }
-            $item->quantity = 1;
-            $item->price = $item->getPrice($this->docform->pricetype->getValue(), $store_id);
-
-            $this->_itemlist[$item->item_id] = $item;
-        }
-        $this->_rownumber  = 1;
-
-        $this->docform->detail->Reload();
-
-        $this->calcTotal();
-        $this->calcPay();
-    }
-
+   
 
    
          

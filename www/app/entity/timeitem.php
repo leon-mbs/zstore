@@ -62,7 +62,7 @@ class TimeItem extends \ZCL\DB\Entity
         $t_start = $conn->DBTimeStamp($this->t_start);
         $t_end = $conn->DBTimeStamp($this->t_end);
         $sql = " select  *  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and       (( t_start >  {$t_start}    and  t_start < {$t_end}  ) or ( t_end >  {$t_start}    and  t_end < {$t_end}   ) or (   {$t_start} <= t_start   and  t_end <= {$t_end}   )   )";
-        \App\Helper::log($sql);
+        
        
         $sql = " select  count(*)  from timesheet where time_id <> {$this->time_id}  and  emp_id={$this->emp_id}  and       (( t_start >  {$t_start}    and  t_start < {$t_end}  ) or ( t_end >  {$t_start}    and  t_end < {$t_end}   ) or (   {$t_start} <= t_start   and  t_end <= {$t_end}   )   )";
        

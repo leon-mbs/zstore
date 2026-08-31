@@ -243,7 +243,7 @@ class OrderCustList extends \App\Pages\Base
     //просмотр
     public function showOnClick($sender) {
 
-        $this->_doc = $sender->owner->getDataItem();
+        $this->_doc = $sender->owner->getDataItem()->cast();
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
@@ -258,7 +258,43 @@ class OrderCustList extends \App\Pages\Base
         $this->goAnkor('dankor');
         $this->_tvars['askclose'] = false;
 
-        $this->_explist = $this->_doc->unpackDetails('detaildata');
+        $list = $this->_doc->unpackDetails('detaildata');
+        
+        $delivered = [];
+      
+         $docs= Document::find("state >=5 and meta_name  in ('GoodsReceipt') and parent_id=". $this->_doc->document_id);   
+         foreach($docs as $d)  {
+             foreach($d->unpackDetails('detaildata') as $item){
+                if(!isset($recqty[$item->item_id]) ) $recqty[$item->item_id]=0;
+                
+                $delivered[$item->item_id] += $item->quantity;
+             }
+         }      
+      
+      
+      
+        $this->_explist=[];
+        
+        foreach($list as $it) {
+
+            $it->checked = true;
+            foreach($delivered as $id=>$q) {
+                if($it->item_id == $id )   {
+                   if($it->quantity == $q ) {
+                      $it->checked = false;
+                   } 
+                   if($it->quantity > $q ) {
+                      $it->quantity = $it->quantity - $q;
+                   } 
+                    
+                   break;
+                }
+                
+            }
+            
+            $this->_explist[]=$it; 
+        }
+        
         
         $this->formexp->exptitemlist->Reload();
     }
@@ -305,47 +341,33 @@ class OrderCustList extends \App\Pages\Base
            }
         }
         if(count($list)==0) {
-            return;
+           // return;
         }
         
-        \App\Session::getSession()->clipboard = $list;
+        \App\Session::getSession()->clipboard = ['co'=>$list] ;
 
         
         if( $this->formexp->expclose->isChecked() ) {
             $this->_doc->updateStatus(Document::STATE_CLOSED); 
         }
-        //проверяем  что есть ТТН
-        $d = $this->_doc->getChildren('GoodsReceipt');
-        $ttn = count($d) > 0;
+        
         if ($dtype==1) {
 
-            if ($ttn) {
-                $this->setWarn('Вже існує документ Прибуткова накладна');
-            }
+            
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
         }
         if ($dtype==2) {
-
-            if ($ttn) {
-                $this->setWarn('Вже існує документ Прибуткова накладна');
-            }
-            $d = $this->_doc->getChildren('InvoiceCust');
-            if (count($d) > 0) {
-
-                $this->setWarn('Вже існує документ Рахунок');
-            }
-
+      
             App::Redirect("\\App\\Pages\\Doc\\InvoiceCust", 0, $this->_doc->document_id);
             return;
         } 
         
     }
      
-  public function explistOnRow($row) {
+   public function explistOnRow($row) {
         $item = $row->getDataItem();
-        $item->checked=true;
-        
+          
         $row->add(new  Label('editlistname', $item->itemname));
         $row->add(new  Label('editlistcode', $item->item_code));
         $row->add(new  TextInput('editlistqty',new \Zippy\Binding\PropertyBinding($item, 'quantity')  ));

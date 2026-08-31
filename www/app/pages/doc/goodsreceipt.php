@@ -218,41 +218,26 @@ class GoodsReceipt extends \App\Pages\Base
                         $this->docform->basedoc->setText($basedoc->document_number);
 
                         $order = $basedoc->cast();
-                        $list =\App\Session::getSession()->clipboard ??[] ; //отобранные
+                        $list =  $order->unpackDetails('detaildata');
+                       
+                        $cp =\App\Session::getSession()->clipboard ??[] ; //отобранные
                         \App\Session::getSession()->clipboard=null;
-                        $nr=[];                   
-                        if(count($list) ==0){
-                            $nr=$order->getNotReceivedItems();
-                            if(count($nr)==0) {
-                               $this->setWarn('Всі позиції вже доставлені') ;
-                            }
-                            
+                        if(isset($cp['co'])) {
+                           $list = $cp['co'] ;
                         }
+                      
                         $this->_itemlist = [];
                          
                          
-                        foreach($order->unpackDetails('detaildata') as $item){
-                           
-                            if(count($list) >0){
-                                if( ( $list[$item->item_id] ?? null) != null )  {
-                                    $it=   $list[$item->item_id] ;
-                                    $item->quantity =  $it->quantity ;
-                                    $item->price =  $it->price ;
-                                    $this->_itemlist[] = $item;   
-                                }  
-                                 
-                              
-                                continue;
-                            }
-                           
-                           
-                            if( ( $nr[$item->item_id] ??0  )> 0 )  {
-                                $item->quantity =   $nr[$item->item_id] ;
-                                $this->_itemlist[] = $item; 
-                                
-                            }
+                        foreach($list as $item){
+                            $it = Item::load($item->item_id) ;
+                            $it->quantity =  $item->quantity;
+                            $it->price =  $item->price ;   
+                      
+                            $this->_itemlist[] = $it;     
                            
                         }
+                          
                         
                         $this->CalcTotal();
                         $this->CalcPay();
@@ -768,20 +753,7 @@ class GoodsReceipt extends \App\Pages\Base
                     }
                 }
 
-                if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                        $order = Document::load($this->_doc->parent_id);
-                        
-                        if ($order->meta_name =="OrderCust"){
-                            $order = $order->cast();
-                            $nr=$order->getNotReceivedItems();
-                            if(count($nr)==0){ // все доставлено
-                               if($order->state == Document::STATE_INPROCESS  ||  $order->state == Document::STATE_INSHIPMENT  ) {
-                                   $order->updateStatus(Document::STATE_DELIVERED);
-                               }
-                            }                   
-                       }
-                     
-                }
+            
 
                 //обновляем  курс
                 if (strlen($this->_doc->headerdata['val']) > 1) {

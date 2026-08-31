@@ -474,7 +474,7 @@ $printer->qrCode($text,0,$size);
 $printer->close();
 $b = json_encode( $this->buffer) ;
 
-            \App\Helper::log($b) ;
+       
 
         
     return; 
