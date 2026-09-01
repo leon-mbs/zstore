@@ -108,7 +108,27 @@ class MoneyFund extends \ZCL\DB\Entity
         return $ml;
     }
 
-    public static function getConstraint() {
+    public static function getConstraint() { 
+       
+        $user = \App\System::getUser();
+        if ($user->rolename == 'admins') {
+            return '';
+        }       
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1) {
+            
+            $aclmf = $user->aclmf ?? '';
+            
+            if(strlen($aclmf)>0) {
+                   return " ( mf_id in ( {$aclmf}) )";     
+            } else {
+                return " (1=2)";
+            }
+       
+            
+            return '';
+        }      
+       
         return \App\ACL::getBranchConstraint();
     }
 

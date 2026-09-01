@@ -52,18 +52,20 @@ class EndDay extends \App\Pages\Base
      
       
         $usr = '';
-        $brf = '';
+       
+        $mfacl = '';
      
         if($user->rolename!='admins') {
            $usr = " and user_id=" . $user->user_id ;  
         }
        
-      
-        $brids = \App\ACL::getBranchIDsConstraint();
+        
+        $mfids = \App\ACL::getMFBranchConstraint();
     
-        if (strlen($brids) > 0) {
-            $brf = " and  mf_id in (select mf_id from mfund where   branch_id in ({$brids})  )";
+        if (strlen($mfids) > 0) {
+            $mfacl = " and  mf_id in (  {$mfids}  )    ";
         }  
+        
         $detail=[];
         $detail2=[];
 
@@ -74,7 +76,7 @@ class EndDay extends \App\Pages\Base
               mf_name,
               username
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate={$date} {$brf} {$usr}  
+            WHERE paytype <= 1000  and paydate={$date}   {$usr}  {$mfacl}
             GROUP BY username,
                      mf_name
             ORDER BY username, mf_name ";
@@ -99,7 +101,7 @@ class EndDay extends \App\Pages\Base
               mf_name 
               
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate<{$date} {$brf}
+            WHERE paytype <= 1000  and paydate<{$date} {$mfacl}
             GROUP BY  
                      mf_name
               ";
@@ -120,7 +122,7 @@ class EndDay extends \App\Pages\Base
               mf_name 
               
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate={$date} {$brf}
+            WHERE paytype <= 1000  and paydate={$date} {$mfacl}
             GROUP BY  
                      mf_name
             ORDER BY   mf_name ";
@@ -130,7 +132,7 @@ class EndDay extends \App\Pages\Base
         
         
         foreach($conn->Execute($sql) as $row){
-            $b = $begins[$row['mf_name']];
+            $b = $begins[$row['mf_name']] ??0;
             $detail2[]=array(
            
               'mf_name'=>$row['mf_name'],

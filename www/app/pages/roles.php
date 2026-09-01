@@ -51,8 +51,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
         $this->editpan->editform->add(new CheckBox('editcanevent'));
         $this->editpan->editform->add(new CheckBox('editdashboard'));
-        $this->editpan->editform->add(new CheckBox('editshowotherstores'));
-
+         
       
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
@@ -146,8 +145,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
         $this->editpan->editform->editcanevent->setChecked($this->role->canevent);
         $this->editpan->editform->editdashboard->setChecked($this->role->dashboard);
-        $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
-
+        
 
  
 
@@ -242,8 +240,7 @@ class Roles extends \App\Pages\Base
         $this->role->canevent = $this->editpan->editform->editcanevent->isChecked() ? 1 : 0;
         $this->role->dashboard = $this->editpan->editform->editdashboard->isChecked() ? 1 : 0;
         $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ? 1 : 0;
-        $this->role->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
-
+        
         $varr = array();
         $earr = array();
         $xarr = array();

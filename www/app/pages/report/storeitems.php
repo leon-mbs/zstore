@@ -80,10 +80,7 @@ class StoreItems extends \App\Pages\Base
         $itemlist = Item::find($where, 'itemname asc') ;
         $storelist = Store::getList() ;
 
-        if(\App\System::getUser()->showotherstores) {
-            $storelist = Store::getListAll() ;
-
-        }
+      
         $siqty = array();
         $stlist = array();
       
@@ -220,10 +217,7 @@ class StoreItems extends \App\Pages\Base
         $itemlist = Item::find($where, 'itemname asc') ;
         $storelist = Store::getList() ;
 
-        if(\App\System::getUser()->showotherstores) {
-            $storelist = Store::getListAll() ;
-
-        }
+       
         $siqty = array();
         $stlist = array();
       

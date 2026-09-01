@@ -289,6 +289,13 @@ class Outcome extends \App\Pages\Base
        
  
         if ($type == 10) {    //по складах
+           
+            $str="";
+            $cstr = \App\ACL::getStoreBranchConstraint();
+            if (strlen($cstr) > 0) {
+                $str = "  and  sr.store_id in ({$cstr})      ";
+            }
+               
             $sql = "
             select  sr.storename as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
@@ -300,7 +307,7 @@ class Outcome extends \App\Pages\Base
              join documents_view d on d.document_id = e.document_id
                where   e.partion  is  not null and  (e.tag = 0 or e.tag = -1  or e.tag = -4) 
                and d.meta_name in ('GoodsIssue','ServiceAct' , 'POSCheck','ReturnIssue','TTN','OrderFood','Order')
-                {$br} {$u}
+                {$br} {$u} {$str}
               AND  (e.document_date) >= " . $conn->DBDate($from) . "
               AND  (e.document_date) <= " . $conn->DBDate($to) . "
                 group by  sr.storename

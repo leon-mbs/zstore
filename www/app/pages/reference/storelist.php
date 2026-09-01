@@ -52,11 +52,8 @@ class StoreList extends \App\Pages\Base
 
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $cstr = \App\ACL::getStoreBranchConstraint();
-        if (strlen($cstr) > 0) {
-            $cstr = "  store_id in ({$cstr})  and  ";
-        }
-        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} store_id={$item->store_id} and  qty >0                   ";
+      
+        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where  store_id={$item->store_id} and  qty >0                   ";
 
 
         $row->add(new Label('qty', H::fqty($conn->GetOne($sql))));

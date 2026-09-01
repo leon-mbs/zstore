@@ -64,10 +64,7 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchprice', $prices, "price1"));
         $storelist = Store::getList() ;
 
-        if(\App\System::getUser()->showotherstores) {
-            $storelist = Store::getListAll() ;
-
-        }
+       
         $this->filter->add(new DropDownChoice('searchtype', [], 0));
         $this->filter->add(new DropDownChoice('searchqty', [], 0));
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
@@ -555,30 +552,29 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     }
 
     private function getWhere($p=false) {
+       
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $sqty = $form->searchqty->getValue();
-        $where = "   disabled <> 1 ";
-   
-
-
-        $cstr = \App\ACL::getStoreBranchConstraint();
-        if (strlen($cstr) > 0) {
-            $cstr = "    store_id in ({$cstr})      ";
-        }
-        if(\App\System::getUser()->showotherstores) {
-            $cstr ="";
-
-        }
-        if(strlen(trim($cstr))==0) {
-            $cstr = "1=1 ";
-        }
-        
+       
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
         $emp = $form->searchemp->getValue();
+           
+       
+        $sqty = $form->searchqty->getValue();
+        $where = "   disabled <> 1 ";
+   
+        $stw="";                       
+
+        $cstr = \App\ACL::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $stw = "  and  store_id in ( {$cstr}  )     ";
+        }
+     
     
+        
+     
         if ($cat != 0) {
             if ($cat == -1) {
                 $where = $where . " and cat_id=0";
@@ -601,10 +597,10 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             $str .= " and coalesce(emp_id,0)={$emp} ";            
         }        
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store} {$wemp} ) ";
+            $where = $where . " and item_id in (select item_id from store_stock where 1=1 {$stw}   and store_id={$store} {$wemp} ) ";
             $str .= " and store_id={$store}";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  {$wemp} ) ";
+            $where = $where . " and item_id in (select item_id from store_stock where 1=1 {$stw}  {$wemp} ) ";
         }
         if ($form->searchterm->isChecked()  ) {   
             $where = $where . " and item_id in (select item_id from store_stock where sdate is not null and sdate < CURDATE()  ) ";
@@ -689,10 +685,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
         if (strlen($cstr) > 0) {
             $cstr = "  and  store_id in ({$cstr})      ";
         }
-        if(\App\System::getUser()->showotherstores) {
-            $cstr ="";
-
-        }          
+                
         $where = $where . $cstr ;
         $store = $form->searchstore->getValue();
         if ($store > 0) {

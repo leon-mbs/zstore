@@ -459,7 +459,7 @@ class OLAP extends \App\Pages\Base
 
           
            if($this->isbigperiod==false) { 
-               $concat =" dv.paydate " ;  
+               $concat =" pv.paydate " ;  
            }
            
             $where = " pv.amount <> 0  and  pv.paydate >= " . $conn->DBDate($this->startform->stfrom->getDate()) . " 

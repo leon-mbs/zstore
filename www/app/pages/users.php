@@ -49,12 +49,15 @@ class Users extends \App\Pages\Base
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
+        $this->editpan->editform->add(new CheckBox('editshowotherstores'));
         $this->editpan->editform->add(new CheckBox('edithidemenu'));
 
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->editpan->editform->add(new DataView('brow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Branch", "disabled<>1", "branch_name"), $this, 'branchOnRow'));
+        $this->editpan->editform->add(new DataView('srow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\Store", "disabled<>1", "storename"), $this, 'storeOnRow'));
+        $this->editpan->editform->add(new DataView('mrow', new \ZCL\DB\EntityDataSource("\\App\\Entity\\MoneyFund", "disabled<>1", "mf_name"), $this, 'mfOnRow'));
     }
 
     public function onAdd($sender) {
@@ -81,19 +84,23 @@ class Users extends \App\Pages\Base
 
             return;
         }
-
+      
         $this->listpan->setVisible(false);
         $this->editpan->setVisible(true);
 
         $this->_tvars['otpcode']  = false; //todo
         
         $this->user = $sender->getOwner()->getDataItem();
+        $this->_tvars["isroleadmins"] = $this->user->rolename == 'admins';
+        
+        
         $this->editpan->editform->editemail->setText($this->user->email);
         $this->editpan->editform->editphone->setText($this->user->phone);
         $this->editpan->editform->editlogin->setText($this->user->userlogin);
         $this->editpan->editform->editrole->setValue($this->user->role_id);
 
         $this->editpan->editform->editonlymy->setChecked($this->user->onlymy);
+        $this->editpan->editform->editshowotherstores->setChecked($this->user->showotherstores);
         $this->editpan->editform->edithidemenu->setChecked($this->user->hidemenu);
         $this->editpan->editform->editdisabled->setChecked($this->user->disabled);
 
@@ -102,6 +109,8 @@ class Users extends \App\Pages\Base
         }
         
         $this->editpan->editform->brow->Reload();
+        $this->editpan->editform->srow->Reload();
+        $this->editpan->editform->mrow->Reload();
     }
 
     public function saveOnClick($sender) {
@@ -152,7 +161,12 @@ class Users extends \App\Pages\Base
             return;
         }
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
+        $this->user->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
         $this->user->hidemenu = $this->editpan->editform->edithidemenu->isChecked() ? 1 : 0;
+        if($this->user->hidemenu==1) {
+           $this->user->collapsesidebar = 1;   
+        }
+        
         $this->user->disabled = $this->editpan->editform->editdisabled->isChecked() ? 1 : 0;
 
         $pass = $this->editpan->editform->editpass->getText();
@@ -167,14 +181,47 @@ class Users extends \App\Pages\Base
         if($this->user->disabled ==1) {
            $this->user->userpass =''; 
         }
-        $barr = array();
-        foreach ($this->editpan->editform->brow->getDataRows() as $row) {
-            $item = $row->getDataItem();
-            if ($item->editbr == true) {
-                $barr[] = $item->branch_id;
+
+        if($this->_tvars["usebranch"]   ) {
+            $barr = array();
+            foreach ($this->editpan->editform->brow->getDataRows() as $row) {
+                $item = $row->getDataItem();
+                if ($item->editbr == true) {
+                    $barr[] = $item->branch_id;
+                }
+            }     
+            if(count($barr)==0) {
+                $this->setError('Не вибрана  жодна  філія') ;
+                return;
+            }   
+            $this->user->aclbranch = implode(',', $barr);
+        }   else {
+            $sarr = array();
+            foreach ($this->editpan->editform->srow->getDataRows() as $row) {
+                $item = $row->getDataItem();
+                if ($item->editbr == true) {
+                    $sarr[] = $item->store_id;
+                }
             }
+            $marr = array();
+            foreach ($this->editpan->editform->mrow->getDataRows() as $row) {
+                $item = $row->getDataItem();
+                if ($item->editbr == true) {
+                    $marr[] = $item->mf_id;
+                }
+            }
+            if(count($sarr)==0) {
+                $this->setError('Не вибраний  жоден склад') ;
+                return;
+            }   
+            if(count($marr)==0) {
+                $this->setError('Не вибраний  жоден  грошовий рахунок') ;
+                return;
+            }   
+ 
+            $this->user->aclstore = implode(',', $sarr);
+            $this->user->aclmf = implode(',', $marr);
         }
-        $this->user->aclbranch = implode(',', $barr);
 
         $this->user->save();
         $this->listpan->userrow->Reload();
@@ -222,6 +269,28 @@ class Users extends \App\Pages\Base
         $datarow->add(new \Zippy\Html\Link\ClickLink("remove", $this, "OnRemove"))->setVisible($item->userlogin != 'admin');
     }
 
+    public function storeOnRow($row) { 
+       $item = $row->getDataItem();
+       $arr = @explode(',', $this->user->aclstore ?? '');
+       if (is_array($arr)) {
+            $item->editbr = in_array($item->store_id, $arr);
+       }
+          
+       $row->add(new Label('store_name', $item->storename));
+       $row->add(new CheckBox('editst', new Bind($item, 'editbr')));
+    }
+   
+    public function mfOnRow($row) { 
+       $item = $row->getDataItem();
+       $arr = @explode(',', $this->user->aclmf ?? '');
+       if (is_array($arr)) {
+            $item->editbr = in_array($item->mf_id, $arr);
+       }
+       $row->add(new Label('mf_name', $item->mf_name));
+       $row->add(new CheckBox('editmf', new Bind($item, 'editbr')));
+         
+    }
+    
     public function branchOnRow($row) {
         $item = $row->getDataItem();
         $arr = @explode(',', $this->user->aclbranch ?? '');

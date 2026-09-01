@@ -88,7 +88,9 @@ class User extends \ZCL\DB\Entity
         $this->modules = $acl['modules'];
         $this->smartmenu = $acl['smartmenu'];
 
-        $this->aclbranch = $acl['aclbranch'];
+        $this->aclbranch = $acl['aclbranch'] ?? "";
+        $this->aclstore = $acl['aclstore']?? "";
+        $this->aclmf = $acl['aclmf']?? "";
         $this->onlymy = $acl['onlymy'];
         $this->hidemenu = $acl['hidemenu']?? null;
 
@@ -143,7 +145,10 @@ class User extends \ZCL\DB\Entity
         $acl = array();
 
         $acl['aclbranch'] = $this->aclbranch;
+        $acl['aclstore'] = $this->aclstore;
+        $acl['aclmf'] = $this->aclmf;
         $acl['onlymy'] = $this->onlymy;
+        $acl['showotherstores'] = $this->showotherstores;
         $acl['hidemenu'] = $this->hidemenu;
 
         $this->acl = serialize($acl);

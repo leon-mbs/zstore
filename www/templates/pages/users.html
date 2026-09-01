@@ -119,12 +119,15 @@
                         </div>
                    </div>
                    </div>
+                   
+                    {{^isroleadmins}}
+                    
                     <div class="col-4">
                   
 
                      {{#usebranch}}
                     <div class="form-group">
-                        <label for="acl"> Доступ до філій</label>
+                        <label  > Доступ до філій</label>
                         <table class="table table-sm table-striped">
                             <tr zippy="brow">
                                 <td zippy="branch_name"></td>
@@ -132,19 +135,40 @@
                             </tr>
 
                         </table>
+                        
+                        <div class="form-group">
+                          <div class="form-check   ">
+                               <input class="form-check-input" type="checkbox" zippy="editshowotherstores">
+                               <label class="form-check-label ms-sm-2" for="editshowotherstores"> Показувати стан складiв iнших фiлiй</label>
+                           </div>
+                       </div>             
+                        
                     </div>
                     {{/usebranch}} 
-                   {{#hideblock}}
+                   {{^usebranch}}
                     <div class="form-group">
-                        <label for="acl">Доступ  до складів</label>
-                       
+                        <label  >Доступ  до складів</label>
+                       <table class="table table-sm table-striped">
+                            <tr zippy="srow">
+                                <td zippy="store_name"></td>
+                                <td align="right"><input zippy="editst" class="acl" type="checkbox"></td>
+                            </tr>
+
+                        </table> 
                     </div>
                     <div class="form-group">
-                        <label for="acl">Доступ  до грошових рахунків</label>
-                       
+                        <label  >Доступ  до грошових рахунків</label>
+                          <table class="table table-sm table-striped">
+                            <tr zippy="mrow">
+                                <td zippy="mf_name"></td>
+                                <td align="right"><input zippy="editmf" class="acl" type="checkbox"></td>
+                            </tr>
+
+                        </table> 
+               
                     </div>
                     
-                    {{/hideblock}} 
+                    {{/usebranch}} 
                       <div class="form-group">
                          <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="editonlymy">
@@ -152,6 +176,9 @@
                         </div>
                      </div>   
                    </div>
+                   
+                    {{/isroleadmins}}
+                  
                     <div class="col-12 mt-2">
                       
                         <a zippy="cancel" class="btn btn-secondary  me-2   ">Скасувати</a>

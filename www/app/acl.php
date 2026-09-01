@@ -448,21 +448,37 @@ class ACL
      *
      */
     public static function getStoreBranchConstraint() {
+        $user = \App\System::getUser();
+        if ($user->rolename == 'admins') {
+            return '';
+        }
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
+            
+            $aclstore = $user->aclstore ?? '';
+             
+            if(strlen($aclstore)>0) {
+               return "  {$aclstore}  ";        
+            } else {
+                return "  0 ";
+            }
+       
+            
             return '';
         }
 
+        if($user->showotherstores  && dtrlen($user->aclbranch) >0) {
+            return "select stacl.store_id  from stores stacl where branch_id in ({$user->aclbranch} ) ";  
+        }     
+            
+        
         $id = \App\System::getBranch(); //если  выбран  конкретный
 
         if ($id > 0) {
             return "select stacl.store_id  from stores stacl where stacl.branch_id={$id} ";
         }
 
-        $user = \App\System::getUser();
-        if ($user->rolename == 'admins') {
-            return '';
-        }
+      
 
         if (strlen($user->aclbranch) == 0) {
             return " (0)";
@@ -471,12 +487,26 @@ class ACL
     }
 
     /**
-     * Возвращает  список касс для подстановки  в запрос по текущим  филиалам
+     * Возвращает  список касс для подстановки  в запрос  
      *
      */
     public static function getMFBranchConstraint() {
+        $user = \App\System::getUser();
+        if ($user->rolename == 'admins') {
+            return '';
+        }       
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
+            
+            $aclmf = $user->aclmf ?? '';
+            
+            if(strlen($aclmf)>0) {
+               return " {$aclmf} ";     
+            } else {
+                return " 0";
+            }
+       
+            
             return '';
         }
 
@@ -485,10 +515,7 @@ class ACL
             return "select stacl.mf_id  from mfund stacl where stacl.branch_id={$id} ";
         }
 
-        $user = \App\System::getUser();
-        if ($user->rolename == 'admins') {
-            return '';
-        }
+
 
         if (strlen($user->aclbranch) == 0) {
             return " (0)";
