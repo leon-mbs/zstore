@@ -169,6 +169,17 @@ class Order extends \App\Entity\Doc\Document
         return $html;
     }
 
+ 
+     //есть ли   резерв
+    public function hasReserve() {
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select coalesce(count(*),0) from entrylist where tag=-64 and  document_id=" . $this->document_id;
+        $am = round($conn->GetOne($sql));
+
+        return $am > 0;
+
+    }
+    
     //резервирование товаров
     public function reserve() {
 

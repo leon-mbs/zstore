@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Pages\Register;
 
 use App\Application as App;
@@ -129,7 +131,7 @@ class OrderList extends \App\Pages\Base
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $doc = $row->getDataItem();
+        $doc = $row->getDataItem()->cast();
 
         $n = $doc->document_number;
         if(strlen($doc->headerdata['ocorder'] ?? '')>0) {
@@ -165,7 +167,7 @@ class OrderList extends \App\Pages\Base
             $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
             $row->ispay->setAttribute('title','Оплачено');            
         }
-        $row->add(new Label('isreserved'))->setVisible($doc->hasStore());
+        $row->add(new Label('isreserved'))->setVisible($doc->hasReserve());
 
         $stname = Document::getStateName($doc->state);
 
@@ -555,7 +557,7 @@ class OrderList extends \App\Pages\Base
 
         if ($state == Document::STATE_INPROCESS || $state == Document::STATE_FINISHED || $state == Document::STATE_READYTOSHIP) {
             $this->statuspan->resform->setVisible(true);
-            $reserved = $this->_doc->hasStore();
+            $reserved = $this->_doc->hasReserve();
             $this->statuspan->resform->bres->setVisible(!$reserved);
             $this->statuspan->resform->store->setVisible(!$reserved);
             $this->statuspan->resform->bunres->setVisible($reserved);
@@ -763,7 +765,7 @@ class OrderList extends \App\Pages\Base
     }
 
     public function editOnClick($sender) {
-        $doc = $sender->getOwner()->getDataItem();
+        $doc = $sender->getOwner()->getDataItem()->cast();
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
@@ -773,7 +775,7 @@ class OrderList extends \App\Pages\Base
 
             return;
         }
-        if($doc->hasStore()) {
+        if($doc->hasReserve()) {
            $doc->setHD('doreserv',1);
         }
         $doc->updateStatus(Document::STATE_CANCELED);
