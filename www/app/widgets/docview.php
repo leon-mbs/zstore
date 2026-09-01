@@ -140,7 +140,7 @@ class DocView extends \Zippy\Html\PageFragment
         from entrylist e 
         join store_stock  s on e.stock_id = s.stock_id
         join items i on s.item_id = i.item_id 
-        where  coalesce(e.quantity,0) <> 0  and document_id=" . $docid . " order  by e.entry_id";
+        where  coalesce(e.quantity,0) <> 0 and tag <> -64 and document_id=" . $docid . " order  by e.entry_id";
 
         foreach(\App\Entity\Entry::findBySql($sql) as $entry) {
             $ret['entrylist'][]= array(
