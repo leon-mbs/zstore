@@ -5,9 +5,9 @@
     </head>
   <body>
         <div class="row">
-            <div class="col-12   col-md-10 col-md-8 " zippy="clist">
+            <div class="col-12   col-md-10 col-xl-8  col-xxl-7  " zippy="clist">
                 <h3>Розрахунки з постачальниками </h3>
-             <small>В списку тільки ті контрагенти з якими є  назакриті розрахунки </small>
+             <small>В списку тільки ті контрагенти з якими є  назакриті розрахунки. Борг постачальника  зазвичай - невiдправленi товари </small>
             <div class="navbar">
                     <form zippy="filter"  >
                        <div class="row  ">
@@ -62,6 +62,7 @@
 
 
                         <td></td>
+                        <td></td>
 
 
                     </tr>
@@ -70,11 +71,13 @@
 
             </div>
 
-            <div class="col-12 col-lg-10 col-xl-8 " zippy="plist">
+            <div class="col-12  " zippy="plist">
                 <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до переліку</a>
                 <h3 zippy="cname"></h3>
-                <span>До сплати </span><b zippy="allforpay"> </b> &nbsp;<span>Створити </span> <a zippy="payorder"></a> 
-
+               <form zippy="payform"  >
+              <div class="row  ">
+               <div class="col-12 col-lg-8 col-xl-6   " >
+            
                 <table class="table table-sm  ">
                     <tr>
 
@@ -84,18 +87,18 @@
                            {{#usebranch}}
                         <th>Фiлiя</th>
                            {{/usebranch}}
-                         <th class="text-end">Сума</th>
+                         <th  >Сума</th>
                        
 
 
-                        <th></th>
+                       
                          <th>Перевести в статус</th>
-
+                     
 
                     </tr>
                     <tr zippy="doclist">
 
-                        <td zippy="name"></td>
+                        <td  ><a zippy="name"></a></td>
                         <td zippy="number"></td>
                         <td zippy="date"></td>
                           {{#usebranch}}
@@ -103,33 +106,26 @@
                            {{/usebranch}}
 
                      
-                        <td zippy="sum" class="text-end"></td>
+                        <td    > 
+                         <input zippy="sum"   style="width:75px;"        class="form-control  ">
+                          </td>
 
 
-                        <td class="text-nowrap">
-                         &nbsp;   <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-                            &nbsp; &nbsp;<a zippy="pay"  >Внести оплату</a>
-
-
-                        </td>
+                  
                             <td  class="text-nowrap"  > <a zippy="stpayed">Оплачений</a> <a  zippy="stdone">Виконаний</a> <a  zippy="stclosed">Закритий</a>  </td>
-
+                     
                     </tr>
 
                 </table>
-               
-            </div>
-
-            <div class="col-12 col-lg-10 col-xl-8 " zippy="paypan">
-
-
-                <div class="navbar">
-                    <form zippy="payform"  >
-                        <div class="row  ">
+                </div>
+              </div>
+             <div class="navbar">
+                  
+                   <div class="row  ">
                         
                         <label class="col-form-label col-auto">До оплати</label>
                            <div class="col-auto  ">
-                           <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."                               class="form-control me-2">
+                           <input zippy="pamount" readonly="on" style="width:75px;"        class="form-control me-2">
                            </div>
                         <label class="col-form-label col-auto" for="payment">рахунок</label>
                            <div class="col-auto  ">
@@ -149,33 +145,23 @@
                         <label class="col-form-label col-auto">дата</label>
                            <div class="col-auto  ">
                            <input zippy="pdate" style="width:100px;" class="form-control me-2 ">
-                           </div>
-                            <div class="col-auto  ">
-                        <input zippy="pcomment" placeholder="Коментар..." class="form-control me-2">
+                         </div>
+                         <div class="col-auto  ">
+                        <input zippy="pcomment" placeholder="Коментар..." class="form-control me-2 qtyprice">
                         </div>
-                           <div class="col-auto  ">
-                        <button type="submit" class="  btn btn-info  me-2 ">Сплатити</button>
-
-                      </div></div>
-                    </form>
-
-                </div>
-                <b><i class="fa fa-credit-card"></i> Оплати ( <span zippy="pname"></span>)</b><br>
-                <table cellpadding="4">
-                    <tr zippy="paylist">
-                        <td zippy="pldate"></td>
-                        <td zippy="pluser"></td>
-                        <td class="text-end">&nbsp;<span zippy="plamount">&nbsp;</span></td>
-
-                        <td zippy="plmft"></td>
-                        <td zippy="plcomment"></td>
-
-                    </tr>
-                </table>
-
-
+                        <div class="col-auto  ">
+                        <button zippy="paybtn"  type="submit" class="  btn btn-success  me-2 ">Сплатити</button>
+                      </div>
+                        <div class="col-auto  ">
+                         <button zippy="payorder" type="submit" class="  btn btn-success  me-2 " title="Створити видатковий кассовий ордер">Створити КО</button>
+                      </div>
+                       
+                    </div>
+      
+                </div>   
+               </form>    
             </div>
-         
+          
         </div>
 
             

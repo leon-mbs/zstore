@@ -49,7 +49,6 @@ class Users extends \App\Pages\Base
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
-        $this->editpan->editform->add(new CheckBox('editshowotherstores'));
         $this->editpan->editform->add(new CheckBox('edithidemenu'));
 
         $this->editpan->editform->onSubmit($this, 'saveOnClick');
@@ -100,7 +99,6 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->editrole->setValue($this->user->role_id);
 
         $this->editpan->editform->editonlymy->setChecked($this->user->onlymy);
-        $this->editpan->editform->editshowotherstores->setChecked($this->user->showotherstores);
         $this->editpan->editform->edithidemenu->setChecked($this->user->hidemenu);
         $this->editpan->editform->editdisabled->setChecked($this->user->disabled);
 
@@ -161,7 +159,7 @@ class Users extends \App\Pages\Base
             return;
         }
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
-        $this->user->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
+      
         $this->user->hidemenu = $this->editpan->editform->edithidemenu->isChecked() ? 1 : 0;
         if($this->user->hidemenu==1) {
            $this->user->collapsesidebar = 1;   

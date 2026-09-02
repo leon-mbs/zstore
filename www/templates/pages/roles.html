@@ -15,7 +15,7 @@
            
                         <tr zippy="rolerow">
                             <td zippy="rolename"></td>
-                            <td><span title="Користувачiв" zippy="cnt" class="badge text-bg info "></span></td>
+                            <td><span title="Користувачiв" zippy="cnt" class="badge text-bg-success rounded-pill "></span></td>
 
 
                             <td><a title="Права доступу" zippy="acl"><i class="fa fa-user-lock"></i></a></td>
@@ -109,8 +109,8 @@
 
 
                             </div>
-                            <div class="form-group">
-                            <a zippy="cancel" class="btn btn-secondary   me-2  ">Скасувати</a>
+                            <div class="form-group d-flex  justify-content-end">
+                            <a zippy="cancel" class="btn btn-secondary   me-4  ">Скасувати</a>
                             
                                 <button type="submit" class="btn btn-primary   ">Зберегти</button>
                                
@@ -122,10 +122,16 @@
                             <div class="form-group">
 
                                 <table class="table table-sm  ms-4">
+                                   
+                                     <tr>
+                                        <td colspan="2">
+                                             Доступ до контрагентів 
+                                        </td>
+                                    </tr>
                                     <tr>
-                                        <td>
-                                        <label for="editcusttype">Доступ до  контрагентів </label>
-                                        <select zippy="editcusttype" class="form-control ms-sm-2">
+                                        <td colspan="2">
+                                       
+                                        <select zippy="editcusttype" class="form-control  ">
                                             <option value="0">Всі </option>
                                             <option value="1">Покупці</option>
                                             <option value="2">Постачальники</option>
@@ -135,6 +141,8 @@
                                  <tr>
                                         <td>
                                             <input class="form-check-input" type="checkbox" zippy="editnoshowpartion">
+                                           </td> 
+                                           <td> 
                                             <label class="form-check-label ms-sm-2" for="editnoshowpartion"> Не показувати закупiвельнi цiни</label>
                                         </td> 
                                        </tr> 
@@ -142,24 +150,36 @@
                                         <tr>
                                         <td>
                                             <input class="form-check-input" type="checkbox" zippy="editcanevent">
-                                            <label class="form-check-label ms-sm-2" for="editcanevent"> Може  створювати завдання iншим користувачам</label>
+                                             </td> 
+                                           <td> 
+                                          <label class="form-check-label ms-sm-2" for="editcanevent"> Може  створювати завдання iншим користувачам</label>
                                         </td> 
                                            
                                        </tr>
                                         <tr>
                                         <td>
                                             <input class="form-check-input" type="checkbox" zippy="editdashboard">
-                                            <label class="form-check-label ms-sm-2" for="editdashboard"> Показувати  вiджети на дашбордi</label>
-                                        </td> 
+                                             </td> 
+                                           <td> 
+                                          <label class="form-check-label ms-sm-2" for="editdashboard"> Показувати  вiджети на дашбордi</label>
+                                        </td></tr> 
+                                     {{#usebranch}}
+                                      <tr> <td>
+                             
+                                           <input class="form-check-input" type="checkbox" zippy="editshowotherstores">
+                                            </td> 
+                                           <td> 
+                                          <label class="form-check-label ms-sm-2" for="editshowotherstores"> Доступ до складiв iнших фiлiй</label>
+                                         </td> 
                                            
                                        </tr>
                                       
-                                  
+                                       {{/usebranch}}
                           
 
 
                                     <tr>
-                                        <td>
+                                        <td colspan="2">
                                             <b>Доступ до модулів</b>
                                         </td>
                                     </tr>
@@ -169,7 +189,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editocstore">
-                                            <label class="form-check-label ms-sm-2" for="editocstore"> Iнтеграція з
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editocstore"> Iнтеграція з
                                                 опенкарт</label>
                                         </td>
                                     </tr>
@@ -179,7 +200,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editwoocomerce">
-                                            <label class="form-check-label ms-sm-2" for="editwoocomerce"> Iнтеграція з
+                                            </td> 
+                                           <td> <label class="form-check-label ms-sm-2" for="editwoocomerce"> Iнтеграція з
                                                 Woocomerce</label>
                                         </td>
                                     </tr>
@@ -190,7 +212,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="edithoroshop">
-                                            <label class="form-check-label ms-sm-2" for="editwoocomerce"> Iнтеграція з
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editwoocomerce"> Iнтеграція з
                                                 Хорошоп</label>
                                         </td>
                                     </tr>
@@ -202,7 +225,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editshop">
-                                            <label class="form-check-label ms-sm-2" for="editshop"> Онлайн каталог </label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editshop"> Онлайн каталог </label>
                                         </td>
                                     </tr>
                                     {{/shop}}
@@ -211,7 +235,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editnote">
-                                            <label class="form-check-label ms-sm-2" for="editnote"> База знань </label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editnote"> База знань </label>
                                         </td>
                                     </tr>
                                     {{/note}}
@@ -220,7 +245,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editissue">
-                                            <label class="form-check-label ms-sm-2" for="editissue"> Проекти та
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editissue"> Проекти та
                                                 завдання </label>
                                         </td>
                                     </tr>
@@ -230,7 +256,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editppo">
-                                            <label class="form-check-label ms-sm-2" for="editppo"> Програмний РРО </label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editppo"> Програмний РРО </label>
                                         </td>
                                     </tr>
                                     {{/ppo}}
@@ -239,7 +266,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editnp">
-                                            <label class="form-check-label ms-sm-2" for="editnp">Нова Пошта</label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editnp">Нова Пошта</label>
                                         </td>
                                     </tr>
                                     {{/np}}
@@ -248,7 +276,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editpu">
-                                            <label class="form-check-label ms-sm-2" for="editpu">PromUa</label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editpu">PromUa</label>
                                         </td>
                                     </tr>
                                     {{/promua}}
@@ -258,7 +287,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editcb">
-                                            <label class="form-check-label ms-sm-2" for="editcb">CheckBox</label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editcb">CheckBox</label>
                                         </td>
                                     </tr>
                                     {{/checkbox}}
@@ -268,7 +298,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editvk">
-                                            <label class="form-check-label ms-sm-2" for="editvk">ВчасноКаса</label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editvk">ВчасноКаса</label>
                                         </td>
                                     </tr>
                                     {{/vkassa}}
@@ -279,7 +310,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editvdoc">
-                                            <label class="form-check-label ms-sm-2" for="editvdoc">Вчасно Документооборот</label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editvdoc">Вчасно Документооборот</label>
                                         </td>
                                     </tr>
                                     {{/vdoc}}
@@ -288,7 +320,8 @@
                                         <td>
 
                                             <input class="form-check-input" type="checkbox" zippy="editdf">
-                                            <label class="form-check-label ms-sm-2" for="editdf">Дропшипінг та  фулфілмент</label>
+                                           </td> 
+                                           <td>  <label class="form-check-label ms-sm-2" for="editdf">Дропшипінг та  фулфілмент</label>
                                         </td>
                                     </tr>
                                     {{/df}}
@@ -321,8 +354,8 @@
 
 
                     </div>
-                    <div class="form-group">
-                            <a zippy="cancelmenu" class="btn btn-secondary   me-2  ">Скасувати</a>
+                    <div class="form-group  d-flex  justify-content-end">
+                            <a zippy="cancelmenu" class="btn btn-secondary   me-4  ">Скасувати</a>
                         <button type="submit" class="btn btn-primary  ">Зберегти</button>
                    
                     </div>

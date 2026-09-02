@@ -179,7 +179,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
-            $this->docform->editdeliverytype->setValue( $this->_doc->headerdata['editdeliverytype']) ;
+            $this->docform->editdeliverytype->setValue( $this->_doc->headerdata['deliverytype']) ;
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
             $this->docform->payreq->setText($this->_doc->getHD('payreq'));
   

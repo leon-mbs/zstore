@@ -70,7 +70,7 @@ class User extends \ZCL\DB\Entity
             }
         }
 
-
+        $this->showotherstores = $acl['showotherstores']??0;
         $this->custtype = $acl['custtype']??0;
         $this->canevent = $acl['canevent']??0;
         $this->dashboard = $acl['dashboard']??0;

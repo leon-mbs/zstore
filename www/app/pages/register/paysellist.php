@@ -12,6 +12,7 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
@@ -28,7 +29,7 @@ class PaySelList extends \App\Pages\Base
     public $_custlist  = array();
     public $_doclist   = array();
     public $_blist   = array();
-    public $_pays      = array();
+     
     public $_totamountd = 0;
     public $_totamountc = 0;
     public $_bal = 0;
@@ -50,12 +51,10 @@ class PaySelList extends \App\Pages\Base
 
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
-        $this->plist->add(new Label("allforpay"));
-        $this->plist->add(new RedirectLink("payorder"));
-        $this->plist->add(new ClickLink("back", $this, "onBack"));
 
-        $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
+         $this->plist->add(new ClickLink("back", $this, "onBack"));
 
+     
         $this->add(new Panel("dlist"))->setVisible(false);
         $this->dlist->add(new Label("cnamed"));
         $this->dlist->add(new ClickLink("backd", $this, "onBack"));
@@ -66,17 +65,19 @@ class PaySelList extends \App\Pages\Base
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
-        $this->add(new Panel("paypan"))->setVisible(false);
-        $this->paypan->add(new Label("pname"));
-        $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->paypan->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
-        $this->paypan->payform->add(new TextInput('pamount'));
-        $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new Date('pdate', time()));
+       
+        $this->plist->add(new Form('payform'));
+        $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->plist->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
+        $this->plist->payform->add(new TextInput('pamount'));
+        $this->plist->payform->add(new TextInput('pcomment'));
+        $this->plist->payform->add(new Date('pdate', time()));
+        $doclist = $this->plist->payform->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
 
-        $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-      
+        $this->plist->payform->add(new SubmitButton("paybtn"))->onClick($this, 'payOnSubmit');
+        $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payorderOnSubmit');
+   
+        
 
         $this->updateCust();
 
@@ -173,14 +174,8 @@ GROUP BY c.customer_name,
 
         $this->_cust = $sender->owner->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
-        $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
-        if($this->_cust->act >  $this->_cust->pas) {
-          $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),2 ));
-        }   else {
-          $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),2 ));
-        }
+
+       
         
         
         $this->updateDocs();
@@ -206,25 +201,24 @@ GROUP BY c.customer_name,
         }
         $this->_doclist = array_reverse($this->_doclist);
 
-        $this->plist->doclist->Reload();
+        $this->plist->payform->doclist->Reload();
     }
 
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
-
-        $row->add(new Label('name', $doc->meta_desc));
+        $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
+       
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('branch_name', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
 
-        $row->add(new Label('sum', H::fa($doc->payamount  - $doc->payed)));
+        $doc->forpay =   H::fa($doc->payamount  - $doc->payed)  ;
+        $row->add(new TextInput('sum',new \Zippy\Binding\PropertyBinding($doc,'forpay')));
 
-        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
-        $row->pay->setVisible($doc->payamount > 0);
+        
         $row->add(new ClickLink('stpayed'))->onClick($this, 'stOnClick');
-        $row->add(new ClickLink('stdone'))->onClick($this, 'stOnClick');
-        $row->add(new ClickLink('stclosed'))->onClick($this, 'stOnClick');
+        $row->add(new ClickLink('stdone',$this, 'stOnClick'))->setVisible(false);
+        $row->add(new ClickLink('stclosed',$this, 'stOnClick'))->setVisible(false); 
 
 
     }
@@ -244,7 +238,7 @@ GROUP BY c.customer_name,
 
 
         $this->docview->setVisible(true);
-        $this->paypan->setVisible(false);
+       
         $this->docview->setDoc($this->_doc);
         $this->goAnkor('dankor');
     }
@@ -254,7 +248,7 @@ GROUP BY c.customer_name,
         $this->dlist->setVisible(false);
         $this->plist->setVisible(false);
         $this->docview->setVisible(false);
-        $this->paypan->setVisible(false);
+       
         $this->updateCust();
     }
 
@@ -262,15 +256,28 @@ GROUP BY c.customer_name,
        $item = $sender->getOwner()->getDataItem(); 
        $doc = Document::load($item->document_id);
        
-       
-       if(strpos($sender->id,'stpayed')===0) {
-           $doc->updateStatus(Document::STATE_PAYED,true);  
-           
+       if($this->_doc->getHD('waitpay' )==1) {
+           $this->_doc->setHD('waitpay',0); 
+           $this->_doc->save();
+       }     
+       if(strpos($sender->id,'stpayed')===0  ) {
+          if($this->_doc->state == Document::STATE_WP) {
+             $this->_doc->updateStatus(Document::STATE_PAYED);            
+          }   
        }      
        if(strpos($sender->id,'stdone')===0) {
+         if($this->_doc->state == Document::STATE_WP) {
+            
+            $this->_doc->updateStatus(Document::STATE_PAYED);            
+         }  
+   
            $doc->updateStatus(Document::STATE_FINISHED,true);  
        }      
        if(strpos($sender->id,'stclosed')===0) {
+         if($this->_doc->state == Document::STATE_WP) {
+            
+            $this->_doc->updateStatus(Document::STATE_PAYED);            
+         }  
            $doc->updateStatus(Document::STATE_CLOSED,true);  
        }      
         
@@ -278,66 +285,13 @@ GROUP BY c.customer_name,
 
     }
 
-    //оплаты
-
-
-    public function payDoc($docid) {
-
-        $this->_doc = Document::load($docid)->cast()  ;
-        $this->_cust = \App\Entity\Customer::load($this->_doc->customer_id);
-        $this->showPay();
-        $this->plist->cname->setText($this->_cust->customer_name);
-        $this->updateDocs();
-
-        $this->clist->setVisible(false);
-        $this->plist->setVisible(true);
-
+  
+    
+    public function payorderOnSubmit($sender) {
+        
     }
-
-    public function payOnClick($sender) {
-        $this->docview->setVisible(false);
-
-        $this->_doc = $sender->owner->getDataItem();
-         
-        //   $this->plist->doclist->setSelectedRow($sender->getOwner());
-        $this->showPay();
-    }
-
-    public function showPay() {
-        //        $this->plist->doclist->Reload(false);
-        $this->docview->setVisible(false);
-
-
-        $this->paypan->setVisible(true);
-
-
-        $this->plist->doclist->Reload(false);
-
-        $this->goAnkor('dankor');
-        $amount = $this->_doc->payamount - $this->_doc->payed;
-
-        $this->paypan->payform->pamount->setText(H::fa($amount));
-        $this->paypan->payform->pcomment->setText("");
-        $this->paypan->pname->setText($this->_doc->document_number);
-        if($this->_doc->getHD('payment') >0) {
-            $this->paypan->payform->payment->setValue($this->_doc->getHD('payment'));
-        }
-
-        $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
-        $this->paypan->paylist->Reload();
-    }
-
-    public function payOnRow($row) {
-        $pay = $row->getDataItem();
-        $row->add(new Label('plamount', H::fa($pay->amount)));
-        $row->add(new Label('pluser', $pay->username));
-        $row->add(new Label('pldate', H::fdt($pay->paydate)));
-        $row->add(new Label('plmft', $pay->mf_name));
-        $row->add(new Label('plcomment', $pay->notes));
-    }
-
     public function payOnSubmit($sender) {
-        $form = $this->paypan->payform;
+        $form = $this->plist->payform;
         $pos_id = $form->pos->getValue();
         $amount = $form->pamount->getText();
         $pdate = $form->pdate->getDate();
@@ -351,6 +305,8 @@ GROUP BY c.customer_name,
              $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d', $da) );
             return;
        }
+
+
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
@@ -401,7 +357,7 @@ GROUP BY c.customer_name,
         $this->setSuccess('Оплата додана');
 
         //$this->updateDocs();
-        $this->paypan->setVisible(false);
+       
         $this->onBack(null);
     }
 
