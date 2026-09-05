@@ -248,8 +248,8 @@ class CustomerList extends \App\Pages\Base
         $row->add(new ClickLink('contentlist'))->onClick($this, 'editContentOnClick');
 
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
-
-        $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
+  
+        $row->customername->setAttribute('class', $item->class == 1 ? 'text-secondary' : null);
 
         if ($item->customer_id == $this->_customer->customer_id) {
             $row->setAttribute('class', 'table-success');
