@@ -46,7 +46,9 @@ class ProdAreaList extends \App\Pages\Base
         $row->add(new Label('pa_notes', $item->notes));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+
+        $row->pa_name->setAttribute('class', $item->disabled == 1 ? 'text-secondary' : null);
+        
    }
 
     public function deleteOnClick($sender) {

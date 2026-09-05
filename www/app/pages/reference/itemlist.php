@@ -241,8 +241,7 @@ class ItemList extends \App\Pages\Base
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-
+       
 
         $row->add(new ClickLink('itemname', $this, 'editOnClick'))->setValue($item->itemname);
 
@@ -258,6 +257,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('price5', $item->price5));
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        $row->itemname->setAttribute('class', $item->disabled == 1 ? 'text-secondary' : null);
 
         $row->add(new Label('onstore'))->setVisible($item->qty > 0);
         $row->add(new Label('cell', $item->cell));

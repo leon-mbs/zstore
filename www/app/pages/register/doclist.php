@@ -319,6 +319,7 @@ class DocList extends \App\Pages\Base
         $doc = Document::load($doc->document_id);
         // $doc = $doc->cast() ;
         $this->show($doc);
+       
     }
 
     public function show($doc) {
@@ -404,6 +405,7 @@ class DocList extends \App\Pages\Base
         }          
         
           $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-active') ",true)  ;
+          $this->goAnkor('dankor');
     }
 
     //редактирование

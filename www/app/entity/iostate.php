@@ -21,6 +21,7 @@ class IOState extends \ZCL\DB\Entity
 
     //внебалансовые доходы (для  статистики)
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
+    public const TYPE_BEGIN     = 31;     //внесение  начальных остатков
  
     //расход платежи
     public const TYPE_BASE_OUTCOME     = 50;    // закупка ТМЦ  услуг
@@ -150,7 +151,8 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_LOST] = "Втрати при інвентаризації";
             $list[self::TYPE_TRASH] = "Відходи виробництва";
             $list[self::TYPE_OVER] = "Надлишки при інвентаризації";
-   
+            $list[self::TYPE_BEGIN] = "Внесення початкових залишкiв";
+           
         }
 
         return $list;
@@ -195,7 +197,8 @@ class IOState extends \ZCL\DB\Entity
 
        $list[self::TYPE_FIN] = "Доходи від фінансових операцій";
        $list[self::TYPE_OTHER_INCOME] = "Інші доходи";
-     
+       $list[self::TYPE_BEGIN] = "Внесення початкових залишкiв";
+       
        return $list;
     }
     /**

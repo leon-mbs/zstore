@@ -68,7 +68,7 @@ class MFList extends \App\Pages\Base
         $row->add(new Label('amount', \App\Helper::fa($this->_balance[$item->mf_id] ??0)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+        $row->mf_name->setAttribute('class', $item->disabled == 1 ? 'text-secondary' : null);
 
     }
 

@@ -71,8 +71,8 @@ class SalaryTypeList extends \App\Pages\Base
         $row->add(new Label('code', $item->salcode));
         $row->add(new Label('acccode', $item->acccode ?? ''));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-        
+        $row->stname->setAttribute('class', $item->disabled == 1 ? 'text-secondary' : null);
+      
     }
 
     public function deleteOnClick($sender) {

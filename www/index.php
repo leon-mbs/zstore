@@ -60,6 +60,11 @@ try {
         echo $e->getLine() . ' ';
         echo $e->getFile() . '<br>';
     }
-
+       
+      
+    $logger->error( $e->getTraceAsString());
+    $logger->error( $e->getFile().' '.$e->getLine());
+      
+ 
 }
  
