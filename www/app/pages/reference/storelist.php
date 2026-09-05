@@ -59,8 +59,8 @@ class StoreList extends \App\Pages\Base
         $row->add(new Label('qty', H::fqty($conn->GetOne($sql))));
         $row->add(new ClickLink('storeedit'))->onClick($this, 'storeeditOnClick');
         $row->add(new ClickLink('storedelete'))->onClick($this, 'storedeleteOnClick');
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-
+     
+        $row->storename->setAttribute('class', $item->disabled == 1 ? 'text-secondary' : null);
 
     }
 
