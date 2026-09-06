@@ -297,79 +297,158 @@ GROUP BY c.customer_name,
        $this->updateDocs() ;
     }
    
-    public function payorderOnSubmit($sender) {
-        
-    }  
+    
+
+   
 
     public function payOnSubmit($sender) {
         $form = $this->plist->payform;
-
-        $amount = $form->pamount->getText();
+        $pos_id = $form->pos->getValue();
         $pdate = $form->pdate->getDate();
-        if ($amount == 0) {
+        $mf= $form->payment->getValue();
+        $pcomment= $form->pcomment->getText();
+    
+      
+        $amount = 0;
+        $ret = 0;
+      
+        foreach($this->_doclist  as $doc){
+           $am = doubleval($doc->forpay); 
+           $amount +=$am;
+           if($doc->meta_name=="ReturnIssue"){
+              $ret +=$am;  
+           } else {
+              $amount +=$am;
+           }
+        }  
+        if(( $amount+$ret)==0 ) {
             return;
         }
-
+      
         $common = \App\System::getOptions('common') ;
-        $da = $common['actualdate'] ?? 0 ;
+        if($common['allowminusmf'] !=1) {
+            $b = \App\Entity\MoneyFund::Balance() ;
 
-        if($da>$pdate) {
-            $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d', $da));
-            return;
-        }
-
-
-
-        if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
-
-            $this->setWarn('Сума більше необхідної');
-        }
-        if (in_array($this->_doc->meta_name, array( 'GoodsIssue','Invoice','ServiceAct','Order','POSCheck'))) {
-            \App\Entity\IOState::addIOState($this->_doc->document_id,  $amount, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
-        }       
-        if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
-
-            $options=\App\System::getOptions('common')  ;
-            if($options['allowminusmf'] !=1) {
-                $mf= $form->payment->getValue();
-                $b = \App\Entity\MoneyFund::Balance() ;
-
-                if($b[$mf] < $amount) {
-                    $this->setError('Сума на рахунку недостатня  для  повернення');
-                    return;
-                }
+            if($b[$mf] < ($ret - $amount ) ) {
+                $this->setError('Сума  на рахунку недостатня  для  оплати');
+                return;
             }
-             \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true,$pdate);
-            $amount = 0 - $amount;
-  
-  
-        }   
-
- 
-        $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
- 
- 
-            
-        if($payed>=$this->_doc->payamount) {
-            $this->markPayed()  ;
-        }
-        if ($payed > 0) {
-            $this->_doc->payed = $payed;
+        }  
+        foreach($this->_doclist  as $doc){
+           $am = doubleval($doc->forpay); 
+           if($am==0 ) {
+               continue;
+           }    
+           if($doc->meta_name=="RetIssue"){
+              continue; 
+           }    
+        } 
+     
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
          
+        try {
+            foreach($this->_doclist  as $doc){
+               $am = doubleval($doc->forpay); 
+               if($am==0 ) {
+                   continue;
+               }    
+               //отмечаем  оплаченными
+               if($doc->waitpay==1) {
+                  $doc->waitpay=0; 
+                  $doc->save(); 
+               }
+               if($doc->state==Document::STATE_WA) {
+                   $doc->updateStatus(Document::STATE_PAYED,true);
+               }    
+               if($sender->id=='paybtn') {   //создаем  оплаты
+                 if (in_array($doc->meta_name, array( 'Order','Invoice','POSCheck', 'GoodsIssue','ServiceAct'))) {
+                    \App\Entity\IOState::addIOState($doc->document_id, $am, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
+                    Pay::addPayment($doc->document_id, $pdate,  $am,$mf , $pcomment);
+       
+                 }    
+
+                 if (in_array($this->_doc->meta_name, array( 'ReturnIssue'))) {
+                   
+                    \App\Entity\IOState::addIOState($doc->document_id, 0 - $am, \App\Entity\IOState::TYPE_BASE_INCOME, true, $pdate);
+                    Pay::addPayment($doc->document_id, $pdate, 0- $am,$mf , $pcomment);
+       
+           
+                 }          
+                 $doc = \App\Entity\Doc\Document::load($doc->document_id)->cast();
+                 $doc->DoBalans();
+   
+               }
+            }    
+            if($sender->id=='payorder') {//создаем  КО
+                 if($ret > 0) {                       
+                     $doc=Document::create('OutcomeMoney');
+                     $doc->document_number = $doc->nextNumber() ;
+                     $doc->amount = $ret ;
+                     $doc->payamount = $ret ;
+                     $doc->payed = o ;
+                     $doc->notes = $pcomment ;
+                     $doc->document_number = $pdate ;
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     $doc->setHD('paymentname' ,  $form->payment->getValueName() );
+                     $doc->setHD('type',   \App\Entity\IOState::TYPE_OTHER_OUTCOME)  ;
+                     $doc->setHD('detail',1) ;
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     
+                     $doc->save();
+                     
+                     $doc->updateStatus(Document::STATE_NEW);
+                     $doc->updateStatus(Document::STATE_EXECUTED);
+                  
+                 } 
                 
-        }
-  
-        $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
-        $doc->DoBalans();
-        
+                 if($amount > 0) {
+                     $doc=Document::create('IncomeMoney');
+                     $doc->document_number = $doc->nextNumber() ;
+                     $doc->amount = $amount ;
+                     $doc->payamount = $amount ;
+                     $doc->payed = o ;
+                     $doc->notes = $pcomment ;
+                     $doc->document_number = $pdate ;
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     $doc->setHD('paymentname',  $form->payment->getValueName() );
+                     $doc->setHD('type',  \App\Entity\IOState::TYPE_BASE_INCOME );
+                     $doc->setHD('detail', 1);
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     
+                     $doc->save();
+                     
+                     $doc->updateStatus(Document::STATE_NEW);
+                     $doc->updateStatus(Document::STATE_EXECUTED);
+                
+                 } 
+                 
+                 $conn->CommitTrans();
+                 $this->updateDocs();
+                 $this->onBack(null);  
+      
+                 $this->setSuccess('Створено квсовий ордер');
+
+                 return;
+            }
+
+            $conn->CommitTrans();
+          
+        } catch(\Throwable $ee) {
+          
+            $conn->RollbackTrans();
+ 
+            $this->setError($ee->getMessage());
+            return;
+        }        
+        $this->onBack(null);  
+      
         $this->setSuccess('Оплата додана');
 
-        //$this->updateDocs();
-        
-        $this->onBack(null);
+        $this->updateDocs();
+       
+       
     }
-
-
    
 
     //детализация  баланса

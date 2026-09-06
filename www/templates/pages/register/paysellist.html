@@ -77,7 +77,7 @@
                <form zippy="payform"  >
               <div class="row  ">
                <div class="col-12 col-lg-8 col-xl-6   " >
-            
+                <small>Щоб пропустити обробку документа поставте 0 в сумi</small>
                 <table class="table table-sm  ">
                     <tr>
 
@@ -107,11 +107,9 @@
 
                      
                         <td    > 
-                         <input zippy="sum"   style="width:75px;"        class="form-control  ">
+                         <input zippy="sum"   style="width:75px;"        class="form-control paysumrow ">
                           </td>
-
-
-                  
+                          
                             <td  class="text-nowrap"  > <a zippy="stpayed">Оплачений</a> <a  zippy="stdone">Виконаний</a> <a  zippy="stclosed">Закритий</a>  </td>
                      
                     </tr>
@@ -216,6 +214,34 @@
             
    <div class="col-12 col-lg-10 col-xl-8 ">    <a id="dankor"></a>
                 <div zippy="docview"></div>
-            </div>              
+            </div> 
+            
+<script>
+        
+           
+           setInterval(()=>
+           {
+              
+               var sum=0;
+               $('input.paysumrow').each(function(index, element) {
+ 
+                      
+                     var am =  $(element).val( )
+                    
+                     sum =  sum+(parseVal( am ))
+                     
+                  
+                 
+                  
+                });
+               
+                $("#pamount").val(   fa( sum))                       
+                                   
+               
+               
+           }, 500);
+           
+    
+    </script>                         
     </body>
 </html>
