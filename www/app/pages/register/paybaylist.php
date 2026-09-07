@@ -182,7 +182,9 @@ GROUP BY c.customer_name,
         $this->_cust = $sender->getOwner()->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
       
-      
+        $this->plist->payform->pcomment->setText('')  ;
+        $this->plist->payform->payment->setValue(0)  ;
+     
         $this->updateDocs();
 
         $this->clist->setVisible(false);
@@ -264,53 +266,53 @@ GROUP BY c.customer_name,
     public function stOnClick($sender) {
         
        $item = $sender->getOwner()->getDataItem(); 
-       $this->_doc = Document::load($item->document_id);
+       $doc = Document::load($item->document_id);
     
-       if($this->_doc->getHD('waitpay' )==1) {
-           $this->_doc->setHD('waitpay',0); 
-           $this->_doc->save();
+       if($doc->getHD('waitpay' )==1) {
+           $doc->setHD('waitpay',0); 
+           $doc->save();
        }
     
        if(strpos($sender->id,'stpayed')===0   ) {
-          if($this->_doc->state == Document::STATE_WP) {
-            $this->_doc->updateStatus(Document::STATE_PAYED);            
+          if($doc->state == Document::STATE_WP) {
+             $doc->updateStatus(Document::STATE_PAYED);            
           }      
        }      
        if(strpos($sender->id,'stdone')===0) {
-           if($this->_doc->state == Document::STATE_WP) {
+           if($doc->state == Document::STATE_WP) {
             
-              $this->_doc->updateStatus(Document::STATE_PAYED);            
+              $doc->updateStatus(Document::STATE_PAYED);            
            }            
-           $this->_doc->updateStatus(Document::STATE_FINISHED,true);  
+           $doc->updateStatus(Document::STATE_FINISHED,true);  
        }      
        if(strpos($sender->id,'stclosed')===0) {
-         if($this->_doc->state == Document::STATE_WP) {
+         if($doc->state == Document::STATE_WP) {
             
-            $this->_doc->updateStatus(Document::STATE_PAYED);            
+            $doc->updateStatus(Document::STATE_PAYED);            
          }       
          
-          $this->_doc->updateStatus(Document::STATE_CLOSED,true);  
+         $doc->updateStatus(Document::STATE_CLOSED,true);  
               
        }      
      
         
        $this->updateDocs() ;
     }
-   
-    
-
-   
-
+  
     public function payOnSubmit($sender) {
         $form = $this->plist->payform;
-        $pos_id = $form->pos->getValue();
+     //   $pos_id = $form->pos->getValue();
         $pdate = $form->pdate->getDate();
         $mf= $form->payment->getValue();
         $pcomment= $form->pcomment->getText();
-    
-      
+       
         $amount = 0;
         $ret = 0;
+        if($mf==0 ) {
+            $this->setError('Не вибрана каса') ;
+            return;
+        }      
+      
       
         foreach($this->_doclist  as $doc){
            $am = doubleval($doc->forpay); 
@@ -354,11 +356,11 @@ GROUP BY c.customer_name,
                    continue;
                }    
                //отмечаем  оплаченными
-               if($doc->waitpay==1) {
-                  $doc->waitpay=0; 
-                  $doc->save(); 
+               if( $doc->getHD('waitpay')==1) {
+                   $doc->setHD('waitpay',0) ;
+                   $doc->save(); 
                }
-               if($doc->state==Document::STATE_WA) {
+               if($doc->state==Document::STATE_WP) {
                    $doc->updateStatus(Document::STATE_PAYED,true);
                }    
                if($sender->id=='paybtn') {   //создаем  оплаты
@@ -368,7 +370,7 @@ GROUP BY c.customer_name,
        
                  }    
 
-                 if (in_array($this->_doc->meta_name, array( 'ReturnIssue'))) {
+                 if (in_array($doc->meta_name, array( 'ReturnIssue'))) {
                    
                     \App\Entity\IOState::addIOState($doc->document_id, 0 - $am, \App\Entity\IOState::TYPE_BASE_INCOME, true, $pdate);
                     Pay::addPayment($doc->document_id, $pdate, 0- $am,$mf , $pcomment);
@@ -386,10 +388,11 @@ GROUP BY c.customer_name,
                      $doc->document_number = $doc->nextNumber() ;
                      $doc->amount = $ret ;
                      $doc->payamount = $ret ;
-                     $doc->payed = o ;
+                     $doc->payed = 0 ;
                      $doc->notes = $pcomment ;
-                     $doc->document_number = $pdate ;
+                     $doc->document_date = $pdate ;
                      $doc->customer_id = $this->_cust->customer_id ;
+                     $doc->setHD('payment' ,  $mf);
                      $doc->setHD('paymentname' ,  $form->payment->getValueName() );
                      $doc->setHD('type',   \App\Entity\IOState::TYPE_OTHER_OUTCOME)  ;
                      $doc->setHD('detail',1) ;
@@ -407,10 +410,11 @@ GROUP BY c.customer_name,
                      $doc->document_number = $doc->nextNumber() ;
                      $doc->amount = $amount ;
                      $doc->payamount = $amount ;
-                     $doc->payed = o ;
+                     $doc->payed = 0 ;
                      $doc->notes = $pcomment ;
-                     $doc->document_number = $pdate ;
+                     $doc->document_date = $pdate ;
                      $doc->customer_id = $this->_cust->customer_id ;
+                     $doc->setHD('payment' ,  $mf);
                      $doc->setHD('paymentname',  $form->payment->getValueName() );
                      $doc->setHD('type',  \App\Entity\IOState::TYPE_BASE_INCOME );
                      $doc->setHD('detail', 1);
