@@ -21,7 +21,7 @@
     "symfony/polyfill-mbstring": "^1.29.0",
     "symfony/polyfill-uuid": "^1.29.0",
     "leon-mbs/zippy": "~2.8.2",
-    "leon-mbs/ppolib": "~1.6.0",
+    "leon-mbs/ppolib": "~1.7.0",
 
     "ext-mysqli": "*",
     "ext-zip": "*",
