@@ -210,13 +210,13 @@
                         <form zippy="navform"  >                   
                            <div class="row  ">
                             <div class="col-auto  ">
-                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-info ms-4"> 
+                              <input  zippy="baddnewpos"  type="submit" value="Додати позицію  "   class="btn btn-success ms-4"> 
                            </div> 
                            <div class="col-auto  ">
                              <input placeholder="Швидкий пошук..." zippy="itemfast" class="form-control"   >                            
                            </div> 
                            <div class="col-auto  ">
-                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-info ms-4">     
+                             <input  zippy="addfast"  type="submit" value="+"   class="btn btn-success ms-4">     
                             </div> 
                             {{#usescanner}}
                              <div class="col-auto  ">
@@ -235,6 +235,8 @@
                       
                         <div class="card" style="font-size:large">
                           {{^modeof}} 
+                             <div class="table-responsive-lg  "    >
+             
                             <table class="table   " >
                             <tr>
                                   
@@ -343,6 +345,7 @@
                                     <td > </td>
                                 </tr>      
                             </table>
+                            </div>
                              {{/modeof}}  
                              {{#modeof}}  
                             <div class="row ">
@@ -731,6 +734,8 @@
 
                   <a zippy="refresh" >&nbsp;&nbsp;<i class="fa fa-undo"></i>  <b>Оновити</b> </a>
                   {{^modeof}}
+                     <div class="table-responsive-lg  "    >
+             
                 <table class="table  table-sm">
                     <tr>
 
@@ -792,6 +797,7 @@
                     </tr>
 
                 </table> 
+                </div>
                   {{/modeof}}
                    {{#modeof}}
                 <div class="row mt-2">
