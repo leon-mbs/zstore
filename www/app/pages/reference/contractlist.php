@@ -407,7 +407,7 @@ class ContractDataSource implements \Zippy\Interfaces\DataSource
         }
         if (strlen($text) > 0) {
             $text = Contract::qstr('%' . $text . '%');
-            $where =   " and contract_number like {$text}   ";
+            $where =   "   contract_number like {$text}   ";
         }
         
         $user=\App\System::getUser() ;
