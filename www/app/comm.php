@@ -23,7 +23,14 @@ class Comm
 
             if($doc != null) {
                 $filename = strtolower($doc->meta_name) . ".pdf";
-                $html = $doc->cast()->generateReport();
+                $doc = $doc->cast()   ;
+                if($doc->meta_name=="POSCheck" || $doc->meta_name=="OrderFood"  ) {
+                    $html = $doc->generatePosReport();
+                }   else {
+                    $html = $doc->generateReport();
+                }
+                
+                
                 $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
 
