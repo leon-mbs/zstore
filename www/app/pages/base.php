@@ -3,7 +3,8 @@
 namespace App\Pages;
 
 use App\Application as App;
-use App\Helper;
+ 
+use App\Helper as H;
 use App\Session;
 use App\System;
 use Zippy\Html\Label;
@@ -35,7 +36,7 @@ class Base extends \Zippy\Html\WebPage
        
         //миграция  данных
         if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
-            Helper::migration() ;
+            H::migration() ;
             Session::getSession()->migrationcheck = true;
         }       
       //  $this->_tvars['curversion'] = System::CURR_VERSION ;
@@ -109,11 +110,11 @@ class Base extends \Zippy\Html\WebPage
         //меню
         $menu = Session::getSession()->menu ?? [];
         if(count($menu)==0) {
-            $menu["docmenu"] = Helper::generateMenu(1);
-            $menu["repmenu"] = Helper::generateMenu(2);
-            $menu["regmenu"] = Helper::generateMenu(3);
-            $menu["refmenu"] = Helper::generateMenu(4);
-            $menu["sermenu"] = Helper::generateMenu(5);
+            $menu["docmenu"] = H::generateMenu(1);
+            $menu["repmenu"] = H::generateMenu(2);
+            $menu["regmenu"] = H::generateMenu(3);
+            $menu["refmenu"] = H::generateMenu(4);
+            $menu["sermenu"] = H::generateMenu(5);
             Session::getSession()->menu = $menu;
         }
 
@@ -140,7 +141,7 @@ class Base extends \Zippy\Html\WebPage
             $this->branch_id = 0;
             System::setBranch(0);
         }
-        $this->_tvars["smart"] = Helper::generateSmartMenu();
+        $this->_tvars["smart"] = H::generateSmartMenu();
         //модули
         $modules = System::getOptions('modules');
 
@@ -292,7 +293,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function LogoutClick($sender) {
-        \App\Helper::logout();
+        \App\H::logout();
     }
 
     public function onnbFirm($sender) {
@@ -310,7 +311,7 @@ class Base extends \Zippy\Html\WebPage
     public function setError($msg,$log=false ) {
 
         if($log) {
-            \App\Helper::logerror($msg) ;
+            \App\H::logerror($msg) ;
         }
         $msg = str_replace("'", "`", $msg) ;
         $msg = str_replace("\"", "`", $msg) ;
@@ -477,8 +478,8 @@ class Base extends \Zippy\Html\WebPage
         $doc = \App\Entity\Doc\Document::getFirst(" customer_id={$c->customer_id}", "document_id desc") ;
         if($doc != null) {
             $header['last']= $doc->meta_desc .' '. $doc->document_number;
-            $header['lastdate']=Helper::fd($doc->document_date);
-            $header['lastsum']=Helper::fa($doc->amount);
+            $header['lastdate']=H::fd($doc->document_date);
+            $header['lastsum']=H::fa($doc->amount);
             $header['laststatus']   =  \App\Entity\Doc\Document::getStateName($doc->state)  ;
 
             $header['goods'] = [];
@@ -505,7 +506,7 @@ class Base extends \Zippy\Html\WebPage
             $header['click'] = "onclick=\"sendSMSCust('{$c->phone}',{$header['smscode']})\"" ;
 
         }
-        $header['sumall'] = \App\Helper::fa($c->sumAll());
+        $header['sumall'] = \App\H::fa($c->sumAll());
 
 
         $report = new \App\Report('cinfo.tpl');
@@ -534,8 +535,8 @@ class Base extends \Zippy\Html\WebPage
         $header['bar_code'] = $it->bar_code;
         $header['brand'] = $it->manufacturer;
         $header['cat_name'] = $it->cat_name;
-        $header['qty'] =  Helper::fqty( $it->getQuantity() );
-        $header['price'] = Helper::fa(  $it->getPrice() );
+        $header['qty'] =  H::fqty( $it->getQuantity() );
+        $header['price'] = H::fa(  $it->getPrice() );
         $header['notes'] = str_replace("'","`",$it->notes) ;
         $header['image'] = false;
         if($it->image_id >0) {
@@ -620,11 +621,11 @@ class Base extends \Zippy\Html\WebPage
 
 
             foreach ($items as $item) {
-                $item->amount = \App\Helper::fa($item->price * $item->quantity);
+                $item->amount = \App\H::fa($item->price * $item->quantity);
 
                 $total = $total + $item->amount;
             }
-            $co->amount= \App\Helper::fa($total);
+            $co->amount= \App\H::fa($total);
             
             
             $co->packDetails('detaildata',$items);
@@ -653,8 +654,8 @@ class Base extends \Zippy\Html\WebPage
  
         $ret['number']  = $doc->document_number;
         $ret['cashier']  = $doc->getCashier();
-        $ret['totalamount']  = Helper::fa($doc->amount); //сумма  по документу
-        $ret['payamount']  = Helper::fa($doc->payamount);  //к оплате
+        $ret['totalamount']  = H::fa($doc->amount); //сумма  по документу
+        $ret['payamount']  = H::fa($doc->payamount);  //к оплате
         $ret['bonus']  = 0;
         $ret['discount']  = 0;
         $ret['rest']  = 0;
@@ -667,16 +668,16 @@ class Base extends \Zippy\Html\WebPage
     
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']??0);
      
-        $ret['payed']  = Helper::fa($payed);
+        $ret['payed']  = H::fa($payed);
         $delbonus = $doc->getBonus(false) ;
         if($delbonus >0) {
-           $ret['bonus']  = Helper::fa($delbonus); //списано  бонусов
+           $ret['bonus']  = H::fa($delbonus); //списано  бонусов
         }
         if($doc->headerdata["totaldisc"] >0) {
-           $ret['discount']  = Helper::fa($doc->headerdata["totaldisc"]); //общая  скидка
+           $ret['discount']  = H::fa($doc->headerdata["totaldisc"]); //общая  скидка
         }
         if($doc->headerdata["exchange"] >0) {
-           $ret['rest']  = Helper::fa($doc->headerdata["exchange"]??0); //сдача
+           $ret['rest']  = H::fa($doc->headerdata["exchange"]??0); //сдача
         }
        
           
@@ -684,9 +685,9 @@ class Base extends \Zippy\Html\WebPage
         if($ret['type']  == 'R') {
            $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
            if ($mf->beznal == 1) {
-              $ret['beznal']  = Helper::fa($doc->payed);
+              $ret['beznal']  = H::fa($doc->payed);
            } else {
-              $ret['nal']  = Helper::fa($doc->payed);
+              $ret['nal']  = H::fa($doc->payed);
            }
     
         } else {
@@ -696,22 +697,22 @@ class Base extends \Zippy\Html\WebPage
      
                 if ($mf->beznal == 1) {
                     
-                    $ret['beznal']  = Helper::fa($payed);
+                    $ret['beznal']  = H::fa($payed);
                     // в долг
                     if ($payed < $doc->payamount) {
-                         $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                         $ret['credit']  = H::fa($doc->payamount -$payed);
                     }
                 } else {
-                    $ret['nal']  = Helper::fa($payed);
+                    $ret['nal']  = H::fa($payed);
                
                     
                     //сдача
                     if ($doc->headerdata["exchange"] > 0) {
-                        $ret['rest']  = Helper::fa($payed- $doc->headerdata["exchange"]);
+                        $ret['rest']  = H::fa($payed- $doc->headerdata["exchange"]);
                     }
                     // в долг
                     if ($payed < $doc->payamount) {
-                        $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                        $ret['credit']  = H::fa($doc->payamount -$payed);
                     }
 
                      
@@ -719,17 +720,17 @@ class Base extends \Zippy\Html\WebPage
             } else {
                 if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
      
-                    $ret['nal']  = Helper::fa($doc->headerdata['payed']);
+                    $ret['nal']  = H::fa($doc->headerdata['payed']);
                
                     //сдача
                     if ($doc->headerdata["exchange"] > 0) {
-                        $ret['rest']  = Helper::fa($payed- $doc->headerdata["exchange"]);
+                        $ret['rest']  = H::fa($payed- $doc->headerdata["exchange"]);
                     }
             
                 }
                 if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
            
-                    $ret['beznal']  = Helper::fa($doc->headerdata['payedcard']);
+                    $ret['beznal']  = H::fa($doc->headerdata['payedcard']);
                
                  
                 }
@@ -738,13 +739,13 @@ class Base extends \Zippy\Html\WebPage
 
             // в долг
             if ($payed < $doc->payamount) {
-                $ret['credit']  = Helper::fa($doc->payamount -$payed);
+                $ret['credit']  = H::fa($doc->payamount -$payed);
                 
               
             }
             // предоплата
             if ($doc->headerdata['prepaid']>0) {
-                $ret['prepaid']  = Helper::fa($doc->headerdata['prepaid']);
+                $ret['prepaid']  = H::fa($doc->headerdata['prepaid']);
             }        
         }
         
@@ -755,8 +756,8 @@ class Base extends \Zippy\Html\WebPage
                 'id'  => $item->item_id,
                 'article'  => $item->item_code,
                 'name'  => $item->itemname,  
-                'qty'   => Helper::fqty($item->quantity) ,
-                'price'   => Helper::fa($item->price) 
+                'qty'   => H::fqty($item->quantity) ,
+                'price'   => H::fa($item->price) 
                
             );
             if(strlen($item->shortname) >0)  $it['name'] =  $item->shortname;
@@ -827,7 +828,7 @@ class Base extends \Zippy\Html\WebPage
         $this->pr_itemsform->pr_items->Reload();
             
        
-        $ret = \App\Helper::printItems($items  );   
+        $ret = \App\H::printItems($items  );   
         $user = \App\System::getUser() ;         
  
         

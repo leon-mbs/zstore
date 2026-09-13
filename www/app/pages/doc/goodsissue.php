@@ -797,7 +797,7 @@ class GoodsIssue extends \App\Pages\Base
                     if($order->meta_name == 'Order') {
                         $nosent = $order->getNotSendedItem(); 
                          
-                        if(count($nosent)==0 && ($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP )) {
+                        if(count($nosent)==0 && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP )) {
                             $order->updateStatus(Document::STATE_INSHIPMENT);
                         }   
                     }  

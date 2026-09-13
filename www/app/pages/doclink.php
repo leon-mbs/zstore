@@ -4,7 +4,7 @@ namespace App\Pages;
 
 use App\Entity\Doc\Document;
 
-//страница  для  загрузки  файла экcпорта
+//страница  для  загрузки  документа по  внешней ссылке
 class Doclink extends \Zippy\Html\WebPage
 {
     public function __construct($hash) {
@@ -28,10 +28,13 @@ class Doclink extends \Zippy\Html\WebPage
             die;
         }
 
-        $doc = $doc->cast();
-
-        $html = $doc->generateReport();
-
+        $doc = $doc->cast()   ;
+        if($doc->meta_name=="POSCheck" || $doc->meta_name=="OrderFood"  ) {
+            $html = $doc->generatePosReport();
+        }   else {
+            $html = $doc->generateReport();
+        }
+        
         echo $html;
         die;
 
