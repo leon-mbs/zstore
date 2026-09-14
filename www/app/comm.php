@@ -1,6 +1,8 @@
 <?php
 namespace App;
 
+use App\Helper as H;
+
 /**
 * класс  с  методами  комуникаций    
 */
