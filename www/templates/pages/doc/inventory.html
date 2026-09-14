@@ -9,8 +9,8 @@
             <h3> Інвентаризація
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-bs-toggle="popover"
                    data-bs-placement="bottom" data-bs-content="Документ дозволяє ввести поточну кількість на складі і внести корективи
-                   в залежності від різниці в ту чи іншу сторону. Фактичну кількість може  
-                   бачити адміністратор при перегляді документа"></i>
+                   в залежності від різниці в ту чи іншу сторону. Фактичну кількість можуть   
+                   бачити користувачі ролi admins при перегляді документа"></i>
             </h3>
 
             <div class="row">
@@ -93,7 +93,9 @@
                     </div>
                     {{/usescanner}}
                     &nbsp; <a zippy="addrow" class="btn  btn-primary">Додати ТМЦ</a>
-
+                     {{^isadmins}}
+                     <br><small> <i class="fa fa-exclamation"> </i> Кiлькiсть доступна тiльки користувачам ролi admins </small>
+                     {{/isadmins}}
                     <table class="table table-sm mt-2">
                         <tr>
                             <th> <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
