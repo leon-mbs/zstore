@@ -49,10 +49,34 @@ class Store extends \ZCL\DB\Entity
     }
 
     public static function getConstraint() {
+       
+        $user = \App\System::getUser();
+        if ($user->rolename == 'admins') {
+            return '';
+        }       
+        $options = \App\System::getOptions('common');
+        if ($options['usebranch'] != 1) {
+            
+            $aclstore = $user->aclstore ?? '';
+             
+            if(strlen($aclstore)>0) {
+               return " ( store_id in ( {$aclstore}) )";        
+            } else {
+                return " (1=2)";
+            }
+       
+            
+            return '';
+        }    
+        
+        if($user->showotherstores  && dtrlen($user->aclbranch) >0) {
+            return "branch_id in ({$user->aclbranch})";
+        }         
+        
         $br = \App\ACL::getBranchConstraint();
         if (strlen($br) > 0) {
-            $br = " (" . $br . " or coalesce(branch_id,0)=0)  ";
-        }  //склады не  привязаные к  филиалу
+            $br = " (" . $br . " or coalesce(branch_id,0)=0)  ";  //склады не  привязаные к  филиалу
+        }  
         return $br;
     }
 

@@ -470,10 +470,24 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
     private function getWhere() {
         $user = System::getUser();
 
+        $brf="";
+        $mfacl="";
+        
+        $brids = \App\ACL::getBranchIDsConstraint();
+    
+        if (strlen($brids) > 0) {
+            $brf = " and  mf_id in (select mf_id from mfund where   branch_id in ({$brids})  )";
+        }  
+        $mfids = \App\ACL::getMFBranchConstraint();
+    
+        if (strlen($mfids) > 0) {
+            $mfacl = " and  mf_id in (  {$mfids}  )    ";
+        }         
+        
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-        $where = "p.paytype<>1001 and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) ;
+        $where = "p.paytype<>1001  {$brf}  {$mfacl}  and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) ;
         
         $to=$this->page->filter->to->getDate();
         if($to > 0){

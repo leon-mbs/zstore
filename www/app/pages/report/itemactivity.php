@@ -94,7 +94,10 @@ class ItemActivity extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-
+        $storeid = $this->filter->store->getValue();
+        if(  intval($storeid) ==0) {
+            return;
+        }
 
         $this->detail->setVisible(true);
 

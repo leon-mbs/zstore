@@ -105,7 +105,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new DropDownChoice('editdf', array(1 => "Дропшипінг", 2 => "Фулфілмент"), 0));
         $this->customerdetail->add(new DropDownChoice('editpricetype', \App\Entity\Item::getPriceTypeList(), Helper::getDefPriceType()));
 
-        $this->customerdetail->add(new CheckBox('editallowedshop'))->setVisible($shop["uselogin"] == 1);
+        $this->customerdetail->add(new CheckBox('editallowedshop'))->setVisible( ($shop["uselogin"]??0) == 1);
         $this->customerdetail->add(new CheckBox('editnosubs'));
         $this->customerdetail->add(new CheckBox('editdisabled'));
 

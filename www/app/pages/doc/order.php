@@ -42,11 +42,11 @@ class Order extends \App\Pages\Base
        
       //  $common = \App\System::getOptions("common");
          
-        $defstore= false;
+        $dostore= false;
         if($docid==0) {
             $last = Document::getFirst("state > 3 and  meta_name='Order'","document_id desc");
             if($last != null){
-                $defstore = $last->getHD('dostore',0)==1;
+                $dostore = $last->getHD('dostore',0)==1;
             }
         }
   
@@ -81,7 +81,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc', 0));
 
-        $this->docform->add(new CheckBox('dostore',$defstore));
+        $this->docform->add(new CheckBox('dostore',$dostore));
         
         $this->docform->add(new TextInput('editpayed'));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
@@ -728,12 +728,24 @@ class Order extends \App\Pages\Base
         $item = Item::load($id);
         $customer_id = $this->docform->customer->getKey()  ;
         $pt=     $this->docform->pricetype->getValue() ;
+        $store=     $this->docform->store->getValue() ;
         $price = $item->getPriceEx(array(
            'pricetype'=>$pt,
            'customer'=>$customer_id
          ));
-
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity()));
+      
+        $qtymdg="";
+        $qty = $item->getQuantity() ; 
+        if($store>0) {
+           $oq = $item->getQuantity() ;
+           $qtymdg= "На  складi ". H::fqty( $qty) .", на iнших складах ". H::fqty($oq - $qty);    
+           
+        }   else {
+           $qtymdg= "Наявнiсть: ".  H::fqty($qty );    
+        }
+        
+        
+        $this->editdetail->qtystock->setText($qtymdg);
         $this->editdetail->editprice->setText($price);
         $price = $item->getPartion();
         $this->editdetail->pricestock->setText(H::fa($price));

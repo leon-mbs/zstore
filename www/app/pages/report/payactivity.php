@@ -38,7 +38,10 @@ class PayActivity extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-
+        $mf_id = $this->filter->mf->getValue();
+        if( intval($mf_id)==0) {
+            return;
+        }
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);

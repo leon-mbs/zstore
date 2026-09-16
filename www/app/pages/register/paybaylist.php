@@ -12,6 +12,7 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
@@ -28,7 +29,7 @@ class PayBayList extends \App\Pages\Base
     public $_custlist  = array();
     public $_doclist   = array();
     public $_blist   = array();
-    public $_pays      = array();
+   
     public $_totamountc = 0;
     public $_totamountd = 0;
     public $_bal = 0;
@@ -50,13 +51,10 @@ class PayBayList extends \App\Pages\Base
 
         $this->add(new Panel("plist"))->setVisible(false);
         $this->plist->add(new Label("cname"));
-        $this->plist->add(new Label("allforpay"));
-        $this->plist->add(new RedirectLink("payorder"));
-        
+         
         $this->plist->add(new ClickLink("back", $this, "onBack"));
 
-        $doclist = $this->plist->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
-
+      
 
         $this->add(new Panel("dlist"))->setVisible(false);
         $this->dlist->add(new Label("cnamed"));
@@ -68,17 +66,20 @@ class PayBayList extends \App\Pages\Base
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
 
-        $this->add(new Panel("paypan"))->setVisible(false);
-        $this->paypan->add(new Label("pname"));
-        $this->paypan->add(new Form('payform'))->onSubmit($this, 'payOnSubmit');
-        $this->paypan->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+       
+        $this->plist->add(new Form('payform')) ;
+        $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
 
-        $this->paypan->payform->add(new TextInput('pamount'));
-        $this->paypan->payform->add(new TextInput('pcomment'));
-        $this->paypan->payform->add(new Date('pdate', time()));
+        $this->plist->payform->add(new TextInput('pamount'));
+        $this->plist->payform->add(new TextInput('pcomment'));
+        $this->plist->payform->add(new Date('pdate', time()));
+        $doclist = $this->plist->payform->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
 
-        $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-    
+   
+        $this->plist->payform->add(new SubmitButton("paybtn"))->onClick($this, 'payOnSubmit');
+        $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payorderOnSubmit');
+      
+        
 
         $this->updateCust();
 
@@ -180,14 +181,10 @@ GROUP BY c.customer_name,
 
         $this->_cust = $sender->getOwner()->getDataItem();
         $this->plist->cname->setText($this->_cust->customer_name);
-        $this->plist->allforpay->setText( H::fa($this->_cust->act -  $this->_cust->pas));
-        if($this->_cust->pas <  $this->_cust->act) {
-          $this->plist->payorder->setValue( "Видатковий касовий  ордер");          
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\OutcomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->act -  $this->_cust->pas),1 ));
-        }   else {
-          $this->plist->payorder->setValue( "Прибутковий касовий  ордер");    
-          $this->plist->payorder->setLink("\\App\\Pages\\Doc\\IncomeMoney", array(0, $this->_cust->customer_id,  H::fa($this->_cust->pas -  $this->_cust->act),1 ));
-        }
+      
+        $this->plist->payform->pcomment->setText('')  ;
+        $this->plist->payform->payment->setValue(0)  ;
+     
         $this->updateDocs();
 
         $this->clist->setVisible(false);
@@ -212,25 +209,31 @@ GROUP BY c.customer_name,
         }
         $this->_doclist = array_reverse($this->_doclist);
 
-        $this->plist->doclist->Reload();
+        $this->plist->payform->doclist->Reload();
     }
 
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('name', $doc->meta_desc));
+        $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
+       
         $row->add(new Label('number', $doc->document_number));
         $row->add(new Label('branch_name', $doc->branch_name));
         $row->add(new Label('date', H::fd($doc->document_date)));
 
-        $row->add(new Label('sum', H::fa($doc->payamount  - $doc->payed)));
+        $doc->forpay =   H::fa($doc->payamount  - $doc->payed)  ;
+        $row->add(new TextInput('sum',new \Zippy\Binding\PropertyBinding($doc,'forpay')));
 
-        $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        $row->add(new ClickLink('pay'))->onClick($this, 'payOnClick');
+       
         $row->add(new ClickLink('stpayed'))->onClick($this, 'stOnClick');
-        $row->add(new ClickLink('stdone'))->onClick($this, 'stOnClick');
-        $row->add(new ClickLink('stclosed'))->onClick($this, 'stOnClick');
-
+        $row->add(new ClickLink('stdone',$this, 'stOnClick'))->setVisible(false);
+        $row->add(new ClickLink('stclosed',$this, 'stOnClick'))->setVisible(false); 
+        if($doc->meta_name=='Order')  {
+            $row->stclosed->setVisible(true) ;
+        }
+        if($doc->meta_name=='ServiceAct')  {
+            $row->stdone->setVisible(true) ;
+        }
     }
 
     //просмотр
@@ -246,7 +249,7 @@ GROUP BY c.customer_name,
 
 
         $this->docview->setVisible(true);
-        $this->paypan->setVisible(false);
+     
         $this->docview->setDoc($this->_doc);
         $this->goAnkor('dankor');
     }
@@ -256,171 +259,201 @@ GROUP BY c.customer_name,
         $this->plist->setVisible(false);
         $this->dlist->setVisible(false);
         $this->docview->setVisible(false);
-        $this->paypan->setVisible(false);
+      
         $this->updateCust();
     }
 
     public function stOnClick($sender) {
         
        $item = $sender->getOwner()->getDataItem(); 
-       $this->_doc = Document::load($item->document_id);
-       if(strpos($sender->id,'stpayed')===0) {
-          $this->markPayed()  ;
+       $doc = Document::load($item->document_id);
+    
+       if($doc->getHD('waitpay' )==1) {
+           $doc->setHD('waitpay',0); 
+           $doc->save();
+       }
+    
+       if(strpos($sender->id,'stpayed')===0   ) {
+          if($doc->state == Document::STATE_WP) {
+             $doc->updateStatus(Document::STATE_PAYED);            
+          }      
        }      
        if(strpos($sender->id,'stdone')===0) {
-           $this->_doc->updateStatus(Document::STATE_FINISHED,true);  
+           if($doc->state == Document::STATE_WP) {
+            
+              $doc->updateStatus(Document::STATE_PAYED);            
+           }            
+           $doc->updateStatus(Document::STATE_FINISHED,true);  
        }      
        if(strpos($sender->id,'stclosed')===0) {
-           $this->_doc->updateStatus(Document::STATE_CLOSED,true);  
-           $this->_doc->setHD('waitpay',0); 
-           $this->_doc->save();            
+         if($doc->state == Document::STATE_WP) {
+            
+            $doc->updateStatus(Document::STATE_PAYED);            
+         }       
+         
+         $doc->updateStatus(Document::STATE_CLOSED,true);  
+              
        }      
      
         
        $this->updateDocs() ;
     }
-    
-    
-    //оплаты
-    public function payDoc($docid) {
-
-        $this->_doc = Document::load($docid)  ;
-        $this->_cust = \App\Entity\Customer::load($this->_doc->customer_id);
-        $this->showPay();
-        $this->plist->cname->setText($this->_cust->customer_name);
-        $this->updateDocs();
-
-        $this->clist->setVisible(false);
-        $this->plist->setVisible(true);
-
-    }
-
-
-    public function payOnClick($sender) {
-        $this->docview->setVisible(false);
-
-        $this->_doc = $sender->owner->getDataItem();
-        //   $this->plist->doclist->setSelectedRow($sender->getOwner());
-        $this->showPay();
-    }
-
-    public function showPay() {
-        $this->plist->doclist->Reload(false);
-
-        $this->paypan->setVisible(true);
-
-
-        $this->goAnkor('dankor');
-        $amount = $this->_doc->payamount - $this->_doc->payed;
-        if ($amount > $this->_cust->sam) {
-            $amount = $this->_cust->sam;
-        }
-
-        $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
-        $this->paypan->payform->pcomment->setText("");
-        $this->paypan->pname->setText($this->_doc->document_number);
-        if($this->_doc->getHD('payment') >0)  {
-            $this->paypan->payform->payment->setValue($this->_doc->getHD('payment'));
-        }
-
-        $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
-        $this->paypan->paylist->Reload();
-
-    }
-
-
-
-    public function payOnRow($row) {
-        $pay = $row->getDataItem();
-        $row->add(new Label('plamount', H::fa($pay->amount)));
-        $row->add(new Label('pluser', $pay->username));
-        $row->add(new Label('pldate', H::fdt($pay->paydate)));
-        $row->add(new Label('plmft', $pay->mf_name));
-        $row->add(new Label('plcomment', $pay->notes));
-    }
-
+  
     public function payOnSubmit($sender) {
-        $form = $this->paypan->payform;
-
-        $amount = $form->pamount->getText();
+        $form = $this->plist->payform;
+     //   $pos_id = $form->pos->getValue();
         $pdate = $form->pdate->getDate();
-        if ($amount == 0) {
+        $mf= $form->payment->getValue();
+        $pcomment= $form->pcomment->getText();
+       
+        $amount = 0;
+        $ret = 0;
+        if($mf==0 ) {
+            $this->setError('Не вибрана каса') ;
+            return;
+        }      
+      
+      
+        foreach($this->_doclist  as $doc){
+           $am = doubleval($doc->forpay); 
+           $amount +=$am;
+           if($doc->meta_name=="ReturnIssue"){
+              $ret +=$am;  
+           } else {
+              $amount +=$am;
+           }
+        }  
+        if(( $amount+$ret)==0 ) {
             return;
         }
-
+      
         $common = \App\System::getOptions('common') ;
-        $da = $common['actualdate'] ?? 0 ;
+        if($common['allowminusmf'] !=1) {
+            $b = \App\Entity\MoneyFund::Balance() ;
 
-        if($da>$pdate) {
-            $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d', $da));
-            return;
-        }
-
-
-
-        if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
-
-            $this->setWarn('Сума більше необхідної');
-        }
-        if (in_array($this->_doc->meta_name, array( 'GoodsIssue','Invoice','ServiceAct','Order','POSCheck'))) {
-            \App\Entity\IOState::addIOState($this->_doc->document_id,  $amount, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
-        }       
-        if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
-
-            $options=\App\System::getOptions('common')  ;
-            if($options['allowminusmf'] !=1) {
-                $mf= $form->payment->getValue();
-                $b = \App\Entity\MoneyFund::Balance() ;
-
-                if($b[$mf] < $amount) {
-                    $this->setError('Сума на рахунку недостатня  для  повернення');
-                    return;
-                }
+            if($b[$mf] < ($ret - $amount ) ) {
+                $this->setError('Сума  на рахунку недостатня  для  оплати');
+                return;
             }
-             \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true,$pdate);
-            $amount = 0 - $amount;
-  
-  
-        }   
-
- 
-        $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
- 
- 
-            
-        if($payed>=$this->_doc->payamount) {
-            $this->markPayed()  ;
-        }
-        if ($payed > 0) {
-            $this->_doc->payed = $payed;
+        }  
+        foreach($this->_doclist  as $doc){
+           $am = doubleval($doc->forpay); 
+           if($am==0 ) {
+               continue;
+           }    
+           if($doc->meta_name=="RetIssue"){
+              continue; 
+           }    
+        } 
+     
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
          
+        try {
+            foreach($this->_doclist  as $doc){
+               $am = doubleval($doc->forpay); 
+               if($am==0 ) {
+                   continue;
+               }    
+               //отмечаем  оплаченными
+               if( $doc->getHD('waitpay')==1) {
+                   $doc->setHD('waitpay',0) ;
+                   $doc->save(); 
+               }
+               if($doc->state==Document::STATE_WP) {
+                   $doc->updateStatus(Document::STATE_PAYED,true);
+               }    
+               if($sender->id=='paybtn') {   //создаем  оплаты
+                 if (in_array($doc->meta_name, array( 'Order','Invoice','POSCheck', 'GoodsIssue','ServiceAct'))) {
+                    \App\Entity\IOState::addIOState($doc->document_id, $am, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
+                    Pay::addPayment($doc->document_id, $pdate,  $am,$mf , $pcomment);
+       
+                 }    
+
+                 if (in_array($doc->meta_name, array( 'ReturnIssue'))) {
+                   
+                    \App\Entity\IOState::addIOState($doc->document_id, 0 - $am, \App\Entity\IOState::TYPE_BASE_INCOME, true, $pdate);
+                    Pay::addPayment($doc->document_id, $pdate, 0- $am,$mf , $pcomment);
+       
+           
+                 }          
+                 $doc = \App\Entity\Doc\Document::load($doc->document_id)->cast();
+                 $doc->DoBalans();
+   
+               }
+            }    
+            if($sender->id=='payorder') {//создаем  КО
+                 if($ret > 0) {                       
+                     $doc=Document::create('OutcomeMoney');
+                     $doc->document_number = $doc->nextNumber() ;
+                     $doc->amount = $ret ;
+                     $doc->payamount = $ret ;
+                     $doc->payed = 0 ;
+                     $doc->notes = $pcomment ;
+                     $doc->document_date = $pdate ;
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     $doc->setHD('payment' ,  $mf);
+                     $doc->setHD('paymentname' ,  $form->payment->getValueName() );
+                     $doc->setHD('type',   \App\Entity\IOState::TYPE_OTHER_OUTCOME)  ;
+                     $doc->setHD('detail',1) ;
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     
+                     $doc->save();
+                     
+                     $doc->updateStatus(Document::STATE_NEW);
+                     $doc->updateStatus(Document::STATE_EXECUTED);
+                  
+                 } 
                 
-        }
-  
-        $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
-        $doc->DoBalans();
-        
+                 if($amount > 0) {
+                     $doc=Document::create('IncomeMoney');
+                     $doc->document_number = $doc->nextNumber() ;
+                     $doc->amount = $amount ;
+                     $doc->payamount = $amount ;
+                     $doc->payed = 0 ;
+                     $doc->notes = $pcomment ;
+                     $doc->document_date = $pdate ;
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     $doc->setHD('payment' ,  $mf);
+                     $doc->setHD('paymentname',  $form->payment->getValueName() );
+                     $doc->setHD('type',  \App\Entity\IOState::TYPE_BASE_INCOME );
+                     $doc->setHD('detail', 1);
+                     $doc->customer_id = $this->_cust->customer_id ;
+                     
+                     $doc->save();
+                     
+                     $doc->updateStatus(Document::STATE_NEW);
+                     $doc->updateStatus(Document::STATE_EXECUTED);
+                
+                 } 
+                 
+                 $conn->CommitTrans();
+                 $this->updateDocs();
+                 $this->onBack(null);  
+      
+                 $this->setSuccess('Створено квсовий ордер');
+
+                 return;
+            }
+
+            $conn->CommitTrans();
+          
+        } catch(\Throwable $ee) {
+          
+            $conn->RollbackTrans();
+ 
+            $this->setError($ee->getMessage());
+            return;
+        }        
+        $this->onBack(null);  
+      
         $this->setSuccess('Оплата додана');
 
-        //$this->updateDocs();
-        $this->paypan->setVisible(false);
-        $this->onBack(null);
+        $this->updateDocs();
+       
+       
     }
-
-
-    private function markPayed() {
-        $this->_doc = Document::load($this->_doc->document_id);
-
-        if($this->_doc->state == Document::STATE_WP) {
-            
-            $this->_doc->updateStatus(Document::STATE_PAYED);            
-        }
-       // if($this->_doc->meta_name=='Order' ||  $this->_doc->meta_name=='ServiceAct' ) {
-           $this->_doc->setHD('waitpay',0); 
-           $this->_doc->save();  
-     //   }         
-
-    }
+   
 
     //детализация  баланса
     public function showdetOnClick($sender) {
