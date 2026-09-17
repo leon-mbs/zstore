@@ -1393,9 +1393,6 @@ class Helper
             $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
             $conn->Execute("optimize table substitems ")   ;
           //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
-          
-                    
-               
         
                  
  
@@ -1691,6 +1688,35 @@ class Helper
 
 
         }
+  
+  
+        $migration828 = \App\Helper::getKeyVal('migration828'); 
+        if($migration828 != "done"  ) {
+            Helper::log("Міграція 828");
+         
+            \App\Helper::setKeyVal('migration828', "done");           
+        
+            try {
+       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                 $is=false;          
+                 foreach($w as $e){
+                     if($e['Key_name']=='meta_id'){
+                          $is=true;      
+                     }             
+                 }
+                 if($is==false) {
+                     $conn->Execute("ALTER TABLE documents ADD INDEX meta_id (meta_id) ");                     
+                 }
+        
+  
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+  
+  
   
     }
 

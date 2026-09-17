@@ -108,6 +108,7 @@ CREATE TABLE documents (
   KEY user_id (user_id),
   KEY branch_id (branch_id),
   KEY parent_id (parent_id),
+  KEY meta_id (meta_id),
   KEY document_number (document_number),
   KEY state (state)
 
@@ -310,7 +311,8 @@ CREATE TABLE iostate (
   iodate DATE DEFAULT NULL,
   amount decimal(10, 2) NOT NULL,
   PRIMARY KEY (id),
-  KEY document_id (document_id)
+  KEY document_id (document_id)  
+ 
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE issue_history (
@@ -1711,4 +1713,5 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migration180','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration811','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration812','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration821','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration828','done');
  

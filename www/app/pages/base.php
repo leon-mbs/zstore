@@ -293,7 +293,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function LogoutClick($sender) {
-        \App\H::logout();
+         H::logout();
     }
 
     public function onnbFirm($sender) {
@@ -575,13 +575,36 @@ class Base extends \Zippy\Html\WebPage
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
  
             $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
-
-            if($d == null) {
-                return "По  даному  ТМЦ  закупок не  було";
+            $customer_id = 0;
+            $quantity = 0;
+            $price = 0;
+            if($d != null) {
+                $price = $e->partion;
+                $quantity = $e->quantity;
+                $customer_id = $d->customer_id;
             }
-            $price = $e->partion;
-            $quantity = $e->quantity;
-            $customer_id = $d->customer_id;
+            $p = \App\Entity\CustItem::getFirst("item_id={$args[0]}   ","custitem_id desc")  ;
+            if($p != null) {
+                $price = $p->price;
+                $customer_id = $p->customer_id;
+            }
+            if($d != null && $p != null) {  //сравниваем дату закупки и прайса
+               if($d->document_date > $p->updatedon )  {
+                  $price = $e->partion; 
+                  $customer_id = $d->customer_id;
+               }
+               if($d->document_date < $p->updatedon )  {
+                  $price = $p->price; 
+                  $customer_id = $p->customer_id;
+               }
+            }
+           
+           
+            if($customer_id == 0) {
+                return "По  даному  ТМЦ  не знайжено закупок обо прайсу  постачальника  ";
+            }
+           
+           
             if(($args[1] ??0)  > 0) {
                 $quantity = $args[1] ;
             }
