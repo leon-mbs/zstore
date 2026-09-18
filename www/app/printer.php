@@ -280,7 +280,7 @@ class Printer
         if ($text === false) {
         //  throw new \Exception("Input must be UTF-8");
         }
-        //украинское i на  ангглийсккое  хз  почему
+        //украинское i на  английское  хз  почему
         $text = str_replace("і", "i", $text);
         $text = str_replace("І", "I", $text);
    //     $text = mb_convert_encoding($text, "cp866", "utf-8");
@@ -961,7 +961,7 @@ $b = json_encode( $this->buffer) ;
 
         foreach($arr as $row)  {
             
-    //украинское i на  ангглийсккое  хз  почему
+    //украинское i на  английское  хз  почему
         $row = str_replace("і", "i", $row);
         $row = str_replace("І", "I", $row);
               
