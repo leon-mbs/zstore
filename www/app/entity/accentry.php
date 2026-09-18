@@ -46,7 +46,10 @@ class AccEntry extends \ZCL\DB\Entity
         
         $acclist= Account::getList();
         $numlist = array_keys($acclist) ;
-   
+        //односторонні проводки дозволені (нижче accdt/accct ставляться лише коли задані):
+        //порожня сторона дає intval 0 і не повинна вважатись невірним рахунком
+        $numlist[] = 0;
+
         if(!in_array(intval($dt),$numlist) ) {
             throw new \Exception("Невiрний рахунок ".$dt);
         }            

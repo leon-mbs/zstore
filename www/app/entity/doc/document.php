@@ -838,7 +838,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function insertLog($state,$user_id=0) {
         $conn = \ZDB\DB::getConnect();
-        $host = $_SERVER["REMOTE_ADDR"];
+        $host = $_SERVER["REMOTE_ADDR"] ?? '';
         if($host==null) {
             $host = "";
         }

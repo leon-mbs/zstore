@@ -106,18 +106,19 @@ class Account
            $all=self::getList($namewithcode) ;
            $ret=[];
            $conn = \ZDB\DB::getConnect();
-           $col=$conn->GetCol("select distinct  accdt from acc_entry");
+           //односторонні проводки мають порожній accdt або accct — їх пропускаємо
+           $col=$conn->GetCol("select distinct  accdt from acc_entry where accdt is not null and accdt <> ''");
            foreach($col  as $code){
-              if(!isset($ret[$code])) {
+              if(!isset($ret[$code]) && isset($all[$code])) {
                  $ret[$code]  = $all[$code]  ;
               }
            }
-           $col=$conn->GetCol("select distinct  accct from acc_entry");
+           $col=$conn->GetCol("select distinct  accct from acc_entry where accct is not null and accct <> ''");
            foreach($col as $code){
-              if(!isset($ret[$code])) {
+              if(!isset($ret[$code]) && isset($all[$code])) {
                  $ret[$code]  = $all[$code]  ;
               }
-           }  
+           }
            
            
            return $ret;         
