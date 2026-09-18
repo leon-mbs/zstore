@@ -49,7 +49,7 @@ class OrderList extends \App\Pages\Base
 
         $this->listpanel->filter->add(new TextInput('searchnumber'));
         $this->listpanel->filter->add(new TextInput('searchtext'));
-        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Вiдкритi', 1 => 'Новi',2 => 'До сплати', 3 => 'Всi'), 0));
+        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові',2 => 'До сплати', 3 => 'Всі'), 0));
         $this->listpanel->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
 
         $doclist = $this->listpanel->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
@@ -1024,7 +1024,7 @@ class OrderList extends \App\Pages\Base
                     
                     
                      if($item->newqty > $item->quantity || $item->newqty < 0 )  {
-                         $this->setError('Невiрна кiлькiсть для '.$item->itemname) ;
+                         $this->setError('Невірна кількість для '.$item->itemname) ;
                          return;
                      }
                     
@@ -1048,7 +1048,7 @@ class OrderList extends \App\Pages\Base
                 }
                 
                 if(count($oldlist)==0 || count($newlist)==0)  {
-                     $this->setError('Порожній перелік позицій в старому або новому замовленнi ') ;
+                     $this->setError('Порожній перелік позицій в старому або новому замовленні ') ;
                      return;
                 }
                 

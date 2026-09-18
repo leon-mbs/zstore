@@ -304,7 +304,7 @@ class System
         
         $data = @json_decode($response, true);
         if(!is_array($data)) {
-           \App\Helper::logerror("Невiрний формат  файлу '{$url}'") ;
+           \App\Helper::logerror("Невірний формат  файлу '{$url}'") ;
            \App\Helper::logerror($response) ;
            return false;
         }

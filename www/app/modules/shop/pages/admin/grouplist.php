@@ -172,7 +172,7 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовий параметр (наприклад тип процесора). Значення не  використовується  в  фільтрах. ");
         }
         if ($type == 6) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", " Атрибут для кастомних полiв (якщо задані для даної категорії). Задається  як код кастомного  поля  ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", " Атрибут для кастомних полів (якщо задані для даної категорії). Задається  як код кастомного  поля  ");
             $this->attrpanel->attreditform->cfpanel->setVisible(true);
      
         }        

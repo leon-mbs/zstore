@@ -13,7 +13,7 @@
                        data-bs-placement="bottom" data-bs-content="Імпорт ТМЦ з Excel файлу.
                        Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
                        Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад, створюється документ Оприбуткування товару.
-                       Також є можливість попереднього перегляду даних. Рекомендуется  всi дані в  Ексель виставити як строковий  тип"></i>
+                       Також є можливість попереднього перегляду даних. Рекомендуется  всі дані в  Ексель виставити як строковий  тип"></i>
                        
                 </h3>
          <small><i class="fa fa-exclamation-triangle"></i> 
@@ -27,13 +27,13 @@
                         <div class="form-group  ">
                             <label for="itype">Тип імпорту</label>
                             <select zippy="itype" class="form-control  ">
-                                <option value="0">Тiльки довiдник</option>
+                                <option value="0">Тільки довідник</option>
                                 <option value="1">З оприходуванням на склад</option>
                                 
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label for="icompare">Спiвставлення при оновленнi</label>
+                            <label for="icompare">Співставлення при оновленні</label>
                             <select zippy="icompare" class="form-control  ">
                                 <option value="0">За артикулем</option>
                                 <option value="1">За найменуванням</option>
@@ -69,11 +69,11 @@
                        
                         <div class="  form-check">
                             <input zippy="noshowprice" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowprice">Не показувати в прайсi</label>
+                            <label class="form-check-label" for="noshowprice">Не показувати в прайсі</label>
                         </div>
                         <div class="  form-check">
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowshop">Не показувати в онлайн каталозi </label>
+                            <label class="form-check-label" for="noshowshop">Не показувати в онлайн каталозі </label>
                         </div>
                         
 
@@ -116,7 +116,7 @@
                             </select>   </div> 
                         </div>
                         <div class="form-group row ">
-                            <label  class="col-8 col-form-label" for="colcat">Категорiя</label>
+                            <label  class="col-8 col-form-label" for="colcat">Категорія</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcat" class="form-control  ">                            </select>  
                            </div> 
@@ -180,7 +180,7 @@
                             </div>  
                         </div>                        
                        <div class="form-group  row">
-                            <label class="col-8 col-form-label"  for="colcell">Комiрка</label>
+                            <label class="col-8 col-form-label"  for="colcell">Комірка</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcell" class="form-control  ">
                             </select>   </div> 
@@ -192,13 +192,13 @@
                             </select>   </div> 
                         </div>
                        <div class="form-group  row">
-                            <label class="col-8 col-form-label"  for="colwar">Гарантiя</label>
+                            <label class="col-8 col-form-label"  for="colwar">Гарантія</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colwar" class="form-control  ">
                             </select>   </div> 
                         </div>
                       <div class="form-group  row">
-                            <label class="col-8 col-form-label"  for="colnotes">Примiтка</label>
+                            <label class="col-8 col-form-label"  for="colnotes">Примітка</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colnotes" class="form-control  ">
                             </select>   </div> 
@@ -290,7 +290,7 @@
                        data-bs-toggle="popover"
                        data-bs-placement="bottom"  data-bs-content="Імпорт накладної з Excel файлу.
                        Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
-                       У результатi створюється документ Прибуткова накладна, який слiд провести пiсля введення оплат та інших атрибутів.
+                       У результаті створюється документ Прибуткова накладна, який слід провести після введення оплат та інших атрибутів.
                        Також є можливість попереднього перегляду даних. "></i>
                 </h3>
 
@@ -379,7 +379,7 @@
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="ncolprice">Вхiдна ціна</label>
+                            <label class="col-8 col-form-label" for="ncolprice">Вхідна ціна</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolprice" class="form-control  ">
                             </select>  </div>
@@ -402,7 +402,7 @@
                                 <th>Од.</th>
                                
                                 <th class="text-end">Кіл.</th>
-                                <th class="text-end">Цiна</th>
+                                <th class="text-end">Ціна</th>
 
                             </tr>
                             {{#list}}
@@ -446,7 +446,7 @@
                             <label for="ctype">Імпортувати як</label>
                             <select zippy="ctype" class="form-control   ">
                                 <option value="0">Не обрано</option>
-                                <option value="1">Покупцi</option>
+                                <option value="1">Покупці</option>
                                 <option value="2">Постачальники</option>
                                 
 
@@ -556,7 +556,7 @@
                        data-bs-toggle="popover"
                        data-bs-placement="bottom"  data-bs-content="Імпорт накладної з Excel файлу.
                        Для розташування даних необхідно вказати номери відповідних колонок (перевіряється на унікальність артикул і найменування).
-                       В результатi створюється документ Замовлення.
+                       В результаті створюється документ Замовлення.
                        "></i>
                 </h3>
 
@@ -636,7 +636,7 @@
                                 <th>Код</th>
                                
                                 <th class="text-end">Кіл.</th>
-                                <th class="text-end">Цiна</th>
+                                <th class="text-end">Ціна</th>
 
                             </tr>
                             {{#list}}

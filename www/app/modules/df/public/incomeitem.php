@@ -414,7 +414,7 @@ class IncomeItem extends Base
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
-                $this->setError("Cерійний номер має бути унікальним для виробу");    
+                $this->setError("Серійний номер має бути унікальним для виробу");    
                 return;
             }           
             

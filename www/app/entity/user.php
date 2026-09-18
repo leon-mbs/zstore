@@ -15,8 +15,8 @@ class User extends \ZCL\DB\Entity
      *
      */
     protected function init() {
-        $this->userlogin = "Гiсть";
-        $this->rolename = "Гiсть";
+        $this->userlogin = "Гість";
+        $this->rolename = "Гість";
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;

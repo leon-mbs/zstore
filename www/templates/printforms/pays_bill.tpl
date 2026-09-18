@@ -1,10 +1,10 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td colspan="2"> <b>Квитанцiя про оплату </b></td>
+        <td colspan="2"> <b>Квитанція про оплату </b></td>
     </tr>
     <tr>
 
-        <td colspan="2">Пiдстава {{document_number}}</td>
+        <td colspan="2">Підстава {{document_number}}</td>
     </tr>
     <tr>
 

@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="7">
-           Оборотно-сальдова вiдомiсть
+           Оборотно-сальдова відомість
         </td>
     </tr>
     <tr>

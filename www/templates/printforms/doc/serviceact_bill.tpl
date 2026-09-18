@@ -61,7 +61,7 @@
   
     {{#isitems}}
    <tr>
-        <td colspan="2">Комплектуючi:</td>
+        <td colspan="2">Комплектуючі:</td>
     </tr>
     {{#ilist}}
     <tr>

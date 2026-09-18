@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b>Перемiщення ТМЦ № {{document_number}} від {{date}}</b> <br>
+            <b>Переміщення ТМЦ № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
     <tr>
@@ -13,7 +13,7 @@
     {{#storeemp}}
     <tr>
         <td colspan="4">
-            <b>Зі спiвробiтника:</b> {{storeemp}}
+            <b>Зі співробітника:</b> {{storeemp}}
         </td>
     </tr>
  
@@ -21,7 +21,7 @@
    {{#tostoreemp}}
     <tr>
         <td colspan="4">
-            <b>На спiвробiтника:</b> {{tostoreemp}}
+            <b>На співробітника:</b> {{tostoreemp}}
         </td>
     </tr>
  

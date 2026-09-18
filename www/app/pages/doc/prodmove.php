@@ -204,7 +204,7 @@ class ProdMove extends \App\Pages\Base
                $ids= array_keys($st->itemlist) ; 
                
                if(!in_array($id,$ids)) {
-                    $this->setError( "ТМЦ не в перелiку  на  етапi");
+                    $this->setError( "ТМЦ не в переліку  на  етапі");
                     return;
                }
             }

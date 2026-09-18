@@ -48,10 +48,10 @@ class AccEntry extends \ZCL\DB\Entity
         $numlist = array_keys($acclist) ;
    
         if(!in_array(intval($dt),$numlist) ) {
-            throw new \Exception("Невiрний рахунок ".$dt);
+            throw new \Exception("Невірний рахунок ".$dt);
         }            
         if(!in_array(intval($ct),$numlist) ) {
-            throw new \Exception("Невiрний рахунок ".$ct);
+            throw new \Exception("Невірний рахунок ".$ct);
         }            
               
         $en = new AccEntry();

@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="7" align="center">
-            Наряд № {{document_number}} вiд {{document_date}}
+            Наряд № {{document_number}} від {{document_date}}
         </td>
     </tr>
     {{#pareaname}}
@@ -39,8 +39,8 @@
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;">Категорiя</th>
-        <th style="border: 1px solid black;" width="50" align="right">Кiл</th>
+        <th style="border: 1px solid black;">Категорія</th>
+        <th style="border: 1px solid black;" width="50" align="right">Кіл</th>
         <th style="border: 1px solid black;" width="50" align="right">Сума</th>
         <th style="border: 1px solid black;" width="50" align="right">Годин</th>
         <th style="border: 1px solid black;"   > </th>
@@ -63,14 +63,14 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="7" style="text-align: left;">Готова продукцiя</th>
+        <th colspan="7" style="text-align: left;">Готова продукція</th>
 
     </tr>
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;">Код</th>
-        <th style="border: 1px solid black;" width="50" align="right">Кiл.</th>
+        <th style="border: 1px solid black;" width="50" align="right">Кіл.</th>
         <th style="border: 1px solid black;" width="50" align="right"> </th>
         <th style="border: 1px solid black;" width="50" align="right"> </th>
         <th style="border: 1px solid black;"    > </th>

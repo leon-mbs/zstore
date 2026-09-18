@@ -136,7 +136,7 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Закупівлі по категорiям <br> <br>
+        Закупівлі по категоріям <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">

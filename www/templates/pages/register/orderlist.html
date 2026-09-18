@@ -53,7 +53,7 @@
                         <th>Замовник</th>
                         <th class="text-end">Сума</th>
                         <th>Статус</th>
-                        <th>Вiдповiдальний</th>
+                        <th>Відповідальний</th>
 
 
 
@@ -77,7 +77,7 @@
                         <td   zippy="emp"></td>
                         <td ><small zippy="onotes"></small></td>
                         <td>
-                            <i  zippy="isreserved" title="Зарезервованi товари" class="fa fa-archive"></i>
+                            <i  zippy="isreserved" title="Зарезервовані товари" class="fa fa-archive"></i>
                         </td>
                         <td>
                             <i  zippy="ispay"   class="fa fa-credit-card "></i>
@@ -108,7 +108,7 @@
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">
                 <details>
-                  <summary>Наявнiсть товарiв на складi та/або у постачальника</summary>
+                  <summary>Наявність товарів на складі та/або у постачальника</summary>
                   
                  
            
@@ -117,8 +117,8 @@
                      <th>Товар</th>
                      <th>Артикул</th>
                      <th class="text-end">Замовлено</th>
-                     <th>На складi</th>
-                     <th>У постачальникiв</th>
+                     <th>На складі</th>
+                     <th>У постачальників</th>
                       {{#isciprod}}
                   
                      <th class="text-end">Гот. до вир.</th>
@@ -200,14 +200,14 @@
                      
                          <button zippy="binp" class="btn btn-success  me-2">  На виконання</button>
                      
-                         <button zippy="bscan" class="btn btn-primary  me-2">  Зiбрати</button>
+                         <button zippy="bscan" class="btn btn-primary  me-2">  Зібрати</button>
                   
-                         <button zippy="bsplit" class="btn btn-primary  me-2">  Роздiлити</button>
+                         <button zippy="bsplit" class="btn btn-primary  me-2">  Розділити</button>
                          
-                         <button zippy="brd" class="btn btn-success  me-2">  Готовий до вiдправки</button>
+                         <button zippy="brd" class="btn btn-success  me-2">  Готовий до відправки</button>
                         
                          
-                         <button zippy="bsent" class="btn btn-success  me-2">  Вiдправлений</button>
+                         <button zippy="bsent" class="btn btn-success  me-2">  Відправлений</button>
                         
                          
                          <button zippy="brec" class="btn btn-success  me-2">  Доставлений</button>
@@ -281,7 +281,7 @@
                            </div> 
                        {{#usebranch}}
                          <div class="col-auto"> 
-                        <label   for="brmove">фiлiю </label>
+                        <label   for="brmove">філію </label>
                           </div> 
                          <div class="col-auto">  
                         <select zippy="brmove" class="form-control me-2 ">
@@ -345,9 +345,9 @@
                  <div class="form-group">
                     <button zippy="editcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
                     <button zippy="editsave" type="submit" class="  btn btn-info  me-2 ">Зберегти</button>                 
-                    <button zippy="editready" type="submit" class="  btn btn-success  ms-4 ">Зiбрано</button>                 
+                    <button zippy="editready" type="submit" class="  btn btn-success  ms-4 ">Зібрано</button>                 
 
-                    <i style="cursor:pointer" title="Вiдправити запитання" zippy="editchat" class="fa fa-comments"></i>
+                    <i style="cursor:pointer" title="Відправити запитання" zippy="editchat" class="fa fa-comments"></i>
 
  
                  </div>
@@ -407,7 +407,7 @@
                             <div class="modal-body">
                             
                              <details  >
-                                <summary>Перелiк товарiв</summary>
+                                <summary>Перелік товарів</summary>
                                 <table class="ctable" style="font-size:smaller">
                                     <tr v-for="item in cchatitemlist">
                                         <td>{{item.itemname}} </td>
@@ -461,17 +461,17 @@
                                  </div>                            
                                 <form>
                                   <div class="form-group">
-                                         <label for="msgtext">Повiдомлення</label> 
+                                         <label for="msgtext">Повідомлення</label> 
                                         <textarea  v-model="message"      class="form-control"></textarea>
                                          
                                            
                                       </div>
                                   <div class="input-group">
                                     
-                                      <button v-show="showntnsend" v-on:click.prevent="send()"   class="btn btn-primary">Вiдправити</button>
+                                      <button v-show="showntnsend" v-on:click.prevent="send()"   class="btn btn-primary">Відправити</button>
                                     
                                   </div>
-                                <small>Вiдправка уточнень по  смс  </small>  
+                                <small>Відправка уточнень по  смс  </small>  
                                 </form>
                            
                             

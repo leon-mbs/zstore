@@ -12,7 +12,7 @@
         <td></td>
 
         <td valign="top"><b>Договір</b></td>
-        <td colspan="6">{{contract}} вiд {{createdon}}</td>
+        <td colspan="6">{{contract}} від {{createdon}}</td>
 
 
     </tr>
@@ -22,7 +22,7 @@
 
         <td></td>
 
-        <td colspan="7"> Платiжнi реквiзити:<br>  {{payreq}}  </td>
+        <td colspan="7"> Платіжні реквізити:<br>  {{payreq}}  </td>
 
     </tr>
     {{/ispayreq}}      
@@ -58,7 +58,7 @@
   
      <td></td>
 
-        <td valign="top"><b>На спiвробiтника</b></td>
+        <td valign="top"><b>На співробітника</b></td>
         <td colspan="6">{{storeemp}}</td>
   
        
@@ -98,7 +98,7 @@
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кiл.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кіл.</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
     </tr>

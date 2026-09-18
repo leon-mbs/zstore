@@ -82,7 +82,7 @@
     {{/isdisc}}  
          {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Списано бонусiв::</td>
+        <td colspan="6" align="right">Списано бонусів::</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}

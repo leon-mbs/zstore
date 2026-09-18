@@ -120,7 +120,7 @@ class PPOHelper
 
         $firm = \App\Helper::getFirmData( );
         if($firm== null){
-            return array('success' => false, 'data' => 'Не вказанi данi компанiї');
+            return array('success' => false, 'data' => 'Не вказані дані компанії');
         }
         if( ($pos->firmname ??"")=="") {
             $pos->firmname = $firm['firm_name']  ;

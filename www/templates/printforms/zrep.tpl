@@ -1,7 +1,7 @@
  
    <table class="ctable" border="0" cellpadding="1" cellspacing="0"  }>
     <tr>
-        <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звiт</td>
+        <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звіт</td>
     </tr>
    
    {{#test}}
@@ -26,7 +26,7 @@
     </tr>
   <tr>
 
-        <td  > ЄДРПОУ/IПН</td>
+        <td  > ЄДРПОУ/ІПН</td>
         <td  > {{inn}} </td>
     </tr>
     <tr>
@@ -54,7 +54,7 @@
     {{/payments}}
    <tr>
 
-        <td  >Кiлькiсть чекiв</td>
+        <td  >Кількість чеків</td>
         <td style="text-align:right" > {{cnt}} </td>
     </tr>
  
@@ -72,7 +72,7 @@
     {{/rpayments}}    
    <tr>
 
-        <td  >Кiлькiсть чекiв</td>
+        <td  >Кількість чеків</td>
         <td  style="text-align:right" > {{rcnt}} </td>
     </tr>
  

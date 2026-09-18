@@ -1,6 +1,6 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
-        <td align="center" colspan="2"> <b>Х-Звiт </b></td>
+        <td align="center" colspan="2"> <b>Х-Звіт </b></td>
     </tr>
     <tr>
 
@@ -8,10 +8,10 @@
         
     </tr>   
    <tr>
-        <td  > Чекiв</td>        <td  > {{cnt}}</td>
+        <td  > Чеків</td>        <td  > {{cnt}}</td>
     </tr>    
     <tr>
-        <td  > Готiвка</td>        <td  > {{nal}}  {{#isrnal}} (повернення {{rnal}})  {{/isrnal}}   </td>
+        <td  > Готівка</td>        <td  > {{nal}}  {{#isrnal}} (повернення {{rnal}})  {{/isrnal}}   </td>
     </tr>
    <tr>
         <td  > Картка</td>        <td  > {{card}}  {{#isrcard}} (повернення {{rcard}})  {{/isrcard}}</td>

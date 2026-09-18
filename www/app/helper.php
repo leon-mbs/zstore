@@ -70,7 +70,7 @@ class Helper
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
-        $_SESSION['userlogin'] = 'Гiсть';
+        $_SESSION['userlogin'] = 'Гість';
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 
@@ -264,7 +264,7 @@ class Helper
         }
         if(($modules['checkbox'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'checkbox') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/CB/Reports", 'meta_type' => 6, 'description' => "Х-Звiт (Чекбокс)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/CB/Reports", 'meta_type' => 6, 'description' => "Х-Звіт (Чекбокс)"));
             }
         }
       

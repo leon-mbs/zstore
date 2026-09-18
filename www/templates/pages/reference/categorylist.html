@@ -17,7 +17,7 @@
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                                data-bs-toggle="popover"
                                data-bs-placement="bottom" data-bs-content="Категорії призначені для групування товарів в Прайсі, а також для
-                               визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно. Iєрархія категорій вмикається  в довіднику Номенклатура"></i>
+                               визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно. Ієрархія категорій вмикається  в довіднику Номенклатура"></i>
 
                         </h3>
                         <a zippy="addnew" class="btn btn-primary  ">Додати</a>
@@ -28,11 +28,11 @@
                                 {{/useimages}}
                                 <th>Назва</th>
                                 {{#usecattree}}
-                                <th > Батькiвська</th>
+                                <th > Батьківська</th>
                                 {{/usecattree}}
                                 <th colspan="2"  style="width:20px" >  
                                 &nbsp;&nbsp;<i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title=" Порядок виводу в меню та онлайн каталозi "></i>
+                                   title=" Порядок виводу в меню та онлайн каталозі "></i>
 
                                  </th>
                                 <th class="text-end"> ТМЦ </th>
@@ -60,8 +60,8 @@
                                   <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
                                  </td> 
                                 <td class="text-end"><span  zippy="qty" class="badge text-bg-success rounded-pill"></span></td>
-                                <td> <a zippy="prices" title="Змiнити цiни">-<i class="fa fa-coins"></i>+ </a>   </td>
-                                <td> <a zippy="cfields" title="Кастомнi поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
+                                <td> <a zippy="prices" title="Змінити ціни">-<i class="fa fa-coins"></i>+ </a>   </td>
+                                <td> <a zippy="cfields" title="Кастомні поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
                                 <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
                                     &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -84,16 +84,16 @@
                             <input autofocus="on"    required="on"  class="form-control" zippy="editcat_name"/>
                         </div>
                        <div class="form-group">
-                            <label for="editcat_desc">Примiтка</label>
+                            <label for="editcat_desc">Примітка</label>
                             <input   class="form-control" zippy="editcat_desc"/>
                         </div>
                         {{#usecattree}}
                         <div class="form-group">
-                            <label for="editparent">Батькiвська</label>
+                            <label for="editparent">Батьківська</label>
                             <select   class="form-control" zippy="editparent">
                                 <option value="0">Не вказано</option>
                             </select>
-                            <small>Категорiя  не повинна мати ТМЦ</small>
+                            <small>Категорія  не повинна мати ТМЦ</small>
                         </div>
                         {{/usecattree}}
                         <div class="form-group  ">
@@ -125,7 +125,7 @@
                         {{#shop}}   
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозi</label>
+                            <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозі</label>
                         </div>
                          {{/shop}}
                             {{#usefood}}  
@@ -140,7 +140,7 @@
                           {{/usefood}}  
                            <div class="form-check">
                                 <input zippy="editnoprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
+                                <label class="form-check-label" for="editnoprice">Не показувати в прайсі</label>
                             </div>
                           {{#usends}}    
                          <div class="form-group">
@@ -165,7 +165,7 @@
                     <h5 zippy="catprname"></h5>  
                         <div class="form-group row">
                             <div class="col-auto pt-1"> 
-                            <label for="ptype">Тип цiни</label>
+                            <label for="ptype">Тип ціни</label>
                             </div>
                              <div class="col-auto"> 
                             <select   class="form-control" zippy="ptype">
@@ -174,7 +174,7 @@
                             </div>
                         </div>                     
                     <div class="form-group  ">
-                         <label   for="editprice">Змiнити на  суму або процент</label>
+                         <label   for="editprice">Змінити на  суму або процент</label>
                              <input  required="on"  style="width: 100px"   class="form-control" zippy="chprice"/>
 
                              <small class="form-text text-muted">Наприклад  5, -2, 3%, -0.5%. </small>

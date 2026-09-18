@@ -70,7 +70,7 @@
     {{#ship_number}}
     <tr>
         <td></td>
-        <td><b>№ декларацiї</b></td>
+        <td><b>№ декларації</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
     {{/ship_number}}
@@ -92,7 +92,7 @@
     {{#ship_amount}}
     <tr>
         <td></td>
-        <td><b>Вартiсть доставки</b></td>
+        <td><b>Вартість доставки</b></td>
         <td colspan="5"> {{ship_amount}}</td>
     </tr>
     {{/ship_amount}}

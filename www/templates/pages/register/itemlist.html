@@ -111,7 +111,7 @@
                    </form>
                 </div>
                 <a zippy="csv">Експорт у Excel</a>
-                <a zippy="printqty" class=" ms-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
+                <a zippy="printqty" class=" ms-4  " title="Друкувати відфільтровані по кількості наявних"> <i class="fa fa-print"></i> </a>
                  <div class="table-responsive-lg  "    >
              
                 <table class="table      table-sm  table-hover ">
@@ -212,12 +212,12 @@
                 <h3 zippy="itemdetname"></h3>
                 
             {{^noshowpartion}}                 
-                <h5> Партiї облiку  </h5>
+                <h5> Партії обліку  </h5>
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
                          {{#storeemp}}
-                        <th>Спiвробiтник</th>
+                        <th>Співробітник</th>
                          {{/storeemp}}
                         {{#usesnumber}}
                         <th class="text-end text-nowrap">Серія</th>
@@ -251,13 +251,13 @@
                         <td zippy="amount" class="text-end  "></td>
 
 
-                         <td  ><a zippy="createmove" >Перемiстити партiю</a></td>
+                         <td  ><a zippy="createmove" >Перемістити партію</a></td>
 
 
                     </tr>
                 </table>
-                <small><i class="fa fa-exclamation-triangle"></i> Скоригувати партiї, наприклад, якщо утворився мiнус можна
-                    документом Перемiщення партiй.</small>
+                <small><i class="fa fa-exclamation-triangle"></i> Скоригувати партії, наприклад, якщо утворився мінус можна
+                    документом Переміщення партій.</small>
              {{/noshowpartion}} 
               </div>
               
@@ -266,7 +266,7 @@
                      <b>Остання продажа</b> <br>
                   {{i_lastsell}}  <br>
                      {{i_avgout}} <br>                 
-                     <b>Вiдпускнi цiни</b> <br>
+                     <b>Відпускні ціни</b> <br>
                     <table class="ctable">
                       {{#i_plist}}
                       <tr><td>{{i_pricename}}</td><td class="text-end">{{i_price}}</td></tr>
@@ -286,7 +286,7 @@
                  
                      <form zippy="iformbay" class="  mt-4">
                        <div class="row  ">
-                       <label class="col-form-label col-auto">Кiл.</label> 
+                       <label class="col-form-label col-auto">Кіл.</label> 
                          <div class="col-auto  ">
                            <input  required="on"  style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
                           </div>

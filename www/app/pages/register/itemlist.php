@@ -348,7 +348,7 @@ class ItemList extends \App\Pages\Base
         $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st}  and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
-           $this->_tvars["i_lastsell"] =  $d->document_number .' вiд '. H::fd($d->document_date) .'.'  ; 
+           $this->_tvars["i_lastsell"] =  $d->document_number .' від '. H::fd($d->document_date) .'.'  ; 
            $this->_tvars["i_lastsell"] .= (' Продано  '. H::fqty(0-$e->quantity) .' по '. H::fa($e->outprice)  ) ; 
         }
 
@@ -357,7 +357,7 @@ class ItemList extends \App\Pages\Base
         $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity > 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsReceipt')  ) ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
-           $this->_tvars["i_lastbay"] =  $d->document_number .' вiд '. H::fd($d->document_date) .'.'  ; 
+           $this->_tvars["i_lastbay"] =  $d->document_number .' від '. H::fd($d->document_date) .'.'  ; 
            $this->_tvars["i_lastbay"] .= (' Закуплено  '. H::fqty($e->quantity) .' по '. H::fa($e->partion)  ) ; 
            
            $this->detailpanel->iformbay->setVisible(true);
@@ -387,7 +387,7 @@ class ItemList extends \App\Pages\Base
                 $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
                 $sell =   $conn->GetOne($sql)  ;
                 $sell =  number_format($sell/$interval->days*30, 1, '.', '');
-                $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в мiс.";
+                $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в міс.";
                 
                 
             }  
@@ -433,11 +433,11 @@ class ItemList extends \App\Pages\Base
         $header['B1'] = "Артикул";
         $header['C1'] = "Штрих-код";
         $header['D1'] = "Од.";
-        $header['E1'] = "Категорiя";
+        $header['E1'] = "Категорія";
         $header['F1'] = "Бренд";
         $header['G1'] = "Комірка";
-        $header['H1'] = "Кiл.";
-        $header['I1'] = "Обл. цiна";
+        $header['H1'] = "Кіл.";
+        $header['I1'] = "Обл. ціна";
         if($this->_tvars["noshowpartion"] == true) {
             $header['I1'] ='';
         }

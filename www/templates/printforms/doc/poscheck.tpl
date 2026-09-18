@@ -13,7 +13,7 @@
     </tr>
     <tr>
         <td></td>
-        <td valign="top"><b>IПН</b></td>
+        <td valign="top"><b>ІПН</b></td>
         <td colspan="5">{{inn}}</td>
     </tr>
     <tr>

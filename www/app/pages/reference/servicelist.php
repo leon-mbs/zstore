@@ -337,7 +337,7 @@ class ServiceList extends \App\Pages\Base
         }
 
        $this->servicetable->servicelist->Reload();
-       $this->setSuccess("Імпортовано {$cnt} позицiй ");
+       $this->setSuccess("Імпортовано {$cnt} позицій ");
     }
     
     

@@ -920,7 +920,7 @@ class ItemList extends \App\Pages\Base
          
         $this->setpanel->scopyform->editscopy->setValue(0) ;
         
-        $this->setSuccess("Скопiйовано") ;
+        $this->setSuccess("Скопійовано") ;
     }  
         
    

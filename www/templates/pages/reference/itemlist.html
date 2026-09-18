@@ -12,7 +12,7 @@
                 <h3>Довідник номенклатури
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-bs-toggle="popover"
-                        data-bs-placement="bottom" data-bs-content="Довiдник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
+                        data-bs-placement="bottom" data-bs-content="Довідник ТМЦ, з можливістю створення нових одиниць їх редагування, видалення та пошуком.
                        У списку відображаються активні товари. Для відображення товарів з статусом 'Більше не використовується' потрібно встановити прапорець 'Все' біля кнопки 'ОК' "></i>
                 </h3>
 
@@ -71,7 +71,7 @@
                                 <option value="0">Найменування</option>
                                 <option value="1">Артикул</option>
                                 <option value="2">Тип</option>
-                                <option value="3">Спочатку новi</option>
+                                <option value="3">Спочатку нові</option>
                             </select>
                           </div>
                        </div>
@@ -112,7 +112,7 @@
                  
                 <div class="col-1   "  >
                                 
-                <a class="  ms-4  "  href="/index.php?p=App/Pages/Service/Import"> <i class="fa fa-download"></i> Iмпорт</a>
+                <a class="  ms-4  "  href="/index.php?p=App/Pages/Service/Import"> <i class="fa fa-download"></i> Імпорт</a>
                  </div>  
                  <div class="col-2  "  >
                  
@@ -150,9 +150,9 @@
 
                             <th> <i title="В наявності" class="fa fa-warehouse"></i> </th>
                             <th> <i title="Комірка" class="fa fa-box"></i> </th>
-                            <th><i title="В прайсi" class="fa fa-list-alt"></i></th>
+                            <th><i title="В прайсі" class="fa fa-list-alt"></i></th>
                             {{#usesnumber}}
-                            <th><i title="Облiк серiй виробника" class="fa fa-calendar-check"></i></th>
+                            <th><i title="Облік серій виробника" class="fa fa-calendar-check"></i></th>
                             {{/usesnumber}}
                             <th></th>
                             <th></th>
@@ -216,8 +216,8 @@
                         <tr><td colspan="9">
                                 <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
                                 <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  
-                                <a zippy="priceall">Змiнити цiни</a>&nbsp;&nbsp;
-                                Перемiстити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
+                                <a zippy="priceall">Змінити ціни</a>&nbsp;&nbsp;
+                                Перемістити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
                             </td> </tr>                 
                     </table>
                     <div class="w-50" zippy="pag"></div>   
@@ -276,8 +276,8 @@
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editcode">Код товару (артикул)
                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Код товару має бути унiкальним.
-                                        Якщо використовується код виробника, слiд додати бренд до коду, наприклад, k123_назвабренду"></i>
+                                   title="Код товару має бути унікальним.
+                                        Якщо використовується код виробника, слід додати бренд до коду, наприклад, k123_назвабренду"></i>
                                 </label>                                
                                 <div class="col-5">
                                     <input class="form-control" zippy="editcode"/>
@@ -290,7 +290,7 @@
                                 <label class="col-5 col-form-label" for="editbarcode">Штрих код (основний)</label>
                                 <div class="col-5">
                                     <input class="form-control" zippy="editbarcode"/>
-                                    <small   >Латинські  букви i цифри</small>
+                                    <small   >Латинські  букви і цифри</small>
                                 </div>
                             </div>
                            <div class="form-group row">
@@ -329,7 +329,7 @@
                            
 
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editcostprice">Собiвартiсть (облiкова цiна)
+                                <label class="col-5 col-form-label" for="editcostprice">Собівартість (облікова ціна)
                                    <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="  Для виробництва має приоритет перед комплектами"></i>
                                 </label>  
@@ -364,14 +364,14 @@
                                 </label>  
                                 <div class="col-7">
                                     <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editexcise"/>
-                                     <small>Залишити пустим якщо не пiдакцизний  а</small>
+                                     <small>Залишити пустим якщо не підакцизний  а</small>
                                 </div>
                             </div>
                             {{/useexcise}}   
                                                        
                               {{#useprod}}   
                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editzarp">Розцiнки (за замовчанням) 
+                                <label class="col-5 col-form-label" for="editzarp">Розцінки (за замовчанням) 
                                    <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Нарахування оплати за одиницю при відрядній оплаті"></i>
                                 </label>  
@@ -384,33 +384,33 @@
                             {{#usesnumber}}
                             <div class="form-check">
                                 <input zippy="edituseserial" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="edituseserial">Облік серiй виробника або серiйних номерiв</label>
+                                <label class="form-check-label" for="edituseserial">Облік серій виробника або серійних номерів</label>
                             </div>
 
 
                             {{/usesnumber}}    
                             <div class="form-check">
                                 <input zippy="editnoprice" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
+                                <label class="form-check-label" for="editnoprice">Не показувати в прайсі</label>
                             </div>
                             <div class="form-check">
                                 <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnoshop">Не показувати в онлайн торгiвлi  {{#usefood}} або кафе {{/usefood}}  </label>
+                                <label class="form-check-label" for="editnoshop">Не показувати в онлайн торгівлі  {{#usefood}} або кафе {{/usefood}}  </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Не показувати в онлайн каталозi, меню кафе та  IM  "></i>                                
+                                   title="Не показувати в онлайн каталозі, меню кафе та  IM  "></i>                                
                             </div>
                              <div class="form-check">
                                 <input zippy="editnoprint" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoprint">Не друкувати етикетки   </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="При масовому  друцi етикеток  товар  буде  проiгноровано  "></i>                                
+                                   title="При масовому  друці етикеток  товар  буде  проігноровано  "></i>                                
                             </div>
                             <div class="form-check">
                                 <input zippy="editautooutcome" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editautooutcome">Автоматичне списання комплекту</label> 
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Списання складових частин у виробництво при оприбуткуванні готової продукції.
-                                   Підходить для короткого циклу виробництва, наприклад, в громадському харчуванні. Списуватиме тiльки  перший рiвень - комплект в  комплектi слiд списувати вручну"></i>
+                                   Підходить для короткого циклу виробництва, наприклад, в громадському харчуванні. Списуватиме тільки  перший рівень - комплект в  комплекті слід списувати вручну"></i>
 
                             </div>
                             <div class="form-check">
@@ -471,7 +471,7 @@
                                 </div>
                             </div>
                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editwarranty">Гарантiйний термін</label>
+                                <label class="col-5 col-form-label" for="editwarranty">Гарантійний термін</label>
                                 <div class="col-7">
                                     <input class="form-control" zippy="editwarranty"/>
                                     <small>Для електроніки і  побутової  техніки</small>
@@ -531,9 +531,9 @@
                                               
                          
                              <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editlost">Вiдходи, % 
+                                <label class="col-5 col-form-label" for="editlost">Відходи, % 
                                   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Втрати при автоматичному списаннi у виробництво при оприходуваннi комплектiв. Наприклад  очистки  з картоплi у громадському харчуваннi"></i>
+                                   title="Втрати при автоматичному списанні у виробництво при оприходуванні комплектів. Наприклад  очистки  з картоплі у громадському харчуванні"></i>
                                 </label>                                 
                                 <div class="col-7">
                                     <input pattern="[0-9,\.]+"  class="form-control qtyprice" zippy="editlost"   />
@@ -572,7 +572,7 @@
                             <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editurl">URL для QR коду
                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Посилання  на  товар  в  iнтернет магазинi або на  сайт  виробника"></i>
+                                   title="Посилання  на  товар  в  інтернет магазині або на  сайт  виробника"></i>
                                 </label>                                   
                                 <div class="col-7">
                                     <input class="form-control" zippy="editurl"/>
@@ -663,7 +663,7 @@
                 <h4 zippy="stitle"></h4>
                
                 {{#complin}}
-                <span>Комплекти (рецепти) для готової продукцiї та напiвфабрикатiв</span>
+                <span>Комплекти (рецепти) для готової продукції та напівфабрикатів</span>
                  <div class="navbar  ">
                 
                     <form zippy="setform"  >
@@ -735,11 +735,11 @@
                         <td><a zippy="ssdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <span>Усього собiвартiсть: </span> <b zippy="stotal"></b>
+                <span>Усього собівартість: </span> <b zippy="stotal"></b>
                  <br>
                  <br>
-                 <h5>Технологiчна карта</h5>
-                  <small>Наприклад рецепт для  кухнi</small>
+                 <h5>Технологічна карта</h5>
+                  <small>Наприклад рецепт для  кухні</small>
                  <form zippy="cardform" >
                     <textarea style="height:200px" class="form-control" zippy="editscard"></textarea> 
                            
@@ -750,7 +750,7 @@
                   <form zippy="scopyform" >
                   <div class="row  ">
                    
-                    <label class="col-form-label col-auto" for="editscopy">Скопiювати в </label>
+                    <label class="col-form-label col-auto" for="editscopy">Скопіювати в </label>
                     <div class="col-auto  "> 
                         <select class="form-control  select2" zippy="editscopy">
                           <option value="0">Не обрано</option>
@@ -788,7 +788,7 @@
                             </div> 
                              <div class="form-check">
                                 <input zippy="usecattree" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="usecattree">Ієрархiя категорiй ТМЦ </label>
+                                <label class="form-check-label" for="usecattree">Ієрархія категорій ТМЦ </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title=" Можливість вибудовувати  ієрархію категорій. Має сенс, якщо передбачається використання в онлайн каталозі "></i>
                             </div>                                                       
@@ -827,8 +827,8 @@
                             </div> 
                                                                                 
                    <h5 class="mt-2">Кастомні поля   </h5>
-                   <small> Поля, що створюються користувачем. Переважно для пошуку та  друку в  цiнниках   </small>
-                   <br><small>   Код має бути унiкальним, допускається латиниця i  цифри     </small>
+                   <small> Поля, що створюються користувачем. Переважно для пошуку та  друку в  цінниках   </small>
+                   <br><small>   Код має бути унікальним, допускається латиниця i  цифри     </small>
                    <br><a  zippy="addnewcf"><b>Додати</b></a>
 
                        <table class="ctable mt-2">

@@ -36,7 +36,7 @@ class Orders extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
        
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Вiдкритi', 1 => 'Закритi',2 => 'Всi'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Закриті',2 => 'Всі'), 0));
         $this->filter->add(new DropDownChoice('fpartner', \App\Entity\Customer::findArray("customer_name","status=0 and (detail like '%<df>1</df>%' or detail like '%<df>2</df>%'  ) ","customer_name"), 0));
         $this->filter->add(new Date('from', time() - (15 * 24 * 3600)));
         $this->filter->add(new Date('to', 0));
@@ -108,7 +108,7 @@ class Orders extends \App\Pages\Base
          
        $this->doclist->Reload() ;
        $this->docpan->setVisible(false) ;      
-       $this->setSuccess('Вiдправлено') ;
+       $this->setSuccess('Відправлено') ;
     
         $n = new \App\Entity\Notify();
         $n->user_id = $uid;

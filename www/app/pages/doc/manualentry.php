@@ -139,7 +139,7 @@ class ManualEntry extends \App\Pages\Base
             return;
         }        
         if ($item->accdt==   $item->accct ) {
-            $this->setError("Однаковi рахунки");
+            $this->setError("Однакові рахунки");
             return;
         }        
         if($this->_rowid == -1) {

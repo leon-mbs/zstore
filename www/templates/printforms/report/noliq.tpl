@@ -12,12 +12,12 @@
         <th style="border: solid black 1px"> Найменування</th>
 
         <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Категорiя</th>
+        <th style="border: solid black 1px">Категорія</th>
         <th style="border: solid black 1px">Бренд</th>
         <th style="border: solid black 1px">Склад</th>
-        <th style="border: solid black 1px">Комiрка</th>
-        <th align="right" style="border: solid black 1px">Цiна</th>
-        <th align="right" style="border: solid black 1px">На складi</th>
+        <th style="border: solid black 1px">Комірка</th>
+        <th align="right" style="border: solid black 1px">Ціна</th>
+        <th align="right" style="border: solid black 1px">На складі</th>
 
 
     </tr>

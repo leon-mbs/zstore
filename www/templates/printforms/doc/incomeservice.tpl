@@ -17,7 +17,7 @@
     {{#iscontract}}
     <tr>
         <td colspan="6">
-            Договір: {{contract}} вiд {{createdon}}
+            Договір: {{contract}} від {{createdon}}
         </td>
 
     </tr>
@@ -30,7 +30,7 @@
     
     <tr style="font-weight: bolder;">
         <td colspan="6" align="center">
-            Отриманi послуги № {{document_number}} від {{date}}
+            Отримані послуги № {{document_number}} від {{date}}
         </td>
     </tr>
 

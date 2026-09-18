@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Класc-сущность   тип начислений удержаний
+ * Класс-сущность   тип начислений удержаний
  *
  * @table=saltypes
  * @keyfield=st_id

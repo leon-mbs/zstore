@@ -16,24 +16,24 @@
             
              <table class="ctable">
                 <tr>
-                <td>Поточна версiя програми  
+                <td>Поточна версія програми  
                 </td>
                  <td> 
                   <b> {{curversion}}</b>
                 </td> 
                 <td> 
                  {{#actual}}
-              Версiя   актуальна  
+              Версія   актуальна  
              {{/actual}}  
                 </td>
               <td> 
              {{#show}} 
-               Доступна       <a href="https://zippy.com.ua/update">нова версiя <b>{{reqversionprg}}</b> </a>   
+               Доступна       <a href="https://zippy.com.ua/update">нова версія <b>{{reqversionprg}}</b> </a>   
              {{/show}}  
                 </td>
                 </tr>
             <tr>
-                <td> Поточна версiя БД  
+                <td> Поточна версія БД  
                 </td>
                   <td> 
                   <b> {{curversiondb}}</b>
@@ -46,12 +46,12 @@
                  
                 </td>  
                 <td>  {{^actualdb}}
-                    Версiя БД має  бути <b>{{reqversiondb}}</b>  
+                    Версія БД має  бути <b>{{reqversiondb}}</b>  
                  {{/actualdb}}  </td>
               </tr>      
             
           <tr>
-                <td>  Поточна версiя PHP 
+                <td>  Поточна версія PHP 
                 </td>
                 <td> 
                   <b> {{currphpv}}</b>
@@ -75,10 +75,10 @@
          {{#tooold}}
        <div class="col-12 col-xl-8 mb-4">
          <small>
-        <i class="fa fa-exclamation-triangle text-danger" ></i>   Якщо пропущено кiлька оновлень може знадобитись ручне  оновлення.
+        <i class="fa fa-exclamation-triangle text-danger" ></i>   Якщо пропущено кілька оновлень може знадобитись ручне  оновлення.
             Для цього перейдіть на  <a href="https://zippy.com.ua/update">історію оновлень </a> 
             і виконайте послідовне оновлення структури база данних у відповідності з інструкціями, починаючи з поточної версії.
-            Виконайте  повне  оновлення  з    <a class="link" href="https://zippy.com.ua/download/fullzstore.zip"> архiву</a> (крім config.php). 
+            Виконайте  повне  оновлення  з    <a class="link" href="https://zippy.com.ua/download/fullzstore.zip"> архіву</a> (крім config.php). 
             {{#oldphp}}
             <br> Оскільки поточна  версія PHP застаріла, папку vendor необхідно  <a class="link" href="https://zippy.com.ua/download/vendor74.zip"> зкачати  </a> окремо 
              {{/oldphp}}
@@ -89,8 +89,8 @@
   <div class="col-12  mt-2">
             
      <i class="fa fa-exclamation-circle text-warning"></i> 
-       Поточна версія PHP на вашому сервері застарiла. 
-       Пiдтримка версiй менших 8.1.0 з часом буде припинена.  
+       Поточна версія PHP на вашому сервері застаріла. 
+       Підтримка версій менших 8.1.0 з часом буде припинена.  
        <br> Рекомендується  оновити до 8.1+
        <br>
        <br>
@@ -170,12 +170,12 @@
        <div class="col-12  mt-4">
           {{#reinstall}}    
         <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
-        <br><small>Повторити останнє оновлення файлiв, наприклад пiсля виходу виправлення (хотфiксу)</small>
+        <br><small>Повторити останнє оновлення файлів, наприклад після виходу виправлення (хотфіксу)</small>
            {{/reinstall}}    
           {{#rollback}}
         <br>  <br> 
-        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити код до попередньої версії </b> </a> 
-        <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
+        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Відкотити код до попередньої версії </b> </a> 
+        <br><small>На  випадок  виникнення проблем  після оновлення</small>
           {{/rollback}}        
        
         
@@ -186,7 +186,7 @@
         {{#needvendor}}
       
       <i class="fa fa-exclamation-triangle"></i>  
-        Були оновленi стороннi бiблiотеки. Для коректної роботи наступних версій рекомендується  оновити  папку  vendor   {{#oldphp}} (необхідно оновити попередньо PHP до 8.1+ )  {{/oldphp}}   
+        Були оновлені сторонні бібліотеки. Для коректної роботи наступних версій рекомендується  оновити  папку  vendor   {{#oldphp}} (необхідно оновити попередньо PHP до 8.1+ )  {{/oldphp}}   
       
      
           
@@ -221,7 +221,7 @@
        
         } 
         function check_rollback(ele){
-           return confirm("Вiдкотити версію?")
+           return confirm("Відкотити версію?")
         } 
  
         function check_reload(ele){

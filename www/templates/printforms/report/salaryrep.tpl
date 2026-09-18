@@ -8,7 +8,7 @@
     <tr>
 
         <td align="center" colspan="3">
-            Перiод з {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
+            Період з {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
         </td>
     </tr>
     {{#isemp}}

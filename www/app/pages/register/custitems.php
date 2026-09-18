@@ -479,7 +479,7 @@ class CustItems extends \App\Pages\Base
     public function cartOnClick($sender) {
         $ci =  $sender->getOwner()->getDataItem();
         if(intval($ci->cartqty)==0)  {
-            $this->setError('Не задана кiлькiсть ') ;
+            $this->setError('Не задана кількість ') ;
             return   ;
         }
       
@@ -566,7 +566,7 @@ class CustItems extends \App\Pages\Base
        $fh = fopen($tempFilePath, 'w');
       
       
-       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кiл.;Цiна;Примiтка;";
+       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кіл.;Ціна;Примітка;";
        $line = mb_convert_encoding($line, "windows-1251", "utf-8");
        fwrite($fh, $line . PHP_EOL);      
        
@@ -709,7 +709,7 @@ class CustItems extends \App\Pages\Base
         $json = str_replace("\r","",$json) ;
         $data=json_decode($json,true) ;
         if(!is_array($data)) {
-            $this->setError("Невiрний json") ;
+            $this->setError("Невірний json") ;
             return;
         }
         

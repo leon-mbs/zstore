@@ -104,10 +104,10 @@ class SubstItems extends \App\Pages\Base
         if($it != null) {
             $qty = $it->getQuantity() ;
             $t="<small>";
-            $t = $t . $it->itemname.". Кiл. ".H::fqty($qty);
+            $t = $t . $it->itemname.". Кіл. ".H::fqty($qty);
             if($qty>0) {
                $price = $it->getPrice() ;
-               $t .= ". Цiна. ".H::fa($price)  ;
+               $t .= ". Ціна. ".H::fa($price)  ;
             }
             $t.="</small>";
             $row->initems->setText($t,true);
@@ -120,9 +120,9 @@ class SubstItems extends \App\Pages\Base
             $t="";
             foreach($ci as $c) {
                 $t.="<small style=\"display:block\">";  
-                $t=$t . $c->cust_name.". Кiл. ".H::fqty($c->quantity);
+                $t=$t . $c->cust_name.". Кіл. ".H::fqty($c->quantity);
                 if($c->quantity <0) {
-                   $t .= ". Цiна. ".H::fa($c->price)  ;  
+                   $t .= ". Ціна. ".H::fa($c->price)  ;  
                 }  
                 $t.="</small>";
             }
@@ -238,7 +238,7 @@ class SubstItems extends \App\Pages\Base
              || $colsubstcode === '0'
              || $colsubstbrand === '0'
          ) {
-            $this->setError('Не вказанi колонки ');
+            $this->setError('Не вказані колонки ');
             return;
         }
          
@@ -353,7 +353,7 @@ class SubstItems extends \App\Pages\Base
        $fh = fopen($tempFilePath, 'w');
       
       
-       $line ="Найменування;Код оригiнала;Бренд оригiнала;Код замiни;Бренд замiни;  ";
+       $line ="Найменування;Код оригінала;Бренд оригінала;Код заміни;Бренд заміни;  ";
        $line = mb_convert_encoding($line, "windows-1251", "utf-8");
        fwrite($fh, $line . PHP_EOL);      
        

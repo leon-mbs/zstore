@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="{{colspan}}">
-            Стан складiв  на  {{date}} 
+            Стан складів  на  {{date}} 
         </td>
     </tr>
  
@@ -12,7 +12,7 @@
         <th style="border: solid black 1px">Найменування</th>
         <th style="border: solid black 1px">Артикул</th>
         <th style="border: solid black 1px">Бренд</th>
-        <th style="border: solid black 1px">Miн. кiл.</th>
+        <th style="border: solid black 1px">Мін. кіл.</th>
         {{#cfnames}}
         <th style="border: solid black 1px">{{value}} </th>
         {{/cfnames}}
@@ -20,7 +20,7 @@
         <th style="border: solid black 1px">{{value}} </th>
         {{/storescol}}
         {{#ver}}
-        <th style="border: solid black 1px" align="right"> Кiл. </th>
+        <th style="border: solid black 1px" align="right"> Кіл. </th>
         {{/ver}}
         
     </tr>
