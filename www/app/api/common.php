@@ -14,7 +14,8 @@ class common extends JsonRPC
 
         if ($user instanceof \App\Entity\User) {
           //  $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
-            $key = 'api'.\App\Helper::getSalt();            
+            // php-jwt 7 вимагає ключ HS256 не коротший за 32 байти; 'api'.salt давав ~9 байт і кидав «Provided key is too short»
+            $key = hash('sha256', 'api' . \App\Helper::getSalt());            
             $exp = strlen($api['exp']) > 0 ? $api['exp'] : 60;
 
             $payload = array(
