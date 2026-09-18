@@ -672,6 +672,16 @@ class ServiceAct extends \App\Pages\Base
         return !$this->isError();
     }
 
+    //кнопка OK біля поля «Сплачено» (bpayed); метод був відсутній, клік давав фатал
+    public function onPayed($sender) {
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
+        $payed = $this->docform->editpayed->getDouble();
+        $payamount = doubleval(str_replace(' ', '', $this->docform->payamount->getText()));
+        if ($payed > $payamount) {
+            $this->setWarn('Внесена сума більше необхідної');
+        }
+    }
+
     public function OnPayType($sender) {
          $this->docform->payed->setVisible($sender->getValue()==1);
          $this->docform->payment->setVisible($sender->getValue()==1);

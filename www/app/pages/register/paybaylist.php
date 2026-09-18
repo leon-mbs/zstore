@@ -77,7 +77,7 @@ class PayBayList extends \App\Pages\Base
 
    
         $this->plist->payform->add(new SubmitButton("paybtn"))->onClick($this, 'payOnSubmit');
-        $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payorderOnSubmit');
+        $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payOnSubmit');
       
         
 
