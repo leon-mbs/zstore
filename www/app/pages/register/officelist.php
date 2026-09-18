@@ -349,7 +349,7 @@ class OfficeList extends \App\Pages\Base
 
         try {
 
-            if ($sender->id == 'binproсess') {
+            if ($sender->id == 'binprocess') {
                 $this->_doc->updateStatus(Document::STATE_INPROCESS);
             }
             if ($sender->id == 'bdone') {

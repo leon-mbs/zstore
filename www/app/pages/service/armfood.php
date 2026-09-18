@@ -1894,7 +1894,7 @@ class ARMFood extends \App\Pages\Base
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
-                    $this->setError('Не створено унікальный номер документа');
+                    $this->setError('Не створено унікальний номер документа');
                     return false;
                 }
             }

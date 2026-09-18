@@ -1204,7 +1204,7 @@ class Document extends \ZCL\DB\Entity
         }
         
         $payee  =  $firm['firm_name'] ;//плательщик 
-        $tin =  $firm['tin']  ;//едрпоу 
+        $tin =  $firm['tin']  ;//ЄДРПОУ 
         
         if(strlen($mf->payname ??'') > 0)  $payee  = $mf->payname;
         if(strlen($mf->tin ??'') > 0) $tin  = $mf->tin;
