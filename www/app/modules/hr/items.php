@@ -340,7 +340,7 @@ class Items extends \App\Pages\Base
         $conn =   \ZDB\DB::getConnect();
  
         if(count($this->_pages)==0){
-            $this->setError('Не  оновллені категорії') ;
+            $this->setError('Не  оновлені категорії') ;
             return;
         }
  

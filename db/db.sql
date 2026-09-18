@@ -1634,7 +1634,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Розрахунки з постачальниками', 'PaySelList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Розрахунки з покупцями', 'PayBayList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення грошей', 'MoveMoney', 'Каса та платежі', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовленя кафе', 'OrderFood', 'Кафе', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Замовлення кафе', 'OrderFood', 'Кафе', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ касира (кафе)', 'ARMFood', 'Кафе', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Кафе', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кухнi (бару)', 'ArmProdFood', 'Кафе', 1);
@@ -1687,7 +1687,7 @@ INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(3,
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(4, 600, 'Всього утримано', 'вс. утр', 0);
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(5, 900, 'До видачi', 'До видачi', 0);
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(6, 850, 'Аванс', 'Аванс', 0);
-INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(7, 220, 'НДФО', 'НДФО', 0);
+INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(7, 220, 'ПДФО', 'ПДФО', 0);
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(8, 300, 'ЕСВ', 'ЕСВ', 0);
 
 

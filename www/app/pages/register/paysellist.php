@@ -425,7 +425,7 @@ GROUP BY c.customer_name,
                  $this->updateDocs();
                  $this->onBack(null);  
       
-                 $this->setSuccess('Створено квсовий ордер');
+                 $this->setSuccess('Створено касовий ордер');
 
                  return;
             }

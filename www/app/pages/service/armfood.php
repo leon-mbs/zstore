@@ -1844,12 +1844,12 @@ class ARMFood extends \App\Pages\Base
                       }
                   }
                   if(count($stlst)  !=  count(array_unique($stlst) ) ) {
-                     $this->setWarn("Марки дублюются" );
+                     $this->setWarn("Марки дублюються" );
                      return;  
                   }           
                   
                   if(count($stlst)  !=  $item->quantity) {
-                     $this->setWarn("Кількість марок не  відповідае кількості в  позиції " );
+                     $this->setWarn("Кількість марок не  відповідає кількості в  позиції " );
                      return;  
                   }
               }
@@ -1894,7 +1894,7 @@ class ARMFood extends \App\Pages\Base
                 $next = $this->_doc->nextNumber();
                 $this->_doc->document_number = $next;
                 if (strlen($next) == 0) {
-                    $this->setError('Не створено унікальный номер документа');
+                    $this->setError('Не створено унікальний номер документа');
                     return false;
                 }
             }

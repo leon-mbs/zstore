@@ -429,7 +429,7 @@ class ItemList extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Наименуваня";
+        $header['A1'] = "Найменування";
         $header['B1'] = "Артикул";
         $header['C1'] = "Штрих-код";
         $header['D1'] = "Од.";
