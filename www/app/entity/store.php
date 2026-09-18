@@ -69,7 +69,7 @@ class Store extends \ZCL\DB\Entity
             return '';
         }    
         
-        if($user->showotherstores  && dtrlen($user->aclbranch) >0) {
+        if($user->showotherstores  && strlen($user->aclbranch) >0) {
             return "branch_id in ({$user->aclbranch})";
         }         
         

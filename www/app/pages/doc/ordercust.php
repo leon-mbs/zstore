@@ -566,6 +566,8 @@ class OrderCust extends \App\Pages\Base
         
         try{
             $rowid = -1;
+            $price = 0;
+            $quantity = 0;
             
             
             foreach ($this->_itemlist as $i=> $it) {

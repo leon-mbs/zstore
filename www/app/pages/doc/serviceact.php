@@ -8,6 +8,7 @@ use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Service;
 use App\Entity\Store;
+use App\Entity\Stock;
 use App\Entity\MoneyFund;
 use App\System;
 use App\Helper as H;
@@ -364,6 +365,7 @@ class ServiceAct extends \App\Pages\Base
             }
             
 
+            $store_id = $this->docform->store->getValue();
             $slist = $item->getSerials($store_id);
             
             if (in_array($item->snumber, $slist) == false) {

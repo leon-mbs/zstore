@@ -262,7 +262,7 @@ class ProdProcList extends \App\Pages\Base
     public function onAddProd($sender) {
 
         $it = Item::load($sender->additem->getValue());
-        if ($item == null) {
+        if ($it == null) {
             return;
         }
         

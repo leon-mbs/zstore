@@ -127,7 +127,8 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
      
-        $docs = Document::findBySql( "select * from documents_view where ". $this->getWhere(), $sortfield . " " . $asc, $count, $start);
+        $order = strlen($sortfield ?? '') > 0 ? $sortfield . " " . $asc : "document_date desc, document_id desc";
+        $docs = Document::findBySql("select * from documents_view where " . $this->getWhere() . " order by {$order} limit " . intval($start) . "," . intval($count));
  
 
         return $docs;

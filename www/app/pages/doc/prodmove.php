@@ -222,7 +222,7 @@ class ProdMove extends \App\Pages\Base
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-            $slist = $item->getSerials($store_id);
+            $slist = $item->getSerials();
 
             if (in_array($item->snumber, $slist) == false) {
                 $this->setError('Невірний номер серії');

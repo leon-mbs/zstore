@@ -20,8 +20,8 @@ class ManualEntry extends Document
     public   function DoAcc() {
        
        $conn = \ZDB\DB::getConnect(); 
+       $dt=$conn->DBDate($this->document_date);
        if($this->headerdata['remove']==1) {
-           $dt=$conn->DBDate($this->document_date);
            $sql="delete from acc_entry where  ( createdon is not null and createdon<={$dt} ) || document_id in(select document_id from documents where document_date <={$dt} )  ";
            $conn->Execute($sql);
        }   

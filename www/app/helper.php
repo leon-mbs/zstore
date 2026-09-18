@@ -1078,6 +1078,7 @@ class Helper
         $user = \App\System::getUser();
 
         $printer = \App\System::getOptions('printer');
+        $prturn = intval($user->prturn ?? 0);
 
          
         $htmls = "";

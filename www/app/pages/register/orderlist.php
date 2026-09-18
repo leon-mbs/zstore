@@ -754,7 +754,7 @@ class OrderList extends \App\Pages\Base
 
         }
 
-        $this->_tvars['issitems']= count($sitems) >0;
+        $this->_tvars['issitems']= count($sitems ?? []) >0;
 
         $this->statuspan->moveform->brmove->setValue($this->_doc->branch_id) ;
         $this->onBranch($this->statuspan->moveform->brmove);
