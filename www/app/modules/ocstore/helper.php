@@ -33,7 +33,7 @@ class Helper
             foreach ($params as $key => $value) {
                 $params_string .= $key . '=' . $value . '&';
             }
-            rtrim($params_string, '&');
+            $params_string = rtrim($params_string, '&');
 
             curl_setopt($ch, CURLOPT_POST, count($params));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);

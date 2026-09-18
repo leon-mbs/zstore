@@ -55,6 +55,8 @@ class ProdMove extends \App\Pages\Base
         $this->docform->add(new TextArea('notes'));
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -183,6 +185,54 @@ class ProdMove extends \App\Pages\Base
 
         $this->_rowid =  array_search($item, $this->_itemlist, true);
 
+    }
+
+    //додавання по штрих-коду (поле barcode + кнопка addcode є в шаблоні)
+    public function addcodeOnClick($sender) {
+        $code = trim($this->docform->barcode->getText());
+        $this->docform->barcode->setText('');
+        if ($code == '') {
+            return;
+        }
+
+        $item = Item::findBarCode($code);
+        if ($item == null) {
+            $this->setError("Товар з кодом `{$code}` не знайдено");
+            return;
+        }
+
+        $st_id = $this->docform->psfrom->getValue();
+        if ($st_id > 0) {
+            $st = \App\Entity\ProdStage::load($st_id);
+            if (count($st->itemlist) > 0 && !in_array($item->item_id, array_keys($st->itemlist))) {
+                $this->setError("ТМЦ не в переліку  на  етапі");
+                return;
+            }
+        }
+
+        foreach ($this->_itemlist as $it) {
+            if ($it->item_id == $item->item_id) {
+                $it->quantity += 1;
+                $this->docform->detail->Reload();
+                return;
+            }
+        }
+
+        if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
+            $this->setWarn('Потрібна партія виробника');
+            $this->_rowid = -1;
+            $this->editdetail->setVisible(true);
+            $this->docform->setVisible(false);
+            $this->editdetail->edititem->setValue($item->item_id);
+            $this->editdetail->editserial->setText('');
+            $this->editdetail->editquantity->setText('1');
+            return;
+        }
+
+        $item->quantity = 1;
+        $item->snumber = '';
+        $this->_itemlist[] = $item;
+        $this->docform->detail->Reload();
     }
 
     public function saverowOnClick($sender) {

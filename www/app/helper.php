@@ -1379,6 +1379,7 @@ class Helper
             
           
             //очистка товаров у поставщика
+            $options = \App\System::getOptions('common');
             $days = $options['ci_clean'] ?? 0;
             if($days >0) {
                 $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;

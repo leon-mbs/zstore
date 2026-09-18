@@ -253,7 +253,7 @@ class Document extends \ZCL\DB\Entity
     * @return mixed
     */
     public function setHD(string $name, $value=null)  {
-       if(strlen($name)=='')    return;
+       if(strlen($name)==0)    return;
        if($value==null) {
           unset( $this->headerdata[$name] );    
        }   else {

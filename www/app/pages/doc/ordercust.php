@@ -69,6 +69,7 @@ class OrderCust extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
      
      

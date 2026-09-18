@@ -189,7 +189,7 @@ class Orders extends \App\Pages\Base
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = str_replace(',', '.', $product['price']);
                 $desc = '';
-                if (array($product['_options_'])) {
+                if (is_array($product['_options_'] ?? null)) {
                     foreach ($product['_options_'] as $k => $v) {
                         $desc = $desc . $k . ':' . $v . ';';
                     }
