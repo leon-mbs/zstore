@@ -28,11 +28,14 @@ class InvoiceCust extends Document
             );
         }
 
+        $firm = H::getFirmData($this->branch_id);
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         
+                        "firm_name"       => $firm['firm_name'] ?? '',
+                        "isfirm"          => strlen($firm['firm_name'] ?? '') > 0,
                          "isval"           => strlen($this->headerdata['val']??'') > 1,
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),
@@ -60,6 +63,7 @@ class InvoiceCust extends Document
         }
         $val = H::getValList();
         $header['val'] = $val[$this->headerdata['val']]??'';
+        $header['valname'] = $header['val'];
 
         $report = new \App\Report('doc/invoicecust.tpl');
 

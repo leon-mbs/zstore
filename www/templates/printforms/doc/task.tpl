@@ -119,7 +119,7 @@
 
         <td colspan="5">{{eq_name}}</td>
 
-        <td colspan="2">{{code}}</td>
+        <td colspan="2">{{invnumber}}</td>
 
     </tr>
     {{/_detail2}}

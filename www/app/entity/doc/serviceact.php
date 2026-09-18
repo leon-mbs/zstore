@@ -46,6 +46,8 @@ class ServiceAct extends Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
+                        "stamp"           => _BASEURL . ($firm['stamp'] ?? ''),
+                        "isstamp"         => strlen($firm['stamp'] ?? '') > 0 && is_file(_ROOT . '/' . ltrim($firm['stamp'], '/')),
                         "gar"             => $this->headerdata['gar'],
                         "isdevice"        => strlen($this->headerdata["device"]) > 0,
                         "device"          => $this->headerdata["device"],

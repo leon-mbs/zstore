@@ -271,6 +271,12 @@ class PayList extends \App\Pages\Base
         $header['firm_name'] = $doc->headerdata['firm_name'] ;
  
         $header['customer_name'] = $doc->customer_name;
+        $wp = 'style="width:40mm"';
+        $printer = \App\System::getOptions('printer');
+        if (strlen($printer['pwidth'] ?? '') > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . '"';
+        }
+        $header['printw'] = $wp;
         $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
         $all = 0;
         $header['plist'] = array();

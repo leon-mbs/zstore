@@ -130,6 +130,11 @@ class OrderFood extends Document
         }
    
    
+        $wp = 'style="width:40mm"';
+        $printer = \App\System::getOptions('printer');
+        if (strlen($printer['pwidth'] ?? '') > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . '"';
+        }
         $addbonus = $this->getBonus() ;
         $delbonus = $this->getBonus(false) ;
         $allbonus = 0 ;
@@ -141,6 +146,7 @@ class OrderFood extends Document
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                      
+                        'printw'          => $wp,
                         "username"        => $this->headerdata['cashier'] ,
                         "firm_name"       => $firm["firm_name"],
                         "shopname"        => strlen($shopname) > 0 ? $shopname : false,

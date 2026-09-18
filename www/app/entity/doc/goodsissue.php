@@ -71,6 +71,7 @@ class GoodsIssue extends Document
                         "store_name"      => $this->headerdata["store_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
                         "document_number" => $this->document_number,
+                        "weight"          => $weight > 0 ? round($weight, 3) : false,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
