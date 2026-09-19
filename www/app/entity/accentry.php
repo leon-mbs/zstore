@@ -82,6 +82,7 @@ class AccEntry extends \ZCL\DB\Entity
    */
    public static function getDocConstraint( ) {
         $user = \App\System::getUser();
+        $where = '';
 
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {

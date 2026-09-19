@@ -108,6 +108,7 @@ CREATE TABLE documents (
   KEY user_id (user_id),
   KEY branch_id (branch_id),
   KEY parent_id (parent_id),
+  KEY meta_id (meta_id),
   KEY document_number (document_number),
   KEY state (state)
 
@@ -310,7 +311,8 @@ CREATE TABLE iostate (
   iodate DATE DEFAULT NULL,
   amount decimal(10, 2) NOT NULL,
   PRIMARY KEY (id),
-  KEY document_id (document_id)
+  KEY document_id (document_id)  
+ 
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE issue_history (
@@ -1666,14 +1668,14 @@ INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabl
 INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  2, 'Закриття дня', 'EndDay', 'Каса та платежі',     0);
 INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  3, 'Замiни ТМЦ', 'SubstItems', 'Склад',     0);
 
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 4, 'План рахункiв', 'AccountList', 'Бухоблiк',   1 );
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 3, 'Журнал проводок', 'AccountEntryList', 'Бухоблiк',   1 );
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Рух по рахунку', 'AccountActivity', 'Бухоблiк',     1);
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Ручна проводка', 'ManualEntry', 'Бухоблiк',   1);
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Оборотно-сальдова вiдомiсть', 'ObSaldo', 'Бухоблiк',     1);
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Шахматна вiдомiсть', 'Shahmatka', 'Бухоблiк',   1 );
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблiк',  1 );
-INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Закриття перiоду', 'FinResult', 'Бухоблiк',   1);
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 4, 'План рахункiв', 'AccountList', 'Бухоблік',   1 );
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 3, 'Журнал проводок', 'AccountEntryList', 'Бухоблік',   1 );
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Рух по рахунку', 'AccountActivity', 'Бухоблік',     1);
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Ручна проводка', 'ManualEntry', 'Бухоблік',   1);
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Оборотно-сальдова вiдомiсть', 'ObSaldo', 'Бухоблік',     1);
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Шахматна вiдомiсть', 'Shahmatka', 'Бухоблік',   1 );
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 2, 'Фiн. звiт малого  пiдприємства', 'FinReportSmall', 'Бухоблік',  1 );
+INSERT INTO metadata (meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Закриття перiоду', 'FinResult', 'Бухоблік',   1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Обмеження системи', 'Toc', 'Аналітика', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по акцизних марках', 'ExciseList', 'Продажі', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Форма ведення обліку ТМЦ', 'FormItemsReport', 'Склад', 0);
@@ -1711,4 +1713,5 @@ INSERT INTO keyval  (  keyd,vald)  VALUES ('migration180','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration811','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration812','done');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration821','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration828','done');
  

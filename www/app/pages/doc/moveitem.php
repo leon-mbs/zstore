@@ -332,7 +332,7 @@ class MoveItem extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
@@ -387,7 +387,8 @@ class MoveItem extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }
-
+    
+    //tofix  
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
        

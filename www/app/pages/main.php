@@ -21,7 +21,7 @@ class Main extends Base
 {
     private $_docstatelist;
 
-    public function __construct() {
+    public function __construct($mnumber=1) {
         parent::__construct();
 
 
@@ -79,7 +79,7 @@ class Main extends Base
             $data = array();
             $sql = "select coalesce(t.qty,0) as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
            items  i 
-          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
+            join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
                on t.item_id = i.item_id
            
             where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
@@ -103,7 +103,7 @@ class Main extends Base
      
           
             $data = array(); 
-            foreach( \App\Entity\Doc\Document::find("  lastupdate >=  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ","lastupdate desc,document_id desc") as $d ){
+            foreach( \App\Entity\Doc\Document::findYield("  lastupdate >=  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ","lastupdate desc,document_id desc") as $d ){
                
                $data[] = $d ; 
             }
@@ -146,11 +146,19 @@ class Main extends Base
             $doclist->Reload();
         
 
+        
+        $mc = 3;
+        if($mnumber==2) $mc=6;
+        if($mnumber==3) $mc=12;
+        $this->_tvars['mc3'] = $mc == 3;
+        $this->_tvars['mc6'] = $mc == 6;
+        $this->_tvars['mc12'] = $mc == 12;
+        
         //структура  доходов  и расходов
         $dt = new \App\DateTime();
 
         $to = $dt->startOfMonth()->getTimestamp();
-        $dt = $dt->subMonth(12);
+        $dt = $dt->subMonth($mc);
         $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
@@ -189,7 +197,7 @@ class Main extends Base
 
         $pc=[];
 
-        $mlist = Util::genPastMonths(12);
+        $mlist = Util::genPastMonths($mc);
 
         foreach ($mlist as $m) {
             $sql = " 
@@ -223,7 +231,7 @@ class Main extends Base
         $ts = [];
         //  $ts[] = ['Month','Goods','Service'];
 
-        $mlist = Util::genPastMonths(12);
+        $mlist = Util::genPastMonths($mc);
 
         foreach ($mlist as $m) {
 

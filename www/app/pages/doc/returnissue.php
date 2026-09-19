@@ -345,7 +345,7 @@ class ReturnIssue extends \App\Pages\Base
             }
   
             
-            
+            $pos = null; 
             if ($pos_id > 0 && $sender->id == 'execdoc') {
                 $pos = \App\Entity\Pos::load($pos_id);
                 if($pos->usefreg == 1) {
@@ -536,7 +536,7 @@ class ReturnIssue extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {

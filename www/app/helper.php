@@ -1078,7 +1078,7 @@ class Helper
         $user = \App\System::getUser();
 
         $printer = \App\System::getOptions('printer');
-
+      
          
         $htmls = "";
         $rows = [];
@@ -1100,12 +1100,7 @@ class Helper
         
             $header = [];
             $header['turn'] = '';
-            if($prturn == 1) {
-                $header['turn'] = 'transform: rotate(90deg);';
-            }
-            if($prturn == 2) {
-                $header['turn'] = 'transform: rotate(-90deg);';
-            }
+         
 
 
             if(strlen($item->shortname) > 0) {
@@ -1369,7 +1364,8 @@ class Helper
        if(date('W') === date('W', $last)) {
            return;
        }
-      
+       $options=\App\System::getOptions('common' ) ;
+       
         \App\Helper::setKeyVal('lastcleandb', time()) ;
         $conn = \ZDB\DB::getConnect()  ;
  
@@ -1393,9 +1389,6 @@ class Helper
             $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
             $conn->Execute("optimize table substitems ")   ;
           //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
-          
-                    
-               
         
                  
  
@@ -1691,6 +1684,35 @@ class Helper
 
 
         }
+  
+  
+        $migration828 = \App\Helper::getKeyVal('migration828'); 
+        if($migration828 != "done"  ) {
+            Helper::log("Міграція 828");
+         
+            \App\Helper::setKeyVal('migration828', "done");           
+        
+            try {
+       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                 $is=false;          
+                 foreach($w as $e){
+                     if($e['Key_name']=='meta_id'){
+                          $is=true;      
+                     }             
+                 }
+                 if($is==false) {
+                     $conn->Execute("ALTER TABLE documents ADD INDEX meta_id (meta_id) ");                     
+                 }
+        
+  
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+  
+  
   
     }
 

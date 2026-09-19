@@ -81,11 +81,7 @@ class PaySelList extends \App\Pages\Base
 
         $this->updateCust();
 
-        if($docid>0) {
-            $this->payDoc($docid) ;
-        }
-
-
+      
     }
 
     public function filterOnSubmit($sender) {

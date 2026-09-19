@@ -32,11 +32,13 @@ class InvoiceCust extends Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
-                        
-                         "isval"           => strlen($this->headerdata['val']??'') > 1,
-                       "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "firm_name"       => $firm['firm_name'] ?? '',
+                        "isfirm"          => strlen($firm['firm_name'] ?? '') > 0,
+                           
+                        "isval"           => strlen($this->headerdata['val']??'') > 1,
+                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),
-                       "total"           => H::fa($this->amount),
+                        "total"           => H::fa($this->amount),
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );

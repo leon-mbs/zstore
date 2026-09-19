@@ -51,7 +51,8 @@ class CronTask extends \ZCL\DB\Entity
         $options = System::getOptions('common');
         $modules = System::getOptions('modules');
        
-        
+      
+               
         $last = intval( \App\Helper::getKeyVal('lastcron') );
         if((time()-$last) < self::MIN_INTERVAL) { //не  чаще  раза в пять минут
             return;
@@ -91,7 +92,7 @@ class CronTask extends \ZCL\DB\Entity
             if(date('Y-m-d') != date('Y-m-d', $last)) {
                 \App\Helper::setKeyVal('lastcrond', time()) ;
 
-           
+                self::doXampp( ) ;
            
                 
             }
@@ -208,6 +209,7 @@ class CronTask extends \ZCL\DB\Entity
         }
          
     }
+ 
     public static function getTypes() {
         $ret=[];
         $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
@@ -218,4 +220,21 @@ class CronTask extends \ZCL\DB\Entity
         return $ret;
     }
 
+    //для xampp
+    public static function doXampp( ) {
+        
+        $root =_ROOT;
+     //   $root ="c:/xampp/htdocs";
+        $pos = strpos($root,'xampp');
+        if($pos>0) {
+           $root = substr($root,0,$pos+5)  ;
+           $cmd = $root."/mysql/bin/mysqldump.exe -uroot -proot   --skip-comments  zstore > {$root}/mysql/data/zstore.sql";
+           try {
+              system($cmd);    
+           } catch(\Exception $ee) {
+                
+           }
+        }
+   }
+    
 }

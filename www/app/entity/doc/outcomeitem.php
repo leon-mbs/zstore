@@ -81,7 +81,7 @@ class OutcomeItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'CТ-000000';
+        return 'СТ-000000';
     }
 
     public function getRelationBased() {

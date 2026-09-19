@@ -475,6 +475,7 @@ class CustItems extends \App\Pages\Base
    
     }
     
+    //в закупку
     public function cartOnClick($sender) {
         $ci =  $sender->getOwner()->getDataItem();
         if(intval($ci->cartqty)==0)  {

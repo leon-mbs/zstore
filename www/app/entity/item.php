@@ -1003,9 +1003,11 @@ class Item extends \ZCL\DB\Entity
 
                     if($iset->item_id > 0) {
                         $it = \App\Entity\Item::load($iset->item_id);
-                        $pr = $it->getPartion(0);
-                        $price += doubleval($iset->qty * $pr);
-                    }
+                        if($it != null ) {
+                            $pr = $it->getPartion(0);
+                            $price += doubleval($iset->qty * $pr);
+                        }
+                     }
                     if($iset->service_id >0) {
                         $price += doubleval($iset->cost);
 

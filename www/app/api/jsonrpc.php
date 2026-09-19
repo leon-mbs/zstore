@@ -74,8 +74,7 @@ abstract class JsonRPC
                 }
             }
 
-          //  $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
-            $key = 'api'.\App\Helper::getSalt();
+            $key = hash('sha256', 'api' . \App\Helper::getSalt());
 
 
             //   $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
@@ -258,7 +257,7 @@ abstract class JsonRPC
             return self::error($id, $e->getCode(), $e->getMessage());
         }
 
-        if ($result != false) {
+        if ($result !== null && $result !== false) {
             return self::response($id, $result);
         }
         return [];

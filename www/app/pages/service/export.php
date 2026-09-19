@@ -99,7 +99,7 @@ class Export extends \App\Pages\Base
         $header['C1'] = "Email";
         $header['D1'] = "Місто";
         $header['E1'] = "Адреса";
-        $header['F1'] = "ЕДРПОУ";
+        $header['F1'] = "ЄДРПОУ";
         $root="<root>";
         $i = 1;
         foreach (Customer::find($sql, "customer_name asc") as $item) {
@@ -160,7 +160,7 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Найменуванння";
+        $header['A1'] = "Найменування";
         $header['B1'] = "Кор. назва";
         $header['C1'] = "Од.";
         $header['D1'] = "Категорія";

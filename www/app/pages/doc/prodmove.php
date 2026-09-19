@@ -58,6 +58,8 @@ class ProdMove extends \App\Pages\Base
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
+        $this->docform->add(new TextInput('barcode'));
+        $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
@@ -222,7 +224,7 @@ class ProdMove extends \App\Pages\Base
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
-            $slist = $item->getSerials($store_id);
+            $slist = $item->getSerials( );
 
             if (in_array($item->snumber, $slist) == false) {
                 $this->setError('Невірний номер серії');
@@ -258,6 +260,54 @@ class ProdMove extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
     }
 
+    
+    //tofix
+    public function addcodeOnClick($sender) {
+        $code = trim($this->docform->barcode->getText());
+        if ($code == '') {
+            return;
+        }
+       
+        $this->docform->barcode->setText('');
+   
+        
+        $item = Item::findBarCode($code);
+        
+        if($item != null) {
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id  ) {
+                    $this->_itemlist[$ri]->quantity += 1;
+                    $this->_rownumber  = 1;
+
+                    $this->docform->detail->Reload();
+                    $this->calcTotal();
+                    $this->CalcPay();
+                    return;
+                }
+            }
+        }
+
+
+        $this->editdetail->setVisible(true);
+        $this->docform->setVisible(false);
+        $this->_rowid = -1;
+
+        if ($item == null) {
+
+            $this->setWarn('Товар не знайдено');
+            $this->addnewitemOnClick(null);
+        } else {
+            $this->editdetail->edititem->setKey($item->item_id);
+            $this->editdetail->edititem->setText($item->itemname);
+            
+            $price = $item->getLastPartion($this->docform->store->getValue(), "", true,'GoodsReceipt');
+            
+            $this->editdetail->editprice->setText(H::fa($price));
+            $this->editdetail->editsellprice->setText(H::fa($item->price1));
+            $this->editdetail->editsellprice2->setText(H::fa($item->price2));
+        }
+    }
+    
     public function savedocOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
@@ -344,7 +394,7 @@ class ProdMove extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {

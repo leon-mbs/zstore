@@ -77,15 +77,13 @@ class PayBayList extends \App\Pages\Base
 
    
         $this->plist->payform->add(new SubmitButton("paybtn"))->onClick($this, 'payOnSubmit');
-        $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payorderOnSubmit');
+        $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payOnSubmit');
       
         
 
         $this->updateCust();
 
-        if($docid>0) {
-            $this->payDoc($docid) ;
-        }
+        
 
     }
 
@@ -431,7 +429,7 @@ GROUP BY c.customer_name,
                  $this->updateDocs();
                  $this->onBack(null);  
       
-                 $this->setSuccess('Створено квсовий ордер');
+                 $this->setSuccess('Створено касовий ордер');
 
                  return;
             }

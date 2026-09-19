@@ -8,6 +8,7 @@ use App\Entity\Doc\Document;
 use App\Entity\Item;
 use App\Entity\Service;
 use App\Entity\Store;
+use App\Entity\Stock;
 use App\Entity\MoneyFund;
 use App\System;
 use App\Helper as H;
@@ -339,7 +340,8 @@ class ServiceAct extends \App\Pages\Base
             $this->setError("Не обрано товар");
             return;
         }
-
+        $store_id = $this->docform->store->getValue();
+       
         $item = Item::load($id);
 
         $item->snumber = $this->editdetail->editsnumber->getText();
@@ -531,9 +533,11 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->packDetails('detail2data', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->payed = 0;
+        
         $this->_doc->payamount = $this->docform->payamount->getText();
-
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
+  
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -586,6 +590,16 @@ class ServiceAct extends \App\Pages\Base
     public function onTotaldisc($sender) {
         $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getDouble()));
         $this->calcPay() ;
+    }
+ 
+    public function onPayed($sender) {
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
+        $payed = $this->docform->payed->getText();
+        $payamount = $this->docform->payamount->getText();
+        if ($payed > $payamount) {
+
+            $this->setWarn('Внесена сума більше необхідної');
+        }        
     }
   
     /**
@@ -653,7 +667,7 @@ class ServiceAct extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
             }
         }
         if (count($this->_serlist) == 0) {
@@ -688,7 +702,7 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
         $price = $item->getLastPartion(0, "", false);
       
-        $store_id = $this->docform->store->getValue();
+       
 
         $customer_id = $this->docform->customer->getKey()  ;
      
