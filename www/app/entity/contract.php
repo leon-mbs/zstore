@@ -137,7 +137,7 @@ class Contract extends \ZCL\DB\Entity
         $ret=[];
         $ret[Contract::STATE_NEW]='Новий';
         $ret[Contract::STATE_NEGOTIATE]='Перемовини';
-        $ret[Contract::STATE_SHIFTED]='Вiдкдалений';
+        $ret[Contract::STATE_SHIFTED]='Вiдкладений';
         $ret[Contract::STATE_INWORK]='В роботi';
         $ret[Contract::STATE_CLODED]='Закритий';
         

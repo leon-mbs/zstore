@@ -41,7 +41,7 @@ class EqEntry extends \ZCL\DB\Entity
         $list=[];
         $list[self::OP_INCOME] = 'Ввод в експлуатацію' ;
         $list[self::OP_OUTCOME] = 'Виведення з експлуатації' ;
-        $list[self::OP_AMOR] = 'Нарахування амортизвції' ;
+        $list[self::OP_AMOR] = 'Нарахування амортизації' ;
         $list[self::OP_REPAIR] = 'Ремонт та відновлення' ;
         $list[self::OP_MOVE] = 'Переміщення між вир. ділянками ' ;
         $list[self::OP_BUY] = 'Закупка' ;
