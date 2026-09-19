@@ -342,7 +342,9 @@ class FinReportSmall extends \App\Pages\Base
     public function export($sender) {
         
         $header = $this->getData()  ;
-        
+        $year = $this->filter->yr->getValue();
+        $pm = (string) sprintf('%02d', 3 * $this->filter->qw->getValue());
+   
         $xml=   $this->getXML($header)  ;
 
         $firm = \App\System::getOptions("firm");

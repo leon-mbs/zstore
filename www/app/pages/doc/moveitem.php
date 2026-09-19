@@ -387,7 +387,8 @@ class MoveItem extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text, $store_id);
     }
-
+    
+    //tofix  
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
        

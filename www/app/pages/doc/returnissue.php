@@ -345,7 +345,7 @@ class ReturnIssue extends \App\Pages\Base
             }
   
             
-            
+            $pos = null; 
             if ($pos_id > 0 && $sender->id == 'execdoc') {
                 $pos = \App\Entity\Pos::load($pos_id);
                 if($pos->usefreg == 1) {

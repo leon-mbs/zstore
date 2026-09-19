@@ -91,7 +91,7 @@ class POSCheck extends Document
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payamount"       => H::fasell($this->payamount)
         );
-        if($this->headerdata['payment'] ?? null  >0) {
+        if( ( $this->headerdata['payment'] ?? null ) >0) {
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment']);
             $header['nal']  = $mf->beznal!=1;
         }

@@ -311,7 +311,7 @@ class Base extends \Zippy\Html\WebPage
     public function setError($msg,$log=false ) {
 
         if($log) {
-            \App\H::logerror($msg) ;
+            H::logerror($msg) ;
         }
         $msg = str_replace("'", "`", $msg) ;
         $msg = str_replace("\"", "`", $msg) ;
@@ -506,7 +506,7 @@ class Base extends \Zippy\Html\WebPage
             $header['click'] = "onclick=\"sendSMSCust('{$c->phone}',{$header['smscode']})\"" ;
 
         }
-        $header['sumall'] = \App\H::fa($c->sumAll());
+        $header['sumall'] = H::fa($c->sumAll());
 
 
         $report = new \App\Report('cinfo.tpl');
@@ -644,11 +644,11 @@ class Base extends \Zippy\Html\WebPage
 
 
             foreach ($items as $item) {
-                $item->amount = \App\H::fa($item->price * $item->quantity);
+                $item->amount = H::fa($item->price * $item->quantity);
 
                 $total = $total + $item->amount;
             }
-            $co->amount= \App\H::fa($total);
+            $co->amount= H::fa($total);
             
             
             $co->packDetails('detaildata',$items);
@@ -851,7 +851,7 @@ class Base extends \Zippy\Html\WebPage
         $this->pr_itemsform->pr_items->Reload();
             
        
-        $ret = \App\H::printItems($items  );   
+        $ret = H::printItems($items  );   
         $user = \App\System::getUser() ;         
  
         

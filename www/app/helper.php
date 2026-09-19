@@ -1078,7 +1078,7 @@ class Helper
         $user = \App\System::getUser();
 
         $printer = \App\System::getOptions('printer');
-
+      
          
         $htmls = "";
         $rows = [];
@@ -1100,12 +1100,7 @@ class Helper
         
             $header = [];
             $header['turn'] = '';
-            if($prturn == 1) {
-                $header['turn'] = 'transform: rotate(90deg);';
-            }
-            if($prturn == 2) {
-                $header['turn'] = 'transform: rotate(-90deg);';
-            }
+         
 
 
             if(strlen($item->shortname) > 0) {
@@ -1369,7 +1364,8 @@ class Helper
        if(date('W') === date('W', $last)) {
            return;
        }
-      
+       $options=\App\System::getOptions('common' ) ;
+       
         \App\Helper::setKeyVal('lastcleandb', time()) ;
         $conn = \ZDB\DB::getConnect()  ;
  

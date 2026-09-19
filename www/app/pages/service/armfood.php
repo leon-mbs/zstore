@@ -1556,7 +1556,8 @@ class ARMFood extends \App\Pages\Base
     public function topayOnClick($sender) {
          $this->docpanel->catpan->setVisible(false);
          $this->docpanel->prodpan->setVisible(false);
- 
+         $pass=  $this->docpanel->listsform->passprod->isChecked() ? 1:0;
+      
          if($this->_tvars['diffbp']==1 && $this->_ct<1 && $pass ==0 )  {
             $this->setError('Не вказано тип чеку') ;
             return;

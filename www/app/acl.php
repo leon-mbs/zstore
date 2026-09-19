@@ -467,7 +467,7 @@ class ACL
             return '';
         }
 
-        if($user->showotherstores  && dtrlen($user->aclbranch) >0) {
+        if($user->showotherstores  && strlen($user->aclbranch) >0) {
             return "select stacl.store_id  from stores stacl where branch_id in ({$user->aclbranch} ) ";  
         }     
             

@@ -70,7 +70,8 @@ class OrderCust extends \App\Pages\Base
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
-     
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+    
      
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -566,7 +567,8 @@ class OrderCust extends \App\Pages\Base
         
         try{
             $rowid = -1;
-            
+            $price = 0;
+            $quantity = 0;    
             
             foreach ($this->_itemlist as $i=> $it) {
                  if($it->item_id == $item_id)  {
