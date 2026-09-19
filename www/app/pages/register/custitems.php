@@ -205,7 +205,7 @@ class CustItems extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-        if (false == \App\ACL::checkEditRef('CustItems')) {
+        if (false == \App\ACL::checkEditReg('CustItems')) {
             return;
         }
         $this->_item->customer_id = $this->itemdetail->editcust->getKey();

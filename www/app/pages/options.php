@@ -72,7 +72,7 @@ class Options extends \App\Pages\Base
         $this->common->shopname->setText($common['shopname']);
 
         $this->common->sell2->setChecked($common['sell2']);
-        $this->common->sellcheck->setChecked($common['sellcheck']);
+        $this->common->sellcheck->setChecked($common['sellcheck'] ?? 0);
 
 
        

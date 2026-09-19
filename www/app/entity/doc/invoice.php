@@ -46,20 +46,20 @@ class Invoice extends \App\Entity\Doc\Document
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
                        
-                        "logo"            => _BASEURL . ltrim( $firm['logo'] ,'/' ) ,
-                        "islogo"          => is_file(_ROOT .'/'. ltrim( $firm['logo'] ,'/' ) ),
-                        "stamp"           => _BASEURL . $firm['stamp'],
-                        "isstamp"         => is_file(_ROOT .'/'. ltrim( $firm['stamp'] ,'/' ) ), 
-                        "sign"            => _BASEURL . $firm['sign'],
-                        "issign"          => is_file(_ROOT .'/'. ltrim( $firm['sign'] ,'/' ) ),
-                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "logo"            => _BASEURL . ltrim( $firm['logo'] ?? '' ,'/' ) ,
+                        "islogo"          => is_file(_ROOT .'/'. ltrim( $firm['logo'] ?? '' ,'/' ) ),
+                        "stamp"           => _BASEURL . ($firm['stamp'] ?? ''),
+                        "isstamp"         => is_file(_ROOT .'/'. ltrim( $firm['stamp'] ?? '' ,'/' ) ), 
+                        "sign"            => _BASEURL . ($firm['sign'] ?? ''),
+                        "issign"          => is_file(_ROOT .'/'. ltrim( $firm['sign'] ?? '' ,'/' ) ),
+                        "isfirm"          => strlen($firm["firm_name"] ?? '') > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "iscustaddress"    => false,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
-                        "isbank"          => (strlen($mf->bankacc??'') > 0 || strlen($mf->bank) > 0),
+                        "isbank"          => (strlen($mf->bankacc??'') > 0 || strlen($mf->bank ?? '') > 0),
                         "iban"      => strlen($iban) > 0 ? $iban : false,
                        
                         "notes"           => nl2br($this->notes),
@@ -100,10 +100,10 @@ class Invoice extends \App\Entity\Doc\Document
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
         }
-        if (strlen($firm['tin']) > 0) {
+        if (strlen($firm['tin'] ?? '') > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['phone']) > 0) {
+        if (strlen($firm['phone'] ?? '') > 0) {
             $header["fphone"] = $firm['phone'];
         }
                                            

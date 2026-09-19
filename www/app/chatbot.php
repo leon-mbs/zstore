@@ -38,7 +38,7 @@ class ChatBot
 
         $res =  json_decode($resultQuery, true);
 
-        if($res['ok'] != true) {
+        if(($res['ok'] ?? false) != true) {
            \App\Helper::log($url);
            \App\Helper::log($resultQuery);
       
@@ -53,7 +53,10 @@ class ChatBot
         }
 
         $u = array_pop($ret['result'])  ;
-        $this->onMessage($u['message'])  ;
+        if(!is_array($u)) {
+            return array();
+        }
+        $this->onMessage($u['message'] ?? null)  ;
 
 
     }
@@ -66,7 +69,7 @@ class ChatBot
         $ret = json_decode($request, true)   ;
 
         // $logger->info($request);
-        if(false === $this->onMessage($ret['message'])) {
+        if(false === $this->onMessage($ret['message'] ?? null)) {
             $logger->error("bot answer " . $request);
         }
 
@@ -84,8 +87,8 @@ class ChatBot
 
 
 
-        $text = $msg['text'] ;
-        $chat_id = $msg['chat']['id'] ;
+        $text = $msg['text'] ?? '' ;
+        $chat_id = $msg['chat']['id'] ?? '' ;
         if(strpos($text, "/help")===0) {
             $this->sendMessage($chat_id, "Перелік команд:\nlogin логін пароль - вхід для користувача\nlogin телефон(". H::PhoneL()." цифр) пароль - вхід для контрагента\nlogout - вихід") ;
 
@@ -111,7 +114,7 @@ class ChatBot
                 return;
             }
 
-            if (($c->passw ??'') != $s[2]) {
+            if (($c->passw ??'') !== $s[2]) {
                 $this->sendMessage($chat_id, "Login fail") ;
                 return;
             }
@@ -138,11 +141,11 @@ class ChatBot
         }
 
 
-        if(strlen($msg['caption'] >0)) {
+        if(strlen($msg['caption'] ?? '') >0) {
             $text = $msg['caption'] ;  //коментарий к  файлу
         }
 
-        if(is_array($msg['document'])) {
+        if(is_array($msg['document'] ?? null)) {
             $filename=$msg['document']['file_name'] ;
             $mimetype=$msg['document']['mime_type'] ;
             $size=$msg['document']['file_size'] ;
@@ -206,6 +209,7 @@ class ChatBot
             }
         }
 
+        $chat_id = \ZCL\DB\Entity::escape($chat_id) ;
         $customer = \App\Entity\Customer::getFirst("detail like '%<chat_id>{$chat_id}</chat_id>%'") ;
         if($customer instanceof \App\Entity\Customer) {
             return $customer;

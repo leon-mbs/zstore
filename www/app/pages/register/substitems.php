@@ -155,7 +155,7 @@ class SubstItems extends \App\Pages\Base
     }
 
     public function OnSubmit($sender) {
-        if (false == \App\ACL::checkEditRef('SubstItems')) {
+        if (false == \App\ACL::checkEditReg('SubstItems')) {
             return;
         }
         $this->_item = new SubstItem(); 

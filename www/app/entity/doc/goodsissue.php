@@ -66,7 +66,7 @@ class GoodsIssue extends Document
                         "_detail"   => $detail,
                         "firm_name" => $firm['firm_name'],
 
-                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "isfirm"          => strlen($firm["firm_name"] ?? '') > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
@@ -74,8 +74,8 @@ class GoodsIssue extends Document
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
-                         "stamp"           => _BASEURL . $firm['stamp'],
-                        "isstamp"         => strlen($firm['stamp']) > 0,
+                         "stamp"           => _BASEURL . ($firm['stamp'] ?? ''),
+                        "isstamp"         => is_file(_ROOT .'/'. ltrim( $firm['stamp'] ?? '' ,'/' ) ),
                        "iscustaddress"    => false,
 
                         "bank"            => $mf->bank ?? "",
@@ -116,10 +116,10 @@ class GoodsIssue extends Document
                 $header["custaddress"] = $cust->address;
             }
         }
-        if (strlen($firm['tin']) > 0) {
+        if (strlen($firm['tin'] ?? '') > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['phone']) > 0) {
+        if (strlen($firm['phone'] ?? '') > 0) {
             $header["fphone"] = $firm['phone'];
         }  
 

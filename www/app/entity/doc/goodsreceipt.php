@@ -41,7 +41,7 @@ class GoodsReceipt extends Document
                         "_detail"         => $detail,
                         "basedoc"         => $this->headerdata["basedoc"],
                         "firm_name"       => $firm['firm_name'],
-                        "isfirm"          => strlen($firm["firm_name"]) > 0,
+                        "isfirm"          => strlen($firm["firm_name"] ?? '') > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "isval"           => strlen($this->headerdata['val']) > 1,
                         "valname"           => $this->headerdata['valname'],
@@ -63,7 +63,7 @@ class GoodsReceipt extends Document
         }
 
         $header['payreq'] = $this->getHD('payreq');
-        $header['ispayreq'] = strlen($header['payreq']) > 0;
+        $header['ispayreq'] = strlen($header['payreq'] ?? '') > 0;
  
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
