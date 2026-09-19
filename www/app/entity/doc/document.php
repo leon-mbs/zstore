@@ -103,10 +103,10 @@ class Document extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-        if(is_integer($this->document_date)==false && strlen($this->document_date) >0 ) {
+        if(is_integer($this->document_date)==false && strlen($this->document_date ?? '') >0 ) {
             $this->document_date = @strtotime($this->document_date);
         }
-        if(is_integer($this->lastupdate)==false && strlen($this->lastupdate) >0 ) {
+        if(is_integer($this->lastupdate)==false && strlen($this->lastupdate ?? '') >0 ) {
             $this->lastupdate = @strtotime($this->lastupdate);
         }
        

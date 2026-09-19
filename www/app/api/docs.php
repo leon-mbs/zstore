@@ -87,8 +87,8 @@ class docs extends JsonRPC
         
         $list = [];
         $where= "1=1  ";
-        if($args['state']>0) {
-          $where .= " and state = ".$args['state'];
+        if(intval($args['state'] ?? 0)>0) {
+          $where .= " and state = ".intval($args['state']);
         }
         if(strlen($args['type'])>0) {
           $where .= " and meta_name= ". Document::qstr($args['type']);

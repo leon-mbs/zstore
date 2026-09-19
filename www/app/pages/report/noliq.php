@@ -15,6 +15,8 @@ use Zippy\Html\Panel;
  */
 class NoLiq extends \App\Pages\Base
 {
+    public $data = array();
+
     public function __construct() {
         parent::__construct();
 

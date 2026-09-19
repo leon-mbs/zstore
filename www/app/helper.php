@@ -1099,7 +1099,6 @@ class Helper
             }
         
             $header = [];
-            $header['turn'] = '';
          
 
 
@@ -1317,7 +1316,7 @@ class Helper
     * загрузка  с интернета (file_get_content не  всегда  работает)
     * 
     * @param mixed $url
-    * @return   данные  или  false
+    * @return   string|false  данные  или  false
     */
     public static function getContent($url) {
         $ch = curl_init($url);

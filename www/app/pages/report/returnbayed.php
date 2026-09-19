@@ -15,6 +15,8 @@ use Zippy\Html\Panel;
  */
 class Returnbayed extends \App\Pages\Base
 {
+    public $data = array();
+
     public function __construct() {
         parent::__construct();
 
