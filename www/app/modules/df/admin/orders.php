@@ -112,7 +112,7 @@ class Orders extends \App\Pages\Base
     
         $n = new \App\Entity\Notify();
         $n->user_id = $uid;
-        $n->sender_id = $user->user_id;
+        $n->sender_id = \App\System::getUser()->user_id;
         $n->dateshow = time();
         $n->message = "Вам  призначено замовлення {$this->_doc->document_number}  " ;
 
@@ -146,10 +146,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if($status == 1) {
            $where .= " and state   in(9,17) "  ; 
         }    
-        if($filter->from > 0) {
+        if($this->page->filter->from > 0) {
             $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
         }
-        if($filter->to > 0) {
+        if($this->page->filter->to > 0) {
             $where .= " and  document_date <= " . $conn->DBTimeStamp($filter->to+3600*24-1) ;
         }           
         if(strlen($searchnumber) > 0) {

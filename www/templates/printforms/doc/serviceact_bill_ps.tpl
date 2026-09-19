@@ -8,7 +8,7 @@
 <font >a</font>
 <text>вiд {{date}}</text>
 <align>left</align>
-<text> {{firmname}}</text>
+<text> {{firm_name}}</text>
     {{#shopname}}
 <text> {{shopname}}</text>
     {{/shopname}}

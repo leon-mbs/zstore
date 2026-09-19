@@ -305,7 +305,7 @@ class Discounts extends \App\Pages\Base
         $row->add(new  Label("cname", $c->customer_name));
         $row->add(new  Label("cphone", $c->phone));
         $row->add(new  TextInput("cdisc"))->setText(new  Bind($c, "discount"));
-        $row->add(new  ClickLink('сdel'))->onClick($this, 'cdeleteOnClick');
+        $row->add(new  ClickLink('cdel'))->onClick($this, 'cdeleteOnClick');
 
     }
 

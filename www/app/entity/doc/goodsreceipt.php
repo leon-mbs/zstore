@@ -315,7 +315,7 @@ class GoodsReceipt extends Document
            $date= $this->document_date;
            if($this->parent_id >0){
                foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
-                   $date = $pay->paydate;
+                   $date = $p->paydate;
                    break;
                }
            }

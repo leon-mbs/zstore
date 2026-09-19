@@ -135,7 +135,7 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
         */
-        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблiк');
+        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблік');
       
         if($options['useacc']==1) {
             $sql="update metadata set  disabled=0 ";

@@ -70,6 +70,7 @@ class GoodsIssue extends Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
+                        "weight"          => $weight > 0 ? round($weight, 3) : false,
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
@@ -403,7 +404,7 @@ class GoodsIssue extends Document
                $date= $this->document_date;
                if($this->parent_id > 0 ){  //первое  событиен
                    foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
-                       $date = $pay->paydate;
+                       $date = $p->paydate;
                        break;
                    }
                }             

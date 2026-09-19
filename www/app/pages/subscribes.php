@@ -17,6 +17,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use App\System;
+use App\Entity\Item;
 
 class Subscribes extends \App\Pages\Base
 {
@@ -402,7 +403,7 @@ class SHDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItem($id) {
-        return Item::load($id);
+        return Subscribe::load($id);
     }
 
 }

@@ -244,11 +244,11 @@ class FinReportSmall extends \App\Pages\Base
             'date1m' => date('m', time()),
             'date1d' => date('d', time()),
             'date2' => date('d.m.Y', $to + 1),
-            'edrpou' => (string) sprintf("%10d", $firm['tin']),
-            'koatuu' => (string) sprintf("%10d", $firm['koatuu']),
-            'kopfg' => (string) sprintf("%10d", $firm['kopfg']),
-            'kodu' => (string) sprintf("%10d", $firm['kodu']),
-            'kved' => (string) sprintf("%10s", $firm['kved']),
+            'edrpou' => (string) sprintf("%10d", $firm['tin'] ?? ''),
+            'koatuu' => (string) sprintf("%10d", $firm['koatuu']?? ''),
+            'kopfg' => (string) sprintf("%10d", $firm['kopfg']?? ''),
+            'kodu' => (string) sprintf("%10d", $firm['kodu']?? ''),
+            'kved' => (string) sprintf("%10s", $firm['kved']?? ''),
             'address' => $firm['address']??'' . ' ' . $firm['city']??'' . ', ' . $firm['phone']??'',
             'firmname' => $firm['firm_name'],
             'b1005' => H::fa($b1005),
@@ -342,7 +342,9 @@ class FinReportSmall extends \App\Pages\Base
     public function export($sender) {
         
         $header = $this->getData()  ;
-        
+        $year = $this->filter->yr->getValue();
+        $pm = (string) sprintf('%02d', 3 * $this->filter->qw->getValue());
+   
         $xml=   $this->getXML($header)  ;
 
         $firm = \App\System::getOptions("firm");

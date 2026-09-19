@@ -70,7 +70,8 @@ class OrderCust extends \App\Pages\Base
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
-     
+        $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+    
      
 
         $this->add(new Form('editdetail'))->setVisible(false);
@@ -380,7 +381,7 @@ class OrderCust extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
@@ -419,8 +420,34 @@ class OrderCust extends \App\Pages\Base
         $qty = $item->getQuantity();
     
         $this->editdetail->qtystock->setText(H::fqty($qty));
+        $cid=$this->docform->customer->getKey() ;
+        if($cid==0) {
+            return;
+        }
+        
+        
+        $e = \App\Entity\Entry::getFirst("item_id={$id} and quantity > 0 and document_id in (select document_id from documents_view where customer_id={$cid} and meta_name='GoodsReceipt' ) ","entry_id desc")  ;
+ 
+        $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
+        $price = 0;
+        if($d != null) {
+            $price = $e->partion;
+            $this->editdetail->editquantity->setText(H::fqty($e->quantity));
 
-        $price = $item->getLastPartion(0, "", true,'GoodsReceipt');
+        }
+        $p = \App\Entity\CustItem::getFirst("item_id={$id}   ","custitem_id desc")  ;
+        if($p != null) {
+            $price = $p->price;
+        }
+        if($d != null && $p != null) {  //сравниваем дату закупки и прайса
+           if($d->document_date > $p->updatedon )  {
+              $price = $e->partion; 
+           }
+           if($d->document_date < $p->updatedon )  {
+              $price = $p->price; 
+           }
+        }              
+        
         $this->editdetail->editprice->setText(H::fa($price));
 
 
@@ -540,7 +567,8 @@ class OrderCust extends \App\Pages\Base
         
         try{
             $rowid = -1;
-            
+            $price = 0;
+            $quantity = 0;    
             
             foreach ($this->_itemlist as $i=> $it) {
                  if($it->item_id == $item_id)  {

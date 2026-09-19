@@ -108,17 +108,16 @@ class Account
            $conn = \ZDB\DB::getConnect();
            $col=$conn->GetCol("select distinct  accdt from acc_entry");
            foreach($col  as $code){
-              if(!isset($ret[$code])) {
+              if(!isset($ret[$code]) && isset($all[$code])) {
                  $ret[$code]  = $all[$code]  ;
               }
            }
            $col=$conn->GetCol("select distinct  accct from acc_entry");
            foreach($col as $code){
-              if(!isset($ret[$code])) {
+              if(!isset($ret[$code]) && isset($all[$code])) {
                  $ret[$code]  = $all[$code]  ;
               }
-           }  
-           
+           }
            
            return $ret;         
     }

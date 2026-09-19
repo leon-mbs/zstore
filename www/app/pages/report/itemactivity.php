@@ -204,9 +204,60 @@ class ItemActivity extends \App\Pages\Base
               ORDER BY    ";
         
        $sql .= (  $fitem ? " t.itemname,t.dt " : " t.dt,t.itemname " );
-        
-        
-        //  H::log($sql)  ;
+      
+  
+       
+        if ($itemid > 0) {
+            $flt = ($storeid > 0 ? " AND st.store_id = {$storeid} " : "")
+                 . ($emp > 0 ? " AND st.emp_id = {$emp} " : "")
+                 . ($cat > 0 ? " AND st.cat_id = {$cat} " : "");
+            $fromd = $conn->DBDate($from);
+            $tod = $conn->DBDate($to);
+
+            $sqlw = "
+            SELECT t.item_id, t.itemname, t.item_code, t.docs, t.dt,
+                   t.obin, t.obout, t.obinamount, t.oboutamount,
+                   COALESCE(MAX(o.q), 0) + COALESCE(SUM(d.q), 0) AS begin_quantity,
+                   COALESCE(MAX(o.a), 0) + COALESCE(SUM(d.a), 0) AS begin_amount
+            FROM (
+                SELECT st.store_id, st.item_id, st.itemname, st.item_code,
+                       GROUP_CONCAT(DISTINCT sc.document_id) AS docs,
+                       DATE(sc.document_date) AS dt,
+                       SUM(CASE WHEN sc.quantity > 0 THEN sc.quantity ELSE 0 END) AS obin,
+                       SUM(CASE WHEN sc.quantity < 0 THEN 0 - sc.quantity ELSE 0 END) AS obout,
+                       SUM(CASE WHEN (st.partion * sc.quantity) > 0 THEN (st.partion * sc.quantity) ELSE 0 END) AS obinamount,
+                       SUM(CASE WHEN (st.partion * sc.quantity) < 0 THEN 0 - (st.partion * sc.quantity) ELSE 0 END) AS oboutamount
+                FROM entrylist_view sc
+                JOIN store_stock_view st ON sc.stock_id = st.stock_id
+                WHERE {$it} {$flt}
+                  AND DATE(sc.document_date) >= {$fromd}
+                  AND DATE(sc.document_date) <= {$tod}
+                GROUP BY st.store_id, st.item_id, st.itemname, st.item_code, DATE(sc.document_date)
+            ) t
+            LEFT JOIN (
+                SELECT st.item_id, SUM(sc.quantity) AS q, SUM(st.partion * sc.quantity) AS a
+                FROM entrylist_view sc
+                JOIN store_stock_view st ON sc.stock_id = st.stock_id
+                WHERE st.item_id = {$itemid} {$flt}
+                  AND sc.document_date < {$fromd}
+                GROUP BY st.item_id
+            ) o ON o.item_id = t.item_id
+            LEFT JOIN (
+                SELECT st.item_id, DATE(sc.document_date) AS dt, SUM(sc.quantity) AS q, SUM(st.partion * sc.quantity) AS a
+                FROM entrylist_view sc
+                JOIN store_stock_view st ON sc.stock_id = st.stock_id
+                WHERE st.item_id = {$itemid} {$flt}
+                  AND DATE(sc.document_date) >= {$fromd}
+                  AND DATE(sc.document_date) <= {$tod}
+                GROUP BY st.item_id, DATE(sc.document_date)
+            ) d ON d.item_id = t.item_id AND d.dt < t.dt
+            GROUP BY t.store_id, t.item_id, t.itemname, t.item_code, t.docs, t.dt,
+                     t.obin, t.obout, t.obinamount, t.oboutamount
+            ORDER BY " . ($fitem ? " t.itemname, t.dt " : " t.dt, t.itemname ") . "
+            ";
+        }
+       
+      
         $rs = $conn->Execute($sql);
         $ba = 0;
         $bain = 0;

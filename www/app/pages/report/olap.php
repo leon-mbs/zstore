@@ -351,6 +351,8 @@ class OLAP extends \App\Pages\Base
 
         $header = array('from'    => H::fd($this->startform->stfrom->getDate()),
                         'to'      => H::fd($this->startform->stto->getDate()),
+                        'type'    => $this->startform->sttype->getValueName(),
+      
                         "cols"    => count($h)+1,
                         "hor"    => $h,
                         "ver"    => $v

@@ -13,8 +13,8 @@ class common extends JsonRPC
         $user = \App\Helper::login($args['login'], $args['password']);
 
         if ($user instanceof \App\Entity\User) {
-          //  $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
-            $key = 'api'.\App\Helper::getSalt();            
+            $key = hash('sha256', 'api' . \App\Helper::getSalt());            
+         
             $exp = strlen($api['exp']) > 0 ? $api['exp'] : 60;
 
             $payload = array(

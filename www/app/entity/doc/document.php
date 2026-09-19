@@ -253,7 +253,7 @@ class Document extends \ZCL\DB\Entity
     * @return mixed
     */
     public function setHD(string $name, $value=null)  {
-       if(strlen($name)=='')    return;
+       if(strlen($name)==0)    return;
        if($value==null) {
           unset( $this->headerdata[$name] );    
        }   else {
@@ -838,7 +838,7 @@ class Document extends \ZCL\DB\Entity
      */
     public function insertLog($state,$user_id=0) {
         $conn = \ZDB\DB::getConnect();
-        $host = $_SERVER["REMOTE_ADDR"];
+        $host = $_SERVER["REMOTE_ADDR"] ?? '';
         if($host==null) {
             $host = "";
         }
@@ -1204,7 +1204,7 @@ class Document extends \ZCL\DB\Entity
         }
         
         $payee  =  $firm['firm_name'] ;//плательщик 
-        $tin =  $firm['tin']  ;//едрпоу 
+        $tin =  $firm['tin']  ;//ЄДРПОУ 
         
         if(strlen($mf->payname ??'') > 0)  $payee  = $mf->payname;
         if(strlen($mf->tin ??'') > 0) $tin  = $mf->tin;

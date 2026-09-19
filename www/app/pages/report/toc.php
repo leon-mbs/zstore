@@ -233,7 +233,8 @@ class Toc extends \App\Pages\Base
            "isdetail3" => count($detail3) > 0, 
           "_detail4" => $detail4,
            "isdetail4" => count($detail4) > 0, 
-           "_detail5" => $detai5,
+           "_detail5" => $detail5,
+       
            "isdetail5" => count($detail5) > 0 
 
 

@@ -106,7 +106,7 @@ class ChatBot
             }
 
             $c = \App\Entity\Customer::getByPhone($s[1]);
-            if ($c = null) {
+            if ($c == null) {
                 $this->sendMessage($chat_id, "Login fail") ;
                 return;
             }

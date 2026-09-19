@@ -1,4 +1,4 @@
-<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" >
     <tr>
         <td colspan="2">
           {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
@@ -13,7 +13,7 @@
     </tr>
     <tr>
 
-        <td colspan="2"> {{firmname}}</td>
+        <td colspan="2"> {{firm_name}}</td>
     </tr>
     {{#shopname}}
     <tr>

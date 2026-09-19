@@ -1151,7 +1151,7 @@ class ARMPos extends \App\Pages\Base
             $next = $this->_doc->nextNumber();
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
                 return  ;
             }
         }
@@ -1205,7 +1205,7 @@ class ARMPos extends \App\Pages\Base
             $this->docpanel->form3->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не створено унікальний номер документа');
             }
         }
         $this->_doc->document_date = $this->docpanel->form3->document_date->getDate();

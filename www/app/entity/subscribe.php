@@ -52,6 +52,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->doctypename = (string)($xml->doctypename[0]);
         $this->msgsubject = (string)($xml->msgsubject[0]);
         $this->url = (string)($xml->url[0]);
+        $this->email = (string)($xml->email[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
         $this->username = (string)($xml->username[0]);
         $this->user_id = (int)($xml->user_id[0]);
@@ -81,6 +82,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<username>{$this->username}</username>";
         $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<chat_id>{$this->chat_id}</chat_id>";
 
         $this->detail .= "</detail>";
@@ -210,7 +212,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
-                $u = \App\Entity\User::load($doc->headerdata['author']);
+                $u = \App\Entity\User::load($doc->headerdata['author'] ?? $doc->user_id);
             }
             if ($sub->reciever_type == self::RSV_DOCRESP) {
                 $u = \App\Entity\User::load($doc->user_id);

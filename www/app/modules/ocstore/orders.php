@@ -189,7 +189,7 @@ class Orders extends \App\Pages\Base
                 $tovar->quantity = $product['quantity'];
                 $tovar->price = str_replace(',', '.', $product['price']);
                 $desc = '';
-                if (array($product['_options_'])) {
+                if (is_array($product['_options_'])) {
                     foreach ($product['_options_'] as $k => $v) {
                         $desc = $desc . $k . ':' . $v . ';';
                     }
@@ -266,7 +266,7 @@ class Orders extends \App\Pages\Base
             }
             if (strlen($shoporder->telephone) > 0) {
                 $neworder->notes .= " Тел: " . $shoporder->telephone . ";";
-                $neworder->headerdata['phone'] = $phone;            
+                $neworder->headerdata['phone'] = $shoporder->telephone;            
             }
             $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";

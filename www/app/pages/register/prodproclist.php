@@ -262,7 +262,7 @@ class ProdProcList extends \App\Pages\Base
     public function onAddProd($sender) {
 
         $it = Item::load($sender->additem->getValue());
-        if ($item == null) {
+        if ($it == null) {
             return;
         }
         
@@ -391,7 +391,7 @@ class ProdProcList extends \App\Pages\Base
         //проверка на  доки
         $cnt = \App\Entity\doc\Document::findCnt("meta_name in ('ProdMove','IncomeService', 'ProdReceipt','ProdIssue' ) and ( content  like '%<st_id>{$stage->st_id}</st_id>%' or content like '%<psto>{$stage->st_id}</psto>%' or content like '%<psfrom>{$stage->st_id}</psfrom>%'   )  ");
         if($cnt >0) {
-            $this->setError('Вже  ствворено документи на  етап') ;
+            $this->setError('Вже  створено документи на  етап') ;
             return;
         }
         ProdStage::delete($stage->st_id);

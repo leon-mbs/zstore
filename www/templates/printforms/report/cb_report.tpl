@@ -1,4 +1,4 @@
-<table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" >
     <tr>
         <td align="center" colspan="2"> <b>Х-Звiт </b></td>
     </tr>

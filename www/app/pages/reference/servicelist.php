@@ -208,7 +208,8 @@ class ServiceList extends \App\Pages\Base
         $this->exportform->setVisible(true);
         $this->importform->setVisible(false);
         $this->servicetable->setVisible(false);
-
+       
+        $detail = [];
         foreach (Service::findYield("disabled <> 1 and  detail not like '%<noprice>1</noprice>%' ", "category,service_name") as $item) {
        
        
