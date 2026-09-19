@@ -128,8 +128,8 @@
  
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td>  </tr>
 
+<tr><td colspan="3" ></td> <td align="right" ><b>{{total}}</b></td>  </tr>
 </table>
 
 {{/_type4}}
@@ -161,7 +161,7 @@
  
 </tr>
 {{/_detail}}
-<tr><td colspan="3" ></td> <td align="right" ><b>{{totsumma}}</b></td> 
+<tr><td colspan="3" ></td> <td align="right" ><b>{{total}}</b></td> 
  
 
 

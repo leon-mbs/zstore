@@ -25,8 +25,8 @@ class CalcSalary extends Document
    
         $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
         $to = $dt->endOfMonth()->getTimestamp();
-        if($this->document_date > $dt && $this->document_date < $to   ) {
-            $to = $this->document_date;
+        if($this->document_date > $dt->getTimestamp() && $this->document_date < $to   ) {
+             $to = $this->document_date;
         }
          
         foreach ($this->unpackDetails('detaildata') as $emp) {

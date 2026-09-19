@@ -129,7 +129,7 @@ class OrderFood extends Document
            $firm["address"]=$pos->address ;   
         }
    
-   
+  
         $addbonus = $this->getBonus() ;
         $delbonus = $this->getBonus(false) ;
         $allbonus = 0 ;
@@ -149,7 +149,7 @@ class OrderFood extends Document
                         "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
                         "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
                         "exciseval"         => $this->getHD('exciseval',0) > 0 ? H::fa($this->getHD('exciseval')) : false   ,
-
+  
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??'') > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]??'') > 0 ? $this->headerdata["fiscalnumberpos"] : false,

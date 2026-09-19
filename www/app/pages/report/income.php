@@ -200,7 +200,8 @@ class Income extends \App\Pages\Base
             $detail[] = array(
                 "code"  => $row['item_code'],
                 "name"  => $row['itemname'],
-                "dt"    => H::fd(strtotime($row['dt'])),
+                "dt"    => isset($row['dt']) ? H::fd(strtotime($row['dt'])) : '',
+         
                 "qty"   => H::fqty($row['qty']),
                 "summa" => H::fa($row['summa'])
             );

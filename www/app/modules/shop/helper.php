@@ -78,10 +78,11 @@ class Helper
 
         $conn = DB::getConnect();
 
-        $group = \App\Entity\Category::load($cat_id);
-        $grlist = $group->getParents();
+    
+        $group = intval($cat_id) > 0 ? \App\Entity\Category::load(intval($cat_id)) : null;
+        $grlist = $group ? $group->getParents() : [];
 
-        $grlist[] = $cat_id;
+        $grlist[] = intval($cat_id);
         $grlist[] = 0;
 
         $sql = "select attribute_id,  cat_id,attributename,attributetype,valueslist,ordern from  shop_attributes_view   where cat_id  in(" . implode(',', $grlist) . ")  order  by ordern";

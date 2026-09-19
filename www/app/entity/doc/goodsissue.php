@@ -70,6 +70,7 @@ class GoodsIssue extends Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
                         "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
+                        "weight"          => $weight > 0 ? round($weight, 3) : false,
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
