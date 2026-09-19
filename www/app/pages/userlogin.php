@@ -36,6 +36,14 @@ class UserLogin extends \Zippy\Html\WebPage
         $form->onSubmit($this, 'onsubmit');
 
         $this->add($form);
+
+        //другий крок двофакторної авторизації
+        $otpform = new \Zippy\Html\Form\Form('otpform');
+        $otpform->add(new TextInput('otpinput'));
+        $otpform->add(new \Zippy\Html\Link\ClickLink('otpback'))->onClick($this, 'otpbackOnClick');
+        $otpform->onSubmit($this, 'onotpsubmit');
+        $otpform->setVisible(false);
+        $this->add($otpform);
         $this->setError('');
 
 
@@ -90,7 +98,18 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->_user = Helper::login($login, $password);
 
             if ($this->_user instanceof User) {
-       
+                if ($this->_user->otpEnabled()) {
+                    $this->_otpcode = (string) rand(100000, 999999);
+                    $this->_otptime = time();
+                    $errors = $this->_user->sendOtp($this->_otpcode);
+                    if (count($errors) > 0) {
+                        Helper::log('OTP send failed for ' . $this->_user->userlogin . ': ' . implode('; ', $errors));
+                        $this->setError('Не вдалося надіслати код підтвердження: ' . implode('; ', $errors) . '. Можна ввести резервний код з профілю.');
+                    }
+                    $this->loginform->setVisible(false);
+                    $this->otpform->setVisible(true);
+                    return;
+                }
                 $this->successLogin() ;
                 return;
             } 
@@ -104,6 +123,40 @@ class UserLogin extends \Zippy\Html\WebPage
         }
 
         $sender->userpasswo->setText('');
+    }
+
+    //перевірка коду підтвердження (одноразовий, дійсний 10 хвилин) або резервного коду з профілю
+    public function onotpsubmit($sender) {
+        $this->setError('');
+        $code = trim($sender->otpinput->getText());
+        $sender->otpinput->setText('');
+        if (!($this->_user instanceof User)) {
+            $this->otpbackOnClick(null);
+            return;
+        }
+        if (strlen($code) == 0) {
+            $this->setError('Введіть код підтвердження');
+            return;
+        }
+        $fresh = strlen($this->_otpcode ?? '') > 0 && $this->_otptime > time() - 600 && hash_equals((string) $this->_otpcode, $code);
+        $backup = strlen($this->_user->otpcode ?? '') > 0 && hash_equals((string) $this->_user->otpcode, $code);
+        if (!$fresh && !$backup) {
+            $this->setError('Невірний код підтвердження');
+            $this->counter();
+            return;
+        }
+        $this->_otpcode = null;
+        $this->_otptime = null;
+        $this->successLogin();
+    }
+
+    public function otpbackOnClick($sender) {
+        $this->_user = null;
+        $this->_otpcode = null;
+        $this->_otptime = null;
+        $this->setError('');
+        $this->otpform->setVisible(false);
+        $this->loginform->setVisible(true);
     }
 
     public function successLogin() {

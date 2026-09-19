@@ -84,7 +84,22 @@
                         </div>
                        
                     </form>
-                            
+
+                    <form zippy="otpform">
+                        <div class="form-group  ">
+                            <label for="otpinput">Код підтвердження</label>
+                            <input autofocus="on" zippy="otpinput" required="on" autocomplete="one-time-code" inputmode="numeric" class="form-control">
+                            <small class="text-muted">Код надіслано каналами, вибраними у профілі. Якщо він не прийшов, введіть резервний код з профілю.</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <a zippy="otpback" class="btn btn-secondary btn-block btn-flat">Назад</a>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary btn-block btn-flat">Підтвердити</button>
+                            </div>
+                        </div>
+                    </form>
 
                 </div>
                 <!-- /.login-card-body -->

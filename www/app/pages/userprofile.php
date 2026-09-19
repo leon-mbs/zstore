@@ -351,8 +351,11 @@ class UserProfile extends \App\Pages\Base
     }
     
     public function saveOtpOnClick($sender) {
-             
-         
+        $this->user->otpemail = $this->otpform->otpemail->isChecked() ? 1 : 0;
+        $this->user->otpsms = $this->otpform->otpsms->isChecked() ? 1 : 0;
+        $this->user->otptg = $this->otpform->otptg->isChecked() ? 1 : 0;
+        $this->user->save();
+        $this->setSuccess('Збережено');
     }
     
     public function refreshOtpOnClick($sender) {
@@ -364,8 +367,17 @@ class UserProfile extends \App\Pages\Base
     }
 
     public function testOtpOnClick($sender) {
-             
-         
+        //беремо стан прапорців з форми, не зберігаючи
+        $this->user->otpemail = $this->otpform->otpemail->isChecked() ? 1 : 0;
+        $this->user->otpsms = $this->otpform->otpsms->isChecked() ? 1 : 0;
+        $this->user->otptg = $this->otpform->otptg->isChecked() ? 1 : 0;
+        $code = (string) rand(100000, 999999);
+        $errors = $this->user->sendOtp($code);
+        if (count($errors) > 0) {
+            $this->setError(implode('<br>', $errors));
+        } else {
+            $this->setSuccess("Тестовий код {$code} надіслано");
+        }
     }
     
     

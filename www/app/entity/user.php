@@ -127,6 +127,11 @@ class User extends \ZCL\DB\Entity
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
+        //двофакторна авторизація
+        $this->otpemail = intval($options['otpemail'] ?? 0);
+        $this->otpsms = intval($options['otpsms'] ?? 0);
+        $this->otptg = intval($options['otptg'] ?? 0);
+        $this->otpcode = $options['otpcode'] ?? '';
         
       
 
@@ -184,6 +189,10 @@ class User extends \ZCL\DB\Entity
          
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
+        $options['otpemail'] = intval($this->otpemail ?? 0);
+        $options['otpsms'] = intval($this->otpsms ?? 0);
+        $options['otptg'] = intval($this->otptg ?? 0);
+        $options['otpcode'] = $this->otpcode ?? '';
        
         $options['scalescript'] = base64_encode($this->scalescript )   ;
 
@@ -214,6 +223,59 @@ class User extends \ZCL\DB\Entity
         $user = User::getFirst('userlogin = ' . $conn->qstr($login));
   
         return $user;
+    }
+
+    /**
+     * чи ввімкнена двофакторна авторизація (хоч один канал)
+     */
+    public function otpEnabled(): bool {
+        return $this->otpemail == 1 || $this->otpsms == 1 || $this->otptg == 1;
+    }
+
+    /**
+     * надсилає код підтвердження всіма ввімкненими каналами
+     *
+     * @param string $code
+     * @return array перелік помилок (порожній — усе надіслано)
+     */
+    public function sendOtp($code): array {
+        $errors = [];
+        $sent = 0;
+        $text = "Zippy: код підтвердження входу {$code}";
+        if ($this->otpemail == 1) {
+            if (strlen($this->email ?? '') == 0) {
+                $errors[] = 'E-Mail: у профілі не вказано адресу';
+            } else {
+                try {
+                    $r = \App\Comm::sendEmail($this->email, $text, 'Код підтвердження входу');
+                    if (strlen($r ?? '') > 0) $errors[] = 'E-Mail: ' . $r; else $sent++;
+                } catch (\Throwable $e) { $errors[] = 'E-Mail: ' . $e->getMessage(); }
+            }
+        }
+        if ($this->otpsms == 1) {
+            if (strlen($this->phone ?? '') == 0) {
+                $errors[] = 'SMS: у профілі не вказано телефон';
+            } else {
+                try {
+                    $r = \App\Comm::sendSMS($this->phone, $text);
+                    if (strlen($r ?? '') > 0) $errors[] = 'SMS: ' . $r; else $sent++;
+                } catch (\Throwable $e) { $errors[] = 'SMS: ' . $e->getMessage(); }
+            }
+        }
+        if ($this->otptg == 1) {
+            if (strlen($this->chat_id ?? '') == 0) {
+                $errors[] = 'Телеграм: у профілі не вказано chat_id (підключіть бота)';
+            } else {
+                try {
+                    \App\Comm::sendBot($this->chat_id, $text);
+                    $sent++;
+                } catch (\Throwable $e) { $errors[] = 'Телеграм: ' . $e->getMessage(); }
+            }
+        }
+        if ($sent == 0 && count($errors) == 0) {
+            $errors[] = 'Не вибрано жодного каналу';
+        }
+        return $errors;
     }
 
     public static function getByEmail($email) {
