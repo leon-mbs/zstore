@@ -153,6 +153,7 @@ class SerList extends \App\Pages\Base
 
         $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
+        $pos = count($this->_doc->getChildren('POSCheck')) > 0;   //оплачено чеком — не переводити в «чекає оплату»
 
         if ($sender->id == "btask") {
             if ($task) {

@@ -29,7 +29,7 @@ class EqEntry extends \ZCL\DB\Entity
     }
 
     protected function init() {
-        $this->amount;
+        $this->amount = 0;
     }
 
     protected function afterLoad() {

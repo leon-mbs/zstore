@@ -308,7 +308,7 @@ class GoodsReceipt extends Document
    
         
         if ($this->headerdata["disc"] > 0) {
-           \App\Entity\AccEntry::addEntry('63', '71',   $am,$this->document_id,$p->paydate)  ; 
+           \App\Entity\AccEntry::addEntry('63', '71', $this->headerdata["disc"], $this->document_id)  ; 
         }
         if ($this->headerdata["nds"] > 0) {
            //   если  предоплата то дата первого события

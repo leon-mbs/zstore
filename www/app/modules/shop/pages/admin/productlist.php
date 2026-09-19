@@ -150,6 +150,11 @@ class ProductList extends \App\Pages\Base
 
     //редактирование
 
+    //«Додати новий»: товар магазину = ТМЦ, тому відкриваємо довідник ТМЦ одразу у формі нового запису
+    public function addnewOnClick($sender) {
+        App::Redirect("\\App\\Pages\\Reference\\ItemList", true);
+    }
+
     public function lnameOnClick($sender) {
 
         $this->editimagepanel->setVisible(false);

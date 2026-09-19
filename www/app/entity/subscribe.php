@@ -206,8 +206,8 @@ class Subscribe extends \ZCL\DB\Entity
             
             
             if ($sub->reciever_type == self::RSV_CUSTOMER) {
-                $c = \App\Entity\Customer::load($doc->customer_id);
-                if($c->nosubs == 1) {
+                $c = $doc->customer_id > 0 ? \App\Entity\Customer::load($doc->customer_id) : null;
+                if($c != null && $c->nosubs == 1) {
                    $c=null; 
                 }
             }
@@ -361,6 +361,9 @@ class Subscribe extends \ZCL\DB\Entity
     
     private    function sendmsg($text, $options=[]){
         $ret='';    
+        //не всі події заповнюють усі ключі (наприклад, отримувач «Телеграм» дає лише chat_id)
+        $options += ['phone' => '', 'viber' => '', 'email' => '', 'chat_id' => '', 'notifyuser' => 0];
+        foreach (['phone', 'viber', 'email', 'chat_id'] as $k) { $options[$k] = (string) ($options[$k] ?? ''); }
         if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
                Notify::sendNotify($options['notifyuser'], $text, Notify::SUBSCRIBE);
             }
@@ -601,7 +604,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         }
 
-        $payed= doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']) ;
+        $payed= doubleval($doc->headerdata['payed'] ?? 0) + doubleval($doc->headerdata['payedcard'] ?? 0) ;
 
         if ($payed == 0 && $doc->payamount > 0) {
             $header['mf'] = "Постоплата (кредит)";
@@ -613,11 +616,11 @@ class Subscribe extends \ZCL\DB\Entity
             $header['payed'] = \App\Helper::fa($payed);
         }
 
-        if ($doc->headerdata['pos']) {
+        if ($doc->headerdata['pos'] ?? 0) {
             $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
             $header['pos'] = $pos->pos_name;
         }
-        if ($doc->headerdata['salesource'] > 0) {
+        if (($doc->headerdata['salesource'] ?? 0) > 0) {
             $sl = H::getSaleSources();
             $header['source'] = $sl[$doc->headerdata['salesource']];
         }
@@ -632,7 +635,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         }
         $header['taxurl'] = $doc->getFiscUrl();
-        if(strlen($doc->headerdata['hash'])>0) {
+        if(strlen($doc->headerdata['hash'] ?? '')>0) {
 
             $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
 

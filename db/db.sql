@@ -1660,6 +1660,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Офiс', 'OfficeList', '', 0);
 
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Переміщення між етапами', 'ProdMove', 'Виробництво', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товари на комісії', 'ItemComission', 'Закупівлі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);

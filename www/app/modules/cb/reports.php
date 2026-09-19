@@ -85,6 +85,12 @@ class Reports extends \App\Pages\Base
         $header['rnal'] =H::fa($header['rnal']);
         $header['rcard'] =H::fa($header['rcard']);
          
+        $wp = 'style="width:40mm"';
+        $printer = \App\System::getOptions('printer');
+        if (strlen($printer['pwidth'] ?? '') > 0) {
+            $wp = 'style="width:' . $printer['pwidth'] . '"';
+        }
+        $header['printw'] = $wp;
         $report = new \App\Report('report/cb_report.tpl');
 
         $html = $report->generate($header);
