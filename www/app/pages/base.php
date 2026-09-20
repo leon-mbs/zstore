@@ -20,7 +20,8 @@ class Base extends \Zippy\Html\WebPage
 {
     public $branch_id = 0;
     public $_pritems=[] ;
-
+    protected $_printitems = [];
+   
 
     public function __construct( ) {
         global $_config;
@@ -28,7 +29,7 @@ class Base extends \Zippy\Html\WebPage
 
         \Zippy\Html\WebPage::__construct();
      
-        Session::getSession()->setPrintForm('');
+        Session::getSession()->setExportReport('');
   
         $user = System::getUser();
         if ($user->user_id == 0) {
@@ -829,8 +830,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_pritems[$item->item_id]= $item;
          }
          $this->pr_itemsform->pr_items->Reload();
-    
-         
+        
          $this->addJavaScript(" openModal('modalpritems')  ",true )  ;
     }
  
@@ -851,7 +851,8 @@ class Base extends \Zippy\Html\WebPage
         }
         $this->_pritems=[]  ;
         $this->pr_itemsform->pr_items->Reload();
-            
+        $this->_printitems   =[];    
+          
        
         $ret = H::printItems($items  );   
         $user = \App\System::getUser() ;         
@@ -890,7 +891,7 @@ class Base extends \Zippy\Html\WebPage
         
             }            
             $b = json_encode($buf) ;
-
+        
             $this->addJavaScript(" sendPSlabel('{$b}') ",true);
         } catch(\Exception $e) {
             $message = $e->getMessage()  ;

@@ -12,6 +12,7 @@ class Session
     public $filter = array();
     public $start = 0;
     public $printform = '';
+    public $exportreport = '';
 
     public function __construct() {
 
@@ -43,20 +44,20 @@ class Session
         $this->printform = '';
         
     }
-    public function getPrintForm() {
-        if(  strlen ($this->printform) ==0) {
+    public function getExportReport() {
+        if(  strlen ($this->exportreport) ==0) {
             return ''; 
         }
-        return gzdecode( $this->printform);
+        return gzdecode( $this->exportreport);
     }
-    public function setPrintForm($printform) {
-        $l=  strlen ($printform) ;
+    public function setExportReport($exportreport) {
+        $l=  strlen ($exportreport) ;
         if($l==0) {
-            $this->printform ='';
+            $this->exportreport ='';
             return; 
         }
                
-        $this->printform = gzencode($printform) ;
+        $this->exportreport = gzencode($exportreport) ;
     
     }
     
