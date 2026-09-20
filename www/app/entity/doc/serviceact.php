@@ -241,12 +241,9 @@ class ServiceAct extends Document
         $printer = \App\System::getOptions('printer');
         $firm = H::getFirmData(  $this->branch_id);
 
-        $wp = 'style="width:40mm"';
-        if (strlen($printer['pwidth']??'') > 0) {
-            $wp = 'style="width:' . $printer['pwidth'] . '"';
-        }
+       
 
-        $header = array('printw'          => $wp, 'date' => H::fd(time()),
+        $header = array(  'date' => H::fd(time()),
                         "document_number" => $this->document_number,
                         "firm_name"       => $firm['firm_name'],
                         "shopname"        => strlen($common['shopname']) > 0 ? $common['shopname'] : false,

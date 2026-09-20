@@ -840,7 +840,7 @@ class Import extends \App\Pages\Base
                 $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
                 if ($item == null) {
-                    $this->setError("Не знайдоно товар {$itemname} {$itemcode}");
+                    $this->setError("Не знайдено товар {$itemname} {$itemcode}");
                     return;
                 }
                 if ($qty > 0) {

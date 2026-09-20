@@ -102,7 +102,7 @@ class Product extends \App\Entity\Item
             return $this->actionprice;
         } else {
             $options = \App\System::getOptions('shop');
-            return $this->getPrice($options['defpricetype']);
+            return $this->getPrice($options['defpricetype']??'price1');
         }
     }
 

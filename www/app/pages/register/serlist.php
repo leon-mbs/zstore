@@ -153,7 +153,7 @@ class SerList extends \App\Pages\Base
 
         $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
-
+         
         if ($sender->id == "btask") {
             if ($task) {
 
@@ -198,9 +198,9 @@ class SerList extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_FINISHED);
 
             if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
-                if($pos==false){
+               
                   $this->_doc->updateStatus(Document::STATE_WP);
-                }
+                
             }
 
 

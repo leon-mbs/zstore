@@ -177,7 +177,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["smsscript"] = false;
         $sms = System::getOptions('sms');
         if($sms['smstype']==4 && $sms['smscustlang']=='js') {
-           $this->_tvars["smsscript"] =base64_decode( $sms['smscustscript']);
+           $this->_tvars["smsscript"] =base64_decode( $sms['smscustscript']??'');
             
         }
         //доступы к  модулям
@@ -604,7 +604,7 @@ class Base extends \Zippy\Html\WebPage
            
            
             if($customer_id == 0) {
-                return "По  даному  ТМЦ  не знайжено закупок обо прайсу  постачальника  ";
+                return "По  даному  ТМЦ  не знайдено  закупок обо прайсу  постачальника  ";
             }
            
            

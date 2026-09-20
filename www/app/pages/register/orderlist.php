@@ -1067,7 +1067,7 @@ class OrderList extends \App\Pages\Base
 
                
                 $conn->CommitTrans();
-                $this->setSuccess('Створено замовдення '.$newdoc->document_number) ;
+                $this->setSuccess('Створено замовлення '.$newdoc->document_number) ;
         } catch(\Exception $e) {
             $this->setError($e->getMessage()) ;
             $conn->RollbackTrans();

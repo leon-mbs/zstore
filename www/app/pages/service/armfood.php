@@ -1835,7 +1835,7 @@ class ARMFood extends \App\Pages\Base
                   foreach($stlst as $st) {
                       if(trim($st)=='')  continue;
                       if(\App\Entity\Excise::checkFormat($st) ==false){
-                         $this->setWarn("Невiрний формат марки " . $st);
+                         $this->setWarn("Невірний формат марки " . $st);
                          return; 
                       }
                       $exists=\App\Entity\Excise::checkUsed($st) ;
@@ -1845,12 +1845,12 @@ class ARMFood extends \App\Pages\Base
                       }
                   }
                   if(count($stlst)  !=  count(array_unique($stlst) ) ) {
-                     $this->setWarn("Марки дублюются" );
+                     $this->setWarn("Марки дублюються" );
                      return;  
                   }           
                   
                   if(count($stlst)  !=  $item->quantity) {
-                     $this->setWarn("Кількість марок не  відповідае кількості в  позиції " );
+                     $this->setWarn("Кількість марок не  відповідає  кількості в  позиції " );
                      return;  
                   }
               }

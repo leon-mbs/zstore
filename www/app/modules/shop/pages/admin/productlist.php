@@ -39,7 +39,7 @@ class ProductList extends \App\Pages\Base
         }
 
         $this->op = System::getOptions("shop");
-        if (strlen($this->op['defcust']) == 0 || strlen($this->op['defpricetype']) == 0) {
+        if (strlen($this->op['defcust']??0) == 0 || strlen($this->op['defpricetype']??'') == 0) {
 
             $this->setWarn('Не виконано всі необхідні налаштування магазина. Перейдіть на сторінку налаштувань');
         }
@@ -73,7 +73,7 @@ class ProductList extends \App\Pages\Base
 
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
 
-        $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
+
         $this->listpanel->add(new DataView('plist', new ProductDataSource($this), $this, 'plistOnRow'));
         $this->listpanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->listpanel->plist));
         $this->listpanel->plist->setPageSize(15);

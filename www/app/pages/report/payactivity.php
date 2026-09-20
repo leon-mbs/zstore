@@ -30,7 +30,7 @@ class PayActivity extends \App\Pages\Base
 
         $this->filter->add(new DropDownChoice('mf', MoneyFund::getList(), H::getDefMF()));
 
-        $this->add(new \Zippy\Html\Link\ClickLink('autoclick'))->onClick($this, 'OnAutoLoad', true);
+       
         $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
   
         $this->add(new Panel('detail'))->setVisible(false);

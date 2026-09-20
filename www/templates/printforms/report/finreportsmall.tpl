@@ -99,7 +99,7 @@
  <tr  ><td>Запаси:</td><td>1100</td><td align="right"> {{b1100}} </td> <td align="right"> {{e1100}} </td>    </tr>
  <tr  ><td>у тому числі готова продукція</td><td>1103</td><td align="right"> {{b1103}} </td> <td align="right"> {{e1103}} </td>    </tr>
  <tr  ><td>Дебіторська заборгованість за товари, послуги</td><td>1125</td><td align="right"> {{b1125}} </td> <td align="right"> {{e1125}} </td>    </tr>
- <tr  ><td>Дебіторська sзаборгованість за розрахунками з бюджетом</td><td>1135</td><td align="right"> {{b1135}} </td> <td align="right"> {{e1135}} </td>    </tr>
+ <tr  ><td>Дебіторська заборгованість за розрахунками з бюджетом</td><td>1135</td><td align="right"> {{b1135}} </td> <td align="right"> {{e1135}} </td>    </tr>
  <tr  ><td>Інша дебіторська заборгованість</td><td>1155</td><td align="right"> {{b1155}} </td> <td align="right"> {{e1155}} </td>    </tr>
  <tr  ><td>Гроші та їх еквіваленти</td><td>1165</td><td align="right"> {{b1165}} </td> <td align="right"> {{e1165}} </td>    </tr>
  <tr  ><td>Інші оборотні активи</td><td>1190</td><td align="right"> {{b1190}} </td> <td align="right"> {{e1190}} </td>    </tr>
@@ -123,7 +123,7 @@
     <td  align="center"   >4 </td>  
   </tr>
   <tr style="  font-weight: bolder;">
-    <td >I. Власний капітвл</td>     <td  > </td>    <td   >   </td>   <td  >  </td>    
+    <td >I. Власний капітал</td>     <td  > </td>    <td   >   </td>   <td  >  </td>    
   </tr> 
   <tr  ><td>Нерозподiлений прибуток (непокритий збиток)</td><td>1420</td><td align="right"> {{b1420}} </td> <td align="right"> {{e1420}} </td>    </tr>
   <tr  ><td>Усього за роздiлом I</td><td>1495</td><td align="right"> {{b1495}} </td> <td align="right"> {{e1495}} </td>    </tr>

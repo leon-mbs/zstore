@@ -1024,7 +1024,7 @@ class Item extends \ZCL\DB\Entity
             $price = $this->getLastPartion() ;
         }
         if($price==0) {
-            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собївартїсть") ;
+            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собівартість") ;
         }
         return $price;
     }

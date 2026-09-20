@@ -709,7 +709,7 @@ class CustItems extends \App\Pages\Base
         $json = str_replace("\r","",$json) ;
         $data=json_decode($json,true) ;
         if(!is_array($data)) {
-            $this->setError("Невiрний json") ;
+            $this->setError("Невірний json") ;
             return;
         }
         

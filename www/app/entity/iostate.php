@@ -120,7 +120,7 @@ class IOState extends \ZCL\DB\Entity
         if ($type == 2 ||   $type == 0  ) {
             $list[self::TYPE_BASE_OUTCOME] = "Витрати на закупку";
             $list[self::TYPE_COMMON_OUTCOME] = "Загальновиробничі витрати";
-            $list[self::TYPE_PROD] = "Витрати на виробьництво";
+            $list[self::TYPE_PROD] = "Витрати на виробництво";
             $list[self::TYPE_ADMIN_OUTCOME] = "Адміністративні витрати";
             $list[self::TYPE_SALE_OUTCOME] = "Витрати на збут";
             $list[self::TYPE_SALARY_OUTCOME] = "Витрати на зарплату";
