@@ -251,7 +251,7 @@ class TimeSheet extends \App\Pages\Base
     }
     public function loadprojects($args) {
 
-        $projects = Project::findArray("project_name", "project_id in (select project_id from issue_projectacc where  user_id={$args[0]}) and  project_id in (select project_id from  issue_projectlist where  status <>12) ", "project_name");
+        $projects = Project::findArray("project_name", "project_id in (select project_id from issue_projectacc where  user_id=".(int)$args[0].") and  project_id in (select project_id from  issue_projectlist where  status <>12) ", "project_name");
 
 
         $ret =  \App\Util::tokv($projects);
@@ -260,7 +260,7 @@ class TimeSheet extends \App\Pages\Base
     }
     public function loadissues($args) {
 
-        $issues = Issue::findArray("issue_name", "project_id=".$args[0], "issue_name");
+        $issues = Issue::findArray("issue_name", "project_id=".(int)$args[0], "issue_name");
 
 
         $ret =  \App\Util::tokv($issues);

@@ -575,7 +575,7 @@ class Base extends \Zippy\Html\WebPage
     */
     public function addItemToCO($args, $post=null) {
         try{
-            $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
+            $e = \App\Entity\Entry::getFirst("item_id=".(int)$args[0]." and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
  
             $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
             $customer_id = 0;
@@ -586,7 +586,7 @@ class Base extends \Zippy\Html\WebPage
                 $quantity = $e->quantity;
                 $customer_id = $d->customer_id;
             }
-            $p = \App\Entity\CustItem::getFirst("item_id={$args[0]}   ","custitem_id desc")  ;
+            $p = \App\Entity\CustItem::getFirst("item_id=".(int)$args[0]."   ","custitem_id desc")  ;
             if($p != null) {
                 $price = $p->price;
                 $customer_id = $p->customer_id;

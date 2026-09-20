@@ -80,7 +80,7 @@ class IssueList extends \App\Pages\Base
 
     public function empbyproj($args, $post=null) {
         //  $conn = \ZDB\DB::getConnect();
-        $users = \App\Entity\User::findArray("username", "user_id in(select  user_id  from issue_projectacc   where   project_id={$args[0]}   )", "username");
+        $users = \App\Entity\User::findArray("username", "user_id in(select  user_id  from issue_projectacc   where   project_id=".(int)$args[0]."   )", "username");
 
 
         return json_encode(array('emps'=>\App\Util::tokv($users)), JSON_UNESCAPED_UNICODE);
@@ -89,7 +89,7 @@ class IssueList extends \App\Pages\Base
 
     public function loadhistory($args, $post=null) {
         $conn = \ZDB\DB::getConnect();
-        $res = $conn->Execute("select h.*,u.username from issue_history h join users_view u on h.user_id=u.user_id  where  issue_id={$args[0]} order  by  hist_id");
+        $res = $conn->Execute("select h.*,u.username from issue_history h join users_view u on h.user_id=u.user_id  where  issue_id=".(int)$args[0]." order  by  hist_id");
         $hist = array();
         foreach($res as $row) {
             $hist[]=array(

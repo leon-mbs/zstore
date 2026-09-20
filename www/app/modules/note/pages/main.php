@@ -87,9 +87,9 @@ class Main extends \App\Pages\Base
 
         $conn = \ZCL\DB\DB::getConnect();
         if ($args[1]=="true") {
-            $conn->Execute("insert into note_fav (topic_id,user_id) values ({$args[0]}," . System::getUser()->user_id . ") ");
+            $conn->Execute("insert into note_fav (topic_id,user_id) values (".(int)$args[0]."," . System::getUser()->user_id . ") ");
         } else {
-            $conn->Execute("delete from note_fav where topic_id={$args[0]} and  user_id= " . System::getUser()->user_id);
+            $conn->Execute("delete from note_fav where topic_id=".(int)$args[0]." and  user_id= " . System::getUser()->user_id);
         }
 
     }
@@ -98,7 +98,7 @@ class Main extends \App\Pages\Base
         if($args[0] =="delete") {
             if($args[3]=="true") {  //ссылка
                $conn = \ZCL\DB\DB::getConnect();
-               $conn->Execute("delete from note_topicnode where topic_id={$args[1]} and node_id={$args[2]}" );
+               $conn->Execute("delete from note_topicnode where topic_id=".(int)$args[1]." and node_id=".(int)$args[2]."" );
  
             }
             else {
@@ -114,7 +114,7 @@ class Main extends \App\Pages\Base
             }
       
             
-            $tn = TopicNode::getFirst("topic_id={$args[1]} and node_id={$args[3]}") ;
+            $tn = TopicNode::getFirst("topic_id=".(int)$args[1]." and node_id=".(int)$args[3]) ;
             if($tn==null) return;
             $topic->removeFromNode($args[3]);
             $topic->addToNode($args[2],$tn->islink==1);
@@ -388,13 +388,13 @@ class Main extends \App\Pages\Base
             $favorites[] = $r['topic_id'];
         }
         $links = [];
-        $res = $conn->Execute("select topic_id from note_topicnode where islink=1 and  node_id= ".$args[0] );
+        $res = $conn->Execute("select topic_id from note_topicnode where islink=1 and  node_id= ".(int)$args[0] );
         foreach ($res as $r) {
             $links[] = $r['topic_id'];
         }
 
         $arr = array()  ;
-        foreach(Topic:: findYield("   topic_id in (select topic_id from note_topicnode where  node_id={$args[0]})" )  as $t) {
+        foreach(Topic:: findYield("   topic_id in (select topic_id from note_topicnode where  node_id=".(int)$args[0].")" )  as $t) {
                    
             $a=array(
              "title"=>$t->title,

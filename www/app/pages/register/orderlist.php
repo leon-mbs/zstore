@@ -1112,7 +1112,7 @@ class OrderList extends \App\Pages\Base
     public function getCChatMessages($args) {
 
         $ret=[];
-        $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
+        $list = \App\Entity\Message::find("item_id=".(int)$args[0]." and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
 
         $ret['msglist'] = [];
 

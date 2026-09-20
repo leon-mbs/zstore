@@ -80,7 +80,7 @@ class CatItemList extends \Zippy\Html\PageFragment
         } else {
             
 
-            foreach(Item::findYield('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $args[0]) as $prod) {
+            foreach(Item::findYield('disabled<>1  and  item_type in (1,4 )  and cat_id=' . (int)$args[0]) as $prod) {
                 $ret['items'][] = array(
                   'item_id'=>$prod->item_id,
                   'itemname'=>$prod->itemname,
