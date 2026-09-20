@@ -700,7 +700,7 @@ class Helper
     public static function fasell($am) {
         $common = \App\System::getOptions("common");
         $ret = self::fa($am); 
-        if ($common['sellcheck'] !=1   ) { 
+        if (($common['sellcheck'] ?? 0) !=1   ) { 
             return $ret;
         }
         
@@ -1099,9 +1099,7 @@ class Helper
             }
         
             $header = [];
-            $header['turn'] = '';
          
-
 
             if(strlen($item->shortname) > 0) {
                 $header['name'] = $item->shortname;

@@ -17,6 +17,8 @@ use Zippy\Html\Form\SubmitButton;
  */
 class ItemComission extends \App\Pages\Base
 {
+    public $data = array();
+    
     public function __construct() {
         parent::__construct();
 

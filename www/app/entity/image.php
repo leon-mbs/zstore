@@ -14,7 +14,7 @@ class Image extends \ZCL\DB\Entity
     }
 
     public  function getUrlData(){
-        $data = $this->thumb;
+       
         $data = strlen($this->thumb ?? '') > 0 ? $this->thumb : $this->content ;
 
         return "data:" . $this->mime . ";base64," . base64_encode($data);
@@ -24,7 +24,7 @@ class Image extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();
 
-        if(strlen($this->content) > (1024*1024) ) {
+        if(strlen($this->content ??'') > (1024*1024) ) {
             throw new \Exception('Розмір файлу більше 1M');
         }    
     }

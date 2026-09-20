@@ -19,7 +19,7 @@ class CronTask extends \ZCL\DB\Entity
     public const TYPE_SUBSEMAIL='subsemail' ;
     public const TYPE_EVENTCUST='eventcust' ;
     public const TYPE_AUTOSHIFT='autoshift' ;
-    
+   
     
     protected function init() {
 
@@ -108,7 +108,7 @@ class CronTask extends \ZCL\DB\Entity
             }
 
             
-        } catch(\Exception $ee) {
+        } catch(\Throwable $ee) {
             $msg = $ee->getMessage();
             $logger->error($msg);
 
@@ -124,7 +124,11 @@ class CronTask extends \ZCL\DB\Entity
             }
 
         }
-        \App\Helper::setKeyVal('stopcron', 'true') ;
+        finally {
+           
+            \App\Helper::setKeyVal('stopcron', 'true') ;
+        }
+   
 
 
     }
@@ -198,7 +202,7 @@ class CronTask extends \ZCL\DB\Entity
                 if($done) {
                    CronTask::delete($task->id) ;
                 }   
-            } catch(\Exception $e) {
+            } catch(\Throwable  $e) {
                 $msg = $e->getMessage();
                 $logger->error($msg);
                 $task->starton +=  (12 *3600) ;

@@ -3,7 +3,7 @@
 require_once 'init.php';
 $_REQUEST['id'] = intval($_REQUEST['id']);
 
-if (isset($_REQUEST['id']) > 0) {
+if ( ($_REQUEST['id']??0) > 0) {
     $user = \App\System::getUser();
     if ($user->user_id == 0) {
         die;

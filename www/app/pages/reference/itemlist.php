@@ -988,16 +988,19 @@ class ItemList extends \App\Pages\Base
 
     }
 
-   
+    //печать  списка
     public function printlistOnClick($sender) {
-    
+           if(count($this->_printitems)==0) {
+               $this->setWarn('Пустий список друку') ;
+               return;
+           }
            $this->printLabelForm($this->_printitems);
            $this->itemtable->listform->itemlist->Reload(false);
              
     }
         
         
-    
+    //добавляет  в список печати
     public function OnPrintAll($sender) {
         $cnt=0;
         

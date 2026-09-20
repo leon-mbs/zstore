@@ -16,6 +16,8 @@ use Zippy\Html\Form\SubmitButton;
  */
 class Returnselled extends \App\Pages\Base
 {
+    public $data = array();
+
     public function __construct() {
         parent::__construct();
 
