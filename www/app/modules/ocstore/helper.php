@@ -20,20 +20,23 @@ class Helper
 
         $ssl = \App\System::getSession()->ocssl == 1;
 
+        //сессия  API  своя  у каждого  пользователя,  иначе  параллельные
+        //обмены  затирают  куку  друг  другу
+        $cookie = _ROOT . 'upload/apicookie' . intval(\App\System::getUser()->user_id) . '.txt';
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, _ROOT . 'upload/apicookie.txt');
-        curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/apicookie.txt');
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie);
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
 
-        $params_string = '';
         if (is_array($params) && count($params)) {
-            foreach ($params as $key => $value) {
-                $params_string .= $key . '=' . $value . '&';
-            }
-            $params_string = rtrim($params_string, '&');
+            //кодируем  параметры.  Без  этого  символ  &  в  названии  товара
+            //обрывает  тело  запроса,  магазин  получает  обрезанный  JSON
+            //и  молча  ничего  не  делает
+            $params_string = http_build_query($params);
 
             curl_setopt($ch, CURLOPT_POST, count($params));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);
@@ -43,9 +46,13 @@ class Helper
         $result = curl_exec($ch);
         if ($result === false) {
             $error = curl_error($ch);
+            curl_close($ch);
             \App\System::setErrorMsg($error);
             return false;
         }
+        //close connection
+        curl_close($ch);
+
         $data = json_decode($result, true);
         if ($data === null) {
             if (strlen($result) > 0) {
@@ -57,8 +64,6 @@ class Helper
 
             return false;
         }
-        //close connection
-        curl_close($ch);
 
         return $result;
     }
