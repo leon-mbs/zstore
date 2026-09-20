@@ -54,7 +54,7 @@ class OLAP extends \App\Pages\Base
         $this->reppan->filter->add(new DropDownChoice('slmf_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slstorename', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slbranch_name', array(), 0));
-        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+        $this->reppan->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
   
         $this->reppan->add(new Panel('detail'))->setVisible(false);
 

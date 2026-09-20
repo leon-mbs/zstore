@@ -1,55 +1,64 @@
-<html>
-<head>
-<title></title>
-</head>
-<body>
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" >
+    <tr>
+        <td colspan="3">Накладна №{{document_number}}</td>
+    </tr>
+    <tr>
 
-Information:<p>
+        <td colspan="3">вiд {{date}}</td>
+    </tr>
+     {{#isfirm}}
+    <tr>
+        <td colspan="3"> Продавець:</td>
+    </tr>
+    <tr>
 
-Name: {$name|capitalize}<br>
-Addr: {$address|escape}<br>
-Date: {$smarty.now|date_format:"%Y-%m-%d"}<br>
-
-</body>
-</html><table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{style}}}>
-    <tr>
-        <td colspan="3">ТТН №{{document_number}}</td>
-    </tr>
-    <tr>
-        <td colspan="3">від {{date}}</td>
-    </tr>
-    {{#ship_number}}
-    <tr>
-        <td colspan="3">Експрес-накладна: {{ship_number}}</td>
-    </tr>
-    {{/ship_number}}
-    {{#order}}
-    <tr>
-        <td colspan="3">Замовлення: {{order}}</td>
-    </tr>
-    {{/order}}
-    {{#isfirm}}
-    <tr>
-        <td colspan="3">Відправник:</td>
-    </tr>
-    <tr>
-        <td colspan="3">{{firm_name}}</td>
+        <td colspan="2"> {{firm_name}} 
+        {{#fphone}} Тел.  {{fphone}}  {{/fphone}} </td>
     </tr>
     {{/isfirm}}
-    {{#customer_name}}
+ 
+     {{#isfop}}
     <tr>
-        <td colspan="3">Отримувач:</td>
+        <td colspan="3"> Продавець:</td>
     </tr>
     <tr>
-        <td colspan="3">{{customer_name}}</td>
+
+        <td colspan="2"> {{fop_name}} 
+         </td>
     </tr>
-    {{/customer_name}}
+    {{/isfop}}
+ 
+
+  
+    
+    <tr>
+        <td colspan="3"> Покупець:</td>
+    </tr>
+    <tr>
+        <td colspan="3"> {{customer_name}}</td>
+    </tr>
+    <tr>
+        <td colspan="3"> Тел. {{phone}}</td>
+    </tr>
+ 
+      {{#order}}
+   
+    <tr>
+
+        <td colspan="3"> Замовлення {{order}} 
+         </td>
+    </tr>
+    {{/order}}
 
     {{#_detail}}
     <tr>
-        <td colspan="3">{{tovar_name}}</td>
+        <td colspan="3"> {{tovar_name}}</td>
+
     </tr>
+
+
     <tr>
+
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
         <td align="right">{{amount}}</td>
@@ -59,9 +68,7 @@ Date: {$smarty.now|date_format:"%Y-%m-%d"}<br>
         <td colspan="2" align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
-    {{#sent_date}}
-    <tr>
-        <td colspan="3">Відправлено: {{sent_date}}</td>
-    </tr>
-    {{/sent_date}}
+                 
+   
+
 </table>

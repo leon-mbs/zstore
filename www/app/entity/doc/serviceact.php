@@ -54,7 +54,7 @@ class ServiceAct extends Document
                         "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "totalstr"        => $totalstr,
                         "stamp"           => _BASEURL . ($firm['stamp'] ?? ''),
-                        "isstamp"         => strlen($firm['stamp'] ?? '') > 0 && is_file(_ROOT . '/' . ltrim($firm['stamp'], '
+                        "isstamp"         => strlen($firm['stamp'] ?? '') > 0 && is_file(_ROOT . '/' . ltrim($firm['stamp'])), 
                         "bonus"           => ($this->headerdata["bonus"]??0) > 0 ? H::fa($this->headerdata["bonus"]) : false,
                         "devsn"           => $this->headerdata["devsn"],
                         "devdesc"           => $this->headerdata["devdesc"],
