@@ -1020,7 +1020,7 @@ class Helper
     public static function getKeyValBool($key): bool {
 
         $ret = self::getKeyVal($key);
-        if($ret == true || $ret == "true" || $ret == "TRUE" || $ret == 1 || $ret == "1") {
+        if($ret === true || $ret === "true" || $ret === "TRUE" || $ret === 1 || $ret === "1") {
             return true;
         }
 

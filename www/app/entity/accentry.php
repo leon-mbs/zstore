@@ -47,10 +47,10 @@ class AccEntry extends \ZCL\DB\Entity
         $acclist= Account::getList();
         $numlist = array_keys($acclist) ;
    
-        if(!in_array(intval($dt),$numlist) ) {
+        if(!in_array(intval($dt),$numlist) && strlen($dt) >0 ) {
             throw new \Exception("Невiрний рахунок ".$dt);
         }            
-        if(!in_array(intval($ct),$numlist) ) {
+        if(!in_array(intval($ct),$numlist) && strlen($ct) >0 ) {
             throw new \Exception("Невiрний рахунок ".$ct);
         }            
               

@@ -225,7 +225,7 @@ class Admin extends \App\Pages\Base
      
         $doc =  \App\Entity\doc\Document::getFirst("document_number=".$dn);
         if($doc==null){
-            $this->setError("Документ не знвйдено")  ;
+            $this->setError("Документ не знайдено")  ;
             return;
         }
         if($doc->state <5){

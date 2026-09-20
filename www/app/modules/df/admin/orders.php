@@ -134,7 +134,9 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $searchnumber= trim( $this->page->filter->searchnumber->getText());
         $status=  $this->page->filter->status->getValue() ;
         $fpartner=  $this->page->filter->fpartner->getValue() ;
- 
+        $dfrom = $this->page->filter->from->getDate();
+        $dto = $this->page->filter->to->getDate();
+   
         $wherebase  = " meta_name  = 'Order' and content like '%<dsff>%'  " ;
         $where  = $wherebase;
         if($fpartner > 0) {
@@ -147,10 +149,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
            $where .= " and state   in(9,17) "  ; 
         }    
         if($this->page->filter->from > 0) {
-            $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
+            $where .= " and  document_date >= " . $conn->DBDate($dfrom) ;
         }
         if($this->page->filter->to > 0) {
-            $where .= " and  document_date <= " . $conn->DBTimeStamp($filter->to+3600*24-1) ;
+            $where .= " and  document_date <= " . $conn->DBTimeStamp($dto+3600*24-1) ;
         }           
         if(strlen($searchnumber) > 0) {
          

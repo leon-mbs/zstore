@@ -14,7 +14,7 @@ class ProdMove extends Document
 {
     public function generateReport() {
 
-
+      //tofix   выяснить нужен или нет
         $i = 1;
         $detail = array();
 

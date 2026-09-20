@@ -207,7 +207,7 @@ class Subscribe extends \ZCL\DB\Entity
             
             if ($sub->reciever_type == self::RSV_CUSTOMER) {
                 $c = \App\Entity\Customer::load($doc->customer_id);
-                if($c->nosubs == 1) {
+                if($c != null && $c->nosubs == 1) {
                    $c=null; 
                 }
             }
@@ -601,7 +601,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         }
 
-        $payed= doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']) ;
+        $payed= doubleval($doc->headerdata['payed'] ?? 0) + doubleval($doc->headerdata['payedcard'] ?? 0) ;
 
         if ($payed == 0 && $doc->payamount > 0) {
             $header['mf'] = "Постоплата (кредит)";
@@ -614,12 +614,12 @@ class Subscribe extends \ZCL\DB\Entity
         }
 
         if ($doc->headerdata['pos']) {
-            $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
+            $pos = \App\Entity\Pos::load($doc->headerdata['pos']?? 0);
             $header['pos'] = $pos->pos_name;
         }
         if ($doc->headerdata['salesource'] > 0) {
             $sl = H::getSaleSources();
-            $header['source'] = $sl[$doc->headerdata['salesource']];
+            $header['source'] = $sl[$doc->headerdata['salesource']?? ''];
         }
         if ($doc->customer_id > 0) {
             $cust = \App\Entity\Customer::load($doc->customer_id) ;

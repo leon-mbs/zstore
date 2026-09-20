@@ -406,7 +406,7 @@
                                 <input zippy="editnoprint" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editnoprint">Не друкувати етикетки   </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="При массовому  друцi етикеток  товар  буде  проiгноровано  "></i>                                
+                                   title="При масовому друцi етикеток  товар  буде  проiгноровано  "></i>                                
                             </div>
                             <div class="form-check">
                                 <input zippy="editautooutcome" type="checkbox" class="form-check-input">
@@ -430,7 +430,7 @@
                                 <input zippy="editisweight" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="editisweight">Ваговий товар</label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Для  друку стікерів на попередньо росфасований товар. Прискануванні  гтрихкоду в  АРМ касира 
+                                   title="Для  друку стікерів на попередньо розфасований товар. При скануванні  штрих-коду в  АРМ касира 
                                    товар  буде  додано з вказаною ціною і  вагою "></i>
                             </div>
                              <div class="form-check">
@@ -564,7 +564,7 @@
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editimageurl"> URL зображення
                                  <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Посилання наприклад на зовнішнє зображення. Якщо каталог локальний можна вказати відносну адресу. При прямому посиланні не превіряється право доступу"></i>
+                                   title="Посилання наприклад на зовнішнє зображення. Якщо каталог локальний можна вказати відносну адресу. При прямому посиланні не перевіряється  право доступу"></i>
                                                                </label>
                                 <div class="col-7">
                                     <input class="form-control" zippy="editimageurl"   />
@@ -615,11 +615,9 @@
                         <div class="form-group  " zippy="cflistv">
                                 <label zippy="cfd"  >   </label>
                               
-                                    <input zippy="cfval" class="form-control"  />
-
-                               
-                            </div> 
+                                    <input zippy="cfval" class="form-control" >                          
                           
+                         </div>
                        </div>
                         {{/cflist}}
                        
@@ -819,7 +817,7 @@
                                 <input zippy="branchprice" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="branchprice"> Прив'язувати ціни   до філій
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="При збереженні  ТМЦ відпускні  ціни будуть збережені окреемо для вибраної (вверху) філії"></i>
+                                   title="При збереженні  ТМЦ відпускні  ціни будуть збережені окремо для вибраної (вверху) філії"></i>
                             </div> 
                                {{/usebranch}}
                              <div class="form-group row mt-2">
@@ -868,7 +866,7 @@
                          </div>
                          {{#usescale}}
                           <div class="col-2">
-                             <a title="Отримати з електронниъ ваг"  href="#" id="onscale" class="btn btn-success"><i class="fa fa-scale-balanced"></i></a>
+                             <a title="Отримати з електронних ваг"  href="#" id="onscale" class="btn btn-success"><i class="fa fa-scale-balanced"></i></a>
                          </div>
                          {{/usescale}}
                      </div>
@@ -928,7 +926,7 @@
             $(document).ready(function () {
 
                
-                //данные с электронныъ весов
+                //данные с электронных  весов
                 $("#onscale").click(function(event) {
                    event.preventDefault();
                
