@@ -38,7 +38,7 @@ class docs extends JsonRPC
     //изменить статус
     public function updatestatus($args) {
         $doc = null;
-        if (strlen($args['number']) > 0) {
+        if (strlen($args['number'] ?? '') > 0) {
             $num1 = Document::qstr($args['number']);
             $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
@@ -46,7 +46,7 @@ class docs extends JsonRPC
             throw new \Exception("Документ не  знайдено");
         }
    
-        $status=intval($args['status']); 
+        $status=intval($args['status'] ?? 0); 
         if(false== in_array($status,[5,7,18,9]) ) {
             throw new \Exception("Недопустимий статус");
            
@@ -58,7 +58,7 @@ class docs extends JsonRPC
      //запрос на  отмену
     public function cancel($args) {
         $doc = null;
-        if (strlen($args['number']) > 0) {
+        if (strlen($args['number'] ?? '') > 0) {
             $num1 = Document::qstr($args['number']);
             $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
@@ -68,12 +68,15 @@ class docs extends JsonRPC
 
         $user = \App\System::getUser();
         $admin = \App\Entity\User::getByLogin('admin');
+        if ($admin == null) {
+            throw new \Exception('Адміністратора не знайдено');
+        }
         $n = new \App\Entity\Notify();
         $n->user_id = $admin->user_id;
         $n->sender_id = $user->user_id;
 
         $n->dateshow = time();
-        $n->message = "Запит на  видалення  документу {$doc->document_number}. Причина " . $args['reason'];
+        $n->message = "Запит на  видалення  документу {$doc->document_number}. Причина " . htmlspecialchars($args['reason'] ?? '', ENT_QUOTES, 'UTF-8');
         $n->save();
     }
     
@@ -90,15 +93,15 @@ class docs extends JsonRPC
         if(intval($args['state'] ?? 0)>0) {
              $where .= " and state = ".intval($args['state']);
         }
-        if(strlen($args['type'])>0) {
+        if(strlen($args['type'] ?? '')>0) {
           $where .= " and meta_name= ". Document::qstr($args['type']);
         }
        
-        $from = strtotime($args['datefrom'] );
+        $from = strtotime($args['datefrom'] ?? '' );
         if($from==0) {
            $from = strtotime('- 1 months',time())  ;
         }
-        $to = strtotime($args['dateto'] );
+        $to = strtotime($args['dateto'] ?? '' );
         if($from>0) {
             $where .= " and document_date>= ". $conn->DBDate($from) ;
         }
@@ -176,11 +179,9 @@ class docs extends JsonRPC
     public function createprodissue($args) {
 
 
-        if ($args['store_id'] > 0) {
-            $store = \App\Entity\Store::load($args['store_id']);
-            if ($store == null) {
-                throw new \Exception('Не  вказано  склад');
-            }
+        $store = \App\Entity\Store::load(intval($args['store_id'] ?? 0));
+        if ($store == null) {
+            throw new \Exception('Не  вказано  склад');
         }
         $doc = Document::create('ProdIssue');
         $doc->document_number = $doc->nextNumber();
@@ -191,6 +192,7 @@ class docs extends JsonRPC
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
@@ -201,12 +203,17 @@ class docs extends JsonRPC
 
                 if ($item instanceof Item) {
 
-                    $item->quantity = $it['quantity'];
-                    $item->rowid = $item->item_id;
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception("Невірна кількість для артикула {$it['item_code']}");
+                    }
+                    $item->quantity = $qty;
+                    $rowid++;
+                    $item->rowid = $rowid;
 
-                    $details[$item->item_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ з артикулом {$it['item_code']} не знайдено ");
 
                 }
             }
@@ -231,6 +238,16 @@ class docs extends JsonRPC
     //записать заказ
     public function createorder($args) {
         $options = \App\System::getOptions('common');
+
+        //повторный  вызов  с  тем  же  внешним  номером  не  должен  плодить  заказы
+        if (strlen($args['number'] ?? '') > 0) {
+            $num1 = Document::qstr('%<outnumber>' . $args['number'] . '</outnumber>%');
+            $num2 = Document::qstr('%<outnumber><![CDATA[' . $args['number'] . ']]></outnumber>%');
+            $exists = Document::getFirst(" meta_name='Order' and ( content like {$num1} or content like {$num2} ) ");
+            if ($exists != null) {
+                throw new \Exception("Замовлення з номером {$args['number']} вже існує");
+            }
+        }
      
      
         $doc = Document::create('Order');
@@ -267,6 +284,7 @@ class docs extends JsonRPC
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
@@ -277,15 +295,20 @@ class docs extends JsonRPC
 
                 if ($item instanceof Item) {
 
-                    $item->quantity = $it['quantity'];
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception("Невірна кількість для артикула {$it['item_code']}");
+                    }
+                    $item->quantity = $qty;
                     $item->price = $it['price'];
                     $item->desc = $it['desc'];
-                    $item->rowid = $item->item_id;
+                    $rowid++;
+                    $item->rowid = $rowid;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
-                    $details[$item->item_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ з артикулом {$it['item_code']} не знайдено ");
                 }
             }
         } else {
@@ -312,7 +335,7 @@ class docs extends JsonRPC
     //записать ТТН
     public function createttn($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number'] ?? '') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -352,6 +375,7 @@ class docs extends JsonRPC
  
         $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
@@ -362,14 +386,19 @@ class docs extends JsonRPC
 
                 if ($item instanceof Item) {
 
-                    $item->quantity = $it['quantity'];
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception("Невірна кількість для артикула {$it['item_code']}");
+                    }
+                    $item->quantity = $qty;
                     $item->price = $it['price'];
-                    $item->rowid = $item->item_id;
+                    $rowid++;
+                    $item->rowid = $rowid;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
-                    $details[$item->item_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ з артикулом {$it['item_code']} не знайдено ");
 
                 }
             }
@@ -397,7 +426,7 @@ class docs extends JsonRPC
     //записать расходную накладную
     public function goodsissue($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number'] ?? '') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -429,12 +458,20 @@ class docs extends JsonRPC
         $doc->document_date = time();
 
         $doc->headerdata["apinumber"] = $args['number'];
-        $doc->headerdata["payment"] = $args['mf'];
+        if (intval($args['mf'] ?? 0) > 0) {
+            if (\App\Entity\MoneyFund::load(intval($args['mf'])) == null) {
+                throw new \Exception('Касу не знайдено');
+            }
+        } elseif (doubleval($args['payed'] ?? 0) != 0) {
+            throw new \Exception('Не вказано касу для оплати');
+        }
+        $doc->headerdata["payment"] = $args['mf'] ?? 0;
         $doc->branch_id = intval($args['branch_id']);
 
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
 
         if (is_array($args['items']) && count($args['items']) > 0) {
@@ -446,14 +483,19 @@ class docs extends JsonRPC
 
                 if ($item instanceof Item) {
 
-                    $item->quantity = $it['quantity'];
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception("Невірна кількість для артикула {$it['item_code']}");
+                    }
+                    $item->quantity = $qty;
                     $item->price = $it['price'];
                     $item->amount = $item->quantity * $item->price;
-                    $item->rowid = $item->item_id;
+                    $rowid++;
+                    $item->rowid = $rowid;
                     $total = $total + $item->quantity * $item->price;
-                    $details[$item->item_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ з артикулом {$it['item_code']} не знайдено ");
                 }
             }
         } else {
@@ -470,12 +512,12 @@ class docs extends JsonRPC
         }
 
         $doc->payamount = $doc->amount;
-        $doc->payed = $args["payed"];
+        $doc->payed = doubleval($args["payed"] ?? 0);
 
         $doc->save();
         $doc->updateStatus(Document::STATE_NEW);
 
-        if ($args["autoexec"] == true) {
+        if (filter_var($args["autoexec"] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $doc->updateStatus(Document::STATE_EXECUTED);
         }
 
@@ -486,7 +528,7 @@ class docs extends JsonRPC
     //записать приходную накдадную
     public function goodsreceipt($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number'] ?? '') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -518,7 +560,14 @@ class docs extends JsonRPC
         $doc->document_date = time();
 
         $doc->headerdata["apinumber"] = $args['number'];
-        $doc->headerdata["payment"] = $args['mf'];
+        if (intval($args['mf'] ?? 0) > 0) {
+            if (\App\Entity\MoneyFund::load(intval($args['mf'])) == null) {
+                throw new \Exception('Касу не знайдено');
+            }
+        } elseif (doubleval($args['payed'] ?? 0) != 0) {
+            throw new \Exception('Не вказано касу для оплати');
+        }
+        $doc->headerdata["payment"] = $args['mf'] ?? 0;
         $doc->headerdata["nds"] = 0;
         $doc->headerdata["disc"] = 0;
         $doc->branch_id = intval($args['branch_id']);
@@ -526,6 +575,7 @@ class docs extends JsonRPC
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
 
         if (is_array($args['items']) && count($args['items']) > 0) {
@@ -537,14 +587,19 @@ class docs extends JsonRPC
 
                 if ($item instanceof Item) {
 
-                    $item->quantity = $it['quantity'];
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception("Невірна кількість для артикула {$it['item_code']}");
+                    }
+                    $item->quantity = $qty;
                     $item->price = $it['price'];
-                    $item->rowid = $item->item_id;
+                    $rowid++;
+                    $item->rowid = $rowid;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
-                    $details[$item->item_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ з артикулом {$it['item_code']} не знайдено ");
 
                 }
             }
@@ -562,12 +617,12 @@ class docs extends JsonRPC
         }
 
         $doc->payamount = $doc->amount;
-        $doc->payed = $args["payed"];
+        $doc->payed = doubleval($args["payed"] ?? 0);
 
         $doc->save();
         $doc->updateStatus(Document::STATE_NEW);
 
-        if ($args["autoexec"] == true) {
+        if (filter_var($args["autoexec"] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $doc->updateStatus(Document::STATE_EXECUTED);
         }
 
@@ -578,7 +633,7 @@ class docs extends JsonRPC
     //записать  оприходование  ТМЦ
     public function incomeitem($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number'] ?? '') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -607,6 +662,7 @@ class docs extends JsonRPC
 
         $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
 
         if (is_array($args['items']) && count($args['items']) > 0) {
@@ -618,14 +674,19 @@ class docs extends JsonRPC
 
                 if ($item instanceof Item) {
 
-                    $item->quantity = $it['quantity'];
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception("Невірна кількість для артикула {$it['item_code']}");
+                    }
+                    $item->quantity = $qty;
                     $item->price = $it['price'];
-                    $item->rowid = $item->item_id;
+                    $rowid++;
+                    $item->rowid = $rowid;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
-                    $details[$item->item_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ з артикулом {$it['item_code']} не знайдено ");
                 }
             }
         } else {
@@ -645,7 +706,7 @@ class docs extends JsonRPC
         $doc->save();
         $doc->updateStatus(Document::STATE_NEW);
 
-        if ($args["autoexec"] == true) {
+        if (filter_var($args["autoexec"] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $doc->updateStatus(Document::STATE_EXECUTED);
         }
 
@@ -658,7 +719,7 @@ class docs extends JsonRPC
     //записать акт выполненых работ
     public function serviceact($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number'] ?? '') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -683,13 +744,21 @@ class docs extends JsonRPC
         $doc->document_date = time();
 
         $doc->headerdata["apinumber"] = $args['number'];
-        $doc->headerdata["payment"] = $args['mf'];
+        if (intval($args['mf'] ?? 0) > 0) {
+            if (\App\Entity\MoneyFund::load(intval($args['mf'])) == null) {
+                throw new \Exception('Касу не знайдено');
+            }
+        } elseif (doubleval($args['payed'] ?? 0) != 0) {
+            throw new \Exception('Не вказано касу для оплати');
+        }
+        $doc->headerdata["payment"] = $args['mf'] ?? 0;
         $doc->headerdata["device"] = $args['device'];
         $doc->branch_id = intval($args['branch_id']);
 
 
         //    $doc->notes = @base64_decode($args['description']);
         $details = array();
+        $rowid = 0;
         $total = 0;
 
         if (is_array($args['items']) && count($args['items']) > 0) {
@@ -699,12 +768,17 @@ class docs extends JsonRPC
 
                 if ($item instanceof \App\Entity\Service) {
 
-                    $item->quantity = $it['quantity'];
+                    $qty = doubleval($it['quantity'] ?? 0);
+                    if ($qty <= 0) {
+                        throw new \Exception('Невірна кількість');
+                    }
+                    $item->quantity = $qty;
                     $item->price = $it['price'];
-                    $item->rowid = $item->item_id;
+                    $rowid++;
+                    $item->rowid = $rowid;
                     $item->amount = $item->quantity * $item->price;
                     $total = $total + $item->quantity * $item->price;
-                    $details[$item->service_id] = $item;
+                    $details[$rowid] = $item;
                 } else {
                     throw new \Exception("Сервіс не знайдено ");
 
@@ -724,12 +798,12 @@ class docs extends JsonRPC
         }
 
         $doc->payamount = $doc->amount;
-        $doc->payed = $args["payed"];
+        $doc->payed = doubleval($args["payed"] ?? 0);
 
         $doc->save();
         $doc->updateStatus(Document::STATE_NEW);
 
-        if ($args["autoexec"] == true) {
+        if (filter_var($args["autoexec"] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             $doc->updateStatus(Document::STATE_INPROCESS);
         }
 
@@ -755,7 +829,8 @@ class docs extends JsonRPC
            $doc = Document::create('IncomeMoney');
            $doc->headerdata['type'] = \App\Entity\IOState::TYPE_BASE_INCOME;
         } else {
-           $doc = Document::create('IncomeMoney');
+           //виплата - это  расходный  ордер, а  не  приходный  с  минусом
+           $doc = Document::create('OutcomeMoney');
            $doc->headerdata['type'] = \App\Entity\IOState::TYPE_BASE_OUTCOME;
         }
         $doc->document_number = $doc->nextNumber();
@@ -769,7 +844,8 @@ class docs extends JsonRPC
         if($doc->customer_id > 0){
             $doc->headerdata['detail'] = $sum > 0 ?1:2;  //оплата  от покупателя  или  оплата  поставщику
         }
-        $doc->amount = $sum;
+        $doc->amount = abs($sum);
+        $doc->payamount = $doc->amount;
    
         $doc->notes = @base64_decode($args['description']);
 
