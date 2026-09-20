@@ -115,7 +115,7 @@ class ChatBot
                 return;
             }
 
-            if (($c->passw ??'') != $s[2]) {
+            if (($c->passw ??'') !== $s[2]) {
                 $this->sendMessage($chat_id, "Login fail") ;
                 return;
             }
@@ -142,11 +142,11 @@ class ChatBot
         }
 
 
-        if(strlen($msg['caption'] >0)) {
+        if(strlen($msg['caption'] ?? '') >0) {
             $text = $msg['caption'] ;  //коментарий к  файлу
         }
 
-        if(is_array($msg['document'])) {
+        if(is_array($msg['document'] ?? null)) {
             $filename=$msg['document']['file_name'] ;
             $mimetype=$msg['document']['mime_type'] ;
             $size=$msg['document']['file_size'] ;
@@ -210,6 +210,8 @@ class ChatBot
             }
         }
 
+        $chat_id = \ZCL\DB\Entity::qstr($chat_id) ;
+        $chat_id = \ZCL\DB\Entity::escape($chat_id) ;
         $customer = \App\Entity\Customer::getFirst("detail like '%<chat_id>{$chat_id}</chat_id>%'") ;
         if($customer instanceof \App\Entity\Customer) {
             return $customer;

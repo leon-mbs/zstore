@@ -11,8 +11,8 @@ if ( ($_REQUEST['id']??0) > 0) {
     $image = \App\Entity\Image::load($_REQUEST['id']);
     if ($image instanceof \App\Entity\Image) {
 
-        header("Content-Type: " . $image->mime);
-        if (($_REQUEST['t'] ??'') == "t" && strlen($image->thumb) > 0) {
+        header("Content-Type: " . ($image->mime ?? 'application/octet-stream'));
+        if (($_REQUEST['t'] ??'') == "t" && strlen($image->thumb ?? '') > 0) {
             header("Content-Length: " . strlen($image->thumb));
             echo $image->thumb;
         } else {

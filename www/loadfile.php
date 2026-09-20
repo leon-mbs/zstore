@@ -15,13 +15,9 @@ if ($file == null) {
     die;
 }
 
-$pos = strrpos($file['filename'], '.');
-if ($pos !== false) {
-    //$type = substr($file['filename'], $pos + 1);
-}
 $size = strlen($file['filedata']);
 if ($size > 0) {
-    if (strlen($file['mime']) > 0 && $_REQUEST['im'] > 0) {
+    if (strlen($file['mime'] ?? '') > 0 && ($_REQUEST['im'] ?? 0) > 0) {
         header('Content-Type: ' . $file['mime']);
     } else {
         header('Content-Type: application/octet-stream');

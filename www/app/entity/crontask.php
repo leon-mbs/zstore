@@ -16,6 +16,7 @@ use App\Entity\Notify;
 class CronTask extends \ZCL\DB\Entity
 {
     public const MIN_INTERVAL=300 ;
+    public const MAX_RUNTIME=3600 ; //через  стільки  замок  вважається  застряглим
     public const TYPE_SUBSEMAIL='subsemail' ;
     public const TYPE_EVENTCUST='eventcust' ;
     public const TYPE_AUTOSHIFT='autoshift' ;
@@ -57,9 +58,10 @@ class CronTask extends \ZCL\DB\Entity
         if((time()-$last) < self::MIN_INTERVAL) { //не  чаще  раза в пять минут
             return;
         }
-        $start = \App\Helper::getKeyVal('lastcron')  ?? 0 ;
+        $start = intval(\App\Helper::getKeyVal('lastcron')  ?? 0) ;
         $stop = \App\Helper::getKeyVal('stopcron')  ?? '' ;
-        if($start >0 &&  $stop=== 'false') { //уже  запущен
+        //замок  знiмається  сам, якщо  попереднiй  запуск  обiрвався
+        if($start >0 &&  $stop=== 'false' && (time() - $start) < self::MAX_RUNTIME) { //уже  запущен
             return;
         }
         \App\Helper::setKeyVal('lastcron', time()) ;
@@ -151,8 +153,8 @@ class CronTask extends \ZCL\DB\Entity
                 if($task->tasktype==self::TYPE_SUBSEMAIL) {
                     $msg =unserialize($task->taskdata);
 
-                    $ret = \App\Comm::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
-                    if(strlen($ret)==0) {
+                    $ret = \App\Comm::sendEmail($msg['email'], $msg['text'], $msg['subject'], intval($msg['document_id'] ?? 0) > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
+                    if(strlen($ret ?? '')==0) {
                         $done = true;
                     }
 
@@ -161,14 +163,18 @@ class CronTask extends \ZCL\DB\Entity
                 if($task->tasktype==self::TYPE_EVENTCUST) {
                     $data =unserialize($task->taskdata);
                     $text = $data['text']  ;
-                    $user = \App\Entity\User::load($data['user_id']);
+                    $user = \App\Entity\User::load($data['user_id'] ?? 0);
+                    if($user == null) { //користувача  видалили - задачу  прибираємо
+                        CronTask::delete($task->id) ;
+                        continue;
+                    }
 
-                    if(strlen($user->chat_id) >0) {
+                    if(strlen($user->chat_id ?? '') >0) {
                         $ret= \App\Comm::sendBot($user->chat_id, $text) ;
-                    } elseif(strlen($user->email) >0  ) {
+                    } elseif(strlen($user->email ?? '') >0  ) {
                         $ret= \App\Comm::sendEmail($user->email, $text, "ZStore  notify") ;
                     }
-                    if(strlen($ret)==0) {
+                    if(strlen($ret ?? '')==0) {
                         $done = true;
                     }
 
@@ -188,7 +194,7 @@ class CronTask extends \ZCL\DB\Entity
                         $admin = \App\Entity\User::getByLogin('admin');
 
                         $n = new  Notify();
-                        $n->user_id =  $admin->user_id;
+                        $n->user_id =  $admin->user_id ?? 0;
                         $n->sender_id =  Notify::SYSTEM;
 
                         $n->message = "Помилка  автоматичного закриття змiни";
