@@ -62,7 +62,7 @@ if (!file_exists(_ROOT . "upload")) {
 try {
     $conn = \ZDB\DB::getConnect();
 } catch(Throwable $e) {
-    echo 'Помилка з`єднання з БД. Деталi в папцi logs';
+    echo 'Помилка з`єднання з БД. Деталі в папці logs';
 
     $logger->error($e);
     die;
@@ -77,7 +77,7 @@ function app_autoload($className) {
         if (file_exists($file)) {
             require_once $file;
         } else {
-            die('Невiрний клас ' . $className);
+            die('Невірний клас ' . $className);
         }
     }
 }

@@ -66,7 +66,7 @@ class Price extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+            \App\Session::getSession()-> setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

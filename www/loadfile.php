@@ -25,7 +25,7 @@ if ($size > 0) {
         header('Content-Type: ' . $file['mime']);
     } else {
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . $file['filename']);
+         header('Content-Disposition: attachment; filename="' . str_replace('"', '', $file['filename'] ?? 'file') . '"');
         header('Content-Transfer-Encoding: binary');
     }
 

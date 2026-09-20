@@ -53,7 +53,7 @@ class FormItemsReport extends \App\Pages\Base
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
-        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+        \App\Session::getSession()-> setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
         $this->detail->preview->setText($html, true);
 

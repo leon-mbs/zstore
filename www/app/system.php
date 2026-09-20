@@ -282,7 +282,7 @@ class System
             if( $b==1 ){
                 $n = new \App\Entity\Notify();
                 $n->user_id = $user->user_id;
-                $n->message = "Доступна  нова  версія <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальнішк</a>" ;
+                $n->message = "Доступна  нова  версія <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальніше</a>" ;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                 $n->save();              

@@ -31,10 +31,10 @@ class ItemList extends \App\Pages\Base
     public $_itemset  = array();
     public $_serviceset  = array();
     public $_tag = '' ; 
-    public $_cflist = array();
-    public $_cflistv = array();
-    public $_itemca = array();
-  
+    public $_cflist = [];
+    public $_cflistv = [];
+    public $_itemca = [];
+   
     public function __construct($add = false) {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('ItemList')) {
@@ -70,6 +70,7 @@ class ItemList extends \App\Pages\Base
      
      
         $this->itemtable->addform->add(new ClickLink('options'))->onClick($this, 'optionsOnClick');
+        $this->itemtable->addform->add(new ClickLink('printlist'))->onClick($this, 'printlistOnClick');
 
      
         $this->itemtable->add(new Form('listform'));
@@ -987,102 +988,32 @@ class ItemList extends \App\Pages\Base
 
     }
 
-    /*
-    public function printOnClick($sender) {
-        $item = $sender->getOwner()->getDataItem();
-        $printer = \App\System::getOptions('printer');
-        $pwidth = 'style="width:40mm;"';
-        $pfs = 'style="font-size:16px;"';
-        $pfsp = 'style="font-size:24px;"';
-
-        if (strlen($printer['pwidth']) > 0) {
-            $pwidth = 'style="width:' . $printer['pwidth'] . ' ";';
-        }
-        if (strlen($printer['pfontsize']) > 0) {
-            $pfs = 'style="font-size:' . $printer['pfontsize'] . 'px";';
-            $pfsp = 'style="font-size:' . intval(($printer['pfontsize'] * 1.5)) . 'px";';
-        }
-
-
-        $report = new \App\Report('item_tag.tpl');
-        $header = array('width' => $pwidth, 'fsize' => $pfs, 'fsizep' => $pfsp);
-        if ($printer['pname'] == 1) {
-
-            if (strlen($item->shortname) > 0) {
-                $header['name'] = $item->shortname;
-            } else {
-                $header['name'] = $item->itemname;
-            }
-            $header['name'] = str_replace("'","`", $header['name'])  ;
-            $header['name'] = str_replace("\"'","`", $header['name'])  ;
-        }
-
-
-        $header['action'] = $item->actionprice > 0;
-        $header['actionprice'] = $item->actionprice;
-        $header['isap'] = false;
-        if ($printer['pprice'] == 1) {
-            $header['price'] = number_format($item->getPrice($printer['pricetype']), 2, '.', '');
-            $header['isap'] = true;
-        }
-        if ($printer['pcode'] == 1) {
-            $header['article'] = $item->item_code;
-            $header['isap'] = true;
-        }
-
-        if ($printer['pqrcode'] == 1 && strlen($item->url) > 0) {
-            $qrCode = new \Endroid\QrCode\QrCode($item->url);
-            $qrCode->setSize(100);
-            $qrCode->setMargin(5);
-            $qrCode->setWriterByName('png');
-
-            $dataUri = $qrCode->writeDataUri();
-            $header['qrcode'] = "<img src=\"{$dataUri}\"  />";
-
-        }
-        if ($printer['pbarcode'] == 1) {
-            $barcode = $item->bar_code;
-            if (strlen($barcode) == 0) {
-                $barcode = $item->item_code;
-            }
-           try{
-            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-            $img = '<img src="data:image/png;base64,' . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . '">';
-            $header['img'] = $img;
-            $header['barcode'] = \App\Util::addSpaces($barcode);
-        } catch (\Throwable $e) {
-           \App\Helper::logerror("barcode: ".$e->getMessage()) ;
-           return '';
-        }
-            
-            
-        }
-        $header['iscolor'] = $printer['pcolor'] == 1;
-
-        $html = $report->generate($header);
-
-
-
+    //печать  списка
+    public function printlistOnClick($sender) {
+           if(count($this->_printitems)==0) {
+               $this->setWarn('Пустий список друку') ;
+               return;
+           }
+           $this->printLabelForm($this->_printitems);
+           $this->itemtable->listform->itemlist->Reload(false);
+             
     }
-
-    */
+        
+        
+    //добавляет  в список печати
     public function OnPrintAll($sender) {
-        $buf=[];
-        $items = array();
+        $cnt=0;
+        
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
             if ($item->seldel == true) {
                 $item->printqty = 1;
-                $items[] = $item;
+                $this->_printitems[] = $item;
+                $cnt++;
             }
         }
-        if (count($items) == 0) {
-           
-            return;
-        }
-        $this->printLabelForm($items);
-          
-  
+        
+        $this->setInfo("Додано {$cnt} до списку друку") ;
 
     }
 
