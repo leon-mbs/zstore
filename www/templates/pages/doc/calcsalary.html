@@ -13,16 +13,16 @@
         <form v-show="showheader" id="docform">
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_number">Номер документа</label>
                         <input class="form-control" type="text" v-model="doc.document_number"  required="on" > 
                     </div>
-                    <div class="form-group">
-                        <label for="document_date"> Дата</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_date"> Дата</label>
                         <input class="form-control" type="date" v-model="doc.document_date"  required="on" >
                     </div>
-                     <div class="form-group  ">
-                        <label for="department">Вiддiл </label>
+                     <div class="mb-3  ">
+                        <label class="form-label" for="department">Вiддiл </label>
                         <input  list="dlist" class="form-control" v-model="doc.department">
                          <datalist id="dlist">
                              <option v-for="dep in deps"  v-bind:label="dep"  v-bind:value="dep" >
@@ -30,9 +30,9 @@
                     </div>
           
                       {|#useacc|}
-                     <div class="form-group">
-                        <label for="acccode">Бух. рахунок                        </label>
-                        <select v-model="doc.acccode"  class="form-control"    >
+                     <div class="mb-3">
+                        <label class="form-label" for="acccode">Бух. рахунок                        </label>
+                        <select v-model="doc.acccode"  class="form-select"    >
                             
                             <option value="91">Загальновиробничі витрати</option>
                             <option value="23">Виробництво</option>
@@ -45,25 +45,25 @@
                      {|/useacc|}
                 </div>
                 <div id="formd" class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group  ">
-                        <label for="year">Рiк</label>
-                        <select v-on:change="hch()" class="form-control" v-model="doc.year">
+                    <div class="mb-3  ">
+                        <label class="form-label" for="year">Рiк</label>
+                        <select v-on:change="hch()" class="form-select" v-model="doc.year">
                              <option v-for="year in years "  v-bind:value="year.key">{{year.value}}</option>
                         </select>
                     </div>
-                    <div class="form-group  ">
-                        <label for="month">Мiсяць</label>
-                        <select v-on:change="hch()" class="form-control" v-model="doc.month">
+                    <div class="mb-3  ">
+                        <label class="form-label" for="month">Мiсяць</label>
+                        <select v-on:change="hch()" class="form-select" v-model="doc.month">
                             <option v-for="month in monthes "  v-bind:value="month.key">{{month.value}}</option>
                        </select>
                     </div>
-                    <div class="form-group  ">
-                        <label for="daysmon">Кiл. роб. днiв </label>
+                    <div class="mb-3  ">
+                        <label class="form-label" for="daysmon">Кiл. роб. днiв </label>
                         <input v-on:change="hch()" style="width:100px;"  type="number"  required="on"   class="form-control" v-model="doc.daysmon">
                         <small>Кiлькiсть робочих днiв в  мiсяцi</small>
                     </div>
-                     <div class="form-group  ">
-                        <label for="notes">Примiтка </label>
+                     <div class="mb-3  ">
+                        <label class="form-label" for="notes">Примiтка </label>
 
                         <textarea class="form-control" type="text" v-model="doc.notes"></textarea>
 
@@ -88,12 +88,12 @@
                
          <div class="col-12">
               <a v-on:click.prevent="toback()"> <i class="fa fa-arrow-circle-left"></i>  Назад</a>
-            <div class="form-group row">
+            <div class="mb-3 row">
                 <div class="col-auto pt-2">
-                  <label   > Спiвробiтник</label>
+                  <label class="form-label"   > Спiвробiтник</label>
                 </div>
                <div class="col-auto">
-                  <select  v-model="selectednewemp" class="form-control"  id="newemp" name="newemp" >
+                  <select  v-model="selectednewemp" class="form-select"  id="newemp" name="newemp" >
                      <option value="0">Не обрано</option>
                         <option v-for=" e in deleted "  v-bind:value="e.id">
                             {{e.emp_name}}

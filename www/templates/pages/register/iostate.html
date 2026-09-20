@@ -31,13 +31,13 @@
                           {{^bmode}}
                         <label class="col-form-label col-auto" for="fuser"> автор </label>
                           <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="fuser">
+                          <select class="form-select me-2" zippy="fuser">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
                         <label class="col-form-label col-auto" for="ftype"> тип </label>
                           <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="ftype">
+                          <select class="form-select me-2" zippy="ftype">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
@@ -56,7 +56,7 @@
                            </div>
                          <label class="col-form-label col-auto" for="docio"> Тип </label>
                          <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="docio">
+                          <select class="form-select me-2" zippy="docio">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
@@ -140,7 +140,7 @@
 
           
             <div class="col-12">
-                <table   class="ctanle">
+                <table   class="ctable">
                   
                    <tr><td style="width:100px"  >Доход  </td><td class="text-end"><b> {{totalin}} </b> </td></tr>
                    <tr><td style="width:100px"  >Видатки </td><td class="text-end"><b>{{totalout}}</b></td></tr>
@@ -177,11 +177,11 @@
                               <form zippy="formedit">       
                              <input   type="hidden" zippy="editio"  >
                                
-                             <div class="form-group  ">
-                             <label for="editdate">Дата:</label>
+                             <div class="mb-3  ">
+                             <label class="form-label" for="editdate">Дата:</label>
                                 <input   class="form-control  " type="text" zippy="editdate"  >
                                  </div>
-                                <div class="form-group  ">   
+                                <div class="mb-3  ">   
                                     <input type="submit" value="Зберегти"   class="  btn btn-info  ">
                                 </div>
                                 

@@ -19,7 +19,7 @@
                         <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                         </div>
                          <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="status">
+                        <select class="form-select me-2" zippy="status">
                         </select>
                         </div>
                         <div class="col-auto  ">
@@ -191,23 +191,23 @@
                         <tr><td colspan="8">
                           <form zippy="iform"   >
                             <div class="row  ">
-                                 <label for="iitem"> ТМЦ </label>
+                                 <label class="form-label" for="iitem"> ТМЦ </label>
                                <div class="col-auto  ">
                                <input zippy="iitem"  class="form-control">
                                </div>
                               {{#usesnumberitem}}
                                
-                                 <label for="isn"> с/н </label>
+                                 <label class="form-label" for="isn"> с/н </label>
                                   <div class="col-auto  ">
                                <input zippy="isn"  class="form-control">
                                </div>
                                {{/usesnumberitem}}
                               
-                                 <label for="iqty"> Кiл. </label>
+                                 <label class="form-label" for="iqty"> Кiл. </label>
                                 <div class="col-auto  ">
                                 <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="iqty"  >
                                 </div>
-                                <label for="iprice"> Цiна </label>
+                                <label class="form-label" for="iprice"> Цiна </label>
                                <div class="col-auto  ">
                                 <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="iprice"  >
                                 </div>

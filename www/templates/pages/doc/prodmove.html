@@ -12,28 +12,28 @@
            
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>  
                  
                     
-                     <div class="form-group  ">
-                        <label for="pp">Виробничий процес</label>
-                        <select class="form-control" zippy="pp">
+                     <div class="mb-3  ">
+                        <label class="form-label" for="pp">Виробничий процес</label>
+                        <select class="form-select" zippy="pp">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
-                     <div class="form-group  ">
-                        <label for="psfrom">З етапу</label>
-                        <select class="form-control" zippy="psfrom">
+                     <div class="mb-3  ">
+                        <label class="form-label" for="psfrom">З етапу</label>
+                        <select class="form-select" zippy="psfrom">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
 
-                     <div class="form-group  ">
-                        <label for="psto">До етапу</label>
-                        <select class="form-control" zippy="psto">
+                     <div class="mb-3  ">
+                        <label class="form-label" for="psto">До етапу</label>
+                        <select class="form-select" zippy="psto">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
@@ -41,13 +41,13 @@
                     
                 </div>
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
-                        <label for="document_date"> Дата</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
-                     <div class="form-group  ">
-                        <label for="emp">Виконавець </label>
-                        <select class="form-control  " zippy="emp">
+                     <div class="mb-3  ">
+                        <label class="form-label" for="emp">Виконавець </label>
+                        <select class="form-select  " zippy="emp">
                             <option value="0">Не вказано</option>
                         </select>
                         <small> Для нарахування  зарплати при вiдрядному виробництвi</small>
@@ -55,8 +55,8 @@
                   
                  
                  
-                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                     <div class="mb-3  ">
+                        <label class="form-label" for="notes">Примітка </label>
                         <textarea class="form-control"   zippy="notes"></textarea>
                     </div>            
               
@@ -123,29 +123,29 @@
           <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
-                       <label for="edititem">Назва </label>
+                    <div class="mb-3">
+                       <label class="form-label" for="edititem">Назва </label>
                         <select class="form-control select2" zippy="edititem">
                             <option value="1">Не обрано</option>
                         </select>
                     </div>
                     {{#usesnumber}}
-                    <div class="form-group">
-                        <label for="editserial">Серія виробника </label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editserial">Серія виробника </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
 
                     {{/usesnumber}}
-                    <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editquantity">Кількість</label>
                         <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary  me-2">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
                         

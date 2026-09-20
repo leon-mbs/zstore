@@ -51,8 +51,8 @@
               <div class="col-12 col-md-4  col-xl-3">
  
                 <form zippy="addeventform"   >
-                   <div class="form-group   ">
-                        <label  >Тип</label>
+                   <div class="mb-3   ">
+                        <label class="form-label"  >Тип</label>
                         <br>
                         <div class="form-check form-check-inline">
                             <input zippy="addeventin" class="form-check-input" type="radio"   >
@@ -63,28 +63,28 @@
                             <label class="form-check-label" for="addeventout"> Видаток</label>
                         </div>
                    </div>      
-                    <div class="form-group  ">
-                        <label for="addeventdate">Дата платежу</label>
+                    <div class="mb-3  ">
+                        <label class="form-label" for="addeventdate">Дата платежу</label>
                         <input style="width:150px"  class="form-control "   zippy="addeventdate"  required="on" >
                     </div>
 
-                    <div class="form-group  ">
-                        <label for="addeventamount">Сума платежу</label>
+                    <div class="mb-3  ">
+                        <label class="form-label" for="addeventamount">Сума платежу</label>
                         <input style="width:150px"  class="form-control qtyprice"   zippy="addeventamount"  required="on" >
                     </div>
-                    <div class="form-group">
-                        <label for="addeventtitle">Призначення </label>
+                    <div class="mb-3">
+                        <label class="form-label" for="addeventtitle">Призначення </label>
                         <input  required="on"  class="form-control" zippy="addeventtitle">
                     </div>
-                    <div class="form-group">
-                        <label for="addeventcust">Контрагент </label>
+                    <div class="mb-3">
+                        <label class="form-label" for="addeventcust">Контрагент </label>
                         <input   class="form-control" zippy="addeventcust">
                     </div>
-                    <div class="form-group">
-                        <label for="addeventdesc">Коментар</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="addeventdesc">Коментар</label>
                         <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                     </div>
-                    <div class="form-group">  
+                    <div class="mb-3">  
                        <a zippy="cancel" class="btn btn-secondary  ms-4">Скасувати</a>
                        <input class="btn btn-success  " type="submit" value="Зберегти">
                      </div>
@@ -93,16 +93,16 @@
    
                 <form zippy="editeventform" >
               
-                    <div class="form-group">
-                        <label for="editeventdate">Дата платежу</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editeventdate">Дата платежу</label>
                         <input style="width:150px"  required="on"  class="form-control" zippy="editeventdate">
                     </div>
-                    <div class="form-group">
-                        <label for="editeventamount">Сума платежу</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editeventamount">Сума платежу</label>
                         <input style="width:150px"  required="on"  class="form-control" zippy="editeventamount">
                     </div>
-                    <div class="form-group">
-                        <label for="editeventdesc">Коментар</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editeventdesc">Коментар</label>
                         <textarea class="form-control" zippy="editeventdesc" style=" height:120px;"></textarea>
                     </div>
                     <a zippy="canceledit" class="btn btn-secondary  me-2">Скасувати</a> &nbsp;

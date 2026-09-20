@@ -21,12 +21,12 @@
                           </div>
                         <label class="col-form-label col-auto" for="status">Статус</label>
                          <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="status">
+                        <select class="form-select me-2" zippy="status">
                         </select>
                           </div>
                         <label class="col-form-label col-auto" for="salesource">Джерело продаж</label>
                          <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="salesource">
+                        <select class="form-select me-2" zippy="salesource">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
@@ -224,7 +224,7 @@
                        <div class="navbar  justify-content-start"> 
                            
                         
-                           <label     >Створити </label>
+                           <label class="form-label"     >Створити </label>
                          
                         <button zippy="bttn" class="btn btn-primary  me-2">  ТТН</button>
                         
@@ -260,7 +260,7 @@
                         <label class=" form-label   me-2"  data-label="bres">Резервувати товари </label>
                         </div>
                          <div class="col-auto">  
-                        <select class=" form-control me-2"  zippy="store"></select>
+                        <select class=" form-select me-2"  zippy="store"></select>
                           </div>
                          <div class="col-auto"> 
                         <button zippy="bres" class="btn btn-success  ">OK                 </button>
@@ -281,10 +281,10 @@
                            </div> 
                        {{#usebranch}}
                          <div class="col-auto"> 
-                        <label   for="brmove">фiлiю </label>
+                        <label class="form-label"   for="brmove">фiлiю </label>
                           </div> 
                          <div class="col-auto">  
-                        <select zippy="brmove" class="form-control me-2 ">
+                        <select zippy="brmove" class="form-select me-2 ">
                             <option value="0">Не вказано</option>
                         </select>
                          </div>   
@@ -293,7 +293,7 @@
                         <label  class="form-label me-2" for="usmove">користувача </label>
                            </div> 
                           <div class="col-auto"> 
-                         <select class="form-control me-2" zippy="usmove"  >
+                         <select class="form-select me-2" zippy="usmove"  >
 
                         </select>   
                            </div> 
@@ -342,7 +342,7 @@
                       <td class="text-end" zippy="editlistqty"></td>
                    </tr> 
                  </table>         
-                 <div class="form-group">
+                 <div class="mb-3">
                     <button zippy="editcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
                     <button zippy="editsave" type="submit" class="  btn btn-primary  me-2 ">Зберегти</button>                 
                     <button zippy="editready" type="submit" class="  btn btn-success  ms-4 ">Зiбрано</button>                 
@@ -377,7 +377,7 @@
                    
                    </tr> 
                  </table>         
-                 <div class="form-group">
+                 <div class="mb-3">
                     <button zippy="splitcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
                     <button zippy="splitsave" type="submit" class="  btn btn-info  me-2 ">Розділити</button>                 
                   
@@ -460,8 +460,8 @@
                                                             
                                  </div>                            
                                 <form>
-                                  <div class="form-group">
-                                         <label for="msgtext">Повiдомлення</label> 
+                                  <div class="mb-3">
+                                         <label class="form-label" for="msgtext">Повiдомлення</label> 
                                         <textarea  v-model="message"      class="form-control"></textarea>
                                          
                                            

@@ -9,16 +9,16 @@
             <h3> Ручна проводка</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
-                     <div class="form-group">
-                        <label for="document_date"> Дата</label>
+                     <div class="mb-3">
+                        <label class="form-label" for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required >
                     </div>   
-                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                     <div class="mb-3  ">
+                        <label class="form-label" for="notes">Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -27,7 +27,7 @@
                  <div class="col-12 col-md-4 col-xl-3">
                      <b>Генерацiя  проводок початкових залишкiв </b>
                      <br><small>Слiд виконувати  на  кiнець звiтного перiоду з закритими розрахунками, завершеним  виробництвом тощо</small>
-                    <div class="form-group">
+                    <div class="mb-3">
                        <input zippy="generate" type="submit" value="Згенерувати" class="btn   btn-primary ">
                       
                     </div>
@@ -90,24 +90,24 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
            
-                    <div class="form-group  ">
-                        <label for="editdt">Дебет</label>
-                        <select class="form-control" zippy="editdt">
+                    <div class="mb-3  ">
+                        <label class="form-label" for="editdt">Дебет</label>
+                        <select class="form-select" zippy="editdt">
                           <option value="0">Не вказано</option>
                         </select>
                     </div>
-                    <div class="form-group  ">
-                        <label for="editct">Кредит</label>
-                        <select class="form-control" zippy="editct">
+                    <div class="mb-3  ">
+                        <label class="form-label" for="editct">Кредит</label>
+                        <select class="form-select" zippy="editct">
                           <option value="0">Не вказано</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="editamount">Сума</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editamount">Сума</label>
                         <input  style="width:120px" pattern="[0-9,\.\-]+" class="form-control qtyprice" type="text" zippy="editamount">
                     </div>
                   
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="button" zippy="cancelrow" value="Скасувати" class="btn btn-secondary me-2">
                         <input type="submit" zippy="submitrow" value="Додати" class="btn btn-secondary ">
                         

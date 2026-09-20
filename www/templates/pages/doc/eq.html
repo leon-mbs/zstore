@@ -9,25 +9,25 @@
             <h3> Операції з ОЗ та  НМА</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_number">Номер документу</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
-                    <div class="form-group">
-                        <label for="document_date"> Дата</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
-                     <div class="form-group  ">
-                        <label for="optype">Тип операції</label>
-                        <select class="form-control" zippy="optype">
+                     <div class="mb-3  ">
+                        <label class="form-label" for="optype">Тип операції</label>
+                        <select class="form-select" zippy="optype">
                                <option value="0">Не вибрано</option>
                            
                     
                         </select>
                         <small zippy="tip"></small>
                     </div>                    
-                     <div class="form-group">
-                        <label for="eq"> ОЗ</label>
+                     <div class="mb-3">
+                        <label class="form-label" for="eq"> ОЗ</label>
                         <input placeholder="Почніть вводити" class="form-control" type="text" zippy="eq"    >
                     </div>
 
@@ -39,41 +39,41 @@
            
                  <div class="col-12 col-md-4 col-xl-3">
                
-                     <div class="form-group  ">
-                        <label data-label="parea" for="parea">Виробнича ділянка</label>
-                        <select class="form-control" zippy="parea">
+                     <div class="mb-3  ">
+                        <label class="form-label" data-label="parea" for="parea">Виробнича ділянка</label>
+                        <select class="form-select" zippy="parea">
                             <option value="0">Не вибрано</option>
                         </select>
                     </div>
                   
-                     <div class="form-group  ">
-                        <label data-label="emp" for="emp">Відповідальний</label>
-                        <select class="form-control" zippy="emp">
+                     <div class="mb-3  ">
+                        <label class="form-label" data-label="emp" for="emp">Відповідальний</label>
+                        <select class="form-select" zippy="emp">
                             <option value="0">Не вибрано</option>
                         </select>
                     </div>
-                    <div class="form-group  ">
-                        <label data-label="customer" for="customer">Контрагент</label>
+                    <div class="mb-3  ">
+                        <label class="form-label" data-label="customer" for="customer">Контрагент</label>
                         <input placeholder="Почніть вводити"   class="form-control  " type="text" zippy="customer">
                    
                     </div>
-                    <div class="form-group  ">
-                        <label data-label="store" for="store">Склад</label>
-                        <select class="form-control" zippy="store">
+                    <div class="mb-3  ">
+                        <label class="form-label" data-label="store" for="store">Склад</label>
+                        <select class="form-select" zippy="store">
                         </select>
                     </div>
                   
-                    <div class="form-group  ">
-                        <label data-label="item" for="item">ТМЦ</label>
+                    <div class="mb-3  ">
+                        <label class="form-label" data-label="item" for="item">ТМЦ</label>
                         <input placeholder="Почніть вводити"   class="form-control  " type="text" zippy="item">
                    
                     </div>
-                     <div class="form-group">
-                        <label data-label="amount" for="amount">Сума</label>
+                     <div class="mb-3">
+                        <label class="form-label" data-label="amount" for="amount">Сума</label>
                         <input style="width:120px" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="amount">
                     </div>                 
-                    <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                    <div class="mb-3  ">
+                        <label class="form-label" for="notes">Примітка </label>
 
                         <textarea class="form-control"   zippy="notes"></textarea>
 

@@ -12,53 +12,49 @@
          
  
                 <div class="col-12 col-md-4 col-xl-3">
-                  <div class="form-group">
-                        <label for="edittitle"> Назва (тип) документу</label>
+                  <div class="mb-3">
+                        <label class="form-label" for="edittitle"> Назва (тип) документу</label>
                         <input class="form-control" type="text" zippy="edittitle"  >
                         <small>Наприклад: Заява, Звiт, Угода...</small>
                         
                  </div>                 
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <div class="col-5">
-                            <label for="document_number">Номер </label>
+                            <label class="form-label" for="document_number">Номер </label>
                         </div>
                          <div class="col-7">
                             <input style="width:150px" class="form-control" type="text" zippy="document_number"  required="on" >
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <div class="col-5">
-                           <label for="document_date"> Дата</label>
+                           <label class="form-label" for="document_date"> Дата</label>
                         </div>
                          <div class="col-7">
                            <input class="form-control" type="text" zippy="document_date"  required="on" >
                         </div>                        
                     </div>
-                    <div class="form-group  ">
-                      <label for="document_date"> Контрагент</label>
+                    <div class="mb-3  ">
+                      <label class="form-label" for="document_date"> Контрагент</label>
                       <div class="input-group  ">
                          <input class="form-control"  placeholder="Почніть вводити..."   zippy="customer"/>
-                         <div class="input-group-append">
-                           <a class="btn btn-primary btn-sm me-2" title="Додати нового" zippy="addcust">+</a>
-                        </div>
-                        <div class="input-group-append"  >
-                            <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
-                        </div>                                                      
+                         <a class="btn btn-primary btn-sm" title="Додати нового" zippy="addcust">+</a>
+                        <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>                                                      
                     </div> 
                     <small>Якщо документ зв'язаний з контрагентом</small>         
                                     
                   </div>          
-                    <div class="form-group">
-                        <label for="emp">Спiвробiтник</label>
-                        <select class="form-control"  zippy="emp" >  
+                    <div class="mb-3">
+                        <label class="form-label" for="emp">Спiвробiтник</label>
+                        <select class="form-select"  zippy="emp" >  
                            <option value="0">Не вказаний</option>
                         </select>
                         <small>Якщо документ зв'язаний зi спiвробiтником</small>         
                     </div>               
-                   <div class="form-group row">
-                         <div class="col-auto"><label for="bonus">Премiя:</label></div>
+                   <div class="mb-3 row">
+                         <div class="col-auto"><label class="form-label" for="bonus">Премiя:</label></div>
                          <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="bonus" ></div>
-                         <div class="col-auto"><label for="fine">&nbsp;&nbsp;Штраф:</label></div>
+                         <div class="col-auto"><label class="form-label" for="fine">&nbsp;&nbsp;Штраф:</label></div>
                          <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="fine" ></div>
                          <div class="w-100"></div>
                          <small data-label="bonus"> Додаються  на  особовий  рахунок</small>                       
@@ -66,14 +62,14 @@
                     </div> 
                                  
                     
-                   <div class="form-group">
-                        <label for="user">Вiдповiдальний</label>
-                        <select class="form-control"  zippy="user" >  
+                   <div class="mb-3">
+                        <label class="form-label" for="user">Вiдповiдальний</label>
+                        <select class="form-select"  zippy="user" >  
 
                         </select>
                     </div>               
-                   <div class="form-group">
-                        <label for="editcomment">Коментар, примiтка</label>
+                   <div class="mb-3">
+                        <label class="form-label" for="editcomment">Коментар, примiтка</label>
                         <textarea class="form-control"  zippy="editcomment" >  
                         </textarea>
 
@@ -85,17 +81,17 @@
                 
                 
                 <div class="col-12 col-md-8 col-xl-6">
-                    <div class="form-group">
-                        <label for="doccontent">Змiст</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="doccontent">Змiст</label>
                         <textarea    class="form-control" zippy="doccontent"></textarea>
                     </div>
-                     <div class="form-group">
-                        <label for="doctags">Теги</label>
+                     <div class="mb-3">
+                        <label class="form-label" for="doctags">Теги</label>
                         <div    zippy="doctags" >  </div>
                         <small>Вводяться по  Enter</small>
                     </div>   
-                     <div class="form-group">
-                        <label for="editfile"> Оригiнал (файл, скан) документу</label>
+                     <div class="mb-3">
+                        <label class="form-label" for="editfile"> Оригiнал (файл, скан) документу</label>
                         <input class="form-control" type="file" zippy="editfile"  >
                     
                         
@@ -123,22 +119,22 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
-                        <label for="editcustname">Назва </label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editcustname">Назва </label>
                         <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
-                    <div class="form-group">
-                        <label for="editphone">Телефон</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editphone">Телефон</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
-                    <div class="form-group">
-                        <label for="editemail">E-mail</label>
+                    <div class="mb-3">
+                        <label class="form-label" for="editemail">E-mail</label>
                         <input class="form-control" type="email" zippy="editemail"/>
                     </div>
 
-                    <div class="form-group">
-                        <label for="editemail">Тип</label>
-                        <select class="form-control" type="email" zippy="edittype">
+                    <div class="mb-3">
+                        <label class="form-label" for="editemail">Тип</label>
+                        <select class="form-select" type="email" zippy="edittype">
                            <option value="0">Не вказано</option>
                            <option value="1">Покупець</option>
                            <option value="2">Постачальник</option>
@@ -147,7 +143,7 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
                         
@@ -165,9 +161,9 @@
                 <h5>&nbsp;Право перегляду </h5>
             
             
-                <div class="form-group row">
+                <div class="mb-3 row">
                      <div class="col-auto">
-                       <select class="form-control" zippy="accshowusers">
+                       <select class="form-select" zippy="accshowusers">
                         
                        </select>
                     </div>
@@ -176,7 +172,7 @@
                     </div>
                            
                </div> 
-                <div class="form-group">
+                <div class="mb-3">
                   <table class="table table-sm">
                      <tr zippy="accshowlist">  
                        <td zippy="accshowuser">  </td>
@@ -186,9 +182,9 @@
                </div>           
              
             <h5>&nbsp;Право редагування </h5>
-                <div class="form-group row">
+                <div class="mb-3 row">
                      <div class="col-auto">
-                       <select class="form-control" zippy="acceditusers">
+                       <select class="form-select" zippy="acceditusers">
                         
                        </select>
                     </div>
@@ -197,16 +193,16 @@
                     </div>
                            
                </div> 
-                <div class="form-group">
+                <div class="mb-3">
                   <table class="table table-sm">
                      <tr zippy="acceditlist">  <td zippy="accedituser">  </td><td class="text-end" > <a zippy="deledituser"><i class="fa fa-trash"></i></a> </td></tr>
                   </table>
                </div>                   
             <h5>&nbsp;Мають пiдписати (затвердити) </h5>
             <small>Документ буде затверджено пiсдя пiдпису всiх з перелiку   </small>
-                <div class="form-group row">
+                <div class="mb-3 row">
                      <div class="col-auto">
-                       <select class="form-control" zippy="accapprusers">
+                       <select class="form-select" zippy="accapprusers">
                         
                        </select>
                     </div>
@@ -215,7 +211,7 @@
                     </div>
                            
                </div> 
-                <div class="form-group">
+                <div class="mb-3">
                   <table class="table table-sm">
                      <tr zippy="accapprlist">  <td zippy="accappruser">  </td><td class="text-end" > <a zippy="delappruser"><i class="fa fa-trash"></i></a> </td></tr>
                   </table>
@@ -223,7 +219,7 @@
 
             <div class="row">
                 <div class="col-12">
-                     <div class="form-group">
+                     <div class="mb-3">
                         <input type="button" zippy="cancelaccess" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="saveaccess" type="submit" value="Зберегти" class="btn btn-primary">
                     </div>           
