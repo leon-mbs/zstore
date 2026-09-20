@@ -37,7 +37,7 @@ class ExciseList extends \App\Pages\Base
         $items=Item::findArray("itemname","item_id in (select item_id from excisestamps )","itemname");
         $this->filter->add(new DropDownChoice('item',$items,0)) ;
      
-        $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
    
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -55,7 +55,8 @@ class ExciseList extends \App\Pages\Base
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+
         $this->detail->preview->setText($html, true);
 
        
@@ -145,7 +146,7 @@ class ExciseList extends \App\Pages\Base
 
 
         $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
         return $html;
 

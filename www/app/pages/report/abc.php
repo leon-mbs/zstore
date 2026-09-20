@@ -9,6 +9,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * АВС анализ
@@ -32,11 +33,12 @@ class ABC extends \App\Pages\Base
         $this->typelist[5] = "Покупці, маржа";
 
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -51,7 +53,7 @@ class ABC extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

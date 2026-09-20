@@ -11,6 +11,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Прайсы
@@ -25,7 +26,7 @@ class Price extends \App\Pages\Base
 
         $option = \App\System::getOptions('common');
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
         $this->filter->add(new CheckBox('price1'))->setVisible(strlen($option['price1']) > 0);
         $this->filter->add(new CheckBox('price2'))->setVisible(strlen($option['price2']) > 0);
         $this->filter->add(new CheckBox('price3'))->setVisible(strlen($option['price3']) > 0);
@@ -35,7 +36,8 @@ class Price extends \App\Pages\Base
         $this->filter->add(new CheckBox('showqty'));
         $this->filter->add(new CheckBox('showdesc'));
         $this->filter->add(new CheckBox('showimage'));
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $catlist = array();
         foreach (Category::findYield("cat_id in (select cat_id from items where disabled <>1 )", "cat_name") as $c) {
             if($c->noprice==1) {
@@ -64,7 +66,7 @@ class Price extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

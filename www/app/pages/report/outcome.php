@@ -11,6 +11,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Отчет по продажам
@@ -28,13 +29,14 @@ class Outcome extends \App\Pages\Base
             $br = " and  branch_id in ({$brids}) ";
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "disabled <> 1 and user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
         $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false, false), 0))->setVisible(false);
         $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0))->setVisible(false);
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $hlist = \App\Entity\Customer::getHoldList();
         //  $this->filter->add(new DropDownChoice('holding', $hlist, 0))->setVisible(false);
 
@@ -108,7 +110,7 @@ class Outcome extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+          \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

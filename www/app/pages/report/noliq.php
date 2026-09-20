@@ -9,6 +9,8 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
+
 
 /**
  * Неликвидные товары
@@ -22,10 +24,11 @@ class NoLiq extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
 
         $this->filter->add(new DropDownChoice('mqty', array("1" => "1", "3" => "3", "6" => "6", "12" => "12"), 1));
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+   
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -36,7 +39,7 @@ class NoLiq extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

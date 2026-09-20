@@ -11,6 +11,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use App\Entity\SalType;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  *  Отчет по  зарплате
@@ -23,7 +24,7 @@ class SalaryRep extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
 
         $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), intval(date('Y'))));
         $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), intval(date('m'))));
@@ -34,7 +35,8 @@ class SalaryRep extends \App\Pages\Base
         $dp =  Employee::getDP()  ;
         
         $this->filter->add(new TextInput('dep' ))->setDataList($dp['d']);
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));

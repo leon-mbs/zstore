@@ -27,7 +27,9 @@ class Base extends \Zippy\Html\WebPage
 
 
         \Zippy\Html\WebPage::__construct();
-
+     
+        Session::getSession()->setPrintForm('');
+  
         $user = System::getUser();
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");

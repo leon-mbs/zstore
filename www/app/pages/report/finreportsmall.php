@@ -34,8 +34,8 @@ class FinReportSmall extends \App\Pages\Base
         $this->add(new Form('filter'));
         $this->filter->add(new DropDownChoice('yr'));
         $this->filter->add(new DropDownChoice('qw'));
-        $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new ClickLink('exml',$this,'export'));
@@ -52,7 +52,8 @@ class FinReportSmall extends \App\Pages\Base
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+             \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+
         $this->detail->preview->setText($html, true);
 
               

@@ -11,6 +11,7 @@ class Session
     private $values = array();
     public $filter = array();
     public $start = 0;
+    public $printform = '';
 
     public function __construct() {
 
@@ -39,7 +40,28 @@ class Session
         $this->values = array();
         $this->filter = array();
         $this->start = 0;
+        $this->printform = '';
+        
     }
+    public function getPrintForm() {
+        if(  strlen ($this->printform) ==0) {
+            return ''; 
+        }
+        return gzdecode( $this->printform);
+    }
+    public function setPrintForm($printform) {
+        $l=  strlen ($printform) ;
+        if($l==0) {
+            $this->printform ='';
+            return; 
+        }
+               
+        $this->printform = gzencode($printform) ;
+    
+    }
+    
+ 
+    
     //длительность сеанса  в секундах
     public function duration() {
         if(intval($this->start) > 0) {

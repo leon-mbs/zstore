@@ -10,6 +10,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Отчет по закупкам
@@ -23,7 +24,7 @@ class Income extends \App\Pages\Base
         }
 
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
         $this->filter->add(new DropDownChoice('type', array(1 => "За товарами", 2 => "За постачальниками", 3 => "За датами",4 => "Послуги, роботи",5 => "Товари за постачальниками",6=>'За категоріями'), 1))->onChange($this, "OnType");
@@ -32,7 +33,8 @@ class Income extends \App\Pages\Base
 
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->cust->setVisible(false);
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
 
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -50,7 +52,7 @@ class Income extends \App\Pages\Base
         $this->filter->cust->setVisible($type == 5);
 
         $this->filter->cat->setVisible($type == 6);
-
+       
     }
 
     public function OnAutoItem($sender) {
@@ -69,7 +71,7 @@ class Income extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

@@ -32,18 +32,19 @@ class AccountActivity extends \App\Pages\Base
         $this->add(new Form('filter'));
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-
+     
         $list=Account::     getUsedList(true);
         
        
         
         $this->filter->add(new DropDownChoice('acc', $list ));
-        $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+
     }
 
  
@@ -171,7 +172,7 @@ class AccountActivity extends \App\Pages\Base
 
 
         $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
         return $html;
 

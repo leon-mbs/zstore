@@ -11,6 +11,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Form\Date;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  *  Отчет по  рабочему времени
@@ -23,7 +24,7 @@ class TimeStat extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
 
         $dt = new \App\DateTime();
 
@@ -33,7 +34,8 @@ class TimeStat extends \App\Pages\Base
         $this->filter->add(new Date('from', $from));
         $this->filter->add(new Date('to', $to));
         $this->filter->add(new DropDownChoice('ttype', TimeItem::getTypeTime(), TimeItem::TIME_WORK));
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));

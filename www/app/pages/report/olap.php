@@ -30,13 +30,7 @@ class OLAP extends \App\Pages\Base
         }
         $conn = \ZDB\DB::getConnect();
 
-
-        //        $dt = new \App\DateTime() ;
-        //        $to = $dt->startOfMonth()->getTimestamp()  - 1 ;
-        //        $from = $dt->subMonth(1)->getTimestamp()  ;
-
-
-
+  
         $this->add(new Form('startform'))->onSubmit($this, 'OnNext') ;
         $this->startform->add(new Date('stfrom', time() - (7 * 24 * 3600)));
         $this->startform->add(new Date('stto', time()));
@@ -60,8 +54,8 @@ class OLAP extends \App\Pages\Base
         $this->reppan->filter->add(new DropDownChoice('slmf_name', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slstorename', array(), 0));
         $this->reppan->filter->add(new DropDownChoice('slbranch_name', array(), 0));
-        $this->reppan->filter->add(new SubmitButton('show'))->onClick($this, 'OnFilter');
-
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
         $this->reppan->add(new Panel('detail'))->setVisible(false);
 
         $this->reppan->detail->add(new Label('preview'));
@@ -236,7 +230,7 @@ class OLAP extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->reppan->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->reppan->detail->setVisible(true);
