@@ -28,7 +28,7 @@ class Toc extends \App\Pages\Base
 
         $this->add(new Form('filter'));
         $this->filter->add(new DropDownChoice('period', [], 1));
-        $this->filter->add(new SubmitButton('start' ))->onClick($this, 'OnSubmit');
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
          
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -43,7 +43,7 @@ class Toc extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

@@ -10,6 +10,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Заказанные покупателями товары
@@ -24,12 +25,13 @@ class ItemOrder extends \App\Pages\Base
             return;
         }
    
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
 
         $where = "status<>1 and customer_id in  (select customer_id from documents_view where meta_name='Order'  and (state= " . Document::STATE_INPROCESS . " or state =" . Document::STATE_NEW . " or state =" . Document::STATE_WP . " ) )";
         $this->filter->add(new DropDownChoice('cust', Customer::findArray('customer_name', $where, 'customer_name'), 0));
         $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "disabled <> 1 and user_id in (select user_id from documents_view  where  meta_name  in('Order' )    )", 'username'), 0));
- 
+       $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+   
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -40,7 +42,7 @@ class ItemOrder extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+            \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

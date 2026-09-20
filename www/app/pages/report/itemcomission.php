@@ -10,6 +10,7 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Товары  на  комиссии
@@ -22,7 +23,7 @@ class ItemComission extends \App\Pages\Base
         if (false == \App\ACL::checkShowReport('ItemComission')) {
             return;
         }
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
 
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
@@ -33,7 +34,8 @@ class ItemComission extends \App\Pages\Base
         $clist = \App\Entity\Customer::findArray("customer_name","status=0 and customer_id in (select customer_id from documents_view where  meta_name='GoodsReceipt' and state=5 and  content like '%<comission>1</comission>%'  {$br} )","customer_name") ;
  
         $this->filter->add(new DropDownChoice('customer', $clist, 0));
-       
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+     
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
@@ -46,7 +48,7 @@ class ItemComission extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+          \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

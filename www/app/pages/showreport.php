@@ -17,14 +17,14 @@ class ShowReport extends \Zippy\Html\WebPage
         }
 
         $filename = $filename . date('_Y_m_d');
-        $html = \App\Session::getSession()->printform;
+        $html = \App\Session::getSession()->getPrintForm();
         if (strlen($html) == 0) {
             http_response_code(404);
             die;
         }    
         
         
-        \App\Session::getSession()->printform="";
+   //     \App\Session::getSession()->setPrintForm('');
   
         if ($type == "preview") {
             header("Content-Type: text/html;charset=UTF-8");

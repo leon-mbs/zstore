@@ -11,6 +11,7 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use App\Entity\Pay;
 use App\Entity\Item;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Управоенческий  баланс
@@ -27,8 +28,9 @@ class Balance extends \App\Pages\Base
         $dt = $dt->startOfMonth()->getTimestamp();
   
     
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
         $this->filter->add(new Date('dt', $dt));
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
   
       
 
@@ -44,7 +46,7 @@ class Balance extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+          \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
         $this->detail->setVisible(true);
 

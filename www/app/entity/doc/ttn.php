@@ -336,7 +336,7 @@ class TTN extends Document
     }
 
     public function supportedExport() {
-        return array(self::EX_EXCEL, self::EX_PDF);
+        return array(self::EX_EXCEL, self::EX_PDF, self::EX_POS);
     }
 
     /**

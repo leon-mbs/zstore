@@ -17,6 +17,7 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\SubmitButton;
 
 /**
  * Состояние  складов
@@ -29,19 +30,21 @@ class StoreItems extends \App\Pages\Base
             return;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter')) ;
         $this->filter->add(new CheckBox('fminus'));
         $this->filter->add(new CheckBox('fmin'));
         $this->filter->add(new CheckBox('fver'));
  
         $this->filter->add(new CheckBox('fcust'));
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
- 
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
+  
 
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+        \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+
     }
 
 

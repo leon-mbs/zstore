@@ -54,7 +54,7 @@ class ItemActivity extends \App\Pages\Base
    
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
         $this->filter->item->onChange($this, "onItem");
-        $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');
+        $this->filter->add(new SubmitButton('onreport'))->onClick($this, 'OnSubmit');
    
         $this->add(new Panel('detail'))->setVisible(false);
 
@@ -102,11 +102,14 @@ class ItemActivity extends \App\Pages\Base
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+             \App\Session::getSession()->setPrintForm("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+
         $this->detail->preview->setText($html, true);
 
-       
+    
     }
+
+    
 
     private function generateReport() {
 
@@ -133,46 +136,51 @@ class ItemActivity extends \App\Pages\Base
         $i = 1;
         $detail = array();
         $conn = \ZDB\DB::getConnect();
-       
-
+        
+        $sql="CREATE    TABLE  itemactivity_tmp (
+          id int NOT NULL AUTO_INCREMENT,
+          item_id int , 
+          quantity decimal (11,3) , 
+          amount decimal (11,2) , 
+        
+   
+          KEY (item_id),
+          PRIMARY KEY (id)
+        )  engine=memory    ";
+        $conn->Execute($sql);
+        $conn->Execute("delete from itemactivity_tmp  ");
+                   
+               
         $sql = "
-         SELECT  t.*,
+           INSERT  INTO  itemactivity_tmp (item_id,quantity,amount ) 
+
+              SELECT  st.item_id,
           
-         (
-        SELECT  
-          
-          COALESCE(SUM(sc2.quantity), 0)  
-         FROM entrylist_view sc2
-          JOIN store_stock_view st2
-            ON sc2.stock_id = st2.stock_id
+          COALESCE(SUM(sc.quantity), 0) , 
+          COALESCE(SUM(sc.partion*sc.quantity), 0)  
+         FROM entrylist_view sc
+          JOIN store_stock_view st
+            ON sc.stock_id = st.stock_id
            
-              WHERE st2.item_id = t.item_id  
+              WHERE {$it} and sc.document_date  < " . $conn->DBDate($from) . " 
               
-              " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
-              " . ($emp > 0 ? " AND st2.emp_id = {$emp}  " : "") . "  
-              " . ($cat > 0 ? " AND st2.cat_id = {$cat}  " : "") . "  
-              AND sc2.document_date  < t.dt   
-              GROUP BY st2.item_id 
-                                 
-         ) as begin_quantity ,
-          
-    (
-        SELECT  
-          
-          COALESCE(SUM((st3.partion*sc3.quantity )), 0)  
-         FROM entrylist_view sc3
-          JOIN store_stock_view st3
-            ON sc3.stock_id = st3.stock_id
-          
-              WHERE st3.item_id = t.item_id  
-             " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
-             " . ($emp > 0 ? " AND st3.emp_id = {$emp}  " : "") . "  
-             " . ($cat > 0 ? " AND st3.cat_id = {$cat}  " : "") . "  
-              AND sc3.document_date  < t.dt   
-              GROUP BY st3.item_id 
-                                 
-         ) as begin_amount  
-                
+              " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
+              " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
+              " . ($cat > 0 ? " AND st.cat_id = {$cat}  " : "") . "  
+           
+             
+              GROUP BY st.item_id  ";
+               
+   
+       
+         $conn->Execute($sql);        
+        
+        $sql = "
+         SELECT     t.*,
+         
+         (select  (b.quantity) from  itemactivity_tmp b  where t.item_id = b.item_id limit 0,1 ) as  begin_quantity,
+         (select  (c.amount) from  itemactivity_tmp c where t.item_id = c.item_id  limit 0,1) as  begin_amount 
+         
           from (
            select
           st.item_id,
@@ -204,61 +212,9 @@ class ItemActivity extends \App\Pages\Base
               ORDER BY    ";
         
        $sql .= (  $fitem ? " t.itemname,t.dt " : " t.dt,t.itemname " );
-      
-  
-       
-        if ($itemid > 0) {
-            $flt = ($storeid > 0 ? " AND st.store_id = {$storeid} " : "")
-                 . ($emp > 0 ? " AND st.emp_id = {$emp} " : "")
-                 . ($cat > 0 ? " AND st.cat_id = {$cat} " : "");
-            $fromd = $conn->DBDate($from);
-            $tod = $conn->DBDate($to);
-
-            $sqlw = "
-            SELECT t.item_id, t.itemname, t.item_code, t.docs, t.dt,
-                   t.obin, t.obout, t.obinamount, t.oboutamount,
-                   COALESCE(MAX(o.q), 0) + COALESCE(SUM(d.q), 0) AS begin_quantity,
-                   COALESCE(MAX(o.a), 0) + COALESCE(SUM(d.a), 0) AS begin_amount
-            FROM (
-                SELECT st.store_id, st.item_id, st.itemname, st.item_code,
-                       GROUP_CONCAT(DISTINCT sc.document_id) AS docs,
-                       DATE(sc.document_date) AS dt,
-                       SUM(CASE WHEN sc.quantity > 0 THEN sc.quantity ELSE 0 END) AS obin,
-                       SUM(CASE WHEN sc.quantity < 0 THEN 0 - sc.quantity ELSE 0 END) AS obout,
-                       SUM(CASE WHEN (st.partion * sc.quantity) > 0 THEN (st.partion * sc.quantity) ELSE 0 END) AS obinamount,
-                       SUM(CASE WHEN (st.partion * sc.quantity) < 0 THEN 0 - (st.partion * sc.quantity) ELSE 0 END) AS oboutamount
-                FROM entrylist_view sc
-                JOIN store_stock_view st ON sc.stock_id = st.stock_id
-                WHERE {$it} {$flt}
-                  AND DATE(sc.document_date) >= {$fromd}
-                  AND DATE(sc.document_date) <= {$tod}
-                GROUP BY st.store_id, st.item_id, st.itemname, st.item_code, DATE(sc.document_date)
-            ) t
-            LEFT JOIN (
-                SELECT st.item_id, SUM(sc.quantity) AS q, SUM(st.partion * sc.quantity) AS a
-                FROM entrylist_view sc
-                JOIN store_stock_view st ON sc.stock_id = st.stock_id
-                WHERE st.item_id = {$itemid} {$flt}
-                  AND sc.document_date < {$fromd}
-                GROUP BY st.item_id
-            ) o ON o.item_id = t.item_id
-            LEFT JOIN (
-                SELECT st.item_id, DATE(sc.document_date) AS dt, SUM(sc.quantity) AS q, SUM(st.partion * sc.quantity) AS a
-                FROM entrylist_view sc
-                JOIN store_stock_view st ON sc.stock_id = st.stock_id
-                WHERE st.item_id = {$itemid} {$flt}
-                  AND DATE(sc.document_date) >= {$fromd}
-                  AND DATE(sc.document_date) <= {$tod}
-                GROUP BY st.item_id, DATE(sc.document_date)
-            ) d ON d.item_id = t.item_id AND d.dt < t.dt
-            GROUP BY t.store_id, t.item_id, t.itemname, t.item_code, t.docs, t.dt,
-                     t.obin, t.obout, t.obinamount, t.oboutamount
-            ORDER BY " . ($fitem ? " t.itemname, t.dt " : " t.dt, t.itemname ") . "
-            ";
-        }
-       
-      
         $rs = $conn->Execute($sql);
+        
+        
         $ba = 0;
         $bain = 0;
         $baout = 0;
@@ -359,7 +315,8 @@ class ItemActivity extends \App\Pages\Base
 
         }
 
-
+        $conn->Execute("drop TABLE if   exists itemactivity_tmp  ");
+   
         $header = array('datefrom'      => \App\Helper::fd($from),
                         "_detail"       => $detail,
                         'noshowpartion' => \App\System::getUser()->noshowpartion,
@@ -385,15 +342,11 @@ class ItemActivity extends \App\Pages\Base
         return $html;
     }
 
-    public function getData() {
-
-
-        $html = $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-
-        return $html;
-
-    }
+ 
 
 
 }
+ 
+
+
+ 
