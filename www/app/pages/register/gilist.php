@@ -742,6 +742,23 @@ class GIList extends \App\Pages\Base
         return '';
     }
 
+    /**
+     * Вага для ТТН НП: [загальна, одного місця], кг, рядками з крапкою; кома у введенні допускається.
+     * Не менше 0.1 кг (мінімум НП). Порожня або нечислова вага - [0, 0] (форма скаже «не вказано вагу»).
+     * «10», 2 місця -> ['10', '5'];  «1,5» -> ['1.5', '1.5'];  «0.04» -> ['0.1', '0.1']
+     */
+    public static function npWeight($text, $seats) {
+        $w = str_replace(array(',', ' '), array('.', ''), trim((string)$text));
+        if (!is_numeric($w) || doubleval($w) <= 0) {
+            return array(0, 0);
+        }
+        $w = max(0.1, doubleval($w));
+        $fmt = function ($v) {
+            return rtrim(rtrim(number_format($v, 3, '.', ''), '0'), '.');
+        };
+        return array($fmt($w), $fmt(max(0.1, $w / max(1, intval($seats)))));
+    }
+
     public function npOnSubmit($sender) {
         $params = array();
         $dt = $this->nppan->npform->deltype->getValue();  //0-отделение 1-поштомат 2-по адресу
@@ -755,10 +772,8 @@ class GIList extends \App\Pages\Base
         $params['Description'] = trim($this->nppan->npform->npdesc->getText());
         $params['CargoType'] = 'Cargo';
      
-        $params['Weight'] = $this->nppan->npform->npw->getText();
-        if ($params['SeatsAmount'] > 1) {
-            $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
-        }
+        //Weight - загальна вага відправлення (НП сама ділить її на місця), вага одного місця - лише в OptionsSeat
+        [$params['Weight'], $seatweight] = self::npWeight($this->nppan->npform->npw->getText(), $params['SeatsAmount']);
      
         if($dt==1) {
             $params['CargoType'] = 'Parcel';
@@ -768,7 +783,7 @@ class GIList extends \App\Pages\Base
                             'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
                             'volumetricLength' => intval( $this->nppan->npform->npgd->getText()),
                             'volumetricHeight' => intval( $this->nppan->npform->npgh->getText()),
-                            'weight' => $params['Weight']  
+                            'weight' => $seatweight  
                            
                           );
                 
