@@ -120,7 +120,7 @@
 
     </tr>
     <tr>
-        <td>Проход:</td>
+        <td>Прохід:</td>
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
@@ -148,7 +148,7 @@
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Проход мiнус операцiйнi витрати (виручка мiнус всi витрати)"></i>
+               title="Прохід мiнус операцiйнi витрати (виручка мiнус всi витрати)"></i>
         </td>
     </tr>
    {{#isinv}}   
@@ -165,7 +165,7 @@
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Проход на iнвестицiї"></i>
+               title="Прохід на iнвестицiї"></i>
         </td>
     </tr>
     {{/isinv}}     

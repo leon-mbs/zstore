@@ -35,7 +35,7 @@ class Orders extends \App\Pages\Base
         $statuses = System::getSession()->statuses;
         if (is_array($statuses) == false) {
             $statuses = array();
-            $this->setWarn('Нажміть перевірити з`єднання  ');
+            $this->setWarn("Натисніть перевірити з'єднання  ");
         }
 
         $defpaytype=intval($modules['ocpaytype']??0);
