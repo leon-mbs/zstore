@@ -525,9 +525,12 @@ class GIList extends \App\Pages\Base
         $this->_npvol = 0;
         $this->_npmaxside = 0;
         $this->_npalldims = true;
+        $noweight = array();
         foreach ($list as $it) {
             if ($it->weight > 0) {
                 $w += ($it->weight * $it->quantity);
+            } else {
+                $noweight[] = $it->itemname;
             }
             $p = $p + ($it->quantity * $it->price);
             
@@ -553,14 +556,19 @@ class GIList extends \App\Pages\Base
         
         $this->nppan->npform->npw->setText($w);
         $this->nppan->npform->npv->setText($v);
-        $this->nppan->npform->npback->setText(round($p));
         $this->nppan->npform->npcost->setText(round($p));
+        //накладений платіж - лише неоплачена частина (замовлення або самого документа)
+        $paydoc = ($order instanceof Document && $order->payamount > 0) ? $order : $this->_doc;
+        $back = $paydoc->payamount > 0 ? max(0, $paydoc->payamount - $paydoc->payed) : $p;
+        if ($order instanceof Document && $order->payamount > 0) {
+            $this->nppan->npform->npcost->setText(round($order->payamount));
+        }
+        $this->nppan->npform->npback->setText(round($back));
+        $this->nppan->npform->nppmback->setValue(round($back) > 0 ? 'Cash' : '0');
 
-        if ($order instanceof Document) {
-            if ($order->payamount > 0) {
-                $this->nppan->npform->npback->setText(round($order->payamount));
-                $this->nppan->npform->npcost->setText(round($order->payamount));
-            }
+        if (count($noweight) > 0) {
+            $this->setWarn(($w > 0 ? 'Вагу пораховано без товарів, у яких її немає в картці: ' : 'Вкажіть вагу вручну - її немає в картках товарів: ')
+                . implode(', ', array_slice($noweight, 0, 5)) . (count($noweight) > 5 ? '...' : ''));
         }
 
         $c = \App\Entity\Customer::load($this->_doc->customer_id);
@@ -588,7 +596,7 @@ class GIList extends \App\Pages\Base
         }          
         
         
-        $this->nppan->npform->baytel->setText($tel);
+        $this->nppan->npform->baytel->setText(self::npPhone($tel) ?: $tel);
         $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
         $this->nppan->npform->bayfirstname->setText($name[1]??'');
@@ -766,12 +774,30 @@ class GIList extends \App\Pages\Base
     
     
      
+    /**
+     * Телефон у форматі Нової пошти 380XXXXXXXXX; '' - якщо це не український мобільний/міський номер.
+     * «+38(068)063-30-25», «068 063 30 25», «380680633025» -> 380680633025
+     */
+    public static function npPhone($phone) {
+        $d = preg_replace('/\D+/', '', (string)$phone);
+        if (strlen($d) == 12 && substr($d, 0, 3) == '380') {
+            return $d;
+        }
+        if (strlen($d) == 10 && $d[0] == '0') {
+            return '38' . $d;
+        }
+        if (strlen($d) == 9) {
+            return '380' . $d;
+        }
+        return '';
+    }
+
     public function npOnSubmit($sender) {
         $params = array();
         $dt = $this->nppan->npform->deltype->getValue();  //0-отделение 1-поштомат 2-по адресу
 
         $params['DateTime'] = date('d.m.Y', $this->nppan->npform->npdate->getDate());
-        $params['ServiceType'] = 'WarehouseWarehouse';
+        $params['ServiceType'] = $dt == 2 ? 'WarehouseDoors' : 'WarehouseWarehouse';
         $params['PaymentMethod'] = $this->nppan->npform->nppm->getValue();
         $params['PayerType'] = $this->nppan->npform->nppt->getValue();
         $params['Cost'] = $this->nppan->npform->npcost->getText();
@@ -785,15 +811,6 @@ class GIList extends \App\Pages\Base
         }
           
        
-       //проверка  введеных параметров
-        if (($params['Weight'] > 0) == false) {
-            $this->setError('Не вказано вагу');
-            return;
-        }
-        if (strlen($params['Description']) == 0) {
-            $this->setError('Не вказано опис');
-            return;
-        }     
         if($dt==1) {
             $params['CargoType'] = 'Parcel';
             unset( $params['VolumeGeneral'])  ;
@@ -843,7 +860,35 @@ class GIList extends \App\Pages\Base
         }
 
 
-   
+        //проверка  введеных параметров
+        $f = $this->nppan->npform;
+        $err = array();
+        if (($params['Weight'] > 0) == false) {
+            $err[] = 'вагу';
+        }
+        if (strlen($params['Description']) == 0) {
+            $err[] = 'опис';
+        }
+        if (strlen($f->baycity->getKey()) < 2) {
+            $err[] = 'місто отримувача (оберіть зі списку)';
+        }
+        if ($dt != 2 && strlen($f->baypoint->getKey()) == 0) {
+            $err[] = ($dt == 1 ? 'поштомат' : 'відділення') . ' отримувача (оберіть зі списку)';
+        }
+        if ($dt == 2 && (strlen(trim($f->bayaddr->getText())) == 0 || strlen(trim($f->bayhouse->getText())) == 0)) {
+            $err[] = 'вулицю і будинок отримувача';
+        }
+        if (strlen(trim($f->baylastname->getText())) == 0 || strlen(trim($f->bayfirstname->getText())) == 0) {
+            $err[] = 'прізвище та ім\'я отримувача';
+        }
+        if (self::npPhone($f->baytel->getText()) == '') {
+            $err[] = 'телефон отримувача (380XXXXXXXXX)';
+        }
+        if (count($err) > 0) {
+            $this->setError('Не вказано: ' . implode(', ', $err));
+            return;
+        }
+        $f->baytel->setText(self::npPhone($f->baytel->getText()));
         $api = new \App\Modules\NP\Helper();
 
         $sender = array();
@@ -862,7 +907,7 @@ class GIList extends \App\Pages\Base
 
             $resultc = $api->model('Counterparty')->getCounterpartyContactPersons($result['data'][0]['Ref']);
             if ($resultc['success'] == false) {
-                $error = array_pop($result['errors'] );
+                $error = array_pop($resultc['errors'] );
                 $this->setError($error) ;
                 return;
             }
