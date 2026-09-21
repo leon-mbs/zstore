@@ -45,7 +45,7 @@
                        
                             <div class="form-check">
                                 <input zippy="sell2" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="sell2">Продажа без копiйок </label>
+                                <label class="form-check-label" for="sell2">Продаж без копiйок </label>
                                 <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"    
                                     title="Формувати продажу без копiйок якщо в налаштуваннях  заданi копiйки "></i>
                             </div>                            
@@ -324,7 +324,7 @@
                                <div class="form-group">
                                 <label for="checkslogan">Фраза в кiнцi чеку</label>
                                 <textarea   class="form-control"   zippy="checkslogan"></textarea>
-                                <small  class="compact">Наприклад, 'Дякуємо за довiру до нас!'. Кожна строка - окрема фраза. 
+                                <small  class="compact">Наприклад, 'Дякуємо за довiру до нас!'. Кожен рядок - окрема фраза. 
                                  Якщо бiльш нiж одна - буде вибиратись випадково.</small>
 
                             </div>                            
@@ -493,14 +493,14 @@
                             </div>
 
                              <div class="form-group  ">
-                                <label for="smscustlang">Мова скрипта</label>
+                                <label for="smscustlang">Мова скрипту</label>
                                 <select class="form-control" zippy="smscustlang">
                           
                                 </select>
                                   <small data-label="smscustlang">JS не пiдходить для вiдправки в  фоновому  режимi, наприклад з планувальника</small>
                             </div>
                               <div class="form-group  ">
-                                <label for="smscustscript">Код скрипта</label>
+                                <label for="smscustscript">Код скрипту</label>
                                 <textarea style="height:400px" class="form-control" zippy="smscustscript">
                           
                                 </textarea>
@@ -512,9 +512,9 @@
                                    Скрипт, що виконує  запит  до  вибраного  SMS сервiсу, має реалiзувати 
                                    тiло вбудованої функцiї яка буде викликатись системою з двома  строковими параметрами: phone i sms. 
                                    Третiй параметр - функцiя callback що приймає  строковий параметр. В  callback можна передати  строку помилки, якщо така  виникне.
-                                   Якщо помилок  нема  callback викликається  з  пустою  строкою.
+                                   Якщо помилок  нема  callback викликається  з  порожнім  рядком.
                                    <br>  <b>PHP</b><br>
-                                   Для PHP скрипта на  входi автоматично  створяться  змiннi $phonе i $sms з данними. 
+                                   Для PHP скрипту на  входi автоматично  створяться  змiннi $phonе i $sms з даними. 
                                    Скрипт  має повернути пусту  строку  або  текст  помилки, якщо така  виникла 
                                    <br><br>Технiчно пiд виглядом  SMS  вiдправки  може бути реалiзований будь який  сервiс  повiдомлень що має  вiдповiдний API
                                  </details>
