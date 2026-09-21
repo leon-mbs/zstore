@@ -1,71 +1,69 @@
 <html >
   <head>
       <title> Стан  доставок   </title>
-
     </head>
     <body>
         <div class="row">
             <div class="col-12   col-xl-10"  >
-
                 <h3>Стан  доставок</h3>
-                <small>ТТН в  станi Готовий до вiдправки та В доставцi</small>
-                    <div class="col-12 col-md-10 col-xl-8" >
-              
-                            <div class="navbar">
-                                <form zippy="searchform"  >
-                                    <div class="row  ">
-                                    <label class="col-form-label col-auto" for="searchnumber"> ЕН </label>
-                                    <div class="col-auto  ">
-                                      <input class="form-control me-2" type="text" zippy="searchnumber" style="width:200px">
-                                    </div>
-                                    <label class="col-form-label col-auto" for="searchcust"> Покупець </label>
-                                    <div class="col-auto  ">
-                                    <select class="form-control select2" zippy="searchcust" >
-                                       <option value="0">Не обрано </option>
-                                    </select>
-                                    </div>
-                                    <div class="col-auto  ">
-                                    <input type="submit" class=" ms-2 btn btn-success  " value="Шукати">
-                                 </div>
-                               </div>
-                                </form>
+                <small>ТТН з експрес-накладною Нової пошти. Проблемні (повернення, відмова, номер не знайдено) - першими, з червоною позначкою. Список береться з бази, «Оновити статуси з НП» питає Нову пошту</small>
+                <div class="navbar">
+                    <form zippy="searchform"  >
+                        <div class="row g-2 align-items-center">
+                            <div class="col-auto">
+                                <select class="form-control" zippy="searchmode"></select>
                             </div>
-                  
+                            <label class="col-form-label col-auto" for="searchnumber"> ЕН / ТТН </label>
+                            <div class="col-auto  ">
+                                <input class="form-control" type="text" zippy="searchnumber" style="width:180px">
+                            </div>
+                            <label class="col-form-label col-auto" for="searchcust"> Покупець </label>
+                            <div class="col-auto  ">
+                                <select class="form-control select2" zippy="searchcust" >
+                                    <option value="0">Не обрано </option>
+                                </select>
+                            </div>
+                            <div class="col-auto  ">
+                                <input type="submit" class="btn btn-success" value="Шукати">
+                                <a zippy="reset" class="btn btn-outline-secondary">Скинути</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                
-                &nbsp; &nbsp;  <a zippy="refresh">Оновити</a>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <a zippy="refresh" class="btn btn-primary btn-sm" onclick="return check_refresh(this)"><i class="fa fa-sync"></i> Оновити статуси з НП</a>
+                    <span zippy="summary" class="text-muted"></span>
+                </div>
                 <table class="table  table-sm">
                     <tr>
                         <th>ТТН</th>
-                        <th>Сума</th>
+                        <th>Дата</th>
                         <th>Покупець</th>
+                        <th class="text-end">Сума</th>
                         <th>Експрес-накладна</th>
                         <th>Стан</th>
+                        <th>Планова доставка</th>
                         <th> </th>
                     </tr>
                     <tr zippy="doclist">
-                        <td zippy="document_number"></td>
-                        <td zippy="amount"></td>
+                        <td><a zippy="document_number" title="Відкрити документ"></a></td>
+                        <td zippy="document_date"></td>
                         <td zippy="customer_name"></td>
-                        <td zippy="ship_number"></td>
-                        <td zippy="state"></td>
-                        <td><a target="_blank" zippy="print" title="Друк маркування"><i class="fa fa-print"></i></a> </td>
+                        <td zippy="amount" class="text-end"></td>
+                        <td><a zippy="ship_number" target="_blank" title="Відстеження на сайті Нової пошти"></a></td>
+                        <td><span zippy="badge"></span> <span zippy="state"></span><br><small zippy="checked" class="text-muted"></small></td>
+                        <td zippy="plan"></td>
+                        <td><a target="_blank" zippy="print" title="Друк маркування 100x100"><i class="fa fa-print"></i></a> </td>
                     </tr>
                 </table>
             </div>
         </div>
   <script>
-  
-                     
        function check_refresh(ele){
-            
-           document.getElementById('dialogwait').showModal()
-            return true;
-       
+           var d = document.getElementById('dialogwait');
+           if (d && d.showModal) d.showModal();
+           return true;
         }
   </script>
-  
-  
     </body>
 </html>

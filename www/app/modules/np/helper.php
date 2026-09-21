@@ -1126,26 +1126,25 @@ class Helper
 
     //проверка  экспрес накладной
     public function check($docs) {
-        $ar = array();
-        foreach ($docs as $track) {
-            $ar[] = array('DocumentNumber' => $track);
-        }
-        if (count($ar) == 0) {
-            return array();
-        }
-
-        $params = array('Documents' => $ar);
         $list = array();
+        //НП приймає до 100 номерів за один запит
+        foreach (array_chunk(array_values(array_unique($docs)), 100) as $chunk) {
+            $ar = array();
+            foreach ($chunk as $track) {
+                $ar[] = array('DocumentNumber' => $track);
+            }
 
-        $res = $this
-            ->model('TrackingDocument')
-            ->method('getStatusDocuments')
-            ->params($params)
-            ->execute();
+            $res = $this
+                ->model('TrackingDocument')
+                ->method('getStatusDocuments')
+                ->params(array('Documents' => $ar))
+                ->execute();
 
-        if ($res['success'] == true) {
-            foreach ($res['data'] as $row) {
-                $list[$row['Number']] = array('StatusCode' => $row['StatusCode'], 'Status' => $row['Status']);
+            if ($res['success'] == true) {
+                foreach ($res['data'] as $row) {
+                    $list[$row['Number']] = array('StatusCode' => $row['StatusCode'], 'Status' => $row['Status'],
+                        'ScheduledDeliveryDate' => $row['ScheduledDeliveryDate'] ?? '');
+                }
             }
         }
         return $list;
