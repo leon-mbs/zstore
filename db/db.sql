@@ -110,7 +110,8 @@ CREATE TABLE documents (
   KEY parent_id (parent_id),
   KEY meta_id (meta_id),
   KEY document_number (document_number),
-  KEY state (state)
+  KEY state (state),
+  KEY lastupdate (lastupdate)
 
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 

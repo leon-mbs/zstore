@@ -44,7 +44,12 @@ class Order extends \App\Pages\Base
          
         $dostore= false;
         if($docid==0) {
-            $last = Document::getFirst("state > 3 and  meta_name='Order'","document_id desc");
+            //  сначала  номер  последнего  заказа  (по  индексу),  потом  чтение  по  ключу:
+            //  getFirst  делает  "select * from documents_view ... order by document_id desc"  и  читает  content  всех  заказов
+            $lastid = intval(\ZDB\DB::getConnect()->GetOne("select  document_id  from  documents
+                              where  meta_id = (select meta_id from metadata where meta_name = 'Order')  and  state > 3
+                              order  by  document_id desc  limit 1"));
+            $last = $lastid > 0 ? Document::load($lastid) : null;
             if($last != null){
                 $dostore = $last->getHD('dostore',0)==1;
             }

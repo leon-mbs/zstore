@@ -30,7 +30,8 @@ class Main extends Base
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
-        $this->_tvars['dashboard'] =  (($user->dashboard ==1 ) ||  ($user->rolename=='admins') );
+        //  показывать  дашборд  или  нет  -  по  флагу  роли  (раньше  админ  видел  его  всегда  и  не  мог  отключить)
+        $this->_tvars['dashboard'] = ($user->dashboard == 1);
      
         $br = '';
         $cstr = '';
@@ -102,10 +103,13 @@ class Main extends Base
         //недавние  документы
      
           
-            $data = array(); 
-            foreach( \App\Entity\Doc\Document::findYield("  lastupdate >=  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ","lastupdate desc,document_id desc") as $d ){
-               
-               $data[] = $d ; 
+            $data = array();
+            //  берем  только  поля  для  таблицы:  Document::findYield  читает  и  content  (XML  всего  документа)
+            $sql = "select  d.document_id,d.document_number,d.meta_desc,d.state,d.username,d.amount,unix_timestamp(d.lastupdate) as lastupdate  from  documents_view d
+                      where  d.lastupdate >= " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br}
+                      order  by  d.lastupdate desc, d.document_id desc ";
+            foreach ($conn->SelectLimit($sql, 100, 0) as $row) {
+                $data[] = new \App\DataItem($row);
             }
             
             
@@ -147,6 +151,14 @@ class Main extends Base
         
 
         
+        if ($this->_tvars['dashboard'] == false) {
+            //  ниже  -  только  данные  дашборда:  десятки  выборок  по  всем  документам.  Не  показываем  -  не  считаем
+            $this->_tvars['ps'] = $this->_tvars['pc'] = $this->_tvars['ts'] = '[]';
+            $this->_tvars['mc3'] = $this->_tvars['mc6'] = $this->_tvars['mc12'] = false;
+            $this->_tvars['biorders'] = $this->_tvars['biitemscnt'] = $this->_tvars['bicredit'] = $this->_tvars['bidebet'] = '';
+            return;
+        }
+
         $mc = 3;
         if($mnumber==2) $mc=6;
         if($mnumber==3) $mc=12;
@@ -339,7 +351,8 @@ class Main extends Base
         $row->add(new Label('wmq_item_code', $item->item_code));
         
         
-        $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
+        //  нужно  только  имя  контрагента  -  не  читаем  content  документа
+        $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc","customer_name") ;
         
         $row->add(new Label('wmq_cust', $d->customer_name ?? '-'));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
@@ -486,7 +499,8 @@ class Main extends Base
         foreach ($rc as $row) {
             $i++;
             
-        $d = \App\Entity\Doc\Document::getFirst("  meta_name='GoodsReceipt'  {$br}  and document_id in (select document_id from entrylist_view where  item_id = {$row['item_id']}) ","document_id desc") ;
+        //  нужно  только  имя  контрагента  -  не  читаем  content  документа
+        $d = \App\Entity\Doc\Document::getFirst("  meta_name='GoodsReceipt'  {$br}  and document_id in (select document_id from entrylist_view where  item_id = {$row['item_id']}) ","document_id desc","customer_name") ;
             
 
             $data['A' . $i] = $row['cat_name'];
