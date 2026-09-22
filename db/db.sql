@@ -1,4 +1,4 @@
-SET NAMES 'utf8';
+SET NAMES 'utf8mb4';
 
 CREATE TABLE branches (
   branch_id int(11) NOT NULL AUTO_INCREMENT,
