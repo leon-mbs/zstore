@@ -131,6 +131,12 @@ class OLAP extends \App\Pages\Base
             $this->setError('Не вибраний тип') ;
             return;
         }
+        //  оба  измерения  обязательны:  если  выбрано  только  одно,  "Виміри однакові"  не  срабатывает,
+        //  а  в  запрос  отчета  вместо  имени  поля  подставляется  0  -  ошибка  SQL
+        if(strlen($hor)==0 || $hor=='0' || strlen($ver)==0 || $ver=='0') {
+            $this->setError('Не вибрані виміри по горизонталі і вертикалі') ;
+            return;
+        }
         if($hor==$ver) {
             $this->setError('Виміри однакові') ;
             return;
@@ -242,6 +248,11 @@ class OLAP extends \App\Pages\Base
         $type = $this->startform->sttype->getValue();
         $hor = $this->startform->sthor->getValue();
         $ver = $this->startform->stver->getValue();
+        //  имена  полей  подставляются  в  SQL  -  допускаем  только  измерения  из  списка  формы
+        $dims = array_keys($this->startform->sthor->getOptionList() ?? []);
+        if(!in_array($hor, $dims, true) || !in_array($ver, $dims, true) || $hor == $ver) {
+            return '';
+        }
 
 
         $sql = $this->getBaseSql($type)  ;
