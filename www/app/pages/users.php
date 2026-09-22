@@ -45,7 +45,7 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('editpass'));
         $this->editpan->editform->add(new TextInput('editemail'));
         $this->editpan->editform->add(new TextInput('editphone'));
-        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', 'disabled<>1', 'rolename')));
+        $this->editpan->editform->add(new DropDownChoice('editrole', UserRole::findArray('rolename', 'disabled<>1', 'rolename')))->onChange($this,'onRole');
 
         $this->editpan->editform->add(new CheckBox('editdisabled'));
         $this->editpan->editform->add(new CheckBox('editonlymy'));
@@ -90,8 +90,7 @@ class Users extends \App\Pages\Base
         $this->_tvars['otpcode']  = false; //todo
         
         $this->user = $sender->getOwner()->getDataItem();
-        $this->_tvars["isroleadmins"] = $this->user->rolename == 'admins';
-        
+         
         
         $this->editpan->editform->editemail->setText($this->user->email);
         $this->editpan->editform->editphone->setText($this->user->phone);
@@ -109,6 +108,9 @@ class Users extends \App\Pages\Base
         $this->editpan->editform->brow->Reload();
         $this->editpan->editform->srow->Reload();
         $this->editpan->editform->mrow->Reload();
+        
+        $this->onRole($this->editpan->editform->editrole);
+         
     }
 
     public function saveOnClick($sender) {
@@ -231,6 +233,11 @@ class Users extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
+    }
+     public function onRole($sender) {
+        
+       $this->_tvars["isroleadmins"] = $sender->getValueName() == 'admins';
+        
     }
 
     //удаление  юзера
