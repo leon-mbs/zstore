@@ -40,6 +40,11 @@ class Item extends \ZCL\DB\Entity
     protected function afterLoad() {
 
 
+        if (strlen($this->detail ?? '') == 0 && array_key_exists('price1', $this->getData())) {
+            //detail  уже  разобран (объект  собран  из  данных  другого  ТМЦ) - не  затираем  поля
+            parent::afterLoad();
+            return;
+        }
         $xml = @simplexml_load_string($this->detail);
 
         $this->price1 = (string)($xml->price1[0]);
@@ -143,6 +148,7 @@ class Item extends \ZCL\DB\Entity
         
         
         parent::afterLoad();
+        $this->detail = ''; //уже  разобрано  в  поля, beforeSave  собирает  заново
     }
 
     protected function beforeSave() {

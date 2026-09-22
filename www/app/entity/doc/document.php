@@ -111,6 +111,7 @@ class Document extends \ZCL\DB\Entity
             $this->lastupdate = @strtotime($this->lastupdate);
         }     
         $this->unpackData();
+        $this->content = ''; //уже  разобрано  в headerdata/detaildata, packData  собирает  заново
     }
 
     protected function beforeSave() {
@@ -467,8 +468,11 @@ class Document extends \ZCL\DB\Entity
             $this->meta_name = $metarow['meta_name'];
         }
         $class = "\\App\\Entity\\Doc\\" . $this->meta_name;
-        $doc = new $class($this->getData());
-        $doc->unpackData();
+        $doc = new $class($this->getData());  //конструктор (setData -> afterLoad) сам  разбирает content
+        if (strlen($this->content ?? '') == 0) {  //content  уже  очищен  в afterLoad - берем  разобранные  данные
+            $doc->headerdata = $this->headerdata;
+            $doc->detaildata = $this->detaildata;
+        }
        // $doc->document_number=$this->document_number;
         $doc->document_date=$this->document_date;
         $doc->lastupdate=$this->lastupdate;
