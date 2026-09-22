@@ -169,11 +169,40 @@ class Document extends \ZCL\DB\Entity
 
         $this->content .= "</doc>";
   
-        $this->content .= serialize($this->detaildata);    
+        $this->content .= serialize(self::slimDetails($this->detaildata));    
         
         
         
         
+    }
+
+    /**
+     * Облегчает  ТМЦ в  строках  документа  перед  записью  в  content:
+     * убирает  поле  detail (сырой  XML  карточки, уже  разобранный  в  поля  в  Item::afterLoad)
+     * и  поля  со  значением  null (при  чтении  __get  и  так  вернет  null).
+     * Пустые  строки  остаются - в  коде  много  strlen($item->...), null  там  дает  deprecated.
+     * Объекты  в  памяти  не  меняются - только  копии  для  записи.
+     */
+    private static function slimDetails($data) {
+        if (is_array($data)) {
+            foreach ($data as $k => $v) {
+                $data[$k] = self::slimDetails($v);
+            }
+            return $data;
+        }
+        if ($data instanceof \App\Entity\Item) {
+            $fields = array_filter($data->getData(), function ($v) {
+                return $v !== null;
+            });
+            unset($fields['detail']);
+            $slim = clone $data;
+            //напрямую, без  конструктора, чтобы  init() не  подставил  значения  по  умолчанию
+            (function ($f) {
+                $this->fields = $f;
+            })->call($slim, $fields);
+            return $slim;
+        }
+        return $data;
     }
 
     /**
