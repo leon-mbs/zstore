@@ -67,7 +67,7 @@ class Item extends \ZCL\DB\Entity
         $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
         $this->maxsize = (string)$xml->maxsize[0];
-        $this->volume = (string)$xml->volume[0];
+
         $this->lost = (string)$xml->lost[0];
         $this->customsize = (string)$xml->customsize[0];
      //   $this->manufacturer = (string)$xml->manufacturer[0];
@@ -137,6 +137,9 @@ class Item extends \ZCL\DB\Entity
         }
         
         $this->isforbar = (string)$xml->isforbar[0];
+        $this->sizeh = (string)$xml->sizeh[0];
+        $this->sizew = (string)$xml->sizew[0];
+        $this->sized = (string)$xml->sized[0];
         
         
         parent::afterLoad();
@@ -216,7 +219,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
         $this->detail .= "<weight>{$this->weight}</weight>";
         $this->detail .= "<maxsize>{$this->maxsize}</maxsize>";
-        $this->detail .= "<volume>{$this->volume}</volume>";
+
         $this->detail .= "<lost>{$this->lost}</lost>";
         $this->detail .= "<customsize>{$this->customsize}</customsize>";
         $this->detail .= "<sef>{$this->sef}</sef>";
@@ -264,6 +267,9 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<isvarfood>{$this->isvarfood}</isvarfood>";
         $this->detail .= "<isnds>{$this->isnds}</isnds>";
         $this->detail .= "<nds>{$this->nds}</nds>";
+        $this->detail .= "<sizeh>{$this->sizeh}</sizeh>";
+        $this->detail .= "<sizew>{$this->sizew}</sizew>";
+        $this->detail .= "<sized>{$this->sized}</sized>";
         $this->detail .= "<foodvars>". serialize($this->foodvars) ."</foodvars>";
 
 

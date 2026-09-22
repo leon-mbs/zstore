@@ -145,8 +145,10 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editexcise'));
         $this->itemdetail->add(new TextInput('editcostprice'));
         $this->itemdetail->add(new TextInput('editweight'));
-        $this->itemdetail->add(new TextInput('editmaxsize'));
-        $this->itemdetail->add(new TextInput('editvolume'));
+        $this->itemdetail->add(new TextInput('editsizeh'));
+        $this->itemdetail->add(new TextInput('editsizew'));
+        $this->itemdetail->add(new TextInput('editsized'));
+
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
         $this->itemdetail->add(new TextInput('editterm'));
@@ -373,8 +375,10 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editbarcode2->setText($this->_item->bar_code2);
         $this->itemdetail->editmsr->setText($this->_item->msr);
         $this->itemdetail->editnotes->setText($this->_item->notes);
-        $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
-        $this->itemdetail->editvolume->setText($this->_item->volume);
+        $this->itemdetail->editsizeh->setText($this->_item->sizeh);
+        $this->itemdetail->editsizew->setText($this->_item->sizew);
+        $this->itemdetail->editsized->setText($this->_item->sized);
+
         $this->itemdetail->editlost->setText($this->_item->lost);
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
@@ -527,8 +531,10 @@ class ItemList extends \App\Pages\Base
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->notes = $this->itemdetail->editnotes->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
-        $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
-        $this->_item->volume = $this->itemdetail->editvolume->getText();
+        $this->_item->sizeh = $this->itemdetail->editsizeh->getText();
+        $this->_item->sizew = $this->itemdetail->editsizew->getText();
+        $this->_item->sized = $this->itemdetail->editsized->getText();
+
         $this->_item->lost = $this->itemdetail->editlost->getText();
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
