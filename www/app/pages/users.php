@@ -71,9 +71,12 @@ class Users extends \App\Pages\Base
         $this->editpan->setVisible(true);
         // Очищаем  форму
         $this->editpan->editform->clean();
-        $this->editpan->editform->brow->Reload();
-
+        // новий користувач — не адмін: інакше блок доступу лишався схованим після редагування адміністратора
         $this->user = new User();
+        $this->_tvars["isroleadmins"] = false;
+        $this->editpan->editform->brow->Reload();
+        $this->editpan->editform->srow->Reload();
+        $this->editpan->editform->mrow->Reload();
     }
 
     public function onEdit($sender) {
@@ -180,7 +183,12 @@ class Users extends \App\Pages\Base
            $this->user->userpass =''; 
         }
 
-        if($this->_tvars["usebranch"]   ) {
+        // для ролі admins списки філій/складів/рахунків не потрібні (адміну доступно все) і у формі сховані —
+        // не вимагаємо їх, інакше адміністратора не можна зберегти («Не вибраний жоден склад»)
+        $selrole = UserRole::load($this->user->role_id);
+        if ($selrole != null && $selrole->rolename == 'admins') {
+            // без обмежень
+        } elseif($this->_tvars["usebranch"]   ) {
             $barr = array();
             foreach ($this->editpan->editform->brow->getDataRows() as $row) {
                 $item = $row->getDataItem();

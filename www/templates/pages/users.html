@@ -120,9 +120,7 @@
                    </div>
                    </div>
                    
-                    {{^isroleadmins}}
-                    
-                    <div class="col-4">
+                    <div class="col-4" id="useracl" style="{{#isroleadmins}}display:none{{/isroleadmins}}">
                   
 
                      {{#usebranch}}
@@ -171,8 +169,6 @@
                         </div>
                      </div>   
                    </div>
-                   
-                    {{/isroleadmins}}
                   
                     <div class="col-12 mt-2">
                       
@@ -187,6 +183,13 @@
 
         </div>
         <script>
+            // доступ до складів/рахунків/філій потрібен лише не-адміну: блок іде за роллю, вибраною у формі
+            document.addEventListener('change', function (e) {
+                if (!e.target || e.target.id !== 'editrole') { return; }
+                var box = document.getElementById('useracl'), opt = e.target.options[e.target.selectedIndex];
+                if (box) { box.style.display = opt && opt.text.trim() === 'admins' ? 'none' : ''; }
+            });
+
             function check_remove() {
 
                 return confirm("Видалити користувача?")
