@@ -39,7 +39,9 @@ class Item extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
-
+        if (strlen($this->detail ?? '') == 0) {
+            return;
+        }
         $xml = @simplexml_load_string($this->detail);
 
         $this->price1 = (string)($xml->price1[0]);
@@ -141,7 +143,7 @@ class Item extends \ZCL\DB\Entity
         $this->sizew = (string)$xml->sizew[0];
         $this->sized = (string)$xml->sized[0];
         
-        
+        $this->detail ='';
         parent::afterLoad();
     }
 

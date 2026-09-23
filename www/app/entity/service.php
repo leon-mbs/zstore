@@ -17,6 +17,9 @@ class Service extends \ZCL\DB\Entity
 
     protected function afterLoad() {
 
+        if (strlen($this->detail ?? '') == 0) {
+            return;
+        }
 
         $xml = @simplexml_load_string($this->detail);
 
@@ -39,7 +42,7 @@ class Service extends \ZCL\DB\Entity
            $this->itemset = [];
         }
 
-
+        $this->detail ='';
         parent::afterLoad();
     }
 
