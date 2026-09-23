@@ -216,6 +216,41 @@ class Helper
         return $xml->asXML();
     }
 
+    /** Файл с адресами api.novaposhta.ua, которые недавно долго соединялись: {ip: до_какого_времени}. */
+    private static function npSlowFile()
+    {
+        return sys_get_temp_dir() . '/zippy_np_slow_ips.json';
+    }
+
+    /** Адреса API НП из DNS, сначала те, что в последнее время отвечали нормально (пусто — без подмены, как раньше). */
+    private static function npAddresses()
+    {
+        $ips = @gethostbynamel('api.novaposhta.ua');
+        if (!$ips || count($ips) < 2) {
+            return array();
+        }
+        $slow = @json_decode((string)@file_get_contents(self::npSlowFile()), true);
+        $slow = is_array($slow) ? $slow : array();
+        usort($ips, function ($a, $b) use ($slow) {
+            return (int)(($slow[$a] ?? 0) > time()) - (int)(($slow[$b] ?? 0) > time());
+        });
+        return $ips;
+    }
+
+    /** Соединение было долгим — адреса, стоявшие перед ответившим, пометить медленными на 15 мин. */
+    private static function npMarkSlow(array $ips, $ok)
+    {
+        $slow = @json_decode((string)@file_get_contents(self::npSlowFile()), true);
+        $slow = is_array($slow) ? $slow : array();
+        foreach ($ips as $ip) {
+            if ($ip === $ok) {
+                break;
+            }
+            $slow[$ip] = time() + 900;
+        }
+        @file_put_contents(self::npSlowFile(), json_encode($slow), LOCK_EX);
+    }
+
     /**
      * Make request to NovaPoshta API.
      *
@@ -254,7 +289,19 @@ class Helper
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                // без таймаутов curl ждал соединения до 300 с: если один из адресов api.novaposhta.ua не отвечает,
+                // запрос висел минутами и держал PHP-сессию (вся вкладка Zippy «крутилась»)
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                // адрес, который недавно долго соединялся, — в конец очереди на 15 мин
+                $npIps = self::npAddresses();
+                if ($npIps) {
+                    curl_setopt($ch, CURLOPT_RESOLVE, array('api.novaposhta.ua:443:' . implode(',', $npIps)));
+                }
                 $result = curl_exec($ch);
+                if ($npIps && curl_getinfo($ch, CURLINFO_CONNECT_TIME) > 1.5) {
+                    self::npMarkSlow($npIps, (string)curl_getinfo($ch, CURLINFO_PRIMARY_IP));
+                }
                 
                 if (curl_errno($ch) > 0) {
                     $msg = "sign server error: ".curl_error($ch);
