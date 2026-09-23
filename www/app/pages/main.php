@@ -31,7 +31,7 @@ class Main extends Base
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
         $this->_tvars['dashboard'] =  (($user->dashboard ==1 ) ||  ($user->rolename=='admins') );
-     
+ 
         $br = '';
         $cstr = '';
         $brpay = '';
@@ -146,6 +146,11 @@ class Main extends Base
             $doclist->Reload();
         
 
+        
+        if($this->_tvars['dashboard'] != true){
+            return;
+        }
+        
         
         $mc = 3;
         if($mnumber==2) $mc=6;
