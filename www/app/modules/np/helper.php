@@ -254,8 +254,17 @@ class Helper
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                         
                 $result = curl_exec($ch);
-                
+            
+            
+              //для  заопоминания  медленного  IP
+              //  $t=      curl_getinfo($ch, CURLINFO_CONNECT_TIME);   
+              //  $ip=      curl_getinfo($ch, CURLINFO_PRIMARY_IP) ;  
+              //  curl_setopt($ch, CURLOPT_RESOLVE, array('api.novaposhta.ua:443:' . implode(',', $npIps)));
+             
                 if (curl_errno($ch) > 0) {
                     $msg = "sign server error: ".curl_error($ch);
                     $msg = str_replace("'", "\"", $msg) ;

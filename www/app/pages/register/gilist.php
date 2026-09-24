@@ -740,7 +740,7 @@ class GIList extends \App\Pages\Base
         $params['PaymentMethod'] = $this->nppan->npform->nppm->getValue();
         $params['PayerType'] = $this->nppan->npform->nppt->getValue();
         $params['Cost'] = $this->nppan->npform->npcost->getText();
-        $params['Weight'] = $this->nppan->npform->npcost->getText();
+        $params['Weight'] = $this->nppan->npform->npw->getText();
         $params['VolumeGeneral'] = $this->nppan->npform->npv->getText();
         $params['SeatsAmount'] = 1;
         $params['Description'] = trim($this->nppan->npform->npdesc->getText());
