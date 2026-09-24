@@ -148,6 +148,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editsizeh'));
         $this->itemdetail->add(new TextInput('editsizew'));
         $this->itemdetail->add(new TextInput('editsized'));
+        $this->itemdetail->add(new TextInput('editrecomqty'));
 
         $this->itemdetail->add(new TextInput('editcustomsize'));
         $this->itemdetail->add(new TextInput('editwarranty'));
@@ -378,6 +379,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editsizeh->setText($this->_item->sizeh);
         $this->itemdetail->editsizew->setText($this->_item->sizew);
         $this->itemdetail->editsized->setText($this->_item->sized);
+        $this->itemdetail->editrecomqty->setText($this->_item->recomqty);
 
         $this->itemdetail->editlost->setText($this->_item->lost);
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
@@ -534,6 +536,13 @@ class ItemList extends \App\Pages\Base
         $this->_item->sizeh = $this->itemdetail->editsizeh->getText();
         $this->_item->sizew = $this->itemdetail->editsizew->getText();
         $this->_item->sized = $this->itemdetail->editsized->getText();
+        //рекомендована кількість: кома -> крапка, не число - помилка
+        $v = str_replace([',', ' '], ['.', ''], trim($this->itemdetail->editrecomqty->getText()));
+        if ($v !== '' && !preg_match('/^\d{1,7}(\.\d{1,3})?$/', $v)) {
+            $this->setError('Рек. кількість - лише число, наприклад 12.5');
+            return;
+        }
+        $this->_item->recomqty = $v;
 
         $this->_item->lost = $this->itemdetail->editlost->getText();
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();

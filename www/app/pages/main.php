@@ -77,7 +77,7 @@ class Main extends Base
         //минимальное количество
        
             $data = array();
-            $sql = "select coalesce(t.qty,0) as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+            $sql = "select coalesce(t.qty,0) as qty, i.minqty,ExtractValue(i.detail,'/detail/recomqty') as recomqty,i.itemname,i.item_code,i.item_id   from 
            items  i 
             join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
                on t.item_id = i.item_id
@@ -349,6 +349,7 @@ class Main extends Base
         $row->add(new Label('wmq_cust', $d->customer_name ?? '-'));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
+        $row->add(new Label('wmq_recomqty', doubleval($item->recomqty) > 0 ? H::fqty($item->recomqty) : ''));
     }
 
     public function rdoclistOnRow($row) {
@@ -477,7 +478,7 @@ class Main extends Base
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-       $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id,i.bar_code,i.cat_name   from 
+       $sql = "select t.qty, i.minqty,ExtractValue(i.detail,'/detail/recomqty') as recomqty,i.itemname,i.item_code,i.item_id,i.bar_code,i.cat_name   from 
             (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock    {$cstr}       group by  item_id    ) t
             join items_view  i  on t.item_id = i.item_id
            
@@ -501,6 +502,7 @@ class Main extends Base
             $data['E' . $i] = $d->customer_name ?? '';
             $data['F' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
             $data['G' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
+            $data['H' . $i] = doubleval($row['recomqty']) > 0 ? array('value' => H::fqty($row['recomqty']), 'format' => 'number') : '';
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
     }

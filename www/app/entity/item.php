@@ -142,6 +142,7 @@ class Item extends \ZCL\DB\Entity
         $this->sizeh = (string)$xml->sizeh[0];
         $this->sizew = (string)$xml->sizew[0];
         $this->sized = (string)$xml->sized[0];
+        $this->recomqty = (string)$xml->recomqty[0];
         
         $this->detail ='';
         parent::afterLoad();
@@ -272,6 +273,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<sizeh>{$this->sizeh}</sizeh>";
         $this->detail .= "<sizew>{$this->sizew}</sizew>";
         $this->detail .= "<sized>{$this->sized}</sized>";
+        $this->detail .= "<recomqty>{$this->recomqty}</recomqty>";
         $this->detail .= "<foodvars>". serialize($this->foodvars) ."</foodvars>";
 
 

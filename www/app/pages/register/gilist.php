@@ -29,6 +29,9 @@ use Zippy\Html\Panel;
 class GIList extends \App\Pages\Base
 {
     private $_doc = null;
+    private $_npvol = 0;          //об'єм відправлення за габаритами товарів, см3
+    private $_npmaxside = 0;      //найдовша сторона товару, см
+    private $_npalldims = false;  //габарити заповнені в усіх товарах
 
     /**
      *
@@ -519,6 +522,9 @@ class GIList extends \App\Pages\Base
         $v = 0;
         $w = 0;
         $p = 0;
+        $this->_npvol = 0;
+        $this->_npmaxside = 0;
+        $this->_npalldims = true;
         foreach ($list as $it) {
             if ($it->weight > 0) {
                 $w += ($it->weight * $it->quantity);
@@ -526,7 +532,15 @@ class GIList extends \App\Pages\Base
             $p = $p + ($it->quantity * $it->price);
             
             $v  += ( intval($it->sizeh)  * intval($it->sized)  * intval($it->sizew)  *  $it->quantity ) / 1000000;
-            
+
+            //для  підбору  коробки  поштомату: габарити  мають бути в  усіх  товарах
+            $d = array(intval($it->sizeh), intval($it->sizew), intval($it->sized));
+            if (min($d) > 0) {
+                $this->_npvol += $d[0] * $d[1] * $d[2] * $it->quantity;
+                $this->_npmaxside = max($this->_npmaxside, max($d));
+            } else {
+                $this->_npalldims = false;
+            }
         }
 
         if($v >0) {
@@ -593,9 +607,30 @@ class GIList extends \App\Pages\Base
            $tmp = unserialize( $modules['npgl'] );    
         }
         foreach($tmp as $g){
-           $gablist[$g->gabname]= $g->gabname;   
+           $gablist[$g->gabname]= $g->gabname;
         }
         $this->nppan->npform->npgab->setOptionList($gablist);
+
+        //поштомат: найменша коробка зі списку, куди поміщається весь товар
+        if ($this->_npalldims && $this->_npvol > 0) {
+            $best = '';
+            $bestv = 0;
+            foreach ($tmp as $g) {
+                $ga = array_map('doubleval', explode('x', $g->gabname));
+                if (count($ga) < 3) {
+                    continue;
+                }
+                $gv = $ga[0] * $ga[1] * $ga[2];
+                if ($gv >= $this->_npvol && max($ga) >= $this->_npmaxside && ($best == '' || $gv < $bestv)) {
+                    $best = $g->gabname;
+                    $bestv = $gv;
+                }
+            }
+            if ($best != '') {
+                $this->nppan->npform->npgab->setValue($best);
+                $this->onGab($this->nppan->npform->npgab);
+            }
+        }
     }
 
  
