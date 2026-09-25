@@ -41,6 +41,7 @@ class PayBayList extends \App\Pages\Base
         }
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('holdlist', \App\Entity\Customer::getHoldList(), 0));
+        $this->filter->add(new \Zippy\Html\Form\CheckBox('allyears', false));
 
         $this->add(new Panel("clist"));
 
@@ -127,9 +128,19 @@ GROUP BY c.customer_name,
             $this->_custlist[$_c->customer_id]=$_c;
         }
  
+        // «чекає оплату» — стан 21 за індексом і позначка waitpay за пів року за індексом дати;
+        // повний пошук по вмісту всіх документів (7–8 с на MySQL 8.4) — лише з галочкою «за всі роки»
+        $allyears = $this->filter->allyears->isChecked();
+        $_conn = \ZDB\DB::getConnect();
+        $waitids = $_conn->GetCol("select document_id from documents where state = 21");
+        foreach ($_conn->GetCol("select document_id from documents " . ($allyears ? "where " : "force index(document_date) where document_date > now() - interval 180 day and ")
+                . "state > 4 and content like '%<waitpay>1</waitpay>%'") as $_id) {
+            $waitids[] = $_id;
+        }
+        $waitin = count($waitids) > 0 ? implode(',', array_map('intval', array_unique($waitids))) : '0';
         $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state > 4 and  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}   and   c.detail not like '%<df>%' 
+             WHERE  d.state > 4 and  d.document_id in ({$waitin}) and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}   and   c.detail not like '%<df>%' 
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
