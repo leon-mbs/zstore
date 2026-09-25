@@ -102,7 +102,7 @@ class ACL
         $meta_id = self::$_metas['4_' . $ref]?? 0;
         $acldelete = explode(',', System::getUser()->acldelete);
 
-        if (in_array($meta_id > 0 && $meta_id, $acldelete)) {
+        if ($meta_id > 0 && in_array($meta_id, $acldelete)) {
             return true;
         }
         if ($showerror == true) {
