@@ -30,10 +30,8 @@ class Helper
 
         $params_string = '';
         if (is_array($params) && count($params)) {
-            foreach ($params as $key => $value) {
-                $params_string .= $key . '=' . $value . '&';
-            }
-            $params_string = rtrim($params_string, '&');
+        
+            $params_string = http_build_query($params);
 
             curl_setopt($ch, CURLOPT_POST, count($params));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);
@@ -46,6 +44,8 @@ class Helper
             \App\System::setErrorMsg($error);
             return false;
         }
+        curl_close($ch);
+        
         $data = json_decode($result, true);
         if ($data === null) {
             if (strlen($result) > 0) {
@@ -57,8 +57,8 @@ class Helper
 
             return false;
         }
-        //close connection
-        curl_close($ch);
+      
+        
 
         return $result;
     }

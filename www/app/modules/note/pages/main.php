@@ -64,7 +64,7 @@ class Main extends \App\Pages\Base
 
     public function onDelFile($args, $post=null) {
 
-        Helper::deleteFile($args[0]);
+        Helper::deleteFile((int)$args[0]);
 
 
     }
@@ -77,13 +77,13 @@ class Main extends \App\Pages\Base
             return;
         }
 
-        Helper::addFile($file, $args[0]);
+        Helper::addFile($file,(int) $args[0]);
 
 
     }
 
     public function onFav($args, $post=null) {
-
+        $args[0]  = (int) $args[0];
 
         $conn = \ZCL\DB\DB::getConnect();
         if ($args[1]=="true") {
@@ -95,6 +95,8 @@ class Main extends \App\Pages\Base
     }
 
     public function opTopic($args, $post=null) {
+        $args[1]  = (int) $args[1];
+
         if($args[0] =="delete") {
             if($args[3]=="true") {  //ссылка
                $conn = \ZCL\DB\DB::getConnect();
@@ -189,7 +191,7 @@ class Main extends \App\Pages\Base
         }
 
 
-        $node = Node::load($args[1]);
+        $node = Node::load((int) $args[1]);
         if ($topic->ispublic == 1 && $node->ispublic == 0) {
             return "Не можна додавати публічний топік у приватний вузол" ;
         }
@@ -203,7 +205,7 @@ class Main extends \App\Pages\Base
 
 
         if ($args[0] == 0) {
-            $topic->addToNode($args[1]);
+            $topic->addToNode((int) $args[1]);
         }
 
 
@@ -213,7 +215,7 @@ class Main extends \App\Pages\Base
 
     public function opTree($args, $post=null) {
         if($args[0] =="new") {
-            $id = $args[3] ;
+            $id = (int) $args[3] ;
             $parent = Node::load($id);
             $node = new Node();
             $node->pid = $id;
@@ -229,7 +231,7 @@ class Main extends \App\Pages\Base
 
         }
         if($args[0] =="edit") {
-            $id = $args[3] ;
+            $id = (int) $args[3] ;
             $node = Node::load($id);
             $node->title = $args[1];
             $node->ispublic = $args[2]=="true" ? 1 : 0;
@@ -242,13 +244,13 @@ class Main extends \App\Pages\Base
 
         }
         if($args[0] =="delete") {
-            Node::delete($args[1]);
-            Topic::deleteByNode($args[1]);
+            Node::delete((int) $args[1]);
+            Topic::deleteByNode((int) $args[1]);
 
         }
         if($args[0] =="paste") {
-            $id = $args[1] ;
-            $pid = $args[2] ;
+            $id = (int) $args[1] ;
+            $pid = (int) $args[2] ;
             $dest = Node::load($pid);
 
             if ($pid == $id) {
@@ -343,8 +345,8 @@ class Main extends \App\Pages\Base
     }
 
     public function loadTopic($args, $post=null) {
-        $t = Topic::load($args[0]) ;
-        $n = Node::load($args[1]) ;
+        $t = Topic::load((int) $args[0]) ;
+        $n = Node::load((int) $args[1]) ;
         $user = \App\System::getUser();
   
             
@@ -429,7 +431,7 @@ class Main extends \App\Pages\Base
     public function loadUsers($args, $post=null) {
         $user = \App\System::getUser();
      
-        $t = Topic::load($args[0]) ;
+        $t = Topic::load((int) $args[0]) ;
         $ret = ['allUsers'=>[],'accUsers'=>[]] ;
         
         foreach( \App\Entity\User::findArray('username', 'disabled <> 1','username') as $id=>$name ){
@@ -451,7 +453,7 @@ class Main extends \App\Pages\Base
    
     public function saveUsers($args, $post=null) {
         $post= json_decode($post)    ;
-        $t = Topic::load($args[0]) ;
+        $t = Topic::load((int) $args[0]) ;
         $t->accusers=[];
         foreach($post as $u){
             $t->accusers[]=$u->id;  

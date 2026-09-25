@@ -7,6 +7,7 @@ use App\Entity\Doc\Document;
 use App\Helper as H;
  
 use App\Entity\Customer;
+use App\Entity\Item;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
@@ -102,7 +103,8 @@ class GIList extends \App\Pages\Base
         $npform->add(new TextInput('baymiddlename'));
         $npform->add(new TextInput('baytel'));
         $npform->add(new TextInput('npw'));
-        $npform->add(new TextInput('npplaces'));
+        $npform->add(new TextInput('npv'));
+      
         $npform->add(new TextInput('npcost'));
         $npform->add(new TextArea('npdesc'));
         $npform->add(new Date('npdate'));
@@ -408,7 +410,7 @@ class GIList extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
 
-        $this->nppan->npform->npplaces->setText(1);
+    
         $this->nppan->npform->npcost->setText(0);
         $this->nppan->npform->npdate->setDate(time());
 
@@ -475,7 +477,7 @@ class GIList extends \App\Pages\Base
      
       
         
-        $this->nppan->npform->seltel->setText($modules['nptel']);
+        $this->nppan->npform->seltel->setText( self::npPhone( $modules['nptel']) );
         $this->nppan->npform->selcity->setKey($modules['npcityref']);
         $this->nppan->npform->selcity->setText($modules['npcity']);
         $this->nppan->npform->selpoint->setKey($modules['nppointref']);
@@ -514,17 +516,42 @@ class GIList extends \App\Pages\Base
             $this->nppan->npform->npdesc->setText(trim($desc, ","));
 
         }
-
+        $needopt=false;
+        $v = 0;
         $w = 0;
         $p = 0;
         foreach ($list as $it) {
-            if ($it->weight > 0) {
-                $w += ($it->weight * $it->quantity);
+            $_it= Item::load($it->item_id);
+            if ($_it->weight > 0) {
+                $w += ($_it->weight * $it->quantity);
             }
             $p = $p + ($it->quantity * $it->price);
+            
+            $v  += ( intval($_it->sizeh)  * intval($_it->sized)  * intval($_it->sizew)  *  $it->quantity ) / 1000000;
+            if(doubleval($_it->weight) == 0  
+              || doubleval($_it->sizeh) == 0 
+              || doubleval($_it->sized) == 0 
+              || doubleval($_it->sizew) == 0 
+            )  {
+               $needopt=true; 
+            }
         }
 
+        if($needopt) {
+            $this->setWarn("Не у всіх товарів звдвні вага або габарити ") ;
+        }
+        
+        
+        if($v >0) {
+            $v = number_format($v,8,'.','')  ;
+            $v = rtrim($v,'0');
+            $v = rtrim($v,'0');
+            $v = rtrim($v,'0');
+            $v = rtrim($v,'0');
+        }
+        
         $this->nppan->npform->npw->setText($w);
+        $this->nppan->npform->npv->setText($v);
         $this->nppan->npform->npback->setText(round($p));
         $this->nppan->npform->npcost->setText(round($p));
 
@@ -560,7 +587,7 @@ class GIList extends \App\Pages\Base
         }          
         
         
-        $this->nppan->npform->baytel->setText($tel);
+        $this->nppan->npform->baytel->setText( self::npPhone( $tel ) );
         $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
         $this->nppan->npform->bayfirstname->setText($name[1]??'');
@@ -585,8 +612,6 @@ class GIList extends \App\Pages\Base
     }
 
  
-  
-
     public function npOnCancel($sender) {
         $this->statuspan->setVisible(false);
         $this->listpan->setVisible(true);
@@ -612,6 +637,7 @@ class GIList extends \App\Pages\Base
        $this->nppan->npform->npgh->setText($ga[1]); 
        $this->nppan->npform->npgd->setText($ga[2]); 
     }
+   
     public function onDelType($sender) {
       
       $dt=$sender->getValue();  
@@ -628,9 +654,11 @@ class GIList extends \App\Pages\Base
       $this->nppan->npform->npgd->setVisible($dt ==1) ;   
       $this->nppan->npform->bayaddr->setVisible($dt ==2) ;   
       $this->nppan->npform->bayhouse->setVisible($dt ==2) ;   
-      $this->nppan->npform->bayflat->setVisible($dt ==2) ;   
+      $this->nppan->npform->bayflat->setVisible($dt ==2) ;  
       
+      $this->nppan->npform->npv->setVisible($dt ==0) ;
       
+      //todo для  поштомата  подобрать  коробку  чтобы  влазил  обем  и наибольшая  длина
       
     }  
     
@@ -722,21 +750,35 @@ class GIList extends \App\Pages\Base
 
         $params['DateTime'] = date('d.m.Y', $this->nppan->npform->npdate->getDate());
         $params['ServiceType'] = 'WarehouseWarehouse';
+        if($dt==2)  {
+            $params['ServiceType'] = 'WarehouseDoors';
+        }
         $params['PaymentMethod'] = $this->nppan->npform->nppm->getValue();
         $params['PayerType'] = $this->nppan->npform->nppt->getValue();
         $params['Cost'] = $this->nppan->npform->npcost->getText();
-        $params['SeatsAmount'] = $this->nppan->npform->npplaces->getText();
+        $params['Weight'] = $this->nppan->npform->npw->getText();
+        $params['VolumeGeneral'] = $this->nppan->npform->npv->getText();
+        $params['SeatsAmount'] = 1;
         $params['Description'] = trim($this->nppan->npform->npdesc->getText());
         $params['CargoType'] = 'Cargo';
-     
-        $params['Weight'] = $this->nppan->npform->npw->getText();
-        if ($params['SeatsAmount'] > 1) {
-            $params['Weight'] = number_format($params['Weight'] / $params['SeatsAmount'], 1, '.', '');
+        if(doubleval($params['VolumeGeneral'])==0) {  
+           unset( $params['VolumeGeneral']) ; 
         }
-     
+          
+       
+       //проверка  введеных параметров
+        if (($params['Weight'] > 0) == false) {
+            $this->setError('Не вказано вагу');
+            return;
+        }
+        if (strlen($params['Description']) == 0) {
+            $this->setError('Не вказано опис');
+            return;
+        }     
         if($dt==1) {
             $params['CargoType'] = 'Parcel';
-     
+            unset( $params['VolumeGeneral'])  ;
+            
             $params['OptionsSeat'] =[] ;
             $params['OptionsSeat'][] =array(
                             'volumetricWidth' =>intval( $this->nppan->npform->npgw->getText()),
@@ -782,15 +824,7 @@ class GIList extends \App\Pages\Base
         }
 
 
-        //проверка  введеных параметров
-        if (($params['Weight'] > 0) == false) {
-            $this->setError('Не вказано вагу');
-            return;
-        }
-        if (strlen($params['Description']) == 0) {
-            $this->setError('Не вказано опис');
-            return;
-        }
+   
         $api = new \App\Modules\NP\Helper();
 
         $sender = array();
@@ -908,7 +942,20 @@ class GIList extends \App\Pages\Base
             $this->setError($error) ;
         }
     }
-
+   
+    public static function npPhone($phone) {
+        $d = preg_replace('/\D+/', '', (string)$phone);
+        if (strlen($d) == 12 && substr($d, 0, 3) == '380') {
+            return $d;
+        }
+        if (strlen($d) == 10 && $d[0] == '0') {
+            return '38' . $d;
+        }
+        if (strlen($d) == 9) {
+            return '380' . $d;
+        }
+        return '';
+    }
 }
 
 /**

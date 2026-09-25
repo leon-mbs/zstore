@@ -111,9 +111,13 @@ class Document extends \ZCL\DB\Entity
             $this->lastupdate = @strtotime($this->lastupdate);
         }     
         $this->unpackData();
+    
+        parent::afterLoad();        
     }
 
     protected function beforeSave() {
+        parent::beforeSave();  
+          
         $this->lastupdate=time();
 
         $common = \App\System::getOptions('common') ;
@@ -139,7 +143,7 @@ class Document extends \ZCL\DB\Entity
         $this->packData();
 
 
-        
+            
 
     }
 
@@ -181,7 +185,7 @@ class Document extends \ZCL\DB\Entity
      *
      */
     private function unpackData() {
-        global $logger;
+       
         $this->headerdata = array();
         if (strlen($this->content ?? '') == 0) {
             return;
@@ -193,8 +197,7 @@ class Document extends \ZCL\DB\Entity
         
         $xml = @simplexml_load_string($xml) ;
         if($xml==false) {
-
-            $logger->error("Документ " . $this->document_number . " Невірний  контент");
+            \App\Helper::log("Документ " . $this->document_number . " Невірний  контент") ;
             return;
         }
 
@@ -214,7 +217,7 @@ class Document extends \ZCL\DB\Entity
         if(!is_array($this->detaildata)) {
             $this->detaildata =[];
         }
-  
+        $this->content = '';
     }
 
     
@@ -442,6 +445,8 @@ class Document extends \ZCL\DB\Entity
         $doc->unpackData();
        // $doc->document_number=$this->document_number;
         $doc->document_date=$this->document_date;
+        $doc->headerdata=$this->headerdata;
+        $doc->detaildata=$this->detaildata;
         $doc->lastupdate=$this->lastupdate;
         return $doc;
     }

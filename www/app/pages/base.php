@@ -444,7 +444,7 @@ class Base extends \Zippy\Html\WebPage
     public function getCustomerInfo($args, $post) {
         $conn= \ZDB\DB::getConnect() ;
 
-        $c = \App\Entity\Customer::load($args[0]);
+        $c = \App\Entity\Customer::load((int)$args[0]);
         if($c==null) {
             return $this->jsonOK("N/A");  
         }
@@ -525,7 +525,7 @@ class Base extends \Zippy\Html\WebPage
     public function getItemInfo($args, $post) {
         $conn= \ZDB\DB::getConnect() ;
 
-        $it = \App\Entity\Item::load($args[0]);
+        $it = \App\Entity\Item::load((int)$args[0]);
         if($it==null) {
                return $this->jsonOK("N/A"); 
         }
@@ -574,6 +574,7 @@ class Base extends \Zippy\Html\WebPage
     * @return mixed
     */
     public function addItemToCO($args, $post=null) {
+        $args[0] =  (int) $args[0] ;
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
  
@@ -634,7 +635,7 @@ class Base extends \Zippy\Html\WebPage
                 }
             }
             if($i==-1)  {
-                $item = \App\Entity\Item::load($args[0]);
+                $item = \App\Entity\Item::load((int)$args[0]);
      
                 $item->quantity = $quantity;
                 $item->price = $price;
@@ -671,7 +672,7 @@ class Base extends \Zippy\Html\WebPage
     * @param mixed $post
     */
     public function loadDocFR($args, $post=null) {
-        $doc = \App\Entity\Doc\Document::load($args[0]);
+        $doc = \App\Entity\Doc\Document::load((int)$args[0]);
         $doc = $doc->cast();
                    
         $ret=[];
@@ -808,7 +809,7 @@ class Base extends \Zippy\Html\WebPage
     * @param mixed $post
     */
     public function saveDocFR($args, $post=null) {
-        $doc = \App\Entity\Doc\Document::load($args[0]);
+        $doc = \App\Entity\Doc\Document::load((int)$args[0]);
         if($doc != null){
             if(strlen($args[1] ??'')>0) {
                $doc->headerdata["passfisc"] = 0;
@@ -960,7 +961,7 @@ class Base extends \Zippy\Html\WebPage
 
     public function vLoadService($args, $post=null) {
 
-        $service_id = $args[0];
+        $service_id =(int) $args[0];
         $ser =   \App\Entity\Service::load($service_id) ;
         $ret = [];
         if($ser != null) {
@@ -981,7 +982,7 @@ class Base extends \Zippy\Html\WebPage
     }
 
     public function vLoadItem($args, $post=null) {
-        $item_id=$args[0];
+        $item_id=(int)$args[0];
         $p = strlen($post)==null ? array() : json_decode($post, true)  ;
 
 
@@ -1113,7 +1114,7 @@ class Base extends \Zippy\Html\WebPage
 
    
     public function getPriceByQty($args, $post=null) {
-        $item = \App\Entity\Item::load($args[0]) ;
+        $item = \App\Entity\Item::load((int)$args[0]) ;
         $args[1] = str_replace(',', '.', $args[1]) ;
         $price = $item->getActionPriceByQuantity($args[1]);
 
@@ -1125,7 +1126,7 @@ class Base extends \Zippy\Html\WebPage
 
         $ret=[];
         $info=[] ;
-        $c = \App\Entity\Customer::load($args[0]) ;
+        $c = \App\Entity\Customer::load((int)$args[0]) ;
         if($c != null) {
             $info['customer_name'] = $c->customer_name;
             $info['disctext'] = '';

@@ -25,7 +25,7 @@
                                     </select>
                                     </div>
                                     <div class="col-auto  ">
-                                    <input type="submit" class=" ms-2 btn btn-success  " value="Шукати">
+                                    <input zippy="refresh" type="submit" class=" ms-2 btn btn-success  " value="Шукати">
                                  </div>
                                </div>
                                 </form>
@@ -34,9 +34,10 @@
                 </div>
 
                 
-                &nbsp; &nbsp;  <a zippy="refresh">Оновити</a>
+            
                 <table class="table  table-sm">
                     <tr>
+                        <th>Дата</th>
                         <th>ТТН</th>
                         <th>Сума</th>
                         <th>Покупець</th>
@@ -45,6 +46,7 @@
                         <th> </th>
                     </tr>
                     <tr zippy="doclist">
+                        <td zippy="document_date"></td>
                         <td zippy="document_number"></td>
                         <td zippy="amount"></td>
                         <td zippy="customer_name"></td>
