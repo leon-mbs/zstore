@@ -607,7 +607,7 @@ class Base extends \Zippy\Html\WebPage
            
            
             if($customer_id == 0) {
-                return "По  даному  ТМЦ  не знайдено  закупок обо прайсу  постачальника  ";
+                return "По  даному  ТМЦ  не знайдено  закупок або  прайсу  постачальника  ";
             }
            
            
@@ -879,7 +879,7 @@ class Base extends \Zippy\Html\WebPage
 
             if(intval($user->prtypelabel) == 1) {
                 if(strlen($ret)==0) {
-                   $this->addJavaScript(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   $this->addJavaScript(" toastr.warning( 'Немає даних для  друку ' )   ");
                    return; 
                 }
                 $buf = \App\Printer::xml2comm($ret);
@@ -887,7 +887,7 @@ class Base extends \Zippy\Html\WebPage
             }            
             if(intval($user->prtypelabel) == 2) {
                 if(count($ret)==0) {
-                   $this->addJavaScript(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   $this->addJavaScript(" toastr.warning( 'Немає даних для  друку ' )   ");
                    return; 
                 }
                 $buf = \App\Printer::arr2comm($ret);
