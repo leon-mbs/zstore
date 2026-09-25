@@ -153,6 +153,7 @@ class OrderCust extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new BookmarkableLink('move')) ;
         $row->move->setAttribute('onclick','showmoveform('. $item->item_id .')' ) ;
+        $row->move->setVisible(count($this->_itemlist)>1 ) ;
              
   }
 
@@ -553,6 +554,9 @@ class OrderCust extends \App\Pages\Base
 
 
      public function moveOnClick($sender) {
+        
+       
+       
         $item_id = $this->docform->moveitemid->getInt() ;
         $cust_id = $this->docform->movecust->getKey() ;
         if($cust_id==0) {

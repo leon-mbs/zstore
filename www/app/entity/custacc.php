@@ -185,8 +185,11 @@ class CustAcc extends \ZCL\DB\Entity
     }
     
     
-    //вместо  промотра  в  бд
+    //вместо  проcмотра  в  бд
     public  static function  get_acc_view($dt=0){
+        
+        $conn= \ZDB\DB::getConnect() ;
+        
         $brdoc = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
@@ -194,11 +197,33 @@ class CustAcc extends \ZCL\DB\Entity
         }
         $createdon = "";
         if($dt >0) {
-          $conn= \ZDB\DB::getConnect() ;
+        
           $createdon = " and date(createdon) < " . $conn->DBDate($dt);
              
-        }                   
-            $cust_acc_view =" 
+        }  
+        
+      
+        $sql="CREATE    TABLE if not exists cust_acc_view_tmp (
+          id int NOT NULL AUTO_INCREMENT,
+          customer_id int NOT NULL ,
+         
+          s_active decimal (11,3) , 
+          s_passive decimal (11,2) , 
+          b_active decimal (11,2) , 
+          b_passive decimal (11,2) , 
+        
+   
+          KEY (customer_id),
+          PRIMARY KEY (id)
+        )  engine=memory    ";
+        $conn->Execute($sql);
+        $conn->Execute("delete from cust_acc_view_tmp  ");
+         
+         
+                         
+            $sql =" 
+                INSERT  INTO  cust_acc_view_tmp ( s_active,s_passive,b_active,b_passive, customer_id  ) 
+
                 SELECT
                   SUM(CASE WHEN amount > 0 AND       optype = 3 THEN amount ELSE 0 END) AS s_active,
                   SUM(CASE WHEN amount < 0 AND       optype = 3 THEN 0 - amount ELSE 0 END) AS s_passive,
@@ -213,8 +238,9 @@ class CustAcc extends \ZCL\DB\Entity
                 GROUP BY customer_id
 
                  ";
-                
-        return $cust_acc_view;
+        $conn->Execute($sql);
+               
+        return "cust_acc_view_tmp";
         
     }
         

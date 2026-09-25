@@ -297,7 +297,7 @@ class ManualEntry extends \App\Pages\Base
     $sql = "SELECT  
      COALESCE( sum(a.s_passive), 0) AS pas,
      COALESCE( sum(a.s_active), 0) AS act
-FROM ({$cust_acc_view} ) a
+FROM {$cust_acc_view}  a
   JOIN customers c
     ON a.customer_id = c.customer_id
     AND c.status = 0 AND a.s_passive <> a.s_active 

@@ -77,12 +77,12 @@ class Main extends Base
         //минимальное количество
        
             $data = array();
-            $sql = "select coalesce(t.qty,0) as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+            $sql = "select  t.qty as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
            items  i 
             join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
                on t.item_id = i.item_id
            
-            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
+            where i.disabled  <> 1 and   t.qty  < i.minqty and i.minqty>0 order  by  i.itemname ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -99,53 +99,8 @@ class Main extends Base
             $mqlist->Reload();
        
 
-        //недавние  документы
+    
      
-          
-            $data = array(); 
-            foreach( \App\Entity\Doc\Document::findYield("  lastupdate >=  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ","lastupdate desc,document_id desc") as $d ){
-               
-               $data[] = $d ; 
-            }
-            
-            
-            if (count($data) == 0) {
-                $this->_tvars['wrdoc'] = false;
-            }
-            $this->add(new ClickLink('rdcsv', $this, 'onRDcsv'));
-
-            $doclist = $this->add(new DataView('rdoclist', new ArrayDataSource($data), $this, 'rdoclistOnRow'));
-            $doclist->setPageSize(10);
-            $this->add(new Paginator("wrpag", $doclist));
-
-            $doclist->Reload();
-      
-
-
-
-        //мои  документы
-   
-            $data = array();
-
-            $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
-
-            $rc = $conn->SelectLimit($sql, 25, 0);
-
-            foreach ($rc as $row) {
-                $data[] = new \App\DataItem($row);
-            }
-            if (count($data) == 0) {
-                $this->_tvars['wmdoc'] = false;
-            }
-            $this->add(new ClickLink('mdcsv', $this, 'onMDcsv'));
-
-            $doclist = $this->add(new DataView('mdoclist', new ArrayDataSource($data), $this, 'mdoclistOnRow'));
-            $doclist->setPageSize(10);
-            $this->add(new Paginator("wmpag", $doclist));
-
-            $doclist->Reload();
-        
-
         
         if($this->_tvars['dashboard'] != true){
             return;
@@ -299,16 +254,16 @@ class Main extends Base
         $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
         
         //к оплате
-        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM {$cust_acc_view} a where  a.s_active > a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM {$cust_acc_view} a where  a.b_active > a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
         $this->_tvars['bicredit'] = H::fa($sum);
 
         //ожидается  оплата
-        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
+        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM {$cust_acc_view} a where  a.s_active < a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
+        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM {$cust_acc_view} a where  a.b_active < a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
         $this->_tvars['bidebet'] = H::fa($sum);
 

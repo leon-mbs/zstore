@@ -100,7 +100,7 @@ CREATE TABLE documents (
   parent_id bigint(20) DEFAULT 0,
    
  
-  lastupdate datetime DEFAULT NULL,
+ 
   PRIMARY KEY (document_id),
 
   KEY document_date (document_date),
@@ -760,13 +760,13 @@ SELECT
     when d.state =3  then 70  
     when d.state = 21 then 75  
  
-    when d.state in(19,2) then 80  
+    when d.state in(19,2,23) then 80  
     when d.state = 8 then 90
     when d.state = 1 then 100
          
     else 50 end  AS priority ,
     
-  d.lastupdate AS lastupdate,
+ 
   metadata.meta_name AS meta_name,
   metadata.description AS meta_desc
 FROM documents d
