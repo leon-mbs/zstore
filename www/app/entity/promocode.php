@@ -88,7 +88,7 @@ class PromoCode extends \ZCL\DB\Entity
                return "Недійсний промокод";
            }
            if($code->dateto >0  && $code->dateto < time() ) {
-               return "Просрочений промокод";
+               return "Прострочений промокод";
            }
            if(strlen( $code->used ?? '') > 0  ) {
                if($code->type==1 || $code->type==3 ){

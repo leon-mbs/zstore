@@ -108,16 +108,16 @@ class Balance extends \App\Pages\Base
         $cust_acc_view = \App\Entity\CustAcc::get_acc_view($dt)  ;
           
         //к оплате
-        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM {$cust_acc_view} a where  a.s_active > a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM {$cust_acc_view} a where  a.b_active > a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
         $credit = H::fa($sum);
         
         //ожидается  оплата
-        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
+        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM {$cust_acc_view} a where  a.s_active < a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
+        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM {$cust_acc_view} a where  a.b_active < a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
         $debet = H::fa($sum);
 
