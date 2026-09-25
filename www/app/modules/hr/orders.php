@@ -108,7 +108,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['article']} в замовленні номер " . $hrorder['order_id']);
+                    $this->setWarn("Не знайдено артикул товару {$product['article']} в замовленні номер " . $hrorder['order_id']);
                     continue;
                 }
                 $tovar->quantity = H::fqty($product['quantity']);
