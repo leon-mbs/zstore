@@ -34,19 +34,21 @@ class TTNList extends \App\Pages\Base
 
         $modules = System::getOptions("modules");
         $this->_apikey = $modules['npapikey'];
-        $this->add(new ClickLink('refresh', $this, 'onRefresh'));
-        $this->add(new Form('searchform'))->onSubmit($this, 'onFilter');
+    
+        $this->add(new Form('searchform'));
         $this->searchform->add(new TextInput('searchnumber'));
         $this->searchform->add(new DropDownChoice('searchcust'));
+        $this->searchform->add(new SubmitButton('refresh'))->onClick($this, 'onFilter');
 
         $this->add(new DataView('doclist', new ArrayDataSource($this, '_doclist'), $this, 'doclistOnRow'));
-
-      //  $this->onRefresh($this->refresh);
+       
+       
     }
 
     public function doclistOnRow($row) {
         $doc = $row->getDataItem();
 
+        $row->add(new Label('document_date', H::fd( $doc->document_date)) );
         $row->add(new Label('document_number', $doc->document_number));
         $row->add(new Label('ship_number', $doc->headerdata['ship_number']));
         $row->add(new Label('customer_name', $doc->customer_name));
@@ -57,14 +59,27 @@ class TTNList extends \App\Pages\Base
         $row->add(new BookmarkableLink('print'))->setLink($link);
     }
 
-    //обновление  статусов
-    public function onRefresh($sender) {
+  
+    public function onFilter($sender) {
         $this->_doclist = array();
         $api = new \App\Modules\NP\Helper();
         $errors = array();
+      
+        $cust =   $this->searchform->searchcust->getValue();
+        $n =   $this->searchform->searchnumber->getText();
+       
+      
         $docs = Document::find("content like '%<ship_number>%' and  meta_name = 'TTN' and state in(11,20) ");
         $tracks = array();
         foreach ($docs as $ttn) {
+            if($cust >0 && $ttn->customer_id <> $cust) {
+                continue;
+            }
+            if(strlen($n) >0 && $ttn->headerdata['ship_number'] <> $n) {
+                continue;
+            }    
+       
+            
             if (strlen($ttn->headerdata['ship_number']) > 0) {
                 $tracks[] = $ttn->headerdata['ship_number'];
             }
@@ -78,7 +93,12 @@ class TTNList extends \App\Pages\Base
             if (strlen($decl) == 0) {
                 continue;
             }
-
+            if($cust >0 && $ttn->customer_id <> $cust) {
+                continue;
+            }
+            if(strlen($n) >0 && $ttn->headerdata['ship_number'] <> $n) {
+                continue;
+            }  
 
             $st = $statuses[$decl]['Status'];
             $code = $statuses[$decl]['StatusCode'];
@@ -122,22 +142,5 @@ class TTNList extends \App\Pages\Base
 
     }
 
-    public function onFilter($sender) {
-        $list = array();
-        $cust =   $this->searchform->searchcust->getValue();
-        $n =   $this->searchform->searchnumber->getText();
-        foreach($this->_doclist as $d) {
-            if($cust >0 && $d->customer_id <> $cust) {
-                continue;
-            }
-            if(strlen($n) >0 && $d->headerdata['ship_number'] <> $n) {
-                continue;
-            }
-
-            $list[$d->document_id] = $d;
-        }
-        $this->_doclist = $list;
-        $this->doclist->Reload();
-    }
-
+   
 }

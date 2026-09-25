@@ -257,7 +257,7 @@ class TimeSheet extends \App\Pages\Base
     public function del($args) {
 
 
-        TimeItem::delete($args[0]);
+        TimeItem::delete((int)$args[0]);
         return $this->jsonOK() ;
      
 

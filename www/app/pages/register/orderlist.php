@@ -1087,7 +1087,7 @@ class OrderList extends \App\Pages\Base
     * @param mixed $args
     */
     public function getCChatItems($args) {
-        $doc = Document::load($args[0]) ;
+        $doc = Document::load( (int) $args[0]) ;
         $ret=[];
         $ret['itemlist'] =[];
         foreach ($doc->unpackDetails('detaildata') as $item) {
@@ -1110,7 +1110,7 @@ class OrderList extends \App\Pages\Base
     * @param mixed $args[0]  -document_id
     */
     public function getCChatMessages($args) {
-
+        $args[0]  = (int) $args[0];
         $ret=[];
         $list = \App\Entity\Message::find("item_id={$args[0]} and item_type=" .\App\Entity\Message::TYPE_CUSTCHAT, "message_id asc");
 
@@ -1143,7 +1143,7 @@ class OrderList extends \App\Pages\Base
     * @param mixed $args
     */
     public function sendMessage($args, $post) {
-        $doc = Document::load($args[0]) ;
+        $doc = Document::load((int)$args[0]) ;
         $message = json_decode($post)   ;
 
         $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;

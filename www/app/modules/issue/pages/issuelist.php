@@ -79,7 +79,8 @@ class IssueList extends \App\Pages\Base
     }
 
     public function empbyproj($args, $post=null) {
-        //  $conn = \ZDB\DB::getConnect();
+        $args[0]  = intval($args[0])  ;
+   
         $users = \App\Entity\User::findArray("username", "user_id in(select  user_id  from issue_projectacc   where   project_id={$args[0]}   )", "username");
 
 
@@ -88,6 +89,8 @@ class IssueList extends \App\Pages\Base
     }
 
     public function loadhistory($args, $post=null) {
+        $args[0]  = intval($args[0])  ;
+       
         $conn = \ZDB\DB::getConnect();
         $res = $conn->Execute("select h.*,u.username from issue_history h join users_view u on h.user_id=u.user_id  where  issue_id={$args[0]} order  by  hist_id");
         $hist = array();
@@ -173,7 +176,8 @@ class IssueList extends \App\Pages\Base
     }
 
     public function loadissue($args, $post=null) {
-
+        $args[0]  = intval($args[0])  ;
+   
         $ret = array();
 
         $issue = Issue::load($args[0]) ;
@@ -263,12 +267,15 @@ class IssueList extends \App\Pages\Base
     }
 
     public function del($args, $post=null) {
-
+        $args[0]  = intval($args[0])  ;
+   
         Issue::delete($args[0])  ;
 
     }
 
     public function getFileList($args, $post) {
+        $args[0]  = intval($args[0])  ;
+   
         $user = \App\System::getUser() ;
         $i = Issue::load($args[0]);
 
@@ -299,7 +306,8 @@ class IssueList extends \App\Pages\Base
 
     public function addFile($args, $post) {
 
-
+         $args[0]  = intval($args[0])  ;
+   
         $file =  $_FILES['pfile']   ;
 
         if(strlen($file['tmp_name'] ?? '')==0) {
@@ -312,14 +320,14 @@ class IssueList extends \App\Pages\Base
     }
 
     public function delFile($args, $post) {
-
+      
         \App\Helper::deleteFile($args[0]);
 
     }
 
     public function delMsg($args, $post) {
 
-        \App\Entity\Message::delete($args[0]);
+        \App\Entity\Message::delete((int)$args[0]);
 
     }
 
@@ -334,13 +342,13 @@ class IssueList extends \App\Pages\Base
         $msg->message = $post["msg"];
         $msg->created = time();
         $msg->user_id =  \App\System::getUser()->user_id;
-        $msg->item_id = $args[0];
+        $msg->item_id =(int) $args[0];
         $msg->item_type = \App\Entity\Message::TYPE_ISSUE;
 
         $msg->save();
 
 
-        $issue = Issue::load($args[0]);
+        $issue = Issue::load((int)$args[0]);
         if(strlen($users)==0) {
             return;
         }
@@ -363,7 +371,7 @@ class IssueList extends \App\Pages\Base
     public function getMsgList($args, $post) {
         $user = \App\System::getUser() ;
 
-        $where = 'item_type = 5 and item_id=' . $args[0] ;
+        $where = 'item_type = 5 and item_id=' . (int)$args[0] ;
 
         $cnt =  \App\Entity\Message::findCnt($where)    ;
 

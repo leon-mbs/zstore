@@ -7,6 +7,7 @@ use App\Entity\Doc\Document;
 use App\Helper as H;
  
 use App\Entity\Customer;
+use App\Entity\Item;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
@@ -476,7 +477,7 @@ class GIList extends \App\Pages\Base
      
       
         
-        $this->nppan->npform->seltel->setText($modules['nptel']);
+        $this->nppan->npform->seltel->setText( self::npPhone( $modules['nptel']) );
         $this->nppan->npform->selcity->setKey($modules['npcityref']);
         $this->nppan->npform->selcity->setText($modules['npcity']);
         $this->nppan->npform->selpoint->setKey($modules['nppointref']);
@@ -515,20 +516,32 @@ class GIList extends \App\Pages\Base
             $this->nppan->npform->npdesc->setText(trim($desc, ","));
 
         }
-
+        $needopt=false;
         $v = 0;
         $w = 0;
         $p = 0;
         foreach ($list as $it) {
-            if ($it->weight > 0) {
-                $w += ($it->weight * $it->quantity);
+            $_it= Item::load($it->item_id);
+            if ($_it->weight > 0) {
+                $w += ($_it->weight * $it->quantity);
             }
             $p = $p + ($it->quantity * $it->price);
             
-            $v  += ( intval($it->sizeh)  * intval($it->sized)  * intval($it->sizew)  *  $it->quantity ) / 1000000;
-            
+            $v  += ( intval($_it->sizeh)  * intval($_it->sized)  * intval($_it->sizew)  *  $it->quantity ) / 1000000;
+            if(doubleval($_it->weight) == 0  
+              || doubleval($_it->sizeh) == 0 
+              || doubleval($_it->sized) == 0 
+              || doubleval($_it->sizew) == 0 
+            )  {
+               $needopt=true; 
+            }
         }
 
+        if($needopt) {
+            $this->setWarn("Не у всіх товарів звдвні вага або габарити ") ;
+        }
+        
+        
         if($v >0) {
             $v = number_format($v,8,'.','')  ;
             $v = rtrim($v,'0');
@@ -574,7 +587,7 @@ class GIList extends \App\Pages\Base
         }          
         
         
-        $this->nppan->npform->baytel->setText($tel);
+        $this->nppan->npform->baytel->setText( self::npPhone( $tel ) );
         $name =   \App\Util::strtoarray($c->customer_name);
         $this->nppan->npform->baylastname->setText($name[0]);
         $this->nppan->npform->bayfirstname->setText($name[1]??'');
@@ -645,7 +658,7 @@ class GIList extends \App\Pages\Base
       
       $this->nppan->npform->npv->setVisible($dt ==0) ;
       
-      
+      //todo для  поштомата  подобрать  коробку  чтобы  влазил  обем  и наибольшая  длина
       
     }  
     
@@ -737,6 +750,9 @@ class GIList extends \App\Pages\Base
 
         $params['DateTime'] = date('d.m.Y', $this->nppan->npform->npdate->getDate());
         $params['ServiceType'] = 'WarehouseWarehouse';
+        if($dt==2)  {
+            $params['ServiceType'] = 'WarehouseDoors';
+        }
         $params['PaymentMethod'] = $this->nppan->npform->nppm->getValue();
         $params['PayerType'] = $this->nppan->npform->nppt->getValue();
         $params['Cost'] = $this->nppan->npform->npcost->getText();
@@ -926,7 +942,20 @@ class GIList extends \App\Pages\Base
             $this->setError($error) ;
         }
     }
-
+   
+    public static function npPhone($phone) {
+        $d = preg_replace('/\D+/', '', (string)$phone);
+        if (strlen($d) == 12 && substr($d, 0, 3) == '380') {
+            return $d;
+        }
+        if (strlen($d) == 10 && $d[0] == '0') {
+            return '38' . $d;
+        }
+        if (strlen($d) == 9) {
+            return '380' . $d;
+        }
+        return '';
+    }
 }
 
 /**

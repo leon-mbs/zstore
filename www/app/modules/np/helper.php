@@ -1126,6 +1126,8 @@ class Helper
 
     //проверка  экспрес накладной
     public function check($docs) {
+        //todo  разбить  по  100
+      
         $ar = array();
         foreach ($docs as $track) {
             $ar[] = array('DocumentNumber' => $track);
