@@ -107,9 +107,7 @@ class Document extends \ZCL\DB\Entity
         if(is_integer($this->document_date)==false && strlen($this->document_date ?? '') >0 ) {
             $this->document_date = @strtotime($this->document_date);
         }
-        if(is_integer($this->lastupdate)==false && strlen($this->lastupdate ?? '') >0 ) {
-            $this->lastupdate = @strtotime($this->lastupdate);
-        }     
+        
         $this->unpackData();
     
         parent::afterLoad();        
@@ -118,8 +116,10 @@ class Document extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();  
           
-        $this->lastupdate=time();
-
+    
+        $this->headerdata['lastupdated'] = time();
+        $this->headerdata['lastupdatedby'] = System::getUser()->userlogin;
+        
         $common = \App\System::getOptions('common') ;
         $da = $common['actualdate'] ?? 0 ;
 
@@ -447,7 +447,7 @@ class Document extends \ZCL\DB\Entity
         $doc->document_date=$this->document_date;
         $doc->headerdata=$this->headerdata;
         $doc->detaildata=$this->detaildata;
-        $doc->lastupdate=$this->lastupdate;
+        
         return $doc;
     }
 
@@ -498,9 +498,9 @@ class Document extends \ZCL\DB\Entity
    //     $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
-
+        $this->insertLog($state);
         if ($oldstate != $state) {
-            $this->insertLog($state);            
+                        
             
             $doc = $this->cast();
             if($onlystate == false) {
@@ -538,6 +538,7 @@ class Document extends \ZCL\DB\Entity
 
     }
 
+    //deprecated
     public function getPriorytyByState($state) {
        
         if($state == self::STATE_CLOSED) {
