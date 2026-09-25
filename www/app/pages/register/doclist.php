@@ -345,18 +345,17 @@ class DocList extends \App\Pages\Base
         $this->statusform->btopay->setVisible(false);
         if($this->_doc->customer_id >0 &&   $this->_doc->state == Document::STATE_WP) {
             $this->statusform->btopay->setVisible(true);
-            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
-
-                if(in_array($this->_doc->meta_name, array('InvoiceCust','RetCustIssue','GoodsReceipt'))) {
-                    $this->statusform->btopay->setVisible(true);
-                    $this->statusform->btopay->setLink("App\\PAges\\Register\\PaySelList", array($this->_doc->document_id));
-                }
-                if(in_array($this->_doc->meta_name, array('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct'))) {
-                    $this->statusform->btopay->setVisible(true);
-                    $this->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
-                }
-
+            
+            if(in_array($this->_doc->meta_name, array('InvoiceCust','RetCustIssue','GoodsReceipt'))) {
+                
+                $this->statusform->btopay->setLink("App\\PAges\\Register\\PaySelList", array($this->_doc->document_id));
             }
+            if(in_array($this->_doc->meta_name, array('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct'))) {
+              
+                $this->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
+            }
+
+          
 
         }
 
