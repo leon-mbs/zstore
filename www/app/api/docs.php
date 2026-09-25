@@ -38,7 +38,7 @@ class docs extends JsonRPC
     //изменить статус
     public function updatestatus($args) {
         $doc = null;
-        if (strlen($args['number']) > 0) {
+        if (strlen($args['number']??'' ) > 0) {
             $num1 = Document::qstr($args['number']);
             $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
@@ -58,7 +58,7 @@ class docs extends JsonRPC
      //запрос на  отмену
     public function cancel($args) {
         $doc = null;
-        if (strlen($args['number']) > 0) {
+        if (strlen($args['number']?? '') > 0) {
             $num1 = Document::qstr($args['number']);
             $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
@@ -90,7 +90,7 @@ class docs extends JsonRPC
         if(intval($args['state'] ?? 0)>0) {
              $where .= " and state = ".intval($args['state']);
         }
-        if(strlen($args['type'])>0) {
+        if(strlen($args['type']??'')>0) {
           $where .= " and meta_name= ". Document::qstr($args['type']);
         }
        
@@ -98,7 +98,7 @@ class docs extends JsonRPC
         if($from==0) {
            $from = strtotime('- 1 months',time())  ;
         }
-        $to = strtotime($args['dateto'] );
+        $to = strtotime($args['dateto']??0 );
         if($from>0) {
             $where .= " and document_date>= ". $conn->DBDate($from) ;
         }
@@ -185,8 +185,8 @@ class docs extends JsonRPC
         $doc = Document::create('ProdIssue');
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->headerdata['store'] = $args['store_id'];
-        $doc->headerdata['parea'] = $args['parea'];
+        $doc->headerdata['store'] = $args['store_id'] ??0;
+        $doc->headerdata['parea'] = $args['parea']??0;
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -194,7 +194,7 @@ class docs extends JsonRPC
         $total = 0;
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
-                if (strlen($it['item_code']) == 0) {
+                if (strlen($it['item_code']??'') == 0) {
                     throw new \Exception("Не вказано артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
@@ -234,14 +234,14 @@ class docs extends JsonRPC
      
      
         $doc = Document::create('Order');
-        $doc->headerdata["outnumber"] = $args['number'];
+        $doc->headerdata["outnumber"] = $args['number']??'';
         $doc->headerdata["paytype"] = 2;
        
         $doc->document_number = $doc->nextNumber();
         
 
         if ($args['customer_id'] > 0) {
-            $c = \App\Entity\Customer::load($args['customer_id']);
+            $c = \App\Entity\Customer::load( (int) $args['customer_id']);
             if ($c == null) {
                 throw new \Exception("Контрагент не знайдений");
             } else {
@@ -251,7 +251,7 @@ class docs extends JsonRPC
 
         if ($options['usebranch'] == 1) {
             if ($args['branch_id'] > 0) {
-                $doc->branch_id = $args['branch_id'];
+                $doc->branch_id = $args['branch_id'] ;
             } else {
                 throw new \Exception("Не вказано філію");
             }
@@ -261,8 +261,8 @@ class docs extends JsonRPC
 
       
         // $doc->document_number = $args['number'];
-        $doc->headerdata["phone"] = $args['phone'];
-        $doc->headerdata["email"] = $args['email'];
+        $doc->headerdata["phone"] = $args['phone']??'';
+        $doc->headerdata["email"] = $args['email']??'';
         $doc->headerdata["ship_address"] = $args['ship_address'];
 
         $doc->notes = @base64_decode($args['description']);
@@ -270,10 +270,10 @@ class docs extends JsonRPC
         $total = 0;
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
-                if (strlen($it['item_code']) == 0) {
+                if (strlen($it['item_code']??'') == 0) {
                     throw new \Exception("Не вказано артикул");
                 }
-                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
+                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']??''));
 
                 if ($item instanceof Item) {
 
@@ -312,7 +312,7 @@ class docs extends JsonRPC
     //записать ТТН
     public function createttn($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number']??'') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -332,7 +332,7 @@ class docs extends JsonRPC
             }
         }
 
-        $st = \App\Entity\Store::load($args['store_id']);
+        $st = \App\Entity\Store::load($args['store_id']??0);
         if ($st == null) {
             throw new \Exception("Склад не знайдений");
         } else {
@@ -344,10 +344,10 @@ class docs extends JsonRPC
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
 
-        $doc->headerdata["apinumber"] = $args['number'];
-        $doc->headerdata["phone"] = $args['phone'];
-        $doc->headerdata["email"] = $args['email'];
-        $doc->headerdata["ship_address"] = $args['ship_address'];
+        $doc->headerdata["apinumber"] = $args['number']??'';
+        $doc->headerdata["phone"] = $args['phone']??'';
+        $doc->headerdata["email"] = $args['email']??'';
+        $doc->headerdata["ship_address"] = $args['ship_address']??'';
         $doc->branch_id = intval($args['branch_id']);
  
         $doc->notes = @base64_decode($args['description']);
@@ -355,10 +355,10 @@ class docs extends JsonRPC
         $total = 0;
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
-                if (strlen($it['item_code']) == 0) {
+                if (strlen($it['item_code']??'') == 0) {
                     throw new \Exception("Не заданий артикул");
                 }
-                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
+                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']??''));
 
                 if ($item instanceof Item) {
 
@@ -397,7 +397,7 @@ class docs extends JsonRPC
     //записать расходную накладную
     public function goodsissue($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number']??'') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -470,7 +470,7 @@ class docs extends JsonRPC
         }
 
         $doc->payamount = $doc->amount;
-        $doc->payed = $args["payed"];
+        $doc->payed = $args["payed"]??0;
 
         $doc->save();
         $doc->updateStatus(Document::STATE_NEW);
@@ -486,7 +486,7 @@ class docs extends JsonRPC
     //записать приходную накдадную
     public function goodsreceipt($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number']??'') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -497,7 +497,7 @@ class docs extends JsonRPC
         }
         $doc = Document::create('GoodsReceipt');
 
-        $c = \App\Entity\Customer::load($args['customer_id']);
+        $c = \App\Entity\Customer::load( (int) $args['customer_id']);
         if ($c == null) {
             throw new \Exception("Контрагент не знайдений");
         } else {
@@ -517,8 +517,8 @@ class docs extends JsonRPC
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
 
-        $doc->headerdata["apinumber"] = $args['number'];
-        $doc->headerdata["payment"] = $args['mf'];
+        $doc->headerdata["apinumber"] = $args['number'] ??'';
+        $doc->headerdata["payment"] = $args['mf']??0;
         $doc->headerdata["nds"] = 0;
         $doc->headerdata["disc"] = 0;
         $doc->branch_id = intval($args['branch_id']);
@@ -533,7 +533,7 @@ class docs extends JsonRPC
                 if (strlen($it['item_code']) == 0) {
                     throw new \Exception("Не задано артикул");
                 }
-                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
+                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']??''));
 
                 if ($item instanceof Item) {
 
@@ -578,7 +578,7 @@ class docs extends JsonRPC
     //записать  оприходование  ТМЦ
     public function incomeitem($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number']??'') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -590,7 +590,7 @@ class docs extends JsonRPC
         $doc = Document::create('IncomeItem');
 
 
-        $st = \App\Entity\Store::load($args['store_id']);
+        $st = \App\Entity\Store::load((int)$args['store_id']);
         if ($st == null) {
             throw new \Exception("Склад не знайдений");
         } else {
@@ -601,7 +601,7 @@ class docs extends JsonRPC
 
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
-        $doc->headerdata["apinumber"] = $args['number'];
+        $doc->headerdata["apinumber"] = $args['number']??'';
         $doc->branch_id = intval($args['branch_id']);
 
 
@@ -614,7 +614,7 @@ class docs extends JsonRPC
                 if (strlen($it['item_code']) == 0) {
                     throw new \Exception("Не задано артикул");
                 }
-                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
+                $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']??''));
 
                 if ($item instanceof Item) {
 
@@ -658,7 +658,7 @@ class docs extends JsonRPC
     //записать акт выполненых работ
     public function serviceact($args) {
 
-        if (strlen($args['number']) == 0) {
+        if (strlen($args['number']??'') == 0) {
             throw new \Exception("Не вказано номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
@@ -682,9 +682,9 @@ class docs extends JsonRPC
         $doc->document_number = $doc->nextNumber();
         $doc->document_date = time();
 
-        $doc->headerdata["apinumber"] = $args['number'];
+        $doc->headerdata["apinumber"] = $args['number']??'';
         $doc->headerdata["payment"] = $args['mf'];
-        $doc->headerdata["device"] = $args['device'];
+        $doc->headerdata["device"] = $args['device']??'';
         $doc->branch_id = intval($args['branch_id']);
 
 

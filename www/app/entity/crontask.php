@@ -161,14 +161,14 @@ class CronTask extends \ZCL\DB\Entity
                 if($task->tasktype==self::TYPE_EVENTCUST) {
                     $data =unserialize($task->taskdata);
                     $text = $data['text']  ;
-                    $user = \App\Entity\User::load($data['user_id']);
+                    $user = \App\Entity\User::load( (int) $data['user_id']);
 
                     if(strlen($user->chat_id) >0) {
                         $ret= \App\Comm::sendBot($user->chat_id, $text) ;
                     } elseif(strlen($user->email) >0  ) {
                         $ret= \App\Comm::sendEmail($user->email, $text, "ZStore  notify") ;
                     }
-                    if(strlen($ret)==0) {
+                    if(strlen($ret ??'')==0) {
                         $done = true;
                     }
 

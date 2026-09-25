@@ -990,7 +990,7 @@
                        
                              <tr><td colspan="3" align="right">
                              <button type="button" class="btn btn-secondary ms-4" data-bs-dismiss="modal">Закрити</button>
-                             <button type="submit" class="btn btn-primary"  >Друкувати</button>
+                             <button zippy="btn_pr_items" type="submit" class="btn btn-primary"  >Друкувати</button>
                               
                              </td></tr>
                             </table>   
@@ -1018,7 +1018,7 @@
                         <div class="my-1" id="pr_items_table">
                         
                             <div zippy="pr_items_tag">
-                                <div   zippy="pr_item_tag"></div>
+                               
                             </div>
                           
                         </div>
@@ -1246,12 +1246,11 @@ toggler.addEventListener("click",function(){
         } 
         
         function check_onreport(ele){
-    
             document.getElementById('dialogwait').showModal()
-          
             return true;
-       
         } 
+ 
+       
    
         //принт  сервер   принтер  чеков
         function sendPS( buf){
