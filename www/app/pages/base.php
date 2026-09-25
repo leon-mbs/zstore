@@ -105,10 +105,12 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
         $this->add(new Label('loginname', $user->username));
 
-        $this->add(new Form('pr_itemsform' ))->onSubmit($this,'saveLabelForm');
+        $this->add(new Form('pr_itemsform' ));
         $this->pr_itemsform->add(new DataView('pr_items', new ArrayDataSource(new Bind($this, '_pritems')), $this, 'pr_itemsOnRow'));
+        $this->pr_itemsform->add(new SubmitButton('btn_pr_items' ))->onClick($this,'saveLabelForm');
+      
         $this->add(new Label('pr_items_tag' ));
-
+     
 
         //меню
         $menu = Session::getSession()->menu ?? [];

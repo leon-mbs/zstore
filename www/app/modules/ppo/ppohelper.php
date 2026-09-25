@@ -251,7 +251,7 @@ class PPOHelper
         }
 
        \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
-       \App\Helper::log(\App\System::getSession()->shiftclose) ;
+     //  \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
         $n = 1;
@@ -949,7 +949,7 @@ class PPOHelper
                     } elseif($fc=="3") {
                         $amount3 += $sum;
                     } else {
-                        \App\Helper::log("payform ".$fc);
+                     //   \App\Helper::log("payform ".$fc);
                      
                     }
                 }

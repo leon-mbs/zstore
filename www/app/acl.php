@@ -39,7 +39,7 @@ class ACL
         $meta_id = self::$_metas['2_' . $rep]?? 0;
         $aclview = explode(',', System::getUser()->aclview);
 
-        if (in_array($meta_id, $aclview)) {
+        if ($meta_id > 0 && in_array($meta_id, $aclview)) {
             return true;
         }
 
@@ -61,7 +61,7 @@ class ACL
         $meta_id = self::$_metas['4_' . $ref]?? 0;
         $aclview = explode(',', System::getUser()->aclview);
 
-        if (in_array($meta_id, $aclview)) {
+        if ($meta_id > 0 && in_array($meta_id, $aclview)) {
             return true;
         }
 
@@ -82,7 +82,7 @@ class ACL
         $meta_id = self::$_metas['4_' . $ref]?? 0;
         $acledit = explode(',', System::getUser()->acledit);
 
-        if (in_array($meta_id, $acledit)) {
+        if ($meta_id > 0 && in_array($meta_id, $acledit)) {
             return true;
         }
         if ($showerror == true) {
@@ -102,7 +102,7 @@ class ACL
         $meta_id = self::$_metas['4_' . $ref]?? 0;
         $acldelete = explode(',', System::getUser()->acldelete);
 
-        if (in_array($meta_id, $acldelete)) {
+        if (in_array($meta_id > 0 && $meta_id, $acldelete)) {
             return true;
         }
         if ($showerror == true) {
@@ -122,7 +122,7 @@ class ACL
         $meta_id = self::$_metas['3_' . $reg]?? 0;
         $aclview = explode(',', System::getUser()->aclview);
 
-        if (in_array($meta_id, $aclview)) {
+        if ($meta_id > 0 && in_array($meta_id, $aclview)) {
             return true;
         }
 

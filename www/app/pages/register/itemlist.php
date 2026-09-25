@@ -179,10 +179,10 @@ class ItemList extends \App\Pages\Base
  
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         if ($qty < 0) {
-            $row->setAttribute('class', 'text-danger');
+            $row->itemname->setAttribute('class', 'text-danger');
         }
         if ($qty == 0) {
-            $row->setAttribute('class', 'text-warning');
+            $row->itemname->setAttribute('class', 'text-warning');
         }
 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl());
@@ -279,13 +279,7 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
-
-        if ($stock->qty < 0) {
-            $row->setAttribute('class', 'text-danger');
-        }
-        if ($stock->qty == 0) {
-            $row->setAttribute('class', 'text-warn');
-        }
+    
 
      
         $row->add(new \Zippy\Html\Link\RedirectLink("createmove", "\\App\\Pages\\Doc\\MovePart", array(0, $stock->stock_id)))->setVisible($stock->qty < 0);

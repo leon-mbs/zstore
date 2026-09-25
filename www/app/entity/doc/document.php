@@ -586,6 +586,9 @@ class Document extends \ZCL\DB\Entity
         if($state == self::STATE_APPROVED) {
             return 80;
         }
+        if($state == self::STATE_WAIT) {
+            return 80;
+        }
      
         if($state == self::STATE_EDITED) {
             return 80;

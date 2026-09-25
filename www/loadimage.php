@@ -8,10 +8,10 @@ if ( ($_REQUEST['id']??0) > 0) {
     if ($user->user_id == 0) {
         die;
     }
-    $image = \App\Entity\Image::load($_REQUEST['id']);
+    $image = \App\Entity\Image::load( (int) $_REQUEST['id']);
     if ($image instanceof \App\Entity\Image) {
 
-        header("Content-Type: " . $image->mime);
+        header("Content-Type: " . $image->mime ?? 'application/octet-stream');
         if (($_REQUEST['t'] ??'') == "t" && strlen($image->thumb) > 0) {
             header("Content-Length: " . strlen($image->thumb));
             echo $image->thumb;

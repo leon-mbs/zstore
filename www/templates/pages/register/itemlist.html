@@ -115,6 +115,7 @@
                  <div class="table-responsive-lg  "    >
              
                 <table class="table      table-sm  table-hover ">
+                   <thead>
                     <tr>
                         {{#useimages}}
                         <th></th>
@@ -153,7 +154,9 @@
 
 
                     </tr>
-                    <tr zippy="itemlist">
+                    </thead>
+                    <tbody>
+                    <tr zippy="itemlist"  >
                         {{#useimages}}
                         <td>
                             <a zippy="imagelistitem" data-type="image" data-toggle="lightbox" data-gallery="thumb"> <img
@@ -201,6 +204,7 @@
                         <td colspan="10" class="  font-weight:bolder"> Всього на суму: <span zippy="totamount"></span> </td>
 
                     </tr>
+                     </tbody>
                 </table>
                 <div zippy="pag"></div>
                </div>

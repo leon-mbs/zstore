@@ -16,6 +16,19 @@ class ShowReport extends \Zippy\Html\WebPage
             die;
         }
 
+        
+        if ($type == "print") {
+            header("Content-Type: text/html;charset=UTF-8");
+            
+            $html = \App\Session::getSession()->printform;
+            \App\Session::getSession()->printform ='';
+            header('Content-Length: '.strlen($html));
+            echo $html;
+            flush()  ;
+            die;            
+        }        
+        
+        
         $filename = $filename . date('_Y_m_d');
         $html = \App\Session::getSession()->getExportReport();
         if (strlen($html) == 0) {
@@ -28,9 +41,7 @@ class ShowReport extends \Zippy\Html\WebPage
         if ($type == "preview") {
             header("Content-Type: text/html;charset=UTF-8");
         }
-        if ($type == "print") {
-            header("Content-Type: text/html;charset=UTF-8");
-        }
+   
         if ($type == "doc") {
             header("Content-type: application/vnd.ms-word");
             header("Content-Disposition: attachment;Filename={$filename}.doc");
