@@ -303,6 +303,22 @@ class Item extends \ZCL\DB\Entity
         
     }
 
+    /**
+    * база для наценки: последняя закупочная цена,
+    * а для готовой продукции и полуфабрикатов без поступлений - себестоимость по спецификации (или costprice)
+    *
+    * @param mixed $store склад
+    */
+    public function getMarkupBase($store = 0) {
+        $partion = $this->getLastPartion($store, "", true);
+        if ($partion == 0 && ($this->item_type == self::TYPE_PROD || $this->item_type == self::TYPE_HALFPROD)) {
+            if ($this->costprice > 0 || \App\Entity\ItemSet::findCnt("pitem_id=" . $this->item_id) > 0) {
+                $partion = $this->getProdprice();
+            }
+        }
+        return $partion;
+    }
+
     //Вычисляет  отпускную цену без скидок
     //$_price - цифра (заданая цена) или  наименование  цены из настроек
     //$store - склад
@@ -344,7 +360,7 @@ class Item extends \ZCL\DB\Entity
             if (is_numeric($ret)) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену
-                    $partion = $this->getLastPartion($store,"",true);
+                    $partion = $this->getMarkupBase($store);
                 }
                 $price = $partion + doubleval($partion) / 100 * $ret;
 
@@ -360,7 +376,7 @@ class Item extends \ZCL\DB\Entity
             if ($cat != null) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену
-                    $partion = $this->getLastPartion($store,"",true);
+                    $partion = $this->getMarkupBase($store);
                 }
                 if ($_price_ == 'price1' && $cat->price1 > 0) {
                     $price = $partion + doubleval($partion)  / 100 * $cat->price1;
@@ -388,7 +404,7 @@ class Item extends \ZCL\DB\Entity
 
             if ($partion == 0) {
                 //ищем последнюю закупочную  цену
-                $partion = $this->getLastPartion($store,"",true);
+                $partion = $this->getMarkupBase($store);
             }
 
             $price = $partion + (doubleval($partion) / 100) * $common['defprice'];
