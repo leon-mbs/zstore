@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <meta name="description" content="Бібліотека для цифрового підпису">
+
+</head>
+
+<body>
+
+    <section class="ppo">
+        <div class="container">
+
+
+            <div class="row">
+                <div class="col-sm-12   text-format">
+
+                    <h2 id="zdb" class="ppo__title title-h3 title-center">Бібліотека для цифрового підпису</h2>
+                    <p>
+
+                        Бібліотека для цифрового підпису документів, що надсилаються до податкової (Україна)
+
+                    </p>
+                    <p>Основний репозiторiй на <a class="link" target="_blank" href="https://github.com/leon-mbs/ppolib">Гiтхабi</a></p>
+
+                
+
+
+
+                        Розпаковка ключа та сертифiкату
+                    <pre><code class="php"> 
+       $cert =    \PPOLib\Cert::load($certdata) ;
+       
+       $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
+          </code></pre>
+                    <br> Де<br>
+                    $certdata - змiст файлу сертифiката <br>
+                    $keydata - змiст файлу ключа <br>
+                    $password - пароль до ключа
+                    <br><br>
+                    Оскільки розпакування відбувається досить повільно, об'єкти $cert і $key слід
+                    покласти в сесію, або серіалізувати та сховати у надійному сховищі для подальшого використання <br>
+
+                    Підпис документа або команди
+                    <pre><code class="php">   
+       $signeddata=  \PPOLib\PPO::sign('{"Command":"Objects"}'',$key,$cert);
+      </code></pre>
+
+                    Відправка запиту в податкову
+                    <pre><code class="php">  
+       $answer =  \PPOLib\PPO::send($signeddata,'cmd')  ;
+     </code></pre>
+
+                    Якщо надсилається документ, відповіддю будуть підписані дані, з яких потрібно вийняти документ з відповіді (зазвичай
+                    xml)
+                    <pre><code class="php"> 
+       $data = \PPOLib\PPO::decrypt($answer,true) ;
+      </code></pre>
+                    Якщо припускати, що відповідь з податкової буде підписана правильно, то другий параметр (перевірка підпису) можна не
+                    вказувати -
+                    це прискорить обробку.
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+</body>
+
+</html>

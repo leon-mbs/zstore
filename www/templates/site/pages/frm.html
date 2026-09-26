@@ -1,0 +1,1140 @@
+<html>
+
+<head>
+    <meta name="description" content="Компонентный событийно-ориентированный PHP фреймворк Zippy.">
+
+
+</head>
+
+<body>
+    <section class="zippy">
+        <div class="container">
+            <div class="row">
+
+                <div class=" col-md-3   .d-none .d-md-block       ">
+
+                    <ul class="nav flex-column" data-offset-top="60" data-offset-bottom="100">
+
+
+                        <li class="nav-item nav-menu"><a class="nav-link link link-anchor" href="#what">Что такое Zippy?</a> </li>
+                        <li class="nav-item nav-menu"><a class="nav-link link link-anchor" href="#feat">Главные особенности</a> </li>
+                        <li class="nav-item nav-menu"><a class="nav-link link link-anchor" href="#arch">Архитектура</a> </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#archs">Общие сведения</a> </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor"   href="#archp">Жизненный цикл
+                                страницы</a>
+                        </li>
+                        <li class="nav-item nav-menu"><a class="nav-link link link-anchor" class="nav-link link link-anchor"
+                                href="#basecomp">Основные
+                                компоненты</a> </li>
+
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#WebApplication"
+                                title="WebApplication">WebApplication</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#WebPage" title="WebPage">WebPage</a>
+                        </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#HtmlComponent"
+                                title="HtmlComponent">HtmlComponent</a>
+                        </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#HtmlContainer"
+                                title="HtmlContainer">HtmlContainer</a>
+                        </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#Label" title="Label">Label</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#Panel" title="Label">Panel</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#links" title="Ссылки">Ссылки</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#components_of_form"
+                                title="Компоненты формы">Компоненты
+                                формы</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#interfaces"
+                                title="Интерфейсы">Интерфейсы</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#events" title="События">События</a>
+                        </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#binding"
+                                title="Биндинг (привязка данных)">Биндинг
+                                (привязка данных)</a></li>
+
+                        <li class="nav-item  nav-menu"><a class="nav-link link link-anchor" href="#tables">Табличный вывод</a> </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#dataview">DataView</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#datatable">DataTable</a></li>
+                        <li class="nav-item "><a class="nav-link link link-anchor" href="#datasource">Источники данных</a></li>
+                        <li class="nav-item  nav-menu"><a class="nav-link link link-anchor" href="#dop">Дополнительные возможности</a> </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#inheritance_pages"
+                                title="Наследование страниц">Наследование страниц</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#widgets"
+                                title="Фрагменты страниц (виджеты)">Фрагменты
+                                страниц (виджеты)</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#custom_components"
+                                title="Пользовательские компоненты">Пользовательские компоненты</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#ajax" title="Ajax">Ajax</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#callmethod">Вызов метода страницы</a>
+                        </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#changeable_themes"
+                                title="Сменяемые темы">Сменяемые
+                                темы</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#sef" title="ЧПУ(SEF)">ЧПУ(SEF)</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#caching"
+                                title="Кеширование">Кеширование</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#addtemplater"
+                                title="Вспомагательный шаблонизатор">Вспомагательный шаблонизатор</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#spa"
+                                title="Создание  страниц в  стиле  SPA  и Web API">Создание страниц в стиле SPA и Web API</a></li>
+
+
+                        <li class="nav-item  nav-menu"><a class="nav-link link link-anchor" href="#tips">Советы и решения типовых задач </a>
+                        </li>
+
+                        <li class="nav-item  nav-menu"><a class="nav-link link link-anchor" href="#lib">Библиотека компонентов</a> </li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#gantt">Диаграмма Ганта</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#captcha">Капча</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#db">Компоненты для работы с БД</a></li>
+                        <li class="nav-item nav-submenu"><a class="nav-link link link-anchor" href="#bt">Twitter Bootstrap компоненты</a>
+                        </li>
+
+
+
+
+
+                    </ul>
+                </div>
+
+                <div class="col-md-9    text-format zippy-content">
+                    <h1 class="zippy__title title-h2 title-center">PHP фреймворк Zippy</h1>
+                    <br>
+                    <h2 id="what" class="zippy-content__title title-h3">Что такое Zippy?</h2>
+                    <p>
+                        &nbsp; &nbsp;<strong>Zippy</strong> – компонентный событийно-
+                        ориентированный фреймворк на <a class="link" href="http://www.php.net">PHP</a>,
+                        предназначенный для быстрой
+                        разработки сайтов. <strong>Zippy</strong> легок для
+                        изучения, обеспечивает полное
+                        отделение дизайна от логики, а также
+                        отделение бизнес-логики от функций
+                        обеспечения жизненного цикла и
+                        состояния элементов страницы.
+                    </p>
+                    <h2 id="feat" class="zippy-content__title title-h3">Главные особенности</h2>
+
+                    <ul>
+                        <li>Небольшой размер.</li>
+                        <li>Полное отделение дизайна от бизнес-логики.</li>
+                        <li>Использование пространства имен для разделения классов и модулей.</li>
+                        <li>Компонентная, легко расширяемая структура.</li>
+                        <li>Интуитивно понятная архитектура фреймворка и компонентов (особенно для разработчиков,
+                            имеющих опыт с <span>RAD</span> средами типа <span>Delphi</span>, <span>ASP.NET</span>).</li>
+                        <li>Автоматическое сохранение состояния страницы при перезагрузке (включая деревья).</li>
+                        <li>Прозрачная, не требующая дополнительного кодирования, поддержка <span>Ajax</span>.</li>
+                        <li>Русская документация.</li>
+                        <li>Библиотека компонентов <a class="link" href="#lib">ZCL</a>.</li>
+                    </ul>
+
+
+                    <p> &nbsp; &nbsp;Главная идея – предоставить разработчику необходимый набор компонентов, который позволит
+                        сосредоточиться на разработке бизнес-логики сайта.
+                        <br>&nbsp; &nbsp;Разработчику нет необходимости работать с запросами, роутерами,
+                        многочисленными API - он работает только с событиями и свойствами серверных компонентов.
+                        Обмен данными с браузером, рендеринг шаблона страницы, обработка
+                        запросов и т.д. обеспечивается компонентами, соответствующими клиентским элементам страницы. То есть если вы
+                        кликнули
+                        на странице по ссылке или кнопке, все что вам нужно - это назначить
+                        на серверной стороне обработчик данного события для данного компонента (компонент - это просто PHP класс) и написать
+                        в нем
+                        код бизнес-логики.
+                        <br>&nbsp; &nbsp; Обмен данными с компонентами производится через свойства этих компонентов -
+                        если, например, вам нужно вывести выпадающий список, вы просто передаете компоненту ассоциативный массив.
+
+
+                    </p>
+
+                    <p> &nbsp; &nbsp;Компонентная структура <strong>Zippy</strong> позволяет легко разделять работу между разработчиками,
+                        расширять и создавать новые компоненты и модули. Наиболее эффективное применение
+                        фреймворка – интерактивные сайты, предполагающие взаимодействие с пользователями
+                        аналогично десктопным приложениям (так называемый rich-интерфейс).</p>
+                    <p>&nbsp; &nbsp;Основные архитектурные решения по разделению логики и представления заимствованы с
+                        фреймворка <a href="http://wicket.apache.org">Wicket</a> (в некотором смысле можно рассматривать как портинг на
+                        PHP), а также
+                        (прямо или косвенно) ряд идей с таких решений как: JSF, ASP.NET, Delphi for PHP и подобных
+                        компонентно-ориентированных систем.</p>
+
+
+
+                    <h2 id="ust" class="zippy-content__title title-h3">Установка</h2>
+                    <p>
+
+                        Установка фреймворка производится с помощью Composer.
+                        <br><br>
+                        <b> composer require leon-mbs/zippy </b>
+                        <br><br>
+                        В заголовке страницы указать
+                        <code><br>&lt;link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/bootstrap.css"&gt;
+                        <br>&lt;link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.min.css"&gt;
+                        <br>&lt;script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"&gt;
+                        <br>&lt;script src="/vendor/leon-mbs/zippy/assets/js/bootstrap.bundle.js" type="text/javascript"&gt;
+                        <br>&lt;script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle.min.js" type="text/javascript"&gt;
+                    </code>
+                        <br> &nbsp;&nbsp;Эти файлы включают необходимые фронт-энд библиотеки - JQuery, Twitter Bootstrap, Awesome font и все
+                        необходимые плагины и компоненты.
+                        <br><br>
+                        Кроме того, можно <a class="link" href="http://zippy.com.ua/download/frm-full.zip">скачать </a> фреймворк в сборе
+                        со всеми необходимыми библиотеками в виде архива.
+                    </p>
+
+
+                    <p> Репозиторий фреймворка на GitHub:
+                        <a class="link" href="https://github.com/leon-mbs/zippy" target="_blank">Ссылка</a>
+                    </p>
+                    <p><a class="link" href="/api/index.html" target="_blank">Документация</a> по классам фреймворка</p>
+                    <h3 id="archs" class="zippy-content__title title-h4">Как начать</h3>
+                    <p>
+                        Вместе с фреймворком в папке demo идет демо приложение с примерами. Это приложение можно использовать как стартовое
+                        (заготовку).
+                        Нужно только заменить страницы с примерами на свои. Перед началом работы разумеется необходимо выполнить Сomposer.
+                        <br>
+                        Можно также <a class="link" href="http://zippy.com.ua/download/frm-demo.zip">скачать </a> демо-приложение в сборе с
+                        фреймворком.
+                        Также можно смотреть исходники проектов,
+                        где можно найти примеры организации работы с БД, подключение авторизации и пр.
+
+                    </p>
+
+
+                    <h2 id="arch" class="zippy-content__title title-h3">Архитектура</h2>
+
+                    <h3 id="archs" class="zippy-content__title title-h4">Общие сведения</h3>
+                    <p>
+                        Основным элементом сайта, построенного с использованием Zippy, является страница.
+                        Страница состоит из PHP класса - наследника от класса <a class="link" target="_blank"
+                            href="/api/Zippy.Html.WebPage.html"><code>WebPage</code></a> (бэкенд) и HTML файла (фронтэнд).
+                        Для каждого элемента (HTML тэга) страницы, связанного с бизнес-логикой, создается экземпляр
+                        соответствующего класса (Zippy-компонент) в PHP коде.
+                    </p>
+
+                    <strong>Пример:</strong>
+
+                    <pre><code class="html">
+&lt;body>
+&lt;span zippy="msg">&lt;/span>
+ &lt;a  zippy="onmsg">Клик&lt;/a>
+&lt;/body>
+  </code></pre>
+
+
+                    <pre>  <code class="php">
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+
+class Example1 extends \Zippy\Html\WebPage
+{
+    //В конструкторе  создаем  экземпляры компонентов
+    public function __construct($params = null) {
+            $this->add(new Label('msg'));
+            $this->add(new ClickLink('onmsg', $this, 'OnClick'));
+    }
+    // Обработчик  клика  по  ссылке
+    public function OnClick($sender) {
+            //Присваиваем  текст для вывода  в  тэге  span
+            $this->msg->setText("OK");
+    }
+}
+</code>  </pre>
+                    <p>
+                        Компонент обеспечивает рендеринг в HTML, сохранение состояния
+                        (в том числе для элементов ввода), а также вызов обработчиков событий,
+                        возникающих при навигации пользователя по странице. Связь между компонентом
+                        и HTML представлением обеспечивается с помощью атрибута <code>"zippy"</code> в
+                        соответствующих HTML тэгах. При создании экземпляра компонента в его
+                        конструктор передается значение атрибута <code>"zippy"</code>, которое присваивается полю
+                        <code>id</code>, определенному в классе <code>HtmlComponent</code>, от которого наследуются все компоненты.
+                        <br>&nbsp;&nbsp;Таким образом HTML код не включает в себя никаких скриплетов и прочих чужеродных
+                        вставок. При рендеринге компонент, манипулируя тегом, изменяет его значение и/или
+                        значение его атрибутов, отображая таким образом свои данные в выходном HTML потоке.
+                        Важное условие - иерархия компонентов страницы строго соответствует вложенности соответствующих
+                        (с атрибутом <code>"zippy"</code>) HTML тэгов. Если, например, ссылка или другой элемент находится в форме и
+                        для формы как и для элемента необходимо создать соответствующий серверный компонент, то компонент
+                        ссылки должен быть добавлен к форме вызовом метода <code>Add</code> предварительно созданного объекта формы.
+                    <pre><code class="html">
+&lt;body&gt;
+&lt;form zippy="form1"&gt;
+ &lt;input type="text" zippy="message" &gt;
+ &lt;/form&gt;
+&lt;/body&gt;
+  </code></pre>
+                    <pre><code class="php">        public function __construct($params = null) {
+            $this->add(new Form('form1'));
+            $this->form1->add(new TextInput('message');
+    }</code></pre>
+                    <br>&nbsp;&nbsp;Кроме компонентов сохранность состояния будет обеспечена любым членам страницы
+                    до тех пор, пока не будет выполнена переадресация на другую страницу.
+                    Создание экземпляра страницы производится только при первом обращении.
+                    Это аналогично формам в десктопных приложениях. Мы создаем экземпляр класса формы и, пока форма не будет закрыта,
+                    все данные формы сохраняются.
+                    <pre><code class="php">
+use \Zippy\Html\Label;
+use \Zippy\Html\Link\ClickLink;
+
+class Example1 extends \Zippy\Html\WebPage
+{
+public $counter=0;  
+    // Обработчик  клика  по  ссылке
+    public function OnClick($sender) {
+            //Присваиваем  текст для вывода  в  тэге  span
+             
+            $this->counter++;
+            $this->msg->setText("Счетчик ". $this->counter);
+    }
+}
+</code></pre>
+                    Таким образом может быть сохранена между обновлениями страницы любая сложная структура.
+                    Естественно, если нужно очистить данные в компоненте, нужно делать это явно аналогично десктопным приложениям.
+                    <pre><code class="php">$this->msg->setText("");</code></pre>
+                    <br>&nbsp;&nbsp;Связь между классом страницы и соответствующим HTML файлом шаблона задается разработчиком сайта,
+                    что позволяет избежать жесткой структуры каталогов, а также легко реализовать сменяемый дизайн
+                    и/или локализацию. Жизненный цикл страницы и навигация между страницами обеспечивается классом
+                    <code>WebApplication</code> в зависимости от анализа запросов браузера к серверу.
+                    </p>
+
+
+                    <h3 id="archp" class="zippy-content__title title-h4">Жизненный цикл страницы</h3>
+
+                    <p>
+                        При первом открытии страницы приложение создает экземпляр класса страницы. В конструкторе
+                        страницы создаются экземпляры всех компонентов страницы, выполняется биндинг и назначение обработчиков
+                        событий. Затем экземпляр класса страницы сериализуется со всем содержимым и записывается в сессионное
+                        хранилище. После этого приложение загружает HTML шаблон с места на диске, указанного разработчиком в
+                        функции <code>getTemplate</code>, парсит его и вызывает метод рендеринга класса страницы. Класс страницы
+                        рендерит все дочерние компоненты. Компонент изменяет соответствующий ему (связанный через атрибут
+                        <code>zippy</code>)
+                        HTML тэг, корректируя его содержание и/или атрибуты. После рендеринга страницы приложение отправляет
+                        измененный HTML код браузеру.
+                    </p>
+
+                    <p>
+                        При запросе со страницы (например, клик по ссылке) приложение десериализует экземпляр класса страницы из сессии и
+                        находит компонент - инициатор запроса (ссылка, кнопка и т.д.). Компонент активизирует связанную с ней
+                        пользовательскую функцию – обработчик события, которым обычно является метод класса страницы,
+                        поскольку это позволяет иметь доступ ко всем компонентам страницы и таким образом реализовать всю бизнес-логику,
+                        связанную с поведением страницы, обменом данных и т.д. Затем экземпляр страницы вместе с экземплярами всех
+                        компонентов
+                        (хранящих текущее состояние данных) сохраняется в сессионном хранилище, выполняется рендеринг и
+                        отправка ответа в браузер. Сессионное хранилище сохраняет историю изменения страниц, что позволяет
+                        отдавать страницу с соответствующим "историческим" состоянием при навигации браузера
+                        кнопками "вперед"/"назад".
+                    </p>
+
+                    <img src="/assets/images/Diagram1.png" alt="diagram" width="100%">
+
+
+                    <h2 id="basecomp" class="zippy-content__title title-h3">Основные компоненты</h2>
+
+
+                    <h3 id="WebApplication" class="zippy-content__title title-h4">WebApplication</h3>
+
+                    <p>
+                        Класс приложения. Выполняет разбор HTTP запроса, управляет жизненным циклом страницы
+                        и формирует ответ для клиента. Для использования создать экземпляр класса наследнинка от <a class="link"
+                            target="_blank" href="/api/Zippy.WebApplication.html"><code>WebApplication</code></a> и
+                        переопределить минимум одну функцию загрузки шаблонов страниц <code>getTemplate</code>.
+                        Входным параметром является имя класса страницы, выходным - содержание
+                        шаблона. Пример реализации можно посмотреть в демо приложеиии.
+                        Управляя загрузкой шаблона можно легко реализовать сменяемые темы сайта.
+                        <br>В сложных проектах функцию обработки (или несколько функций, если модульное приложение) можно установить методом
+                        <code>setTemplate</code> и может задаватся строковым именем
+                        или лямбдой. В этом случае можно не создавать свой экзеспляр приложения, а использовать непосредственно
+                        <a class="link" target="_blank" href="/api/Zippy.WebApplication.html"><code>WebApplication</code></a>.
+                    </p>
+
+                    <p>
+                        При создании экземпляра <a class="link" target="_blank"
+                            href="/api/Zippy.WebApplication.html"><code>WebApplication</code></a> или собственного класса-наследника в
+                        конструктор необходимо передать имя класса начальной
+                        страницы сайта. Пример кода из index.php:
+                    </p>
+                    <pre>  <code class="php">
+
+class Application extends \Zippy\WebApplication
+{
+
+public function getTemplate($name)
+{
+    //загрузка  шаблонов  для  страниц
+ 
+    $name = str_replace("Pages\\", "", ltrim($name, '\\'));
+
+    $path = __DIR__ . '/' ."templates/" .  strtolower($name) . ".html";
+
+
+    $template = file_get_contents($path);
+    if ($template == false) {
+        new \Exception('Неверный путь к шаблону страницы: ' . $path);
+    }
+
+    return $template;
+}
+
+// если  требуется  роутинг
+public function Route($uri){
+     if($uri == '')  $uri = 'page1';
+     
+     $uria= explode("/",$uri);
+     
+     if($pages[$uria[0]]=='page1'){
+        $this->LoadPage("\\Pages\\Page1");
+     }
+     else if ($pages[$uria[0]]=='page2'){    
+        $this->LoadPage("\\Pages\\Page2",$uria[1]); //страница с параметром
+     }
+     else {
+        $this->getResponse()->to404Page() ;   
+     }
+}
+
+
+}
+
+// создаем  экземпляр приложения с  параметром класса  главной страницы сайта
+$app = new Application('Pages\Main');
+
+$app->Run();
+
+
+</code>  </pre>
+
+                    <h3 id="WebPage" class="zippy-content__title title-h4">WebPage</h3>
+
+                    <p>
+                        Класс страницы. Для создания класса необходимо расширить абстрактный класс <a class="link" target="_blank"
+                            href="/api/Zippy.Html.WebPage.html"><code>WebPage</code></a>.
+                        В конструкторе создаются все компоненты страницы. Иерархия компонентов должна строго
+                        соответствовать вложенности тэгов с атрибутом <code>zippy</code> в шаблоне. Как правило, в классе
+                        страницы создаются функции обработчиков событий, а также реализуется логика работы
+                        страницы. Экземпляры компонентов страницы создаются один раз при первом обращении к
+                        странице. Отслеживать жизненный цикл страницы можно переопределив методы
+                        <code>beforeRequestHandle()</code>, <code>afterRequestHandle()</code> и пр.
+                        <br>Приинцип работы класса страницы напомнинает класс бекенда в ASP WebForms или
+                        десктопных Delphi/WinForms - экземпляр класса страницы (формы) содержит остальные элементы как контейнер,
+                        управляет их жизненным циклом. Обработчики
+                        событий элементов являются методами класса страницы.
+                    </p>
+
+
+                    <h3 id="HtmlComponent" class="zippy-content__title title-h4">HtmlComponent</h3>
+
+                    <p>
+                        Базовый класс для всех компонентов. Каждый компонент имеет уникальный в пределах страницы номер
+                        элемента (поле <code>id</code>) , соответствующий аттрибуту <code>zippy</code> из соответствующего тэга HTML
+                        шаблона.
+                        Каждый компонент, расширяющий базовый класс, должен реализовать метод <code>RenderImpl()</code>, который отвечает
+                        за рендеринг (прорисовку) компонента на странице путем изменения HTML тэга, связанного с данным
+                        компонентом. Свойство <code>attributes</code> позволяет управлять атрибутами HTML тэга. Содержимое тэга задается
+                        классами-потомками <a class="link" target="_blank"
+                            href="/api/Zippy.Html.HtmlComponent.html"><code>HtmlComponent</code></a>
+                        в зависимости от его типа.
+                    </p>
+
+
+                    <h3 id="HtmlContainer" class="zippy-content__title title-h4">HtmlContainer</h3>
+
+                    <p>
+                        Базовый класс контейнера для компонентов. Контейнерами являются: класс страницы, класс HTML формы,
+                        панели (обычно тэг <code>DIV</code>) и прочие компоненты которые могут содержать в себе другие объекты типа
+                        <a class="link" target="_blank" href="/api/Zippy.Html.HtmlComponent.html"><code>HtmlComponent</code></a> (то
+                        есть HTML
+                        тэги, которые могут содержать вложенные тэги). Сам <a target="_blank"
+                            href="/api/Zippy.Html.HtmlContainer.html"><code>HtmlContainer</code></a>
+                        также является наследником от <a class="link" target="_blank"
+                            href="/api/Zippy.Html.HtmlComponent.html"><code>HtmlComponent</code></a>. В классе перегружены
+                        методы<code> __set()</code> и<code> __get()</code>, поэтому
+                        к вложенным компонентам можно обращаться, используя динамическое свойство, совпадающее с <code>ID</code> компонента.
+                        Например:
+                    </p>
+
+
+                    <pre><code  class="html">
+&lt;form zippy="form1"&gt;
+&lt;input  type="text" zippy="username"&gt;
+&lt;/form&gt;
+</code></pre>
+
+
+                    <pre><code  class="php">
+$form = new Form();
+$form = add(new TextInput('username'));
+...
+$form->username->getText();
+</code></pre>
+
+                    <h3 class="zippy-content__title title-h4">Диаграмма иерархии основных компонентов</h3>
+
+                    <img src="/assets/images/Diagram2.png" alt="diagram">
+
+
+
+                    <h3 id="Label" class="zippy-content__title title-h4">Label</h3>
+
+                    <p><a class="link" target="_blank" href="/api/Zippy.Html.Label.html"><code>Label</code></a>Служит для вывода
+                        текстовых данных
+                        на странице. Как правило отображается с
+                        помощью тэга <code>SPAN</code>, но можно использовать <code>TD</code>, <code>DIV</code> и прочие, которые могут
+                        иметь
+                        текстовое содержимое внутри тега.</p>
+
+                    <h3 id="Panel" class="zippy-content__title title-h4">Panel</h3>
+
+                    <p><a class="link" target="_blank" href="/api/Zippy.Html.Panel.html"><code>Panel</code></a> используется как
+                        контейнер, когда
+                        надо временно скрыть группу элементов.
+                        Например, при редактировании строки таблицы скрыть таблицу и показать форму редактирования.
+                        Поскольку работа происходит в пределах той же страницы, сохраняются все сортировки, фильтрация и пагинация таблицы.
+                        Как правило, компонент отображается с помощью тэга <code>div</code> или другого блочного элемента.
+                    </p>
+
+
+                    <h3 id="links" class="zippy-content__title title-h4">Ссылки</h3>
+
+                    <p> Фреймворк содержит несколько разновидностей компонентов для HTML ссылок.
+                        Все они привязываются к тэгу &lt;a&gt; шаблона. Наиболее используемые:
+                    </p>
+
+                    <ul>
+                        <li><a class="link" target="_blank" href="/api/Zippy.Html.Link.ClickLink.html"><code>ClickLink</code></a> -
+                            служит для
+                            вызова обработчика события в классе cтраницы без возможности
+                            сделать закладку в браузере (поскольку это не имеет смысла - ссылка не ведет на какой-либо
+                            ресурс, а просто вызывает обработчик).
+                            <pre>  <code class="php">
+
+    public function __construct($params = null) {
+            
+        $this->add(new ClickLink('onmsg'))->onClick( $this, 'OnClick');
+    }
+    // Обработчик   
+    public function OnClick($sender) {
+             
+    }
+}
+      </code>  </pre>
+
+
+                        </li>
+                        <li> <a class="link" target="_blank"
+                                href="/api/Zippy.Html.Link.ClickLink.html"><code>BookmarkableLink</code></a> -
+                            используется для внешнего перехода или ЧПУ с возможностью создать закладку.
+                            Для указания адреса страницы указывается имя класса страницы с прямыми слешами
+                            <br>/?p=Pages/Page1
+                            <br>Могут быть указаны один или несколько (через прямой слэш) параметров
+                            <br>/?p=Pages/Page1&arg=1
+                        </li>
+                        <li> <a class="link" target="_blank"
+                                href="/api/Zippy.Html.Link.RedirectLink.html"><code>RedirectLink</code></a> -
+                            используется для редиректа на другую страницу. Имя класса страницы задается как параметр
+                            в конструкторе.
+
+                        </li>
+                        <li> <a class="link" target="_blank" href="/api/Zippy.Html.Link.SubmitLink.html"><code>SubmitLink</code></a> -
+                            отправляет
+                            форму на сервер, c возможностью вызвать обработчик события по отправке формы. </li>
+                    </ul>
+
+                    <h3 id="components_of_form" class="zippy-content__title title-h4">Компоненты формы ввода</h3>
+
+                    <p>
+                        Компоненты соответствуют тегам элементов ввода HTML формы. Для принятия данных по отправке формы компоненты
+                        реализуют метод
+                        <code>getRequestData()</code>, в котором считывают «свои» данные с <code>$_POST</code> или <code>$_GET</code>
+                        переменных. При рендеринге как и другие визуальные
+                        компоненты форматируют тэги в соответствии со своими значениями. Если значения не были изменены,
+                        отображаются данные, что были при вводе формы. Таким образом автоматически сохраняется состояние
+                        всех элементов формы - полей ввода, переключателей и т.д при перезагрузке страницы.
+                        <br>Для реакции на отправку формы, форме назначается обработчик.
+                    <pre>  <code class="php">
+    public function __construct($params = null) {
+            
+        $this->add(new Form('form1'))->onSubmit( $this, 'OnForm1');
+    }
+    // Обработчик   
+    public function OnForm1($sender) {
+             
+    }</code></pre>
+                    Вместо формы обработчик может быть назначен одному или нескольким
+                    компонентам типа <a class="link" target="_blank"
+                        href="/api/Zippy.Html.Link.SubmitLink.html"><code>SubmitLink</code></a> или
+                    <a class="link" target="_blank" href="/api/Zippy.Html.Form.SubmitButton.html"><code>SubmitButton</code></a>,
+                    которые могут
+                    отправлять форму.
+                    Компонент должен быть внутри формы.
+
+                    <pre>  <code class="php">
+         public function __construct($params = null) {
+            
+        $this->add(new Form('form1'))->onSubmit( $this, 'OnForm1');
+        $this->form1->add(new SubmitLink('sl1'))->onClick( $this, 'OnForm1');
+    }
+    // Обработчик   
+    public function OnForm1($sender) {
+             
+    }</code></pre>
+                    </p>
+
+
+                    <h3 id="interfaces" class="zippy-content__title title-h4">Интерфейсы</h3>
+
+                    <p class="indent">Для взаимодействия между собой компонентов, существует набор интерфейсов, которые должен реализовать
+                        тот или иной компонент.
+                        Наиболее используемые: </p>
+
+                    <ul>
+                        <li><a class="link" target="_blank" href="/api/Zippy.Interfaces.Requestable.html"><code>Requestable</code></a>
+                            – компонент
+                            способен обрабатывать HTTP запрос.</li>
+                        <li><a class="link" target="_blank"
+                                href="/api/Zippy.Interfaces.ClickListener.html"><code>ClickListener</code></a> –
+                            компонент может вызывать серверный обработчик события при клике мышкой. </li>
+                        <li><a class="link" target="_blank"
+                                href="/api/Zippy.Interfaces.EventReceiver.html"><code>EventReceiver</code></a> – может
+                            иметь методы - обработчики события </li>
+                        <li><a class="link" target="_blank"
+                                href="/api/Zippy.Interfaces.SubmitDataRequest.html"><code>SubmitDataRequest</code></a>
+                            – компонент принимает данные с формы.</li>
+                    </ul>
+
+                    <h3 id="events" class="zippy-content__title title-h4">События</h3>
+
+                    <p>
+                        Большинство пользовательских методов страницы (в которых реализуется бизнес-логика страницы)
+                        как правило являются обработчиками событий. Например: клик по ссылке, отправка формы, навигация
+                        по странице и т.д.
+                    </p>
+
+                    <p>
+                        Для назначения обработчика компоненту-инициатору указывается объект-получатель
+                        (обычно <code>$this</code> - объект класса страницы) и имя метода-обработчика в текстовом виде.
+                        Метод-обработчик содержит параметр <code>$sender</code> – ссылку на объект-источник (одно и тоже
+                        событие может быть назначено нескольким компонентам) и, при необходимости, дополнительные
+                        параметры.
+
+                    </p>
+
+                    <p>
+                        В адресной строке фреймворк формирует номер страницы и иерархию компонентов, в
+                        которой находится источник. При обработке запроса бекенд компоненты, являющиеся контейнерами,
+                        будут передавать вызов компоненту, <code>ID</code> которого следующее в иерархии, вплоть до
+                        последнего – инициатора события (то есть по фронтенду которого например кликнули мышкой).
+                    </p>
+
+                    <p>
+                        Механизм событий избавляет разработчика от забот по функционированию страницы, разборе
+                        запроса и формированию ответа клиенту. Разработчик работает с методами событий аналогично
+                        приложениям типа <span>Delphi</span> или WinForms.
+
+                    </p>
+
+
+
+
+                    <h3 id="binding" class="zippy-content__title title-h4">Биндинг (привязка данных)</h3>
+
+                    <p class="indent">
+                        Позволяет связать переменную или свойство класса с данными компонента для
+                        того, чтобы работать не с компонентами напрямую, а с переменными или полями
+                        бизнес-объектов.
+                    </p>
+
+                    <p>
+                        Например, при биндинге компонента <code>Label</code> с полем страницы <code>$msg</code> в функциях
+                        бизнес-логики достаточно присвоить значение полю и текст будет выведен на
+                        страницу компонентом <code>Label</code>. Если, например, какая-либо переменная привязана
+                        к компоненту <code>TextInput</code> при вводе данных с поля формы, значение поля автоматически
+                        присвоится переменной. Биндинг задается ссылкой и именем привязываемого свойства.
+                    </p>
+
+                    <pre>
+    <code class="php">
+&lt;php
+
+use  \Zippy\PropertyBinding as  Bind;
+
+class Example2 extends \Zippy\Html\WebPage {
+
+public $msg, $text;
+
+public function __construct($params = null) {
+
+    $this->add(new Label('outputtext', new Bind($this, 'msg')));
+    $form = $this->add(new Form('form1'));
+    $form->onSubmit($this, 'OnSubmit');
+    $form->add(new TextInput('inputtext', new Bind($this, 'text')));
+}
+
+public function OnSubmit($sender) {
+    $this->msg = $this->text;
+}
+}  </code>
+                </pre>
+
+                    <h2 id="tables" class="zippy-content__title title-h3">Вывод списочных данных</h2>
+                    <h3 id="dataview" class="zippy-content__title title-h4">DataView</h3>
+                    <p class="indent">Основное назначение компонента <a class="link" target="_blank"
+                            href="/api/Zippy.Html.DataList.DataView.html"><code>DataView</code></a> -
+                        вывод табличных данных.
+                        <br> Пример на основе демо приложения
+                    <pre><code class="html">
+&lt;table &gt;
+     &lt;tr&gt;&lt;th&gt;ФИО&lt;/th&gt;&lt;th&gt;Возраст&lt;/th>&lt;th&gt;> &lt;/th>&lt;/tr&gt;
+     &lt;tr zippy="list"&gt;&lt;td>&lt;span zippy="fio">&lt;/span>&lt;/td&gt;
+     &lt;td&gt;&lt;span zippy="age"&gt;&lt;/span&gt;&lt;/td&gt;
+     &lt;td&gt;&lt;a  zippy="edit"&gt;Редактировать>&lt;/a&gt; &lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;/table&gt; 
+     
+ </code></pre>
+                    <pre><code class="html">
+ 
+public function __construct()
+{
+   $this->add(new DataView('list',new DataSource(),$this,'listOnRow'))->Reload();
+
+} 
+public function listOnRow($row){
+//получаем  объект данных, связанный со  строкой 
+$item = $row->getDataItem();
+
+//создаем  компоненты в  строке
+$row->add(new Label('fio',$item->fio));
+$row->add(new Label('age',$item->age));
+$row->add(new ClickLink('edit'))->onClick($this,'editOnClick');
+}    
+
+//обработчик редактирования
+public function editOnClick($sender){
+//получаем  объект данных, связанный со  строкой 
+$item = $sender->getOwner()->getDataItem();
+
+//заполняем форму редактирования  и т.д.
+}
+ </code></pre>
+                    Для инициализации вывода необходим источник данных, возвращающий массив обьектов классов, реализующих интерфейс
+                    <a class="link" target="_blank" href="/api/Zippy.Interfaces.DataItem.html"><code>DataItem</code></a> или
+                    расширяющий класс
+                    <a class="link" target="_blank" href="/api/ZCL.DB.Entity.html"><code>Entity</code></a> и
+                    обработчик, в котором будут создаваться компоненты вывода.
+                    <br>Строка данных - обычный контейнер, базирующийся на теге &lt;tr>.
+                    Добавлять можно любые компоненты (кроме вложенных DataView). DataView сам размножит компоненты данных для каждой строки.
+                    <br>При необходимости можно добавить пагинатор
+                    <a class="link" target="_blank" href="/api/Zippy.Html.DataList.Paginator.html"><code>Paginator</code></a> или
+                    <a class="link" target="_blank" href="/api/Zippy.Html.DataList.Pager.html"><code>Pager    </code></a>.
+                    <pre><code class="html">&lt;div zippy="pag>&lt;/div> </code></pre>
+
+                    <pre><code class="php">
+ $this->add(new DataView('list',new DataSource(),$this,'listOnRow'));
+ //добавляем  пагинатор для вывода
+ $this->add(new Paginator("pag",$this->list));
+ //устанавливаем количество  строк  на  странице
+ $this->list->setPageSize(25));
+ 
+ $this->list->Reload();
+ 
+</code></pre>
+                    DataView может использовать для вывода и другие блочные элементы, например, если надо вывести список товаров или галерею
+                    рисунков.
+                    Для примера выше (бекенд тот же)
+                    <pre><code class="html">
+&lt;div class="row"&gt;
+&lt;div class="col-md-4" zippy="list"&gt;
+     &lt;span zippy="fio"&gt;&lt;/span&gt;
+     &lt;span zippy="age"&gt;&lt;/span&gt;
+&lt;/div&gt; 
+&lt;/div&gt; 
+ </code></pre>
+
+
+                    </p>
+                    <h3 id="datatable" class="zippy-content__title title-h4">DataTable</h3>
+                    <p class="indent"> Компонент <a class="link" target="_blank"
+                            href="/api/Zippy.Html.DataList.DataTable.html"><code>DataTable</code></a>
+                        предназначен для работы с тегом &lt;table>. Компонент сам создает заголовки и пагинацию (если указано), но выводит
+                        данные только в виде строк.
+                        Компонент чаще всего используется для вывода различного рода репортов и прочих данных, не требующих бэкенд
+                        компонентов.
+                        При создании компонента нужно создать экземпляры столбцов с указанием необходимых параметров.
+                        Для кастомизации вывода предусмотрено н обработчик <code>setCellDrawEvent</code> рендеринга ячейки, которому
+                        передается имя столбца и идентификатор записи.
+                        Также можно установить обработчик <code>setCellClickEvent</code> клика по ячейке
+                    <pre><code class="html">&lt;table zippy="report>&lt;/div> </code></pre>
+                    <pre><code class="php">
+  //выводим  таблицу  с  заголовком  и пагинатором
+  $this->add(new \Zippy\Html\DataList\DataTable("report", new DataSource(), true, true));
+   
+  // создаем  столбцы с  указанием  сортировки
+  $this->report->addColumn(new Column('fio', 'ФИО', true ));
+  $this->report->addColumn(new Column('age', 'Возраст', true ));
+ </code></pre>
+
+
+
+
+
+                    </p>
+                    <h3 id="datasource" class="zippy-content__title title-h4">Источники данных</h3>
+                    <p class="indent"> Источник данных - промежуточный компонент, унифицирующий передачу данных от разных источников
+                        компонентам
+                        <a class="link" target="_blank" href="/api/Zippy.Html.DataList.DataView.html"><code>DataView</code></a> и <a
+                            target="_blank" href="/api/Zippy.Html.DataList.DataTable.html"><code>DataTable</code></a>.
+                        Источник данных должен реализовать интерфейс <a class="link" target="_blank"
+                            href="/api/Zippy.Interfaces.DataSource.html"><code>DataSource</code></a>. Методы интервейса предписывают
+                        реализацию источником
+                        условий выборки, сортировки и пагинации.
+
+                        <br>Существует несколько видов источников.
+                        <br><b><a class="link" target="_blank"
+                                href="/api/Zippy.Html.DataList.ArrayDataSource.html"><code>ArrayDataSource</code></a></b>
+                        <br>ArrayDataSource применяется в случае использования массивов как набора данных. Если массив
+                        может изменятся в процессе работы, следует передавать массив не напрямую, а использовать биндинг (см. демо
+                        приложение).
+                        <br><b><a class="link" target="_blank"
+                                href="/api/ZCL.DB.EntityDataSource.html"><code>EntityDataSource</code></a></b>
+                        <br> EntityDataSource применяется для работы с <a class="link" target="_blank"
+                            href="/api/ZCL.DB.Entity.html"><code>Entity</code></a>. Источнику передается как параметр имя класса
+                        сущности, унаследованной от Entity.
+
+                        <br><b>Пользовательский источник</b>
+                        <br> Для сложных выборок разработчик может создать свой класс источника данных
+                        и, если нужно, связать его с компонентами страницы (например, фильтрацией).
+                    <pre><code class="php">
+    class DocDataSource implements \Zippy\Interfaces\DataSource
+    {
+        private function getWhere()
+        {
+            //возвращает  условие для  SQL запроса
+            return $where;
+        }        
+        public function getItemCount()
+        {
+            //количество  для пагинатора
+            return Document::findCnt($this->getWhere());
+        } 
+
+        public function getItems($start, $count, $sortfield = null, $asc = null)
+        {
+            //выбирает данные 
+            $docs = Document::find($this->getWhere(), "document_date desc,document_id desc", $count, $start);
+            return $docs;
+        }
+        
+        public function getItem($id)
+        {
+            
+        }            
+    }
+    
+    используется  как  обычный источник
+   $this->add(new DataView('list',new DocDataSource(),$this,'listOnRow'))->Reload();
+
+    </code></pre>
+
+                    </p>
+                    <h2 id="dop" class="zippy-content__title title-h3">Дополнительные возможности</h2>
+
+
+
+                    <h3 id="inheritance_pages" class="zippy-content__title title-h4">Наследование страниц</h3>
+
+                    <p class="indent">Наследование страниц предназначено для решения проблемы "единообразия" страниц.
+                        Если необходимо иметь на сайте меню, логотип и прочие неизменяемые от страницы к
+                        странице части, тогда нужно разместить их в базовой странице, а изменяемый контент
+                        вынести в дочерние. На уровне классов дочерняя страница просто наследуется от базовой,
+                        наследуя все ее компоненты и обработчики, на уровне разметки - содержимое тэга BODY
+                        дочерней страницы вкладывается внутрь базовой вместо тэга &lt;childpage/&gt;.</p>
+                    <p class="indent">Если в шаблоне дочерней страницы в &lt;head&gt; есть метатеги
+                        &lt;title&gt;,&lt;description&gt; и &lt;keyword&gt;, при рендеринге дочерней страницы эти теги будут перенесены с заменой в
+                        базовый шаблон.
+
+
+                    </p>
+                    <p class="indent">Дочерние страницы имеют доступ ко всем компонентам, объявленным в родительской и
+                        может ими управлять. Например подсвечивать текущий пункт меню.
+                        <br>Как пример - страница Base в демо приложении, от которой наследуются остальные.
+                    </p>
+
+
+                    <h3 id="widgets"><span>Фрагменты страниц (виджеты)</span></h3>
+
+                    <p class="indent">Фрагмент страницы - это самостоятельный блок, который добавляется в страницу как обычный компонент,
+                        но при этом имеет свой шаблон (загружается аналогично шаблону страницы). Используется, если на
+                        некоторых страницах необходимо иметь один и тот же блок данных. Например: форма поиска, блок
+                        вывода рекламы и т.д. Фрагмент может содержать любые другие компоненты и обработчики событий
+                        как обычная страница. В разметку страницы компонент обычно добавляется с помощью тэга DIV.
+                        Создается класс фрагмента наследованием от класса <a class="link" target="_blank"
+                            href="/api/Zippy.Html.PageFragment.html"><code>PageFragment</code></a>, который, в свою очередь,
+                        наследован
+                        от <a class="link" target="_blank" href="/api/Zippy.Html.HtmlContainer.html"><code>HtmlContainer</code></a>.
+                    </p>
+
+
+                    <h3 id="custom_components"><span>Пользовательские компоненты</span></h3>
+
+                    <p class="indent">Пользовательский компонент позволяет програмно сформировать произвольное содержимое для тэга
+                        (как правило DIV). Для создания пользовательского компонента (по сути пользовательского тэга) нужно
+                        создать класс-наследник от <a class="link" target="_blank"
+                            href="/api/Zippy.Html.CustomComponent.html"><code>CustomComponent</code></a> и перегрузить абстрактный
+                        метод <code>getContent()</code>.
+                        Этот метод должен вернуть HTML код, который будет записан в тэг в шаблоне страницы, предназначенный
+                        для вывода компонента.</p>
+
+
+                    <h3 id="ajax" class="zippy-content__title title-h4"><span>Ajax</span></h3>
+
+                    <p class="indent"> Поскольку фреймворк автоматически обеспечивает сохранность состояния страницы, использование
+                        <code>AJAX</code> в <code>Zippy</code>
+                        менее востребовано по сравнению с другими решениями. Тем не менее ряд компонентов могут использовать асинхронную
+                        обработку событий.
+                        Как правило использование <code>AJAX</code> не требует какого-то особого кодирования и настройки.
+                        Например, для <code>AJAX</code> обработчика <code>onClick()</code> по клику на ссылке для компонента
+                        <code>ClickLink</code> нужно только
+                        указать третий параметр как true. Для отправки формы через <code>AJAX</code>
+                        используется компонент <code>AjaxSubmitLink</code>. Обработчики события и бизнес-логика страницы выполняются
+                        аналогично обычному синхронному.
+                    </p>
+
+                    <p class="indent">Также многие компоненты имеют возможность обновляться на странице после <code>AJAX</code> вызова.
+                        Поскольку обычный рендеринг всей страницы в этом случае не выполняется,
+                        необходимо указать обновляемые элементы в обработчике события (метод страницы <code>updateAjax()</code>).
+                        Для этих компонентов (реализующих интерфейс <code>AjaxRender</code>)
+                        формируется клиентский скрипт, который обновляет их после <code>AJAX</code> ответа.</p>
+
+
+                    <strong><em>Пример:</em></strong>
+
+                    <pre>
+          <code class="php">
+
+$this->add(new ClickLink('time'))->onClick($this,'OnClick',true);
+$this->add(new Label('msg'));
+
+// ...
+
+public function OnClick($sender) {
+    $this->msg->setText('Я обновлен  через  AJAX');
+    //указываем  обновляемые  компоненты
+    $this->updateAjax('msg');
+}
+
+
+</code></pre>
+
+                    <h3 id="callmethod" class="zippy-content__title title-h4"><span>Вызов метода страницы</span></h3>
+
+                    <p class="indent"> В некоторых случаях необходимо вызвать метод страницы,
+                        не связанный с каким-либо компонентом. Вызов выполняется асинхронно с помощью AJAX запроса.
+                        <br> В общем случае вызываемый метод выглядит так:
+                    <pre>
+                  <code class="php"> 
+public function MyMethod($p, $post) {
+    return "Привет";
+}
+                  </code>  </pre>
+                    Где $p - массив параметров, если они были переданы в строке запроса,
+                    $post - данные (raw) отправленые в случае POST запроса.
+                    <br>
+                    Пример обращения с шаблона страницы:
+                    <pre>
+                  <code class="JavaScript"> 
+
+
+                  callPageMethod('MyMethod',[],null,function(answerdata){
+                     
+                  })            
+                  
+                  </code>  </pre>
+                    где <br> callPageMethod - встроеная javascript функция.
+                    <br>callPageMethod (method,params,postdata,callback)
+                    <br>method - имя метода
+                    <br> params - массив параметров
+                    <br> postdata - данные тела POST запроса (может быть FormData)
+                    <br> callback - функция, принимающая текстовый параметр - ответ сервера
+                    </p>
+
+
+                    <h3 id="changeable_themes" class="zippy-content__title title-h4"><span>Сменяемые темы</span></h3>
+
+                    <p class="indent"> Переключение сменяемых дизайнов осуществляется путем простого переключения пути к
+                        файлам в методе <code>getTemplate()</code> приложения. Например, файлы шаблонов страницы можно
+                        расположить в разных папках. </p>
+
+
+
+
+                    <h3 id="sef" class="zippy-content__title title-h4"><span>ЧПУ(SEF) и роутинг</span></h3>
+
+                    <p class="indent">
+                        Роутинг осуществляется перегрузкой метода Route() приложения (см. выше пример для WebApplication) .
+                        Функция принимает параметром URI и загружает страницу, соответствующую вызову.
+
+                        Если присутствуют параметры, они идут через прямой слеш и передаются конструктору страницы.
+                        Например, для <code>/user/2</code> конструктор страницы будет <code>public function __construct($id)</code>.
+
+
+                    </p>
+
+
+
+
+                    <h3 id="caching" class="zippy-content__title title-h4"><span>Кеширование</span></h3>
+
+                    <p class="indent">Поскольку содержимое страниц уже сериализуется и хранится в объекте сессии, а объект сессии в
+                        нагруженых
+                        приложениях обычно закеширован, то кеширование страниц не требует специального решения.</p>
+
+                    <h3 id="addtemplater"><span>Вспомагательный шаблонизатор</span></h3>
+
+                    <p class="indent">Применение вспомагательного шаблонизатора (используется <a class="link" target="_blank"
+                            href="http://mustache.github.io/">Mustache</a>)
+                        не совсем согласуется с компонентной архитектурой фреймворка. Но, как показала практика, иногда использование
+                        компонентов только для вывода
+                        текстов и управления видимостью элементов страницы получается несколько громоздким, поскольку данные операции
+                        фактически не требуют
+                        бэкенд обьектов. В этих случаях можно использовать более традиционый шаблонизатор.
+                        Данные для шаблонизатора присваиваются массиву <code>_tvars</code>, члену класса <code>WebPage</code>.
+
+
+                    </p>
+                    <h3 id="spa" class="zippy-content__title title-h4"><span>Создание страниц в стиле SPA и Web API</span></h3>
+
+                    <p class="indent">
+
+                        Страница может не содержать компонентов, а только независимые методы, вызываемые с помощью javascript функции
+                        <code>callPageMethod</code> (см. выше).
+                        Это позволяет делать страницы в SPA стиле, которые не перезагружаются (до смены страницы) при запросе к серверу.
+                        Серверный код страницы в таком случае работает как Web Api. При этом сохраняется работа PHP сессий,
+                        в частности, не требуется отдельная авторизация. Как пример, страница АРМ кухни в складской системе сделаная на Vue.
+
+
+                    </p>
+
+                    <h2 id="tips" class="zippy-content__title title-h3">Советы и решения типовых задач</h2>
+                    <p>
+
+                    <h3>Скрытие связанных элементов.</h3>
+                    Если нужно скрыть, например, лейбл вместе с элементом ввода,
+                    можно использовать атрибут "data-label", например:
+                    <pre><code>
+                    &lt;label data-label="paynotes" for="paynotes" &gt; Комментарий к оплате&lt;/label&gt;
+                   &lt;input class="form-control" type="text" zippy="paynotes"&gt;
+           
+                    </code> </pre>
+                    Если поле ввода paynotes будет скрыто функцией <code>setVisible(false) </code>,
+                    лейбл скроется вместе с ним.
+
+
+
+                    </p>
+                    <p>
+                    <h3>Переход по якорю.</h3>
+                    Для перехода в опредлеленное место страницы после обработки события
+                    можно использовать метод goAnkor() класса страницы. Параметром является id элемента
+                    или атрибут zippy (атрибуты id и name создаются в таком случае автоматически).
+
+                    </p>
+
+                    <p>
+                    <h3>Перехват событий яваскриптом на элементах с серверным обработчиком.</h3>
+                    Когда элемент имеет серверный обработчик, обычно на событие onclick фреймворк вешает соответствующий клиентский
+                    обработчик.
+                    Допустим нужно выполнить код на клиенте до того как сработает серверный обработчик. Например, спросить пользователя о
+                    подтверждении
+                    действия, или если есть ссылка <code>  &lt;a zippy="deleteitem">Удалить итем &lt;/a> </code>,
+                    <br> для перехвата нужно написать функцию с предопределенным именем, начинающуюся с check_
+                    <pre><code>
+                  &lt;script&gt;
+        function check_deleteitem() {
+
+            return confirm("Удалить  итем?")
+
+        }
+
+    &lt;/script&gt;    
+                     </code></pre>
+                    Если функция вернет false, серверный обработчик вызван не будет.
+                    </p>
+
+
+
+
+                    <br><br>
+                    <h2 id="lib" class="zippy-content__title title-h3">Библиотека компонентов</h2>
+                    <p class="indent">Библиотека представляет собой набор компонентов, построенных на расширении
+                        стандартных компонентов фреймворка. Библиотека не входит в ядро фреймворка и
+                        располагается в отдельном пространстве имен <code>ZCL</code>. </p>
+
+                    <p class="indent">Библиотека состоит из следующих компонентов:</p>
+
+
+
+                    <h3 id="gantt" class="zippy-content__title title-h4"><span>Диаграмма Ганта</span></h3>
+
+                    <p class="indent"> Компонент представляет собой реализацию серверной части для
+                        <a class="link" target="_blank" href="https://github.com/thegrubbsian/jquery.ganttView">jquery.ganttview</a>.
+
+                    </p>
+
+
+                    <h3 id="captcha" class="zippy-content__title title-h4"><span>Капча</span></h3>
+
+                    <p class="indent">Компонент реализует функциональность простейшей капчи полностью инкапсулируя генерацию кода, рисунка,
+                        формирование ссылки на рисунок и, если задан соответствующий параметр, асинхронное обновление капчи по
+                        клику на рисунке. </p>
+
+                    <p class="indent">Для реализации собственного алгоритма достаточно отнаследоваться от компонента и переопределить метод
+                        <code>OnCode</code> для генерации кода и/или метод <code>OnImage</code> для генерации изображения.
+                        Описание методов на странице <a class="link" href="http://zippy.com.ua/api/ZCL.Captcha.html"
+                            title="API">API</a>.
+                    </p>
+                    Для вывода компонента на странице используется обычный тег <code>&lt;img></code>.
+
+
+                    <h3 id="db" class="zippy-content__title title-h4"><span>Компоненты для работы с БД</span></h3>
+                    <p class="indent"> Нeсколько компонентов для работы с базами данных. Компоненты базируются на библиотеке <a class="link"
+                            href="http://adodb.sourceforge.net/" target="_blank" title="ADODB">ADODB</a>,
+                        что позволяет писать код, защищенный от sql-инъекций и переносимый между разными типами БД.<br>
+                        (На данный момент основные компоненты работы с БД выделены в отдельный
+                        проект <a class="link" target="_blank" href="/zdb">ZDB</a>)
+                    </p>
+
+                    <p class="indent">
+                        <a target="_blank" href="/api/ZCL.DB.TreeEntity.html"><code>TreeEntity</code></a> - класс-наследник <a
+                            target="_blank" href="/api/ZCL.DB.Entity.html"><code>Entity</code></a>, предназначенный для работы с
+                        иерархически
+                        организованными сущностями. В дополнение к функционалу родительского класса имеет возможномть манипулировать
+                        дочерними элементами
+                        (поиск по дереву, удаление, перемещение веток), строить дерево для компонента <code>Tree</code> на основе набора
+                        данных из БД. Данные должны быть организованы
+                        в соответствии с алгоритмом материализованного пути.
+
+                    </p>
+
+                    <p class="indent"> <a target="_blank" href="/api/ZCL.DB.EntityDataSource.html"><code>EntityDataSource</code></a> -
+                        универсальный источник данных, реализующий интерфейс <a target="_blank"
+                            href="/api/Zippy.Interfaces.DataSource.html"><code>DataSource</code></a>,
+                        позволяющий связать страничные компоненты табличного и списочного вывода с БД. В параметрах класса задаются имя
+                        класса-сущности (Entity) и, при необходимости,
+                        условие для выборки. Это позволяет разработчику избежать создания специализированного источника для простых линейных
+                        выборок.
+                    </p>
+
+                    <h3 id="bt" class="zippy-content__title title-h4">Twitter Bootstrap компоненты</h3>
+                    <p class="indent"> Некоторые компоненты, базирующиеся на Twitter Bootstrap.
+                    <ul>
+                        <li><a class="link" target="_blank" href="http://www.jondmiles.com/bootstrap-treeview">Bootstrap TreeView</a></li>
+                        <li><a class="link" target="_blank" href="https://github.com/maxwells/bootstrap-tags">Bootstrap Tags</a></li>
+                    </ul>
+                    </p>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+
+</html>
