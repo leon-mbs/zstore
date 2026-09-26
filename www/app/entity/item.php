@@ -1060,7 +1060,7 @@ class Item extends \ZCL\DB\Entity
      }
     
     /**
-    * раcпаковка штрих кода стикера
+    * распаковка штрих кода стикера
     * 
     * @param mixed $barcode
     */

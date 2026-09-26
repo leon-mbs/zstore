@@ -248,7 +248,7 @@ class Admin extends \App\Pages\Base
 
             return;
         }
-        $this->setSuccess("Документ скасoвано")  ;
+        $this->setSuccess("Документ скасовано")  ;
          
     }        
 

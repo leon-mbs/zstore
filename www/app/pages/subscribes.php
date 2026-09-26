@@ -289,7 +289,7 @@ class Subscribes extends \App\Pages\Base
             return;
         }
         if ($this->_sub->msg_type ==  0) {
-            $this->setError("Не вказано тип повiдомлення ");
+            $this->setError("Не вказано тип повідомлення  ");
             return;
         }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {

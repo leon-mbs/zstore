@@ -1,7 +1,7 @@
  
    <table class="ctable" border="0" cellpadding="1" cellspacing="0"  }>
     <tr>
-        <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звiт</td>
+        <td colspan="2" style="font-weight:bolder;text-align:center" >Z-звіт</td>
     </tr>
    
    {{#test}}

@@ -266,7 +266,7 @@ class PosList extends \App\Pages\Base
             return;
         }
         if(strlen($certdata)==0 && $isjks == false && $loadsert == false) {
-            $this->setError('Не вказано сертифiкат') ;
+            $this->setError('Не вказано сертифікат') ;
             return;
         }
 

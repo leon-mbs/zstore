@@ -195,7 +195,7 @@ class Orders extends \App\Pages\Base
                         $cust->customer_name = trim($shoporder->headerdata['wcclient']);
                         $cust->type = Customer::TYPE_BAYER;
                         $cust->phone = $phone;
-                        $cust->comment = "Клiєнт WC";
+                        $cust->comment = "Клієнт  WC";
                         $cust->save();
                   }
                 
