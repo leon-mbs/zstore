@@ -79,7 +79,7 @@
                 
                   <h5>Топ переглядiв</h5>             
                   <table class="table table-sm">
-                     <tr> <th>Товар</th><th class="text-end">Кiл.</th>  </tr>
+                     <tr> <th>Товар</th><th class="text-end">Кіл.</th>  </tr>
                     {{#topview}}
                     <tr> <td>{{n}}</td><td class="text-end">{{v}}</td>  </tr>                       
                     {{/topview}}
@@ -113,7 +113,7 @@
          
           var visdata = new google.visualization.DataTable();
           visdata.addColumn('string', 'Дата');
-          visdata.addColumn('number', 'Кiл.');
+          visdata.addColumn('number', 'Кіл.');
          
           visdata.addRows( 
            {{{vis}}}
@@ -160,7 +160,7 @@
         
          var orddata = new google.visualization.DataTable();
           orddata.addColumn('string', 'Дата');
-          orddata.addColumn('number', 'Кiл.');
+          orddata.addColumn('number', 'Кіл.');
          
           orddata.addRows( 
            {{{ord}}}

@@ -16,7 +16,7 @@
         <th style="border: solid black 1px">Бренд</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Комiрка</th>
-        <th align="right" style="border: solid black 1px">Цiна</th>
+        <th align="right" style="border: solid black 1px">Ціна</th>
         <th align="right" style="border: solid black 1px">На складi</th>
 
 

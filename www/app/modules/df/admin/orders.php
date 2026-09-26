@@ -148,10 +148,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         if($status == 1) {
            $where .= " and state   in(9,17) "  ; 
         }    
-        if($this->page->filter->from > 0) {
+        if($dfrom > 0) {
             $where .= " and  document_date >= " . $conn->DBDate($dfrom) ;
         }
-        if($this->page->filter->to > 0) {
+        if($dto > 0) {
             $where .= " and  document_date <= " . $conn->DBTimeStamp($dto+3600*24-1) ;
         }           
         if(strlen($searchnumber) > 0) {

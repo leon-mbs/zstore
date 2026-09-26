@@ -1024,7 +1024,7 @@ class OrderList extends \App\Pages\Base
                     
                     
                      if($item->newqty > $item->quantity || $item->newqty < 0 )  {
-                         $this->setError('Невiрна кiлькiсть для '.$item->itemname) ;
+                         $this->setError('Невiрна кількiсть для '.$item->itemname) ;
                          return;
                      }
                     

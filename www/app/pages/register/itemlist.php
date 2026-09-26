@@ -431,7 +431,7 @@ class ItemList extends \App\Pages\Base
         $header['F1'] = "Бренд";
         $header['G1'] = "Комірка";
         $header['H1'] = "Кiл.";
-        $header['I1'] = "Обл. цiна";
+        $header['I1'] = "Обл. ціна";
         if($this->_tvars["noshowpartion"] == true) {
             $header['I1'] ='';
         }
