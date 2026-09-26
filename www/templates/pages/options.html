@@ -16,7 +16,7 @@
                    
                          
                         <form zippy="common">
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="shopname">Назва сайту </label>
                                 <input class="form-control" type="text" zippy="shopname">
                                 <small> Назва для логотипу та сторінки логіну. </small>
@@ -24,7 +24,7 @@
 
  
   
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="qtydigits">Знаків після крапки в кількості</label>
 
                                 <select style="width:175px;" class="form-control" zippy="qtydigits">
@@ -34,7 +34,7 @@
                                     <option value="3">3</option>
                                 </select>
                             </div>
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="amdigits">Округлення вартості</label>
 
                                 <select style="width:175px;" class="form-control" zippy="amdigits">
@@ -56,7 +56,7 @@
                                    title="Друкувати дві цифри після  коми в чеках незалежно від налаштувань "></i>
                             </div>                            
                            
-                            <div class="form-group   mt-2">
+                            <div class="    mt-2">
                                 <label for="dateformat">Формат дати</label>
 
                                 <select style="width:175px;" class="form-control" zippy="dateformat">
@@ -70,14 +70,14 @@
                                 </select>
                             </div>
 
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="phonel">Довжина номера телефону</label>
                                 <select style="width:75px" class="form-control" zippy="phonel">
                                 </select>           
                             </div>
                                         
               
-                            <div class="form-group mt-2 ">  
+                            <div class="  mt-2 ">  
                                 <label for="ts_start">Початок робочого дня</label>
 
                                 <input style="width:75px;" class="form-control" zippy="ts_start"
@@ -87,7 +87,7 @@
                             </div>
 
                             
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="ts_end">Кінець робочого дня</label>
 
                                 <input style="width:75px;" class="form-control" zippy="ts_end"
@@ -95,14 +95,14 @@
 
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="ts_break">Перерва, хв.</label>
                                 <input style="width:75px;" pattern="[0-9]+" class="form-control" type="text"
                                        zippy="ts_break">
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                             </div>
 
@@ -138,20 +138,20 @@
                  
                         <form zippy="api">
 
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="atype">Тип авторизації</label>
                                 <select class="form-control" zippy="atype">
                                 </select>
                             </div>
                       
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="aexp" for="aexp">Час життя токену в хв.</label>
                                 <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
 
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                         </form>
@@ -185,10 +185,10 @@
 
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                <a zippy="loadrate">Загрузити курс НБУ</a>
                             </div>
-                          <div class="form-group">
+                          <div class="mb-2">
                                 <button zippy="saveval" class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                         </form>
@@ -201,7 +201,7 @@
                      
                          <form zippy="business">
                 
-                             <div class="form-group  ">
+                             <div class="mb-2">
                                 <label>Типи відпускних цін</label>
                                 <input class="form-control" type="text" zippy="price1"  required="on" >
                                 <input class="form-control" type="text" zippy="price2">
@@ -211,32 +211,32 @@
                                 <small>Введіть найменування типів цін. Непотрібні поля залиште  порожніми</small>
 
                             </div>
-                              <div class="form-group">
+                              <div class="mb-2">
                                 <label for="defprice">Націнка за замовчуванням, у відсотках</label>
                                 <input style="width:100px" pattern="[0-9]+" class="form-control" type="text"
                                        zippy="defprice">
                                 <small>Використовується, якщо не задана ціна в товарі або в категорії
                                     товару</small>
                             </div>
-                           <div class="form-group  ">
+                           <div class="mb-2">
                                 <label for="paytypein">Процес оплати по  ПН </label>
                                 <select class="form-control" zippy="paytypein"> </select>
                                 <small>Переважна  послідовність  оплати  при  закупівлі</small>
 
                             </div>
-                           <div class="form-group  ">
+                           <div class="mb-2">
                                 <label for="paytypeout">Процес оплати по ВН </label>
                                 <select class="form-control" zippy="paytypeout"> </select>
                                 <small>Переважна  послідовність  оплати  при  продажі</small>
 
                             </div>
-                          <div class="form-group">
+                          <div class="mb-2">
                                 <label for="actualdate">Початок актуального періоду</label>
                                 <input   class="form-control"   zippy="actualdate">
                                 <small>Дата, раніше якої заборонено виконувати проводки</small>
 
                             </div> 
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="storepart">Склад  комплектуючих і матеріалів  </label>
                                 <select class="form-control" zippy="storepart"> 
                                     <option value="0">Не вказано</option>
@@ -244,7 +244,7 @@
                                 <small class="compact">Для автосписання в комплектах. Якщо не вказано береться  склад  з документу.</small>
 
                             </div>                    
-                           <div class="form-group  ">
+                           <div class="mb-2">
                                 <label for="usesnumber">Облік ТМЦ за серіями  </label>
                                 <select class="form-control" zippy="usesnumber"> 
                                     <option value="0">Не використовується</option>
@@ -254,7 +254,7 @@
                             </div>
                           
                         
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label   for="deliverytype">Доставка (в закупці) за замовчанням</label>
                                  <select class="form-control" zippy="deliverytype">
                                     <option value="1">Віднести до загальних витрат</i> </option>
@@ -321,7 +321,7 @@
                            
                             
                                                                                         
-                               <div class="form-group">
+                               <div class="mb-2">
                                 <label for="checkslogan">Фраза в кінці чеку</label>
                                 <textarea   class="form-control"   zippy="checkslogan"></textarea>
                                 <small  class="compact">Наприклад, 'Дякуємо за довіру до нас!'. Кожен рядок - окрема фраза. 
@@ -329,7 +329,7 @@
 
                             </div>                            
                                  
-                           <div class="form-group">
+                           <div class="mb-2">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                            </div>
 
@@ -384,12 +384,12 @@
                         
     
                          
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="pmaxname">Максимальна довжина назви</label>
                                 <input style="width:100px" class="form-control" type="text" zippy="pmaxname">
                                 <small>Довжина короткої назви в довіднику ТМЦ</small>
                             </div>                            
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="pricetype">Тип ціни</label>
                                 <select class="form-control" zippy="pricetype">
                                 </select>
@@ -410,14 +410,14 @@
                                 <input zippy="pbarcode" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="pbarcode">Друкувати штрих код</label>
                             </div>
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="barcodetype">Тип коду</label>
                                 <select class="form-control" zippy="barcodetype">
                                 </select>
                             </div>
                          
                    
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <input zippy="savep" class="btn btn-success" type="submit" value="Зберегти">
                             </div>
                         </form>
@@ -431,7 +431,7 @@
                         <h4>Налаштування SMS сервісу    </h4>
                         <form zippy="sms">    
                            
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="smstype">Сервіс</label>
                                 <select class="form-control" zippy="smstype">
                                     <option value="0">Не використовується</option>
@@ -441,65 +441,65 @@
                                 <span data-label="flysmsan"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
                             
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smssemytoken" for="smssemytoken">Токен</label>
                                 <input zippy="smssemytoken"   class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smssemydevid" for="smssemydevid">Device ID</label>
                                 <input zippy="smssemydevid"   class="form-control"  >
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="flysmslogin" for="flysmslogin">Логін</label>
                                 <input zippy="flysmslogin"   class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="flysmspass" for="flysmspass">Пароль</label>
                                 <input zippy="flysmspass"   class="form-control"  >
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="flysmsan" for="flysmsan">Альфа ім'я</label>
                                 <input zippy="flysmsan"   class="form-control"  >
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smscluban" for="smscluban">Альфа ім'я (sms)</label>
                                 <input zippy="smscluban"   class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smsclubtoken" for="smsclubtoken">Токен (sms)</label>
                                 <input zippy="smsclubtoken"   class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smsclublogin" for="smsclublogin">Логін (Viber)</label>
                                 <input zippy="smsclublogin"   class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smsclubpass" for="smsclubpass">Пароль (Viber)</label>
                                 <input zippy="smsclubpass"   class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label data-label="smsclubvan" for="smsclubvan">Альфа ім'я (Viber)</label>
                                 <input zippy="smsclubvan"   class="form-control">
              
                             </div>
 
-                             <div class="form-group  ">
+                             <div class="mb-2">
                                 <label for="smscustlang">Мова скрипту</label>
                                 <select class="form-control" zippy="smscustlang">
                           
                                 </select>
                                   <small data-label="smscustlang">JS не підходить для відправки в  фоновому  режимі, наприклад з планувальника</small>
                             </div>
-                              <div class="form-group  ">
+                              <div class="mb-2">
                                 <label for="smscustscript">Код скрипту</label>
                                 <textarea style="height:400px" class="form-control" zippy="smscustscript">
                           
@@ -522,25 +522,25 @@
                                  
                             </div>
                                
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <button zippy="smssubmit" class="btn btn-success" type="submit">Зберегти</button>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <span data-label="smstestphone"><i class="fa fa-exclamation-triangle"></i> Перед перевіркою збережіть налаштування    </span> 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label   for="smstestphone">Телефон</label>
                                 <input zippy="smstestphone"   class="form-control"  >
 
                             </div> 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label   for="smstesttext">Повідомлення</label>
                                 <input zippy="smstesttext"   class="form-control"  >
 
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <button zippy="smstest" class="btn btn-success" type="submit">Відправити </button>
                             </div>
                         </form>
@@ -554,7 +554,7 @@
                         <h4>Телеграм бот</h4>
                         <form zippy="tbform">
                            
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="tbtoken">Токен бота </label>
                                 <input     class="form-control" type="text" zippy="tbtoken">
                             </div>

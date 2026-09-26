@@ -12,26 +12,26 @@
            
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>  
                  
                     
-                     <div class="form-group  ">
+                     <div class="mb-2">
                         <label for="pp">Виробничий процес</label>
                         <select class="form-control" zippy="pp">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
-                     <div class="form-group  ">
+                     <div class="mb-2">
                         <label for="psfrom">З етапу</label>
                         <select class="form-control" zippy="psfrom">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
 
-                     <div class="form-group  ">
+                     <div class="mb-2">
                         <label for="psto">До етапу</label>
                         <select class="form-control" zippy="psto">
                             <option value="0">Не обрано</option>
@@ -41,11 +41,11 @@
                     
                 </div>
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
-                     <div class="form-group  ">
+                     <div class="mb-2">
                         <label for="emp">Виконавець </label>
                         <select class="form-control  " zippy="emp">
                             <option value="0">Не вказано</option>
@@ -55,7 +55,7 @@
                   
                  
                  
-                     <div class="form-group  ">
+                     <div class="mb-2">
                         <label for="notes">Примітка </label>
                         <textarea class="form-control"   zippy="notes"></textarea>
                     </div>            
@@ -123,21 +123,21 @@
           <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
+                    <div class="mb-2">
                        <label for="edititem">Назва </label>
                         <select class="form-control select2" zippy="edititem">
                             <option value="1">Не обрано</option>
                         </select>
                     </div>
                     {{#usesnumber}}
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editserial">Серія виробника </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
 
                     {{/usesnumber}}
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editquantity">Кількість</label>
                         <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
@@ -145,7 +145,7 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary  me-2">
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
                         

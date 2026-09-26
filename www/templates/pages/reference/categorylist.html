@@ -79,16 +79,16 @@
                 <div class="col-6 col-md-4  col-xl-3">
 
                     <form zippy="categorydetail" enctype="multipart/form-data">
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="editcat_name">Назва</label>
                             <input autofocus="on"    required="on"  class="form-control" zippy="editcat_name"/>
                         </div>
-                       <div class="form-group">
+                       <div class="mb-2">
                             <label for="editcat_desc">Примітка</label>
                             <input   class="form-control" zippy="editcat_desc"/>
                         </div>
                         {{#usecattree}}
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="editparent">Батьківська</label>
                             <select   class="form-control" zippy="editparent">
                                 <option value="0">Не вказано</option>
@@ -96,7 +96,7 @@
                             <small>Категорія  не повинна мати ТМЦ</small>
                         </div>
                         {{/usecattree}}
-                        <div class="form-group  ">
+                        <div class="mb-2">
                             <label for="editprice">Націнки в %</label>
                             <div>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice1"/>
@@ -108,12 +108,12 @@
                             </div>
                         </div>
                            {{#useimages}}
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="editparent">Зображення</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control" zippy="editaddfile">
                             <small>Зображення повинно бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M </small>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <img zippy="editimage" style="height:128px"><br>
                             <div class="form-check">
                                 <input zippy="editdelimage" type="checkbox" class="form-check-input">
@@ -143,13 +143,13 @@
                                 <label class="form-check-label" for="editnoprice">Не показувати в прайсі</label>
                             </div>
                           {{#usends}}    
-                         <div class="form-group">
+                         <div class="mb-2">
                             <label for="editnds">ПДВ,%</label>
                             <input style="width: 100px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
                             <small>Якщо без  ПДВ залишити пустим</small>
                         </div>  
                            {{/usends}}    
-                        <div class="form-group">
+                        <div class="mb-2">
                             <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
                             <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                             
@@ -163,7 +163,7 @@
                   
                  <form  zippy="categoryprice">
                     <h5 zippy="catprname"></h5>  
-                        <div class="form-group row">
+                        <div class="mb-2 row">
                             <div class="col-auto pt-1"> 
                             <label for="ptype">Тип ціни</label>
                             </div>
@@ -173,7 +173,7 @@
                             </select>
                             </div>
                         </div>                     
-                    <div class="form-group  ">
+                    <div class="mb-2">
                          <label   for="editprice">Змінити на  суму або процент</label>
                              <input  required="on"  style="width: 100px"   class="form-control" zippy="chprice"/>
 
@@ -183,7 +183,7 @@
                      <div class="form-check">                    
                            <input type="checkbox"  zippy="rnd">  <label   for="rnd">Закруглити до **9 </label>
                     </div> 
-                    <div class="form-group  ">
+                    <div class="mb-2">
                       <input  zippy="calccp"  type="submit" value="Перерахувати" class="btn btn-primary  ">
                     </div> 
                      <table class="ctable"> 
@@ -195,7 +195,7 @@
                        </tr>
 
                      </table> 
-                     <div class="form-group mt-2 ">
+                     <div class="  mt-2 ">
                                  
                     <a zippy="backprice" class="btn btn-secondary  ">Скасувати</a>
                     &nbsp;&nbsp;<input zippy="savecp"  type="submit" value="Зберегти" class="btn btn-success  ">
@@ -223,7 +223,7 @@
                             <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
                          </tr>    
                       </table>                       
-                        <div class="form-group mt-2">
+                        <div class="  mt-2">
                                 <input zippy="cancelc" type="button" value="Скасувати" class="btn btn-secondary me-2 "> 
                                 <input zippy="savec" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 

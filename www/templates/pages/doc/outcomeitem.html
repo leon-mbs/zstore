@@ -9,18 +9,18 @@
             <h3> Списання ТМЦ</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_number">Номер документа <small class="text-danger">*</small></label>
                         <input style="width:150px" class="form-control"   zippy="document_number">
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_date"> Дата <small class="text-danger">*</small></label>
                         <input style="width:150px" class="form-control"   zippy="document_date"  required="on" >
                     </div>
                             
               
 
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="notes">Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
@@ -29,14 +29,14 @@
 
                 </div>
                 <div class="col-12 col-md-3">
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="store">Зі складу <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
                     {{#storeemp}}
-                     <div class="form-group  ">
+                     <div class="mb-2">
                         <label for="storeemp">Зі співробітника</label>
                         <select class="form-control  " zippy="storeemp">
                             <option value="0">Не обрано</option>
@@ -47,7 +47,7 @@
 
                     {{#usebranch}}
 
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="tostore">Оприходувати на склад іншої філії</label>
                         <select class="form-control" zippy="tostore">
                             <option value="0">Не обрано</option>
@@ -58,7 +58,7 @@
                     </div>
                     {{/usebranch}}  
                     
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="customer">Контрагент</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
                         <small>Не враховується в взаєморозрахунках, тільки в звітах</small>                
@@ -143,7 +143,7 @@
             <div class="col-12 col-md-4 col-xl-3">
              <form zippy="editdetail">
         <h4>Введення товару </h4>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="edititem">Найменування</label>
                     <input     class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
                    <a zippy="openitemsel">Відкрити довідник</a>
@@ -153,7 +153,7 @@
 
                 </div>
                 {{#usesnumber}}
-                <div class="form-group">
+                <div class="mb-2">
                    {{^usesnumberitem}}
                         <label for="editsnumber">Серія (партія) виробника </label>
                          {{/usesnumberitem}}
@@ -165,7 +165,7 @@
 
                 </div>
                 {{/usesnumber}}
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editquantity">Кількість</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
@@ -173,7 +173,7 @@
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-2">
                     <input type="button" zippy="cancelrow" value="До переліку" class="btn   btn-secondary me-2">
                     <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-primary">
                     

@@ -48,7 +48,7 @@
         
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
-                    <div class="form-group row ">
+                    <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="nal">Готівкова каса</label>
                         <div class="col-6">
                             <select class="form-control" zippy="nal">
@@ -56,7 +56,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row  ">
+                    <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="beznal">Безготівковий рахунок</label>
                         <div class="col-6">
                             <select class="form-control" zippy="beznal">
@@ -64,7 +64,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group  row ">
+                    <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="pos">POS термінал</label>
                         <div class="col-6">
                             <select class="form-control" zippy="pos">
@@ -74,7 +74,7 @@
                     </div>
 
 
-                    <div class="form-group row  ">
+                    <div class="mb-2 row">
                         <label class="col-6 col-form-label"   for="store">Склад (кухня)</label>
                         <div class="col-6">
                             <select class="form-control" zippy="store">
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     {{#useimages}}
-                     <div class="form-group row  ">
+                     <div class="mb-2 row">
                         <div class="col-12">
                         
                          <div class="form-check form-check-inline">
@@ -93,7 +93,7 @@
                        </div>
                     </div>
                      {{/useimages}}
-                    <div class="form-group row  ">
+                    <div class="mb-2 row">
                         <div class="col-12">
                         
                          <div class="form-check form-check-inline">
@@ -103,7 +103,7 @@
                        </div>
                     </div>
                
-                    <div class="form-group   ">
+                    <div class="mb-2">
                       
                         <input type="submit" value="До замовлень >"   class="btn btn-success">
                     </div>
@@ -385,7 +385,7 @@
                         <div class="  row ">
                             <div class="  col-6 col-xl-4">
                                  {{^modeof}} 
-                                <div class="form-group   ">
+                                <div class="mb-2">
                                     <label   for="customer">Клієнт</label>
                                     <div class="input-group  ">
 
@@ -407,7 +407,7 @@
                                   {{/modeof}} 
 
                                 {{#tables}}
-                                <div class="form-group  row ">
+                                <div class="mb-2 row">
                                     <label class="col-4 col-form-label" for="table">Номер столу</label>
                                    <div class="col-7">
                                     <input pattern="[0-9]+"  style="width:100px;" zippy="table" class="form-control"  > 
@@ -421,7 +421,7 @@
                                     
                            
  
-                                <div class="form-group  row ">
+                                <div class="mb-2 row">
                                     <label  class="col-4 col-form-label" for="notes">Коментар </label>
                                     <div class="col-7">
                                     <input  zippy="notes" class="form-control"  > 
@@ -435,7 +435,7 @@
                                 {{#delivery}}  
 
 
-                                <div class="form-group   ">
+                                <div class="mb-2">
                                     <label   for="execuser">Виконавець</label>
 
                                     <select class="form-control" zippy="execuser">
@@ -444,7 +444,7 @@
 
 
                                 </div>
-                                <div class="form-group   ">
+                                <div class="mb-2">
                                     <label   for="delivery">Доставка</label>
 
                                     <select class="form-control" zippy="delivery">
@@ -453,7 +453,7 @@
 
 
                                 </div>
-                                <div class="form-group   ">
+                                <div class="mb-2">
 
                                     <label   for="contact" >Контакт</label>
 
@@ -461,7 +461,7 @@
                                     <input    zippy="contact" class="form-control">
 
                                 </div>                           
-                                <div class="form-group   ">
+                                <div class="mb-2">
 
                                     <label   data-label="address" for="address"  >Адреса</label>
 
@@ -470,7 +470,7 @@
 
                                 </div>
 
-                                <div class="form-group  row ">
+                                <div class="mb-2 row">
 
                                     <label  class="col-5 col-form-label" for="time" >Час доставки</label>
                                      <div class="col-5">
@@ -564,7 +564,7 @@
                             </div>
                             <div class="modal-body">
                              <input  type="hidden" zippy="akitemid" >
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="aklist">Перелік</label>
                                 <textarea   class="form-control"   zippy="aklist"></textarea>
                                 <small>По одній на строку по кількісті в позиції</small>
@@ -593,7 +593,7 @@
                     <form zippy="payform" class="row">
 
                         <div class="col-12 col-md-4 col-xl-3 ms-4 ">   
-                            <div class="form-group   ">
+                            <div class="mb-2">
                                 <label   >Каса, рахунок</label>
                                 <br>
 
@@ -611,7 +611,7 @@
                       
                       
                             
-                            <div class="form-group  row ">
+                            <div class="mb-2 row">
                                 <label class="col-7 col-form-label"  for="pfforpay" >До сплати</label>
                                  <div class="col-5">
                                 <input zippy="pfforpay" readonly  style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
@@ -622,20 +622,20 @@
 
                  
                             
-                            <div class="form-group  row ">
+                            <div class="mb-2 row">
                                 <label class="col-7 col-form-label" for="pfpayed"  >Внесено оплату</label>
                                 <div class="col-5">
                                 <input autofocus="on" autocomplete="off" zippy="pfpayed" style="width:100px;" class="form-control  qtyprice "  pattern="[0-9,\.]+">
                                 </div>
                             </div>
-                            <div class="form-group  row ">
+                            <div class="mb-2 row">
 
                                 <label class="col-7 col-form-label" for="pfrest"  >Решта   </label>
                                   <div class="col-5">
                                 <input readonly   zippy="pfrest" style="width:100px;" class="form-control-plaintext    "  pattern="[0-9,\.]+">
                                  </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                       
                                 <label class="col-7 col-form-label"   for="pfexch2b" data-label="pfexch2b">Бонуси</label>
                                  <div class="col-5">
@@ -644,7 +644,7 @@
                                 <small>     Занести частину або всю решту в бонуси </small>
                                  
                            </div>                            
-                            <div class="form-group row ">
+                            <div class="mb-2 row">
                              
                               <label  class="col-5 col-form-label" data-label="pftrans"  for="pftrans">№ транзакції</label>
                             <div class="col-7">                              
@@ -657,7 +657,7 @@
                                    
                         </div>
                         <div class="col-12   ">  
-                            <div class="form-group   ">
+                            <div class="mb-2">
                                 <a zippy="bbackitems" class="btn btn-info"> &lt; Назад</a>
 
                                 &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Оплатити > "   class="btn btn-success">
@@ -852,18 +852,18 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editcustname">Ім'я </label>
                         <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editphone">Телефон</label>
                         <input pattern="[0-9]+" class="form-control" type="text" zippy="editphone"/>
                     </div>
                    
 
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary  ms-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary ms-2">                        
                     </div>
@@ -895,7 +895,7 @@
                   <div class="row">
                         <div class="col-12 col-md-4 col-xl-3">
                               <h4>Налаштування кафе</h4>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="foodworktype">Тип закладу</label>  
                                 <select class="form-control" zippy="foodworktype">
                                     <option value="0">Фастфуд</option>
@@ -914,13 +914,13 @@
                                     </small> 
                                  </details>  
                             </div>    
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="foodpricetype">Тип цін</label>
                                 <select class="form-control" zippy="foodpricetype">
                                 </select>
                             </div>
                           
-                           <div class="form-group  ">
+                           <div class="mb-2">
                                 <label for="foodpricetypeout">Тип цін на  винос</label>
                                 <select class="form-control" zippy="foodpricetypeout">
                                  <option value="0">Не  вказано</option>
@@ -969,26 +969,26 @@
                                  Детальніше про доступ до сторінки меню по QR  коду <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
                                 </small>
                        
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-4 col-form-label"  for="goodname">Назва закладу</label>
                                  <div class="col-8">
                                     <input class="form-control" type="text" zippy="goodname">
                                 </div>                            
                             </div>                            
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-4 col-form-label"  for="goodaddress">Адреса  </label>
                                 <div class="col-8">
                                     <input class="form-control" type="text" zippy="goodaddress">
                                 </div>                            
                             </div>                            
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-4 col-form-label" for="goodphone">Телефон</label>
                                 <div class="col-6">
                                   <input class="form-control" type="text" zippy="goodphone">
                                </div>                            
                             </div>                            
                               
-                         <div class="form-group">
+                         <div class="mb-2">
                                 <label  >Розклад роботи</label>
                                 
                                 <table class="ctable">
@@ -999,13 +999,13 @@
                                 
 
                             </div>                            
-                         <div class="form-group   ">
+                         <div class="mb-2">
                             <label   for="foodlogo">Логотип</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control " zippy="foodlogo"/>
                          
                         </div>
 
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="foodbasemenu">Основне меню</label>
                                 <select class="form-control"  zippy="foodbasemenu">
                                      <option value="0">Не вказано</option>
@@ -1013,7 +1013,7 @@
                                 <span>Якщо не вказано береться верхній рівень</span>
                             </div> 
 
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="foodmenu2">Додаткове меню</label>
                                 <select class="form-control"  zippy="foodmenu2">
                                      <option value="0">Не вказано</option>
@@ -1106,15 +1106,15 @@
                         
                         <div class="modal-body">
                              <form zippy="trform">
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="tritemfrom" > Вхідний ТМЦ (1 шт)  </label>
                                 <input placeholder="Почніть вводити " zippy="tritemfrom" class="form-control"  >
                             </div>
-                             <div class="form-group  ">
+                             <div class="mb-2">
                                 <label for="tritemto" > Вихідний ТМЦ (інгредієнт)</label>
                                 <input placeholder="Почніть вводити " zippy="tritemto" class="form-control"  >
                             </div>
-                             <div class="form-group row ">
+                             <div class="mb-2 row">
                                 <div class="col-auto pt-2">
                                    <label for="tritemqty" > Кількість</label>
                                 </div>

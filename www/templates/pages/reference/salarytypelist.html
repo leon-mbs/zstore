@@ -52,22 +52,22 @@
                 </div>
 
                 <form class="col-6 col-md-6 col-xl-4" zippy="editform">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editstname">Найменування</label>
                         <input autofocus="on"    required="on"  class="form-control" zippy="editstname"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editshortname">Скорочене позначення</label>
                         <input maxlength="10"  style="width:200px;"  required="on"  class="form-control" zippy="editshortname"/>
                         <small>До 10 символів. Використовується для заголовків таблиць у документах та звітах</small>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editcode">Код                        </label>
                         <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required="on"  class="form-control" zippy="editcode"/>
                         <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.                         </small>
                     </div>
                     {{#useacc}}
-                     <div class="form-group">
+                     <div class="mb-2">
                         <label for="editacc">Бух. рахунок                        </label>
                         <select   class="form-control" zippy="editacc">
                             <option value="0">Не вказано</option>
@@ -82,7 +82,7 @@
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="editdisabled">Більше не використовується</label>
                     </div>
-                   <div class="form-group">
+                   <div class="mb-2">
                      <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
                      <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary me-2 ">
                      <input zippy="delete" type="button" value="Видалити" class="btn btn-danger  ">
@@ -98,17 +98,17 @@
        <div class="col-12 col-md-6 col-xl-4"    >
          
          <form zippy="calcform"  >
-             <div class="form-group">
+             <div class="mb-2">
                 <label for="calcbase">Розрахунок основної зарплати</label>             
                 <textarea style="height:100px;width:300px" class="form-control" zippy="calcbase" ></textarea>
                 <small>Виконується однократно для заповнення поля  редагування</small>
              </div> 
-             <div class="form-group">
+             <div class="mb-2">
                 <label for="calc">Розрахунок нарахувань та утримань </label>
                 <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
                 <small>Виконується після редагування основної зарплати</small>
            </div> 
-             <div class="form-group">
+             <div class="mb-2">
                     
                      <a zippy="savecalc"    class="btn btn-success  ">Зберегти</a>&nbsp;&nbsp;
                       
@@ -177,7 +177,7 @@
        <div class="col-12 col-md-6 col-xl-4"    >
          
          <form zippy="optform"  >
-             <div class="form-group">
+             <div class="mb-2">
                 <label for="optbaseincom">Основна зарплата</label>
                 <select  class="form-control" zippy="optbaseincom" >
                    <option value="0">Не вибрано</option>
@@ -188,7 +188,7 @@
      
      
       
-             <div class="form-group">
+             <div class="mb-2">
                 <label for="optall">Всього нараховано</label>
                 <select  class="form-control" zippy="optall" >
                 
@@ -198,7 +198,7 @@
              </div> 
      
        
-             <div class="form-group">
+             <div class="mb-2">
                 <label for="optresult">До видачі</label>
                 <select  class="form-control" zippy="optresult" >
                 
@@ -207,7 +207,7 @@
                 
              </div> 
      
-             <div class="form-group">
+             <div class="mb-2">
                     
                       
                    <a zippy="saveopt"    class="btn btn-success  ">Зберегти</a>

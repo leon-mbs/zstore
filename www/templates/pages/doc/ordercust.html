@@ -11,13 +11,13 @@
            <form class="row" zippy="docform" >
 
               <div class="col-12 col-md-6 col-xl-4">
-                   <div class="form-group row">
+                   <div class="mb-2 row">
                         <label class="col-5 col-form-label" for="document_number">Номер документа</label>
                         <div class="col-7">
                             <input  class="form-control"  required="on"  zippy="document_number"  />
                         </div>
                   </div>
-                  <div class="form-group row">
+                  <div class="mb-2 row">
                         <label class="col-5 col-form-label" for="customer">Постачальник</label>
                         <div class="col-7">
                            <div class="input-group  ">
@@ -28,7 +28,7 @@
                          </div>             
                         </div>
                   </div>
-                 <div class="form-group row">
+                 <div class="mb-2 row">
                         <label class="col-5 col-form-label" for="notes">Примітка</label>
                         <div class="col-7">
                             <input zippy="notes"      class="form-control  "    />
@@ -36,13 +36,13 @@
                   </div>                  
               </div> 
               <div class="col-12 col-md-6 col-xl-4">
-                   <div class="form-group row">
+                   <div class="mb-2 row">
                         <label class="col-5 col-form-label" for="document_date">Дата документа</label>
                         <div class="col-7">
                             <input  type="date" style="width:120px" class="form-control"  required="on"  zippy="document_date"  />
                         </div>
                   </div>
-                  <div class="form-group row">
+                  <div class="mb-2 row">
                         <label class="col-5 col-form-label" for="delivery_date">Очікувана доставка</label>
                         <div class="col-7">
                             <input  type="date" style="width:120px" class="form-control"   zippy="delivery_date"  />
@@ -120,7 +120,7 @@
                             </div>
                             <div class="modal-body">
                              <input  type="hidden" zippy="moveitemid" >
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="movecust">Постачальник</label>
                                 <input   class="form-control"   zippy="movecust"> 
 
@@ -143,7 +143,7 @@
             <h4>Введення товару </h4>
     
 
-                <div class="form-group">
+                <div class="mb-2">
                        <label for="edititem">Назва</label>
                        <div class="input-group  ">
                               <input  placeholder="Почніть вводити..." class="form-control " zippy="edititem"/>
@@ -157,7 +157,7 @@
                                         
                 </div>
 
-                <div class="form-group row">
+                <div class="mb-2 row">
                     <label class="col-7 col-form-label" for="editquantity">Кількість</label>
                     <div class="col-4" >
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"    required="on" 
@@ -166,7 +166,7 @@
                 </div>
 
 
-                <div class="form-group row">
+                <div class="mb-2 row">
                     <label class="col-7 col-form-label" for="editprice">Ціна </label>
                     <div class="col-4" >
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"    required="on" 
@@ -174,7 +174,7 @@
                         </div>    
                 </div>
               
-                <div class="form-group  row">
+                <div class="mb-2 row">
 
                     <label class="col-7 col-form-label" for="editcustcode">Код постачальника </label>
                     <div class="col-5" >
@@ -184,13 +184,13 @@
                     <small>Наприклад, код з прайсу продавця</small>
                 </div>
               
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editdesc">Коментар </label>
                     <input   class="form-control" type="text" zippy="editdesc"        >
 
                 </div>
 
-                <div class="form-group">
+                <div class="mb-2">
                     <input zippy="canceledit" type="button"   value="Скасувати" class="btn btn-secondary ">
                     <input zippy="saveedit"  type="submit" value="Зберегти" class="btn btn-primary"> 
                 </div>
@@ -208,25 +208,25 @@
        <form zippy="editnewitem">
             <h3>&nbsp;Новий товар </h3>
                                  
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editnewitemname">Назва </label>
                         <input zippy="editnewitemname" class="form-control "    required="on" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editnewitemcode">Код</label>
                         <input zippy="editnewitemcode" class="form-control" type="text"  />
                     </div>
-                     <div class="form-group">
+                     <div class="mb-2">
                         <label for="editnewitembrand">Виробник</label>
                         <input list="editnewitembrand" zippy="editnewitembrand" class="form-control" autocomplete="off"    />
                         
                     </div>
-                   <div class="form-group">
+                   <div class="mb-2">
                         <label for="editnewitemmsr">Од. вим.</label>
                         <input zippy="editnewitemmsr" class="form-control" type="text"   />
                     </div>
                     
-                  <div class="form-group  ">
+                  <div class="mb-2">
                         <label for="editnewcat">Категорія</label>
 
                         <select zippy="editnewcat" class="form-control" id="editnewcat">
@@ -236,7 +236,7 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <input  type="button" zippy="cancelnewitem"   value="Скасувати" class="btn btn-secondary me-2">
                         <input  zippy="savenewitem"  type="button" value="Зберегти" class="btn btn-primary">
                     </div>
@@ -250,17 +250,17 @@
             <h5>&nbsp;Новий постачальник </h5>
 
         
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editcustname">Назва </label>
                         <input autofocus="on"   class="form-control " zippy="editcustname"  required="on" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editphone">Телефон</label>
                         <input class="form-control" type="text" zippy="editphone"/>
                     </div>
               
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-secondary me-2">
                         <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-primary">
                         

@@ -9,12 +9,12 @@
             <h3> Рахунок вхідний </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
 
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="customer">Постачальник</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
 
@@ -22,7 +22,7 @@
 
                 
 
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="contract" data-label="contract">Договір</label>
                         <select class="form-control" zippy="contract">
                             <option value="0">Не обрано</option>
@@ -30,7 +30,7 @@
 
 
                     </div>
-                   <div class="form-group  ">
+                   <div class="mb-2">
                         <label for="payreq">Реквізити для оплати </label>
 
                         <textarea class="form-control"   zippy="payreq"></textarea>
@@ -38,19 +38,19 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
  
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="payment">Каса, рахунок</label>
                         <select class="form-control" zippy="payment">
                             <option value="0">Не обрано</option>
 
                         </select>
                     </div>
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="notes">Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
@@ -134,7 +134,7 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-4">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="scan"> &nbsp; &nbsp;Скан документа</label>
                         <input class="form-control" type="file" zippy="scan">
                     </div>
@@ -259,7 +259,7 @@
                  <form zippy="editdetail">
                    <h4>Введення товару </h4>
 
-                    <div class="form-group">
+                    <div class="mb-2">
 
                         <label for="edititem">Назва </label>
                         <div class="input-group  ">
@@ -271,7 +271,7 @@
                           <a zippy="openitemsel">Відкрити довідник</a>   
 
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
 
                         <label for="editcustcode">Код постачальника </label>
                         <input class="form-control " zippy="editcustcode"/>
@@ -280,7 +280,7 @@
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editquantity">Кількість</label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on" 
                                pattern="[0-9,\.]+"
@@ -288,14 +288,14 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editprice">Ціна </label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on" 
                                pattern="[0-9,\.]+"
                                style="width: 100px;">
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         
                         <input  type="button" zippy="cancelrow" value="Скасувати" class="btn btn-secondary me-2">
                         <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-primary"> 
@@ -315,15 +315,15 @@
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editnewitemname">Назва </label>
                         <input class="form-control " zippy="editnewitemname"  required="on" />
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editnewitemcode">Код</label>
                         <input class="form-control" type="text" zippy="editnewitemcode"/>
                     </div>
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="editnewcat">Категорія</label>
 
                         <select class="form-control" zippy="editnewcat">
@@ -331,13 +331,13 @@
                         </select>
 
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editnewitemmsr">Од. вим.</label>
                         <input class="form-control" type="text" zippy="editnewitemmsr"/>
                     </div>
                     
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <input type="button" zippy="cancelnewitem" value="Скасувати" class="btn btn-secondary  me-2">
                         <input zippy="savenewitem" type="submit" value="Зберегти" class="btn btn-primary">
                         

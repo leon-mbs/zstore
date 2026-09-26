@@ -58,7 +58,7 @@
             </div>      
                
            
-             <div class="form-group mt-2"> 
+             <div class="  mt-2"> 
 
              <input zippy="saveconfig" type="submit" value="Зберегти" class="btn btn-success  ">
             </div>  
@@ -122,7 +122,7 @@
                                 <a href="https://zippy.com.ua/ext#id18" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>                  
                               
-                             <div class="form-group mt-2 ">
+                             <div class="  mt-2 ">
                                 <label for="modfisctype">Тип фіскалізації   </label>
                                 <select class="form-control" zippy="modfisctype">
                                    <option value="0">Не використовується</option>
@@ -141,7 +141,7 @@
                             </div>      
                           
                         
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                         </form>        
@@ -169,13 +169,13 @@
                     <label class="form-check-label" for="checkip">Перевіряти вхідні запити</label>
                      <br><small   class='compact'>Перевіряти вхідні запити для скриптів  та  API  на  відповідність  IP адреси списку  нижче    </small>
                </div> 
-               <div class="form-group">
+               <div class="mb-2">
                    <label for="email">IP адреси</label>
                    <textarea style="height:100px" class="form-control"   zippy="iplist"> </textarea>
                    <small>По одній на  строку</small>
                </div>
              
-             <div class="form-group"> 
+             <div class="mb-2"> 
         
              <input zippy="save" type="submit" value="Зберегти" class="btn btn-success  ">
             </div>  
@@ -200,44 +200,44 @@
              <h5>Перевірка відправки пошти</h5>  
          <form class="mt-4" zippy="sendform" >
            
-              <div class="form-group">
+              <div class="mb-2">
                    <label for="email">Email</label>
                    <input class="form-control" type="text" zippy="email">
                </div>
-               <div class="form-group">
+               <div class="mb-2">
                     <input zippy="sendemail" type="submit" value="Відправити" class="btn   btn-primary  ">
                  
                </div>
                {{#issms}}
-             <div class="form-group">
+             <div class="mb-2">
                 <h5>Перевірка відправки SMS</h5>  
              </div>
-              <div class="form-group">
+              <div class="mb-2">
                    <label for="phone">Телефон</label>
                    <input class="form-control" type="text" zippy="phone">
                </div>
-               <div class="form-group">
+               <div class="mb-2">
                     <input zippy="sendphone" type="submit" value="Відправити" class="btn   btn-primary  ">
                  
                </div>
               {{/issms}}               
              {{#isbot}}
-             <div class="form-group">
+             <div class="mb-2">
                 <h5>Перевірка відправки в  телеграм</h5>  
              </div>
-              <div class="form-group">
+              <div class="mb-2">
                    <label for="chat_id">Chat ID</label>
                    <input class="form-control" type="text" zippy="chat_id">
                </div>
-               <div class="form-group">
+               <div class="mb-2">
                     <input zippy="sendbot" type="submit" value="Відправити" class="btn   btn-primary  ">
                  
                </div>
                  {{/isbot}} 
-     <div class="form-group">
+     <div class="mb-2">
                 <h5>Перевірка  структури бази данних</h5>  
              </div>               
-              <div class="form-group">
+              <div class="mb-2">
                     <input zippy="checkdb" type="submit" value="Перевірити" class="btn   btn-primary  ">
                  
                </div>

@@ -180,7 +180,7 @@
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
 
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editcustomername">Назва</label>
                     <input autofocus="on"    required="on"  class="form-control" zippy="editcustomername"/>
                     {{#leadmode}}  
@@ -188,19 +188,19 @@
                     {{/leadmode}}  
                 </div>
 
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editemail">E-Mail</label>
                     <input type="email"  class="form-control" zippy="editemail"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editphone">Телефон</label>
                     <input pattern="[0-9()\+\s]+" class="form-control" zippy="editphone"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editviber">Viber</label>
                     <input class="form-control" zippy="editviber"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="edittelega">Телеграм</label>
                     <input class="form-control" zippy="edittelega"/>
                 </div>
@@ -208,13 +208,13 @@
 
 
                 {{#leadmode}} 
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editleadsource">Джерело ліда</label>
                     <select class="form-control" zippy="editleadsource">
                         <option value="0">Не вказано</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editleadstatus">Стан ліда</label>
                     <select class="form-control" zippy="editleadstatus">
                         <option value="0">Не вказано</option>
@@ -223,14 +223,14 @@
                 {{/leadmode}} 
 
                 {{^leadmode}} 
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="edittype">Тип</label>
                     <select zippy="edittype" class="form-control">
                         <option value="0">Не вказано</option>
                     </select>
                 </div>
                  {{#df}}
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editdf">Партнер</label>
                     <select zippy="editdf" class="form-control">
                         <option value="0">Не обрано</option>
@@ -243,7 +243,7 @@
                     <label class="form-check-label" for="editisholding">Холдинг</label>
                     <br><small>Компанія (або просто умовна назва), що об'єднує дочірні компанії для  консолідованої звітності  </small>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editholding">Дочірня для холдингу</label>
                     <select zippy="editholding" class="form-control">
                         <option value="0">Не обрано</option>
@@ -265,26 +265,26 @@
             <div class="col-12 col-md-4 ">
                 {{^leadmode}}  
                 {{#hideblock}}
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editcity">Країна</label>
                     <input class="form-control" zippy="editcity"/>
                 </div>
                   {{/hideblock}}
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editcountry">Місто</label>
                     <input class="form-control" zippy="editcountry"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editaddress">Повна адреса</label>
                     <input class="form-control" zippy="editaddress"/>
                     <small>Для накладних і рахунків-фактур</small>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editaddressdel">Адреса доставки</label>
                     <input class="form-control" zippy="editaddressdel"/>
                 </div>
 
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editedrpou">ЄДРПОУ</label>
                     <input value="0" class="form-control"   zippy="editedrpou">
                 </div>
@@ -294,7 +294,7 @@
                     <label class="form-check-label" for="editjurid">Юр. особа</label>
                 </div>
                 
-           <div class="form-group  ">
+           <div class="mb-2">
                         <label for="editpricetype">Тип ціни</label>
                         <select class="form-control" zippy="editpricetype">
                          <option value="none">Не обрано</option>                         </select>
@@ -304,12 +304,12 @@
                 {{/leadmode}} 
                 
                {{#shop}}        
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editpassword">Пароль логіна для онлайн-каталогу</label>
                     <input class="form-control" zippy="editpassword"  type="password"/>
                     <small>Залиште порожнім, якщо пароль не змінюється</small>
                 </div>
-                 <div class="form-group">
+                 <div class="mb-2">
                     <label for="editconfirm">Підтвердити пароль</label>
                     <input class="form-control" zippy="editconfirm" type="password"/>
                 </div>
@@ -320,11 +320,11 @@
                 </div>        
                 {{/shop}}  
                                
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editcomment">Примітка</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
                 </div>
-        <div class="form-group">
+        <div class="mb-2">
                    <label for="edittags">Теги</label>
                    <div zippy="edittags"> </div>
                    <small>Вводяться по  Enter</small>
@@ -333,7 +333,7 @@
 
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
-                <div class="form-group">
+                <div class="mb-2">
                     <button zippy="cancel" type="button" class="btn btn-secondary me-2">Скасувати</button>
                     <button zippy="save" type="submit" class="btn btn-primary ">Зберегти</button> 
                     
@@ -401,7 +401,7 @@
                         <hr>
 
                         <form zippy="addeventform">
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-12 col-form-label" for="addeventdate">Дата, час</label>
 
                                 <div class="col-6">
@@ -412,15 +412,15 @@
                                 </div>                                
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addeventtitle">Заголовок, тип події</label>
                                 <input  required="on"  class="form-control" zippy="addeventtitle">
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addeventdesc">Коментар</label>
                                 <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addeventnotify">Нагадати повідомленням за</label>
                                 <select class="form-control" zippy="addeventnotify">
                                     <option value="0">Не нагадувати</option>
@@ -451,7 +451,7 @@
                         </table>
                         <hr>
                         <form zippy="addmsgform">
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addmsg">Коментар</label>
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
@@ -469,13 +469,13 @@
                         </table>
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addfile">Вибрати файл</label>
                                 <input type="file" class="form-control"  required="on"  zippy="addfile">
 
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="adddescfile">Опис </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>
