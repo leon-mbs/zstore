@@ -20,7 +20,7 @@
         <th style="border: solid black 1px">{{value}} </th>
         {{/storescol}}
         {{#ver}}
-        <th style="border: solid black 1px" align="right"> Кiл. </th>
+        <th style="border: solid black 1px" align="right"> Кіл. </th>
         {{/ver}}
         
     </tr>

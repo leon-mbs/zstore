@@ -42,8 +42,8 @@
                
                 <a zippy="addnew" class="btn btn-success ms-4 ms-2" >   Додати</a>
                 <a zippy="csv" class="ms-4 "><i  class="fa fa-upload" ></i> Експорт у Excel</a>
-                <a zippy="imports" class="ms-4"><i  class="fa fa-download" ></i> Iмпорт з Excel</a>
-                <a zippy="importxml" class="ms-4"><i  class="fa fa-download" ></i> Iмпорт з XML</a>
+                <a zippy="imports" class="ms-4"><i  class="fa fa-download" ></i> Імпорт з Excel</a>
+                <a zippy="importxml" class="ms-4"><i  class="fa fa-download" ></i> Імпорт з XML</a>
                 <a zippy="options"  class="ms-4" ><i  class="fa fa-cog" ></i> Налаштування</a>
                   </div>
                 <form zippy="listform">
@@ -61,8 +61,8 @@
                             <th>Бренд</th>
                             <th>Склад</th>
                     
-                            <th class="text-end  ">Цiна </th>
-                            <th class="text-end  ">Кiл.</th>
+                            <th class="text-end  ">Ціна </th>
+                            <th class="text-end  ">Кіл.</th>
                             <th>На дату</th>
                             <th> </th>
                             <th> </th>
@@ -91,7 +91,7 @@
                             <td  > <span style="cursor:pointer" title="Вiдповiдний ТМЦ" zippy="onstore"><i class="fa fa-store"></i></span> </td>
                             <td  > <a zippy="edit"><i class="fa fa-edit"></i></a> </td>
                             <td  align="right" > 
-                               <input placeholder="Кiлькiсть" zippy="cartqty" pattern="[0-9\.]+" class="form-control" style="width:50px" >
+                               <input placeholder="Кількiсть" zippy="cartqty" pattern="[0-9\.]+" class="form-control" style="width:50px" >
                               
                              </td>
                              <td>
@@ -211,7 +211,7 @@
                                <option value="1">По штрих коду</option>
                                <option value="2">Штрих код потiм артикул+бренд,</option>
                             </select>
-                             <small  >Для закупки або оновлення цiн. 
+                             <small  >Для закупки або оновлення цін. 
                              В разi  активного  використання прайсiв рiзних постачальникiв слiд  вимкнути в  довiднику  ТМЦ автоматичне  
                              створення артикулу та/або перевiрку артикула  на  унiкальнiсть</small>                                  
                              
@@ -234,7 +234,7 @@
                         <div class="form-check mb-2">
                             <input zippy="optupdate" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="optupdate">Оновлювати з Прибуткової накладної</label>
-                            <br><small>Цiни оновлюватимуться  при  проведеннi документу</small>                                  
+                            <br><small>Ціни оновлюватимуться  при  проведеннi документу</small>                                  
                         </div>  
                           
                         <div class="form-group"> 
@@ -252,7 +252,7 @@
                 
                 <form zippy="importform" enctype="multipart/form-data"  >
                  
-                    <h4>Iмпорт з Excel</h4>
+                    <h4>Імпорт з Excel</h4>
                          <small>Товар  без  коду постачальника пропускається </small>
                         <div class="row">
                          <div class="col-12 col-md-4 col-xl-3">
@@ -314,14 +314,14 @@
                             </div>                     
                                                                              
                             <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colprice">Цiна</label>
+                                <label  class="col-8 col-form-label" for="colprice">Ціна</label>
                                 <div class="col-3">
                                     <select   zippy="colprice" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                                                                                
                             <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colqty">Кiлькiсть</label>
+                                <label  class="col-8 col-form-label" for="colqty">Кількiсть</label>
                                 <div class="col-3">
                                     <select   zippy="colqty" class="form-control  ">
                                 </select>  
@@ -339,7 +339,7 @@
                        <div class="col-12">
                        <a zippy="back" class="btn btn-secondary  ms-4 " >Скасувати</a>                          
                             
-                        <input zippy="loadimport"    type="submit" value="Iмпортувати" class="btn btn-primary  "> 
+                        <input zippy="loadimport"    type="submit" value="Імпортувати" class="btn btn-primary  "> 
                      
                        </div>
                         </div>  
@@ -350,7 +350,7 @@
             </div>
             
              <div zippy="xmlp" class="col-12  " >
-                 <h4>Iмпорт з XML</h4>
+                 <h4>Імпорт з XML</h4>
                 
                 <div   class="row  " >
                   <div    class="col-12 col-md-6 col-xl-4 " >
@@ -365,7 +365,7 @@
                               <td zippy="custnamex">          </td>
 
                               <td>  <a   zippy="editx">Редагувати код</a>       </td>
-                              <td>  <a   zippy="editi">Iмпорт</a>       </td>
+                              <td>  <a   zippy="editi">Імпорт</a>       </td>
                               <td>  <a   zippy="delx"><i class="fa fa-trash"></i></a>       </td>
                             </tr>   
                         </table>  
@@ -463,8 +463,8 @@ name - назва товару  <br>
                   
 cust_code - код у постачальника <br>
 bar_code - штрих-код  <br>
-price - цiна   <br>
-quantity - кiлькiсть  <br>
+price - ціна   <br>
+quantity - кількiсть  <br>
 brand - бренд, виробник  <br>
 store - склад у постачальника (якщо заданий)   <br>
 comment - примiтка <br>

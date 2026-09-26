@@ -30,7 +30,7 @@
         <th>Од. вим.</th>
      {{#iscat}}   <th>Категорія</th>  {{/iscat}}
      {{#isbrand}}     <th>Бренд</th> {{/isbrand}} 
-{{#showqty}}      <th align="right">Кiл.</th>{{/showqty}}
+{{#showqty}}      <th align="right">Кіл.</th>{{/showqty}}
         
 {{#price1name}}          <th align="right">{{price1name}}</th>  {{/price1name}} 
 {{#price2name}}          <th align="right">{{price2name}}</th>  {{/price2name}} 

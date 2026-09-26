@@ -46,7 +46,7 @@
     {{/aitem}}                 
     {{#aother}}                 
     <tr>
-        <td >  Iншi ТМЦ    </td>
+        <td >  Інші ТМЦ    </td>
         <td align="right">     {{aother}}     </td>
     </tr>
     {{/aother}}                     

@@ -132,7 +132,7 @@
   <tr  ><td>товари, роботи, послуги</td><td>1615</td><td align="right"> {{b1615}} </td> <td align="right"> {{e1615}} </td>    </tr>
   <tr  ><td>розрахунками з бюджетом</td><td>1620</td><td align="right"> {{b1620}} </td> <td align="right"> {{e1620}} </td>    </tr>
   <tr  ><td>розрахунками з оплати праці</td><td>1630</td><td align="right"> {{b1630}} </td> <td align="right"> {{e1630}} </td>    </tr>
-  <tr  ><td>Iншi поточні зобов'язання</td><td>1690</td><td align="right"> {{b1690}} </td> <td align="right"> {{e1690}} </td>    </tr>
+  <tr  ><td>Інші поточні зобов'язання</td><td>1690</td><td align="right"> {{b1690}} </td> <td align="right"> {{e1690}} </td>    </tr>
   <tr  ><td>Усього за роздiлом III</td><td>1695</td><td align="right"> {{b1695}} </td> <td align="right"> {{e1695}} </td>    </tr>
  
   
