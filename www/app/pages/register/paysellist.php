@@ -76,12 +76,32 @@ class PaySelList extends \App\Pages\Base
 
         $this->plist->payform->add(new SubmitButton("paybtn"))->onClick($this, 'payOnSubmit');
         $this->plist->payform->add(new SubmitButton("payorder"))->onClick($this, 'payOnSubmit');
-   
-        
 
         $this->updateCust();
 
+        if ($docid > 0) {
+            $this->payDoc($docid);
+        }
+
       
+    }
+
+    //відкрити панель оплати для контрагента документа (перехід з журналу за кнопкою «До сплати»)
+    private function payDoc($docid) {
+        $doc = \App\Entity\Doc\Document::load($docid);
+        if ($doc == null || $doc->customer_id == 0) {
+            return;
+        }
+        $this->_cust = \App\Entity\Customer::load($doc->customer_id);
+        if ($this->_cust == null) {
+            return;
+        }
+        $this->plist->cname->setText($this->_cust->customer_name);
+        $this->plist->payform->pcomment->setText('');
+        $this->plist->payform->payment->setValue(0);
+        $this->updateDocs();
+        $this->clist->setVisible(false);
+        $this->plist->setVisible(true);
     }
 
     public function filterOnSubmit($sender) {

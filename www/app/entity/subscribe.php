@@ -361,6 +361,9 @@ class Subscribe extends \ZCL\DB\Entity
     
     private    function sendmsg($text, $options=[]){
         $ret='';    
+        //не всі події заповнюють усі ключі (наприклад, отримувач «Телеграм» дає лише chat_id)
+        $options += ['phone' => '', 'viber' => '', 'email' => '', 'chat_id' => '', 'notifyuser' => 0];
+        foreach (['phone', 'viber', 'email', 'chat_id'] as $k) { $options[$k] = (string) ($options[$k] ?? ''); }
         if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
                Notify::sendNotify($options['notifyuser'], $text, Notify::SUBSCRIBE);
             }
@@ -613,11 +616,11 @@ class Subscribe extends \ZCL\DB\Entity
             $header['payed'] = \App\Helper::fa($payed);
         }
 
-        if ($doc->headerdata['pos'] >0) {
-            $pos = \App\Entity\Pos::load($doc->headerdata['pos'] );
+        if (($doc->headerdata['pos'] ?? 0) > 0) {
+            $pos = \App\Entity\Pos::load($doc->headerdata['pos']);
             $header['pos'] = $pos->pos_name;
         }
-        if ($doc->headerdata['salesource'] > 0) {
+        if (($doc->headerdata['salesource'] ?? 0) > 0) {
             $sl = H::getSaleSources();
             $header['source'] = $sl[$doc->headerdata['salesource'] ];
         }
@@ -632,7 +635,7 @@ class Subscribe extends \ZCL\DB\Entity
 
         }
         $header['taxurl'] = $doc->getFiscUrl();
-        if(strlen($doc->headerdata['hash'])>0) {
+        if(strlen($doc->headerdata['hash'] ?? '')>0) {
 
             $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
 

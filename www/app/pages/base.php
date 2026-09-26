@@ -47,20 +47,20 @@ class Base extends \Zippy\Html\WebPage
         $options = System::getOptions('common');
 
         //опции
-        $this->_tvars["usescanner"] = $options['usescanner'] == 1  ;
-        $this->_tvars["usescale"] = $options['usescale'] == 1  ;
+        $this->_tvars["usescanner"] = ($options['usescanner'] ?? 0) == 1  ;
+        $this->_tvars["usescale"] = ($options['usescale'] ?? 0) == 1  ;
 
-        $this->_tvars["useimages"] = $options['useimages'] == 1;
-        $this->_tvars["usebranch"] = $options['usebranch'] == 1;
-        $this->_tvars["usefood"] = $options['usefood'] == 1;
-        $this->_tvars["useprod"] = $options['useprod'] == 1;
-        $this->_tvars["usends"] = $options['usends'] == 1;
-        $this->_tvars["useacc"] = $options['useacc'] == 1;
-        $this->_tvars["useexcise"] = $options['useexcise'] == 1;
-        $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
-        $this->_tvars["noupdate"] = $options['noupdate'] == 1;
-        $this->_tvars["usecattree"] = $options['usecattree'] == 1;
-        $this->_tvars["storeemp"] = $options['storeemp'] == 1;
+        $this->_tvars["useimages"] = ($options['useimages'] ?? 0) == 1;
+        $this->_tvars["usebranch"] = ($options['usebranch'] ?? 0) == 1;
+        $this->_tvars["usefood"] = ($options['usefood'] ?? 0) == 1;
+        $this->_tvars["useprod"] = ($options['useprod'] ?? 0) == 1;
+        $this->_tvars["usends"] = ($options['usends'] ?? 0) == 1;
+        $this->_tvars["useacc"] = ($options['useacc'] ?? 0) == 1;
+        $this->_tvars["useexcise"] = ($options['useexcise'] ?? 0) == 1;
+        $this->_tvars["useval"] = ($options['useval'] ?? 0) == 1 && ($options['usends'] ?? 0) != 1;
+        $this->_tvars["noupdate"] = ($options['noupdate'] ?? 0) == 1;
+        $this->_tvars["usecattree"] = ($options['usecattree'] ?? 0) == 1;
+        $this->_tvars["storeemp"] = ($options['storeemp'] ?? 0) == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
         $this->_tvars["canevent"] = $user->canevent == 1;
         if($user->rolename=='admins') {
@@ -150,21 +150,21 @@ class Base extends \Zippy\Html\WebPage
         //модули
         $modules = System::getOptions('modules');
 
-        $this->_tvars["shop"] = $modules['shop'] == 1;
-        $this->_tvars["ocstore"] = $modules['ocstore'] == 1;
-        $this->_tvars["woocomerce"] = $modules['woocomerce'] == 1;
-        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
-        $this->_tvars["note"] = $modules['note'] == 1;
-        $this->_tvars["issue"] = $modules['issue'] == 1;
+        $this->_tvars["shop"] = ($modules['shop'] ?? 0) == 1;
+        $this->_tvars["ocstore"] = ($modules['ocstore'] ?? 0) == 1;
+        $this->_tvars["woocomerce"] = ($modules['woocomerce'] ?? 0) == 1;
+        $this->_tvars["horoshop"] = ($modules['horoshop'] ?? 0) == 1;
+        $this->_tvars["note"] = ($modules['note'] ?? 0) == 1;
+        $this->_tvars["issue"] = ($modules['issue'] ?? 0) == 1;
 
-        $this->_tvars["ppo"] = $modules['ppo'] == 1;
-        $this->_tvars["df"] = $modules['df'] == 1;
-        $this->_tvars["np"] = $modules['np'] == 1;
-        $this->_tvars["promua"] = $modules['promua'] == 1;
-        $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
-        $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
-        $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
-        $this->_tvars["freg"] = $modules['freg'] == 1;
+        $this->_tvars["ppo"] = ($modules['ppo'] ?? 0) == 1;
+        $this->_tvars["df"] = ($modules['df'] ?? 0) == 1;
+        $this->_tvars["np"] = ($modules['np'] ?? 0) == 1;
+        $this->_tvars["promua"] = ($modules['promua'] ?? 0) == 1;
+        $this->_tvars["checkbox"] = ($modules['checkbox'] ?? 0) == 1;
+        $this->_tvars["vkassa"] = ($modules['vkassa'] ?? 0) == 1;
+        $this->_tvars["vdoc"] = ($modules['vdoc'] ?? 0) == 1;
+        $this->_tvars["freg"] = ($modules['freg'] ?? 0) == 1;
        
 
 

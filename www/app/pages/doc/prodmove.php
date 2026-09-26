@@ -273,39 +273,36 @@ class ProdMove extends \App\Pages\Base
         
         $item = Item::findBarCode($code);
         
-        if($item != null) {
-            foreach ($this->_itemlist as $ri => $_item) {
-                if ($_item->item_id == $item->item_id  ) {
-                    $this->_itemlist[$ri]->quantity += 1;
-                    $this->_rownumber  = 1;
+        if ($item == null) {
+            $this->setError("Товар з кодом `{$code}` не знайдено");
+            return;
+        }
 
-                    $this->docform->detail->Reload();
-                    $this->calcTotal();
-                    $this->CalcPay();
-                    return;
-                }
+        //етап може обмежувати перелік ТМЦ
+        $st_id = $this->docform->psfrom->getValue();
+        if ($st_id > 0) {
+            $st = \App\Entity\ProdStage::load($st_id);
+            if (count($st->itemlist) > 0 && !in_array($item->item_id, array_keys($st->itemlist))) {
+                $this->setError("ТМЦ не в перелiку  на  етапi");
+                return;
             }
         }
 
+        foreach ($this->_itemlist as $ri => $_item) {
+            if ($_item->item_id == $item->item_id) {
+                $this->_itemlist[$ri]->quantity += 1;
+                $this->docform->detail->Reload();
+                return;
+            }
+        }
 
+        //новий рядок: серію вводимо вручну, решту полів у цього документа немає
+        $this->_rowid = -1;
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = -1;
-
-        if ($item == null) {
-
-            $this->setWarn('Товар не знайдено');
-            $this->addnewitemOnClick(null);
-        } else {
-            $this->editdetail->edititem->setKey($item->item_id);
-            $this->editdetail->edititem->setText($item->itemname);
-            
-            $price = $item->getLastPartion($this->docform->store->getValue(), "", true,'GoodsReceipt');
-            
-            $this->editdetail->editprice->setText(H::fa($price));
-            $this->editdetail->editsellprice->setText(H::fa($item->price1));
-            $this->editdetail->editsellprice2->setText(H::fa($item->price2));
-        }
+        $this->editdetail->edititem->setValue($item->item_id);
+        $this->editdetail->editserial->setText('');
+        $this->editdetail->editquantity->setText('1');
     }
     
     public function savedocOnClick($sender) {
