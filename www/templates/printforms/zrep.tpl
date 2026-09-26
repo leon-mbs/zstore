@@ -54,7 +54,7 @@
     {{/payments}}
    <tr>
 
-        <td  >Кiлькiсть чекiв</td>
+        <td  >Кількiсть чекiв</td>
         <td style="text-align:right" > {{cnt}} </td>
     </tr>
  
@@ -72,7 +72,7 @@
     {{/rpayments}}    
    <tr>
 
-        <td  >Кiлькiсть чекiв</td>
+        <td  >Кількiсть чекiв</td>
         <td  style="text-align:right" > {{rcnt}} </td>
     </tr>
  

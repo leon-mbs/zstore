@@ -479,7 +479,7 @@ class CustItems extends \App\Pages\Base
     public function cartOnClick($sender) {
         $ci =  $sender->getOwner()->getDataItem();
         if(intval($ci->cartqty)==0)  {
-            $this->setError('Не задана кiлькiсть ') ;
+            $this->setError('Не задана кількiсть ') ;
             return   ;
         }
       

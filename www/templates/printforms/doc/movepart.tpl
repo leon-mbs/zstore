@@ -18,7 +18,7 @@
     </tr>
    <tr>
         <td colspan="4">
-            <b> Кiл. :</b> {{qty}}  
+            <b> Кіл. :</b> {{qty}}  
         </td>
 
     </tr>
