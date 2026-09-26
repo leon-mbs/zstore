@@ -1,11 +1,11 @@
 <font bold="true">a</font>
 <text>Чек {{document_number}}</text>
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>від {{date}}</text>
 <align>left</align>
 
     {{#fiscalnumber}}
-<text>Фiскальний чек</text>
+<text>Фіскальний чек</text>
 <text>ФН чека {{fiscalnumber}}</text>
     {{/fiscalnumber}}
    {{#fiscalnumberpos}}
@@ -34,16 +34,16 @@
     
     
         {{#form1}}
- <text>Форма оплати: готiвка</text>        
+ <text>Форма оплати: готівка</text>        
         {{/form1}}
         {{#form2}}
- <text>Форма оплати: безготiвка</text>        
+ <text>Форма оплати: безготівка</text>        
         {{/form2}}    
         {{#form3}}
- <text>Форма оплати: iнше</text>        
+ <text>Форма оплати: інше</text>        
         {{/form3}}    
         {{#payeq}}
- <text>Засiб оплати:  </text>        
+ <text>Засіб оплати:  </text>        
  <text>{{payeq}}  </text>        
           
         {{/payeq}}     
@@ -67,7 +67,7 @@
   <col align="right" length="10" >{{amount}}</col>     
 </row>
      {{#isstamps}}
-       <text>Акцизнi марки:</text> 
+       <text>Акцизні марки:</text> 
  
         {{#stamps}}
           <text>{{name}}</text> 
@@ -89,7 +89,7 @@
  
     {{/totaldisc}}
    {{#delbonus}}
- <text>Списано бонусiв: {{delbonus}}</text>
+ <text>Списано бонусів: {{delbonus}}</text>
  
     {{/delbonus}}
    {{#prepaid}}
@@ -112,12 +112,12 @@
         
           
     {{#addbonus}}
- <text>Нараховано бонусiв: {{addbonus}}</text>
+ <text>Нараховано бонусів: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
 
- <text>Всього бонусiв: {{allbonus}}</text>
+ <text>Всього бонусів: {{allbonus}}</text>
  
     {{/allbonus}}
     

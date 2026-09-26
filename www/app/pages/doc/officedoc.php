@@ -288,7 +288,7 @@ class OfficeDoc extends \App\Pages\Base
                 }
 
                 if ($file['size'] > 0) {
-                    $id = H::addFile($file, $this->_doc->document_id, 'Оригiнал', \App\Entity\Message::TYPE_DOC);
+                    $id = H::addFile($file, $this->_doc->document_id, 'Оригінал', \App\Entity\Message::TYPE_DOC);
 
                 }
 

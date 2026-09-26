@@ -2,7 +2,7 @@
  
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Управлiнський  баланс
+            Управлінський  баланс
         </td>
     </tr>
   
@@ -20,14 +20,14 @@
     </tr>
     {{#amat}}
     <tr>
-        <td > Матерiали та  комплектуючi        </td>
+        <td > Матеріали та  комплектуючі        </td>
         <td align="right"> {{amat}}  </td>
     </tr>
     {{/amat}}
    
     {{#aprod}}    
     <tr>
-        <td > Напiвфабрикати та  готова  продукцiя        </td>
+        <td > Напівфабрикати та  готова  продукція        </td>
         <td align="right">  {{aprod}}      </td>
     </tr>
     {{/aprod}} 
@@ -52,31 +52,31 @@
     {{/aother}}                     
     {{#anal}}                 
     <tr>
-        <td >  Готiвка        </td>
+        <td >  Готівка        </td>
         <td align="right">   {{anal}}                        </td>
     </tr>
     {{/anal}}                     
     {{#abnal}}                 
     <tr>
-        <td >  Безготiвка        </td>
+        <td >  Безготівка        </td>
         <td align="right">  {{abnal}}   </td>
     </tr>
     {{/abnal}}                     
     {{#debet}}
     <tr>  
-        <td >Борг  контрагентiв       </td>
+        <td >Борг  контрагентів       </td>
         <td align="right">     {{debet}}              </td>
     </tr>
     {{/debet}} 
     {{#aemp}}                 
     <tr>
-        <td >  Спiвробiтники (виданi  аванси тощо)        </td>
+        <td >  Співробітники (видані  аванси тощо)        </td>
         <td align="right">        {{aemp}}             </td>
     </tr>
     {{/aemp}}                 
    {{#aeq}}                 
     <tr>
-        <td >  Балансова вартiсть ОЗ        </td>
+        <td >  Балансова вартість ОЗ        </td>
         <td align="right">        {{aeq}}             </td>
     </tr>
     {{/aeq}}                 
@@ -106,7 +106,7 @@
  
     {{#pemp}}                 
     <tr>
-        <td >  Спiвробiтники (зарплата до видачi тощо)        </td>
+        <td >  Співробітники (зарплата до видачі тощо)        </td>
         <td align="right">    {{pemp}}               </td>
     </tr>
      {{/pemp}}

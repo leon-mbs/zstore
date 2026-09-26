@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-           Акцизнi марки   
+           Акцизні марки   
         </td>
     </tr>
     <tr>

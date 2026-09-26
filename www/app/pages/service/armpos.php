@@ -1191,7 +1191,7 @@ class ARMPos extends \App\Pages\Base
 
         if($this->_doc->document_id >0) {
             if($this->_doc->hasStore() || $this->_doc->hasPayments()) {
-               $this->setError("Чек вже був проведений. Створiть новий чек")  ;
+               $this->setError("Чек вже був проведений. Створіть новий чек")  ;
                return;
             }
         }

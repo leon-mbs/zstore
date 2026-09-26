@@ -17,7 +17,7 @@
     {{#iscontract}}
     <tr>
         <td colspan="7">
-            Договір: {{contract}} вiд {{createdon}}
+            Договір: {{contract}} від {{createdon}}
         </td>
 
     </tr>

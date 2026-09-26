@@ -14,7 +14,7 @@
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Iм'я</th>
+        <th style="border: solid black 1px"> Ім'я</th>
 
         <th colspan="2" style="border: solid black 1px">Рахунок</th>
         <th  align="right" style="border: solid black 1px">Прибуток</th>
@@ -53,7 +53,7 @@
         <th align="right"  style="border: solid black 1px">Початок
         <th align="right"  style="border: solid black 1px">Прибуток
         <th align="right"  style="border: solid black 1px">Видаток
-        <th align="right" style="border: solid black 1px">Кiнець
+        <th align="right" style="border: solid black 1px">Кінець
      
         
 

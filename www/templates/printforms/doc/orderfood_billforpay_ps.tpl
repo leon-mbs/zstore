@@ -4,7 +4,7 @@
   
     
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>від {{date}}</text>
 <align>left</align>
 
  
@@ -46,7 +46,7 @@
  
     {{/isdisc}}
    {{#bonus}}
- <text>Списано бонусiв: {{bonus}}</text>
+ <text>Списано бонусів: {{bonus}}</text>
  
     {{/bonus}}
 

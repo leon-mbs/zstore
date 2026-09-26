@@ -212,7 +212,7 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажi за категорiями <br> <br>
+        Продажі за категоріями <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -268,7 +268,7 @@
 {{#_type6}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажi за компанiями <br> <br>
+        Продажі за компаніями <br> <br>
     </td>
 </tr>
 <tr style=" font-weight: bolder;">
@@ -329,7 +329,7 @@
 {{#_type7}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажi за  складами <br> <br>
+        Продажі за  складами <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
@@ -382,7 +382,7 @@
 {{#_type8}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="7">
-        Продажi за джерелами <br> <br>
+        Продажі за джерелами <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">

@@ -89,9 +89,9 @@
   </tr>
  <tr  ><td>Незавершені капітальні інвестиції</td><td>1005</td><td align="right"> {{b1005}} </td> <td align="right"> {{e1005}} </td>    </tr>
  <tr  ><td>Основні засоби:</td><td>1010</td><td align="right"> {{b1010}} </td> <td align="right"> {{e1010}} </td>    </tr>
- <tr  ><td>первiсна вартiсть</td><td>1011</td><td align="right"> {{b1011}} </td> <td align="right"> {{e1011}} </td>    </tr>
+ <tr  ><td>первісна вартість</td><td>1011</td><td align="right"> {{b1011}} </td> <td align="right"> {{e1011}} </td>    </tr>
  <tr  ><td>знос</td><td>1012</td><td align="right"> {{1012}} </td> <td align="right"> {{e1012}} </td>    </tr>
- <tr  ><td>Усього за роздiлом I</td><td>1095</td><td align="right"> {{b1095}} </td> <td align="right"> {{e1095}} </td>    </tr>
+ <tr  ><td>Усього за розділом I</td><td>1095</td><td align="right"> {{b1095}} </td> <td align="right"> {{e1095}} </td>    </tr>
   <tr style="  font-weight: bolder;">
     <td>II. Оборотні активи</td>    <td> </td>      <td>      </td>  
     <td>  </td>  
@@ -103,7 +103,7 @@
  <tr  ><td>Інша дебіторська заборгованість</td><td>1155</td><td align="right"> {{b1155}} </td> <td align="right"> {{e1155}} </td>    </tr>
  <tr  ><td>Гроші та їх еквіваленти</td><td>1165</td><td align="right"> {{b1165}} </td> <td align="right"> {{e1165}} </td>    </tr>
  <tr  ><td>Інші оборотні активи</td><td>1190</td><td align="right"> {{b1190}} </td> <td align="right"> {{e1190}} </td>    </tr>
- <tr  ><td>Усього за роздiлом II</td><td>1195</td><td align="right"> {{b1195}} </td> <td align="right"> {{e1195}} </td>    </tr>
+ <tr  ><td>Усього за розділом II</td><td>1195</td><td align="right"> {{b1195}} </td> <td align="right"> {{e1195}} </td>    </tr>
   
  <tr style="  font-weight: bolder;"  >
     <td>Баланс  </td><td>  1300    </td><td align="right"> {{b1300}} </td><td align="right"> {{e1300}} </td>  
@@ -125,15 +125,15 @@
   <tr style="  font-weight: bolder;">
     <td >I. Власний капітал</td>     <td  > </td>    <td   >   </td>   <td  >  </td>    
   </tr> 
-  <tr  ><td>Нерозподiлений прибуток (непокритий збиток)</td><td>1420</td><td align="right"> {{b1420}} </td> <td align="right"> {{e1420}} </td>    </tr>
-  <tr  ><td>Усього за роздiлом I</td><td>1495</td><td align="right"> {{b1495}} </td> <td align="right"> {{e1495}} </td>    </tr>
+  <tr  ><td>Нерозподілений прибуток (непокритий збиток)</td><td>1420</td><td align="right"> {{b1420}} </td> <td align="right"> {{e1420}} </td>    </tr>
+  <tr  ><td>Усього за розділом I</td><td>1495</td><td align="right"> {{b1495}} </td> <td align="right"> {{e1495}} </td>    </tr>
   <tr  ><td>III. Поточні зобов'язання</td><td> </td><td>   </td> <td>   </td>    </tr>
   <tr  ><td>Поточна кредиторська заборгованість за</td><td> </td><td>   </td> <td>   </td>    </tr>
   <tr  ><td>товари, роботи, послуги</td><td>1615</td><td align="right"> {{b1615}} </td> <td align="right"> {{e1615}} </td>    </tr>
   <tr  ><td>розрахунками з бюджетом</td><td>1620</td><td align="right"> {{b1620}} </td> <td align="right"> {{e1620}} </td>    </tr>
   <tr  ><td>розрахунками з оплати праці</td><td>1630</td><td align="right"> {{b1630}} </td> <td align="right"> {{e1630}} </td>    </tr>
   <tr  ><td>Інші поточні зобов'язання</td><td>1690</td><td align="right"> {{b1690}} </td> <td align="right"> {{e1690}} </td>    </tr>
-  <tr  ><td>Усього за роздiлом III</td><td>1695</td><td align="right"> {{b1695}} </td> <td align="right"> {{e1695}} </td>    </tr>
+  <tr  ><td>Усього за розділом III</td><td>1695</td><td align="right"> {{b1695}} </td> <td align="right"> {{e1695}} </td>    </tr>
  
   
  <tr style="  font-weight: bolder;"  >

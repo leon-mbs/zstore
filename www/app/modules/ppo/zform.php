@@ -173,7 +173,7 @@ class ZForm extends \App\Pages\Base
 
     public function OnClose($sender) {
         if ($this->_pos->pos_id == 0) {
-            $this->setError('Не вибраний термiнал');
+            $this->setError('Не вибраний термінал');
             return;
         }
 
@@ -200,7 +200,7 @@ class ZForm extends \App\Pages\Base
                 $this->setErrorTopPage($ret['data']);
             } else {
                 \App\Modules\PPO\PPOHelper::clearStat($this->_pos->pos_id);
-                $this->setSuccess('Змiна закрита');
+                $this->setSuccess('Зміна закрита');
                 $this->stat->clean();
                 $this->OnRefresh($this->filter) ;
 
@@ -259,7 +259,7 @@ class ZForm extends \App\Pages\Base
 
         $pos_id = $this->filter->pos->getValue();
         if ($pos_id == 0) {
-            $this->setError('Не вибраний термiнал');
+            $this->setError('Не вибраний термінал');
             return;
         }
 
@@ -274,7 +274,7 @@ class ZForm extends \App\Pages\Base
         $this->ztres->setText("");
         $pos_id = $this->filter->pos->getValue();
         if ($pos_id == 0) {
-            $this->setError('Не вибраний термiнал');
+            $this->setError('Не вибраний термінал');
 
             return;
         }
@@ -292,12 +292,12 @@ class ZForm extends \App\Pages\Base
         }
         $zt="";
         if(is_array($ret['Totals']['Real']['PayForm'])) {
-            $zt .="<b>Реалiзацiя</b><br>";
+            $zt .="<b>Реалізація</b><br>";
             foreach($ret['Totals']['Real']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
             }
-            $zt .= " Чекiв ".$ret['Totals']['Real']['OrdersCount'] ;
+            $zt .= " Чеків ".$ret['Totals']['Real']['OrdersCount'] ;
         }
         if(is_array($ret['Totals']['Ret']['PayForm'])) {
             $zt .="<br><b>Повернення</b><br>";
@@ -305,7 +305,7 @@ class ZForm extends \App\Pages\Base
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
             }
-            $zt .= " Чекiв ".$ret['Totals']['Ret']['OrdersCount'] ;
+            $zt .= " Чеків ".$ret['Totals']['Ret']['OrdersCount'] ;
         }
 
         $this->ztres->setText($zt, true);

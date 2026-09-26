@@ -1,6 +1,6 @@
 <html >
   <head>
-      <title> Документи на вiдправку   </title>
+      <title> Документи на відправку   </title>
 
     </head>
     <body>
@@ -8,12 +8,12 @@
         <div class="row"  id="vapp">
             <div class="col-12   col-xl-10"  >
 
-                <h3>Документи на вiдправку </h3>
+                <h3>Документи на відправку </h3>
                      
                      <div class="navbar">
                                 <form   >
                                   <div class="row  ">
-                                    <label class="col-form-label col-auto" for="firm"> POS термiнал </label>
+                                    <label class="col-form-label col-auto" for="firm"> POS термінал </label>
                                      <div class="col-auto  ">
                                      <select class="form-control  me-2" v-model="posid" id="pos" name="pos" >
                                        <option v-for="p in poses" :value="p.key">
@@ -37,7 +37,7 @@
                                      <select v-model="doctype" class="form-control me-2" id="doctype"  name="doctype" >
                                        <option value="GoodsIssue"    >Видаткова  накладна </option>
                                        <option value="Invoice">Рахунок-фактура </option>
-                                       <option value="ServiceAct">Акт виконаних робiт </option>
+                                       <option value="ServiceAct">Акт виконаних робіт </option>
 
                                     </select>
                                     </div>
@@ -49,7 +49,7 @@
                                 </form>
                             
                           </div>
-                              <small>Вибираються тiльки документи з контрагентами  у  яких задано ЄДРПОУ</small>
+                              <small>Вибираються тільки документи з контрагентами  у  яких задано ЄДРПОУ</small>
                   
             </div>
             <div class="col-12   col-md-10 col-xl-8"  >
@@ -73,7 +73,7 @@
                     </tr>
                 </table>
                 
-                <a class="btn btn-sm btn-success" v-on:click.prevent="onMark">Позначити  як вiдправленi</a>
+                <a class="btn btn-sm btn-success" v-on:click.prevent="onMark">Позначити  як відправлені</a>
                 <div v-show="showsp1" class="spinner-border spinner-border-sm"></div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Відправити   в Вчасно  </a>
@@ -141,7 +141,7 @@
               
                onMark:function(){
                    if(this.selectedDocs.length ==0) return;
-                   if(confirm("Позначити як вiдправленi?")==false)  return
+                   if(confirm("Позначити як відправлені?")==false)  return
                    
                    this.showsp1 = true
                    

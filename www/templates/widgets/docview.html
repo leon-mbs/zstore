@@ -16,19 +16,19 @@
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tdocs"><i class="fa fa-project-diagram"></i> Пов'язанi документи <span   class="badge  rounded-pill text-bg-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tdocs"><i class="fa fa-project-diagram"></i> Пов'язані документи <span   class="badge  rounded-pill text-bg-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tcomm"><i class="fa fa-comments"></i> Коментарi  <span   class="badge  rounded-pill text-bg-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tcomm"><i class="fa fa-comments"></i> Коментарі  <span   class="badge  rounded-pill text-bg-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tfiles"><i class="fa fa-paperclip"></i> Прикрiпленi файли <span   class="badge rounded-pill text-bg-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tfiles"><i class="fa fa-paperclip"></i> Прикріплені файли <span   class="badge rounded-pill text-bg-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#thist"><i class="fa fa-calendar-alt"></i> Iсторiя змiн</a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#thist"><i class="fa fa-calendar-alt"></i> Історія змін</a>
   </li>
 <li class="nav-item" v-show="docdata.isscan">
-    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tscan"><i class="fa fa-image"></i> Скан оригiналу</a>
+    <a class="nav-link" data-bs-toggle="tab" data-bs-target="#tscan"><i class="fa fa-image"></i> Скан оригіналу</a>
   </li>
  
 </ul>  
@@ -55,8 +55,8 @@
      
   </div>
    <div  class="tab-pane      " id="tprintpos"> 
-        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register me-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-print me-1"></i> </a>
+        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтері"> <i class="fas fa-cash-register me-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на чековому принтері"><i class="fas fa-print me-1"></i> </a>
             
        <div  class="preview mt-2"  id="previewpos"   v-html="docdata.htmlpos" >
         </div>  
@@ -68,7 +68,7 @@
               <table class="table table-sm"   >
                 <tr>
                     <td colspan="2" v-show="docdata.pdoc_id>0">
-                       <b>Батькiвський документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
+                       <b>Батьківський документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
                     </td>
                 </tr>
                 <tr v-for="item   in  reldocs" >
@@ -80,7 +80,7 @@
             <hr>
             <form onsubmit="return  false"     >
 
-                <label for="addrel">Додати дочiрнiй документ:</label>
+                <label for="addrel">Додати дочірній документ:</label>
                 <div style="width:200px" class="form-group">
                     <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почніть вводити номер..."></typeahead>   
 
@@ -158,13 +158,13 @@
              <div class="row" style="font-size:smaller">
 
                         <div class="col-auto  ">
-                            <h5>Iсторiя статусiв</h5>
+                            <h5>Історія статусів</h5>
                             <table class="table table-sm">
                              
                                 <tr>
                                     <th>Статус</th>
                                     <th>Дата</th>
-                                    <th>Змiнив</th>
+                                    <th>Змінив</th>
 
 
                                 </tr> 

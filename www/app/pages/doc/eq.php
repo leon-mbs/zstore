@@ -138,7 +138,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setAttribute('readonly' );
        
             $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахункiв  ");
+            $this->docform->tip->setText("Оплата через журнал розрахунків  ");
          }
          if($op==EqEntry::OP_PROD){
            $this->docform->amount->setAttribute('readonly' );
@@ -155,7 +155,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly' );
             $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахункiв  ");
+            $this->docform->tip->setText("Оплата через журнал розрахунків  ");
        
          }
          if($op==EqEntry::OP_TOSTORE){
