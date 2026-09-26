@@ -404,7 +404,7 @@ class IOState extends \App\Pages\Base
           $header['firmcode']  = "ЄДРПОУ ". $firm['tin']  ;   
        }      
        if(strlen($firm['inn']??'')>0) {
-          $header['firmcode']  = "IПН ". $firm['inn']  ;   
+          $header['firmcode']  = "ІПН ". $firm['inn']  ;   
        }      
               
        $header['from']  = H::fd($from) ;          

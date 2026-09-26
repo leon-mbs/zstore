@@ -4,7 +4,7 @@ namespace App\Pages;
 
 use App\Entity\Doc\Document;
 
-//страница  для  загрузки  файла экcпорта
+//страница  для  загрузки  файла экспорта
 class ShowDoc extends \Zippy\Html\WebPage
 {
     public function __construct($type, $docid) {

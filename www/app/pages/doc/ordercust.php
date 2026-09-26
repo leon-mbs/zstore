@@ -635,7 +635,7 @@ class OrderCust extends \App\Pages\Base
        
             $this->docform->detail->Reload();        
             $this->calcTotal(); 
-            $this->setSuccess('Перемiщено в '.$co->document_number) ;
+            $this->setSuccess('Переміщено  в '.$co->document_number) ;
                  
         } catch(\Exception $e){
    

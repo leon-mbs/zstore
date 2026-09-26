@@ -219,7 +219,7 @@ class ContractList extends \App\Pages\Base
             
             
             $msg = new \App\Entity\Message();
-            $msg->message = " Змiна  статусу  на  ". $this->_states[$this->_contract->state];
+            $msg->message = " Зміна  статусу  на  ". $this->_states[$this->_contract->state];
             $msg->created = time();
             $msg->user_id = 0;
             $msg->item_id = $this->_contract->contract_id;

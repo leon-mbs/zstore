@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="6" align="center">
-            <b> Авансовий звiт № {{document_number}} від {{date}}</b> <br>
+            <b> Авансовий звіт № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
     {{#isdetail}}
