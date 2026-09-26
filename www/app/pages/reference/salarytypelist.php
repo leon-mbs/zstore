@@ -180,7 +180,7 @@ class SalaryTypeList extends \App\Pages\Base
            return;
         }
         if($opt['coderesult']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле до видачi')");
+           $this->addAjaxResponse("toastr.error('Не вказано поле до видачі')");
            return;
         }
         if($opt['codeall']==0) {

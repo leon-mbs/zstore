@@ -76,7 +76,7 @@
                 <a class="btn btn-sm btn-success" v-on:click.prevent="onMark">Позначити  як вiдправленi</a>
                 <div v-show="showsp1" class="spinner-border spinner-border-sm"></div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Вiдправити  в Вчасно  </a>
+                <a class="btn btn-sm btn-success" v-on:click.prevent="onSend">Відправити   в Вчасно  </a>
                 
 
                                     <input  v-model="kep"   name="kep" class="ms-3" type="checkbox"  >
@@ -165,7 +165,7 @@
                } ,    
                onSend:function(){
                    if(this.selectedDocs.length ==0) return;
-                   if(confirm("Вiдправити?")==false)  return
+                   if(confirm("Відправити ?")==false)  return
                    this.showsp2 = true
                    this.log = ""
                     

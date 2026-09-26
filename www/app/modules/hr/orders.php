@@ -205,7 +205,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
 
                     $cust->email = $shoporder->headerdata['cemail'];
-                    $cust->comment = "Клiєнт Хорошоп";
+                    $cust->comment = "Клієнт  Хорошоп";
                     $cust->save();
                 }        
                 if($cust != null) {         

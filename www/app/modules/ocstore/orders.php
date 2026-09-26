@@ -227,7 +227,7 @@ class Orders extends \App\Pages\Base
             $neworder->notes = "OC номер: {$shoporder->order_id};";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->notes .= " Клiєнт: " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+            $neworder->notes .= " Клієнт : " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
             if( $modules['ocinsertcust'] == 1  && strlen($shoporder->telephone ??'' )>0 ) {
                 $cust=null;
  
@@ -248,7 +248,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
                     $cust->phone = $phone;
                     $cust->email = $shoporder->email;
-                    $cust->comment = "Клiєнт OpenCart";
+                    $cust->comment = "Клієнт  OpenCart";
                     $cust->save();
                 }
                 
@@ -424,7 +424,7 @@ class Orders extends \App\Pages\Base
                 $neworder->payamount = 0;
                 $neworder->payed = 0;
                 $neworder->notes = "OC номер:{$shoporder->order_id};";
-                $neworder->notes .= " Клiєнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+                $neworder->notes .= " Клієнт :" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
                 if (strlen($shoporder->email) > 0) {
                     $neworder->notes .= " Email:" . $shoporder->email . ";";
                 }

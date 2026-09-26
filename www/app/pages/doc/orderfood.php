@@ -586,7 +586,7 @@ class OrderFood extends \App\Pages\Base
             } else {
                 $b = $customer->getBonus();
                 if ($b > 0) {
-                    $this->docform->custinfo->setText("Бонусiв " . $b);
+                    $this->docform->custinfo->setText("Бонусів " . $b);
 
                 }
             }

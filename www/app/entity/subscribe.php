@@ -613,13 +613,13 @@ class Subscribe extends \ZCL\DB\Entity
             $header['payed'] = \App\Helper::fa($payed);
         }
 
-        if ($doc->headerdata['pos']) {
-            $pos = \App\Entity\Pos::load($doc->headerdata['pos']?? 0);
+        if ($doc->headerdata['pos'] >0) {
+            $pos = \App\Entity\Pos::load($doc->headerdata['pos'] );
             $header['pos'] = $pos->pos_name;
         }
         if ($doc->headerdata['salesource'] > 0) {
             $sl = H::getSaleSources();
-            $header['source'] = $sl[$doc->headerdata['salesource']?? ''];
+            $header['source'] = $sl[$doc->headerdata['salesource'] ];
         }
         if ($doc->customer_id > 0) {
             $cust = \App\Entity\Customer::load($doc->customer_id) ;
