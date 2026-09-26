@@ -322,7 +322,7 @@ class ProductView extends Base
         $product->comments = $conn->GetOne("select count(*) from shop_prod_comments where  item_id ={$this->item_id} and moderated <> 1");
         $product->save();
         $this->rated->setText($product->rating);
-        $this->comments->setText("Вiгукiв({$product->comments})");
+        $this->comments->setText("Вігуків({$product->comments})");
     }
 
     public function imglistOnRow($row) {

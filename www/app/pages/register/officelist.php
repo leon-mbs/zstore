@@ -417,7 +417,7 @@ class OfficeList extends \App\Pages\Base
 
     public function maintOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('Немає права на дану операцiю');
+            $this->setError('Немає права на дану операцію');
             return;
         }
 

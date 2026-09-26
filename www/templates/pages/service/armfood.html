@@ -16,14 +16,14 @@
 
             </div>
         <div class="col-12 col-md-4 col-xl-3   " >
-             <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
+             <i style="cursor:pointer"  onclick="onBell(this)" title="Звукове повідомлення" class="fa fa-bell-slash text-secondary"></i>  
             </div>              
         </div>
 
 
         <div style="display:none" id="ireadyp" class="row"  >
             <div   class="col-12 col-md-8 col-xl-6 mb-2"> 
-                 <b class="me-2">Готових позицiй <span id="ireadyc"  class="badge text-bg-success rounded-pill" > </span>                </b>
+                 <b class="me-2">Готових позицій <span id="ireadyc"  class="badge text-bg-success rounded-pill" > </span>                </b>
                   
              <table id="ireadyt" class="ctable"   >
             </table>
@@ -49,7 +49,7 @@
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="form-group row ">
-                        <label class="col-6 col-form-label" for="nal">Готiвкова каса</label>
+                        <label class="col-6 col-form-label" for="nal">Готівкова каса</label>
                         <div class="col-6">
                             <select class="form-control" zippy="nal">
                                 <option value="0">Не обрано</option>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="form-group row  ">
-                        <label class="col-6 col-form-label" for="beznal">Безготiвковий рахунок</label>
+                        <label class="col-6 col-form-label" for="beznal">Безготівковий рахунок</label>
                         <div class="col-6">
                             <select class="form-control" zippy="beznal">
                                 <option value="0">Не обрано</option>
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                     <div class="form-group  row ">
-                        <label class="col-6 col-form-label" for="pos">POS термiнал</label>
+                        <label class="col-6 col-form-label" for="pos">POS термінал</label>
                         <div class="col-6">
                             <select class="form-control" zippy="pos">
                                 <option value="0">Не обрано</option>
@@ -98,7 +98,7 @@
                         
                          <div class="form-check form-check-inline">
                             <input zippy="modeof" class="form-check-input" type="checkbox"    > 
-                            <label class="form-check-label" for="modeof">  Режим офiцiанта (для мобiльних телефонiв)</label>
+                            <label class="form-check-label" for="modeof">  Режим офіціанта (для мобільних телефонів)</label>
                         </div>
                        </div>
                     </div>
@@ -123,8 +123,8 @@
                    {{#fiscal}}
                    <div class="d-flex justify-content-center">
                           &nbsp;  &nbsp;
-                            <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiд крити змiну</a>
-                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
+                            <a zippy="openshift"><i class="fa fa-bullhorn"></i> Від крити зміну</a>
+                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
                         {{#fiscaltestmode}}
                         &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
                         {{/fiscaltestmode}}
@@ -255,7 +255,7 @@
                                     <th>Код</th>
                                     <th>   {{#useexcise}}     Ак. марки     {{/useexcise}}    </th>
                                     <th class="text-center ">Кіл.</th>
-                                    <th class="text-end"><i title="Акцiйна знижка" class="fa fa-gift"></i> ,%</th>
+                                    <th class="text-end"><i title="Акційна знижка" class="fa fa-gift"></i> ,%</th>
                                     <th class="text-end">Ціна</th>
                                     <th class="text-end">Сума</th>
                                     <th >Стан </th>
@@ -386,7 +386,7 @@
                             <div class="  col-6 col-xl-4">
                                  {{^modeof}} 
                                 <div class="form-group   ">
-                                    <label   for="customer">Клiєнт</label>
+                                    <label   for="customer">Клієнт</label>
                                     <div class="input-group  ">
 
                                      
@@ -492,7 +492,7 @@
 
                         <div class="row">
                         <div class=" col-12  col-md-6 pt-4">
-                                      <input zippy="btosave" type="submit" value="Вiд класти"   class="btn btn-success ms-4 ms-4">
+                                      <input zippy="btosave" type="submit" value="Від класти"   class="btn btn-success ms-4 ms-4">
                            
                                      
                                        
@@ -503,7 +503,7 @@
                                         </div>
                                          <div class="form-check form-check-inline">
                                             <input zippy="bpprod" class="form-check-input" type="radio"   >
-                                            <label class="form-check-label" for="bpprod">  кухнi</label>
+                                            <label class="form-check-label" for="bpprod">  кухні</label>
                                         </div>
                                          <div class="form-check form-check-inline">
                                             <input zippy="bpbar" class="form-check-input" type="radio"    > 
@@ -515,7 +515,7 @@
                                  {{^modeof}}
                                  <div class="form-check form-check-inline ms-4">
                                     <input zippy="passprod" class="form-check-input" type="checkbox"    > 
-                                    <label class="form-check-label" for="passprod"> Не вiдправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
+                                    <label class="form-check-label" for="passprod"> Не відправляти в  виробництво <small> <i class="fa fa-info-circle" title="Наприклад, караоке"></i> </small> </label>
                                 </div>
                                   {{/modeof}}
                             <input zippy="btoprod" type="submit" value="На виконання"   class="btn btn-success ms-4">
@@ -565,9 +565,9 @@
                             <div class="modal-body">
                              <input  type="hidden" zippy="akitemid" >
                              <div class="form-group">
-                                <label for="aklist">Перелiк</label>
+                                <label for="aklist">Перелік</label>
                                 <textarea   class="form-control"   zippy="aklist"></textarea>
-                                <small>По однiй на строку по кількiстi в позицiї</small>
+                                <small>По одній на строку по кількісті в позиції</small>
 
                             </div>  
                              <div class="form-check">
@@ -599,7 +599,7 @@
 
                                 <div class="form-check form-check-inline">
                                     <input zippy="pfnal" class="form-check-input" type="radio"   >
-                                    <label class="form-check-label" for="pfnal"><i class="fa fa-coins"></i> Готiвка</label>
+                                    <label class="form-check-label" for="pfnal"><i class="fa fa-coins"></i> Готівка</label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <input zippy="pfbeznal" class="form-check-input" type="radio"    >
@@ -664,7 +664,7 @@
        
                             
                            {{#fiscal}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фіскалізацію  
                            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
@@ -721,7 +721,7 @@
                                 <div class="col-auto  ">
                                   <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                                </div>
-                                <label class="col-form-label col-auto" for="searchcust"> Клiєнт </label>
+                                <label class="col-form-label col-auto" for="searchcust"> Клієнт </label>
                                <div class="col-auto  ">
                                 <input placeholder="Почніть вводити..." class="form-control me-2" type="text" zippy="searchcust"  >
                                </div>
@@ -742,7 +742,7 @@
                         <th>Номер</th>
                         <th class="text-end">Час</th>
                         {{#tables}}
-                        <th class="text-end">Стiл</th>
+                        <th class="text-end">Стіл</th>
                         {{/tables}}
 
                         <th ></th>
@@ -781,18 +781,18 @@
   
 
                         <td zippy="docnotes"></td>
-                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-running"></i> Бiгунок</a></td>
+                        <td ><a zippy="brrunner" class="btn btn-sm btn-primary"><i class="fa fa-running"></i> Бігунок</a></td>
                         <td ><a zippy="brprint" class="btn btn-sm btn-info"><i class="fa fa-print"></i> Рахунок</a></td>
                         <td ><a zippy="brpay" class="btn btn-sm btn-primary"><i class="fa fa-credit-card"></i> Оплатити</a></td>
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
                         <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
                         <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
                     {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a>
+                        <td  ><a zippy="checkfisc" >Фіскалізувати</a>
                         </td>
                          {{/fiscal}}                        
                    {{#freg}}
-                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фіскалізувати</span></td>
                          {{/freg}}                        
                     </tr>
 
@@ -806,7 +806,7 @@
                            <a zippy="docnumber_of"></a>&nbsp;
                            <span zippy="doctime_of"></span>  &nbsp; 
                            <span zippy="docamount_of"></span> грн   &nbsp;
-                           {{#tables}} Стiл <span zippy="tablenumber_of"></span>     {{/tables}}
+                           {{#tables}} Стіл <span zippy="tablenumber_of"></span>     {{/tables}}
                        </div>
                         <div class="col-12">
                             Статус: <span zippy="state_of"></span>  &nbsp; 
@@ -814,7 +814,7 @@
                         <div zippy="docnotes_of" class="col-12"> </div>
                         <div zippy="rtlist_of" class="col-12"> </div>
                         <div class="col-12">
-                          <a zippy="brrunner_of" class="btn btn-sm btn-primary me-2">  Бiгунок</a> 
+                          <a zippy="brrunner_of" class="btn btn-sm btn-primary me-2">  Бігунок</a> 
                           <a zippy="brprint_of" class="btn btn-sm btn-info me-2">  Рахунок</a> 
                           <a zippy="brpay_of" class="btn btn-sm btn-primary me-2">  Оплатити</a> 
                           <a zippy="bredit_of" class="btn btn-sm btn-info me-2">  Редагувати</a> 
@@ -925,40 +925,40 @@
                                 <select class="form-control" zippy="foodpricetypeout">
                                  <option value="0">Не  вказано</option>
                                 </select>
-                                <small>Якщо вiдрiзняються  вiд основної</small>
+                                <small>Якщо відрізняються  від основної</small>
                             </div>
                           
                             <div class="form-check">
                                 <input zippy="foodtables" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodtables">Показувати номери столикiв (в  кафе)</label>
+                                <label class="form-check-label" for="foodtables">Показувати номери столиків (в  кафе)</label>
                                
                             </div>
                              <div class="form-check">
                                 <input zippy="foodbell" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodbell">Кнопка (в меню по QR)    виклику офiцiанта   </label>
+                                <label class="form-check-label" for="foodbell">Кнопка (в меню по QR)    виклику офіціанта   </label>
                                
                             </div>
 
 
                             <div class="form-check">
                                 <input zippy="fooddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="fooddelivery">Можливiсть доставки</label>
+                                <label class="form-check-label" for="fooddelivery">Можливість доставки</label>
                              <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Можливiсть створювати доставку з АРМ касира (по дзвiнку клiєнта)"></i>    
+                                   title="Можливість створювати доставку з АРМ касира (по дзвінку клієнта)"></i>    
                                
                             </div>
                             <div class="form-check">
                                 <input zippy="foodpack" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="foodpack">Вибiр можливостi упаковки з собою.</label>
+                                <label class="form-check-label" for="foodpack">Вибір можливості упаковки з собою.</label>
                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="Ставиться, якщо є обидва варіанти (з собою і на місці), тоді потрібно уточнювати в замовленні"></i> 
                                 
                             </div>
                              <div class="form-check">
                                 <input zippy="diffbp" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="diffbp">Окремi замовлення для кухнi i бару</label>
+                                <label class="form-check-label" for="diffbp">Окремі замовлення для кухні і бару</label>
                                <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                   title="Якщо кухня i бар  вимагають окремi  чеки"></i> 
+                                   title="Якщо кухня і бар  вимагають окремі  чеки"></i> 
                                 
                             </div>
                            </div>
@@ -966,7 +966,7 @@
                            
                           <h4>Налаштування меню</h4>    
                          <small>
-                                 Детальнiше про доступ до сторiнки меню по QR  коду <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
+                                 Детальніше про доступ до сторінки меню по QR  коду <a href="https://zippy.com.ua/zstoreusage#food" target="_blank">тут</a>. 
                                 </small>
                        
                             <div class="form-group row">
@@ -1010,7 +1010,7 @@
                                 <select class="form-control"  zippy="foodbasemenu">
                                      <option value="0">Не вказано</option>
                                 </select>
-                                <span>Якщо не вказано береться верхнiй рiвень</span>
+                                <span>Якщо не вказано береться верхній рівень</span>
                             </div> 
 
                              <div class="form-group">
@@ -1177,7 +1177,7 @@
                     }
                     if (answer.tableno > 0) {
                         $('#tablenoalert').show();
-                        $('#tablenomsg').text('Виклик зi столу ' + answer.tableno);
+                        $('#tablenomsg').text('Виклик зі столу ' + answer.tableno);
                         beep()
                     }
                   

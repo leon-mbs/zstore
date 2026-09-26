@@ -7,7 +7,7 @@
     
     {{#fiscalnumber}}
     <tr>
-        <td colspan="3">Фiскальний чек</td>
+        <td colspan="3">Фіскальний чек</td>
     </tr>
     <tr>
         <td colspan="3">ФН чека {{fiscalnumber}}</td>
@@ -65,10 +65,10 @@
       <tr>
        <td colspan="3">
       {{#form1}}
-          Форма оплати: готiвка
+          Форма оплати: готівка
         {{/form1}}
         {{#form2}}
-          Форма оплати: безготiвка
+          Форма оплати: безготівка
         {{/form2}}    
     
     </td>
@@ -77,7 +77,7 @@
    {{#payeq}}
     <tr>
        <td colspan="3" > 
-          Засiб оплати:  {{payeq}}
+          Засіб оплати:  {{payeq}}
    </td>
     </tr> 
   {{/payeq}}   
@@ -111,7 +111,7 @@
     </tr>
        {{#isstamps}}
     <tr>
-        <td  colspan="3">Акцизнi марки:</td> 
+        <td  colspan="3">Акцизні марки:</td> 
     </tr> 
         {{#stamps}}
         <tr>
@@ -135,7 +135,7 @@
     {{/isdisc}}
    {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Списано бонусiв::</td>
+        <td colspan="2" align="right">Списано бонусів::</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}
@@ -166,13 +166,13 @@
     {{/exciseval}}    
     {{#addbonus}}
     <tr >
-        <td colspan="2" align="right">Нараховано бонусiв::</td>
+        <td colspan="2" align="right">Нараховано бонусів::</td>
         <td align="right">{{addbonus}}</td>
     </tr>
     {{/addbonus}}
     {{#allbonus}}
     <tr >
-        <td colspan="2" align="right">Всього бонусiв::</td>
+        <td colspan="2" align="right">Всього бонусів::</td>
         <td align="right">{{allbonus}}</td>
     </tr>
     {{/allbonus}}

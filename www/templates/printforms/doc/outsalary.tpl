@@ -14,7 +14,7 @@
 
     <tr>
         <td colspan="2">
-            <b>Мiсяць:</b> {{month}} {{year}}
+            <b>Місяць:</b> {{month}} {{year}}
         </td>
     </tr>
      {{#advance}}

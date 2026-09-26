@@ -41,10 +41,10 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['ocstoreid']??0));
       
         $pt=[];
-        $pt[1] = 'Оплата на сторонi IM ';
+        $pt[1] = 'Оплата на стороні IM ';
         $pt[2] = 'Постоплата';
         $pt[3] = 'Оплата касовим  чеком, РФ або ВН';
-        $pt[4] = 'Тiльки списати зi складу';
+        $pt[4] = 'Тільки списати зі складу';
       
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
 

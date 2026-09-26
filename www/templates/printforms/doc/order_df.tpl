@@ -11,7 +11,7 @@
      {{#isoutnumber}}
     <tr>
         <td></td>
-        <td>Зовнiшнiй номер</td>
+        <td>Зовнішній номер</td>
         <td colspan="8">{{outnumber}}</td>
     </tr>
 

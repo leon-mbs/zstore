@@ -4,7 +4,7 @@
     </tr>
     <tr>
 
-        <td colspan="3">вiд {{date}}</td>
+        <td colspan="3">від {{date}}</td>
     </tr>
      {{#isfirm}}
     <tr>

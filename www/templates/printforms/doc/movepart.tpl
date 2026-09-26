@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b>Перемiщення партiй ТМЦ № {{document_number}} вiд {{date}}</b> <br>
+            <b>Переміщення партій ТМЦ № {{document_number}} від {{date}}</b> <br>
         </td>
     </tr>
     <tr>

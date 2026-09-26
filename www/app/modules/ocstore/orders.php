@@ -50,7 +50,7 @@ class Orders extends \App\Pages\Base
         $pt[1] = 'Оплата зразу (передплата)';
         $pt[2] = 'Постоплата';
         $pt[3] = 'Оплата в Чеку або ВН';
-        $pt[4] = 'Тiльки списати зi складу';
+        $pt[4] = 'Тільки списати зі складу';
           
         $this->filter2->add(new DropDownChoice('paytype',$pt, $defpaytype));
          

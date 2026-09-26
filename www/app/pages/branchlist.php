@@ -139,7 +139,7 @@ class BranchList extends \App\Pages\Base
     public function moveOnClick($sender) {
         $id= intval($this->branchtable->formmove->selmove->getValue()); 
         if($id==0) {
-            $this->setError('Не вибрана  фiлiя');
+            $this->setError('Не вибрана  філія');
             return;    
         }
         $conn = \ZDB\DB::getConnect();

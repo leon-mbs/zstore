@@ -2,7 +2,7 @@
 
     <tr>
         <td align="center" colspan="5">
-            <h4> Фiскалiзованi чеки </h4>
+            <h4> Фіскалізовані чеки </h4>
         </td>
     </tr>
     <tr>
@@ -44,7 +44,7 @@
 
 
         <td colspan="5" style="border: solid black 1px">
-           Чекiв <b>{{cnt}}</b> на  суму <b>{{tam}}</b>. Повернень  <b>{{rcnt}}</b> на суму <b>{{rtam}}</b>. 
+           Чеків <b>{{cnt}}</b> на  суму <b>{{tam}}</b>. Повернень  <b>{{rcnt}}</b> на суму <b>{{rtam}}</b>. 
         </td>
       
        

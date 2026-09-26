@@ -32,7 +32,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{binal}}</h4>
-                    <p>Готiвка</p>
+                    <p>Готівка</p>
                   </div>
              </div>
             </div>
@@ -40,7 +40,7 @@
                <div class="info-box bg-primary text-white">
                   <div class="inner">
                     <h4>{{bibeznal}}</h4>
-                    <p>Безготiвка</p>
+                    <p>Безготівка</p>
                   </div>
              </div>
             </div>
@@ -70,12 +70,12 @@
         <div class="row">
             <div   class="col-12    ">
              <h4>Статистика за 
-                  {{#mc3}} три мiсяцi  {{/mc3}}  
-                  {{^mc3}} <a onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=1">  3 мiсяцi </a> {{/mc3}}  
-                  {{#mc6}} 6 мiсяцiв {{/mc6}}  
-                  {{^mc6}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=2"> 6 мiсяцiв </a> {{/mc6}}  
-                  {{#mc12}} 12 мiсяцiв {{/mc12}}  
-                  {{^mc12}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=3"> 12 мiсяцiв </a> {{/mc12}}  
+                  {{#mc3}} три місяці  {{/mc3}}  
+                  {{^mc3}} <a onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=1">  3 місяці </a> {{/mc3}}  
+                  {{#mc6}} 6 місяців {{/mc6}}  
+                  {{^mc6}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=2"> 6 місяців </a> {{/mc6}}  
+                  {{#mc12}} 12 місяців {{/mc12}}  
+                  {{^mc12}} <a  onclick="document.getElementById('dialogwait').showModal()" href="/index.php?p=/App/Pages/Main&arg=3"> 12 місяців </a> {{/mc12}}  
                   
                   
              
@@ -128,8 +128,8 @@
          
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Критична кількiсть </h4>
-                        <small>Товари для яких задана мiнiмальна кількiсть на складi та актуальна кількiсть менше заданої</small>
+                        <h4>Критична кількість </h4>
+                        <small>Товари для яких задана мінімальна кількість на складі та актуальна кількість менше заданої</small>
                         <br><a zippy="mqcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
@@ -140,7 +140,7 @@
                                 <th>Поставив</th>
 
                                 <th class="text-end">Факт</th>
-                                <th class="text-end">Мiн.</th>
+                                <th class="text-end">Мін.</th>
                             </tr>
                             <tr zippy="mqlist">
                                
@@ -160,15 +160,15 @@
             {{#usesnumberdate}}
                    <div   class="card ">
                     <div   class="card-body">
-                        <h4>Простроченi товари</h4>
-                        <small>Товари для котрих закiнчився термін придатностi</small>
+                        <h4>Прострочені товари</h4>
+                        <small>Товари для котрих закінчився термін придатності</small>
                         <br><a zippy="sdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
 
                                 <th>Склад</th>
                                 <th>Товар</th>
-                                <th>Серiя</th>
+                                <th>Серія</th>
                                 <th>Придатний до</th>
                                 <th class="text-end">Кіл.</th>
                             </tr>
@@ -224,7 +224,7 @@
         
         
         var psoptions = {
-          title: 'Структура видаткiв' ,
+          title: 'Структура видатків' ,
           sliceVisibilityThreshold: 0.025,         
           backgroundColor: {
             "fill":bgcolor 
@@ -253,7 +253,7 @@
   
      
       var pcdata = new google.visualization.DataTable();
-      pcdata.addColumn('string', 'Мiсяць');
+      pcdata.addColumn('string', 'Місяць');
       pcdata.addColumn('number', 'Прибутки');
       pcdata.addColumn('number', 'Видатки');
 
@@ -303,7 +303,7 @@
           
          
         var tsdata = new google.visualization.DataTable();
-      tsdata.addColumn('string', 'Мiсяць');
+      tsdata.addColumn('string', 'Місяць');
       tsdata.addColumn('number', 'Послуги');
       tsdata.addColumn('number', 'Товари');
 
@@ -314,7 +314,7 @@
         
         
         var tsoptions = {
-          title: 'Реалiзацiя',
+          title: 'Реалізація',
           curveType: 'function',
           legend: { position: 'bottom' } ,
           chartArea : {

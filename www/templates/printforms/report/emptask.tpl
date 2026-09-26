@@ -49,7 +49,7 @@
   
      <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Виконанi роботи
+            Виконані роботи
         </td>
     </tr> 
      

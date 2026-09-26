@@ -1035,7 +1035,7 @@ class Document extends \ZCL\DB\Entity
         $list[self::DEL_UP] = 'Укр. пошта';
         $list[self::DEL_MEEST] = 'Meest';
         $list[self::DEL_ROZ] = 'Rozetka';
-        $list[self::DEL_SERVICE] = 'Iнша служба доставки';
+        $list[self::DEL_SERVICE] = 'Інша служба доставки';
 
         return $list;
     }

@@ -738,10 +738,10 @@ class Order extends \App\Pages\Base
         $qty = $item->getQuantity() ; 
         if($store>0) {
            $oq = $item->getQuantity() ;
-           $qtymdg= "На  складi ". H::fqty( $qty) .", на iнших складах ". H::fqty($oq - $qty);    
+           $qtymdg= "На  складі ". H::fqty( $qty) .", на інших складах ". H::fqty($oq - $qty);    
            
         }   else {
-           $qtymdg= "Наявнiсть: ".  H::fqty($qty );    
+           $qtymdg= "Наявність: ".  H::fqty($qty );    
         }
         
         

@@ -466,7 +466,7 @@ class SerList extends \App\Pages\Base
         $qty  = floatval($this->editpan->sform->sqty->getText());
         $price  = floatval($this->editpan->sform->sprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
-            $this->setError('Невiрнi данi')  ;
+            $this->setError('Невірні дані')  ;
             return;
         }
         $ser = Service::load($id) ;
@@ -495,7 +495,7 @@ class SerList extends \App\Pages\Base
         $qty  = floatval($this->editpan->iform->iqty->getText());
         $price  = floatval($this->editpan->iform->iprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
-            $this->setError('Невiрнi данi')  ;
+            $this->setError('Невірні дані')  ;
             return;
         }
  

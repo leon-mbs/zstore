@@ -107,10 +107,10 @@ class DocList extends \App\Pages\Base
 
         $firm = \App\Helper::getFirmData()   ;
         if(strlen($firm['vdoc'])==0) {
-            return "Не задано токен Вчасно в довiднику  компанiй";
+            return "Не задано токен Вчасно в довіднику  компаній";
         }
         if(strlen($firm['tin'])==0) {
-            return "Компанiя повинна мати ЄДРПОУ";
+            return "Компанія повинна мати ЄДРПОУ";
         }
         if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
             return "Не заданий ключ для КЕП";

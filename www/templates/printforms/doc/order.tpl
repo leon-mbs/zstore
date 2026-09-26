@@ -34,7 +34,7 @@
     {{#isoutnumber}}
     <tr>
         <td></td>
-        <td>Зовнiшнiй номер</td>
+        <td>Зовнішній номер</td>
         <td colspan="8">{{outnumber}}</td>
     </tr>
 
@@ -110,7 +110,7 @@
     {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Списано бонусiв::</td>
+        <td colspan="9" align="right">Списано бонусів::</td>
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
