@@ -1,13 +1,13 @@
  <table class="ctable" border="0"   cellpadding="2" cellspacing="0">
    <tr style="font-size:larger; font-weight: bolder;">
-     <td colspan="11" align="center" > Книга облiку прибуткiв та видаткiв </td>
+     <td colspan="11" align="center" > Книга обліку прибутків та видатків </td>
    </tr>
   <tr style=" font-weight: bolder;">
      <td colspan="8"   > {{firmname}} </td>
      <td colspan="3"   > {{firmcode}} </td>
    </tr>
  <tr style=" font-weight: bolder;">
-     <td colspan="11" align="center"  > Перiод з {{from}}  по {{to}}   </td>
+     <td colspan="11" align="center"  > Період з {{from}}  по {{to}}   </td>
     
    </tr>
    <tr>

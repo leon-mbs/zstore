@@ -1,10 +1,10 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Квитанцiя про  оплату</text>
+<text>Квитанція про  оплату</text>
 <newline ></newline>
 <font >a</font>
 <align>left</align>
-<text>Пiдстава {{document_number}}</text>
+<text>Підстава {{document_number}}</text>
 <text>{{firm_name}}</text>
 <text>{{customer_name}}</text>
 <text>Оплати:</text>

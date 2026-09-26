@@ -8,7 +8,7 @@
     <tr>
 
         <td align="center">
-            <b> Перiод з {{from}} по {{to}}   </b>
+            <b> Період з {{from}} по {{to}}   </b>
         </td>
     </tr>
     <tr>

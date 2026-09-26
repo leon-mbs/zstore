@@ -69,7 +69,7 @@
                             <select class="form-control" zippy="fop">
                                 <option value="0">Не використовується</option>
                             </select>
-                             <small>Друкується замiсть назви компанiї </small>
+                             <small>Друкується замість назви компанії </small>
                             </div>
                         </div> 
                          {{/usefops}}
@@ -87,7 +87,7 @@
             <h4 class="mb-2  ">Оформлення чеку</h4>
             <div zippy="navbar" class="navbar nav justify-content-start">
 
-            <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+            <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чеків</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
                 {{^simplemode}}
                <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощений режим</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
                 {{/simplemode}}
@@ -97,8 +97,8 @@
             
              {{#fiscal}}
                 
-                        <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
-                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
+                        <a zippy="openshift"><i class="fa fa-bullhorn"></i> Відкрити зміну</a>
+                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
                         {{#fiscaltestmode}}
                         &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
                         {{/fiscaltestmode}}
@@ -135,7 +135,7 @@
 
                      
                        <div data-label="promocode" class="col-auto">
-                            Промо-код  <i class="fa fa-exclamation" title="Промо вводиться  пiсля  вводу  всiх позицiй"></i>
+                            Промо-код  <i class="fa fa-exclamation" title="Промо вводиться  після  вводу  всіх позицій"></i>
                             </div>    
                             
                             <div class="col-auto">
@@ -338,7 +338,7 @@
                                                  
                      <div class="form-check form-check-inline">
                         <input zippy="pt1"  class="form-check-input" type="radio"   >
-                        <label class="form-check-label" for="pt1" style="font-weight: bolder;font-size:larger"> Готiвка</label>
+                        <label class="form-check-label" for="pt1" style="font-weight: bolder;font-size:larger"> Готівка</label>
                     </div>                  
                      <div class="form-check form-check-inline">
                         <input zippy="pt2"   class="form-check-input" type="radio"   >
@@ -376,9 +376,9 @@
                             <div class="modal-body">
                              <input  type="hidden" zippy="akitemid" >
                              <div class="form-group">
-                                <label for="aklist">Перелiк</label>
+                                <label for="aklist">Перелік</label>
                                 <textarea   class="form-control"   zippy="aklist"></textarea>
-                                <small>По однiй на строку по кількiстi в позицiї</small>
+                                <small>По одній на строку по кількісті в позиції</small>
 
                             </div>  
                              <div class="form-check">
@@ -501,7 +501,7 @@
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-info">
                             &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-success">
                             {{#fiscal}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фіскалізацію  
                            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
@@ -518,7 +518,7 @@
                     <div class="col-6 col-md-3 col-xl-2">
                            <div class="form-group  ">
                              {{^freg}}
-                           <input   zippy="print" type="button" value="Друк чeка" class="btn  btn-primary">
+                           <input   zippy="print" type="button" value="Друк чека" class="btn  btn-primary">
                               {{/freg}}         
                           &nbsp;&nbsp;  <button zippy="qrpaybtn" title="Оплата по QR коду" onclick="   openModal('modalqr') " class="btn btn-success ms-2"><i class="fa fa-qrcode"></i></button>
                    
@@ -550,7 +550,7 @@
                         <div class="form-group">
                             <label for="edittovar">Назва</label>
                             <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
-                            <br> <a zippy="openitemsel">Вiдкрити довiдник</a>
+                            <br> <a zippy="openitemsel">Відкрити довідник</a>
                             &nbsp; <a zippy="opencatpan">Відкрити Категорії</a>
                             {{^noshowpartion}}
                            <br>
@@ -644,7 +644,7 @@
         <div class="row" zippy="checklistpan"  >
 
             <div class="col-12 col-md-8 xl-6" >
-                <h4>Список чекiв</h4>
+                <h4>Список чеків</h4>
                 <a  class="btn btn-success me-2" zippy="newcheckback">&lt; Назад</a>   
                 <a  class="btn btn-success" zippy="newcheck">Новий чек</a>   
 
@@ -705,10 +705,10 @@
                         <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         <td  ><a zippy="checkreturn" >Повернення</a></td>
                          {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a></td>
+                        <td  ><a zippy="checkfisc" >Фіскалізувати</a></td>
                          {{/fiscal}}
                          {{#freg}}
-                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фіскалізувати</span></td>
                          {{/freg}}
                          
                     </tr>

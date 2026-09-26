@@ -6,7 +6,7 @@
          {{document_number}}
 </text>
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>від {{date}}</text>
 <align>left</align>
 <text> {{firm_name}}</text>
     {{#shopname}}

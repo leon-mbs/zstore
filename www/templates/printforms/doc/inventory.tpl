@@ -17,7 +17,7 @@
     {{#storeemp}}
     <tr>
         <td colspan="4">
-            <b>Спiвробiтник:</b> {{storeemp}}
+            <b>Співробітник:</b> {{storeemp}}
         </td>
     </tr>
  

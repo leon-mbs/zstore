@@ -1,0 +1,170 @@
+<html>
+
+<head>
+    <meta name="description" content="Безкоштовна програма для складського обліку з відкритим кодом та  веб-інтерфейсом">
+    <title>CRM система для складського обліку|Встановлення  та налаштування</title>
+
+</head>
+
+<body>
+
+    <!-- <script>
+        $(document).ready(function () {
+            function scrollToSection(target) {
+                if (target.length) {
+                    $('html, body').stop().animate({
+                        scrollTop: target.offset().top - 100
+                    }, 1000);
+                }
+            }
+
+            $('a[href^="#"]').on('click', function (event) {
+                event.preventDefault();
+                var target = $($(this).attr('href'));
+                scrollToSection(target);
+            });
+        });
+    </script> -->
+
+    <section id="setup" class="setup">
+        <div class="container ">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <h1 class="setup__title title-h2 title-center">Встановлення та налаштування</h1>
+                    <h5>  <i class="fa fa-exclamation-triangle"></i> Оскільки ПЗ вільнорозповсюджуване оплата  не  потрібна але 
+                     можна <a href="/contacts#donate">задонатити</a> на  розвиток проекту.   </h5>
+                    <br>
+                    <p><strong> Вимоги до ПЗ: </strong>
+                        <br> <i class="fa fa-check"></i> PHP8.1+ 
+                        <br> <i class="fa fa-check"></i> Apache (необхідна підтримка .htaccess)
+                        <br><i class="fa fa-check"></i> Mysql 8.0+  (MariaDB)
+                        <br>
+                        <span><b><i class="fa fa-exclamation-triangle"></i></b> Програма спроектована на максимальну простоту і дешевизну розробки,
+                            а не на максимальне навантаження.
+                            Якщо передбачається активна торгівля з великим обсягом товарів, по мірі накопичення даних будуть потрібні значні
+                            обчислювальні ресурси.
+                            <br> Для PHP рекомендується не менше 512MB пам'яті та не менше 300 секунд timeout. Також рекомендується
+                            збільшити пам'ять для сервера БД.
+                        </span>
+                        <br><br>
+                    </p>
+                    <p>
+                        Установка програми може бути виконана як на хостингу, так і на локальному сервері,
+                        або персональному комп'ютері.
+                        Може бути використаний самий недорогий, не потребуючий спеціального адміністрування, віртуальний хостинг
+                        <br>
+                        <br>
+                           <i class="fa fa-exclamation-circle"></i> Рекомендований хостинг <a class="link" tareget="_blank" href="https://www.ukraine.com.ua">ukraine.com.ua</a>
+                      
+                        <br>
+                        <br>
+                        Процесс налаштування залежить від рівня користувача.<br>
+
+                        <br>
+                    <dl>
+                        <dt>Для IT спеціалістів:</dt>
+                        <dd>
+                            1. Отримати дистрибутив з GitHub <a href="https://github.com/leon-mbs/zstore" class="link"
+                                target="_blank">репозиторію</a> (Не забуваємо ставити зірочку :) ) .<br>
+                            2. Скопіювати вміст www в корінь сайту. Надати право запису в папки <b>logs</b> та <b>upload</b> (для Лінукса)
+                            <br>
+                            3. Виконати загрузку бібліотек за допомогою Composer.<br>
+                            4. Створити БД (кодування utfmb4_general_ci) та виконати SQL скрипт <code>/db/db.sql</code> . 
+                            (Файли update*.sql виконувати не треба).
+                            <br><i class="fa fa-exclamation-triangle"></i> В PhpMyAdmin скрипти виконувати через імпорт
+                            <br>
+                            5. Прописати конект до БД в <code>config/config.php</code>.<br>
+                            6. Увійти дефолтним користувачем <b>admin admin</b> (дефолтний пароль слід змінити на сторінці профілю).<br>
+                            7. Задати необхідні налаштування - склад за замовчуванням, назву фірми, оперативне меню у вигляді кнопок,
+                            типи цін та ін. 
+
+                            <br>
+                         
+                        <br>
+                            
+                       <a href="https://github.com/aurodion/zstore-installer-ubuntu" class="link"    target="_blank">Установка ПЗ на Ubuntu</a>
+                         <br> 
+                       <a href="https://github.com/VladyslavHor/zstore-ci-docker" class="link"    target="_blank">Готовий Docker-образ</a>
+                         <br> 
+                        </dd>
+                        <dt>Менш досвідчені розробники (або ті в  кого  віртуальний хостинг)</dt>
+                        <dd>
+                            можуть скачати <a href="/download/fullzstore.zip" class="link"
+                                target="_blank">дистрибутив</a> в зборі з усіма бібліотеками (папка vendor)
+                            та пропустити пункти 1 i 3. 
+                            <br><br>    
+                        </dd>
+
+                     
+                        <dt>Користувачі, що не є IT спеціалістами</dt>
+                        <dd>можуть встановити зібрану, готову до роботи програму на локальному комп'ютері.
+                           <br><br>
+                              
+                           Для цього    <a class="link" target="_blank"  href="https://zippy.com.ua/download/xampp.zip">завантажити</a>   збірку (для Windows), 
+                           на  основі проекту XAMPP, <b>розпакувати</b> архів в корінь диску c:. 
+                           Файл для запуску c:/xampp/xampp-control.exe.
+                            <br>   
+                            <br>   
+                             <img style="display:block;height:176px;" src="/assets/images/xampp.png">  
+                           
+                          <br>Якщо Apache і Mysql стартували після  натискання відповідних кнопок, сайт повинен відкритися в браузері за адресою http://localhost/.
+                             Далі панель можна згорнути.
+                             <br>Папка з сайтом (на  випадок ручних оновлень) - htdocs.
+                             <br>Сторінка управління БД (для ручних оновлень) за адресою http://localhost/phpmyadmin (якщо запитає акаунт- root root)
+                             <br>Після закінчення роботи або перед вимкненням комп'ютера слід зупинити XAMPP. 
+                             В першу чергу потрібно зупинити MySQL, щоб уникнути втрати даних.
+                                                         
+                            <br><br>
+                               Для <b>Mac OS</b>  i <b>Linux</b> можна  завантажити <a  target="_blank" href="https://www.apachefriends.org/ru/download.html"> збірку XAMPP</a>.
+                              <br>  Далі завантажити <a href="https://zippy.com.ua/download/fullzstore.zip" class="link"
+                                target="_blank">дистрибутив</a> в зборі з усіма бібліотеками (папка vendor)
+                                та пропустити пункти 1 i 3  вище.    
+                        
+                         <br><br>
+                         <i  class="fa fa-exclamation-triangle"></i>  В обох збірках після закінчення роботи  слід зупинити програму  кнопками
+                           Stop apache i Stop mysql щоб не пошкодити дані при виключенні ПК
+                          <br><br> 
+                          На випадок  проблем з XAMPP можна      <a class="link" target="_blank"  href="https://zippy.com.ua/download/UniServer.zip">завантажити</a> альтернативну  збір , 
+                           <b>розпакувати</b> архів  (в папку  без пробілів  в  шляху), запустити UniController.exe, натиснути Start Apache, Start Mysql. 
+                           Далі натиснути View www (або  відкрити вручну сайт в  браузері за адресою http://localhost/ )
+                          <br>Папка з сайтом (на випадок ручних оновлень) - www.
+                         
+                        
+                        </dd>
+                    </dl>
+              
+                  
+                      <br>
+
+
+                    <br><i class="fa fa-info-circle"></i> Документація користувача <a class="link" href="/zstoreusage">тут</a>
+                    <br>
+                    <br><i class="fa fa-question-circle"></i> Консультацію по встановленню та налаштуванню можна отримати <a class="link" href="/contacts">тут</a>
+                     <br> Також можлива  допомога  по  встановленню програми (якщо використовується вказаний вище рекомендований хостинг)
+                     <br><br>
+                     
+                     <span id="lostpass"><i class="fa fa-exclamation-triangle"></i> На випадок втрати пароля адміністратора потрібно встановити для
+                        користувача admin (зазвичай перший рядок) в полі userpass таблиці users пароль в незашифрованому вигляді (наприклад 'admin').
+                        (Можна просто виконати запит <i>update users set userpass = 'admin' where userlogin = 'admin')</i>).
+                        Потім залогінитись та перезадати пароль зі сторінки профілю. </span>
+                      <!--
+                      <br> Резервний код двофактрної аутентифікації адміна можна виставити запитом  <i> update users set otpcode = 12345678 where userlogin = admin)</i> де 12345678 - приклад коду
+                      -->  
+                      <br>  
+                          <span>Пароль звичайного користувача  може  змінити адміністратор в довіднику користувачів</span>
+                      <br>                     
+                      <br>                     
+                   <strong><i class="fa fa-download"></i> <a  href="/update">Оновлення та зміни</a></strong>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+</body>
+
+</html>

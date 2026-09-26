@@ -440,8 +440,8 @@ class GIList extends \App\Pages\Base
         $this->nppan->npform->nppm->setValue('Cash');
         $bmlist = array();
         $bmlist['0'] = 'Без доставки';
-        $bmlist['Cash'] = 'Готiвка';
-        $bmlist['NonCash'] = 'Безготiвка';
+        $bmlist['Cash'] = 'Готівка';
+        $bmlist['NonCash'] = 'Безготівка';
         $bmlist['Control'] = 'Контроль доставки';
         $this->nppan->npform->nppmback->setOptionList($bmlist);
         $this->nppan->npform->nppmback->setValue('0');

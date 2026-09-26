@@ -12,7 +12,7 @@
         <td></td>
 
         <td valign="top"><b>Договір</b></td>
-        <td colspan="5">{{contract}} вiд {{createdon}}</td>
+        <td colspan="5">{{contract}} від {{createdon}}</td>
 
 
     </tr>
@@ -23,7 +23,7 @@
 
         <td></td>
 
-        <td colspan="6"> Платiжнi реквiзити:<br>  {{payreq}}  </td>
+        <td colspan="6"> Платіжні реквізити:<br>  {{payreq}}  </td>
 
     </tr>
     {{/ispayreq}}    

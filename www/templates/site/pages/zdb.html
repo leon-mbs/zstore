@@ -1,0 +1,140 @@
+<html>
+
+<head>
+    <meta name="description" content="Бібліотека  для  роботи з БД">
+
+</head>
+
+<body>
+
+    <section class="zdb">
+        <div class="container">
+
+
+            <div class="row">
+                <div class="col-sm-12   text-format">
+
+                    <h2 id="zdb" class="zdb__title title-h3 title-center">ZDB</h2>
+                    <p>
+                        Бібліотека для доступу до БД<br>
+
+                        Бібліотека являє собою Active Record, побудований на функціональності бібліотеки та ADODB. 
+                        Бібліотека дозволяє працювати з бізнес-сутностями, не використовуючи мапінг чи інший спосіб 
+                        ручної вказівки зв'язку полів бізнес-сутності  з полями таблиці БД.
+
+
+
+                    </p>
+                    <p>Основний репозитарій на <a class="link" target="_blank" href="https://github.com/leon-mbs/zdb">Гітхабі</a></p>
+                    
+                    <p><a class="link" href="https://frm.zippy.com.ua/api/namespace-ZDB.html" target="_blank">Документація</a> по классах бібліотеки</p>
+                    <h3 class="zdb-content__title title-h4"> <a class="link" target="_blank"
+                            href="https://frm.zippy.com.ua/apiZDB.DB.html"><code>ZDB\DB</code></a></h3>
+                    <p>Класс, що реалізує коннект до БД. Синглетон-обгортка для ADODB.
+                        <br> Для ініціализації необхідно передати параметры з'єднання .
+                        <br><code class="php">
+                                \ZCL\DB\DB::config($host, $dbname,$dbuser,$dbpass,[$driver=mysqli]);
+                            </code>
+                        <br>Отримання коннекта (для натівних запитів)
+                        <br><code class="php">
+                                DB::getConnect();
+                            </code>
+
+
+                    </p>
+
+
+                    <h3 class="zdb-content__title title-h4"> <a class="link" target="_blank"
+                            href="https://frm.zippy.com.ua/apiZDB.Entity.html"><code>ZDB\Entity</code></a></h3>
+                    <p> Основний клас  бібліотеки, що є базовим для всіх Entity.
+                        <br>
+                        <br> Наприклад, є таблиця користувачів
+
+                    <pre><code class="sql">
+       CREATE TABLE   `users` (
+      `username` varchar(255) ,
+      `updated` date  ,
+      `user_id` int(11) NOT NULL AUTO_INCREMENT,
+      PRIMARY KEY (`user_id`)
+    )
+    </code></pre>
+                    Створимо клас  сущності Користувач  на основі класу <a class="link" target="_blank"
+                        href="https://frm.zippy.com.ua/apiZDB.Entity.html"><code>ZDB\Entity</code></a>
+                    <pre><code class="php">
+    /**
+     * @table=users
+     * @keyfield=user_id
+     */
+    class User extends Entity{
+      
+        protected function init() {
+            $this->user_id = 0;
+            $this->updated = time();
+        }
+    
+        protected function afterLoad() {
+    
+                $this->updated = strtotime($this->updated);
+        }    
+    }
+    </code></pre>
+                    Якщо у нас є перегляд для вибірки користувачів, наприклад usersview, 
+                    тоді ми вказуємо в псевдоанотаціях <code> @view=usersview</code>. 
+                    У цьому випадку вибірка даних буде йти з уявлення, а запис у таблиці. 
+                    <br>Метод init() використовується для ініціалізації полів. 
+                    <br>Метод afterLoad() викликається після завантаження вмісту з відповідного рядка таблиці БД. 
+                    У даному випадку перетворює дату в timestamp для універсальності подальшої роботи. 
+                    <br>Обидва методи необов'язкові. Найважливіше - імена полів, яких йде звернення 
+                    при роботі з екземпляром сутності повинні збігатися з іменами в таблиці БД. Усі 
+                    інше буде автоматизовано бібліотекою ADODB. При збереженні даних бібліотека сама 
+                    визначить типи полів Бд та сформує SQL запит із відповідними перетвореннями. 
+                    Ніякого спеціального мапінгу полів чи генерації структур не потрібно.
+                    <br> Деякі приклади роботи з Entity:
+                    <pre>
+    <code class="php">
+      //загрузка коиистувача.
+      $user = User::load($id);
+      
+      //Зберегти з новими значеннями.
+      $user->username='newname';
+      $user->updated = time();
+      $user->save();
+    
+      //Новий користуывя
+      //якщо $user->user_id дорівнює 0 створюється новий запис і полю $user->user_id  
+      //присовюєтся значення з  автоиінкрементного поля.
+      $user = new  User();
+      $user->username='newname';
+      $user->save();
+      
+      //видалення користуваяа
+      User::delete($id);
+      
+      //знайти всіх крім адміна
+      $users = User::find("username &lt;&gt; 'admin'");
+    
+      //знайти кількість користувачів
+      $users = User::findCnt();
+      
+      
+      //повернути назви в  вигляді  масива  ключ-значення
+      // наприклад для  випадаючого списку
+      $users = User::findArray("username","","username asc");
+    
+      
+    </code></pre>
+                    Клас  сущностей - звичайний клас  и може бути розширений 
+                    будь-якими необхідними методами. Наприклад перевірка  користувача  по  логіну і паролю
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+</body>
+
+</html>

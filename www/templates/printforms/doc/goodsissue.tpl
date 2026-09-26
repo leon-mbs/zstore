@@ -52,7 +52,7 @@
     {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">IПН</td>
+        <td valign="top">ІПН</td>
         <td colspan="6">{{finn}}</td>
     </tr>
      {{/finn}}           
@@ -103,7 +103,7 @@
         <td></td>
 
         <td valign="top"><b>Договір</b></td>
-        <td colspan="6">{{contract}} вiд {{createdon}}</td>
+        <td colspan="6">{{contract}} від {{createdon}}</td>
 
 
     </tr>

@@ -143,8 +143,9 @@ class Shahmatka extends \App\Pages\Base
             'to' =>  H::fd($to_),
             'cols' => count($acclist) +2
         );
-       
-
+   
+        $conn->Execute("drop TABLE if   exists acc_entry_tmp");  
+     
         $report = new \App\Report('report/shahmatka.tpl');
 
         $html = $report->generate($header);

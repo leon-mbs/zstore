@@ -30,7 +30,7 @@
     {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">IПН</td>
+        <td valign="top">ІПН</td>
         <td colspan="4">{{finn}}</td>
     </tr>
      {{/finn}} 

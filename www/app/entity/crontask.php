@@ -7,7 +7,7 @@ use App\System;
 use App\Entity\Notify;
 
 /**
- * Класc-сущность   задача  в  очереди  планироващика
+ * Класс-сущность   задача  в  очереди  планироващика
  *
  * @table=crontask
  * @keyfield=id
@@ -191,7 +191,7 @@ class CronTask extends \ZCL\DB\Entity
                         $n->user_id =  $admin->user_id;
                         $n->sender_id =  Notify::SYSTEM;
 
-                        $n->message = "Помилка  автоматичного закриття змiни";
+                        $n->message = "Помилка  автоматичного закриття зміни";
                         $n->save();          
                     }
                     

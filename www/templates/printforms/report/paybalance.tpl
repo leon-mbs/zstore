@@ -9,7 +9,7 @@
     <tr>
 
         <td align="center" colspan="3">
-            Перiод з {{datefrom}} по {{dateto}} <br>
+            Період з {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
      <tr>
@@ -95,7 +95,7 @@
    
      <tr> 
         <td colspan="3"> <br>
-            <b>Деталiзацiя по ТМЦ </b>
+            <b>Деталізація по ТМЦ </b>
         </td>       
     </tr>    
     
@@ -113,7 +113,7 @@
   {{#isfin}}  
   <tr style="font-weight: bolder;">
 
-        <td> <br>Фiнансовi показники</td>
+        <td> <br>Фінансові показники</td>
 
         <td></td>
         <td></td>
@@ -128,7 +128,7 @@
         </td>
     </tr>
     <tr>
-        <td>Змiннi витрати :</td>
+        <td>Змінні витрати :</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
@@ -136,7 +136,7 @@
         </td>
     </tr>
     <tr>
-        <td>Операцiйнi витрати:</td>
+        <td>Операційні витрати:</td>
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
@@ -148,7 +148,7 @@
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Прохід  мiнус операцiйнi витрати (виручка мiнус всi витрати)"></i>
+               title="Прохід  мінус операційні витрати (виручка мінус всі витрати)"></i>
         </td>
     </tr>
    {{#isinv}}   
@@ -161,11 +161,11 @@
         </td>
     </tr>
     <tr>
-        <td>Вiддача вiд iнвестицiй (ROI),%:</td>
+        <td>Віддача від інвестицій (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-               title="Прохід  на iнвестицiї"></i>
+               title="Прохід  на інвестиції"></i>
         </td>
     </tr>
     {{/isinv}}     
