@@ -168,7 +168,7 @@
                             </div>
                             <div class="form-check">
                                 <input v-model="publicNode"  id="editnodepublic" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnodepublic">Публiчний</label>
+                                <label class="form-check-label" for="editnodepublic">Публічний</label>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -222,12 +222,12 @@
                                 <input id="edittitle" v-model="editTitle" type="text"  class="form-control"  >
                             </div>
                             <div class="form-group">
-                                <label for="editdetail">Змiст </label>
+                                <label for="editdetail">Зміст </label>
                                 <div id="editdetail" class="form-control"  ></div>
                             </div>
                             <div class="form-check">
                                 <input v-model="isPublic"  id="edittopicpublic" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="edittopicpublic">Публiчний</label>
+                                <label class="form-check-label" for="edittopicpublic">Публічний</label>
                             </div> 
                               <div class="form-group">
                                 <label id="edittags_label" for="edittags">Теги</label>
@@ -650,7 +650,7 @@
  
             }   ,
            onDelTopic:function(){
-               if(confirm(  this.selectedTopic.islink==true ? "Видалити лiнк?" : "Видалити топiк?") == false){
+               if(confirm(  this.selectedTopic.islink==true ? "Видалити лінк?" : "Видалити топік?") == false){
                    return;                                   
                }
                this.opTopic(["delete",this.selectedTopic.topic_id,this.selectedNode.id,this.selectedTopic.islink])                           

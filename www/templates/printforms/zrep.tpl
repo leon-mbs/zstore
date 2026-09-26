@@ -26,7 +26,7 @@
     </tr>
   <tr>
 
-        <td  > ЄДРПОУ/IПН</td>
+        <td  > ЄДРПОУ/ІПН</td>
         <td  > {{inn}} </td>
     </tr>
     <tr>
@@ -54,7 +54,7 @@
     {{/payments}}
    <tr>
 
-        <td  >Кількiсть чекiв</td>
+        <td  >Кількість чеків</td>
         <td style="text-align:right" > {{cnt}} </td>
     </tr>
  
@@ -72,7 +72,7 @@
     {{/rpayments}}    
    <tr>
 
-        <td  >Кількiсть чекiв</td>
+        <td  >Кількість чеків</td>
         <td  style="text-align:right" > {{rcnt}} </td>
     </tr>
  

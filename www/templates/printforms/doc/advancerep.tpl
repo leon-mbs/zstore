@@ -14,7 +14,7 @@
 
    {{#storeemp}}
     <tr>
-         <td><b>На спiвробiтника:</b> </td> 
+         <td><b>На співробітника:</b> </td> 
        <td colspan="5">
              {{storeemp}}
         </td>
@@ -23,7 +23,7 @@
     {{/storeemp}}    
      {{/isdetail}} 
     <tr>
-          <td><b>Вiд спiвробiтника:</b> </td> 
+          <td><b>Від співробітника:</b> </td> 
       <td colspan="5">
              {{emp}}
         </td>

@@ -8,10 +8,10 @@
         
     </tr>   
    <tr>
-        <td  > Чекiв</td>        <td  > {{cnt}}</td>
+        <td  > Чеків</td>        <td  > {{cnt}}</td>
     </tr>    
     <tr>
-        <td  > Готiвка</td>        <td  > {{nal}}  {{#isrnal}} (повернення {{rnal}})  {{/isrnal}}   </td>
+        <td  > Готівка</td>        <td  > {{nal}}  {{#isrnal}} (повернення {{rnal}})  {{/isrnal}}   </td>
     </tr>
    <tr>
         <td  > Картка</td>        <td  > {{card}}  {{#isrcard}} (повернення {{rcard}})  {{/isrcard}}</td>

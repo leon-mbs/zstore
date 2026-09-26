@@ -1,13 +1,13 @@
 <html>
     <head>
-        <title> Товари у постачальникiв </title>
+        <title> Товари у постачальників </title>
    </head>
 
     <body>
         <div class="row">
 
             <div class="col-12  col-xl-11" zippy="itemtable">
-                <h3>Товари у постачальникiв               </h3>
+                <h3>Товари у постачальників               </h3>
 
                 <div class="navbar" >
 
@@ -88,10 +88,10 @@
                             <td zippy="updatedon"  ></td>
             
                             <td > <small zippy="comment"></small> </td>
-                            <td  > <span style="cursor:pointer" title="Вiдповiдний ТМЦ" zippy="onstore"><i class="fa fa-store"></i></span> </td>
+                            <td  > <span style="cursor:pointer" title="Відповідний ТМЦ" zippy="onstore"><i class="fa fa-store"></i></span> </td>
                             <td  > <a zippy="edit"><i class="fa fa-edit"></i></a> </td>
                             <td  align="right" > 
-                               <input placeholder="Кількiсть" zippy="cartqty" pattern="[0-9\.]+" class="form-control" style="width:50px" >
+                               <input placeholder="Кількість" zippy="cartqty" pattern="[0-9\.]+" class="form-control" style="width:50px" >
                               
                              </td>
                              <td>
@@ -205,20 +205,20 @@
                        
                     <form zippy="optionsform">
                          <div class="form-group">
-                            <label for="compare">Шукати при iмпортi вiдповiдний ТМЦ в номенклатурi</label>
+                            <label for="compare">Шукати при імпорті відповідний ТМЦ в номенклатурі</label>
                             <select zippy="compare" class="form-control">
                                <option value="0">По артикулу+бренду</option>
                                <option value="1">По штрих коду</option>
-                               <option value="2">Штрих код потiм артикул+бренд,</option>
+                               <option value="2">Штрих код потім артикул+бренд,</option>
                             </select>
                              <small  >Для закупки або оновлення цін. 
-                             В разi  активного  використання прайсiв рiзних постачальникiв слiд  вимкнути в  довiднику  ТМЦ автоматичне  
-                             створення артикулу та/або перевiрку артикула  на  унiкальнiсть</small>                                  
+                             В разі  активного  використання прайсів різних постачальників слід  вимкнути в  довіднику  ТМЦ автоматичне  
+                             створення артикулу та/або перевірку артикула  на  унікальність</small>                                  
                              
                         </div> 
                          <div class="form-check mb-2">
                             <input zippy="optcreateitem" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="optcreateitem">Створювати новий  ТМЦ якщо не  знайдено вiдповiдний</label>
+                            <label class="form-check-label" for="optcreateitem">Створювати новий  ТМЦ якщо не  знайдено відповідний</label>
                            
                         </div>                     
                         <div class="form-group">
@@ -226,7 +226,7 @@
                             <div style="width:100px;" class="input-group  ">
                                 <input  class="form-control"  zippy="optclean" pattern="[0-9]+">
                              <div  class="input-group-append">                                
-                               &nbsp; днiв
+                               &nbsp; днів
                             </div> 
                            </div>   
                            <small>Має бути активований планувальник</small>  
@@ -234,7 +234,7 @@
                         <div class="form-check mb-2">
                             <input zippy="optupdate" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="optupdate">Оновлювати з Прибуткової накладної</label>
-                            <br><small>Ціни оновлюватимуться  при  проведеннi документу</small>                                  
+                            <br><small>Ціни оновлюватимуться  при  проведенні документу</small>                                  
                         </div>  
                           
                         <div class="form-group"> 
@@ -321,7 +321,7 @@
                                  </div> 
                             </div>                                                                                
                             <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colqty">Кількiсть</label>
+                                <label  class="col-8 col-form-label" for="colqty">Кількість</label>
                                 <div class="col-3">
                                     <select   zippy="colqty" class="form-control  ">
                                 </select>  
@@ -427,16 +427,16 @@
                     <div class="modal-content">
                    
                         <div class="modal-body">
-Для iмпорту прайсу необхiдно для файлу цього  постачальника  написати javascript функцiю 
+Для імпорту прайсу необхідно для файлу цього  постачальника  написати javascript функцію 
 парсингу xml   перетворення данних в  json формат.
 <br>  Фц
-Функція має  називатись  "parseprice". На вхiд буде  передано змiст  вибраного файлу.
-Функцiя має  повернути строку  json з даними.
+Функція має  називатись  "parseprice". На вхід буде  передано зміст  вибраного файлу.
+Функція має  повернути строку  json з даними.
  
 <pre>
 <code>
     function parseprice(xmldata){
-      тут виймаємо данi з xml
+      тут виймаємо дані з xml
       return jsondata
     }
 </code> 
@@ -464,13 +464,13 @@ name - назва товару  <br>
 cust_code - код у постачальника <br>
 bar_code - штрих-код  <br>
 price - ціна   <br>
-quantity - кількiсть  <br>
+quantity - кількість  <br>
 brand - бренд, виробник  <br>
 store - склад у постачальника (якщо заданий)   <br>
-comment - примiтка <br>
+comment - примітка <br>
 <br>
 <i class="fa fa-exclamation-circle"></i> 
-Якщо є готовий json, створений стороннiм засобом, функцiя  має просто повернути вхiдний параметр
+Якщо є готовий json, створений стороннім засобом, функція  має просто повернути вхідний параметр
  
 
           </div>

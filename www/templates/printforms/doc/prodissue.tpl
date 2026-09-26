@@ -13,7 +13,7 @@
     </tr>
    <tr>
         <td colspan="9" valign="middle">
-            Зi складу <b>{{storename}}</b><br>
+            Зі складу <b>{{storename}}</b><br>
         </td>
     </tr>
     {{#emp}}

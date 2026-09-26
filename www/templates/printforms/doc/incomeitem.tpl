@@ -13,7 +13,7 @@
    {{#storeemp}}
     <tr>
         <td colspan="6">
-            <b>На спiвробiтника:</b> {{storeemp}}
+            <b>На співробітника:</b> {{storeemp}}
         </td>
     </tr>
  

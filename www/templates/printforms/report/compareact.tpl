@@ -3,7 +3,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Акт звiрки вiд {{date}}<br>
+            Акт звірки від {{date}}<br>
         </td>
     </tr>
    <tr style=" font-weight: bolder;">
@@ -20,7 +20,7 @@
         <th align="right" style="border: solid black 1px">Сальдо</th>
         <th style="border: solid black 1px">Тип документу</th>
         <th  style="border: solid black 1px">Оплати</th>
-        <th  style="border: solid black 1px">Примiтка</th>
+        <th  style="border: solid black 1px">Примітка</th>
 
     </tr>
     {{#_detail}}

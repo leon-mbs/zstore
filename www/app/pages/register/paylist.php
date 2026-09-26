@@ -449,7 +449,7 @@ class PayList extends \App\Pages\Base
             return;
         }     
     
-       $this->setSuccess(" Iмпортовано {$cnt} строк" );
+       $this->setSuccess(" Імпортовано {$cnt} строк" );
       
        $this->importform->setVisible(false);
        $this->filter->setVisible(true);

@@ -20,21 +20,21 @@
                         Бібліотека для цифрового підпису документів, що надсилаються до податкової (Україна)
 
                     </p>
-                    <p>Основний репозiторiй на <a class="link" target="_blank" href="https://github.com/leon-mbs/ppolib">Гiтхабi</a></p>
+                    <p>Основний репозіторій на <a class="link" target="_blank" href="https://github.com/leon-mbs/ppolib">Гітхабі</a></p>
 
                 
 
 
 
-                        Розпаковка ключа та сертифiкату
+                        Розпаковка ключа та сертифікату
                     <pre><code class="php"> 
        $cert =    \PPOLib\Cert::load($certdata) ;
        
        $key =   \PPOLib\KeyStore::load($keydata,$password,$cert ) ;
           </code></pre>
                     <br> Де<br>
-                    $certdata - змiст файлу сертифiката <br>
-                    $keydata - змiст файлу ключа <br>
+                    $certdata - зміст файлу сертифіката <br>
+                    $keydata - зміст файлу ключа <br>
                     $password - пароль до ключа
                     <br><br>
                     Оскільки розпакування відбувається досить повільно, об'єкти $cert і $key слід

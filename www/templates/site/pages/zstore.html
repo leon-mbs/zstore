@@ -41,7 +41,7 @@
                         <br>
                         <span><b><i class="fa fa-exclamation-triangle"></i></b> Програма спроектована на максимальну простоту і дешевизну розробки,
                             а не на максимальне навантаження.
-                            Якщо передбачається активна торгівля з великим обсягом товарів, по мiрi накопичення даних будуть потрібні значні
+                            Якщо передбачається активна торгівля з великим обсягом товарів, по мірі накопичення даних будуть потрібні значні
                             обчислювальні ресурси.
                             <br> Для PHP рекомендується не менше 512MB пам'яті та не менше 300 секунд timeout. Також рекомендується
                             збільшити пам'ять для сервера БД.
@@ -65,13 +65,13 @@
                         <dt>Для IT спеціалістів:</dt>
                         <dd>
                             1. Отримати дистрибутив з GitHub <a href="https://github.com/leon-mbs/zstore" class="link"
-                                target="_blank">репозиторію</a> (Не забуваємо ставити зiрочку :) ) .<br>
-                            2. Скопiювати вмiст www в корiнь сайту. Надати право запису в папки <b>logs</b> та <b>upload</b> (для Лiнукса)
+                                target="_blank">репозиторію</a> (Не забуваємо ставити зірочку :) ) .<br>
+                            2. Скопіювати вміст www в корінь сайту. Надати право запису в папки <b>logs</b> та <b>upload</b> (для Лінукса)
                             <br>
                             3. Виконати загрузку бібліотек за допомогою Composer.<br>
                             4. Створити БД (кодування utfmb4_general_ci) та виконати SQL скрипт <code>/db/db.sql</code> . 
                             (Файли update*.sql виконувати не треба).
-                            <br><i class="fa fa-exclamation-triangle"></i> В PhpMyAdmin скрипти виконувати через iмпорт
+                            <br><i class="fa fa-exclamation-triangle"></i> В PhpMyAdmin скрипти виконувати через імпорт
                             <br>
                             5. Прописати конект до БД в <code>config/config.php</code>.<br>
                             6. Увійти дефолтним користувачем <b>admin admin</b> (дефолтний пароль слід змінити на сторінці профілю).<br>
@@ -100,14 +100,14 @@
                         <dd>можуть встановити зібрану, готову до роботи програму на локальному комп'ютері.
                            <br><br>
                               
-                           Для цього    <a class="link" target="_blank"  href="https://zippy.com.ua/download/xampp.zip">завантажити</a>   збiрку (для Windows), 
+                           Для цього    <a class="link" target="_blank"  href="https://zippy.com.ua/download/xampp.zip">завантажити</a>   збірку (для Windows), 
                            на  основі проекту XAMPP, <b>розпакувати</b> архів в корінь диску c:. 
                            Файл для запуску c:/xampp/xampp-control.exe.
                             <br>   
                             <br>   
                              <img style="display:block;height:176px;" src="/assets/images/xampp.png">  
                            
-                          <br>Якщо Apache і Mysql стартували після  натискання відповідних кнопок, сайт повинен відкритися в браузерi за адресою http://localhost/.
+                          <br>Якщо Apache і Mysql стартували після  натискання відповідних кнопок, сайт повинен відкритися в браузері за адресою http://localhost/.
                              Далі панель можна згорнути.
                              <br>Папка з сайтом (на  випадок ручних оновлень) - htdocs.
                              <br>Сторінка управління БД (для ручних оновлень) за адресою http://localhost/phpmyadmin (якщо запитає акаунт- root root)
@@ -115,17 +115,17 @@
                              В першу чергу потрібно зупинити MySQL, щоб уникнути втрати даних.
                                                          
                             <br><br>
-                               Для <b>Mac OS</b>  i <b>Linux</b> можна  завантажити <a  target="_blank" href="https://www.apachefriends.org/ru/download.html"> збiрку XAMPP</a>.
-                              <br>  Далi завантажити <a href="https://zippy.com.ua/download/fullzstore.zip" class="link"
+                               Для <b>Mac OS</b>  i <b>Linux</b> можна  завантажити <a  target="_blank" href="https://www.apachefriends.org/ru/download.html"> збірку XAMPP</a>.
+                              <br>  Далі завантажити <a href="https://zippy.com.ua/download/fullzstore.zip" class="link"
                                 target="_blank">дистрибутив</a> в зборі з усіма бібліотеками (папка vendor)
                                 та пропустити пункти 1 i 3  вище.    
                         
                          <br><br>
-                         <i  class="fa fa-exclamation-triangle"></i>  В обох збiрках пiсля закiнчення роботи  слід зупинити програму  кнопками
-                           Stop apache i Stop mysql щоб не пошкодити данi при виключеннi ПК
+                         <i  class="fa fa-exclamation-triangle"></i>  В обох збірках після закінчення роботи  слід зупинити програму  кнопками
+                           Stop apache i Stop mysql щоб не пошкодити дані при виключенні ПК
                           <br><br> 
-                          На випадок  проблем з XAMPP можна      <a class="link" target="_blank"  href="https://zippy.com.ua/download/UniServer.zip">завантажити</a> альтернативну  збiр , 
-                           <b>розпакувати</b> архів  (в папку  без пробiлiв  в  шляху), запустити UniController.exe, натиснути Start Apache, Start Mysql. 
+                          На випадок  проблем з XAMPP можна      <a class="link" target="_blank"  href="https://zippy.com.ua/download/UniServer.zip">завантажити</a> альтернативну  збір , 
+                           <b>розпакувати</b> архів  (в папку  без пробілів  в  шляху), запустити UniController.exe, натиснути Start Apache, Start Mysql. 
                            Далі натиснути View www (або  відкрити вручну сайт в  браузері за адресою http://localhost/ )
                           <br>Папка з сайтом (на випадок ручних оновлень) - www.
                          

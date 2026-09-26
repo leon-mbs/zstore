@@ -67,7 +67,7 @@ class Update extends \App\Pages\Base
     
          
         if(!is_array($data)){
-            $this->setError('Помилка завантаження version.json. Детальнiше  в  лог файлi ') ;
+            $this->setError('Помилка завантаження version.json. Детальніше  в  лог файлі ') ;
             return  ;
         }
    
@@ -230,7 +230,7 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, $response) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка архiву');
+                $this->setError('Помилка архіву');
                 return;        
             }
 
@@ -276,7 +276,7 @@ class Update extends \App\Pages\Base
             if($b==1) {
                 @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor.zip")) ;
             }   else {
-                $this->setError('Тiльки для версiй PHP > 8.1.0');
+                $this->setError('Тільки для версій PHP > 8.1.0');
                 return;  
             }
  

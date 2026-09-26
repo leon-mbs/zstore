@@ -2,7 +2,7 @@
 <font bold="true">a</font>
 <text>Накладна {{document_number}}</text>
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>від {{date}}</text>
 <align>left</align>
 <text>Продавець: {{firm_name}}</text>
 
