@@ -67,7 +67,9 @@ class PaySelList extends \App\Pages\Base
 
        
         $this->plist->add(new Form('payform'));
-        $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), 0))->onChange($this,'onPayment');
+
+        
         $this->plist->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
         $this->plist->payform->add(new TextInput('pamount'));
         $this->plist->payform->add(new TextInput('pcomment'));
@@ -165,7 +167,10 @@ GROUP BY c.customer_name,
         $this->_totamountd += ($diff<0 ? 0-$diff : 0);
     }
 
-
+    public function onPayment($sender) {
+         
+       $this->updateDocs();   
+    }
     public function topayOnClick($sender) {
 
         $this->_cust = $sender->owner->getDataItem();
@@ -183,7 +188,8 @@ GROUP BY c.customer_name,
 
     public function updateDocs() {
 
-
+        $pt= intval( $this->plist->payform->payment->getValue());
+  
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
@@ -192,8 +198,12 @@ GROUP BY c.customer_name,
         $this->_doclist = array();
 
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = 21    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
-            $this->_doclist[] = $d;
+         foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = 21    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
+            $pm=intval($d->getHD('payment')) ; //денежный счет
+            if($pt == 0 || $pm==$pt) {
+                $this->_doclist[] = $d;    
+            }
+            
 
         }
         $this->_doclist = array_reverse($this->_doclist);
