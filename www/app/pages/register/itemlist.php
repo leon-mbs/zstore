@@ -49,15 +49,9 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
 
 
-        $prices = [];
-        if($this->_tvars["noshowpartion"] == false) {
-            $prices['price'] = "Закупівельна ціна";
-        }
-
-        foreach(Item::getPriceTypeList() as $k=>$v) {
-            $prices[$k] = $v ;
-        }
-
+        $prices = Item::getPriceTypeList();
+        
+      
        // $keys=array_keys($prices);
      //   $p=array_shift($keys);
 
@@ -86,6 +80,7 @@ class ItemList extends \App\Pages\Base
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
         $this->itempanel->add(new ClickLink('printqty', $this, 'onprint' ));
         $this->itempanel->add(new Label('totamount'));
+        $this->itempanel->add(new Label('totprodamount' ));
 
         $this->add(new Panel('detailpanel'))->setVisible(false);
         $this->detailpanel->add(new ClickLink('back'))->onClick($this, 'backOnClick');
@@ -146,33 +141,28 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cell', $item->cell));
 
-        $qty = $item->getQuantity($store,'',0,$emp);
+        $qty = doubleval($item->getQuantity($store,'',0,$emp) );
         $row->add(new Label('iqty', H::fqty($qty)));
         $row->add(new Label('iqtyr',  ( $this->_itemr[$item->item_id] ??0) > 0 ?  H::fqty($this->_itemr[$item->item_id]) :'' )  );
         $row->add(new Label('iqtyb',  ( $this->_itemb[$item->item_id] ??0) > 0 ?  H::fqty($this->_itemb[$item->item_id]) :'' )  );
        
       //  $row->add(new Label('minqty', H::fqty($item->minqty)));
       
-        $inprice="";
+        $inprice=0;
         if($this->_tvars['noshowpartion'] != true) {
-          $inprice = $item->getPartion($store,"",$emp);  
+           $inprice = doubleval( $item->getPartion($store,"",$emp) );  
         }
         $row->add(new Label('inprice', H::fa($inprice)));
+        
+        $row->add(new Label('iamount', H::fa(abs($inprice *$qty))));
+        
         $pt = $this->filter->searchprice->getValue();
-        if($pt=='price') {
-            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store,"",0,$emp));
+ 
+        $pr= doubleval( $item->getPrice($pt, $store) );
             
-            $pr = ''; 
-           
-        } else {
-            $pr= H::fa( $item->getPrice($pt, $store) );
-            
-            $am = $qty * $pr;
-        }
-
-
-        $row->add(new Label('iprodprice',$pr ));
-        $row->add(new Label('iamount', H::fa(abs($am))));
+        
+        $row->add(new Label('iprodprice',H::fa($pr ) ));
+        $row->add(new Label('iprodamount', H::fa(abs($pr*$qty))));
 
         $row->add(new Label('cat_name', $item->cat_name));
 
@@ -214,13 +204,13 @@ class ItemList extends \App\Pages\Base
          $this->_tvars['nohowprodprice'] = $pt == 'price';  
          
 
-        $this->itempanel->itemlist->Reload();
+         $this->itempanel->itemlist->Reload();
 
-        $am = $this->getTotalAmount();
-        $this->itempanel->totamount->setText((H::fa($am)));
-    }
+         $this->calcTotalAmount();
+      }
 
-    public function getTotalAmount() {
+      //по  всем  строкам
+    public function calcTotalAmount() {
 
         $store = $this->filter->searchstore->getValue();
         $emp = $this->filter->searchemp->getValue();
@@ -231,10 +221,11 @@ class ItemList extends \App\Pages\Base
  
         $items = $src->getItems(-1, -1) ;
         $total = 0;
+        $totalprod = 0;
+        
         foreach($items as $item) {
-            $qty = H::fqty($item->getQuantity($store,"",0,$emp) ); 
+                $qty = H::fqty($item->getQuantity($store,"",0,$emp) ); 
             
-            if($pt=='price') {
                 $am = H::fa( $item->getAmount($store,$emp) );
                 if( $sqty==0 && $qty >0) {
                    $total += $am;
@@ -245,23 +236,25 @@ class ItemList extends \App\Pages\Base
                 if( $sqty==2 ) {
                    $total += $am ;
                 }
-            } else {
+          
                 $am= H::fa( $qty * $item->getPrice($pt, $store) );
                 if( $sqty==0 && $qty >0) {
-                   $total += $am;
+                   $totalprod += $am;
                 }
                 if( $sqty==1 && $qty <0) {
-                   $total += $am ;
+                   $totalprod += $am ;
                 }
                 if( $sqty==2 ) {
-                   $total += $am ;
+                   $totalprod += $am ;
                 }
             }
 
-        }
+     
 
-
-        return $total;
+        $this->itempanel->totamount->setText((H::fa($total)));
+        $this->itempanel->totprodamount->setText((H::fa($totalprod)));
+ 
+       
     }
 
     public function detailistOnRow($row) {

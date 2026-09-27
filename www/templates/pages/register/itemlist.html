@@ -53,7 +53,7 @@
                        {{/storeemp}}
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
-                      <label class="col-auto mt-2" for="searchprice">Сума по  </label>
+                      <label class="col-auto mt-2" for="searchprice">Прод. ціна  </label>
 
                                  <div class="col-auto">
                       <select class="form-control ms-sm-2" zippy="searchprice">
@@ -138,21 +138,17 @@
   <th class="text-end  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
                         
    {{^noshowpartion}}                         
-                        <th class="text-end  ">Обл. ціна</th>
-   {{/noshowpartion}}         
-   
-   {{^nohowprodprice}}       
+                    <th class="text-end  ">Обл. ціна</th>
+                    <th class="text-end  ">На суму</th>
+      {{/noshowpartion}}  
+        {{^nohowprodprice}}       
                         <th class="text-end  ">Прод. ціна</th>
-   {{/nohowprodprice}}                               
                         <th class="text-end  ">На суму</th>
-
-                                           
+   {{/nohowprodprice}}                                        
 
 
                         <th  ></th>
-                    
-
-
+    
                     </tr>
                     </thead>
                     <tbody>
@@ -180,16 +176,15 @@
                         <td zippy="iqtyr" class="text-end  "></td>
                         <td zippy="iqtyb" class="text-end  "></td>
                         
-                           {{^noshowpartion}} 
+                    {{^noshowpartion}} 
                         <td zippy="inprice" class="text-end  "></td>
-                           {{/noshowpartion}} 
-         
-                   {{^nohowprodprice}}       
-                        <td zippy="iprodprice" class="text-end  "></td>
-                   {{/nohowprodprice}}                               
                         <td zippy="iamount" class="text-end  "></td>
-
-                            
+                    {{/noshowpartion}} 
+                      
+                     {{^nohowprodprice}}       
+                        <td zippy="iprodprice" class="text-end  "></td>
+                        <td zippy="iprodamount" class="text-end  "></td>
+                    {{/nohowprodprice}}                     
 
                         <td>
                        
@@ -201,8 +196,24 @@
 
                     </tr>
                     <tr>
-                        <td colspan="10" class="  font-weight:bolder"> Всього на суму: <span zippy="totamount"></span> </td>
-
+                      {{#useimages}}
+                       <td>   </td>
+                      {{/useimages}}
+                     {{#usecf}}
+                       <td>   </td>
+                      {{/usecf}}
+                      
+                        <td class="text-end fw-bolder  " colspan="9"  > Всього на суму:   </td>
+                      {{^noshowpartion}} 
+                    
+                       <td colspan="2" class="text-end fw-bolder " zippy="totamount">   </td>
+                      {{/noshowpartion}}
+                      {{^noshowpartion}} 
+                  
+                       <td  colspan="2" class="text-end fw-bolder "zippy="totprodamount">   </td>
+                      {{/noshowpartion}}
+                      
+                      <td>   </td>
                     </tr>
                      </tbody>
                 </table>
