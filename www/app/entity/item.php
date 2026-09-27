@@ -338,7 +338,7 @@ class Item extends \ZCL\DB\Entity
 
         $isprod = ($this->item_type == self::TYPE_HALFPROD || $this->item_type == self::TYPE_PROD );
         if($isprod)  {
-            $partion = $this->getProdprice() ;
+            $partion = 0;  //для продукции база наценки - себестоимость по спецификации (getMarkupBase), считается только если нужна
         }
         
         
@@ -350,7 +350,7 @@ class Item extends \ZCL\DB\Entity
             if (is_numeric($proc)) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену
-                    $partion = $this->getLastPartion($store,"",true);
+                    $partion = $this->getMarkupBase($store);
                 }
                 $price = $partion + doubleval($partion) / 100 * $proc;
 
@@ -366,7 +366,7 @@ class Item extends \ZCL\DB\Entity
             if ($cat != null) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену
-                    $partion = $this->getLastPartion($store,"",true);
+                    $partion = $this->getMarkupBase($store);
                 }
                 if ($_price_ == 'price1' && $cat->price1 > 0) {
                     $price = $partion + doubleval($partion)  / 100 * $cat->price1;
@@ -394,17 +394,13 @@ class Item extends \ZCL\DB\Entity
 
             if ($partion == 0) {
                 //ищем последнюю закупочную  цену
-                $partion = $this->getLastPartion($store,"",true);
+                $partion = $this->getMarkupBase($store);
             }
 
             $price = $partion + (doubleval($partion) / 100) * $common['defprice'];
 
         }
 
-        if($isprod) {
-             return $price; 
-        }
-  
         //курсовая разница
         if($common['useval']==1) {
             $opv = \App\System::getOptions("val");
@@ -641,8 +637,28 @@ class Item extends \ZCL\DB\Entity
      *
      */
     public function getProdprice() {
+        $price = $this->calcProdprice();
+
+        if($price==0) {
+            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собівартість") ;
+        }
+
+        return $price;
+    }
+
+    /**
+     * себестоимость по спецификации (без предупреждения)
+     *
+     * @param mixed $visited  уже посчитанные полуфабрикаты - защита от цикла в спецификациях
+     */
+    private function calcProdprice($visited = []) {
         $price = 0;
-  
+
+        if (in_array($this->item_id, $visited)) {
+            return 0;
+        }
+        $visited[] = $this->item_id;
+
         $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
 
         if (count($ilist) > 0) {
@@ -653,9 +669,13 @@ class Item extends \ZCL\DB\Entity
                     if($it != null ) {
                         
                         if($it->item_type==self::TYPE_HALFPROD)  {
-                           $pr = $it->getProdprice();  
+                           $pr = $it->calcProdprice($visited);
                         }   else {
-                           $pr = $it->getPartion(); 
+                           $pr = $it->getPartion();
+                           if ($pr == 0) {
+                               //нет на складе - последняя закупочная
+                               $pr = $it->getLastPartion(0, "", true);
+                           }
                         }
                         
                         $price += doubleval($iset->qty * $pr);
@@ -673,12 +693,26 @@ class Item extends \ZCL\DB\Entity
         }
         
  
-        if($price==0) {
-            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собівартість") ;
+        //нет спецификации - фактическая себестоимость со склада
+        if ($price == 0) {
+            $price = $this->getPartion();
         }
-    
-        
+        if ($price == 0) {
+            $price = $this->getLastPartion(0, "", true);
+        }
+
         return $price;
+    }
+
+    /**
+     * база для наценки: для продукции и полуфабрикатов - себестоимость по спецификации,
+     * для остальных - последняя закупочная цена
+     */
+    private function getMarkupBase($store = 0) {
+        if ($this->item_type == self::TYPE_HALFPROD || $this->item_type == self::TYPE_PROD) {
+            return $this->calcProdprice();
+        }
+        return $this->getLastPartion($store, "", true);
     }
         
     
