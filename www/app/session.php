@@ -11,6 +11,7 @@ class Session
     private $values = array();
     public $filter = array();
     public $start = 0;
+    private $uid = 1;
     public $printform = '';
     public $exportreport = '';
 
@@ -71,7 +72,11 @@ class Session
             $this->start  = time();
             return  0;
         }
-
     }
 
+    //уникальный ID для DataItem не привязанных Entity
+    public function getUid() {
+         return  $this->uid++;
+    }
+   
 }

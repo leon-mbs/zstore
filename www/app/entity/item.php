@@ -348,7 +348,7 @@ class Item extends \ZCL\DB\Entity
 
             $proc = doubleval(str_replace('%', '', $_price));
             if (is_numeric($proc)) {
-                if ($partion == 0) {
+                if ($partion == 0 && !$isprod ) {
                     //ищем последнюю закупочную  цену
                     $partion = $this->getLastPartion($store,"",true);
                 }

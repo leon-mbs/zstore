@@ -257,10 +257,12 @@ a.sidebar-link {
   
 }
 
-.info-box > .inner {
-  padding: 5px;
+.input-group > label {
+  margin-top: 8px;
+  margin-right: 4px;
 }
-
+ 
+  
 @media print {
             @page {
               margin: 0!important;
