@@ -277,8 +277,8 @@ class GoodsIssue extends \App\Pages\Base
                         foreach($basedoc->unpackDetails('detaildata') as $k=>$v) {
                             
                            if($v instanceof \App\Entity\Service) {
-                               $this->setError('Послуги не  можуть додаватись до накладної') ;
-                               return;
+                               $this->setWarn('Послуги не  можуть додаватись до накладної') ;
+                               continue;
                            }
                            $this->_itemlist[$k] =$v;
                         }
