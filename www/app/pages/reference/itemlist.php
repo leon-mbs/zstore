@@ -483,6 +483,10 @@ class ItemList extends \App\Pages\Base
           
     }    
     
+    //числовое поле: кома на  точку, без  пробелов (как fixInput в app.js)  - "0,5" иначе  считается  как 0
+    private function num($v) {
+        return preg_replace('/\s/u', '', str_replace(',', '.', $v ?? ''));
+    }
 
     public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
@@ -514,11 +518,11 @@ class ItemList extends \App\Pages\Base
         
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
-        $this->_item->price1 = $this->itemdetail->editprice1->getText();
-        $this->_item->price2 = $this->itemdetail->editprice2->getText();
-        $this->_item->price3 = $this->itemdetail->editprice3->getText();
-        $this->_item->price4 = $this->itemdetail->editprice4->getText();
-        $this->_item->price5 = $this->itemdetail->editprice5->getText();
+        $this->_item->price1 = $this->num($this->itemdetail->editprice1->getText());
+        $this->_item->price2 = $this->num($this->itemdetail->editprice2->getText());
+        $this->_item->price3 = $this->num($this->itemdetail->editprice3->getText());
+        $this->_item->price4 = $this->num($this->itemdetail->editprice4->getText());
+        $this->_item->price5 = $this->num($this->itemdetail->editprice5->getText());
 
         $this->_item->item_code = $itemcode;
         $this->_item->manufacturer = trim($this->itemdetail->editmanufacturer->getText());
@@ -530,12 +534,12 @@ class ItemList extends \App\Pages\Base
         $this->_item->url = trim($this->itemdetail->editurl->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
         $this->_item->notes = $this->itemdetail->editnotes->getText();
-        $this->_item->weight = $this->itemdetail->editweight->getText();
-        $this->_item->sizeh = $this->itemdetail->editsizeh->getText();
-        $this->_item->sizew = $this->itemdetail->editsizew->getText();
-        $this->_item->sized = $this->itemdetail->editsized->getText();
+        $this->_item->weight = $this->num($this->itemdetail->editweight->getText());
+        $this->_item->sizeh = $this->num($this->itemdetail->editsizeh->getText());
+        $this->_item->sizew = $this->num($this->itemdetail->editsizew->getText());
+        $this->_item->sized = $this->num($this->itemdetail->editsized->getText());
 
-        $this->_item->lost = $this->itemdetail->editlost->getText();
+        $this->_item->lost = $this->num($this->itemdetail->editlost->getText());
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->term = $this->itemdetail->editterm->getText();
@@ -544,14 +548,14 @@ class ItemList extends \App\Pages\Base
         $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
         $this->_item->cell = $this->itemdetail->editcell->getText();
         $this->_item->uktz = $this->itemdetail->edituktz->getText();
-        $this->_item->minqty = $this->itemdetail->editminqty->getText();
-        $this->_item->zarp = $this->itemdetail->editzarp->getText();
-        $this->_item->excise = $this->itemdetail->editexcise->getText();
-        $this->_item->costprice = $this->itemdetail->editcostprice->getText();
+        $this->_item->minqty = $this->num($this->itemdetail->editminqty->getText());
+        $this->_item->zarp = $this->num($this->itemdetail->editzarp->getText());
+        $this->_item->excise = $this->num($this->itemdetail->editexcise->getText());
+        $this->_item->costprice = $this->num($this->itemdetail->editcostprice->getText());
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
-        $this->_item->nds = $this->itemdetail->editnds->getText();
+        $this->_item->nds = $this->num($this->itemdetail->editnds->getText());
         $this->_item->isnds = $this->itemdetail->editisnds->getValue();
 
         $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
@@ -841,7 +845,7 @@ class ItemList extends \App\Pages\Base
             return;
         }
 
-        $qty = $form->editsqty->getText();
+        $qty = $this->num($form->editsqty->getText());
 
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
@@ -876,7 +880,7 @@ class ItemList extends \App\Pages\Base
             return;
         }
 
-        $cost = $form->editscost->getText();
+        $cost = $this->num($form->editscost->getText());
 
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
