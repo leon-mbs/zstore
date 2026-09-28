@@ -650,9 +650,35 @@
                                         </li>
                                         
                                    </ul>
-                          </li> 
-                          {{/promua}}   
-                     
+                          </li>
+                          {{/promua}}
+                         {{#rozetka}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodrozetka"     >
+                                         Обмін з Rozetka
+                                    </a>
+                                   <ul id="mnmodrozetka" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                        {{#isadmins}}
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Rozetka/Options"     >
+                                                Налаштування
+                                            </a>
+                                        </li>
+                                        {{/isadmins}}
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Rozetka/Orders"     >
+                                               Замовлення
+                                            </a>
+                                        </li>
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/Rozetka/Items"     >
+                                               Товари
+                                            </a>
+                                        </li>
+                                   </ul>
+                          </li>
+                          {{/rozetka}}
+
          </ul>
                         
                        
