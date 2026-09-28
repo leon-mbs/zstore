@@ -18,36 +18,37 @@
 
                 <div class="navbar">
 
-                    <form zippy="filter" class="   g-2 align-items-center">
-                      <div class="row">
-                      <div class="col-auto">
+                    <form zippy="filter"  >
+                     <div class="row row-cols-sm-auto g-2 align-items-start ">
+                     
+                      <div class="col-12">
                         <input autocomplete="off" placeholder="Пошук..." class="form-control me-2" type="search" zippy="searchkey" onkeydown="onSearch()">
                       </div>
-                       <div class="col-auto">  
-                          <div class=" row no-gutters"> 
-                           <label class="col-auto mt-2"  for="searchcat">категорія</label>
-                              <div class="col-auto">
+                       <div class="col-12">
+                          <div class="input-group">
+                             <label    for="searchcat">категорія</label>
+                            
   
-                                <select class="form-control me-2" zippy="searchcat">
+                                <select class="form-select me-2" zippy="searchcat">
                                     <option value="0">Не вказано</option>
                                 </select>
-                             </div>
+                             
                        </div>
                       </div>
                
-                      <div class="col-auto">  
-                          <div class=" row no-gutters"> 
-                             <label class="col-auto mt-2"  for="searchbrand">Бренд </label>
-                           <div class="col-auto">
+                      <div class="col-12">
+                          <div class="input-group">
+                                  <label    for="searchbrand">Бренд </label>
+                           
                               <input autocomplete="off"   class="form-control me-2" zippy="searchbrand"/>
-                           </div>
+                            
                          </div>
                       </div>
-                       <div class="col-auto">  
-                          <div class=" row no-gutters"> 
-                              <label class="col-auto mt-2"  for="searchtype">Тип</label>
-                          <div class="col-auto">
-                            <select zippy="searchtype" class="form-control ms-sm-2">
+                       <div class="col-12">
+                          <div class="input-group">
+                                  <label   for="searchtype">Тип</label>
+                           
+                            <select zippy="searchtype" class="form-select ms-sm-2">
                                 <option value="0">Всі </option>
                                 <option value="1">Товари</option>
                                 <option value="2">Матеріали та комплектуючі</option>
@@ -57,27 +58,27 @@
                                 <option value="9">Вагові</option>
                                 <option value="10">Деактивовані</option>
                             </select>
-                          </div>
+                          
                        </div>
                       </div>
 
               
-                      <div class="col-auto">  
-                          <div class=" row no-gutters"> 
-                            <label class="col-auto mt-2"  for="searchsort">Сортування</label>
+                     <div class="col-12">
+                          <div class="input-group">
+                                 <label    for="searchsort">Сортування</label>
 
-                         <div class="col-auto">
-                            <select class="form-control me-2" zippy="searchsort">
+                        
+                            <select class="form-select me-2" zippy="searchsort">
                                 <option value="0">Найменування</option>
                                 <option value="1">Артикул</option>
                                 <option value="2">Тип</option>
                                 <option value="3">Спочатку нові</option>
                             </select>
-                          </div>
+                          
                        </div>
                       </div>
                        
-                          <div class="col-auto">  
+                          <div class="col-12">  
          
                                <input class="btn btn-success  " type="submit" value="ОК">
                            </div>
@@ -216,14 +217,31 @@
                                 
                             </td>
                         </tr>
-                        <tr><td colspan="9">
-                                <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
-                                <a  zippy="printall" title="Додати до друку"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  
-                                <a zippy="priceall">Змінити ціни</a>&nbsp;&nbsp;
-                                Перемістити в <select   zippy="allcat"><option value="0">Не вказано </option></select>
-                            </td> </tr>                 
+                                  
                     </table>
-                    <div class="w-50" zippy="pag"></div>   
+                     <div class="row row-cols-sm-auto g-4 align-items-start ">
+                   
+                            <div class="col-12">
+                              <a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a>  
+                               </div>
+                                <div class="col-12"> 
+                            <a  zippy="printall" title="Додати до друку"><i class="fa fa-print"></i></a>  
+                               </div>
+                                <div class="col-12"> 
+                              <a zippy="priceall">Змінити ціни</a> 
+                                 </div>
+                                <div class="col-12"> 
+                                  <div class="input-group">
+                          <label> Перемістити в </label>   
+                                     
+                               
+                       <select class="form-select form-control-sm"   zippy="allcat"
+                                ><option value="0">Не вказано </option>
+                                </select>
+                                </div> 
+                                </div> 
+                             </div> 
+                    <div class="w-75 mt-2" zippy="pag"></div>   
                     </div> 
                 </form>
             </div>
@@ -253,7 +271,7 @@
                             <div class="mb-2 row">
                                 <label class="col-5 col-form-label" for="editcat">Категорія</label>
                                 <div class="col-7">
-                                    <select class="form-control" zippy="editcat">
+                                    <select class="form-select" zippy="editcat">
                                         <option value="0">Не вказано</option>
                                     </select>
                                 </div>
@@ -313,7 +331,7 @@
                             <div class="mb-2 row">
                                 <label class="col-5 col-form-label" for="editcode">Тип ТМЦ</label>
                                 <div class="col-5">
-                                    <select class="form-control" zippy="edittype">
+                                    <select class="form-select" zippy="edittype">
                                         <option value="0">Не вказано</option>
                                     </select>
 
@@ -346,7 +364,7 @@
                         <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="editisnds">Використання ПДВ</label>
                             <div class="col-5">
-                                <select class="form-control" zippy="editisnds">
+                                <select class="form-select" zippy="editisnds">
                                     <option value="0">По категорії</option>
                                     <option value="1">Без ПДВ</option>
                                     <option value="2">Як вказано</option>
@@ -708,7 +726,7 @@
                     <div class="row  ">
                     <label class="col-form-label col-auto" for="editssname">Робота, послуга</label>
                     <div class="col-auto  "> 
-                      <select class="form-control  select2" zippy="editssname">
+                      <select class="form-select  select2" zippy="editssname">
                         <option value="0">Не обрано</option>
                      </select>
                      </div>
@@ -754,7 +772,7 @@
                    
                     <label class="col-form-label col-auto" for="editscopy">Скопіювати в </label>
                     <div class="col-auto  "> 
-                        <select class="form-control  select2" zippy="editscopy">
+                        <select class="form-select  select2" zippy="editscopy">
                           <option value="0">Не обрано</option>
                         </select>
                      </div>
