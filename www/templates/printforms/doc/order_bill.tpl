@@ -16,7 +16,7 @@
 
 
     <tr>
-        <td colspan="3"> {{phone}}</td>
+        <td colspan="3" data-type="s"> {{phone}}</td>
     </tr>
 
     <tr>

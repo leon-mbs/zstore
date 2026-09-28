@@ -25,7 +25,7 @@
         <td colspan="2"> {{address}}</td>
     </tr>
     <tr>
-        <td colspan="2"> {{phone}}</td>
+        <td colspan="2" data-type="s"> {{phone}}</td>
     </tr>
 
     <tr>

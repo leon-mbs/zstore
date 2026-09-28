@@ -9,7 +9,7 @@
     <tr>
         <td></td>
         <td>Телефон</td>
-        <td colspan="8">{{phone}}</td>
+        <td colspan="8" data-type="s">{{phone}}</td>
     </tr>
     {{/phone}}
     {{#email}}
@@ -35,7 +35,7 @@
     <tr>
         <td></td>
         <td>Зовнішній номер</td>
-        <td colspan="8">{{outnumber}}</td>
+        <td colspan="8" data-type="s">{{outnumber}}</td>
     </tr>
 
     {{/isoutnumber}}
@@ -53,7 +53,7 @@
 
         <td></td>
         <td> IBAN</td>
-        <td colspan="8">{{iban}}   </td>
+        <td colspan="8" data-type="s">{{iban}}   </td>
 
     </tr>
     {{/iban}}    
@@ -72,7 +72,7 @@
 
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30pt">№</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування        </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
@@ -86,7 +86,7 @@
     <tr>
         <td align="right" valign="top">{{no}}</td>
         <td colspan="2">{{{tovar_name}}}</td>
-        <td colspan="2" valign="top">{{tovar_code}}</td>
+        <td colspan="2" valign="top" data-type="s">{{tovar_code}}</td>
         <td valign="top">{{msr}}</td>
         <td valign="top">{{desc}}</td>
 

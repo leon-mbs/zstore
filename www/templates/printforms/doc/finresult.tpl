@@ -4,17 +4,15 @@
 
 
     <tr style="font-weight: bolder;">
-        <td>
+        <td colspan="2">
             Фінансові результати {{document_number}}    від {{date}}
         </td>
-      
+
     </tr>
     {{#isbalans}}
   <tr  >
-        <td>
-         Баланс рахунку 79:  <b>{{balans}}</b>
-        </td>
-      
+        <td>Баланс рахунку 79:</td><td><b>{{balans}}</b></td>
+
     </tr>
      {{/isbalans}}
 </table>

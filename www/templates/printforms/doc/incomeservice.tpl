@@ -38,7 +38,7 @@
 <br>
 <table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
-        <th width="20" style="border: 1px solid black;">№</th>
+        <th width="20pt" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;">Опис</th>
         <th style="border: 1px solid black;" align="right">Кіл.</th>
@@ -85,7 +85,7 @@
     </tr>
    {{#hasitems}}
     <tr style="font-weight: bolder;">
-        <th width="20" style="border: 1px solid black;">№</th>
+        <th width="20pt" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;">Код</th>
         <th style="border: 1px solid black;" align="right">Кіл.</th>
@@ -100,7 +100,7 @@
         <td valign="top">{{no}}</td>
         <td valign="top">{{itemname}}</td>
 
-        <td  valign="top">{{item_code}}</td>
+        <td  valign="top" data-type="s">{{item_code}}</td>
 
         <td valign="top" align="right">{{qty}}</td>
         <td valign="top" align="right">{{price}}</td>

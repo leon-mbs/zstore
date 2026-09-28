@@ -5,24 +5,18 @@
         </td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b> Зі складу:</b> {{from}} на {{to}}
-        </td>
+        <td><b>Зі складу:</b></td><td colspan="3">{{from}} на {{to}}</td>
 
     </tr>
     {{#storeemp}}
     <tr>
-        <td colspan="4">
-            <b>Зі співробітника:</b> {{storeemp}}
-        </td>
+        <td><b>Зі співробітника:</b></td><td colspan="3">{{storeemp}}</td>
     </tr>
  
     {{/storeemp}}  
    {{#tostoreemp}}
     <tr>
-        <td colspan="4">
-            <b>На співробітника:</b> {{tostoreemp}}
-        </td>
+        <td><b>На співробітника:</b></td><td colspan="3">{{tostoreemp}}</td>
     </tr>
  
     {{/tostoreemp}}  
@@ -45,9 +39,9 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
-        <td align="right">{{snumber}}</td>
+        <td align="right" data-type="s">{{snumber}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
 

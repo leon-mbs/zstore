@@ -5,21 +5,15 @@
         </td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b> З :</b> {{from}}  
-        </td>
+        <td><b>З :</b></td><td colspan="3">{{from}}</td>
 
     </tr>
    <tr>
-        <td colspan="4">
-            <b> До :</b> {{to}}  
-        </td>
+        <td><b>До :</b></td><td colspan="3">{{to}}</td>
 
     </tr>
    <tr>
-        <td colspan="4">
-            <b> Кіл. :</b> {{qty}}  
-        </td>
+        <td><b>Кіл. :</b></td><td colspan="3">{{qty}}</td>
 
     </tr>
 

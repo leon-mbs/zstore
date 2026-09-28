@@ -48,7 +48,7 @@
         <td colspan="3"> {{address}}</td>
     </tr>
     <tr>
-        <td colspan="3"> {{phone}}</td>
+        <td colspan="3" data-type="s"> {{phone}}</td>
     </tr>
     {{#customer_name}}
     <tr>
@@ -124,7 +124,7 @@
      {{#exciseval}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">В т.ч. акциз:</td>
-        <td align="right">{{exciseval}}</td>
+        <td align="right" data-type="s">{{exciseval}}</td>
     </tr>
     {{/exciseval}}
  

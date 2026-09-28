@@ -5,9 +5,7 @@
         </td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b> Зі складу:</b>  {{from}}
-        </td>
+        <td><b>Зі складу:</b></td><td colspan="3">{{from}}</td>
      
 
     </tr>
@@ -16,7 +14,7 @@
         <td>
            {{fromname}} 
         </td>
-        <td>
+        <td data-type="s">
           {{fromcode}}     
         </td>
        <td>
@@ -30,9 +28,7 @@
     {{/fromlist}}   
 
     <tr>
-        <td colspan="4">
-            <b> На склад:</b>   {{to}}
-        </td>
+        <td><b>На склад:</b></td><td colspan="3">{{to}}</td>
      
 
     </tr>    
@@ -41,7 +37,7 @@
         <td>
            {{toname}} 
         </td>
-        <td>
+        <td data-type="s">
           {{tocode}}     
         </td>
        <td>

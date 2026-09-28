@@ -6,25 +6,18 @@
     </tr>
 
     <tr>
-        <td colspan="6">
-            <b>На склад:</b> {{to}}
-        </td>
+        <td><b>На склад:</b></td><td colspan="5">{{to}}</td>
     </tr>
    {{#storeemp}}
     <tr>
-        <td colspan="6">
-            <b>На співробітника:</b> {{storeemp}}
-        </td>
+        <td><b>На співробітника:</b></td><td colspan="5">{{storeemp}}</td>
     </tr>
  
-    {{/storeemp}}    
- 
-  </tr>
+    {{/storeemp}}
+
    {{#customer}}
     <tr>
-        <td colspan="6">
-            <b>Партнер:</b> {{customer}}
-        </td>
+        <td><b>Партнер:</b></td><td colspan="5">{{customer}}</td>
     </tr>
  
     {{/customer}}    
@@ -47,9 +40,9 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
-        <td align="right">{{snumber}}</td>
+        <td align="right" data-type="s">{{snumber}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>

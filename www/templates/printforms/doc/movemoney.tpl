@@ -7,19 +7,13 @@
 
 
     <tr>
-        <td colspan="4">
-            <b>З рахунку:</b> {{from}}
-        </td>
+        <td><b>З рахунку:</b></td><td colspan="3">{{from}}</td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b>На рахунок:</b> {{to}}
-        </td>
+        <td><b>На рахунок:</b></td><td colspan="3">{{to}}</td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b>Сума:</b> {{amount}}
-        </td>
+        <td><b>Сума:</b></td><td colspan="3">{{amount}}</td>
     </tr>
 
 

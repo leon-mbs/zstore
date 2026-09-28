@@ -9,16 +9,12 @@
     </tr>
     
     <tr>
-        <td colspan="5">
-            <b> Склад:</b> {{store}}
-        </td>
+        <td><b>Склад:</b></td><td colspan="4">{{store}}</td>
 
     </tr>
     {{#storeemp}}
     <tr>
-        <td colspan="4">
-            <b>Співробітник:</b> {{storeemp}}
-        </td>
+        <td><b>Співробітник:</b></td><td colspan="3">{{storeemp}}</td>
     </tr>
  
     {{/storeemp}}     
@@ -45,8 +41,8 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
-        <td>{{snumber}}</td>
+        <td data-type="s">{{item_code}}</td>
+        <td data-type="s">{{snumber}}</td>
 
 
         <td align="right">{{quantity}}</td>
@@ -57,8 +53,8 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
-        <td>{{snumber}}</td>
+        <td data-type="s">{{item_code}}</td>
+        <td data-type="s">{{snumber}}</td>
 
 
         <td align="right">{{quantity}}</td>
@@ -69,8 +65,8 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
-        <td>{{snumber}}</td>
+        <td data-type="s">{{item_code}}</td>
+        <td data-type="s">{{snumber}}</td>
 
 
         <td align="right">{{quantity}}</td>

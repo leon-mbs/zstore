@@ -7,47 +7,37 @@
   
  
     <tr>
-        <td colspan="2">
-            <b>Найменування:</b> {{eqname}}
-        </td>
-        <td colspan="2">
-            <b>Інв. номер:</b> {{invnumber}}
-        </td>
+        <td><b>Найменування:</b></td><td>{{eqname}}</td>
+        <td><b>Інв. номер:</b></td><td>{{invnumber}}</td>
    </tr> 
  
 
    {{#isamount }}
     <tr>
-        <td colspan="4">
-          <b>Сума:</b>   {{amount }}
-        </td>
+        <td><b>Сума:</b></td><td colspan="3">{{amount }}</td>
     </tr>
    {{/isamount }}   
    {{#iscust }}
     <tr>
-        <td colspan="4">
-          <b>Контрагент:</b>   {{customer_name }}  
-        </td>
+        <td><b>Контрагент:</b></td><td colspan="3">{{customer_name }}</td>
     </tr>
    {{/iscust }}   
  
+   {{#ispa}}
     <tr>
-        <td colspan="4">
-          {{#ispa}}
-          <b>Виробнича дільниця:</b>   {{item_name}}   &nbsp;&nbsp;&nbsp;&nbsp;
-          {{/ispa}} 
-           {{#isemp}}
-            <b>Відповідальний</b> {{store_name}}
-          {{/isemp}} 
-        </td>
+        <td><b>Виробнича дільниця:</b></td><td colspan="3">{{pa_name}}</td>
     </tr>
-   {{#isitem }}  
+   {{/ispa}}
+   {{#isemp}}
     <tr>
-        <td colspan="4">
-          <b>ТМЦ:</b>   {{item_name}}   <b>Склад</b> {{store_name}}
-        </td>
- </tr>        
-  {{/isitem }}     
+        <td><b>Відповідальний:</b></td><td colspan="3">{{emp_name}}</td>
+    </tr>
+   {{/isemp}}
+   {{#isitem }}
+    <tr>
+        <td><b>ТМЦ:</b></td><td>{{item_name}}</td><td><b>Склад:</b></td><td>{{store_name}}</td>
+ </tr>
+  {{/isitem }}
     <tr>
         <td colspan="4">
             {{{notes}}}

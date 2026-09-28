@@ -12,7 +12,7 @@
     <tr>
         <td></td>
         <td><b>Покупець</b></td>
-        <td colspan="7"> {{customer_name}}</b> 
+        <td colspan="7"> {{customer_name}}
           {{#phone}} Тел. {{phone}}  {{/phone}} 
         </td>
     </tr>
@@ -23,7 +23,7 @@
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="7">{{edrpou}}</td>
+        <td colspan="7" data-type="s">{{edrpou}}</td>
     </tr>
      {{/edrpou}}       
           
@@ -52,7 +52,7 @@
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="7">{{fedrpou}}</td>
+        <td colspan="7" data-type="s">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}  
     
@@ -60,7 +60,7 @@
     <tr>
         <td></td>
         <td valign="top">ІПН</td>
-        <td colspan="7">{{finn}}</td>
+        <td colspan="7" data-type="s">{{finn}}</td>
     </tr>
      {{/finn}}     
   
@@ -76,7 +76,7 @@
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="7">{{fop_edrpou}}</td>
+        <td colspan="7" data-type="s">{{fop_edrpou}}</td>
     </tr>       
    {{/isfop}}   
      <tr>
@@ -107,7 +107,7 @@
 
         <td></td>
         <td> IBAN</td>
-        <td colspan="7">{{iban}}   </td>
+        <td colspan="7" data-type="s">{{iban}}   </td>
 
     </tr>
     {{/iban}}
@@ -122,7 +122,7 @@
     </tr>
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30pt">№</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
         </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
@@ -136,7 +136,7 @@
     <tr>
         <td align="right">{{no}}</td>
         <td colspan="2">{{tovar_name}}</td>
-        <td colspan="2">{{tovar_code}}</td>
+        <td colspan="2" data-type="s">{{tovar_code}}</td>
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
@@ -175,7 +175,7 @@
        {{#payamount}}
    {{#totalstr}}
     <tr>
-        <td colspan="9">На суму <b>{{totalstr}}</b></td>
+        <td colspan="2">На суму</td><td colspan="7"><b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}      
   {{/payamount}}

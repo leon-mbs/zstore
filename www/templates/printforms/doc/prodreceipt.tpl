@@ -6,20 +6,14 @@
         </td>
     </tr>
     <tr>
-        <td colspan="8" valign="middle">
-            Виробнича ділянка <b>{{pareaname}}</b><br>
-        </td>
+        <td colspan="3">Виробнича ділянка</td><td colspan="5" valign="middle"><b>{{pareaname}}</b></td>
     </tr>
    <tr>
-        <td colspan="8" valign="middle">
-            На склад <b>{{storename}}</b><br>
-        </td>
+        <td colspan="3">На склад</td><td colspan="5" valign="middle"><b>{{storename}}</b></td>
     </tr>
     {{#emp}}
     <tr>
-        <td colspan="6">
-            <b>Виконавець:</b> {{emp}}
-        </td>
+        <td colspan="3"><b>Виконавець:</b></td><td colspan="3">{{emp}}</td>
     </tr>
  
     {{/emp}}      
@@ -29,20 +23,20 @@
         </td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30pt">№</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кіл.</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50pt">Кіл.</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60pt">Ціна</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80pt">Сума</th>
     </tr>
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
         <td colspan="2">{{itemname}}</td>
-        <td colspan="2">{{itemcode}}</td>
+        <td colspan="2" data-type="s">{{itemcode}}</td>
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>

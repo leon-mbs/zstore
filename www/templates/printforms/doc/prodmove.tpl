@@ -7,20 +7,14 @@
         </td>
     </tr>
     <tr>
-        <td colspan="9" valign="middle">
-            Виробничий процес <b>{{procname}}</b> 
-        </td>
+        <td colspan="3">Виробничий процес</td><td valign="middle" colspan="6"><b>{{procname}}</b></td>
     </tr>
    <tr>
-        <td colspan="9" valign="middle">
-            З <b>{{fromname}}</b> в  <b>{{toname}}</b>
-        </td>
+        <td colspan="2">З</td><td colspan="3"><b>{{fromname}}</b></td><td>в</td><td colspan="3"><b>{{toname}}</b></td>
     </tr>
     {{#emp}}
     <tr>
-        <td colspan="6">
-            <b>Виконавець:</b> {{emp}}
-        </td>
+        <td colspan="3"><b>Виконавець:</b></td><td colspan="3">{{emp}}</td>
     </tr>
  
     {{/emp}}  
@@ -31,17 +25,17 @@
     </tr>
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30pt">№</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування        </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60pt">Кіл.</th>
     </tr>
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
         <td colspan="2">{{tovar_name}}</td>
-        <td colspan="2">{{tovar_code}}</td>
+        <td colspan="2" data-type="s">{{tovar_code}}</td>
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>

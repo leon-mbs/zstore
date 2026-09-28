@@ -7,14 +7,10 @@
 
 
     <tr>
-        <td colspan="4">
-            <b>На рахунок:</b> {{to}}
-        </td>
+        <td><b>На рахунок:</b></td><td colspan="3">{{to}}</td>
     </tr>
     <tr>
-        <td colspan="4">
-            <b>Сума:</b> {{amount}}
-        </td>
+        <td><b>Сума:</b></td><td colspan="3">{{amount}}</td>
     </tr>
     <tr>
         <td colspan="4">
@@ -24,23 +20,17 @@
 
     {{#customer}}
     <tr>
-        <td colspan="4">
-            <b>Контрагент:</b> {{customer}}
-        </td>
+        <td><b>Контрагент:</b></td><td colspan="3">{{customer}}</td>
     </tr>
     {{/customer}}
     {{#contract}}
     <tr>
-        <td colspan="4">
-            <b>Договір:</b> {{contract}}
-        </td>
+        <td><b>Договір:</b></td><td colspan="3">{{contract}}</td>
     </tr>
     {{/contract}}
     {{#emp}}
     <tr>
-        <td colspan="4">
-            <b>Співробітник:</b> {{emp}}
-        </td>
+        <td><b>Співробітник:</b></td><td colspan="3">{{emp}}</td>
     </tr>
     {{/emp}}
     <tr>

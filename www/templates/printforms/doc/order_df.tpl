@@ -12,7 +12,7 @@
     <tr>
         <td></td>
         <td>Зовнішній номер</td>
-        <td colspan="8">{{outnumber}}</td>
+        <td colspan="8" data-type="s">{{outnumber}}</td>
     </tr>
 
     {{/isoutnumber}}
@@ -35,7 +35,7 @@
     <tr>
      
         <td colspan="2">{{{tovar_name}}}</td>
-        <td colspan="2" valign="top">{{tovar_code}}</td>
+        <td colspan="2" valign="top" data-type="s">{{tovar_code}}</td>
         <td valign="top">{{msr}}</td>
         <td valign="top">{{desc}}</td>
 

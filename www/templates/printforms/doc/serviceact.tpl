@@ -44,7 +44,7 @@
 <br>
 <table class="ctable"   cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
-        <th width="20" style="border: 1px solid black;">№</th>
+        <th width="20pt" style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;"> </th>
         <th style="border: 1px solid black;"  >Од.</th>
@@ -118,7 +118,7 @@
    
    {{#totalstr}}
     <tr>
-        <td colspan="7">До сплати <b>{{totalstr}}</b></td>
+        <td colspan="2">До сплати</td><td colspan="5"><b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}                    
 

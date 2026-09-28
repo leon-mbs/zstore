@@ -7,15 +7,11 @@
 
 
     <tr>
-        <td colspan="2">
-            <b>З рахунку:</b> {{paymentname}}
-        </td>
+        <td><b>З рахунку:</b></td><td>{{paymentname}}</td>
     </tr>
 
     <tr>
-        <td colspan="2">
-            <b>Місяць:</b> {{month}} {{year}}
-        </td>
+        <td><b>Місяць:</b></td><td>{{month}} {{year}}</td>
     </tr>
      {{#advance}}
   <tr>

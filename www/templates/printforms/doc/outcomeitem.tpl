@@ -5,24 +5,18 @@
         </td>
     </tr>
     <tr>
-        <td colspan="6">
-            <b> Зі складу:</b> {{from}}
-        </td>
+        <td><b>Зі складу:</b></td><td colspan="5">{{from}}</td>
 
     </tr>
    {{#storeemp}}
     <tr>
-        <td colspan="6">
-            <b>Зі співробітника:</b> {{storeemp}}
-        </td>
+        <td><b>Зі співробітника:</b></td><td colspan="5">{{storeemp}}</td>
     </tr>
  
     {{/storeemp}}     
    {{#customer}}
     <tr>
-        <td colspan="6">
-            <b>Партнер:</b> {{customer}}
-        </td>
+        <td><b>Партнер:</b></td><td colspan="5">{{customer}}</td>
     </tr>
  
     {{/customer}}    
@@ -46,9 +40,9 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
-        <td align="right">{{snumber}}</td>
+        <td align="right" data-type="s">{{snumber}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{sum}}</td>
