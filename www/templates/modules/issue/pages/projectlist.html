@@ -88,22 +88,22 @@
                     <div class="row">
                         <div class="col-12 col-md-8  col-xl-6">
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editname"> Назва</label>
                                 <input v-model="editname" id="editname" name="editname" class="form-control" type="text"    >
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editcust"> Замовник </label>
                                 <typeahead   v-model="editcust"     ref="cust"  :onquery="ontext"   placeholder="Почніть вводити ..."></typeahead>   
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editdesc"> Опис </label>
                                 <div  id="editdesc" class="form-control me-2"  ></div>
                             </div>
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label> Перелік учасників </label>
                               
                                 <div v-for="user in users">
@@ -116,7 +116,7 @@
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-secondary ">
                                 <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-primary ms-2 "> 
                             </div>
@@ -183,7 +183,7 @@
 
                     <form >
                         <label> Коментар: </label>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <textarea v-model="msg" class="form-control"  style="width:400px;height:120px;"></textarea>
                         </div>
                         <input   v-on:click.prevent="onmsg"  class="btn btn-success  " type="button" value="Додати">

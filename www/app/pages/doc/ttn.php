@@ -275,9 +275,15 @@ class TTN extends \App\Pages\Base
                         $this->docform->fop->setValue($basedoc->headerdata['fop']);
                  
                         $this->OnChangeCustomer($this->docform->customer);
-
-                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
-        
+                        $this->_itemlist = [];
+                        foreach($basedoc->unpackDetails('detaildata') as $k=>$v) {
+                            
+                           if($v instanceof \App\Entity\Service) {
+                               $this->setWarn('Послуги не  можуть додаватись до накладної') ;
+                               continue;
+                           }
+                           $this->_itemlist[$k] =$v;
+                        }
                         $this->calcTotal();
                     }
 

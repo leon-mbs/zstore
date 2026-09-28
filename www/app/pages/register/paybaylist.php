@@ -68,7 +68,7 @@ class PayBayList extends \App\Pages\Base
 
        
         $this->plist->add(new Form('payform')) ;
-        $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), H::getDefMF()));
+        $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), 0))->onChange($this,'onPayment');
 
         $this->plist->payform->add(new TextInput('pamount'));
         $this->plist->payform->add(new TextInput('pcomment'));
@@ -175,6 +175,10 @@ GROUP BY c.customer_name,
     }
 
    
+    public function onPayment($sender) {
+         
+       $this->updateDocs();   
+    }
     public function topayOnClick($sender) {
 
         $this->_cust = $sender->getOwner()->getDataItem();
@@ -191,7 +195,8 @@ GROUP BY c.customer_name,
 
     public function updateDocs() {
 
-
+        $pt= intval( $this->plist->payform->payment->getValue());
+        
         $br = "";
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
@@ -202,7 +207,12 @@ GROUP BY c.customer_name,
 
 
         foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and  ( state = 21 or  content like '%<waitpay>1</waitpay>%' )   and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ") as $d) {
-            $this->_doclist[] = $d;
+            
+            $pm=intval($d->getHD('payment')) ; //денежный счет
+            if($pt == 0 || $pm==$pt) {
+                $this->_doclist[] = $d;    
+            }
+            
 
         }
         $this->_doclist = array_reverse($this->_doclist);

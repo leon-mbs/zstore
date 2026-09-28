@@ -5,9 +5,13 @@ namespace App;
 // вспомагательный   класс  для   вывода  простых  списков
 class DataItem implements \Zippy\Interfaces\DataItem
 {
-    public $id;
+    private $id;
     protected $fields = array();
 
+    /**
+    * 
+    * @param mixed $row   массив  полей  или  уникальный id 
+    */
     public function __construct($row = null) {
         if(is_integer($row)) {
             $this->id = $row;
@@ -15,6 +19,10 @@ class DataItem implements \Zippy\Interfaces\DataItem
         if (is_array($row)) {
             $this->fields = array_merge($this->fields, $row);
         }
+        if(intval($this->id) == 0) {
+           $this->id = \App\Session::getSession()->getUid()  ;
+        }
+        
     }
 
     final public function __set($name, $value) {

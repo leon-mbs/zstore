@@ -42,19 +42,19 @@
             <form class="col-12 col-md-4" zippy="storeform" method="post">
 
 
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="storeeditname"> Назва</label>
                     <input autofocus="on"   class="form-control" type="text" zippy="storeeditname"  required="on" >
                 </div>
                 {{#usebranch}}
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="editbranch">Філія</label>
                     <select class="form-control" zippy="editbranch">
                         <option value="0">Не обрано</option>
                     </select>
                 </div>
                 {{/usebranch}}
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="storeeditdesc"> Опис </label>
                     <textarea class="form-control" type="text" zippy="storeeditdesc"></textarea>
                 </div>
@@ -62,7 +62,7 @@
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не використовується</label>
                 </div>                
-                <div class="form-group">
+                <div class="mb-2">
                     <input zippy="storecancel" type="button" value="Скасувати" class="btn btn-secondary me-2">
                     <input zippy="storesave" type="submit" value="Зберегти" class="btn btn-primary  "> 
                     

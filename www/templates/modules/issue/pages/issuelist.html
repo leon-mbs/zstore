@@ -145,11 +145,11 @@
                        
                         <form    >
                             <label> Коментар: </label>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <textarea class="form-control" v-model="msg"
                                           style="width:400px;height:120px;"></textarea>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                
                                <details>
                         <summary>Повідомити</summary>
@@ -162,7 +162,7 @@
                             
                             </div>
                          
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <input  v-on:click.prevent="onmsg" class="btn btn-success  " type="button" value="Додати">
                             </div>
                         </form>
@@ -173,7 +173,7 @@
 
                         <form zippy="stform">
 
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="ststatus">Статус </label>
 
                                 <select v-on:change="onstatus" v-model="ststatus" class="form-control   "  >
@@ -185,7 +185,7 @@
 
 
                             </div>
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="stuser">Перевести на </label>
 
 
@@ -198,7 +198,7 @@
 
 
                             </div>
-                            <div class="form-group  ">
+                            <div class="mb-2">
                                 <label for="stpr">Пріоритет </label>
 
 
@@ -238,15 +238,15 @@
        
             <div  v-show="editissue != -1" class="col-12 col-md-8 col-xl-4">
                 <form id="fval">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="edittitle">Назва</label>
                         <input type="text" required="required" class="form-control" v-model="edittitle">
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editdesc">Опис</label>
                         <textarea style="height:100px;" class="form-control" v-model="editdesc"></textarea>
                     </div>
-                    <div v-show="editissue==0" class="form-group">
+                    <div v-show="editissue==0" class="mb-2">
                         <label for="editproj">Проект </label>
                         <select v-on:change="onprchanged"   class="form-control    " v-model="editproj" style="width:200px">
                         <option value="0">Не обрано</option>
@@ -256,7 +256,7 @@
    
                         </select>
                     </div>
-                    <div  v-show="editissue==0"  class="form-group">
+                    <div  v-show="editissue==0"  class="mb-2">
                         <label for="editpr">Пріоритет </label>
                         <select class="form-control    " v-model="editpr" style="width:200px">
                                   <option v-for="option in prlist" :value="option.key">
@@ -266,7 +266,7 @@
                     
                         </select>
                     </div>
-                    <div  v-show="editissue==0"  class="form-group">
+                    <div  v-show="editissue==0"  class="mb-2">
                         <label for="editemp">Виконавець </label>
                         <select class="form-control     " v-model="editemp" style="width:200px">
                             <option value="0">Не обрано</option>
@@ -277,7 +277,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="edithours">Планований час, годин</label>
 
                         <input pattern="[0-9]+" style="width:60px" v-model="edithours"   type="text" class="form-control qtyprice">
@@ -285,7 +285,7 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <a  v-on:click.prevent="cancel" class="btn btn-secondary">Скасувати</a>&nbsp;
                         <input  v-on:click.prevent="save" type="button" class="btn btn-primary" value="Зберегти">
                     </div>

@@ -156,20 +156,20 @@
             <h4>Редагування процесу</h4>
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editname">Найменування <small class="text-danger">*</small></label>
                         <input  required="on"  class="form-control" zippy="editname"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editbasedoc">Замовлення, договір</label>
                         <input   class="form-control" zippy="editbasedoc"/>
                     </div>
                 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editstartdateplan">Початок (план)</label>
                         <input    class="form-control" zippy="editstartdateplan"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editenddateplan">Кінець (план)</label>
                         <input    class="form-control" zippy="editenddateplan"/>
                     </div>        
@@ -177,7 +177,7 @@
                 </div>
                  <div class="col-12 col-md-3 col-xl-2">
                 
-                  <div class="form-group  ">
+                  <div class="mb-2">
                         <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="editstore">
                             <option value="0">Не вказано</option>
@@ -185,7 +185,7 @@
                          <small>Бажано створити окремий (можна віртуальний)    </small>
                                 
                      </div>   
-                   <div class="form-group">
+                   <div class="mb-2">
                         <label for="editnotes">Примітка</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editnotes"></textarea>
                   </div>                                     
@@ -194,7 +194,7 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-primary me-2 ">  
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">  
                     <input zippy="save"   type="submit" value="Зберегти" class="btn btn-primary  ">
                 </div>
             </div>
@@ -239,7 +239,7 @@
                         <td><a zippy="proditemdel"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <a zippy="cancelprods" class="btn btn-success" >Скасувати</a>&nbsp;&nbsp;&nbsp;
+                <a zippy="cancelprods" class="btn btn-secondary" >Скасувати</a>&nbsp;&nbsp;&nbsp;
                 <a zippy="saveprods"  class="btn  btn-success">Зберегти</a>
             </div>
         </div>
@@ -282,11 +282,11 @@
  
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editstagename">Найменування</label>
                         <input  required="on"  class="form-control" zippy="editstagename"/>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editstagearea">Виробнича дільниця  </label>
                         <select  class="form-control" zippy="editstagearea">
                             <option value="0">Не обрано</option>
@@ -294,14 +294,14 @@
                     </div>
 
                  
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editstagenotes">Коментар</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
                     </div>
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-primary  me-2">   
+                    <input zippy="cancelstage" type="button" value="Скасувати" class="btn btn-secondary  me-2">   
                     <input zippy="savestage"   type="submit" value="Зберегти" class="btn btn-primary  "> 
                 </div>
             </div>
@@ -328,21 +328,21 @@
                         </select>
                         </div>  
                          <div   class="col-auto" >
-                            <div   class="form-group row" >
+                            <div   class="mb-2 row" >
                             <label class="ms-2" for="editqty">Кіл.</label>
                             <input class="form-control me-2" type="text" zippy="editqty" pattern="[0-9]+" value="1"  style="width: 50px;">
                        
                              </div>  
                          </div>  
                          <div   class="col-auto" >
-                            <div   class="form-group row" >
+                            <div   class="mb-2 row" >
                             <label class="ms-2" for="editcost">Оплата.</label>
                             <input class="form-control me-2" type="text" zippy="editcost" pattern="[0-9\.]+" value="1"  style="width: 75px;">
                        
                              </div>  
                          </div>  
                          <div   class="col-auto" >
-                            <div   class="form-group row" >
+                            <div   class="mb-2 row" >
                             <label class="ms-2" for="editprice">Собівартість</label>
                             <input class="form-control me-2" type="text" zippy="editprice" pattern="[0-9\.]+" value="1"  style="width: 75px;">
                        
@@ -382,7 +382,7 @@
                    
                    <div   class="col-12 col-md-6 " >
                       
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editcard">Технологічна карта</label>
                         <textarea     class="form-control" zippy="editcard"></textarea>
                     </div>   
@@ -444,7 +444,7 @@
    <div class="col-12  col-md-8 col-xl-6 ">
                 <form zippy="optionsform"  >
                  <h4>Налаштування     </h4>
-                   <div class="form-group  ">
+                   <div class="mb-2">
                         <label for="editrole">Роль для робітників</label>
                         <select class="form-control" zippy="editrole">
                             <option value="0">Не вказано</option>
@@ -453,7 +453,7 @@
                                       
                   </div> 
                  <div class="col-12">
-                    <a zippy="cancelopt"    class="btn btn-primary  me-2">Скасувати</a>   
+                    <a zippy="cancelopt"    class="btn btn-secondary  me-2">Скасувати</a>   
                     <input   type="submit" value="Зберегти" class="btn btn-primary  "> 
                 </div>               
            

@@ -10,22 +10,22 @@
             <h3>Замовлення </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number"  required="on" readonly="on" >
                     </div>
-                   <div class="form-group">
+                   <div class="mb-2">
                         <label for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>   
-                   <div class="form-group">
+                   <div class="mb-2">
                         <label for="outnumber"> Зовнішній номер</label>
                         <input class="form-control" type="text" zippy="outnumber" style="width:100px"    >
                       <small>  Наприклад номер замовлення на  маркетплейсі </small>
                     </div>   
                  
               
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="notes">Примітка </label>
 
                         <textarea class="form-control" zippy="notes"></textarea>
@@ -39,7 +39,7 @@
                  
                                       
                     
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label for="delivery">Доставка</label>
 
                         <select class="form-control" zippy="delivery">
@@ -48,7 +48,7 @@
 
                     </div>
                      {{#np}}
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="deliverynp">Тип доставки НП</label>
                              <select zippy="deliverynp" class="form-control     ">
                                 <option value="0">Відділення</option>
@@ -56,24 +56,24 @@
                                 <option value="2">За адресою</option>
                             </select>
                         </div>                     
-                       <div class="form-group">
+                       <div class="mb-2">
                         <label for="baycity">Населений пункт</label>
 
                         <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   "/>
 
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="baypoint">Відділення</label>
 
                         <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   "/>
                          <small>Для пошуку по номеру додайте перед цифрами №</small>
                     </div>                    
                        {{/np}}
-                    <div class="form-group  ">
+                    <div class="mb-2">
                         <label data-label="address" for="address">Адреса</label>
                         <textarea zippy="address" class="form-control"></textarea>
                     </div>
-                     <div class="form-group row">
+                     <div class="mb-2 row">
                             <label for="bayhouse">Буд.</label>
                             <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
                             <label for="bayflat">Кв. </label>
@@ -153,12 +153,12 @@
             <div class="col-12 col-md-4 col-xl-3">
                 <form zippy="editdetail">
                     <h4>Введення товару </h4>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="edittovar">Назва</label>
                       
                         <input   placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
                        </div>  
-                        <div class="form-group">                                             
+                        <div class="mb-2">                                             
                         <a zippy="openitemsel">Відкрити довідник</a>
                        
                         {{#isds}}
@@ -167,24 +167,24 @@
                         {{/isds}}   
                         
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editquantity">Кількість</label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on"                                pattern="[0-9,\.\s]+" style="width: 100px;">
 
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editprice">Продажна ціна </label>
                         <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editdesc">Коментар </label>
                         <input   class="form-control" type="text" zippy="editdesc"     >
 
                     </div>
 
-                    <div class="form-group">
+                    <div class="mb-2">
                       
                          <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary ">
                        &nbsp;&nbsp;<input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">

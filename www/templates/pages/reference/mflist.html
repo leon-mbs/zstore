@@ -46,7 +46,7 @@
                 <form zippy="mfdetail">
         <div class="row">
             <div class="col-6 col-lg-4 col-xl-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editmf_name">Назва</label>
                         <input autofocus="on"   class="form-control" zippy="editmf_name"/>
                     </div>
@@ -56,7 +56,7 @@
 
                     </div>
            
-                   <div class="form-group">
+                   <div class="mb-2">
                         <label for="editcom" data-label="editcom">Комісія, процент</label>
                         <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editcom"/>
                         <small data-label="editcom">Наприклад комісія ІМ. Списується як витрати </small>
@@ -65,14 +65,14 @@
            
                     
                     {{#usebranch}}
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editbranch">Філія</label>
                         <select class="form-control" zippy="editbranch">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
                     {{/usebranch}}
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editmf_description">Опис</label>
                         <textarea class="form-control" zippy="editmf_description"></textarea>
                     </div>
@@ -82,25 +82,25 @@
                 </div>
            </div>
             <div class="col-6 col-lg-4 col-xl-3">
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editbank" data-label="editbank">Назва  банку, МФО </label>
                         <input class="form-control" type="text" zippy="editbank">
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="editbankacc" data-label="editbankacc">Розрахунковий рахунок</label>
                         <input class="form-control" type="text" zippy="editbankacc">
                     </div>
-                     <div class="form-group">
+                     <div class="mb-2">
                         <label for="editiban" data-label="editiban">IBAN</label>
                         <input class="form-control" type="text" zippy="editiban">
                    </div> 
-                    <div class="form-group">
+                    <div class="mb-2">
                             <label for="editpayname" data-label="editpayname">Платник/Одержувач</label>
                             <input class="form-control" type="text" zippy="editpayname">
                             
                     </div>                    
                                  
-                    <div class="form-group row">
+                    <div class="mb-2 row">
                             <label class="col-6 col-form-label" for="edittin" data-label="edittin">ЄДРПОУ/ІПН</label>
                             <div class="col-6">
                                 <input class="form-control" type="text" zippy="edittin">
@@ -109,14 +109,14 @@
                                         
                     </div>                    
                           
-                    <div class="form-group row">
+                    <div class="mb-2 row">
                         <label class="col-8 col-form-label" for="editbtran" data-label="editbtran">Процент банку, видаток</label>
                         <div class="col-4">
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtran"/>
                          </div>
                         <small  data-label="editbtran">Процент, який банк бере за   переказ суми з рахунку. </small>
                     </div>
-                    <div class="form-group row">
+                    <div class="mb-2 row">
                         <label class="col-8 col-form-label" for="editbtranin" data-label="editbtranin">Процент банку, прибуток</label>
                         <div class="col-4">
                           <input style="width:100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editbtranin"/>
@@ -134,7 +134,7 @@
                    
                 
                 
-                  <div class="form-group">
+                  <div class="mb-2">
                     <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2 ">
                     <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                     

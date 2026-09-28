@@ -336,17 +336,23 @@ class Item extends \ZCL\DB\Entity
             }
         }
 
-
+        $isprod = ($this->item_type == self::TYPE_HALFPROD || $this->item_type == self::TYPE_PROD );
+        if($isprod)  {
+            $partion = $this->getProdprice() ;
+        }
+        
+        
+        
         //если процент
         if (strpos($_price, '%') > 0) {
 
-            $ret = doubleval(str_replace('%', '', $_price));
-            if (is_numeric($ret)) {
-                if ($partion == 0) {
+            $proc = doubleval(str_replace('%', '', $_price));
+            if (is_numeric($proc)) {
+                if ($partion == 0 && !$isprod ) {
                     //ищем последнюю закупочную  цену
                     $partion = $this->getLastPartion($store,"",true);
                 }
-                $price = $partion + doubleval($partion) / 100 * $ret;
+                $price = $partion + doubleval($partion) / 100 * $proc;
 
             }
         } else {
@@ -395,20 +401,10 @@ class Item extends \ZCL\DB\Entity
 
         }
 
-
-        //если  не  задана  наценка и цена  то  берем  закупочную
-        /*
-        if (intval($common['defprice']) == 0 && $price == 0) {
-
-            if ($partion == 0) {
-                //ищем последнюю закупочную  цену
-                $partion = $this->getLastPartion($store,"",true);
-            }
-            $price =  $partion;
-
-
+        if($isprod) {
+             return $price; 
         }
-         */
+  
         //курсовая разница
         if($common['useval']==1) {
             $opv = \App\System::getOptions("val");
@@ -636,6 +632,56 @@ class Item extends \ZCL\DB\Entity
         
         return doubleval($price);
     }
+    
+    
+    
+
+   /**
+     * себестоимость  для  готовой продукции
+     *
+     */
+    public function getProdprice() {
+        $price = 0;
+  
+        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
+
+        if (count($ilist) > 0) {
+            foreach ($ilist as $iset) {
+
+                if($iset->item_id > 0) {
+                    $it = \App\Entity\Item::load($iset->item_id);
+                    if($it != null ) {
+                        
+                        if($it->item_type==self::TYPE_HALFPROD)  {
+                           $pr = $it->getProdprice();  
+                        }   else {
+                           $pr = $it->getPartion(); 
+                        }
+                        
+                        $price += doubleval($iset->qty * $pr);
+                    }
+                 }
+                if($iset->service_id >0) {
+                    $price += doubleval($iset->cost);
+
+                }
+            }
+        }
+        
+        if ($this->costprice > 0 && $price==0) {
+            $price = doubleval($this->costprice);
+        }
+        
+ 
+        if($price==0) {
+            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собівартість") ;
+        }
+    
+        
+        return $price;
+    }
+        
+    
     
     
     public static function getPriceTypeList() {
@@ -993,50 +1039,7 @@ class Item extends \ZCL\DB\Entity
         return $list;
     }
 
-
-    /**
-     * себестоимость  для  готовой продукции
-     *
-     */
-    public function getProdprice() {
-        $price = 0;
-        if ($this->costprice > 0) {
-            $price += doubleval($this->costprice);
-        }
-        else {
-            $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
-
-            if (count($ilist) > 0) {
-                foreach ($ilist as $iset) {
-
-                    if($iset->item_id > 0) {
-                        $it = \App\Entity\Item::load($iset->item_id);
-                        if($it != null ) {
-                            $pr = $it->getPartion(0);
-                            $price += doubleval($iset->qty * $pr);
-                        }
-                     }
-                    if($iset->service_id >0) {
-                        $price += doubleval($iset->cost);
-
-                    }
-                }
-            }
-            
-        }
-        
-        if ($price == 0) {   
-            $price = $this->getPartion();
-        }
-        if($price==0) {
-            $price = $this->getLastPartion() ;
-        }
-        if($price==0) {
-            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собівартість") ;
-        }
-        return $price;
-    }
-
+ 
 
     public function getID() {
         return $this->item_id;

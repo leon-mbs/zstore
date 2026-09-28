@@ -46,7 +46,7 @@
                                 </select>
                             </div>
                             <div class="mb-2  ">
-                                <label for="pagesize">Рядків в таблицях на сторінці </label>
+                                <label  class="form-label" for="pagesize">Рядків в таблицях на сторінці </label>
 
                                 <select class="form-select" zippy="pagesize" style="width:100px;">
 
@@ -55,7 +55,7 @@
                                  </div>
 
                                 <div class="mb-2  ">
-                                    <label for="mainpage">Головна сторінка</label>
+                                    <label class="form-label" for="mainpage">Головна сторінка</label>
 
                                     <select class="form-select" zippy="mainpage">
                                     </select>
@@ -69,20 +69,20 @@
 
 
                         <div class="col-12 col-md-6 ">         
-                            <div class="form-group">
-                                <label for="userlogin">Логін</label>
+                            <div class="mb-2">
+                                <label class="form-label" for="userlogin">Логін</label>
                                 <span zippy="userlogin" class="form-control-plaintext"></span>
                             </div>
-                            <div class="form-group">
-                                <label for="email">E-mail</label>
+                            <div class="mb-2">
+                                <label class="form-label" for="email">E-mail</label>
                                 <input type="email" class="form-control" zippy="email">
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="phone">Телефон</label>
                                 <input   class="form-control" zippy="phone">
                             </div>
-                            <div class="form-group mb-2">
-                                <label for="viber">Viber</label>
+                            <div class="  mb-2">
+                                <label class="form-label" for="viber">Viber</label>
                                 <input   class="form-control" zippy="viber">
                             </div>   
                            <div class="form-check">
@@ -134,17 +134,17 @@
                 <h4>Зміна пароля</h4>
                 <form role="form" zippy="passwordform">
 
-                    <div class="form-group">
-                        <label for="userpassword">Новий пароль</label>
+                    <div class="mb-2">
+                        <label class="form-label" for="userpassword">Новий пароль</label>
                         <input autocomplete="off" type="password" class="form-control" zippy="userpassword"  required="on" >
                         <small>Перед введенням перевірте розкладку та регістр клавіатури </small>
                     </div>
 
-                    <div class="form-group">
-                        <label for="userpassword">Підтвердження</label>
+                    <div class="mb-2">
+                        <label class="form-label" for="userpassword">Підтвердження</label>
                         <input autocomplete="off" type="password" class="form-control " zippy="confirmpassword"  required="on" >
                     </div>
-                    <div class="form-group d-flex justify-content-end  mt-2">
+                    <div class="  d-flex justify-content-end  mt-2">
                      <button type="submit"   class="btn btn-primary">Зберегти</button>
                   </div>   
                 </form>
@@ -167,7 +167,7 @@
                         <label class="form-check-label" for="otptg">Телеграм </label>
                     </div>  
                            
-                   <div class="form-group d-flex justify-content-end  mt-2">         
+                   <div class="  d-flex justify-content-end  mt-2">         
                      
                    <button zippy="otpsave" type="submit"   class="btn btn-primary">Зберегти</button>
                    </div>
@@ -192,9 +192,9 @@
                          <h4>Принтер чеків</h4>
                           <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
                          <form zippy="printer">
-                            <div class="form-group  ">
-                                <label for="prtype">Тип підключення</label>
-                                <select class="form-control" zippy="prtype">
+                            <div class="mb-2">
+                                <label  class="form-label" for="prtype">Тип підключення</label>
+                                <select class="form-select" zippy="prtype">
                                      <option value="0">Системний принтер</option>
                                      <option value="1">Print сервер</option>
                                 </select>
@@ -202,18 +202,18 @@
                             </div>    
                                  
                                 
-                             <div class="form-group  ">
-                                <label data-label="pserver" for="pserver">Адреса серверу</label>
+                             <div class="mb-2">
+                                <label class="form-label" data-label="pserver" for="pserver">Адреса серверу</label>
                                 <input class="form-control" zippy="pserver">
                                  
                             </div>
-                             <div class="form-group  ">
-                                <label data-label="pwsym" for="pwsym">Ширина (кіл. символів)</label>
+                             <div class="mb-2">
+                                <label class="form-label" data-label="pwsym" for="pwsym">Ширина (кіл. символів)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
                             </div>
-                             <div class="form-group  ">
-                                <label for="pcp">Кодова сторінка</label>
-                                <select class="form-control" zippy="pcp">
+                             <div class="mb-2">
+                                <label class="form-label" for="pcp">Кодова сторінка</label>
+                                <select class="form-select" zippy="pcp">
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
@@ -221,10 +221,10 @@
                             </div>    
                                  
                                          
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <input zippy="savep" class="btn btn-primary" type="submit" value="Зберегти">
                             </div>                            
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <a    zippy="pstest" >Тест принтера</a>
                             </div>                            
                          </form> 
@@ -236,9 +236,9 @@
                           <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small> 
                              <small>Кількість на позицію, задається в довіднику ТМЦ </small>
                          <form zippy="printerlabel">
-                            <div class="form-group  ">
-                                <label for="prtypelabel">Тип підключення</label>
-                                <select class="form-control" zippy="prtypelabel">
+                            <div class="mb-2">
+                                <label class="form-label" for="prtypelabel">Тип підключення</label>
+                                <select class="form-select" zippy="prtypelabel">
                                      <option value="0">Системний принтер</option>
                                      <option value="1">Print сервер (режим  receipt)</option>
                                      <option value="2">Print сервер (режим  label)</option>
@@ -247,20 +247,20 @@
                             </div>    
                                  
                                 
-                             <div class="form-group  ">
-                                <label data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
+                             <div class="mb-2">
+                                <label class="form-label" data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
                                 <input class="form-control" zippy="pserverlabel">
                                  
                             </div>
-                             <div class="form-group  ">
-                                <label data-label="pwsymlabel" for="pwsymlabel">Ширина (кіл. символів)</label>
+                             <div class="mb-2">
+                                <label class="form-label" data-label="pwsymlabel" for="pwsymlabel">Ширина (кіл. символів)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
                                 <small data-label="pcplabel"> Якщо строка  довша, буде  записано в другу строку (тег {{name2}})</small>    
                           
                             </div>
-                             <div class="form-group  ">
-                                <label for="pcplabel">Кодова сторінка</label>
-                                <select class="form-control" zippy="pcplabel">
+                             <div class="mb-2">
+                                <label class="form-label" for="pcplabel">Кодова сторінка</label>
+                                <select class="form-select" zippy="pcplabel">
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
@@ -268,10 +268,10 @@
                             </div>    
                             
                                                                      
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <input zippy="saveplabel" class="btn btn-primary" type="submit" value="Зберегти">
                             </div>                            
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <a   zippy="pstestlabel" >Тест принтера</a>
                             </div>                            
                          </form>   
@@ -289,16 +289,16 @@
                   
                          <form zippy="scaleform">
                            
-                             <div class="form-group  ">
-                                <label   for="scalescript">Скрипт</label>
+                             <div class="mb-2">
+                                <label class="form-label"   for="scalescript">Скрипт</label>
                                 <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
                                  
                             </div>
-                              <div class="form-group">
+                              <div class="mb-2">
                                 <input   class="btn btn-primary" type="submit" value="Зберегти">
                             </div>     
                                                
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <a id="testscale" href="#"    >Тест </a>
                             </div> 
                                                                          

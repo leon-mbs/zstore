@@ -69,39 +69,39 @@
                     <div class="row">
                        <div class="col-12 col-md-6 col-xl-3">
                       
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editemp_name">Прізвище ім'я</label>
                                 <input autofocus="on"    required="on"  zippy="editemp_name" class="form-control">
 
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editlogin">Логін</label>
                                 <select class="form-control" zippy="editlogin">
                                     <option value="0">Не вказано</option>
                                 </select>
                                 <small>Логін зв'язує співробітника з користувачем системи</small>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="edithiredate">Дата найму</label>
                                 <input type="date" class="form-control" zippy="edithiredate"/>
                             </div>
-                           <div class="form-group">
+                           <div class="mb-2">
                                 <label for="editemail">E-mail</label>
                                 <input type="email" class="form-control" zippy="editemail"/>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editphone">Телефон</label>
                                 <input pattern="[0-9]+" class="form-control" zippy="editphone"/>
                             </div>
                             {{#usebranch}}
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editbranch">Філія</label>
                                 <select class="form-control" zippy="editbranch">
                                     <option value="0">Не вказано</option>
                                 </select>
                             </div>
                             {{/usebranch}}
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editcomment">Коментар</label>
                                 <textarea class="form-control" zippy="editcomment"></textarea>
                             </div>
@@ -113,35 +113,35 @@
                         </div>
                       
                          <div class="col-12 col-md-4 col-xl-3">
-                            <div class="form-group">
+                            <div class="mb-2">
                                <label  for="editdepartment">Відділ</label>
                                <input   class="form-control" zippy="editdepartment"/>
                            </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                <label  for="editposition">Позиція (посада)</label>
                                <input   class="form-control" zippy="editposition"/>
                            </div>
                       
-                            <div class="form-group">
+                            <div class="mb-2">
                                <label for="editztype">Тип зарплати</label>
                                <select     zippy="editztype" class="form-control">
     
                                </select>
     
                            </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                <label data-label="editzhour" for="editzhour">Оплата за годину</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editzhour"/>
                            </div>
-                           <div class="form-group">
+                           <div class="mb-2">
                                <label data-label="editzmon" for="editzmon">Оплата в міс.</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editzmon"/>
                            </div>
-                           <div class="form-group">
+                           <div class="mb-2">
                                <label for="editadvance">Аванс</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editadvance"/>
                            </div>
-                               <div class="form-group">
+                               <div class="mb-2">
                                <label for="editchildren">Кіл. дітей до 14</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editchildren"/>
                            </div>
@@ -157,7 +157,7 @@
                      </div>                          
                     <div class="row">
                        <div class="col-12   ">
-                   <div class="form-group">
+                   <div class="mb-2">
                                 <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary me-2">
                                 <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
                                 
@@ -190,7 +190,7 @@
                         </table>
                         <hr>
                         <form zippy="addmsgform">
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addmsg">Коментар</label>
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
@@ -209,13 +209,13 @@
                         </table>
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="addfile">Вибрати файл</label>
                                 <input type="file" class="form-control"  required="on"  zippy="addfile">
 
                             </div>
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="adddescfile">Опис </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>

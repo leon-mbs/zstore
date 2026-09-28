@@ -10,19 +10,19 @@
             <div class="col-12 col-md-8  col-xl-6">
                 <h3>OLAP аналіз</h3>
                  <form zippy="startform">
-                          <div class="form-group row">
+                          <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="stfrom">З</label>
                             <div class="col-7">
                                  <input class="form-control " style="width: 130px" type="text" zippy="stfrom">
                            </div>
                         </div>
-                         <div class="form-group row">
+                         <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="stto">По</label>
                             <div class="col-7">
                                  <input class="form-control " style="width: 130px" type="text" zippy="stto">
                            </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="sttype">Тип</label>
                             <div class="col-7">
                                  <select class="form-control  " zippy="sttype"> 
@@ -38,7 +38,7 @@
                                  </select>
                            </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="stver">По вертикалі</label>
                             <div class="col-7">
                                  <select class="form-control  " zippy="stver"> 
@@ -46,7 +46,7 @@
                                  </select>
                            </div>
                         </div>
-                        <div class="form-group row">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="sthor">По горизонталі</label>
                             <div class="col-7">
                                  <select class="form-control  " zippy="sthor"> 
@@ -54,7 +54,7 @@
                                  </select>
                            </div>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                                <input   type="submit" value="Далі &gt;" class="btn btn-primary  ">
                                 
                         </div>
@@ -68,7 +68,7 @@
                         <form zippy="filter" class="row" >
                              <div class="col-12 col-md-6  col-xl-4">
                                  {{#cat_name}}
-                                 <div class="form-group row">
+                                 <div class="mb-2 row">
                                     <label class="col-3 col-form-label" for="slcat_name">Категорія</label>
                                     <div class="col-9">
                                          <select class="form-control  select2 " zippy="slcat_name"> 
@@ -78,7 +78,7 @@
                                 </div>
                                  {{/cat_name}}
                                  {{#itemname}}
-                                 <div class="form-group row">
+                                 <div class="mb-2 row">
                                     <label class="col-3 col-form-label" for="slitemname">ТМЦ</label>
                                     <div class="col-9">
                                          <select class="form-control select2 " zippy="slitemname"> 
@@ -88,7 +88,7 @@
                                 </div>
                                  {{/itemname}}
                                  {{#customer_name}}
-                              <div class="form-group row">
+                              <div class="mb-2 row">
                                     <label class="col-3 col-form-label" for="slcustomer_name">Контрагент</label>
                                     <div class="col-9">
                                          <select class="form-control select2  " zippy="slcustomer_name"> 
@@ -99,7 +99,7 @@
                                {{/customer_name}}
                                {{#service_name}}
                                     
-                              <div class="form-group row">
+                              <div class="mb-2 row">
                                     <label class="col-3 col-form-label" for="slservice_name">Послуга</label>
                                     <div class="col-9">
                                          <select class="form-control  select2 " zippy="slservice_name"> 
@@ -114,7 +114,7 @@
                              <div class="col-12 col-md-4  col-xl-3">
                                  {{#document_date}}
   
-                                 <div class="form-group row">
+                                 <div class="mb-2 row">
                                     <label class="col-5 col-form-label" for="sldocument_date">Дата</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="sldocument_date"> 
@@ -125,7 +125,7 @@
                                  {{/document_date}}
                          
                                   {{#username}}
-                                <div class="form-group row">
+                                <div class="mb-2 row">
                                     <label class="col-5 col-form-label" for="slusername">Співробітник</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="slusername"> 
@@ -135,7 +135,7 @@
                                 </div>
                                  {{/username}}
                                   {{#mf_name}}
-                               <div class="form-group row">
+                               <div class="mb-2 row">
                                     <label class="col-5 col-form-label" for="slmf_name">Рахунок</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="slmf_name"> 
@@ -149,7 +149,7 @@
                                   
                           <div class="col-12 col-md-4  col-xl-3">
                                  {{#storename}}
-                                 <div class="form-group row">
+                                 <div class="mb-2 row">
                                     <label class="col-5 col-form-label" for="slstorename">Склад</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="slstorename"> 
@@ -159,7 +159,7 @@
                                 </div>
                                   {{/storename}}
                                   {{#branch_name}}
-                              <div class="form-group row">
+                              <div class="mb-2 row">
                                     <label class="col-5 col-form-label" for="slbranch_name">Філія</label>
                                     <div class="col-7">
                                          <select class="form-control select2  " zippy="slbranch_name"> 

@@ -63,13 +63,13 @@
                     <div class="row">
                         <div class="col-6 col-md-4 col-xl-3">
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editpos_name">Назва, номер</label>
                                 <input  required="on"  class="form-control" zippy="editpos_name"/>
                             </div>
                       
                             {{#usebranch}}
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editbranch">Філія</label>
                                 <select class="form-control" zippy="editbranch">
                                     <option value="0">Не обрано </option>
@@ -77,7 +77,7 @@
                             </div>
                             {{/usebranch}}
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editpointname"> Назва торгової точки</label>
                                 <input class="form-control" zippy="editpointname"/>
                                 <small>Використовується в чеках та фіскалізації</small>
@@ -85,20 +85,20 @@
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editaddress"> Адреса</label>
                                 <input class="form-control" zippy="editaddress"/>
                                 <small>Використовується в чеках та фіскалізації</small>
 
                             </div>
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="editpayeq"> Засоби оплати</label>
                                 <input class="form-control" zippy="editpayeq"/>
                                 <small>Для друку в чеку</small>
                             </div>
 
 
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editcomment">Коментар</label>
                                 <textarea class="form-control" zippy="editcomment">
                                 </textarea>
@@ -124,38 +124,38 @@
                                 <label class="form-check-label text-bold" for="edittesting">Тестовий режим</label>
                                 <br><small>Чеки будуть відправлятись в ДПІ, але не фіскалізуватимуться</small>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-2">
                                 <label for="editfirmname"  >Власник ключа ЕЦП</label>
                                 <input class="form-control" type="text" zippy="editfirmname">
                                 <br><small> Якщо відрізняється від назви компанії</small>
                             </div>                    
-                             <div class="form-group row">
+                             <div class="mb-2 row">
                                     <label  class="col-6 col-form-label"  for="edittin"  >ЄДРПОУ</label>
                                    <div class="col-6 col">
                                       <input class="form-control" type="text" zippy="edittin">
                                   </div>             
                                    <small> Якщо відрізняється від ЄДРПОУ компанії</small>
                             </div>             
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                     <label  class="col-6 col-form-label"  for="editipn" data-label="editpayname">ІПН</label>
                                      <div class="col-6 col">
                                        <input class="form-control" type="text" zippy="editipn">
                                     </div>    
                                      <small> Якщо платник ПДВ і якщо відрізняється від ІПН компанії</small>
                             </div>             
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-6 col-form-label"  for="editfisc">Фіскальний номер</label>
                                  <div class="col-6 col">
                                    <input class="form-control" zippy="editfisc"/>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-6 col-form-label" for="editposinner"> Локальний номер</label>
                                  <div class="col-6 col">
                                     <input class="form-control" zippy="editposinner"/>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <div class="mb-2 row">
                                 <label class="col-6 col-form-label" for="editfiscalnumber"> Наступний ФС документа</label>
                                  <div class="col-6 col">
                                      <input class="form-control" zippy="editfiscalnumber"/>
@@ -163,18 +163,18 @@
                             </div>
                             {{/ppo}}
                             {{#checkbox}}
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="editcbkey"> Ліцензійний ключ CheckBox</label>
                                 <input class="form-control" zippy="editcbkey"/>
                             </div>
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="editcbpin"> ПІН код касира</label>
                                 <input class="form-control" zippy="editcbpin"/>
                             </div>
                            
                             {{/checkbox}}          
                             {{#vkassa}}
-                             <div class="form-group">
+                             <div class="mb-2">
                                 <label for="editvktoken"> Токен ВчасноКаса</label>
                                 <input class="form-control" zippy="editvktoken"/>
                             </div>
@@ -182,7 +182,7 @@
                            
                             {{/vkassa}}          
                             {{#fiscal}}
-                           <div class="form-group">
+                           <div class="mb-2">
                                 <label for="editautoshift">Автоматично закривати зміну в</label>
                                 <select zippy="editautoshift" class="form-control  ">
                                     <option value="0">Не закривати</option>
@@ -203,7 +203,7 @@
                                     <br> <small><a href="https://zippy.com.ua/ext#id17">Опис</a></small>
                    
                                 </div> 
-                                 <div class="form-group">
+                                 <div class="mb-2">
                                     <label for="editscriptfreg">Скрипт</label>
                                     <textarea style="height:500px" class="form-control" zippy="editscriptfreg">
                                     </textarea>
@@ -228,17 +228,17 @@
                   
             
                              
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="password">Пароль </label>
                     <input  required="on"  class="form-control" type="password" zippy="password">
                     <small>Пароль не буде записаний в системі</small>
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="keyfile">Файл ключа </label>
                     <input class="form-control" type="file" zippy="keyfile">
                   
                 </div>
-                <div class="form-group">
+                <div class="mb-2">
                     <label for="certfile">Файл сертифікату </label>
                     <input class="form-control" type="file" zippy="certfile">
    <small>Для jks ключів (ПриватБанк) необов'язково</small>                      
@@ -258,7 +258,7 @@
                   <br> <small>Якщо помилка з таймаутом (завантаження  може  зайняти кілька хвилин)</small>
                </div>                              
                  
-              <div class="form-group">
+              <div class="mb-2">
                 <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-secondary me-1 ">
                 <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  me-2 ">
                 

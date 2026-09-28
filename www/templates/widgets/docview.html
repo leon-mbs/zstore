@@ -81,7 +81,7 @@
             <form onsubmit="return  false"     >
 
                 <label for="addrel">Додати дочірній документ:</label>
-                <div style="width:200px" class="form-group">
+                <div style="width:200px" class="mb-2">
                     <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почніть вводити номер..."></typeahead>   
 
                 </div>
@@ -110,7 +110,7 @@
                     </table>
                      <form id="msgform"  onsubmit="return  false"  >
        
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="addmsg"> Коментар: </label>
                             <textarea  name="msgtext"  class="form-control" required="required"  
                                       style=" height:120px;"></textarea>
@@ -138,12 +138,12 @@
 
                      <form id="fileaddform" onsubmit="return  false"  enctype="multipart/form-data">
 
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="addfile"> Вибрати файл: </label>
                             <input name="addfile" class="form-control" type="file" required="required"  >
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="adddescfile"> Коментар </label>
                             <input name="adddescfile" class="form-control" type="text"    >
                         </div>

@@ -11,34 +11,47 @@
             </div>
              <div zippy="listpanel" class="col-12 col-xl-11">
 
-                <div class="navbar">
+                
                     <form zippy="filter"  >
 
-                       <div class="row  ">
-                        <label class="col-form-label col-auto" for="searchnumber"> № </label>
-                         <div class="col-auto  ">
+                        <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                         <div class="col-12">
+                           <div class="input-group">
+
+                        <label   for="searchnumber"> № </label>
+                      
                         <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
                           </div>
-                        <label class="col-form-label col-auto" for="status">Статус</label>
-                         <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="status">
+                          </div>
+                         <div class="col-12">
+                           <div class="input-group">
+     
+                        <label   for="status">Статус</label>
+                       
+                        <select class="form-select  " zippy="status">
                         </select>
                           </div>
-                        <label class="col-form-label col-auto" for="salesource">Джерело продаж</label>
-                         <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="salesource">
-                            <option value="0">Не обрано</option>
-                        </select>
                          </div>
-                         <div class="col-auto  ">
+                        <div class="col-12">
+                           <div class="input-group">
+                         
+                        <label   for="salesource">Джерело продаж</label>
+                        
+                          <select class="form-select  " zippy="salesource">
+                            <option value="0">Не обрано</option>
+                         </select>
+                         </div>
+                         </div>
+                        <div class="col-12">
+                          
                         <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
                          </div>
-                        <div class="col-auto  ">
+                        <div class="col-12  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
                         </div>
                       </div>
                     </form>
-                </div>
+               
                 <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
 
 
@@ -256,19 +269,21 @@
                        <div class="col-auto"> 
                      <form zippy="resform" class="row align-items-start " >
                          <div class="col-auto"> 
+                           <div class="input-group">
+
                                    
-                        <label class=" form-label   me-2"  data-label="bres">Резервувати товари </label>
-                        </div>
+                        <label    data-label="bres">Резервувати товари </label>
+                         
+                        <select class=" form-select  "  zippy="store"></select>
+                           </div>
                          <div class="col-auto">  
-                        <select class=" form-control me-2"  zippy="store"></select>
-                          </div>
-                         <div class="col-auto"> 
                         <button zippy="bres" class="btn btn-success  ">OK                 </button>
                          </div>
                          <div class="col-auto">  
                        
                         <button zippy="bunres" class="btn btn-primary "> Зняти з резерву                </button>
                           </div>
+                        </div>
                          
                     </form>       
                       </div>
@@ -284,7 +299,7 @@
                         <label   for="brmove">філію </label>
                           </div> 
                          <div class="col-auto">  
-                        <select zippy="brmove" class="form-control me-2 ">
+                        <select zippy="brmove" class="form-select   ">
                             <option value="0">Не вказано</option>
                         </select>
                          </div>   
@@ -293,7 +308,7 @@
                         <label  class="form-label me-2" for="usmove">користувача </label>
                            </div> 
                           <div class="col-auto"> 
-                         <select class="form-control me-2" zippy="usmove"  >
+                         <select class="form-select  " zippy="usmove"  >
 
                         </select>   
                            </div> 
@@ -342,7 +357,7 @@
                       <td class="text-end" zippy="editlistqty"></td>
                    </tr> 
                  </table>         
-                 <div class="form-group">
+                 <div class="mb-2">
                     <button zippy="editcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
                     <button zippy="editsave" type="submit" class="  btn btn-info  me-2 ">Зберегти</button>                 
                     <button zippy="editready" type="submit" class="  btn btn-success  ms-4 ">Зібрано</button>                 
@@ -377,7 +392,7 @@
                    
                    </tr> 
                  </table>         
-                 <div class="form-group">
+                 <div class="mb-2">
                     <button zippy="splitcancel" type="submit" class="  btn btn-secondary  me-2 ">Скасувати</button>                 
                     <button zippy="splitsave" type="submit" class="  btn btn-info  me-2 ">Розділити</button>                 
                   
@@ -460,7 +475,7 @@
                                                             
                                  </div>                            
                                 <form>
-                                  <div class="form-group">
+                                  <div class="mb-2">
                                          <label for="msgtext">Повідомлення</label> 
                                         <textarea  v-model="message"      class="form-control"></textarea>
                                          

@@ -6,73 +6,76 @@
   <body>
         <div class="row" zippy="listpan">
             <div class="col-12 col-xl-11">
-                <div class="card">
+              
                     <div class="card-body">
                         <h3>Журнал продажів </h3>
 
 
-                        <div class="card">
-                            <form zippy="filter" class="row   g-2 align-items-center">
-                              <div class="col-auto">  
-                                  <div class=" row no-gutters"> 
+                         
+                           <form zippy="filter"  >
+                             <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                     
+                            <div class="col-12">
+                               <div class="input-group">
 
-                                   <label class="col-auto mt-2"   for="searchnumber"> № </label>
-                                 <div class="col-auto">
+                                   <label   for="searchnumber"> № </label>
+                                  
 
-                                     <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
-                                 </div>
+                                     <input class="form-control  " type="text" zippy="searchnumber" style="width:100px">
+                               
                                 </div>
                                </div>
-                               <div class="col-auto">  
-                                  <div class=" row no-gutters"> 
-                                <label class="col-auto mt-2"   for="salesource">Статус</label>
-                               <div class="col-auto">
+                         <div class="col-12">
+                           <div class="input-group">
+                                <label     for="salesource">Статус</label>
+                               
 
-                                <select class="form-control me-2" zippy="status">
+                                <select class="form-select  " zippy="status">
                                 </select>
-                                 </div>
+                                  
                                 </div>
                                </div>
                               
-                                <div class="col-auto">  
-                                  <div class=" row no-gutters"> 
+                         <div class="col-12">
+                           <div class="input-group">
                                       
-                                    <label class="col-auto mt-2"   for="fstore"> склад </label>
-                                 <div class="col-auto">
-                                 <select class="form-control me-2" zippy="fstore">
+                                    <label     for="fstore"> склад </label>
+                                
+                                 <select class="form-select  " zippy="fstore">
                                     <option value="0">Не обрано</option>
                                 </select>
-                                 </div>
+                                 
                                 </div>
                                </div>
-                               <div class="col-auto">  
-                                  <div class=" row no-gutters"> 
+                         <div class="col-12">
+                           <div class="input-group">
                                
-                                <label class="col-auto mt-2"   for="salesource">Джерело продаж</label>
-                                  <div class="col-auto">
-                                  <select class="form-control me-2" zippy="salesource">
+                                <label     for="salesource">Джерело продаж</label>
+                                 
+                                  <select class="form-select  " zippy="salesource">
                                     <option value="0">Не обрано</option>
                                  </select>
-                                 </div>
-                                </div>
-                               </div>
-                               <div class="col-auto">  
-                                  <div class=" row no-gutters"> 
                                
-                                <label class="col-auto mt-2"   for="searchcust">Контрагент</label>
-                                  <div class="col-auto">
-                                    <input placeholder="Почніть вводити..."  class="form-control me-2" zippy="searchcust" >
-                                 </div>
                                 </div>
                                </div>
-                                <div class="col-auto"> 
-                                   <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                        <div class="col-12">
+                           <div class="input-group">
+                               
+                                <label    for="searchcust">Контрагент</label>
+                                 
+                                    <input placeholder="Почніть вводити..."  class="form-control  " zippy="searchcust" >
+                               
+                                </div>
+                               </div>
+                                <div class="col-12"> 
+                                   <input class="form-control  " type="text" zippy="searchtext" placeholder="Пошук по контенту">
                                   </div>
-                                <div class="col-auto">
+                                <div class="col-12">
                                   <input type="submit" class="  btn btn-success  " value="ОК">
                                </div>
+                              </div>
                             </form>
-                        </div>
+                         
                         <a href="/index.php?p=App/Pages/Doc/GoodsIssue" class="btn btn-primary mt-2 mb-3">Створити ВН</a>&nbsp;
                         <a href="/index.php?p=App/Pages/Doc/Invoice" class="btn btn-primary mt-2 mb-3">Створити РФ</a>
                         <a href="/index.php?p=App/Pages/Doc/TTN" class="btn btn-primary mt-2 mb-3">Створити ТТН</a>
@@ -133,7 +136,7 @@
                         <div zippy="pag"></div>
                         <a id="dankor"></a>
                     </div>
-                </div>
+                
             </div>
 
         </div>
@@ -141,48 +144,58 @@
 
         <div class="row" zippy="statuspan">
             <div class="col-12">
-                <div class="navbar">
-                    <div class="card-body">
-                        <div class="nawbar">
-                            <form zippy="statusform"  >
-                                <div class="row  ">
-                               
+                
+                   
+                       
+                          <form zippy="statusform"  >
+                              <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                    
                                 {{#np}}
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                   <button zippy="bnp" type="submit" class="  btn btn-success  me-2 " title="Створити експрес-накладну">Доставка НП</button>
                                 </div>
                                 {{/np}}
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                   <button zippy="bsend" type="submit" class="  btn btn-success  me-2 ">Відправлено</button>
                                 </div>
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                    <button zippy="bdevivered" type="submit" class="  btn btn-success  me-1 ">Доставлено</button>
                                 </div>
-                                <div class="col-auto  ">
-                                  &nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                <div class="col-12 p-x-4 ">
+                                  &nbsp; 
                                 </div>
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                 <button zippy="bttn" type="submit" class="  btn btn-primary  me-2 ">Створити ТТН</button>
                                 </div>
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                    <button zippy="bgi" type="submit" class="  btn btn-primary  me-2 ">Створити ВН</button>
                                 </div>
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                 <button zippy="bgar" type="submit" class="  btn btn-primary  me-2 ">Гарантійний талон</button>
                                 </div>
-                                 <div class="col-auto  ">
+                                 <div class="col-12  ">
                                 <button zippy="bret" type="submit" class="  btn btn-primary  me-2 ">Повернення</button>
                                 </div>
-                                 <div class="col-auto  ">
-                                    &nbsp;&nbsp;&nbsp;<span data-label="ship_number" > № декларації </span> <i data-label="ship_number"  class="fa fa-info-circle " data-bs-toggle="tooltip" data-bs-placement="top" title="Номер декларації служби доставки."></i> 
+                                 <div class="col-12  ">
+                                      <div class="input-group">
+
+                                    <label data-label="ship_number" > № декларації </label>
+                                     <label  >
+                                     <i data-label="ship_number"  class="fa fa-info-circle " data-bs-toggle="tooltip" data-bs-placement="top" title="Номер декларації служби доставки."></i> 
+                                     </label>
+                                     <input zippy="ship_number" style="width:250px;"  class="form-control ms-sm-2"> 
                                 </div>
-                                 <div class="col-auto  ">
-                                   <input zippy="ship_number" style="width:250px;"  class="form-control ms-sm-2"> <input class="btn btn-info" zippy="bdecl"  type="submit" value="OK">
-                               </div></div>
+                                </div>
+                                  <div class="col-auto  ">  
+                                   <input class="btn btn-info" zippy="bdecl"  type="submit" value="OK">
+                                </div>
+                                
+                                
+                              </div>
                             </form>
-                        </div>
-                    </div>
-                </div>
+                    
+                     
+                 
 
                 <div class="card">
                     <div class="card-body">
@@ -200,28 +213,28 @@
             <form zippy="npform">
                 <div class="row">
                     <div class="col-12 col-md-6 col-xl-4">
-                        <div class="form-group  row">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="npw">Вага</label>
                              <div class="col-3">
                                <input pattern="[0-9,\.]+" type="text" zippy="npw" class="form-control qtyprice"/>
                             </div>
                         </div>
                        
-                       <div class="form-group  row">
+                       <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="npv">Об`єм</label>
                              <div class="col-3">
                                <input pattern="[0-9,\.]+" type="text" zippy="npv" class="form-control qtyprice"/>
                             </div>
                         </div>
                        
-                        <div class="form-group row  ">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="npcost">Оцінка, грн</label>
                             <div class="col-3">
                                <input pattern="[0-9]+" type="text" zippy="npcost" class="form-control"/>
                            </div>
 
                         </div>
-                        <div class="form-group  row ">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="npdate">Дата відправки</label>
                              <div class="col-3">
                     
@@ -229,46 +242,46 @@
                              </div>
                         </div>
 
-                        <div class="form-group  row ">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="nppt">Хто сплачує</label>
                             <div class="col-3">
-                              <select zippy="nppt" class="form-control   ">
+                              <select zippy="nppt" class="form-select   ">
                               </select>
                            </div>
                         </div>
-                        <div class="form-group  row">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="nppm">Тип оплати</label>
                              <div class="col-3">
-                            <select zippy="nppm" class="form-control   ">
+                            <select zippy="nppm" class="form-select   ">
 
                             </select>
                           </div>
                         </div>
-                        <div class="form-group row ">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="npback">Зворотня доставка, грн </label>
                                 <div class="col-3">
                             <input pattern="[0-9]+" type="text" zippy="npback" class="form-control"/>
                             </div>
                         </div>
-                        <div class="form-group  row">
+                        <div class="mb-2 row">
                             <label class="col-5 col-form-label" for="nppmback">Тип оплати зворотньої доставки</label>
                                 <div class="col-5">
-                            <select zippy="nppmback" class="form-control   ">
+                            <select zippy="nppmback" class="form-select   ">
 
                             </select>
                               </div>
                         </div>
-                         <div class="form-group">
+                         <div class="mb-2">
                             <label for="seltel">Тел. відправника</label>
                             <input type="text" zippy="seltel" class="form-control"/>
                         </div>
-                       <div class="form-group">
+                       <div class="mb-2">
                         <label for="selcity">Місто відправника</label>
 
                         <input zippy="selcity" class="form-control   "/>
 
                     </div>
-                    <div class="form-group">
+                    <div class="mb-2">
                         <label for="selpoint">Відділення відправника</label>
 
                         <input placeholder="Почніть вводити..." zippy="selpoint" class="form-control   "/>
@@ -281,25 +294,25 @@
                   
                     <div class="col-12 col-md-4 col-xl-3">
 
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="baylastname">Прізвище отримувача</label>
                             <input type="text" zippy="baylastname" class="form-control"/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="bayfirstname">Ім'я отримувача</label>
                             <input type="text" zippy="bayfirstname" class="form-control"/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="baymiddlename">По батькові отримувача</label>
                             <input type="text" zippy="baymiddlename" class="form-control"/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="baytel">Тел. отримувача</label>
                             <input type="text" zippy="baytel" class="form-control"/>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="deltype">Тип доставки</label>
-                             <select zippy="deltype" class="form-control     ">
+                             <select zippy="deltype" class="form-select     ">
                                 <option value="0">Відділення</option>
                                 <option value="1">Поштомат</option>
                                 <option value="2">За адресою</option>
@@ -307,25 +320,25 @@
                         </div>
                         
                      
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="baycity">Місто отримувача</label>
                             
                             <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   ">                           
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label data-label="baypoint" for="baypoint">Відділення отримувача</label>
                             
                            <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   ">                              
                         </div>
 
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label data-label="npgab" for="gab">Габарит</label>
-                            <select zippy="npgab" class="form-control   ">
+                            <select zippy="npgab" class="form-select   ">
                                 <option value="0">Ручне введення  </option>
                             </select>
                         </div>
 
-                         <div class="form-group row  " >
+                         <div class="mb-2 row" >
                               <div class="col-auto">
                                 <label data-label="npgw" class="mt-2"> Ш:</label>  
                              </div>
@@ -345,17 +358,17 @@
                                  <input zippy="npgd"  required="on"   class="form-control" style="width:75px"  type="number">  
                              </div> 
                         </div>
-                        <div class="form-group">
+                        <div class="mb-2">
                             <label for="bayaddr">Адреса отримувача</label>
                             <input type="text" zippy="bayaddr" class="form-control"/>
                         </div>
-                        <div class="form-group row">
+                        <div class="mb-2 row">
                             <label for="bayhouse">Буд.</label>
                             <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
                             <label for="bayflat">Кв. </label>
                             <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
                         </div>
-                      <div class="form-group  ">
+                      <div class="mb-2">
                             <label for="npdesc">Опис </label>
 
                             <textarea zippy="npdesc" class="form-control"></textarea>
@@ -389,7 +402,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-xl-7 ">
-                        <div class="form-group d-flex justify-content-end">
+                        <div class="  d-flex justify-content-end">
                             <a zippy="npcancel" class="btn btn-secondary ">Скасувати</a>
                             &nbsp;&nbsp;<input type="submit" value="Створити" class="btn   btn-primary  "/>
 

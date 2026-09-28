@@ -12,13 +12,13 @@
                 прямий перехід до складу [адреса сайту]/store
                 </small>
                 <form zippy="shop" enctype="multipart/form-data">
-                    <div class="form-group  row ">
+                    <div class="mb-2 row">
                         <label  class="col-6 col-form-label"  for="shopname">Назва магазину</label>
                            <div class="col-6">
                             <input required="required" class="form-control " zippy="shopname"/>
                            </div>
                     </div>
-                    <div class="form-group  row ">
+                    <div class="mb-2 row">
                         <label  class="col-6 col-form-label"   for="logo">Логотип</label>
                          <div class="col-6">
                             <input  accept="image/png,image/jpeg" type="file" class="form-control " zippy="logo"/>
@@ -28,7 +28,7 @@
 
 
 
-                    <div class="form-group  row  ">
+                    <div class="mb-2 row">
                         <label  class="col-6 col-form-label"   for="shopdefpricetype">Тип ціни </label>
                            <div class="col-6">
                             <select class="form-control" zippy="shopdefpricetype">
@@ -36,7 +36,7 @@
                           </div> 
                     </div>
                   {{#hideblock}}   
-                  <div class="form-group  row ">
+                  <div class="mb-2 row">
                         <label class="col-6 col-form-label"  for="defmf">Каса за замовчанням</label>
                         <div class="col-6">
                             <select class="form-control" zippy="defmf">
@@ -46,7 +46,7 @@
                         </div> 
                     </div>
                  {{/hideblock}}    
-                <div class="form-group row  ">
+                <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="defstore">Склад за замовчанням</label>
                        <div class="col-6">
                         <select class="form-control" zippy="defstore">
@@ -57,7 +57,7 @@
 
                     </div>
             
-                 <div class="form-group  row">
+                 <div class="mb-2 row">
                         <label  class="col-6 col-form-label"  for="salesource">Джерело продаж</label>
                          <div class="col-6">
                         <select class="form-control" zippy="salesource">
@@ -66,7 +66,7 @@
                           </div>
                     </div>                    
                      
-                    <div class="form-group  row ">
+                    <div class="mb-2 row">
                      <div class="col-6">
                         <label     for="shopordertype">Формувати  по  замовленню             </label>
                              <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
@@ -86,7 +86,7 @@
                     </div>
                       
                        {{#usebranch}}
-                    <div class="form-group  row ">
+                    <div class="mb-2 row">
                      <div class="col-6">
                         <label      for="shopdefbranch">Філія </label>
                               <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
@@ -103,26 +103,26 @@
                                    
                             
 
-                    <div class="form-group  row ">
+                    <div class="mb-2 row">
                         <label class="col-6 col-form-label"   for="email">E-mail для   зв'язку</label>
                                <div class="col-6">
                             <input class="form-control " zippy="email"/>
                             </div>
                     </div>
     
-                  <div class="form-group  row ">
+                  <div class="mb-2 row">
                         <label class="col-6 col-form-label"  for="phone">Телефон  для  замовлень</label>
                               <div class="col-6">
                             <input class="form-control " zippy="phone"/>
                           </div>
                   </div>
-                  <div class="form-group row ">
+                  <div class="mb-2 row">
                         <label  class="col-6 col-form-label"  for="currencyname">Грошова одиниця</label>
                           <div class="col-6">
                             <input style="width:100px" class="form-control " zippy="currencyname"/>
                             </div>
                     </div>
-                 <div class="form-group row ">
+                 <div class="mb-2 row">
                         <label  class="col-6 col-form-label"  for="pagesize">Товарів на  сторінці </label>
                           <div class="col-6">
                             <input  style="width:100px" type="number" class="form-control " zippy="pagesize"/>
@@ -170,7 +170,7 @@
                     </div>
 
          
-                    <div class="form-group mt-2  ">
+                    <div class="  mt-2  ">
                         <div class="col-sm-4">
                             <button class="btn btn-primary" type="submit">Зберегти</button>
                        
@@ -192,7 +192,7 @@
                 <form zippy="pay" >
                  
                     
-                   <div class="form-group   ">
+                   <div class="mb-2">
                         <label data-label="mfqr"  for="mf">Рахунок для оплати по QR  </label>
                             <select class="form-control" zippy="mfqr">
                               <option value="0">Не обрано</option>
@@ -200,7 +200,7 @@
                             </select>
                    </div>
                 
-                 <div class="form-group mt-2  ">
+                 <div class="  mt-2  ">
                         <div class="col-sm-4">
                             <button class="btn btn-primary" type="submit">Зберегти</button>
                        
