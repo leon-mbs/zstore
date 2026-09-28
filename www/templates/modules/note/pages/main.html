@@ -264,9 +264,9 @@
                                   <option value="0">Не вибраний</option>
                                   <option v-for="u in allUsers"  v-bind:value="u.id"  >{{u.name}}</option>
                               </select>  
-                             <div class="input-group-append">
+                            
                                  <a v-on:click.prevent="onaddUser( )" title="Додати  " class="btn btn-success"   >+</a>
-                            </div>                    
+                                                 
                         </div>  
                          
                          <table class="table table-sm">

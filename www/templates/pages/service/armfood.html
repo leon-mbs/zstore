@@ -51,7 +51,7 @@
                     <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="nal">Готівкова каса</label>
                         <div class="col-6">
-                            <select class="form-control" zippy="nal">
+                            <select class="form-select" zippy="nal">
                                 <option value="0">Не обрано</option>
                             </select>
                         </div>
@@ -59,7 +59,7 @@
                     <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="beznal">Безготівковий рахунок</label>
                         <div class="col-6">
-                            <select class="form-control" zippy="beznal">
+                            <select class="form-select" zippy="beznal">
                                 <option value="0">Не обрано</option>
                             </select>
                         </div>
@@ -67,7 +67,7 @@
                     <div class="mb-2 row">
                         <label class="col-6 col-form-label" for="pos">POS термінал</label>
                         <div class="col-6">
-                            <select class="form-control" zippy="pos">
+                            <select class="form-select" zippy="pos">
                                 <option value="0">Не обрано</option>
                             </select>
                         </div>
@@ -77,7 +77,7 @@
                     <div class="mb-2 row">
                         <label class="col-6 col-form-label"   for="store">Склад (кухня)</label>
                         <div class="col-6">
-                            <select class="form-control" zippy="store">
+                            <select class="form-select" zippy="store">
                                 <option value="0">Не обрано</option>
                             </select>
                         </div>
@@ -392,13 +392,13 @@
                                      
                                        <input  zippy="customer" class="form-control" placeholder="Почніть вводити..."  > 
                                     
-                                      <div class="input-group-append">
+                                    
 
                                         <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
-                                     </div>  
-                                      <div class="input-group-append"  >
+                                    
+                                   
                                           <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
-                                      </div>                                                         
+                                                                                             
                                   </div>  
                                     <span zippy="custinfo"> </span>
                                     
@@ -438,7 +438,7 @@
                                 <div class="mb-2">
                                     <label   for="execuser">Виконавець</label>
 
-                                    <select class="form-control" zippy="execuser">
+                                    <select class="form-select" zippy="execuser">
                                         <option value="0">Поточний користувач </option>
                                     </select>
 
@@ -447,7 +447,7 @@
                                 <div class="mb-2">
                                     <label   for="delivery">Доставка</label>
 
-                                    <select class="form-control" zippy="delivery">
+                                    <select class="form-select" zippy="delivery">
                                         <option value="0">Без доставки </option>
                                     </select>
 
@@ -540,10 +540,9 @@
                             <div class="input-group  ">
                                 <input   class="form-control qtyprice" type="text" zippy="editqtyq" pattern="[0-9,\.]+">
                                 <input    type="hidden" zippy="editqtyi" >
-                                <div class="input-group-append">
+                               
                                     <input type="submit" value="OK" zippy="beditqty" class="ms-2 btn btn-info  ">
-
-                                </div>
+                               
                                 
                             </div>
                         </div>
@@ -897,7 +896,7 @@
                               <h4>Налаштування кафе</h4>
                             <div class="mb-2">
                                 <label for="foodworktype">Тип закладу</label>  
-                                <select class="form-control" zippy="foodworktype">
+                                <select class="form-select" zippy="foodworktype">
                                     <option value="0">Фастфуд</option>
                                     <option value="1">Фастфуд (з кухнею)</option>
                                     <option value="2">Кафе</option>
@@ -916,13 +915,13 @@
                             </div>    
                             <div class="mb-2">
                                 <label for="foodpricetype">Тип цін</label>
-                                <select class="form-control" zippy="foodpricetype">
+                                <select class="form-select" zippy="foodpricetype">
                                 </select>
                             </div>
                           
                            <div class="mb-2">
                                 <label for="foodpricetypeout">Тип цін на  винос</label>
-                                <select class="form-control" zippy="foodpricetypeout">
+                                <select class="form-select" zippy="foodpricetypeout">
                                  <option value="0">Не  вказано</option>
                                 </select>
                                 <small>Якщо відрізняються  від основної</small>
@@ -1007,7 +1006,7 @@
 
                              <div class="mb-2">
                                 <label for="foodbasemenu">Основне меню</label>
-                                <select class="form-control"  zippy="foodbasemenu">
+                                <select class="form-select"  zippy="foodbasemenu">
                                      <option value="0">Не вказано</option>
                                 </select>
                                 <span>Якщо не вказано береться верхній рівень</span>
@@ -1015,13 +1014,13 @@
 
                              <div class="mb-2">
                                 <label for="foodmenu2">Додаткове меню</label>
-                                <select class="form-control"  zippy="foodmenu2">
+                                <select class="form-select"  zippy="foodmenu2">
                                      <option value="0">Не вказано</option>
                                 </select>
-                              <select class="form-control"  zippy="foodmenu3">
+                              <select class="form-select"  zippy="foodmenu3">
                                      <option value="0">Не вказано</option>
                                 </select>
-                              <select class="form-control"  zippy="foodmenu4">
+                              <select class="form-select"  zippy="foodmenu4">
                                      <option value="0">Не вказано</option>
                                 </select>
                                 <span>Наприклад меню бару. Не виводиться якщо не вказано</span>
@@ -1044,7 +1043,7 @@
                  <form zippy="varbaseform"  > 
                        <div class="row  ">
                        <div class="col-auto  ">
-                      <select  zippy="varbaseitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
+                      <select  zippy="varbaseitem" class="form-select select2 "> <option value="0">Не вибрано</option> </select>
                      </div>  
                       <div class="col-auto  ">
                       <input   type="submit" class="btn btn-success  ms-2" value="Додати"  >
@@ -1072,7 +1071,7 @@
                  <form zippy="vardetform"  > 
                     <div class="row  ">
                        <div class="col-auto  ">
-                    <select  zippy="vardetitem" class="form-control select2 "> <option value="0">Не вибрано</option> </select>
+                    <select  zippy="vardetitem" class="form-select select2 "> <option value="0">Не вибрано</option> </select>
                       </div> 
                      <div class="col-auto  ">
                     <input   type="submit" class="btn btn-success  ms-2" value="Додати"  >

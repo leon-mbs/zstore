@@ -46,7 +46,7 @@
                                 </select>
                             </div>
                             <div class="mb-2  ">
-                                <label for="pagesize">Рядків в таблицях на сторінці </label>
+                                <label  class="form-label" for="pagesize">Рядків в таблицях на сторінці </label>
 
                                 <select class="form-select" zippy="pagesize" style="width:100px;">
 
@@ -55,7 +55,7 @@
                                  </div>
 
                                 <div class="mb-2  ">
-                                    <label for="mainpage">Головна сторінка</label>
+                                    <label class="form-label" for="mainpage">Головна сторінка</label>
 
                                     <select class="form-select" zippy="mainpage">
                                     </select>
@@ -70,11 +70,11 @@
 
                         <div class="col-12 col-md-6 ">         
                             <div class="mb-2">
-                                <label for="userlogin">Логін</label>
+                                <label class="form-label" for="userlogin">Логін</label>
                                 <span zippy="userlogin" class="form-control-plaintext"></span>
                             </div>
                             <div class="mb-2">
-                                <label for="email">E-mail</label>
+                                <label class="form-label" for="email">E-mail</label>
                                 <input type="email" class="form-control" zippy="email">
                             </div>
                             <div class="mb-2">
@@ -82,7 +82,7 @@
                                 <input   class="form-control" zippy="phone">
                             </div>
                             <div class="  mb-2">
-                                <label for="viber">Viber</label>
+                                <label class="form-label" for="viber">Viber</label>
                                 <input   class="form-control" zippy="viber">
                             </div>   
                            <div class="form-check">
@@ -135,13 +135,13 @@
                 <form role="form" zippy="passwordform">
 
                     <div class="mb-2">
-                        <label for="userpassword">Новий пароль</label>
+                        <label class="form-label" for="userpassword">Новий пароль</label>
                         <input autocomplete="off" type="password" class="form-control" zippy="userpassword"  required="on" >
                         <small>Перед введенням перевірте розкладку та регістр клавіатури </small>
                     </div>
 
                     <div class="mb-2">
-                        <label for="userpassword">Підтвердження</label>
+                        <label class="form-label" for="userpassword">Підтвердження</label>
                         <input autocomplete="off" type="password" class="form-control " zippy="confirmpassword"  required="on" >
                     </div>
                     <div class="  d-flex justify-content-end  mt-2">
@@ -193,8 +193,8 @@
                           <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
                          <form zippy="printer">
                             <div class="mb-2">
-                                <label for="prtype">Тип підключення</label>
-                                <select class="form-control" zippy="prtype">
+                                <label  class="form-label" for="prtype">Тип підключення</label>
+                                <select class="form-select" zippy="prtype">
                                      <option value="0">Системний принтер</option>
                                      <option value="1">Print сервер</option>
                                 </select>
@@ -203,17 +203,17 @@
                                  
                                 
                              <div class="mb-2">
-                                <label data-label="pserver" for="pserver">Адреса серверу</label>
+                                <label class="form-label" data-label="pserver" for="pserver">Адреса серверу</label>
                                 <input class="form-control" zippy="pserver">
                                  
                             </div>
                              <div class="mb-2">
-                                <label data-label="pwsym" for="pwsym">Ширина (кіл. символів)</label>
+                                <label class="form-label" data-label="pwsym" for="pwsym">Ширина (кіл. символів)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
                             </div>
                              <div class="mb-2">
-                                <label for="pcp">Кодова сторінка</label>
-                                <select class="form-control" zippy="pcp">
+                                <label class="form-label" for="pcp">Кодова сторінка</label>
+                                <select class="form-select" zippy="pcp">
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
@@ -237,8 +237,8 @@
                              <small>Кількість на позицію, задається в довіднику ТМЦ </small>
                          <form zippy="printerlabel">
                             <div class="mb-2">
-                                <label for="prtypelabel">Тип підключення</label>
-                                <select class="form-control" zippy="prtypelabel">
+                                <label class="form-label" for="prtypelabel">Тип підключення</label>
+                                <select class="form-select" zippy="prtypelabel">
                                      <option value="0">Системний принтер</option>
                                      <option value="1">Print сервер (режим  receipt)</option>
                                      <option value="2">Print сервер (режим  label)</option>
@@ -248,19 +248,19 @@
                                  
                                 
                              <div class="mb-2">
-                                <label data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
+                                <label class="form-label" data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
                                 <input class="form-control" zippy="pserverlabel">
                                  
                             </div>
                              <div class="mb-2">
-                                <label data-label="pwsymlabel" for="pwsymlabel">Ширина (кіл. символів)</label>
+                                <label class="form-label" data-label="pwsymlabel" for="pwsymlabel">Ширина (кіл. символів)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
                                 <small data-label="pcplabel"> Якщо строка  довша, буде  записано в другу строку (тег {{name2}})</small>    
                           
                             </div>
                              <div class="mb-2">
-                                <label for="pcplabel">Кодова сторінка</label>
-                                <select class="form-control" zippy="pcplabel">
+                                <label class="form-label" for="pcplabel">Кодова сторінка</label>
+                                <select class="form-select" zippy="pcplabel">
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
@@ -290,7 +290,7 @@
                          <form zippy="scaleform">
                            
                              <div class="mb-2">
-                                <label   for="scalescript">Скрипт</label>
+                                <label class="form-label"   for="scalescript">Скрипт</label>
                                 <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
                                  
                             </div>
