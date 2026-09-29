@@ -8,88 +8,87 @@
             <div class="col-12  ">
 
                 <h3>Журнал платежів </h3>
-
-
-                <div class="card">
-                    <form zippy="filter" class="row   g-2 align-items-center">
-                      <div class="col-auto">
-                       <div class="  row no-gutters"> 
-                         <label class="col-auto mt-2" for="from">З </label>
-                          <div class="col-auto">
+                   
+                    <form zippy="filter"  >
+                       <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                         <div class="col-12">
+                           <div class="input-group">
+                         <label   for="from">З </label>
+                           
                             <input type="text" class="form-control me-sm-1  " zippy="from" style="width:110px">
                          </div>
                        </div>
-                      </div>     
-                       <div class="col-auto">
-                        <div class="  row no-gutters"> 
- 
-                         <label class="col-auto mt-2" for="to"> по </label>
-                            <div class="col-auto">
+                          
+                       <div class="col-12">
+                           <div class="input-group">
+
+                         <label   for="to"> по </label>
+                           
                            <input type="text" class="form-control me-sm-1 " style="width:110px" zippy="to">
                           </div>
                        </div>
-                      </div>     
-                       <div class="col-auto">
-                        <div class="  row no-gutters"> 
+                   
+                         <div class="col-12">
+                           <div class="input-group">
     
-                        <label class="col-auto mt-2" for="fmfund"> рахунок </label>
-                            <div class="col-auto">
-                      <select class="form-control me-2" zippy="fmfund">
+                        <label   for="fmfund"> рахунок </label>
+                          
+                      <select class="form-select  " zippy="fmfund">
                             <option value="0">Не обрано</option>
                         </select>
                      </div>
                       </div>   
-                     </div>     
-                       <div class="col-auto">
-                        <div class="  row no-gutters"> 
+                          
+                          <div class="col-12">
+                           <div class="input-group">
                         
-                        <label class="col-auto mt-2" for="fuser"> створив </label>
-                               <div class="col-auto">
-                         <select class="form-control me-2" zippy="fuser">
+                        <label   for="fuser"> створив </label>
+                             
+                         <select class="form-select  " zippy="fuser">
                             <option value="0">Не обрано</option>
                         </select>
                         </div>
                       </div>   
-                      </div>    
-                       <div class="col-auto">
-                        <div class="  row no-gutters"> 
+                         
+                         <div class="col-12">
+                           <div class="input-group">
 
-                        <label class="col-auto mt-2" for="fcustomer"> контрагент </label>
-                               <div class="col-auto">
+                        <label   for="fcustomer"> контрагент </label>
+                               
                           <input placeholder="Почніть вводити..." type="text" class="form-control  me-2 " zippy="fcustomer">
                        </div>
                       </div>     
-                     </div>
-                       <div class="col-auto">
-                        <div class="  row no-gutters"> 
-                        
-                            <label class="col-auto mt-2" for="fiostate"> тип витрат  </label>
-                            <div class="col-auto">
+                      
+                          <div class="col-12">
+                           <div class="input-group">
+                       
+                            <label   for="fiostate"> тип витрат  </label>
+                            
                                
-                              <select class="form-control" zippy="fiostate">
+                              <select class="form-select" zippy="fiostate">
                                 <option value="0">Не обрано</option>
                              </select>
                             </div>
-                      </div>   
-                      </div>    
-                       <div class="col-auto">
-                        <div class="  row no-gutters"> 
+                         </div>   
                         
-                        <label class="col-auto mt-2" for="fsort"> сортувати </label>
-                           <div class="col-auto">
-                             <select class="form-control me-2" zippy="fsort">
+                          <div class="col-12">
+                           <div class="input-group">
+                           <label   for="fsort"> сортувати </label>
+                           
+                             <select class="form-select  " zippy="fsort">
                                 <option value="0">За датою</option>
                                 <option value="1">За прибутком</option>
                                 <option value="2">За видатком</option>
                             </select>
                         </div>
                       </div>   
-                      </div>    
-                       <div class="col-auto">   
+                         
+                       <div class="col-12">   
                         <input type="submit" class="  btn btn-success  " value="ОК">
                       </div> 
-                    </form>
-                </div>
+                    </div> 
+                 </form>
+                
             </div>
         </div>
 
@@ -184,7 +183,7 @@
                             <div class="mb-2">
 
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Скасувати</button>
-                                <input   type="submit" value="Виконати" class="btn btn-primary  ">
+                                <input   type="submit" value="Виконати" class="btn btn-primary ms-2 ">
                             </div>
                         </form>
                     </div>

@@ -21,7 +21,9 @@ class Category extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-
+        if(strlen($this->detail)==0) {
+            return;
+        }
       
         $xml = @simplexml_load_string($this->detail);
 
@@ -48,7 +50,8 @@ class Category extends \ZCL\DB\Entity
            $this->cflist=[]; 
         }
         $this->nds = (string)($xml->nds[0]);
-    
+       
+        $this->detail = '' ;
         parent::afterLoad();
     }
 

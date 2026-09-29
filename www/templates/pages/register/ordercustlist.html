@@ -10,27 +10,30 @@
                 <h3>Заявки постачальникам </h3>
 
 
-                <div class="navbar">
+             
                     <form zippy="filter"  >
-                       <div class="row  ">
+                     <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                         <div class="col-12">
+                           <div class="input-group">
 
-                        <label class="col-form-label col-auto" for="searchnumber"> № </label>
-                         <div class="col-auto  ">
-                           <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
+                        <label   for="searchnumber"> № </label>
+                       
+                           <input class="form-control  " type="text" zippy="searchnumber" style="width:100px">
                         </div>
-                         <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="status">
+                        </div>
+                         <div class="col-12  ">
+                          <select class="form-select  " zippy="status">
                           </select>
                         </div>
-                        <div class="col-auto  ">
-                          <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
+                        <div class="col-12  ">
+                          <input class="form-control  " type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
                         </div>
-                         <div class="col-auto  ">
+                         <div class="col-12  ">
                           <input type="submit" class="  btn btn-success  " value="ОК">
                        </div>
                    </div>
                     </form>
-                </div>
+             
                 <a href="/index.php?p=App/Pages/Doc/OrderCust" class="btn btn-primary mt-2 mb-3">Створити</a>
                 <br><a zippy="csv">Експорт у Excel</a>
 
@@ -88,34 +91,39 @@
 
                 <div class="card">
                     <form zippy="statusform">   
-                       <div class="row  ">
-                             <div class="  col-auto">
+                     <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                            <div class="  col-12">
                             <button zippy="bcan" type="submit" class="  btn btn-secondary  me-2 "><i class="fa fa-undo"></i>
                                 Скасувати
-                            </button>      </div>
-                             <div class="  col-auto">    
+                            </button>     
+                             </div>
+                             <div class="  col-12">    
                              <button zippy="binp" class="btn btn-primary  me-2"><i class="fa fa-cog"></i> На виконання</button>
                                </div> 
-                             <div class="  col-auto">                    
+                             <div class="  col-12">                    
                             <button zippy="bclose" type="submit" class="  btn btn-success  me-2 "><i class="fa fa-gavel"></i>
                                 Закрити
                             </button>   </div>
-                            <div class="  col-auto">
+                            <div class="  col-12">
                                <a onclick="openexp(1)" title="Створити прибуткову  накладну" zippy="bttn" class="btn btn-primary  me-2"><i class="fa fa-truck"></i> Створити ПН</a>
                              </div> 
-                            <div class="  col-auto">
+                            <div class="  col-12">
                                <a  onclick="openexp(2)" title="Створити рахунок вхідний" zippy="binv" class="btn btn-primary  me-2"><i class="fa fa-credit-card"></i> Створити РВ </a>
                             
                            </div>
-                          <div class="  col-auto">
-                              <div class="  row">
+                         <div class="col-12">
+                           <div class="input-group">
+                           
                                
-                                 <div class="col-auto mt-2"><label data-label="deldate"  for="deldate">Доставка</label></div>
-                                 <div class="col-auto"> <input zippy="deldate" style="width:120px" class="form-control  me-2" ></div> <div class="col-auto"><button zippy="bdeldate" data-label="deldate" class="btn btn-success  me-2">Задати</button></div>
+                                 <label data-label="deldate"  for="deldate">Доставка</label>
+                               
+                                  <input zippy="deldate" style="width:120px" class="form-control  me-2" > 
+                                   <button zippy="bdeldate" data-label="deldate" class="btn btn-success  me-2">Задати</button>
+                                </div>
                               
                              </div>
                          </div>
-                       </div>
+                      
                     </form>
                 </div>
 

@@ -14,7 +14,7 @@
 
                         <label class="col-form-label col-auto" for="holdlist"> Холдинг </label>
                         <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="holdlist">
+                          <select class="form-select me-2" zippy="holdlist">
                             <option value="0">Не вказано</option>
                           </select>
                          </div>
@@ -48,7 +48,7 @@
                         <td zippy="amountc" class="text-end"></td>
                
                         <td><a zippy="showdet">Деталізація</a></td>
-                          <td><a zippy="createpay">До сплати</a></td>
+                          <td><a zippy="createpay">Внести оплату</a></td>
 
 
                     </tr>
@@ -121,57 +121,56 @@
                 </table>
                      </div>
                 </div>
-             <div class="navbar">
+                
+            
+                   <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                     <div class="col-12">
+                       <div class="input-group">
                   
-                     <div class="row  ">
-                     <div class="col-auto">
-                       <div class="  row no-gutters"> 
-                       
-                        <label class="col-auto mt-2">До сплати</label>
-                          <div class="col-auto">
+                        <label  >До сплати</label>
+                         
                             <input zippy="pamount" readonly="on" style="width:75px;"         class="form-control me-2">
                         </div>
                        </div>
-                      </div>
-                 
-                 
-                     <div class="col-auto">
-                       <div class="  row no-gutters"> 
-
-                        <label class="col-auto mt-2" for="payment">рахунок</label>
-                           <div class="col-auto">
-                            <select class="form-select me-2" zippy="payment">
+                      <div class="col-12">
+                       <div class="input-group">
+  
+                        <label   for="payment">рахунок</label>
+                            
+                            <select class="form-select  " zippy="payment">
                                <option value="0">Не вказано</option>
                             </select>
-                          </div>
+                          
                        </div>
                       </div>
   
-                        <div class="col-auto">
-                       <div class="  row no-gutters"> 
-                     <label class="col-auto mt-2">дата</label>
-                         <div class="col-auto">
+                   <div class="col-12">
+                       <div class="input-group">
+                      <label  >дата</label>
+                      
                        <input zippy="pdate" style="width:100px;" class="form-control me-2 qtyprice">
                     </div>
                    </div>
-                      </div>
-                        <div class="col-auto"> 
+                     
+                        <div class="col-12"> 
                           <input zippy="pcomment" placeholder="Коментар..." class="form-control me-2">
                          </div>
                        
 
-                       <div class="col-auto  ">
+                       <div class="col-12  ">
                           <button zippy="paybtn"  type="submit" class="  btn btn-success  me-2 ">Сплатити</button>
                       </div>
-                        <div class="col-auto  ">
+                        <div class="col-12  ">
                           <button zippy="payorder" type="submit" class="  btn btn-success  me-2 " title="Створити прибутковий касовий  ордер">Створити КО</button>
                       </div>
  
                      </div>
+                    
  
-                </div>
+                
               </form>    
             </div>
+           
 
               
            <div class="col-12 col-lg-10 col-xl-8 " zippy="dlist">

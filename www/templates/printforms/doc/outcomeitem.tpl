@@ -46,9 +46,9 @@
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
-        <td align="right">{{snumber}}</td>
+        <td align="right" data-type="s">{{snumber}}</td>
         <td>{{msr}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{sum}}</td>

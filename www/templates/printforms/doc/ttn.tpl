@@ -4,7 +4,7 @@
     <tr>
         <td></td>
         <td valign="top"><b>Покупець</b></td>
-     <td colspan="5"> {{customer_name}}</b> 
+     <td colspan="5"> {{customer_name}}  
           {{#phone}} Тел. {{phone}}  {{/phone}} 
         </td>
     </tr>
@@ -48,7 +48,7 @@
         <td></td>
 
         <td valign="top"><b>Зовн. номер</b></td>
-        <td colspan="6">{{outnumber}}</td>
+        <td colspan="6" data-type="s">{{outnumber}}</td>
 
     </tr>
     {{/outnumber}}
@@ -56,7 +56,7 @@
     <tr>
         <td></td>
         <td><b>Телефон</b></td>
-        <td colspan="5">{{phone}}</td>
+        <td colspan="5" data-type="s">{{phone}}</td>
     </tr>
  
 
@@ -71,7 +71,7 @@
     <tr>
         <td></td>
         <td><b>№ декларації</b></td>
-        <td colspan="4">{{ship_number}}</td>
+        <td colspan="4" data-type="s">{{ship_number}}</td>
     </tr>
     {{/ship_number}}
     <tr>
@@ -109,19 +109,19 @@
 </tr>
 
 <tr style="font-weight: bolder;">
-    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
     <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
     <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
     <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
-    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
 </tr>
 {{#_detail}}
 <tr>
     <td align="right">{{no}}</td>
-    <td>{{tovar_name}}</td>
+    <td data-type="s">{{tovar_name}}</td>
     <td>{{tovar_code}}</td>
     <td>{{msr}}</td>
 

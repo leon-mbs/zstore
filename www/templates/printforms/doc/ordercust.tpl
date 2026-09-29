@@ -17,7 +17,7 @@
     </tr>
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код у пост.</th>
@@ -35,10 +35,10 @@
     <tr>
         <td align="right">{{no}}</td>
         <td>{{itemname}}</td>
-        <td>{{itemcode}}</td>
-        <td>{{custcode}}</td>
+        <td data-type="s">{{itemcode}}</td>
+        <td data-type="s">{{custcode}}</td>
       
-        <td>{{barcode}}</td>
+        <td data-type="s">{{barcode}}</td>
         <td>{{brand}}</td>
         <td>{{msr}}</td>
         <td valign="top">{{desc}}</td>

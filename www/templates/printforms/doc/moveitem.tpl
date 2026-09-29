@@ -38,14 +38,14 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
 
-        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
+        <th align="right"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
 
     </tr>
     {{#_detail}}
     <tr>
 
         <td>{{item_name}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
         <td align="right">{{snumber}}</td>
         <td>{{msr}}</td>

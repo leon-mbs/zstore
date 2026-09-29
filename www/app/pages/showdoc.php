@@ -40,7 +40,7 @@ class ShowDoc extends \Zippy\Html\WebPage
             }
             if ($type == "print") {
                 header("Content-Type: text/html;charset=UTF-8");
-                echo $html;
+                echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>" . $html . "</body></html>";
             }
             if ($type == "pos") {
                 header("Content-Type: text/html;charset=UTF-8");
@@ -52,7 +52,8 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Disposition: attachment;Filename={$filename}.doc");
                 header("Content-Transfer-Encoding: binary");
 
-                echo $html;
+                echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>" . $html . "</body></html>";
+       
             }
             if ($type == "xls") {
 
@@ -98,9 +99,8 @@ class ShowDoc extends \Zippy\Html\WebPage
             if ($type == "pdf") {
                 $custom = $doc->customExportPDF();
                 if($custom != '') {
-                   header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                    header("Content-type: application/pdf");
-                   header("Content-Disposition: attachment;Filename={$filename}.xlsx");
+                   header("Content-Disposition: attachment;Filename={$filename}.pdf");
                     echo $custom;
                     header('Content-Length: ' . strlen($custom));
                     die;

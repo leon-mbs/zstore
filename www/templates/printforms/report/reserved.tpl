@@ -21,7 +21,7 @@
     <tr>
 
         <td>{{itemname}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
         <td>{{store}}</td>
         <td>{{document_number}}</td>

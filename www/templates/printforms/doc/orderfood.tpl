@@ -12,14 +12,14 @@
     <tr>
         <td></td>
         <td valign="top"><b>Термінал</b></td>
-        <td colspan="5">{{pos_name}}</td>
+        <td colspan="5" data-type="s">{{pos_name}}</td>
     </tr>
      {{#fiscalnumber}}
  
     <tr>
         <td></td>
         <td valign="top"><b>ФН чека</b></td>
-        <td colspan="5">{{fiscalnumber}}</td>    
+        <td colspan="5" data-type="s">{{fiscalnumber}}</td>    
     
         
     </tr>
@@ -47,20 +47,20 @@
     {{/notes}}    
     
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
     </tr>
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
         <td>{{tovar_name}}</td>
-        <td>{{tovar_code}}</td>
+        <td data-type="s">{{tovar_code}}</td>
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>

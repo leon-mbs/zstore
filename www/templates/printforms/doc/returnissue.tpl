@@ -10,7 +10,7 @@
     <tr>
         <td></td>
         <td>Фіскальний номер</td>
-        <td colspan="5">{{fiscalnumber}}</td>
+        <td colspan="5" data-type="s">{{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}    
    <tr>
@@ -23,7 +23,7 @@
     </tr>
     
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
         </th>
 

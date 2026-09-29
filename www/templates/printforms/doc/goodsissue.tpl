@@ -17,7 +17,7 @@
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="6">{{edrpou}}</td>
+        <td colspan="6" data-type="s">{{edrpou}}</td>
     </tr>
      {{/edrpou}}       
       
@@ -46,14 +46,14 @@
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="6">{{fedrpou}}</td>
+        <td colspan="6"  data-type="s">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}  
     {{#finn}}
     <tr>
         <td></td>
         <td valign="top">ІПН</td>
-        <td colspan="6">{{finn}}</td>
+        <td colspan="6" data-type="s">{{finn}}</td>
     </tr>
      {{/finn}}           
    
@@ -64,27 +64,27 @@
 
         <td></td>
         <td><b> Продавець</b></td>
-        <td colspan="7"> {{fop_name}} </td>
+        <td colspan="6"> {{fop_name}} </td>
 
     </tr> 
     <tr>
         <td></td>
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="7">{{fop_edrpou}}</td>
+        <td colspan="6" data-type="s">{{fop_edrpou}}</td>
     </tr>       
    {{/isfop}}    
    
      <tr>
         <td></td>
         <td valign="top">Адреса</td>
-        <td colspan="7">{{address}}</td>
+        <td colspan="6">{{address}}</td>
     </tr>      
     {{#isbank}}
     <tr>
 
         <td></td>
         <td> р/р</td>
-        <td colspan="8">{{bankacc}}    {{bank}}</td>
+        <td colspan="6">{{bankacc}}    {{bank}}</td>
 
     </tr>
     {{/isbank}}  
@@ -93,7 +93,7 @@
 
         <td></td>
         <td> IBAN</td>
-        <td colspan="8">{{iban}}   </td>
+        <td colspan="6"  data-type="s">{{iban}}   </td>
 
     </tr>
     {{/iban}}     
@@ -134,7 +134,7 @@
     </tr>
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
@@ -148,7 +148,7 @@
     <tr>
         <td align="right">{{no}}</td>
         <td>{{tovar_name}}</td>
-        <td>{{tovar_code}}</td>
+        <td data-type="s">{{tovar_code}}</td>
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>

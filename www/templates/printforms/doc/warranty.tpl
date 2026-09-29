@@ -20,7 +20,7 @@
         <td colspan="8">&nbsp;</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Кіл.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Ціна</th>
@@ -35,7 +35,7 @@
         <td align="right">{{quantity}}</td>
         <td align="right">{{price}}</td>
         <td align="right">{{amount}}</td>
-        <td align="right">{{sn}}</td>
+        <td align="right" data-type="s">{{sn}}</td>
         <td align="right">{{warranty}}</td>
     </tr>
     {{/_detail}}

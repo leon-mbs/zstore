@@ -90,12 +90,12 @@
                     <div   class="col-12  ">
                         <div class="navbar nav justify-content-start">
                             <a class="btn btn-info" zippy="btnstinprocess">На виконання</a>
-                            &nbsp;&nbsp;
-                            <a class="btn btn-warning" zippy="btnstsuspend">Призупинити</a>
-                            &nbsp;&nbsp;
-                            <a class="btn btn-danger" zippy="btnstcancel">Скасувати</a>
-                            &nbsp;&nbsp;
-                            <a class="btn btn-success" zippy="btnstclose">Виконано</a>
+                            
+                            <a class="btn btn-warning ms-2" zippy="btnstsuspend">Призупинити</a>
+                           
+                            <a class="btn btn-danger ms-2" zippy="btnstcancel">Скасувати</a>
+                           
+                            <a class="btn btn-success ms-2" zippy="btnstclose">Виконано</a>
 
 
                         </div>               
@@ -179,7 +179,7 @@
                 
                   <div class="mb-2">
                         <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
-                        <select class="form-control" zippy="editstore">
+                        <select class="form-select" zippy="editstore">
                             <option value="0">Не вказано</option>
                         </select>
                          <small>Бажано створити окремий (можна віртуальний)    </small>
@@ -203,33 +203,44 @@
         <div class="row" zippy="prodspan" >
             <div class="col-12 col-md-8 col-xl-6">
                 <h5>Запланована готова продукція</h5>
-                <div class="navbar">
+               
                     <form zippy="addprodform"  >
-                        <div class="row  ">
-                        
-                        <label class="col-form-label col-auto"  for="additem">Найменування</label>
-                            <div class="col-auto  ">
-                        <select   class="form-control me-2" zippy="additem">
+                      <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                         <div class="col-12">
+                           <div class="input-group">
+          
+                        <label   for="additem">Найменування</label>
+                         
+                        <select   class="form-select me-2" zippy="additem">
                             <option value="0">Не обрано</option>
 
                         </select>
                           </div>
-                        <label class="col-form-label col-auto" for="addqty">Кіл.</label>
-                           <div class="col-auto  ">
+                          </div>
+                          <div class="col-12">
+                           <div class="input-group">
+                        
+                        <label   for="addqty">Кіл.</label>
+                         
                         <input style="width:60px"  class="form-control qtyprice me-2" zippy="addqty" pattern="[0-9,\.]+"  />
                           </div>
+                          </div>
                            {{#usesnumber}}
-                        <label class="col-form-label col-auto" for="addsnumber">Серія, партія</label>
-                           <div class="col-auto  ">
+                        <div class="col-12">
+                           <div class="input-group">
+                           
+                        <label   for="addsnumber">Серія, партія</label>
+                          
                         <input   class="form-control  me-2" zippy="addsnumber"/>
                           </div>
+                          </div>
                         {{/usesnumber}} 
-                           <div class="col-auto  ">
+                           <div class="col-12  ">
                         <input type="submit" class="  btn btn-success  " value="+">
                           </div>
                        </div>
                     </form>
-                </div>               
+                              
 
                 <table class="table table-sm">
                     <tr zippy="proditemlist">
@@ -288,7 +299,7 @@
                     </div>
                     <div class="mb-2">
                         <label for="editstagearea">Виробнича дільниця  </label>
-                        <select  class="form-control" zippy="editstagearea">
+                        <select  class="form-select" zippy="editstagearea">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>

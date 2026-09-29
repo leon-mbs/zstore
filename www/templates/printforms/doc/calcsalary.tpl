@@ -9,14 +9,14 @@
 
     <tr>
         <td  colspan="{{colspan}}">
-            <b>Місяць:</b> {{month}} {{year}}
+            <b>Місяць:</b>&nbsp;{{month}}&nbsp;{{year}}
         </td>
     </tr>
 
     {{#department}}  
    <tr>
         <td  colspan="{{colspan}}">
-            <b>Відділ:</b> {{department}}  
+            <b>Відділ:</b>&nbsp;{{department}}  
         </td>
     </tr>
     {{/department}}  
@@ -31,7 +31,7 @@
             <b>П I Б</b>
         </td>
         {{#stnames}}
-        <td class="text-end">
+        <td align="text-right">
             <b>{{name}}</b>
         </td>
         {{/stnames}}
@@ -43,7 +43,7 @@
             {{emp_name}}
         </td>
         {{#amounts}}
-                <td class="text-end">
+                <td  align="text-right">
             {{am}}
         </td>
         {{/amounts}}
@@ -51,8 +51,8 @@
 
     {{/_detail}}
     <tr>
-        <td colspan="{{colspan}}">
-            <b>Всього:  {{total}}</b>
+        <td colspan="{{colspan}}" align="text-right">
+            <b>Всього:&nbsp;{{total}}</b>
         </td>
          
     </tr>

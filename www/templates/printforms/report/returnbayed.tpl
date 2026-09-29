@@ -21,7 +21,7 @@
 
    
         <td>{{itemname}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
 
         <td align="right">{{buyqty}}</td>
         <td align="right">{{rqty}}</td>
