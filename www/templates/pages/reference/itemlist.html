@@ -29,7 +29,7 @@
                              <label    for="searchcat">категорія</label>
                             
   
-                                <select class="form-select me-2" zippy="searchcat">
+                                <select class="form-select  " zippy="searchcat">
                                     <option value="0">Не вказано</option>
                                 </select>
                              
@@ -48,7 +48,7 @@
                           <div class="input-group">
                                   <label   for="searchtype">Тип</label>
                            
-                            <select zippy="searchtype" class="form-select ms-sm-2">
+                            <select zippy="searchtype" class="form-select  ">
                                 <option value="0">Всі </option>
                                 <option value="1">Товари</option>
                                 <option value="2">Матеріали та комплектуючі</option>
@@ -68,7 +68,7 @@
                                  <label    for="searchsort">Сортування</label>
 
                         
-                            <select class="form-select me-2" zippy="searchsort">
+                            <select class="form-select  " zippy="searchsort">
                                 <option value="0">Найменування</option>
                                 <option value="1">Артикул</option>
                                 <option value="2">Тип</option>
@@ -687,18 +687,24 @@
                  <div class="navbar  ">
                 
                     <form zippy="setform"  >
-                        <div class="row  ">
-                    
-                        <label class="col-form-label col-auto" for="editsname">ТМЦ</label>
-                        <div class="col-auto  ">
+                    <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                     <div class="col-12">
+                       <div class="input-group">
+       
+                        <label   for="editsname">ТМЦ</label>
+                       
                            <input placeholder="Почніть вводити.." class="form-control  ms-sm-2" zippy="editsname"/>
                          </div>
-                        <label class="col-form-label col-auto" for="editsqty">Кіл.</label>
-                       <div class="col-auto  ">
+                         </div>
+                     <div class="col-12">
+                       <div class="input-group">
+                       <label   for="editsqty">Кіл.</label>
+                     
                         <input autocomplete="off" class="form-control  qtyprice  ms-sm-2" type="text" zippy="editsqty"  required="on" 
                                pattern="[0-9,\.]+" style="width:60px">
                         </div>
-                        <div class="col-auto  ">
+                        </div>
+                        <div class="col-12  ">
                           <input zippy="setformbtn" class="btn btn-success  " type="submit" value="Додати">
                        </div>
                       </div>
@@ -723,19 +729,25 @@
                   <div class="navbar  ">
                
                  <form zippy="setsform"  >
-                    <div class="row  ">
-                    <label class="col-form-label col-auto" for="editssname">Робота, послуга</label>
-                    <div class="col-auto  "> 
+                   <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                     <div class="col-12">
+                       <div class="input-group">
+                    <label   for="editssname">Робота, послуга</label>
+                    
                       <select class="form-select  select2" zippy="editssname">
                         <option value="0">Не обрано</option>
                      </select>
                      </div>
-                    <label class="col-form-label col-auto" class="ms-sm-2" for="editscost">Вартість</label>
-                      <div class="col-auto  ">
+                     </div>
+                    <div class="col-12">
+                       <div class="input-group">
+                    <label    for="editscost">Вартість</label>
+                      
                        <input autocomplete="off" class="form-control  qtyprice  ms-sm-2" type="text" zippy="editscost"  required="on" 
                             pattern="[0-9,\.]+" style="width:60px">
                       </div>
-                     <div class="col-auto  ">      
+                      </div>
+                     <div class="col-12  ">      
                       <input zippy="setsformbtn" class="btn btn-success  " type="submit" value="Додати">
                     </div>
                    </div>

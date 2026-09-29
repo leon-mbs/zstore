@@ -9,51 +9,71 @@
 
                 <h3>Журнал руху ТМЦ </h3>
 
-                <div class="navbar">
+              
                     <form zippy="filter"  >
-                         <div class="row  " >
-                        <label class="col-form-label col-auto" for="from">З </label>
-                         <div class="col-auto  ">
+                      <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                         <div class="col-12">
+                           <div class="input-group">
+                        <label   for="from">З </label>
+                        
                          <input type="text" class="form-control ms-sm-2  " zippy="from" style="width:110px">
                           </div>
+                          </div>
 
-                        <label class="col-form-label col-auto" for="to"> по </label>
-                         <div class="col-auto  ">
+                      <div class="col-12">
+                           <div class="input-group">
+                        <label   for="to"> по </label>
+                        
                          <input type="text" class="form-control ms-sm-2 " style="width:110px" zippy="to">
                          </div>
-                        <label class="col-form-label col-auto" for="fstore"> склад </label>
-                         <div class="col-auto  ">
-                         <select class="form-control me-2" zippy="fstore">
+                         </div>
+                         <div class="col-12">
+                           <div class="input-group">
+                         
+                        <label   for="fstore"> склад </label>
+                          
+                         <select class="form-select  " zippy="fstore">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
+                         </div>
                        {{#storeemp}}
-             
-                       <label class="col-form-label col-auto" class="col-auto mt-2" for="searchemp">Співробітник</label>
-                          <div class="col-auto  ">
-                        <select class="form-control ms-sm-2" zippy="searchemp">
+                          <div class="col-12">
+                           <div class="input-group">
+            
+                       <label   for="searchemp">Співробітник</label>
+                           
+                        <select class="form-select  " zippy="searchemp">
                             <option value="0">Не вказано</option>
                         </select>
                           </div>
+                          </div>
                        {{/storeemp}}                        
-                        
-                        <label class="col-form-label col-auto" for="fitem"> ТМЦ </label>
+                         <div class="col-12">
+                           <div class="input-group">
+      
+                        <label   for="fitem"> ТМЦ </label>
                         
                         <input placeholder="Почніть вводити..." class="form-control ms-sm-2" zippy="fitem">
                          </div>
+                         </div>
                          {{#usesnumber}}
-               
-                        <label class="col-form-label col-auto" data-label="fsnumber" for="fsnumber">Серія, с/н </label>
-                         <div class="col-auto  ">
+                         <div class="col-12">
+                           <div class="input-group">
+
+                        <label   data-label="fsnumber" for="fsnumber">Серія, с/н </label>
+                         
                          <input class="form-control ms-sm-2" zippy="fsnumber">
+                            </div>
                             </div>
                              {{/usesnumber}}
                    
-                          <div class="col-auto  ">
+                          <div class="col-12  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
-                        </div> </div>
+                        </div>
+                         </div>
                     </form>
-                </div>
+               
             </div>
         </div>
         <div class="row">

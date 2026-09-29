@@ -70,7 +70,6 @@ class PaySelList extends \App\Pages\Base
         $this->plist->payform->add(new DropDownChoice('payment', \App\Entity\MoneyFund::getList(), 0))->onChange($this,'onPayment');
 
         
-        $this->plist->payform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
         $this->plist->payform->add(new TextInput('pamount'));
         $this->plist->payform->add(new TextInput('pcomment'));
         $this->plist->payform->add(new Date('pdate', time()));
@@ -294,7 +293,7 @@ GROUP BY c.customer_name,
      
     public function payOnSubmit($sender) {
         $form = $this->plist->payform;
-     //   $pos_id = $form->pos->getValue();
+   
         $pdate = $form->pdate->getDate();
         $mf= $form->payment->getValue();
         $pcomment= $form->pcomment->getText();

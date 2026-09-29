@@ -14,7 +14,7 @@
 
                         <label class="col-form-label col-auto" for="holdlist"> Холдинг </label>
                            <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="holdlist">
+                        <select class="form-select me-2" zippy="holdlist">
                             <option value="0">Не вказано</option>
                         </select>  </div>
                         <div class="col-auto  ">
@@ -49,7 +49,7 @@
                      
                         <td><a zippy="showdet">Деталізація</a></td>
                      
-                        <td><a zippy="createpay">До сплати</a></td>
+                        <td><a zippy="createpay">Внести оплату</a></td>
 
 
                     </tr>
@@ -117,46 +117,45 @@
                 </table>
                 </div>
               </div>
-             <div class="navbar">
-                  
-                   <div class="row  ">
-                        
-                        <label class="col-form-label col-auto">До оплати</label>
-                           <div class="col-auto  ">
+          <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                     <div class="col-12">
+                       <div class="input-group">
+                                
+                        <label  >До оплати</label>
+                          
                            <input zippy="pamount" readonly="on" style="width:75px;"        class="form-control me-2">
                            </div>
-                        <label class="col-form-label col-auto" for="payment">рахунок</label>
-                           <div class="col-auto  ">
+                           </div>
+                      <div class="col-12">
+                       <div class="input-group">
+                        <label   for="payment">рахунок</label>
+                         
                            <select class="form-select me-2" zippy="payment">
                                <option value="0">Не вказано</option>
                            </select>
                         </div>
-                        {{#hideblock}}
-                        <label class="col-form-label col-auto" for="pos">POS</label>
-                          <div class="col-auto  ">
-                           <select class="form-control me-2" zippy="pos">
-                            <option value="0">Не обрано</option>
-
-                        </select>
                         </div>
-                        {{/hideblock}}
-                        <label class="col-form-label col-auto">дата</label>
-                           <div class="col-auto  ">
+                       <div class="col-12">
+                       <div class="input-group">
+
+                        <label  >дата</label>
+                           
                            <input zippy="pdate" style="width:100px;" class="form-control me-2 ">
                          </div>
-                         <div class="col-auto  ">
+                         </div>
+                         <div class="col-12  ">
                         <input zippy="pcomment" placeholder="Коментар..." class="form-control me-2 qtyprice">
                         </div>
-                        <div class="col-auto  ">
+                        <div class="col-12  ">
                         <button zippy="paybtn"  type="submit" class="  btn btn-success  me-2 ">Сплатити</button>
                       </div>
-                        <div class="col-auto  ">
+                        <div class="col-12  ">
                          <button zippy="payorder" type="submit" class="  btn btn-success  me-2 " title="Створити видатковий касовий ордер">Створити КО</button>
                       </div>
                        
                     </div>
       
-                </div>   
+               
                </form>    
             </div>
           
