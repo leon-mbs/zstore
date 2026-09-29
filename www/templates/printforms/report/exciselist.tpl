@@ -42,7 +42,7 @@
 
         <td>{{stamp}}</td>
         <td>{{itemname}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
         <td>{{document_number}}</td>
         <td>{{document_date}}</td>
 

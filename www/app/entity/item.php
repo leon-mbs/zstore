@@ -143,7 +143,7 @@ class Item extends \ZCL\DB\Entity
         $this->sizew = (string)$xml->sizew[0];
         $this->sized = (string)$xml->sized[0];
         
-        $this->detail ='';
+        $this->detail = '';
         parent::afterLoad();
     }
 

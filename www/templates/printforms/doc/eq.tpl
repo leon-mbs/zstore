@@ -34,10 +34,10 @@
     <tr>
         <td colspan="4">
           {{#ispa}}
-          <b>Виробнича дільниця:</b>   {{item_name}}   &nbsp;&nbsp;&nbsp;&nbsp;
+          <b>Виробнича дільниця:</b>   {{pa_name}}   &nbsp;&nbsp;&nbsp;&nbsp;
           {{/ispa}} 
            {{#isemp}}
-            <b>Відповідальний</b> {{store_name}}
+            <b>Відповідальний</b> {{emp_name}}
           {{/isemp}} 
         </td>
     </tr>

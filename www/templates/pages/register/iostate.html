@@ -16,65 +16,96 @@
                  <a zippy="jmode">Режим повного журналу</a>
                   {{/bmode}}
                 </b> 
-
-                <div class="navbar">
+                </div>
+                 <div class="col-12  ">
                     <form zippy="filter"  >
-                        <div class="row  ">
-                        <label class="col-form-label col-auto" for="from"> З </label>
-                          <div class="col-auto  ">
-                          <input type="text" class="form-control    " zippy="from" style="width:110px">
+                        <div class="row row-cols-sm-auto g-2 align-items-start ">
+                          <div class="col-12">
+                           <div class="input-group">
+                            <label   for="from"> З </label>
+                            <input type="text" class="form-control    " zippy="from" style="width:110px">
                            </div>
-                        <label class="col-form-label col-auto" for="to"> По </label>
-                          <div class="col-auto  ">
+                          </div>
+                           <div class="col-12">
+                           <div class="input-group">
+                             
+                           <label   for="to"> по </label>
+                          
                           <input type="text" class="form-control    " zippy="to" style="width:110px">
                            </div>
+                          </div>
+                          
                           {{^bmode}}
-                        <label class="col-form-label col-auto" for="fuser"> автор </label>
-                          <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="fuser">
+                          <div class="col-12">
+                           <div class="input-group">
+            
+                        <label   for="fuser"> автор </label>
+                         
+                          <select class="form-select  " zippy="fuser">
                             <option value="0">Не обрано</option>
                         </select>
                          </div>
-                        <label class="col-form-label col-auto" for="ftype"> тип </label>
-                          <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="ftype">
+                         </div>
+                         <div class="col-12">
+                           <div class="input-group">
+                         
+                        <label   for="ftype"> тип </label>
+                          
+                          <select class="form-select  " zippy="ftype">
                             <option value="0">Не обрано</option>
                         </select>
+                         </div>
                          </div>
                        {{/bmode}}
-                          <div class="col-auto  ">
-                        <input type="submit" class="  btn btn-success  " value="ОК">
-                        </div> </div>
+                        <div class="col-12  ">
+                           <input type="submit" class="  btn btn-success  " value="ОК">
+                        </div> 
+                      </div>
+                     
+             
                     </form>
-                    
+                     </div>  
                   {{#bmode}}
+                     <div class="col-12  ">
                    <form zippy="docform"  >
-                       <div class="row  ">
-                        <label class="col-form-label col-auto" for="docnumber"> Документ </label>
-                          <div class="col-auto  ">
-                          <input required="on" placeholder="Номер документа" class="form-control  me-2  " zippy="docnumber"  >
+                      <div class="row row-cols-sm-auto g-2 align-items-start ">
+                         <div class="col-12">
+                           <div class="input-group">
+ 
+                             <label   for="docnumber"> Документ </label>
+                         
+                             <input required="on" placeholder="Номер документа" class="form-control  me-2  " zippy="docnumber"  >
                            </div>
-                         <label class="col-form-label col-auto" for="docio"> Тип </label>
-                         <div class="col-auto  ">
-                          <select class="form-control me-2" zippy="docio">
+                           </div>
+                         <div class="col-12">
+                           <div class="input-group">
+                          <label   for="docio"> Тип </label>
+                          <select class="form-select me-2" zippy="docio">
                             <option value="0">Не обрано</option>
-                        </select>
+                          </select>
                          </div>
-                        <label class="col-form-label col-auto" for="docamount"> Сума </label>
-                          <div class="col-auto  ">
-                          <input required="on"   class="form-control  me-2  " zippy="docamount"  >
-                           </div>
-                          <div class="col-auto  ">
-                        <input type="submit" class="  btn btn-success  " value="Додати">
-                        </div> </div>
-                    </form>       
+                        </div>
+                         <div class="col-12">
+                           <div class="input-group">
+                            <label   for="docamount"> Сума </label>
+                            <input required="on"   class="form-control  me-2  " zippy="docamount"  >
+                          </div>
+                          
+                          </div>
+                          <div class="col-12  ">
+                             <input type="submit" class="  btn btn-success  " value="Додати">
+                        </div>
+                        </div>
+                     
+                    </form>   
+                       </div>    
                   {{/bmode}}
                     
                     
                     
-                </div>
+              
             </div>
-        </div>
+        
 
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">

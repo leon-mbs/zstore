@@ -11,7 +11,7 @@
     <tr>
       <td></td>  
         <td   valign="top">ЄДРПОУ</td>
-        <td colspan="4">{{edrpou}}</td>
+        <td colspan="4" data-type="s">{{edrpou}}</td>
     </tr>
      {{/edrpou}}      
     <tr>
@@ -24,14 +24,14 @@
     <tr>
       <td></td> 
         <td valign="top">ЄДРПОУ</td>
-        <td colspan="4">{{fedrpou}}</td>
+        <td colspan="4" data-type="s">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}  
     {{#finn}}
     <tr>
         <td></td>
         <td valign="top">ІПН</td>
-        <td colspan="4">{{finn}}</td>
+        <td colspan="4" data-type="s">{{finn}}</td>
     </tr>
      {{/finn}} 
      {{#isbank}}
@@ -47,7 +47,7 @@
     <tr>
 
         <td></td>
-        <td> IBAN</td>
+        <td data-type="s"> IBAN</td>
         <td colspan="4">{{iban}}   </td>
 
     </tr>
@@ -62,7 +62,7 @@
         </td>
     </tr>  
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
 
@@ -75,7 +75,7 @@
     <tr>
         <td align="right">{{no}}</td>
         <td>{{tovar_name}}</td>
-        <td>{{tovar_code}}</td>
+        <td data-type="s">{{tovar_code}}</td>
 
 
         <td align="right">{{quantity}}</td>

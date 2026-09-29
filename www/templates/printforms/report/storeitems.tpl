@@ -30,7 +30,7 @@
     <tr>
 
         <td>{{itemname}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
         <td>{{brand}}</td>
         <td align="right">{{minqty}}</td>
         {{#cfcol}}
@@ -55,7 +55,7 @@
     <tr>
 
         <td>{{itemname}}</td>
-        <td>{{item_code}}</td>
+        <td data-type="s">{{item_code}}</td>
         <td>{{brand}}</td>
         <td align="right">{{minqty}}</td>
         {{#cfcol}}

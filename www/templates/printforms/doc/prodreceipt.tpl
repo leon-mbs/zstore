@@ -29,20 +29,20 @@
         </td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кіл.</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
     </tr>
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
         <td colspan="2">{{itemname}}</td>
-        <td colspan="2">{{itemcode}}</td>
+        <td colspan="2" data-type="s">{{itemcode}}</td>
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>

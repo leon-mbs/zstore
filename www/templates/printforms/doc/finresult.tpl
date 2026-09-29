@@ -7,7 +7,7 @@
         <td>
             Фінансові результати {{document_number}}    від {{date}}
         </td>
-      
+ 
     </tr>
     {{#isbalans}}
   <tr  >

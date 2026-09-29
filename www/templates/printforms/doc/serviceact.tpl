@@ -44,7 +44,7 @@
 <br>
 <table class="ctable"   cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
-        <th width="20" style="border: 1px solid black;">№</th>
+        <th   style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;"> </th>
         <th style="border: 1px solid black;"  >Од.</th>

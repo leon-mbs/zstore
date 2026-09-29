@@ -36,9 +36,9 @@
 
 </table>
 <br>
-<table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">
+<table class="ctable"   cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
-        <th width="20" style="border: 1px solid black;">№</th>
+        <th   style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;">Опис</th>
         <th style="border: 1px solid black;" align="right">Кіл.</th>
@@ -85,7 +85,7 @@
     </tr>
    {{#hasitems}}
     <tr style="font-weight: bolder;">
-        <th width="20" style="border: 1px solid black;">№</th>
+        <th   style="border: 1px solid black;">№</th>
         <th style="border: 1px solid black;">Найменування</th>
         <th style="border: 1px solid black;">Код</th>
         <th style="border: 1px solid black;" align="right">Кіл.</th>

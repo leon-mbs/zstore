@@ -31,7 +31,7 @@
         <td></td>
 
         <td valign="top"><b>Зовн. номер</b></td>
-        <td colspan="6">{{outnumber}}</td>
+        <td colspan="6" data-type="s">{{outnumber}}</td>
 
     </tr>
     {{/outnumber}}    
@@ -90,7 +90,7 @@
     </tr>
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Штрих код</th>
@@ -98,17 +98,17 @@
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кіл.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
     </tr>
     {{#_detail}}
     <tr>
         <td align="right">{{no}}</td>
         <td>{{itemname}}</td>
-        <td>{{itemcode}}</td>
-        <td>{{barcode}}</td>
-        <td>{{custcode}}</td>
+        <td data-type="s">{{itemcode}}</td>
+        <td data-type="s">{{barcode}}</td>
+        <td data-type="s">{{custcode}}</td>
 
         <td>{{msr}}</td>
 
