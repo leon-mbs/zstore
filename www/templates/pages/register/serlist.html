@@ -10,27 +10,30 @@
                 <h3>Журнал послуг  </h3>
 
 
-                <div class="navbar">
+             
                     <form zippy="filter"  >
-                     <div class="row  ">
+                       <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                         <div class="col-12">
+                           <div class="input-group">
 
-                        <label class="col-form-label col-auto" for="searchnumber"> № </label>
-                         <div class="col-auto  ">
-                        <input class="form-control me-2" type="text" zippy="searchnumber" style="width:100px">
+                        <label   for="searchnumber"> № </label>
+                       
+                        <input class="form-control  " type="text" zippy="searchnumber" style="width:100px">
                         </div>
-                         <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="status">
+                        </div>
+                         <div class="col-12  ">
+                        <select class="form-select  " zippy="status">
                         </select>
                         </div>
-                        <div class="col-auto  ">
-                        <input class="form-control me-2" type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
+                        <div class="col-12  ">
+                        <input class="form-control  " type="text" zippy="searchtext" placeholder="Пошук по контенту" ]>
                         </div>
-                         <div class="col-auto  ">
+                         <div class="col-12  ">
                         <input type="submit" class="  btn btn-success  " value="ОК">
                         </div>
                       </div>
                     </form>
-                </div>
+              
 
                 <a href="/index.php?p=App/Pages/Doc/ServiceAct" class="btn btn-primary mt-2 mb-3">Створити новий</a>
                 <br> <a zippy="csv">Експорт у Excel</a>

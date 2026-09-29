@@ -52,7 +52,8 @@ class ShowDoc extends \Zippy\Html\WebPage
                 header("Content-Disposition: attachment;Filename={$filename}.doc");
                 header("Content-Transfer-Encoding: binary");
 
-                echo "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>" . $html . "</body></html>";
+                echo $html;
+         
        
             }
             if ($type == "xls") {

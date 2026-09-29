@@ -309,7 +309,7 @@ GROUP BY c.customer_name,
   
     public function payOnSubmit($sender) {
         $form = $this->plist->payform;
-     //   $pos_id = $form->pos->getValue();
+
         $pdate = $form->pdate->getDate();
         $mf= $form->payment->getValue();
         $pcomment= $form->pcomment->getText();
