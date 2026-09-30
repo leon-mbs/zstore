@@ -100,6 +100,17 @@ class Helper
     }
 
     /**
+     * Название  сайта  для  подписи  документа. Пусто  если  сайт  один
+     */
+    public static function siteLabel($id) {
+        if (count(self::sites(true)) < 2) {
+            return '';
+        }
+
+        return self::siteName($id);
+    }
+
+    /**
      * id сайта, с  которого  импортирован  документ. 0 если  документ  не  из  OpenCart
      *
      * @param mixed $doc
@@ -148,7 +159,9 @@ class Helper
             $id++;
         }
         $site['id'] = $id;
-        $site['site'] = trim($site['site'] ?? '', '/');
+        if (isset($site['site'])) {
+            $site['site'] = trim($site['site'], '/');
+        }
 
         $list[$id] = array_merge($list[$id] ?? array(), $site);
 

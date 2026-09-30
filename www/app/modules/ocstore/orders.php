@@ -180,6 +180,7 @@ class Orders extends \App\Pages\Base
         }
         $defstore=intval($site['storeid'] ?? 0);
         $defmf=intval($site['mf'] ?? 0);
+        $sitelabel = Helper::siteLabel($site['id']);   //если  сайтов  несколько - в  примечании  видно  с  какого  заказ
  
         $i = 0;
         $conn = \ZDB\DB::getConnect();
@@ -251,7 +252,7 @@ class Orders extends \App\Pages\Base
             }
             $neworder->headerdata['store'] = $defstore ; 
       
-            $neworder->notes = "OC номер: {$shoporder->order_id};";
+            $neworder->notes = "OC номер: {$shoporder->order_id}" . ($sitelabel != '' ? " ({$sitelabel})" : '') . ";";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клієнт : " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
@@ -360,6 +361,7 @@ class Orders extends \App\Pages\Base
 
         $store=intval($site['storeid'] ?? 0);
         $kassa=intval($site['mf'] ?? 0);
+        $sitelabel = Helper::siteLabel($site['id']);   //если  сайтов  несколько - в  примечании  видно  с  какого  заказ
         
         
         if ($store == 0) {
@@ -460,7 +462,7 @@ class Orders extends \App\Pages\Base
 
                 $neworder->payamount = 0;
                 $neworder->payed = 0;
-                $neworder->notes = "OC номер:{$shoporder->order_id};";
+                $neworder->notes = "OC номер:{$shoporder->order_id}" . ($sitelabel != '' ? " ({$sitelabel})" : '') . ";";
                 $neworder->notes .= " Клієнт :" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
                 if (strlen($shoporder->email) > 0) {
                     $neworder->notes .= " Email:" . $shoporder->email . ";";

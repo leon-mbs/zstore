@@ -135,7 +135,9 @@ class OrderList extends \App\Pages\Base
 
         $n = $doc->document_number;
         if(strlen($doc->headerdata['ocorder'] ?? '')>0) {
-            $n = $n . " (OC '{$doc->headerdata['ocorder']}')"  ;
+            //если  сайтов  OpenCart несколько - с  какого  заказ
+            $ocsite = \App\Modules\OCStore\Helper::siteLabel(\App\Modules\OCStore\Helper::siteOf($doc));
+            $n = $n . " (OC '{$doc->headerdata['ocorder']}'" . ($ocsite != '' ? ', ' . $ocsite : '') . ")"  ;
         }
         if(strlen($doc->headerdata['wcorder'] ?? '')>0) {
             $n = $n . " (WC '{$doc->headerdata['wcorder']}')"  ;
