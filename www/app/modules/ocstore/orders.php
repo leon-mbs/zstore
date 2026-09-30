@@ -180,7 +180,6 @@ class Orders extends \App\Pages\Base
         }
         $defstore=intval($site['storeid'] ?? 0);
         $defmf=intval($site['mf'] ?? 0);
-        $sitelabel = Helper::siteLabel($site['id']);   //если  сайтов  несколько - в  примечании  видно  с  какого  заказ
  
         $i = 0;
         $conn = \ZDB\DB::getConnect();
@@ -252,58 +251,30 @@ class Orders extends \App\Pages\Base
             }
             $neworder->headerdata['store'] = $defstore ; 
       
-            $neworder->notes = "OC номер: {$shoporder->order_id}" . ($sitelabel != '' ? " ({$sitelabel})" : '') . ";";
+            //данные  покупателя  и  доставки  в  своих  полях, что  писать  в  примечание - в  настройках  сайта
+            $info = Helper::orderInfo($shoporder);
+            $neworder->notes = Helper::notes($site, $shoporder);
 
-            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->notes .= " Клієнт : " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-            if( ($site['insertcust'] ?? 0) == 1  && strlen($shoporder->telephone ??'' )>0 ) {
-                $cust=null;
+            $neworder->headerdata['occlient'] = $info['name'];
+            if ($info['phone'] != '') {
+                $neworder->headerdata['phone'] = $info['phone'];
+            }
+            $neworder->headerdata['email'] = $info['email'];
+            $neworder->headerdata['ship_address'] = $info['address'];
+            if ($info['delivery'] > 0) {
+                $neworder->headerdata['delivery'] = $info['delivery'];
+                $neworder->headerdata['delivery_name'] = $info['delivery_name'];
+            }
+            $neworder->headerdata['ocshipping'] = $info['shipping'];
+            $neworder->headerdata['ocpayment'] = $info['payment'];
 
-                $phone=\App\Util::handlePhone($shoporder->telephone);
-
-                //id покупателя  на  разных  сайтах  не  совпадают, по  нему  ищем  только  для  первого  сайта
-                $byshopid = $site['id'] == Helper::FIRST;
-
-                if ($shoporder->customer_id > 0 && $byshopid) {
-                    $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
-                }
-                if ($cust == null) {
-                    $cust = Customer::getByPhone($phone) ;
-                }   
-     
-                         
-                if ($cust == null) {
-                    $cust = new Customer();
-                    $cust->customer_name = trim($shoporder->lastname . ' ' . $shoporder->firstname);
-                    $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
-                    $cust->type = Customer::TYPE_BAYER;
-                    $cust->phone = $phone;
-                    $cust->email = $shoporder->email;
-                    $cust->comment = "Клієнт  OpenCart";
-                    $cust->save();
-                }
-                
+            if (($site['insertcust'] ?? 0) == 1) {
+                $cust = Helper::customer($site, $shoporder);
                 if ($cust != null) {
-                    if ($shoporder->customer_id > 0 && $byshopid) {
-                       $cust->shopcust_id = $shoporder->customer_id;
-                       $cust->save();
-                    }
-                    
                     $neworder->customer_id = $cust->customer_id;
+                    $neworder->headerdata['customer_name'] = $cust->customer_name;
                 }
             }
-            if (strlen($shoporder->email) > 0) {
-                $neworder->notes .= " Email:" . $shoporder->email . ";";
-            }
-            if (strlen($shoporder->telephone) > 0) {
-                $neworder->notes .= " Тел: " . $shoporder->telephone . ";";
-                $neworder->headerdata['phone'] = $shoporder->telephone;            
-            }
-            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-            $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
-            
-            $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
             
             if($defmf >0) {
                $neworder->headerdata['payment'] = $defmf;
@@ -361,7 +332,6 @@ class Orders extends \App\Pages\Base
 
         $store=intval($site['storeid'] ?? 0);
         $kassa=intval($site['mf'] ?? 0);
-        $sitelabel = Helper::siteLabel($site['id']);   //если  сайтов  несколько - в  примечании  видно  с  какого  заказ
         
         
         if ($store == 0) {
@@ -462,16 +432,18 @@ class Orders extends \App\Pages\Base
 
                 $neworder->payamount = 0;
                 $neworder->payed = 0;
-                $neworder->notes = "OC номер:{$shoporder->order_id}" . ($sitelabel != '' ? " ({$sitelabel})" : '') . ";";
-                $neworder->notes .= " Клієнт :" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-                if (strlen($shoporder->email) > 0) {
-                    $neworder->notes .= " Email:" . $shoporder->email . ";";
+                $info = Helper::orderInfo($shoporder);
+                $neworder->notes = Helper::notes($site, $shoporder);
+                $neworder->headerdata['ship_address'] = $info['address'];
+                $neworder->headerdata['phone'] = $info['phone'];
+                $neworder->headerdata['email'] = $info['email'];
+                if (($site['insertcust'] ?? 0) == 1) {
+                    $cust = Helper::customer($site, $shoporder);
+                    if ($cust != null) {
+                        $neworder->customer_id = $cust->customer_id;
+                        $neworder->headerdata['customer_name'] = $cust->customer_name;
+                    }
                 }
-                if (strlen($shoporder->telephone) > 0) {
-                    $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
-                }
-                $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-                $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
                 $neworder->save();
                 $neworder->updateStatus(Document::STATE_NEW);
                 $neworder->updateStatus(Document::STATE_EXECUTED);

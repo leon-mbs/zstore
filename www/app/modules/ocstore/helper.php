@@ -542,6 +542,209 @@ class Helper
     }
 
     /**
+     * Части  примечания  заказа. Какие  из  них  писать - задается  в  настройках  сайта
+     */
+    public static function noteParts() {
+        return array(
+            'number'   => 'Номер замовлення в магазині',
+            'client'   => 'Клієнт',
+            'phone'    => 'Телефон',
+            'email'    => 'Email',
+            'address'  => 'Адреса доставки',
+            'delivery' => 'Спосіб доставки',
+            'pay'      => 'Спосіб оплати',
+            'comment'  => 'Коментар клієнта'
+        );
+    }
+
+    //текст  из  магазина  без  тегов, спецсимволов  HTML и  лишних  пробелов
+    private static function clean($text) {
+        $text = html_entity_decode(strip_tags((string)$text), ENT_QUOTES, 'UTF-8');
+
+        return trim(preg_replace('/\s+/u', ' ', $text));
+    }
+
+    /**
+     * Имя  или  фамилия: если  набрано  одним  регистром (иван, ИВАН) - с  большой  буквы
+     */
+    public static function personName($name) {
+        $name = self::clean($name);
+        if ($name != '' && ($name === mb_strtolower($name) || $name === mb_strtoupper($name))) {
+            $name = preg_replace_callback('/(^|[\s\-])(\p{L})/u', function ($m) {
+                return $m[1] . mb_strtoupper($m[2]);
+            }, mb_strtolower($name));
+        }
+
+        return $name;
+    }
+
+    /**
+     * Вид  доставки  Zippy по  коду  и  названию  способа  доставки  магазина
+     *
+     * @return array array(вид  доставки, название)
+     */
+    public static function deliveryType($text) {
+        $text = mb_strtolower($text);
+        $modules = System::getOptions("modules");
+        $types = \App\Entity\Doc\Document::getDeliveryTypes(($modules['np'] ?? 0) == 1);
+
+        $type = 0;
+        if (preg_match('/nova.?posh|novapost|нова пошта|новая почта/u', $text)) {
+            $type = \App\Entity\Doc\Document::DEL_NP;
+        } elseif (preg_match('/ukr.?posh|укрпошт|укр\. ?пошт|укрпочт/u', $text)) {
+            $type = \App\Entity\Doc\Document::DEL_UP;
+        } elseif (preg_match('/meest|міст експрес|мист экспресс/u', $text)) {
+            $type = \App\Entity\Doc\Document::DEL_MEEST;
+        } elseif (preg_match('/rozetka|розетк/u', $text)) {
+            $type = \App\Entity\Doc\Document::DEL_ROZ;
+        } elseif (preg_match('/pickup|самовив|самовыв/u', $text)) {
+            $type = \App\Entity\Doc\Document::DEL_SELF;
+        } elseif (preg_match('/courier|кур.?єр|курьер/u', $text)) {
+            $type = \App\Entity\Doc\Document::DEL_BOY;
+        } elseif (trim($text) != '') {
+            $type = \App\Entity\Doc\Document::DEL_SERVICE;
+        }
+        if ($type > 0 && isset($types[$type]) == false) {
+            $type = \App\Entity\Doc\Document::DEL_SERVICE;
+        }
+
+        return array($type, $types[$type] ?? '');
+    }
+
+    /**
+     * Данные  покупателя  и  доставки  из  заказа  магазина  в  разобранном  виде:
+     * firstname, lastname, name, recipient, phone, email, address, shipping, delivery, delivery_name, payment, comment
+     *
+     * @param mixed $shoporder заказ  как  его  отдал  магазин
+     */
+    public static function orderInfo($shoporder) {
+        $info = array();
+        $info['firstname'] = self::personName($shoporder->firstname);
+        $info['lastname'] = self::personName($shoporder->lastname);
+        $info['name'] = trim($info['lastname'] . ' ' . $info['firstname']);
+
+        //получатель - если  это  не  сам  покупатель
+        $recipient = trim(self::personName($shoporder->shipping_lastname) . ' ' . self::personName($shoporder->shipping_firstname));
+        $info['recipient'] = mb_strtolower($recipient) == mb_strtolower($info['name']) ? '' : $recipient;
+
+        $info['phone'] = self::clean($shoporder->telephone);
+        $info['email'] = mb_strtolower(self::clean($shoporder->email));
+
+        //адрес: область, город, улица  или  отделение. Если  адреса  доставки  нет - платежный
+        $prefix = strlen(self::clean($shoporder->shipping_city) . self::clean($shoporder->shipping_address_1)) > 0 ? 'shipping_' : 'payment_';
+        $address = array();
+        foreach (array('zone', 'city', 'address_1', 'address_2') as $field) {
+            $value = self::clean($shoporder->{$prefix . $field});
+            if ($value != '' && in_array(mb_strtolower($value), array_map('mb_strtolower', $address)) == false) {
+                $address[] = $value;
+            }
+        }
+        $info['address'] = implode(', ', $address);
+
+        $info['shipping'] = self::clean($shoporder->shipping_method);
+        list($info['delivery'], $info['delivery_name']) = self::deliveryType(self::clean($shoporder->shipping_code) . ' ' . $info['shipping']);
+        $info['payment'] = self::clean($shoporder->payment_method);
+        $info['comment'] = self::clean($shoporder->comment);
+
+        return $info;
+    }
+
+    /**
+     * Примечание  заказа. Состав - по  настройкам  сайта (noteparts), пустые  части  пропускаются
+     *
+     * @param mixed $site      запись  сайта
+     * @param mixed $shoporder заказ  как  его  отдал  магазин
+     */
+    public static function notes($site, $shoporder) {
+        $info = self::orderInfo($shoporder);
+        $label = self::siteLabel($site['id']);
+
+        $parts = array();
+        $parts['number'] = 'OC номер: ' . $shoporder->order_id . ($label != '' ? " ({$label})" : '');
+        $parts['client'] = $info['name'] . ($info['recipient'] != '' ? ', отримувач ' . $info['recipient'] : '');
+        if ($parts['client'] != '') {
+            $parts['client'] = 'Клієнт: ' . ltrim($parts['client'], ', ');
+        }
+        $parts['phone'] = $info['phone'] != '' ? 'Тел: ' . $info['phone'] : '';
+        $parts['email'] = $info['email'] != '' ? 'Email: ' . $info['email'] : '';
+        $parts['address'] = $info['address'] != '' ? 'Адреса: ' . $info['address'] : '';
+        $parts['delivery'] = $info['shipping'] != '' ? 'Доставка: ' . $info['shipping'] : '';
+        $parts['pay'] = $info['payment'] != '' ? 'Оплата: ' . $info['payment'] : '';
+        $parts['comment'] = $info['comment'] != '' ? 'Коментар: ' . $info['comment'] : '';
+
+        $enabled = $site['noteparts'] ?? null;
+        if (is_array($enabled) == false) { //не  настроено - пишем  все
+            $enabled = array_keys(self::noteParts());
+        }
+        $notes = array();
+        foreach ($parts as $code => $text) {
+            if ($text != '' && in_array($code, $enabled)) {
+                $notes[] = $text;
+            }
+        }
+
+        return count($notes) > 0 ? implode('; ', $notes) . ';' : '';
+    }
+
+    /**
+     * Контрагент  для  заказа  магазина: ищет  по  id покупателя (только  первый  сайт - на  разных  сайтах  id
+     * не  совпадают), телефону, а  если  телефона  нет - по  email. Не  найден - создает.
+     * У  найденного  дополняет  только  пустые  поля, адрес  доставки - из  последнего  заказа.
+     *
+     * @return \App\Entity\Customer|null null если  в  заказе  нет  ни  телефона  ни  email
+     */
+    public static function customer($site, $shoporder) {
+        $info = self::orderInfo($shoporder);
+        $phone = $info['phone'] != '' ? \App\Util::handlePhone($info['phone']) : '';
+        if ($phone == '' && $info['email'] == '') {
+            return null;
+        }
+        $shopid = $site['id'] == self::FIRST ? intval($shoporder->customer_id) : 0;
+
+        $cust = null;
+        if ($shopid > 0) {
+            $cust = \App\Entity\Customer::getFirst("detail like '%<shopcust_id>{$shopid}</shopcust_id>%'");
+        }
+        if ($cust == null && $phone != '') {
+            $cust = \App\Entity\Customer::getByPhone($phone);
+        }
+        if ($cust == null && $phone == '') {
+            $cust = \App\Entity\Customer::getByEmail($info['email']);
+        }
+
+        $changed = false;
+        if ($cust == null) {
+            $label = self::siteLabel($site['id']);
+
+            $cust = new \App\Entity\Customer();
+            $cust->customer_name = $info['name'] != '' ? $info['name'] : ($phone != '' ? $phone : $info['email']);
+            $cust->type = \App\Entity\Customer::TYPE_BAYER;
+            $cust->phone = $phone;
+            $cust->comment = 'Клієнт OpenCart' . ($label != '' ? ' (' . $label . ')' : '');
+            $changed = true;
+        }
+        foreach (array('firstname', 'lastname', 'email', 'address') as $field) {
+            if (strlen((string)$cust->{$field}) == 0 && $info[$field] != '') {
+                $cust->{$field} = $info[$field];
+                $changed = true;
+            }
+        }
+        if ($info['address'] != '' && (string)$cust->addressdel != $info['address']) {
+            $cust->addressdel = $info['address'];
+            $changed = true;
+        }
+        if ($shopid > 0 && intval($cust->shopcust_id) != $shopid) {
+            $cust->shopcust_id = $shopid;
+            $changed = true;
+        }
+        if ($changed) {
+            $cust->save();
+        }
+
+        return $cust;
+    }
+
+    /**
      * Вызывается  после  импорта заказа. Обработчики  других  модулей  задаются  в
      * options['modules']['ocafterimport'] как  список  'Класс::метод' и  получают
      * документ, id сайта и  заказ  в  том  виде, как  его  отдал  сайт (доставка, адрес, оплата).

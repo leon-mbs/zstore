@@ -56,6 +56,11 @@ class Options extends \App\Pages\Base
 
         $form->add(new DropDownChoice('defpaytype',$pt));
 
+        //что  писать  в  примечание  заказа
+        foreach (Helper::noteParts() as $code => $title) {
+            $form->add(new CheckBox('note' . $code));
+        }
+
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 
         //список  сайтов  показывается  если  их  больше  одного
@@ -93,6 +98,9 @@ class Options extends \App\Pages\Base
         $form->defmf->setValue($site['mf'] ?? 0);
         $form->defstore->setValue($site['storeid'] ?? 0);
         $form->defpaytype->setValue($site['paytype'] ?? 0);
+        foreach (Helper::noteParts() as $code => $title) { //не  настроено - пишем  все
+            $form->{'note' . $code}->setChecked(is_array($site['noteparts'] ?? null) ? in_array($code, $site['noteparts']) : true);
+        }
 
         $this->updateList();
     }
@@ -214,6 +222,13 @@ class Options extends \App\Pages\Base
         $rec['mf'] = $mf;
         $rec['storeid'] = $store;
         $rec['paytype'] = $paytype;
+
+        $rec['noteparts'] = array();
+        foreach (Helper::noteParts() as $code => $title) {
+            if ($this->cform->{'note' . $code}->isChecked()) {
+                $rec['noteparts'][] = $code;
+            }
+        }
 
         if ($this->isMulti()) { //название и  отключение  есть  в  форме  только  если  сайтов  несколько
             $rec['name'] = trim($this->cform->name->getText());
