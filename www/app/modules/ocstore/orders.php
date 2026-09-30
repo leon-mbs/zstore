@@ -20,6 +20,7 @@ class Orders extends \App\Pages\Base
 {
     public $_neworders = array();
     public $_eorders   = array();
+    public $_siteid    = 0;   //выбранный  сайт
 
     public function __construct() {
         parent::__construct();
@@ -31,18 +32,29 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $modules = System::getOptions("modules");
-        $statuses = System::getSession()->statuses;
+        //выбор  сайта  показывается  если  сайтов  больше  одного
+        $sites = array();
+        foreach (Helper::sites() as $site) {
+            $sites[$site['id']] = $site['name'];
+        }
+        $this->_siteid = intval(System::getSession()->ocsiteid);
+        if (isset($sites[$this->_siteid]) == false) {
+            $this->_siteid = intval(Helper::site()['id'] ?? 0);
+        }
+        $this->_tvars['ocmulti'] = count($sites) > 1;
+
+        $this->add(new Form('siteform'));
+        $this->siteform->add(new DropDownChoice('site', $sites, $this->_siteid))->onChange($this, 'onSite');
+
+        $site = Helper::site($this->_siteid);
+        $statuses = Helper::statuses($this->_siteid);
         if (is_array($statuses) == false) {
             $statuses = array();
             $this->setWarn('Натисніть Перевірити з`єднання  ');
         }
 
-        $defpaytype=intval($modules['ocpaytype']??0);
-        $defstore=intval($modules['ocstore']);
-        $defmf=intval($modules['ocmf']??0);
-           
-        
+        $defpaytype=intval($site['paytype']??0);
+
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
         $this->add(new Form('filter2'))->onSubmit($this, 'onImport');
@@ -66,49 +78,65 @@ class Orders extends \App\Pages\Base
 
     }
 
-    public function filterOnSubmit($sender) {
-   
-        if(strlen(System::getSession()->octoken)==0) {
-            Helper::connect();
+    //сменился  сайт
+    public function onSite($sender) {
+        $this->_siteid = intval($sender->getValue());
+        System::getSession()->ocsiteid = $this->_siteid;
+
+        $this->_neworders = array();
+        $this->neworderslist->Reload();
+        $this->_eorders = array();
+        $this->updateform->orderslist->Reload();
+
+        $site = Helper::site($this->_siteid);
+        $this->filter2->paytype->setValue(intval($site['paytype'] ?? 0));
+
+        $this->updateStatuses();
+        if (is_array(Helper::statuses($this->_siteid)) == false) {
+            $this->setWarn('Натисніть Перевірити з`єднання  ');
         }
-        $modules = System::getOptions("modules");
+    }
+
+    //списки  статусов  выбранного  сайта
+    private function updateStatuses() {
+        $statuses = Helper::statuses($this->_siteid);
+        if (is_array($statuses) == false) {
+            $statuses = array();
+        }
+        if ($statuses != $this->filter->status->getOptionList()) {
+            $this->filter->status->setOptionList($statuses);
+            $this->updateform->estatus->setOptionList($statuses);
+        }
+    }
+
+    public function filterOnSubmit($sender) {
 
         $status = $this->filter->status->getValue();
+        if ($status == 0) {
+            $this->setError('Не обрано статус');
+            return;
+        }
 
         $this->_neworders = array();
         $fields = array(
             'status_id' => $status,
         );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.orders&' . System::getSession()->octoken;
-        }
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
-            return;
-        }
-        $data = json_decode($json, true);
-        if (!isset($data)) {
-            $this->setError("Невірна відповідь");
-         //   \App\Helper::log($json);
-            return;
-        }
-        if ($data['error'] == "") {
-            $conn = \ZDB\DB::getConnect();
+        $data = Helper::request($this->_siteid, 'api/zstore/orders', $fields);
+        $this->updateStatuses();
+        $orders = $data === false ? false : Helper::rows($this->_siteid, $data, 'orders');
+        $warn = array();
+        if ($orders !== false) {
 
+            foreach ($orders as $ocorder) {
 
-            foreach ($data['orders'] as $ocorder) {
-
-
-                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date  ")  ;
-
-                if (intval($cnt) > 0) { //уже импортирован
+                //один  номер  заказа  может  быть  на  разных  сайтах
+                if (Helper::isImported($this->_siteid, $ocorder['order_id'], $ocorder['date_added'] ?? '')) { //уже импортирован
                     continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("Не задано артикул товара {$product['name']} в замовленні номер " . $ocorder['order_id']);
+                        $warn[] = "№ {$ocorder['order_id']}: не задано артикул товару {$product['name']}";
                     }
                 }
 
@@ -118,11 +146,20 @@ class Orders extends \App\Pages\Base
             }
 
             $this->neworderslist->Reload();
-        } else {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
         }
+        $this->showWarnings($warn);
+    }
+
+    //предупреждения  одним  сообщением: первые  три  и  сколько  еще
+    private function showWarnings($warn) {
+        if (count($warn) == 0) {
+            return;
+        }
+        $text = implode('. ', array_slice($warn, 0, 3));
+        if (count($warn) > 3) {
+            $text .= '. І ще ' . (count($warn) - 3);
+        }
+        $this->setWarn($text);
     }
 
     public function noOnRow($row) {
@@ -150,18 +187,32 @@ class Orders extends \App\Pages\Base
     }
     public function onOrder(  ) {
         $defpaytype = $this->filter2->paytype->getValue() ;
-            
-        $modules = System::getOptions("modules");
-        $defstore=intval($modules['ocstoreid']);
-        $defmf=intval($modules['ocmf']);
+
+        $site = Helper::site($this->_siteid);   //настройки  сайта, с  которого  заказы
+        if ($site == null) {
+            $this->setError('Не задано сайт OpenCart');
+            return;
+        }
+        $defstore=intval($site['storeid'] ?? 0);
+        $defmf=intval($site['mf'] ?? 0);
  
         $i = 0;
+        $warn = array();
+        if (Helper::lock() == false) {
+            $this->setError('Імпорт замовлень зараз виконує інший користувач. Спробуйте за хвилину');
+            return;
+        }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
         try{     
            foreach ($this->_neworders as $shoporder) {
 
+            //пока  список  был  на  экране, заказ  мог  импортировать  другой  пользователь
+            if (Helper::isImported($site['id'], $shoporder->order_id, $shoporder->date_added)) {
+                $warn[] = "№ {$shoporder->order_id} уже імпортовано";
+                continue;
+            }
 
             $neworder = Document::create('Order');
             $neworder->document_date = strtotime($shoporder->date_added);
@@ -173,9 +224,11 @@ class Orders extends \App\Pages\Base
             $total =0;
             $j=0;           //товары
             $tlist = array();
+            $notfound = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу
                 if (strlen($product['sku']) == 0) {
+                    $notfound[] = $product['name'];
                     continue;
                 }
                 $code = Item::qstr($product['sku']);
@@ -183,7 +236,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер ". $shoporder->order_id);
+                    $notfound[] = $product['name'];
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -201,8 +254,12 @@ class Orders extends \App\Pages\Base
                 $total  = $total +  ($tovar->quantity * $tovar->price) ;
                 $tlist[$j] = $tovar;
             }
-            if(count($tlist)==0) {
-                return;
+            if(count($tlist)==0) { //ни  одного  товара  по  артикулу - заказ  пропускаем, остальные  импортируются
+                $warn[] = "№ {$shoporder->order_id} не імпортовано - не знайдено за артикулом: " . implode(', ', $notfound);
+                continue;
+            }
+            if (count($notfound) > 0) {
+                $warn[] = "№ {$shoporder->order_id} імпортовано без товарів, яких не знайдено за артикулом: " . implode(', ', $notfound);
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($total);
@@ -213,9 +270,10 @@ class Orders extends \App\Pages\Base
 
             $neworder->headerdata['outnumber'] = $shoporder->order_id;
             $neworder->headerdata['ocorder'] = $shoporder->order_id;
+            $neworder->headerdata['ocsite'] = $site['id'];
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = 'price1';
-            $neworder->headerdata['salesource'] = $modules['ocsalesource'];
+            $neworder->headerdata['salesource'] = $site['salesource'] ?? 0;
             $neworder->headerdata['paytype'] = $defpaytype;  
             $neworder->headerdata['paytypename'] = $this->filter2->paytype->getValueName() ;  
             $neworder->headerdata['payment'] = $defmf ; 
@@ -224,59 +282,34 @@ class Orders extends \App\Pages\Base
             }
             $neworder->headerdata['store'] = $defstore ; 
       
-            $neworder->notes = "OC номер: {$shoporder->order_id};";
+            //данные  покупателя  и  доставки  в  своих  полях, что  писать  в  примечание - в  настройках  сайта
+            $info = Helper::orderInfo($shoporder);
+            $neworder->notes = Helper::notes($site, $shoporder);
 
-            $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->notes .= " Клієнт : " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-            if( $modules['ocinsertcust'] == 1  && strlen($shoporder->telephone ??'' )>0 ) {
-                $cust=null;
- 
-                $phone=\App\Util::handlePhone($shoporder->telephone);
-                
-                if ($shoporder->customer_id > 0 ) {
-                    $cust = Customer::getFirst("detail like '%<shopcust_id>{$shoporder->customer_id}</shopcust_id>%'");
-                }
-                if ($cust == null) {
-                    $cust = Customer::getByPhone($phone) ;
-                }   
-     
-                         
-                if ($cust == null) {
-                    $cust = new Customer();
-                    $cust->customer_name = trim($shoporder->lastname . ' ' . $shoporder->firstname);
-                    $cust->address = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1;
-                    $cust->type = Customer::TYPE_BAYER;
-                    $cust->phone = $phone;
-                    $cust->email = $shoporder->email;
-                    $cust->comment = "Клієнт  OpenCart";
-                    $cust->save();
-                }
-                
+            $neworder->headerdata['occlient'] = $info['name'];
+            if ($info['phone'] != '') {
+                $neworder->headerdata['phone'] = $info['phone'];
+            }
+            $neworder->headerdata['email'] = $info['email'];
+            $neworder->headerdata['ship_address'] = $info['address'];
+            if ($info['delivery'] > 0) {
+                $neworder->headerdata['delivery'] = $info['delivery'];
+                $neworder->headerdata['delivery_name'] = $info['delivery_name'];
+            }
+            $neworder->headerdata['ocshipping'] = $info['shipping'];
+            $neworder->headerdata['ocpayment'] = $info['payment'];
+
+            if (($site['insertcust'] ?? 0) == 1) {
+                $cust = Helper::customer($site, $shoporder);
                 if ($cust != null) {
-                    if ($shoporder->customer_id > 0) {
-                       $cust->shopcust_id = $shoporder->customer_id;
-                       $cust->save();
-                    }
-                    
                     $neworder->customer_id = $cust->customer_id;
+                    $neworder->headerdata['customer_name'] = $cust->customer_name;
                 }
             }
-            if (strlen($shoporder->email) > 0) {
-                $neworder->notes .= " Email:" . $shoporder->email . ";";
-            }
-            if (strlen($shoporder->telephone) > 0) {
-                $neworder->notes .= " Тел: " . $shoporder->telephone . ";";
-                $neworder->headerdata['phone'] = $shoporder->telephone;            
-            }
-            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-            $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
             
-            $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
-            
-            if($modules['ocmf'] >0) {
-               $neworder->headerdata['payment'] = $modules['ocmf'];
-        
+            if($defmf >0) {
+               $neworder->headerdata['payment'] = $defmf;
+
             }
             if ($neworder->headerdata['paytype'] == 2) {
                 $neworder->setHD('waitpay',1); 
@@ -292,17 +325,21 @@ class Orders extends \App\Pages\Base
               
                 if($neworder->headerdata['store']>0) {
                     $neworder->reserve();   //если задан  склад резервируем товары
-                }  
+                }
+
+                Helper::afterImport($neworder, $site['id'], $shoporder);
       
            
             $i++;
         }
         
            $conn->CommitTrans();
+            Helper::unlock();
           
         } catch(\Throwable $ee){
             global $logger;
             $conn->RollbackTrans();
+            Helper::unlock();
            
             $this->setError($ee->getMessage());
 
@@ -313,6 +350,7 @@ class Orders extends \App\Pages\Base
         }        
         
         $this->setInfo("Імпортовано {$i} замовлень");
+        $this->showWarnings($warn);
         
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -320,10 +358,14 @@ class Orders extends \App\Pages\Base
 
     //только  списание
     public function onOutcome( ) {
-        $modules = System::getOptions("modules");
-       
-        $store=intval($modules['ocstoreid']);
-        $kassa=intval($modules['ocmf']);
+        $site = Helper::site($this->_siteid);   //настройки  сайта, с  которого  заказы
+        if ($site == null) {
+            $this->setError('Не задано сайт OpenCart');
+            return;
+        }
+
+        $store=intval($site['storeid'] ?? 0);
+        $kassa=intval($site['mf'] ?? 0);
         
         
         if ($store == 0) {
@@ -349,7 +391,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder->order_id);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -362,6 +404,11 @@ class Orders extends \App\Pages\Base
                 }
             }
         }
+        $warn = array();
+        if (Helper::lock() == false) {
+            $this->setError('Імпорт замовлень зараз виконує інший користувач. Спробуйте за хвилину');
+            return;
+        }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -369,6 +416,11 @@ class Orders extends \App\Pages\Base
             $i = 0;
             foreach ($this->_neworders as $shoporder) {
 
+                //пока  список  был  на  экране, заказ  мог  импортировать  другой  пользователь
+                if (Helper::isImported($site['id'], $shoporder->order_id, $shoporder->date_added)) {
+                    $warn[] = "№ {$shoporder->order_id} уже імпортовано";
+                    continue;
+                }
 
                 $neworder = Document::create('TTN');
                 $neworder->document_date = time();
@@ -383,9 +435,11 @@ class Orders extends \App\Pages\Base
                 $j=0;
                 $totalpr = 0;
                 $tlist = array();
+                $notfound = array();
                 foreach ($shoporder->_products_ as $product) {
                     //ищем по артикулу
                     if (strlen($product['sku']) == 0) {
+                        $notfound[] = $product['name'];
                         continue;
                     }
                     $code = Item::qstr($product['sku']);
@@ -393,7 +447,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
+                        $notfound[] = $product['name'];
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -404,11 +458,19 @@ class Orders extends \App\Pages\Base
 
                     $tlist[$j] = $tovar;
                 }
+                if (count($tlist) == 0) { //ни  одного  товара  по  артикулу - заказ  пропускаем, остальные  импортируются
+                    $warn[] = "№ {$shoporder->order_id} не імпортовано - не знайдено за артикулом: " . implode(', ', $notfound);
+                    continue;
+                }
+                if (count($notfound) > 0) {
+                    $warn[] = "№ {$shoporder->order_id} імпортовано без товарів, яких не знайдено за артикулом: " . implode(', ', $notfound);
+                }
                 $neworder->packDetails('detaildata', $tlist);
 
                 $neworder->headerdata['store'] = $store;
-                $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
+                $neworder->headerdata['store_name'] = \App\Entity\Store::load($store)->storename ?? '';
                 $neworder->headerdata['ocorder'] = $shoporder->order_id;
+                $neworder->headerdata['ocsite'] = $site['id'];
                 $neworder->headerdata['outnumber'] = $shoporder->order_id;
 
 
@@ -423,30 +485,36 @@ class Orders extends \App\Pages\Base
 
                 $neworder->payamount = 0;
                 $neworder->payed = 0;
-                $neworder->notes = "OC номер:{$shoporder->order_id};";
-                $neworder->notes .= " Клієнт :" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-                if (strlen($shoporder->email) > 0) {
-                    $neworder->notes .= " Email:" . $shoporder->email . ";";
+                $info = Helper::orderInfo($shoporder);
+                $neworder->notes = Helper::notes($site, $shoporder);
+                $neworder->headerdata['ship_address'] = $info['address'];
+                $neworder->headerdata['phone'] = $info['phone'];
+                $neworder->headerdata['email'] = $info['email'];
+                if (($site['insertcust'] ?? 0) == 1) {
+                    $cust = Helper::customer($site, $shoporder);
+                    if ($cust != null) {
+                        $neworder->customer_id = $cust->customer_id;
+                        $neworder->headerdata['customer_name'] = $cust->customer_name;
+                    }
                 }
-                if (strlen($shoporder->telephone) > 0) {
-                    $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
-                }
-                $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-                $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
                 $neworder->save();
                 $neworder->updateStatus(Document::STATE_NEW);
                 $neworder->updateStatus(Document::STATE_EXECUTED);
                 $neworder->updateStatus(Document::STATE_DELIVERED);
 
+                Helper::afterImport($neworder, $site['id'], $shoporder);
+
                 $i++;
             }
 
             $conn->CommitTrans();
+            Helper::unlock();
 
 
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            Helper::unlock();
 
 
             $this->setError($ee->getMessage());
@@ -456,6 +524,7 @@ class Orders extends \App\Pages\Base
         }
 
         $this->setInfo("Імпортовано {$i} замовлень");
+        $this->showWarnings($warn);
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -463,13 +532,14 @@ class Orders extends \App\Pages\Base
 
     public function onCheck($sender) {
 
-        Helper::connect();
+        System::getSession()->ocsiteid = $this->_siteid;
+        Helper::connect($this->_siteid);
         \App\Application::Redirect("\\App\\Modules\\OCStore\\Orders");
     }
 
     public function onRefresh($sender) {
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and " . Helper::docWhere($this->_siteid) . " and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 
@@ -485,9 +555,8 @@ class Orders extends \App\Pages\Base
     }
 
     public function exportOnSubmit($sender) {
-        $modules = System::getOptions("modules");
 
-        $st = $this->updateform->estatus->getValue();
+        $st= $this->updateform->estatus->getValue();
         if ($st == 0) {
 
             $this->setError('Не обрано статус');
@@ -505,26 +574,8 @@ class Orders extends \App\Pages\Base
             $this->setError('Не обрано ордер');
             return;
         }
-        $data = json_encode($elist);
-
-        $fields = array(
-            'data' => $data
-        );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateorder&' . System::getSession()->octoken;
-        }
-
-        $json = Helper::do_curl_request($url, $fields);
-        if ($json === false) {
-            return;
-        }
-        $data = json_decode($json, true);
-
-        if ($data['error'] != "") {
-            $data['error']  = str_replace("'", "`", $data['error']) ;
-
-            $this->setErrorTopPage($data['error']);
+        //статусы  уходят  на  тот  сайт, с  которого  заказы
+        if (Helper::sendStatuses($this->_siteid, $elist) == false) {
             return;
         }
 
@@ -539,7 +590,7 @@ class Orders extends \App\Pages\Base
         }
 
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and " . Helper::docWhere($this->_siteid) . " and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 
