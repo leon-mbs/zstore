@@ -5,7 +5,19 @@
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
                 <h4>Налаштування підключення</h4>
+                {{#ocnew}}<p><b>Новий сайт</b></p>{{/ocnew}}
                 <form zippy="cform">
+                    {{#ocmulti}}
+                    <div class="mb-2">
+                        <label for="name">Назва сайту</label>
+                        <input type="text" zippy="name" class="form-control"/>
+                        <small class="form-text text-muted">Для списку сайтів. Якщо не вказано - адреса сайту</small>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input zippy="sitedisabled" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="sitedisabled">Вимкнено </label>
+                    </div>
+                    {{/ocmulti}}
                     <div class="mb-2">
                         <label for="site">Адреса сайту</label>
                         <input type="text" zippy="site" class="form-control" required="required"/>
@@ -95,7 +107,31 @@
 
                     </div>
                 </form>
+                <a zippy="addsite"><i class="fa fa-plus"></i> Додати ще один сайт</a>
             </div>
+            {{#ocmulti}}
+            <div class="col-12  col-md-6">
+                <h4>Сайти</h4>
+                <table class="table table-sm">
+                    <tr>
+                        <th>Назва</th>
+                        <th>Адреса</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr zippy="sitelist">
+                        <td zippy="sitename"></td>
+                        <td zippy="siteaddr"></td>
+                        <td zippy="sitestate"></td>
+                        <td class="text-nowrap">
+                            <a zippy="siteedit" title="Налаштування"><i class="fa fa-edit"></i></a>
+                            &nbsp;&nbsp; <a zippy="sitecheck" title="Перевірити з'єднання"><i class="fa fa-sync"></i></a>
+                            &nbsp;&nbsp; <a zippy="sitedel" title="Вилучити"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {{/ocmulti}}
         </div>
         <script>
 

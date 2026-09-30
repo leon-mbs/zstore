@@ -2,7 +2,17 @@
     <body>
         <div class="row">
             <div class="col-12 col-xl-10">
-            
+                {{#ocmulti}}
+                <form zippy="siteform">
+                    <div class="row mb-2">
+                        <label class="col-form-label col-auto" for="site"><b>Сайт</b></label>
+                        <div class="col-auto">
+                            <select class="form-control" zippy="site"></select>
+                        </div>
+                    </div>
+                </form>
+                {{/ocmulti}}
+
             <h3>Експорт   товарів в  магазин</h3>
                 &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i>Спецсимволи (типу <b> &amp; ' " `</b>)
                     в назві або описі можуть викликати проблеми з вивантаженням</small>
@@ -90,8 +100,16 @@
                     </div>
                     <div class="col-auto  "> 
                     <a zippy="updateprice" class="  btn btn-success  ">Оновити ціни</a>
-                     
+
                      </div>
+                     {{#ocmulti}}
+                     <div class="col-auto pt-2">
+                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" zippy="allsites">
+                            <label class="form-check-label" for="allsites">На всіх сайтах</label>
+                         </div>
+                     </div>
+                     {{/ocmulti}}
                    </div>
                    </form>
                 </div>

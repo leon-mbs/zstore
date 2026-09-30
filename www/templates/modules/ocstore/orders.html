@@ -4,6 +4,16 @@
     <body>
         <div class="row">
             <div class="col-12 col-xl-10    ">
+                {{#ocmulti}}
+                <form zippy="siteform">
+                    <div class="row mb-2">
+                        <label class="col-form-label col-auto" for="site"><b>Сайт</b></label>
+                        <div class="col-auto">
+                            <select class="form-control" zippy="site"></select>
+                        </div>
+                    </div>
+                </form>
+                {{/ocmulti}}
 
                 <h3>Імпорт замовлень</h3>
                   <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевірити з'єднання</a>
