@@ -22,6 +22,12 @@ class ZForm extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
+        if (strpos(\App\System::getUser()->modules ?? '', 'ppo') === false && \App\System::getUser()->rolename != 'admins') {
+            \App\System::setErrorMsg("Немає права доступу до сторінки");
+            \App\Application::RedirectError();
+            return;
+        }
+
         $this->add(new Form('filter'))->onSubmit($this, 'OnRefresh');
 
         $this->filter->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', ''), 0));
@@ -188,9 +194,9 @@ class ZForm extends \App\Pages\Base
 
             $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
 
-            if ($ret['success'] == false && ($ret['docnumber']??0) > 0) {
+            if ($ret['success'] == false && ($ret['doclocnumber']??0) > 0) {
                 //повторяем для  нового номера
-                $this->_pos->fiscdocnumber = $ret['docnumber'];
+                $this->_pos->fiscdocnumber = $ret['doclocnumber'];
                 $this->_pos->save();
                 $ret = \App\Modules\PPO\PPOHelper::shift($this->_pos->pos_id, false);
 
@@ -214,25 +220,25 @@ class ZForm extends \App\Pages\Base
         $stat = array();
         $rstat = array();
 
-        $stat['amount0'] = $this->stat->nal->getText();
-        $stat['amount1'] = $this->stat->bnal->getText();
-        $stat['amount2'] = $this->stat->credit->getText();
-        $stat['amount3'] = $this->stat->prepaid->getText();
-        $stat['cnt'] = $this->stat->cnt->getText();
+        $stat['amount0'] = doubleval(str_replace(',', '.', $this->stat->nal->getText()));
+        $stat['amount1'] = doubleval(str_replace(',', '.', $this->stat->bnal->getText()));
+        $stat['amount2'] = doubleval(str_replace(',', '.', $this->stat->credit->getText()));
+        $stat['amount3'] = doubleval(str_replace(',', '.', $this->stat->prepaid->getText()));
+        $stat['cnt'] = intval($this->stat->cnt->getText());
 
-        $rstat['amount0'] = $this->stat->retnal->getText();
-        $rstat['amount1'] = $this->stat->retbnal->getText();
+        $rstat['amount0'] = doubleval(str_replace(',', '.', $this->stat->retnal->getText()));
+        $rstat['amount1'] = doubleval(str_replace(',', '.', $this->stat->retbnal->getText()));
         $rstat['amount2'] = 0;
         $rstat['amount3'] = 0;
-        $rstat['cnt'] = $this->stat->retcnt->getText();
+        $rstat['cnt'] = intval($this->stat->retcnt->getText());
 
         $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
-        if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
+        if (strpos($ret['data'] ?? '', 'ZRepAlreadyRegistered') !== false) {
             return true;
         }
-        if ($ret['success'] == false && ( $ret['docnumber'] ??0) > 0) {
+        if ($ret['success'] == false && ( $ret['doclocnumber'] ??0) > 0) {
             //повторяем для  нового номера
-            $this->_pos->fiscdocnumber = $ret['docnumber'];
+            $this->_pos->fiscdocnumber = $ret['doclocnumber'];
             $this->_pos->save();
             $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
         }
@@ -279,7 +285,7 @@ class ZForm extends \App\Pages\Base
             return;
         }
 
-        $pos = \App\Entity\Pos::load($this->_pos->pos_id);
+        $pos = \App\Entity\Pos::load($pos_id);
   
         $ret = PPOHelper::shiftTotal($pos->fiscalnumber, $pos) ;
         if($ret == false) {

@@ -125,6 +125,7 @@ class PPOHelper
         if( ($pos->firmname ??"")=="") {
             $pos->firmname = $firm['firm_name']  ;
         }
+        $pos->inn = $pos->ipn ?? '';   //ІПН з картки термінала
         if( ($pos->inn ??"")=="") {
             $pos->inn = $firm['inn']  ;
         }
@@ -176,6 +177,7 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
+        $pos->inn = $pos->ipn ?? '';   //ІПН з картки термінала
         if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
@@ -250,7 +252,7 @@ class PPOHelper
             $n++;
         }
 
-       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
+       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
      //  \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
@@ -326,6 +328,7 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
+        $pos->inn = $pos->ipn ?? '';   //ІПН з картки термінала
         if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
@@ -434,8 +437,8 @@ class PPOHelper
                     'num'      => "ROWNUM=\"{$n}\""
                 );
                 // в долг
-                if ($payed < $doc->payamount) {
-                    $pay['paysum'] = number_format($payamount, 2, '.', '');
+                if ($payamount - $payed >= 0.005) {
+                    $pay['paysum'] = number_format($payed, 2, '.', '');
                     $pay['payed'] = number_format($payed, 2, '.', '');
                 }
                 $header['pays'][] = $pay;
@@ -457,8 +460,8 @@ class PPOHelper
                     $pay['rest'] = number_format($payed- $doc->headerdata["exchange"], 2, '.', '');
                 }
                 // в долг
-                if ($payed < $doc->payamount) {
-                    $pay['paysum'] = number_format($payamount, 2, '.', '');
+                if ($payamount - $payed >= 0.005) {
+                    $pay['paysum'] = number_format($payed, 2, '.', '');
                     $pay['payed'] = number_format($payed, 2, '.', '');
                 }
 
@@ -505,7 +508,7 @@ class PPOHelper
         }
 
         // в долг
-        if ($payed < $doc->payamount) {
+        if ($payamount - $payed >= 0.005) {
             $pay = array(
                 'formname' => self::FORM_CREDIT,
                 'formcode' => 2,
@@ -554,7 +557,7 @@ class PPOHelper
         $header['amount'] = number_format($sumpay, 2, '.', '');
         $header['rnd']  =  false;
         $header['nrnd']  =  false;
-        if(floatval($sum) !=floatval($sumpay) )  {
+        if(abs(floatval($sum) - floatval($sumpay)) >= 0.005)  {
            $header['rnd']  = number_format( $sum-$sumpay        , 2, '.', '');
            $header['nrnd']  = number_format( $sum  , 2, '.', '');
            
@@ -594,6 +597,7 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
+        $pos->inn = $pos->ipn ?? '';   //ІПН з картки термінала
         if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
@@ -671,6 +675,7 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
+        $pos->inn = $pos->ipn ?? '';   //ІПН з картки термінала
         if( ($pos->inn ??'')=='') {
             $pos->inn = $firm['inn']  ;
         }
@@ -777,7 +782,7 @@ class PPOHelper
         $amount1 = number_format($amount1, 2, '.', '');
         $amount2 = number_format($amount2, 2, '.', '');
         $amount3 = number_format($amount3, 2, '.', '');
-        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon,fiscnumber) values ({$pos_id},{$checktype}, {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . ",'{$fiscnumber}')";
+        $sql = "insert into ppo_zformstat (pos_id,checktype,  amount0,amount1,amount2,amount3,document_number,createdon,fiscnumber) values (" . intval($pos_id) . "," . intval($checktype) . ", {$amount0}, {$amount1},{$amount2},{$amount3}," . $conn->qstr($document_number) . "," . $conn->DBDate(time()) . "," . $conn->qstr($fiscnumber) . ")";
 
         $conn->Execute($sql);
     }
@@ -785,19 +790,19 @@ class PPOHelper
     public static function clearStat($pos_id) {
         $conn = \ZDB\DB::getConnect();
 
-        $conn->Execute("delete from ppo_zformstat where  pos_id=" . $pos_id);
+        $conn->Execute("delete from ppo_zformstat where  pos_id=" . intval($pos_id));
     }
 
     public static function delStat($id) {
         $conn = \ZDB\DB::getConnect();
 
-        $conn->Execute("delete from ppo_zformstat where  zf_id=" . $id);
+        $conn->Execute("delete from ppo_zformstat where  zf_id=" . intval($id));
     }
 
     public static function getStat($pos_id, $ret = false) {
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id=" . $pos_id;
+        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id=" . intval($pos_id);
         if ($ret == true) {
             $sql = $sql . "  and checktype =3"; //возврат
         } else {
@@ -811,7 +816,7 @@ class PPOHelper
     public static function getStatList($pos_id) {
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select  * from  ppo_zformstat where  pos_id=" . $pos_id;
+        $sql = "select  * from  ppo_zformstat where  pos_id=" . intval($pos_id);
 
         $list = array();
         foreach($conn->Execute($sql) as $row) {
@@ -955,7 +960,7 @@ class PPOHelper
                 }
 
 
-                \App\Modules\PPO\PPOHelper::insertStat($pos_id, $st=="1" ? 2 : 0, $amount0, $amount1, $amount2, $amount3, '', $d);
+                \App\Modules\PPO\PPOHelper::insertStat($pos_id, $st=="1" ? 3 : 0, $amount0, $amount1, $amount2, $amount3, '', $d);
 
 
             }

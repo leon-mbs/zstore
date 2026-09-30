@@ -2516,7 +2516,7 @@ class ARMFood extends \App\Pages\Base
                 //повторяем для  нового номера
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'];
                 $this->_pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                $ret = \App\Modules\PPO\PPOHelper::check($doc);
             }
             if ($ret['success'] == false) {
                   throw new \Exception($ret['data']);
