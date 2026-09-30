@@ -133,7 +133,8 @@ class Items extends \App\Pages\Base
         $this->_items = array();
         $data = Helper::request($this->_siteid, 'api/zstore/articles');
         $this->updateCats();
-        if ($data !== false) {
+        $articles = $data === false ? false : Helper::rows($this->_siteid, $data, 'articles');
+        if ($articles !== false) {
 
             $cat = $this->filter->searchcat->getValue();
             $where = "disabled <> 1   ";
@@ -147,7 +148,7 @@ class Items extends \App\Pages\Base
                 }
                 if($item->noshop ==1)  continue;
                  
-                if (in_array($item->item_code, $data['articles'])) {
+                if (in_array($item->item_code, $articles)) {
                     continue;
                 } //уже  в  магазине
                 $item->qty = $item->getQuantity();
@@ -296,7 +297,11 @@ class Items extends \App\Pages\Base
         }
         //  $this->setInfo($json);
         $i = 0;
-        foreach ($data['products'] as $product) {
+        $products = Helper::rows($this->_siteid, $data, 'products');
+        if ($products === false) {
+            return;
+        }
+        foreach ($products as $product) {
 
             if (strlen($product['sku']) == 0) {
                 continue;
@@ -394,7 +399,11 @@ class Items extends \App\Pages\Base
         }
         //  $this->setInfo($json);
         $i = 0;
-        foreach ($data['names'] as  $name) {
+        $names = Helper::rows($this->_siteid, $data, 'names');
+        if ($names === false) {
+            return;
+        }
+        foreach ($names as  $name) {
 
             if (strlen($name['name']) == 0) {
                 continue;

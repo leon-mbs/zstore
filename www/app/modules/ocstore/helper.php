@@ -21,6 +21,11 @@ class Helper
     public const FIRST = 1;
 
     /**
+     * Сколько  секунд  ждать  ответ  магазина
+     */
+    public static $timeout = 120;
+
+    /**
      * Список  сайтов  id => запись
      *
      * @param mixed $all true - вместе  с  отключенными
@@ -299,6 +304,7 @@ class Helper
         curl_setopt($ch, CURLOPT_COOKIEJAR, _ROOT . 'upload/' . $cookie);
         curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/' . $cookie);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_TIMEOUT, self::$timeout);   //магазин  соединился  и  молчит - не  ждем  бесконечно
 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
 
@@ -501,6 +507,60 @@ class Helper
         }
 
         return $data;
+    }
+
+    /**
+     * Список  из  ответа  магазина (orders, articles, products ...)
+     *
+     * @return array|false false и  сообщение  об  ошибке  если  списка  в  ответе  нет
+     */
+    public static function rows($siteId, $data, $key) {
+        if (is_array($data) && is_array($data[$key] ?? null)) {
+            return $data[$key];
+        }
+        $site = self::site($siteId);
+        if ($site == null) {
+            System::setErrorMsg('Не задано сайт OpenCart');
+            return false;
+        }
+
+        return self::error($site, 'Невірна відповідь магазину: немає списку ' . $key);
+    }
+
+    /**
+     * Импортирован  ли  уже  заказ  сайта. Дата  заказа  сужает  поиск: документ  не  может  быть  старше  заказа
+     *
+     * @param mixed $siteId
+     * @param mixed $ocorder   номер  заказа  на  сайте
+     * @param mixed $dateAdded дата  заказа  на  сайте (date_added)
+     */
+    public static function isImported($siteId, $ocorder, $dateAdded = '') {
+        $conn = \ZDB\DB::getConnect();
+        $ocorder = intval($ocorder);
+
+        $where = "(meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder}</ocorder>%' and " . self::docWhere($siteId);
+        $time = strtotime((string)$dateAdded);
+        if ($time > 0) {
+            $where .= " and document_date >= '" . date('Y-m-d', $time - 86400) . "'";
+        }
+
+        return intval($conn->GetOne("select count(*) from documents_view where " . $where)) > 0;
+    }
+
+    /**
+     * Импорт  заказов  выполняет  только  один  пользователь  одновременно
+     *
+     * @return bool false если  импорт  сейчас  идет  у  другого  пользователя
+     */
+    public static function lock() {
+        $conn = \ZDB\DB::getConnect();
+
+        return intval($conn->GetOne("select get_lock(concat('ocstore_import_', database()), 5)")) == 1;
+    }
+
+    public static function unlock() {
+        $conn = \ZDB\DB::getConnect();
+        $conn->GetOne("select release_lock(concat('ocstore_import_', database()))");
     }
 
     /**

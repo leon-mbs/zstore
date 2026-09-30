@@ -112,6 +112,10 @@ class Orders extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         $status = $this->filter->status->getValue();
+        if ($status == 0) {
+            $this->setError('Не обрано статус');
+            return;
+        }
 
         $this->_neworders = array();
         $fields = array(
@@ -119,22 +123,20 @@ class Orders extends \App\Pages\Base
         );
         $data = Helper::request($this->_siteid, 'api/zstore/orders', $fields);
         $this->updateStatuses();
-        if ($data !== false) {
-            $conn = \ZDB\DB::getConnect();
+        $orders = $data === false ? false : Helper::rows($this->_siteid, $data, 'orders');
+        $warn = array();
+        if ($orders !== false) {
 
-
-            foreach ($data['orders'] as $ocorder) {
+            foreach ($orders as $ocorder) {
 
                 //один  номер  заказа  может  быть  на  разных  сайтах
-                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%' and " . Helper::docWhere($this->_siteid) . " and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date  ")  ;
-
-                if (intval($cnt) > 0) { //уже импортирован
+                if (Helper::isImported($this->_siteid, $ocorder['order_id'], $ocorder['date_added'] ?? '')) { //уже импортирован
                     continue;
                 }
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("Не задано артикул товара {$product['name']} в замовленні номер " . $ocorder['order_id']);
+                        $warn[] = "№ {$ocorder['order_id']}: не задано артикул товару {$product['name']}";
                     }
                 }
 
@@ -145,6 +147,19 @@ class Orders extends \App\Pages\Base
 
             $this->neworderslist->Reload();
         }
+        $this->showWarnings($warn);
+    }
+
+    //предупреждения  одним  сообщением: первые  три  и  сколько  еще
+    private function showWarnings($warn) {
+        if (count($warn) == 0) {
+            return;
+        }
+        $text = implode('. ', array_slice($warn, 0, 3));
+        if (count($warn) > 3) {
+            $text .= '. І ще ' . (count($warn) - 3);
+        }
+        $this->setWarn($text);
     }
 
     public function noOnRow($row) {
@@ -182,12 +197,22 @@ class Orders extends \App\Pages\Base
         $defmf=intval($site['mf'] ?? 0);
  
         $i = 0;
+        $warn = array();
+        if (Helper::lock() == false) {
+            $this->setError('Імпорт замовлень зараз виконує інший користувач. Спробуйте за хвилину');
+            return;
+        }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
 
         try{     
            foreach ($this->_neworders as $shoporder) {
 
+            //пока  список  был  на  экране, заказ  мог  импортировать  другой  пользователь
+            if (Helper::isImported($site['id'], $shoporder->order_id, $shoporder->date_added)) {
+                $warn[] = "№ {$shoporder->order_id} уже імпортовано";
+                continue;
+            }
 
             $neworder = Document::create('Order');
             $neworder->document_date = strtotime($shoporder->date_added);
@@ -199,9 +224,11 @@ class Orders extends \App\Pages\Base
             $total =0;
             $j=0;           //товары
             $tlist = array();
+            $notfound = array();
             foreach ($shoporder->_products_ as $product) {
                 //ищем по артикулу
                 if (strlen($product['sku']) == 0) {
+                    $notfound[] = $product['name'];
                     continue;
                 }
                 $code = Item::qstr($product['sku']);
@@ -209,7 +236,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер ". $shoporder->order_id);
+                    $notfound[] = $product['name'];
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -227,8 +254,12 @@ class Orders extends \App\Pages\Base
                 $total  = $total +  ($tovar->quantity * $tovar->price) ;
                 $tlist[$j] = $tovar;
             }
-            if(count($tlist)==0) {
-                return;
+            if(count($tlist)==0) { //ни  одного  товара  по  артикулу - заказ  пропускаем, остальные  импортируются
+                $warn[] = "№ {$shoporder->order_id} не імпортовано - не знайдено за артикулом: " . implode(', ', $notfound);
+                continue;
+            }
+            if (count($notfound) > 0) {
+                $warn[] = "№ {$shoporder->order_id} імпортовано без товарів, яких не знайдено за артикулом: " . implode(', ', $notfound);
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($total);
@@ -303,10 +334,12 @@ class Orders extends \App\Pages\Base
         }
         
            $conn->CommitTrans();
+            Helper::unlock();
           
         } catch(\Throwable $ee){
             global $logger;
             $conn->RollbackTrans();
+            Helper::unlock();
            
             $this->setError($ee->getMessage());
 
@@ -317,6 +350,7 @@ class Orders extends \App\Pages\Base
         }        
         
         $this->setInfo("Імпортовано {$i} замовлень");
+        $this->showWarnings($warn);
         
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -370,6 +404,11 @@ class Orders extends \App\Pages\Base
                 }
             }
         }
+        $warn = array();
+        if (Helper::lock() == false) {
+            $this->setError('Імпорт замовлень зараз виконує інший користувач. Спробуйте за хвилину');
+            return;
+        }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -377,6 +416,11 @@ class Orders extends \App\Pages\Base
             $i = 0;
             foreach ($this->_neworders as $shoporder) {
 
+                //пока  список  был  на  экране, заказ  мог  импортировать  другой  пользователь
+                if (Helper::isImported($site['id'], $shoporder->order_id, $shoporder->date_added)) {
+                    $warn[] = "№ {$shoporder->order_id} уже імпортовано";
+                    continue;
+                }
 
                 $neworder = Document::create('TTN');
                 $neworder->document_date = time();
@@ -391,9 +435,11 @@ class Orders extends \App\Pages\Base
                 $j=0;
                 $totalpr = 0;
                 $tlist = array();
+                $notfound = array();
                 foreach ($shoporder->_products_ as $product) {
                     //ищем по артикулу
                     if (strlen($product['sku']) == 0) {
+                        $notfound[] = $product['name'];
                         continue;
                     }
                     $code = Item::qstr($product['sku']);
@@ -401,7 +447,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder->order_id);
+                        $notfound[] = $product['name'];
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -411,6 +457,13 @@ class Orders extends \App\Pages\Base
                     $tovar->rowid = $j;
 
                     $tlist[$j] = $tovar;
+                }
+                if (count($tlist) == 0) { //ни  одного  товара  по  артикулу - заказ  пропускаем, остальные  импортируются
+                    $warn[] = "№ {$shoporder->order_id} не імпортовано - не знайдено за артикулом: " . implode(', ', $notfound);
+                    continue;
+                }
+                if (count($notfound) > 0) {
+                    $warn[] = "№ {$shoporder->order_id} імпортовано без товарів, яких не знайдено за артикулом: " . implode(', ', $notfound);
                 }
                 $neworder->packDetails('detaildata', $tlist);
 
@@ -455,11 +508,13 @@ class Orders extends \App\Pages\Base
             }
 
             $conn->CommitTrans();
+            Helper::unlock();
 
 
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
+            Helper::unlock();
 
 
             $this->setError($ee->getMessage());
@@ -469,6 +524,7 @@ class Orders extends \App\Pages\Base
         }
 
         $this->setInfo("Імпортовано {$i} замовлень");
+        $this->showWarnings($warn);
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
