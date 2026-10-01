@@ -297,19 +297,24 @@ class TTN extends Document
                          }
                        
                          if($order->state == Document::STATE_WP  || ($order->getHD('paytype')==2 && $order->getHD('waitpay')==1  )  )    {
-                             $order->payed = \App\Entity\Pay::addPayment($order->document_id, $this->document_date, $this->headerdata['moneyback'], $mf);
-                             $order->setHD('waitpay',0) ;
-                             $order->save();
-                             $order->DoBalans() ;
-                             if( $order->payed >= $order->payamount   )  {
-                                $order->updateStatus(Document::STATE_PAYED);
+                             
+                            // $topay=   $this->headerdata['moneyback'] ;
+                             $topay=   $order->payamount - $order->payed ;
+                             if($topay>0) {
+                                 $order->payed = \App\Entity\Pay::addPayment($order->document_id, $this->document_date, $topay, $mf);
+                                 $order->setHD('waitpay',0) ;
+                                 $order->save();
+                                 $order->DoBalans() ;
+                                 if($order->state == Document::STATE_WP  )  {
+                                    $order->updateStatus(Document::STATE_PAYED);
+                                 }
                              }
                          }
                          
                          
                     }
                     
-                    
+                    //оплачен
                     if( $order->payed >= $order->payamount   )  {
                         $order->updateStatus(Document::STATE_CLOSED);
                     }
