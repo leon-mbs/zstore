@@ -184,6 +184,9 @@ class CronTask extends \ZCL\DB\Entity
                     if($msg['type']=='cb') {
                        $b=  \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
                     }
+                    if($msg['type']=='vk') {
+                       $b=  \App\Modules\VK\VK::autoshift($msg['pos_id']) ;
+                    }                    
                     if(!$b) {
                         $admin = \App\Entity\User::getByLogin('admin');
 
@@ -191,7 +194,7 @@ class CronTask extends \ZCL\DB\Entity
                         $n->user_id =  $admin->user_id;
                         $n->sender_id =  Notify::SYSTEM;
 
-                        $n->message = "Помилка  автоматичного закриття зміни";
+                        $n->message = "Помилка  автоматичного закриття зміни ".$msg['type'];
                         $n->save();          
                     }
                     

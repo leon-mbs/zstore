@@ -60,7 +60,10 @@ class ItemActivity extends \App\Pages\Base
 
         $this->detail->add(new Label('preview'));
       //  $this->OnSubmit($this->filter->show);
-
+        $conn = \ZDB\DB::getConnect();
+   
+        $conn->Execute("drop TABLE if   exists itemactivity_tmp  ");
+            
     }
 
     public function OnAutoItem($sender) {
@@ -137,50 +140,44 @@ class ItemActivity extends \App\Pages\Base
         $detail = array();
         $conn = \ZDB\DB::getConnect();
         
-        $sql="CREATE    TABLE  itemactivity_tmp (
-          id int NOT NULL AUTO_INCREMENT,
-          item_id int , 
-          quantity decimal (11,3) , 
-          amount decimal (11,2) , 
-        
-   
-          KEY (item_id),
-          PRIMARY KEY (id)
-        )  engine=memory    ";
-        $conn->Execute($sql);
-        $conn->Execute("delete from itemactivity_tmp  ");
-                   
-               
         $sql = "
-           INSERT  INTO  itemactivity_tmp (item_id,quantity,amount ) 
-
-              SELECT  st.item_id,
+         SELECT  t.*,
           
-          COALESCE(SUM(sc.quantity), 0) , 
-          COALESCE(SUM(sc.partion*sc.quantity), 0)  
-         FROM entrylist_view sc
-          JOIN store_stock_view st
-            ON sc.stock_id = st.stock_id
+         (
+        SELECT  
+          
+          COALESCE(SUM(sc2.quantity), 0)  
+         FROM entrylist_view sc2
+          JOIN store_stock_view st2
+            ON sc2.stock_id = st2.stock_id
            
-              WHERE {$it} and sc.document_date  < " . $conn->DBDate($from) . " 
+              WHERE st2.item_id = t.item_id  
               
-              " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
-              " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
-              " . ($cat > 0 ? " AND st.cat_id = {$cat}  " : "") . "  
-           
-             
-              GROUP BY st.item_id  ";
-               
-   
-       
-         $conn->Execute($sql);        
-        
-        $sql = "
-         SELECT     t.*,
-         
-         (select  (b.quantity) from  itemactivity_tmp b  where t.item_id = b.item_id limit 0,1 ) as  begin_quantity,
-         (select  (c.amount) from  itemactivity_tmp c where t.item_id = c.item_id  limit 0,1) as  begin_amount 
-         
+              " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
+              " . ($emp > 0 ? " AND st2.emp_id = {$emp}  " : "") . "  
+              " . ($cat > 0 ? " AND st2.cat_id = {$cat}  " : "") . "  
+              AND sc2.document_date  < t.dt   
+              GROUP BY st2.item_id 
+                                 
+         ) as begin_quantity ,
+          
+    (
+        SELECT  
+          
+          COALESCE(SUM((st3.partion*sc3.quantity )), 0)  
+         FROM entrylist_view sc3
+          JOIN store_stock_view st3
+            ON sc3.stock_id = st3.stock_id
+          
+              WHERE st3.item_id = t.item_id  
+             " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
+             " . ($emp > 0 ? " AND st3.emp_id = {$emp}  " : "") . "  
+             " . ($cat > 0 ? " AND st3.cat_id = {$cat}  " : "") . "  
+              AND sc3.document_date  < t.dt   
+              GROUP BY st3.item_id 
+                                 
+         ) as begin_amount  
+                
           from (
            select
           st.item_id,
@@ -188,7 +185,7 @@ class ItemActivity extends \App\Pages\Base
           st.item_code,
          
           GROUP_CONCAT(distinct sc.document_id)   as docs,
-          date(sc.document_date) AS dt,
+          sc.document_date AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
           SUM(CASE WHEN (st.partion*sc.quantity ) > 0 THEN (st.partion*sc.quantity ) ELSE 0 END) AS obinamount,
@@ -202,13 +199,13 @@ class ItemActivity extends \App\Pages\Base
            " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
            " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
            " . ($cat > 0 ? " AND st.cat_id = {$cat}  " : "") . "  
-             AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
-              AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
+             AND sc.document_date >= " . $conn->DBDate($from) . "
+              AND sc.document_date <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,
           st.itemname,
           st.item_code,   
 
-                       DATE(sc.document_date) ) t
+                       sc.document_date   ) t
               ORDER BY    ";
         
        $sql .= (  $fitem ? " t.itemname,t.dt " : " t.dt,t.itemname " );
@@ -251,7 +248,7 @@ class ItemActivity extends \App\Pages\Base
               $sql ="          select
               
              
-               date(sc.document_date) AS dt,
+               sc.document_date AS dt,
                dd.document_number ,
               SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
               SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout 
@@ -272,8 +269,8 @@ class ItemActivity extends \App\Pages\Base
                   GROUP BY   
                             dd.document_number ,
 
-                           DATE(sc.document_date)  
-                  ORDER BY DATE(sc.document_date)
+                           sc.document_date   
+                  ORDER BY sc.document_date 
             ";      
         
                  $rsd = $conn->Execute($sql);

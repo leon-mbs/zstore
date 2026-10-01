@@ -125,8 +125,8 @@ class PPOHelper
         if( ($pos->firmname ??"")=="") {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if( ($pos->inn ??"")=="") {
-            $pos->inn = $firm['inn']  ;
+        if( ($pos->ipn ??"")=="") {
+            $pos->ipn = $firm['inn']  ;
         }
         if( ($pos->tin ??"")=="") {
             $pos->tin = $firm['tin']  ;
@@ -136,7 +136,7 @@ class PPOHelper
         $header = array();
         $header['doctype'] = $open == true ? 100 : 101;
         $header['firmname'] = $pos->firmname;
-        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
         $header['tin'] = strlen($pos->tin) > 0 ? $pos->tin : false; 
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
@@ -176,8 +176,8 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if( ($pos->inn ??'')=='') {
-            $pos->inn = $firm['inn']  ;
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['ipn']  ;
         }
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
@@ -186,7 +186,7 @@ class PPOHelper
         $header = array();
         //    $header['doctype'] = $open == true ? 100 : 101;
         $header['firmname'] = $pos->firmname;
-        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
         $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
@@ -250,7 +250,7 @@ class PPOHelper
             $n++;
         }
 
-       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($stat['amount2']). ", банк ". \App\Helper::fa($stat['amount3'] );
+       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
      //  \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
@@ -326,11 +326,11 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if( ($pos->inn ??'')=='') {
-            $pos->inn = $firm['inn']  ;
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['inn'] ??'' ;
         }
         if( ($pos->tin ??'')=='') {
-            $pos->tin = $firm['tin']  ;
+            $pos->tin = $firm['tin'] ??'' ;
         }
         
         
@@ -340,7 +340,7 @@ class PPOHelper
         //  $header['doctype'] = $doctype;
         //     $header['docsubtype'] = $docsubtype;
         $header['firmname'] = $pos->firmname;
-        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
         $header['tin'] = $pos->tin;
         $header['testing'] = $pos->testing==1;
         $header['address'] = $pos->address;
@@ -433,7 +433,7 @@ class PPOHelper
                     'rest'     => false,                    
                     'num'      => "ROWNUM=\"{$n}\""
                 );
-                // в долг
+                // в долг  ($payamount - $payed >= 0.005
                 if ($payed < $doc->payamount) {
                     $pay['paysum'] = number_format($payamount, 2, '.', '');
                     $pay['payed'] = number_format($payed, 2, '.', '');
@@ -594,8 +594,8 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if( ($pos->inn ??'')=='') {
-            $pos->inn = $firm['inn']  ;
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['ipn']  ;
         }
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
@@ -605,7 +605,7 @@ class PPOHelper
         $header = array();
 
         $header['firmname'] = $pos->firmname ;
-        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
         $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;
@@ -671,8 +671,8 @@ class PPOHelper
         if( ($pos->firmname ??'')=='') {
             $pos->firmname = $firm['firm_name']  ;
         }
-        if( ($pos->inn ??'')=='') {
-            $pos->inn = $firm['inn']  ;
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['inn'] ??'' ;
         }
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
@@ -682,7 +682,7 @@ class PPOHelper
         $header = array();
   
         $header['firmname'] = $pos->firmname ;
-        $header['inn'] = strlen($pos->inn) > 0 ? $pos->inn : false;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
         $header['tin'] = $pos->tin;
         $header['address'] = $pos->address;
         $header['testing'] = $pos->testing==1;

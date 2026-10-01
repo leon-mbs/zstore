@@ -1,9 +1,9 @@
 SET NAMES 'utf8mb4'; 
 
-
+ 
 ALTER TABLE users ADD otpcode int DEFAULT NULL ;
 ALTER TABLE store_stock ADD tag int DEFAULT NULL ;
-
+ 
 
 DROP  VIEW users_view; 
 
@@ -74,7 +74,8 @@ FROM  store_stock st
      
  
  
-
+DROP  VIEW acc_entry_view; 
+ 
  
 CREATE VIEW acc_entry_view
 AS
@@ -96,8 +97,6 @@ SELECT
 FROM  acc_entry e
   JOIN documents d
     ON  d.document_id = e.document_id ; 
- 
- 
  
  
 delete from options where  optname='version' ;

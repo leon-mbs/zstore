@@ -117,9 +117,8 @@ class Document extends \ZCL\DB\Entity
         parent::beforeSave();  
           
     
-        $this->headerdata['lastupdated'] = time();
-        $this->headerdata['lastupdatedby'] = System::getUser()->userlogin;
-        
+        $this->lastupdated = time();
+         
         $common = \App\System::getOptions('common') ;
         $da = $common['actualdate'] ?? 0 ;
 

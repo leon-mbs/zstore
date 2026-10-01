@@ -30,6 +30,12 @@ class ZList extends \App\Pages\Base
     public $_doc;
     public function __construct() {
         parent::__construct();
+        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg("Немає права доступу до сторінки");
+
+            App::RedirectError();
+            return;
+        }
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
@@ -150,7 +156,7 @@ class ZList extends \App\Pages\Base
             }
         }
 
-        if(isset($xml->v->PAYFORMS)) {
+        if(isset($xml->ZREPRETURN->PAYFORMS)) {
             foreach($xml->ZREPRETURN->PAYFORMS->children() as $row) {
                 $header['rpayments'][]=array('forma'=>(string)$row->PAYFORMNM,'amount'=>H::fa((string)$row->SUM));
             }

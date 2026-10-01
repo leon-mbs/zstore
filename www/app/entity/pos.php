@@ -28,7 +28,7 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
         $this->details .= "<fiscallocnumber>{$this->fiscallocnumber}</fiscallocnumber>";
         $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
-        $this->details .= "<firmname>{$this->firmname}</firmname>";
+        $this->details .= "<firmname><![CDATA[{$this->firmname}]]></firmname>";
         $this->details .= "<tin>{$this->tin}</tin>";
         $this->details .= "<ipn>{$this->ipn}</ipn>";
 
@@ -71,6 +71,7 @@ class Pos extends \ZCL\DB\Entity
         $this->firmname = (string)($xml->firmname[0]);
         $this->tin = (string)($xml->tin[0]);
         $this->ipn = (string)($xml->ipn[0]);
+        $this->inn = $this->ipn;
 
         $this->autoshift = (int)($xml->autoshift[0]);
 
