@@ -71,6 +71,7 @@ class Contract extends \ZCL\DB\Entity
 
         $ar = array();
 
+        $c = intval($c);
         if ($c > 0) {
             $where = " state=6 and  customer_id={$c} ";
      

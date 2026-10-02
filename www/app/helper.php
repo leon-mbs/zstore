@@ -41,14 +41,16 @@ class Helper
         }
 
 
-        if($user->userpass == $password) {
-            return $user;
+        // пароль — лише рядок
+        if(!is_string($password) || strlen($password) == 0) {
+            return null;
         }
-        if(strlen($password) > 0) {
-            $b = password_verify($password, $user->userpass);
-            return $b ? $user : null;
+        if(!empty(password_get_info((string)$user->userpass)['algo'])) {
+            // хеш у базі
+            return password_verify($password, $user->userpass) ? $user : null;
         }
-        return null;
+        // старий пароль відкритим текстом
+        return hash_equals((string)$user->userpass, $password) ? $user : null;
     }
 
     /**
@@ -357,6 +359,8 @@ class Helper
      */
     public static function addFile($file, $itemid, $comment, $itemtype = 0) {
         $conn = DB::getConnect();
+        $itemid = intval($itemid);
+        $itemtype = intval($itemtype);
         $filename = $file['name'];
         $imagedata = getimagesize($file["tmp_name"]);
         $mime = is_array($imagedata) ? $imagedata['mime'] : "";
@@ -394,7 +398,7 @@ class Helper
      */
     public static function getFileList($item_id, $item_type = 0) {
         $conn = \ZDB\DB::getConnect();
-        $rs = $conn->Execute("select * from files where item_id={$item_id} and item_type={$item_type} ");
+        $rs = $conn->Execute("select * from files where item_id=" . intval($item_id) . " and item_type=" . intval($item_type));
         $list = array();
         foreach($rs as $row) {
             $item = new \App\DataItem();
@@ -417,6 +421,7 @@ class Helper
      */
     public static function deleteFile($file_id) {
         $conn = \ZDB\DB::getConnect();
+        $file_id = intval($file_id);
         $conn->Execute("delete  from  files  where  file_id={$file_id}");
         $conn->Execute("delete  from  filesdata  where  file_id={$file_id}");
     }

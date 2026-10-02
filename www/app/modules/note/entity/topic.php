@@ -100,6 +100,7 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public function addToNode($node_id,$islink=false) {
+        $node_id = intval($node_id);
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from note_topicnode where topic_id={$this->topic_id} and node_id = {$node_id} ");
         $conn->Execute("insert into note_topicnode(topic_id,node_id,islink)values({$this->topic_id},{$node_id}," . ($islink ? 1:0  ). ")");
@@ -111,6 +112,7 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public function removeFromNode($node_id) {
+        $node_id = intval($node_id);
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from note_topicnode where topic_id= {$this->topic_id} and node_id = {$node_id}");
     }

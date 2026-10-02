@@ -60,10 +60,10 @@ class items extends JsonRPC
         $w = 'disabled<> 1 ';
 
         if ($args['cat'] > 0) {
-            $w .= " and cat_id=" . $args['cat'];
+            $w .= " and cat_id=" . intval($args['cat']);
         }
         if ($args['item_type'] > 0) {
-            $w .= " and item_type=" . $args['item_type'];
+            $w .= " and item_type=" . intval($args['item_type']);
         }
         if (strlen($args['item_code']) > 0) {
             $w .= " and item_code=" . Item::qstr($args['item_code']);
@@ -229,7 +229,7 @@ class items extends JsonRPC
         $list = array();
         $w = '1=1';
         if ($args['customer_id'] > 0) {
-            $w = $w . " and customer_id=" . $args['customer_id'];
+            $w = $w . " and customer_id=" . intval($args['customer_id']);
         }
         if (strlen($args['searchkey'] ??'') > 0) {
             $skey = CustItem::qstr('%' . $args['searchkey'] . '%');

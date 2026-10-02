@@ -100,7 +100,7 @@ class Main extends \App\Pages\Base
         if($args[0] =="delete") {
             if($args[3]=="true") {  //ссылка
                $conn = \ZCL\DB\DB::getConnect();
-               $conn->Execute("delete from note_topicnode where topic_id={$args[1]} and node_id={$args[2]}" );
+               $conn->Execute("delete from note_topicnode where topic_id={$args[1]} and node_id=" . intval($args[2]) );
  
             }
             else {
@@ -116,10 +116,10 @@ class Main extends \App\Pages\Base
             }
       
             
-            $tn = TopicNode::getFirst("topic_id={$args[1]} and node_id={$args[3]}") ;
+            $tn = TopicNode::getFirst("topic_id={$args[1]} and node_id=" . intval($args[3])) ;
             if($tn==null) return;
-            $topic->removeFromNode($args[3]);
-            $topic->addToNode($args[2],$tn->islink==1);
+            $topic->removeFromNode(intval($args[3]));
+            $topic->addToNode(intval($args[2]),$tn->islink==1);
 
         }
         if($args[0] =="pastelink") {   //вставка  как  ссылка
@@ -381,6 +381,7 @@ class Main extends \App\Pages\Base
     }
 
     public function loadTopics($args, $post=null) {
+        $args[0] = intval($args[0]);
         $user = \App\System::getUser();
   
         $conn = \ZCL\DB\DB::getConnect();

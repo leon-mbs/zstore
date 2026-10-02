@@ -110,10 +110,10 @@ class IssueList extends \App\Pages\Base
         $post = json_decode($post) ;
         $user = System::getUser();
 
-        $number = $post->searchnumber;
-        $status = $post->searchstatus;
-        $emp = $post->searchemp;
-        $project = $post->searchproject;
+        $number = trim((string)$post->searchnumber);
+        $status = intval($post->searchstatus);
+        $emp = intval($post->searchemp);
+        $project = intval($post->searchproject);
         $sort = $post->searchsort;
         $orderby ="";
         if($sort==0) {
@@ -143,7 +143,7 @@ class IssueList extends \App\Pages\Base
         if (strlen($number) > 0) {
 
             $s = Issue::qstr('%' . $number . '%');
-            $where = "  (details like {$s} or issue_name like {$s} or issue_id={$number})  ";
+            $where = "  (details like {$s} or issue_name like {$s} or issue_id=" . intval($number) . ")  ";
             $orderby ="";
         }
 
@@ -321,7 +321,7 @@ class IssueList extends \App\Pages\Base
 
     public function delFile($args, $post) {
       
-        \App\Helper::deleteFile($args[0]);
+        \App\Helper::deleteFile(intval($args[0]));
 
     }
 

@@ -10,7 +10,9 @@ class Doclink extends \Zippy\Html\WebPage
     public function __construct($hash) {
         parent::__construct();
 
-        if(strlen($hash)==0) {
+        // точний збіг коду посилання
+        $hash = trim((string)$hash);
+        if(strlen($hash) < 16 || !preg_match('~^[a-z0-9+=/]+$~', $hash)) {
             header("HTTP/1.0 404 Not Found");
             die;
 
@@ -18,9 +20,10 @@ class Doclink extends \Zippy\Html\WebPage
         
         $conn= \ZDB\db::getConnect()  ;
         
-        $hash = $conn->qstr('%'.$hash.'%') ;
-        
-        $id = intval( $conn->GetOne(" select document_id from documents where content like ".$hash) );
+        $h1 = $conn->qstr('%<hash><![CDATA['.$hash.']]></hash>%') ;
+        $h2 = $conn->qstr('%<hash>'.$hash.'</hash>%') ;
+
+        $id = intval( $conn->GetOne(" select document_id from documents where content like {$h1} or content like {$h2} ") );
         
         $doc = Document::load($id) ;
         if ($doc == null) {

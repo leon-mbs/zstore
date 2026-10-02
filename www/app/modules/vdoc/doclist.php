@@ -68,9 +68,9 @@ class DocList extends \App\Pages\Base
         $ret['docs']  =  [];
                 
         $p = \App\Entity\Pos::load($arg[2]);
-        $sql = "    meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        $sql = "    meta_name=" . Document::qstr((string)$arg[1]) . " and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
-            $sql .= " and customer_id={$arg[0]} ";
+            $sql .= " and customer_id=" . intval($arg[0]) . " ";
         } else {
              return json_encode($ret, JSON_UNESCAPED_UNICODE);
         }
@@ -94,7 +94,10 @@ class DocList extends \App\Pages\Base
 
 
     public function mark($arg, $post=null) {
-        $ids = $post;
+        $ids = implode(',', array_filter(array_map('intval', explode(',', (string)$post))));
+        if ($ids === '') {
+            return;
+        }
         foreach(Document::findYield("document_id  in ({$ids})") as $doc) {
             $doc->headerdata['vdoc'] = 0;
             $doc->save();

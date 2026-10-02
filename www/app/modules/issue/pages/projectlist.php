@@ -63,7 +63,7 @@ class ProjectList extends \App\Pages\Base
     public function del($args, $post=null) {
 
 
-        $del = Project::delete($args[0]);
+        $del = Project::delete(intval($args[0]));
 
 
     }
@@ -77,8 +77,8 @@ class ProjectList extends \App\Pages\Base
 
 
         $number = trim($post->searchnumber ??'');
-        $cust = $post->searchcust;
-        $status = $post->searchstate;
+        $cust = intval($post->searchcust);
+        $status = intval($post->searchstate);
 
         if ($status == 0) {
             $where = " status <>  " . Project::STATUS_CLOSED;
@@ -224,7 +224,7 @@ class ProjectList extends \App\Pages\Base
         $pr = Project::load($args[0]);
 
         $filelist = array();
-        foreach(H::getFileList($args[0], \App\Entity\Message::TYPE_PROJECT) as $f) {
+        foreach(H::getFileList(intval($args[0]), \App\Entity\Message::TYPE_PROJECT) as $f) {
 
 
             $url = _BASEURL . 'loadfile.php?id=' . $f->file_id;
@@ -263,13 +263,13 @@ class ProjectList extends \App\Pages\Base
     }
     public function delFile($args, $post) {
 
-        \App\Helper::deleteFile($args[0]);
+        \App\Helper::deleteFile(intval($args[0]));
 
     }
 
     public function delMsg($args, $post) {
 
-        \App\Entity\Message::delete($args[0]);
+        \App\Entity\Message::delete(intval($args[0]));
 
     }
     public function addMsg($args, $post) {
@@ -277,7 +277,7 @@ class ProjectList extends \App\Pages\Base
         $msg->message = $post;
         $msg->created = time();
         $msg->user_id =  \App\System::getUser()->user_id;
-        $msg->item_id = $args[0];
+        $msg->item_id = intval($args[0]);
         $msg->item_type = \App\Entity\Message::TYPE_PROJECT;
         if (strlen($msg->message) == 0) {
             return;
@@ -290,7 +290,7 @@ class ProjectList extends \App\Pages\Base
     public function getMsgList($args, $post) {
         $user = \App\System::getUser() ;
 
-        $where = 'item_type = 6 and item_id=' . $args[0] ;
+        $where = 'item_type = 6 and item_id=' . intval($args[0]) ;
 
         $cnt =  \App\Entity\Message::findCnt($where)    ;
 

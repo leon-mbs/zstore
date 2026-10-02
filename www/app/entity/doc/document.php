@@ -419,9 +419,8 @@ class Document extends \ZCL\DB\Entity
         if(strlen($common['cashier'])>0) {
             $doc->headerdata['cashier'] = $common['cashier'] ;
         }
-        $hash = md5(''.rand(1, 1000000), false);
-        $hash = base64_encode(substr($hash, 0, 24));
-        $doc->headerdata['hash'] = strtolower($hash)  ;
+        // код посилання
+        $doc->headerdata['hash'] = bin2hex(random_bytes(16))  ;
     
         $firm=Helper::getFirmData()  ;
      

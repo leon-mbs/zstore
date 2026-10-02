@@ -236,10 +236,10 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function getDocs($args, $post) {
 
-        $q = (int) $args[0];
+        $q = trim((string)$args[0]);
         $q= \App\Entity\Doc\Document::qstr('%'.$q.'%') ;
         $data = array();
-        foreach(\App\Entity\Doc\Document::findArray('document_number', "parent_id <> {$args[1]} and document_number like ".$q) as $id=>$v) {
+        foreach(\App\Entity\Doc\Document::findArray('document_number', "parent_id <> " . intval($args[1]) . " and document_number like ".$q) as $id=>$v) {
             $data[]=array('value'=>$v,'key'=>$id);
         }
 
@@ -272,7 +272,7 @@ class DocView extends \Zippy\Html\PageFragment
     public function delmsg($arg, $post) {
 
 
-        \App\Entity\Message::delete($arg[0]);
+        \App\Entity\Message::delete(intval($arg[0]));
 
     }
 
@@ -356,7 +356,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function delfile($arg, $post) {
 
-        H::deleteFile($arg[0]);
+        H::deleteFile(intval($arg[0]));
         $doc= Document::load($arg[1]) ;
         if($doc->headerdata["scan"]== $arg[0] )  {
              $doc->headerdata["scan"] = 0;
