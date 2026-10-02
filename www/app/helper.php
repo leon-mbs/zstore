@@ -398,8 +398,8 @@ class Helper
         $list = array();
         foreach($rs as $row) {
             $item = new \App\DataItem();
-            $item->file_id = $row['file_id'];
-            $item->user_id = $row['user_id'];
+            $item->file_id = (int)$row['file_id'];
+            $item->user_id = (int)$row['user_id'];
             $item->filename = $row['filename'];
             $item->description = $row['description'];
             $item->mime = $row['mime'];
@@ -416,6 +416,7 @@ class Helper
      * @param mixed $file_id
      */
     public static function deleteFile($file_id) {
+        $file_id= (int) $file_id;
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete  from  files  where  file_id={$file_id}");
         $conn->Execute("delete  from  filesdata  where  file_id={$file_id}");
@@ -427,6 +428,7 @@ class Helper
      * @param mixed $file_id
      */
     public static function loadFile($file_id) {
+        $file_id= (int) $file_id;
         $conn = \ZDB\DB::getConnect();
         $rs = $conn->Execute("select filename,filedata,mime from files join filesdata on files.file_id = filesdata.file_id  where files.file_id={$file_id}  ");
         foreach($rs as $row) {

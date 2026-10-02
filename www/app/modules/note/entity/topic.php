@@ -111,6 +111,7 @@ class Topic extends \ZCL\DB\Entity
      * @param mixed $node_id
      */
     public function removeFromNode($node_id) {
+        $node_id  = (int) $node_id ;
         $conn = \ZCL\DB\DB::getConnect();
         $conn->Execute("delete from note_topicnode where topic_id= {$this->topic_id} and node_id = {$node_id}");
     }

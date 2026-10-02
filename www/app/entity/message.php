@@ -41,6 +41,7 @@ class Message extends \ZCL\DB\Entity
   
      */
     public static function getMessages($type, $item_id) {
+        $type = intval($type);
         return \App\Entity\Message::find("item_type ={$type} and item_id={$item_id}", "message_id ");
     }
 

@@ -203,7 +203,7 @@ class TimeSheet extends \App\Pages\Base
 
         $time = new TimeItem();
         if($args[0] > 0) {
-            $time = TimeItem::load($args[0]);
+            $time = TimeItem::load((int)$args[0]);
         }
 
         $time->description = $post->desc;

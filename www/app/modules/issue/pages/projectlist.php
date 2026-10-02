@@ -63,7 +63,7 @@ class ProjectList extends \App\Pages\Base
     public function del($args, $post=null) {
 
 
-        $del = Project::delete($args[0]);
+        $del = Project::delete( (int)$args[0]);
 
 
     }
@@ -77,8 +77,8 @@ class ProjectList extends \App\Pages\Base
 
 
         $number = trim($post->searchnumber ??'');
-        $cust = $post->searchcust;
-        $status = $post->searchstate;
+        $cust = (int) $post->searchcust;
+        $status = (int)$post->searchstate;
 
         if ($status == 0) {
             $where = " status <>  " . Project::STATUS_CLOSED;
@@ -157,7 +157,7 @@ class ProjectList extends \App\Pages\Base
     }
 
     public function show($args, $post=null) {
-        $pd = Project::load($args[0])  ;
+        $pd = Project::load((int)$args[0])  ;
 
 
         return json_encode(array('name'=>$pd->project_name,
@@ -172,7 +172,7 @@ class ProjectList extends \App\Pages\Base
 
     public function save($args, $post=null) {
         $user=\App\System::getUser()  ;
-        $pd = Project::load($args[0])  ;
+        $pd = Project::load((int)$args[0])  ;
         if($pd==null) {
             $pd = new  Project();
             $pd->creator_id  = $user->user_id;
@@ -187,7 +187,7 @@ class ProjectList extends \App\Pages\Base
         }
         $pd->project_name=$post["name"] ;
         $pd->desc=$post["desc"] ;
-        $pd->customer_id=$post["customer_id"] ;
+        $pd->customer_id= (int) $post["customer_id"] ;
         $pd->save();
 
 
