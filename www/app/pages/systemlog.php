@@ -157,7 +157,7 @@ class SystemLog extends \App\Pages\Base
         if($author > 0) {
             $w .= " and user_id = {$author}  ";
         }
-        if($doctype > 0) {
+        if($doctype > 0) { //todo  после  обновления  Бд
             $w .= " and document_id  in (select document_id  from documents where  meta_id =  {$doctype} ) ";
         }
         $rc = $conn->Execute("select * from docstatelog_view where {$w}   order  by  log_id");
