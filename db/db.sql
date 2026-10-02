@@ -867,7 +867,7 @@ SELECT
   dl.hostname AS hostname,
   u.username AS username,
   d.document_number AS document_number,
-  d.meta_desc AS meta_desc,
+ 
   d.meta_name AS meta_name
 FROM ((docstatelog dl
   LEFT JOIN users_view u

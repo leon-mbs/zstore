@@ -116,8 +116,8 @@ class Document extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();  
           
-    
-        $this->lastupdated = time();
+        $this->headerdata['lastupdated'] = time();
+        $this->headerdata['lastupdatedby'] = System::getUser()->userlogin;
          
         $common = \App\System::getOptions('common') ;
         $da = $common['actualdate'] ?? 0 ;
@@ -853,10 +853,8 @@ class Document extends \ZCL\DB\Entity
         $host = $conn->qstr($host);
         if($user_id==0){
             $user = \App\System::getUser();
-            if($user == null) {
-                $user = \App\Entity\User::getByLogin('admin') ;
-            }
             $user_id= $user->user_id;
+            
         }  else {
 
                 $n = new \App\Entity\Notify();

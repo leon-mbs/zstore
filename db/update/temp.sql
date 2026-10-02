@@ -98,6 +98,29 @@ FROM  acc_entry e
   JOIN documents d
     ON  d.document_id = e.document_id ; 
  
+DROP  VIEW docstatelog_view; 
+
+CREATE VIEW docstatelog_view
+AS
+SELECT
+  dl.log_id AS log_id,
+  dl.user_id AS user_id,
+  dl.document_id AS document_id,
+  dl.docstate AS docstate,
+  dl.createdon AS createdon,
+  dl.hostname AS hostname,
+  u.username AS username,
+  d.document_number AS document_number,
+ 
+  d.meta_id AS meta_id
+  d.meta_name AS meta_name
+FROM ((docstatelog dl
+  LEFT JOIN users_view u
+    ON ((dl.user_id = u.user_id)))
+  JOIN documents_view d
+    ON ((d.document_id = dl.document_id))) ;
+
+
  
 delete from options where  optname='version' ;
 insert into options (optname,optvalue) values('version','8.3.0'); 

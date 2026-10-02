@@ -211,12 +211,12 @@ class Users extends \App\Pages\Base
                 }
             }
             if(count($sarr)==0) {
-                $this->setError('Не вибраний  жоден склад') ;
-                return;
+                $this->setWarn('Не вибраний  жоден склад') ;
+               
             }   
             if(count($marr)==0) {
-                $this->setError('Не вибраний  жоден  грошовий рахунок') ;
-                return;
+                $this->setWarn('Не вибраний  жоден  грошовий рахунок') ;
+               
             }   
  
             $this->user->aclstore = implode(',', $sarr);

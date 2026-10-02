@@ -57,7 +57,7 @@ class DocView extends \Zippy\Html\PageFragment
     }
 
     public function loaddata($arg, $post) {
-        $docid =  $arg[0] ;
+        $docid = (int) $arg[0] ;
 
         $user = \App\System::getUser() ;
         $common = \App\System::getOptions('common') ;
@@ -121,7 +121,15 @@ class DocView extends \Zippy\Html\PageFragment
         //статусы
         $ret['loglist'] = array();
         foreach($doc->getLogList() as $st) {
-            $ret['loglist'][]= array('statedate'=> \App\Helper::fdt($st->createdon),'stateuser'=>$st->username,'statename'=>Document::getStateName($st->docstate)) ;
+            $statename="";
+            if($st->docstate >0) {
+               $statename =  Document::getStateName($st->docstate) ;
+            }
+            if($st->docstate < 0) {
+               continue;
+            }
+         
+            $ret['loglist'][]= array('statedate'=> \App\Helper::fdt($st->createdon),'stateuser'=>$st->username,'statename'=>$statename ) ;
         }
 
         //оплаты
@@ -184,7 +192,7 @@ class DocView extends \Zippy\Html\PageFragment
     public function loadchilddocs($arg, $post) {
         $user = \App\System::getUser() ;
 
-        $docid =  $arg[0] ;
+        $docid = (int) $arg[0] ;
 
         $doc = Document::load($docid);
 
@@ -208,7 +216,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function delchilddoc($arg, $post) {
 
-        $chid =  $arg[0] ;
+        $chid = (int) $arg[0] ;
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("update documents set parent_id=0 where  document_id=" . $chid);
@@ -218,9 +226,9 @@ class DocView extends \Zippy\Html\PageFragment
     public function addchilddoc($arg, $post) {
 
 
-        $child = Document::load($arg[0]);
+        $child = Document::load((int)$arg[0]);
         if ($child instanceof Document) {
-            $child->parent_id = $arg[1];
+            $child->parent_id =(int) $arg[1];
             $child->save();
         }
 
@@ -228,7 +236,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function getDocs($args, $post) {
 
-        $q = $args[0];
+        $q = (int) $args[0];
         $q= \App\Entity\Doc\Document::qstr('%'.$q.'%') ;
         $data = array();
         foreach(\App\Entity\Doc\Document::findArray('document_number', "parent_id <> {$args[1]} and document_number like ".$q) as $id=>$v) {
@@ -241,8 +249,8 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function loadmessages($arg, $post) {
         $user = \App\System::getUser() ;
-
-        $docid =  $arg[0] ;
+      
+        $docid = (int) $arg[0] ;
 
 
         $msglist = array();
@@ -272,6 +280,7 @@ class DocView extends \Zippy\Html\PageFragment
         if(strlen($post['msgtext'])==0) {
             return;
         }
+        $arg[0] = (int) $arg[0] ;
         $user = System::getUser();
         $doc = Document::load($arg[0]);
 
@@ -314,8 +323,8 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function loadfiles($arg, $post) {
         $user = \App\System::getUser() ;
-
-        $docid =  $arg[0] ;
+      
+        $docid = (int) $arg[0] ;
         $doc = Document::load($docid);
 
 
@@ -357,6 +366,7 @@ class DocView extends \Zippy\Html\PageFragment
     }
 
     public function addfile($arg, $post) {
+        $arg[0] = (int) $arg[0] ;
 
 
         $file =  $_FILES['addfile']  ;
@@ -371,6 +381,7 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function printEP($arg, $post) {
 
+       $arg[0] = (int) $arg[0] ;
 
 
         try {

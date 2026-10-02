@@ -12,12 +12,15 @@ class DataItem implements \Zippy\Interfaces\DataItem
     * 
     * @param mixed $row   массив  полей  или  уникальный id 
     */
-    public function __construct($row = null) {
+    public function __construct($row = null,$id=0) {
         if(is_integer($row)) {
             $this->id = $row;
         }
         if (is_array($row)) {
             $this->fields = array_merge($this->fields, $row);
+        }
+        if(intval($id) >  0) {
+           $this->id = $id ;
         }
         if(intval($this->id) == 0) {
            $this->id = \App\Session::getSession()->getUid()  ;
@@ -45,14 +48,15 @@ class DataItem implements \Zippy\Interfaces\DataItem
      * возвращает  список DataItem заполненый с запроса
      *
      * @param mixed $sql
+     * @param mixed $keyfield    название поля  ключа
      */
-    public static function query($sql) {
+    public static function query($sql,$keyfield="") {
         $conn = \ZDB\DB::getConnect();
         $list = array();
 
         $rc = $conn->Execute($sql);
         foreach ($rc as $row) {
-            $list[] = new DataItem($row);
+            $list[] = new DataItem($row,$row[$keyfield] ?? 0);
         }
         return $list;
     }
