@@ -36,7 +36,7 @@ class Options extends \App\Pages\Base
         $form->add(new TextArea('key', $modules['ockey']));
 
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
-        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']));
+        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']??0));
         $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
         $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['ocstoreid']??0));
       

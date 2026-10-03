@@ -10,11 +10,16 @@
                 <h3>Журнал замовлень </h3>
             </div>
              <div zippy="listpanel" class="col-12 col-xl-11">
-
+             
+              
+                 <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-primary  btn-sm my-1">Нове замовлення</a>
+                 
+                 
+                  
                 
                     <form zippy="filter"  >
 
-                        <div class="row row-cols-sm-auto g-2 align-items-start mb-2">
+                        <div class="row row-cols-sm-auto g-2 align-items-start my-1">
                          <div class="col-12">
                            <div class="input-group">
 
@@ -52,10 +57,7 @@
                       </div>
                     </form>
                
-                <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
-
-
-                <br><a zippy="csv">Експорт у Excel</a>
+                 <a zippy="csv">Експорт у Excel</a>
                  <div class="table-responsive-lg  "    >
              
                 <table class="table   table-sm   ">
@@ -117,7 +119,7 @@
         </div>
 
       
-
+       
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">
                 <details>
@@ -239,8 +241,7 @@
                         
                            <label     >Створити </label>
                          
-                        <button zippy="bttn" class="btn btn-primary  me-2">  ТТН</button>
-                        
+                          <button zippy="bttn" class="btn btn-primary  me-2">  ТТН</button>
                      
                           <button zippy="bpos" class="btn btn-primary  me-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
                           
@@ -326,15 +327,13 @@
                     </div>
                      </div>  
                    
-                    
-                </div>
-
+            <div class="row ">  
+            <div class="col-12 ">  
 
                 <div zippy="docview"></div>
-
-            </div>
-        </div>
-        
+           </div>
+         </div>
+         
         
         <div zippy="editpanel" class="row">
             <div class="col-12 col-md-8 col-xl-6">
@@ -378,7 +377,9 @@
       
             </div>
         </div>        
-        
+       
+       
+            
         <div zippy="splitpanel" class="row">
             <div class="col-12 col-md-8 col-xl-6">
                  <h5>Замовлення <span zippy="splitdn"></span></h5>
@@ -410,6 +411,9 @@
       
             </div>
         </div>        
+        
+    
+      
         
          {{={| |}=}}   
           <div class="row">

@@ -2846,6 +2846,10 @@ class ARMFood extends \App\Pages\Base
     
     public  function afterRequest() {
         parent::afterRequest() ;
+     
+        $isajax=  \App\Application::$app->getRequest()->isAjaxRequest() ;
+        if($isajax) return;
+     
         if($this->docpanel->listsform->isVisible()) {
            
             $this->docpanel->listsform->btosave->setVisible($this->_doc->state < 4 || $this->_doc->state== 16); 

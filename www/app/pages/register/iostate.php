@@ -7,6 +7,7 @@ use App\Entity\Doc\Document;
 use App\Entity\Pay;
 use App\Helper as H;
 use App\System;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Pager;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -14,6 +15,7 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\ClickLink;
@@ -26,7 +28,9 @@ use App\Application as App;
 class IOState extends \App\Pages\Base
 {
     private ?Document $_doc    = null;
-    public array $_ptlist = [];
+    public array $_list = [];
+    private array $_ptlist = [];
+    private array $_ptlistb = []; // без закупки
     
 
     /**
@@ -44,8 +48,11 @@ class IOState extends \App\Pages\Base
         $this->_tvars['totaldiff'] = "";
           
         $this->_ptlist = \App\Entity\IOState::getTypeListBook();
-
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->_ptlistb = \App\Entity\IOState::getTypeListBook();
+        
+        unset($this->_ptlistb[\App\Entity\IOState::TYPE_BASE_OUTCOME]) ;
+         
+        $this->add(new Form('filter'));
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
       
@@ -55,16 +62,18 @@ class IOState extends \App\Pages\Base
         $to = $dt->endOfMonth()->getTimestamp();
         $this->filter->add(new Date('from',$from));
         $this->filter->add(new Date('to',$to));
+        $this->filter->add(new SubmitButton('bfilter' ))->onClick($this, 'filterOnSubmit');
               
         
 
         $this->add(new Form('docform'))->onSubmit($this, 'addOnSubmit');
         $this->docform->add(new TextInput('docnumber'));
         $this->docform->add(new TextInput('docamount'));
+        $this->docform->add(new Date('docdate'));
         $this->docform->add(new DropDownChoice('docio', $this->_ptlist, 0));
          
         
-        $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->add(new DataView('doclist', new ArrayDataSource($this,'_list'), $this, 'doclistOnRow'));
 
         
         $this->add(new Pager('pag', $doclist));
@@ -83,12 +92,7 @@ class IOState extends \App\Pages\Base
         $this->add(new Panel('bookrep' ))->setVisible(false);
        
         $this->bookrep->add(new Label('bookrephtml' ));
-         
-        $this->add(new Form('formedit'))->onSubmit($this, 'editOnSubmit');
-        $this->formedit->add(new Date('editdate' ));
-        $this->formedit->add(new TextInput('editio' ));
-                
-   //     $this->_ptlist[0] = '';
+     
        
         $this->update(); 
     }
@@ -137,17 +141,107 @@ class IOState extends \App\Pages\Base
     }
 
     private function update( ) {
-        $this->_tvars['totalin'] = 0;
-        $this->_tvars['totalout'] = 0;
-        $this->doclist->Reload(); 
+        $conn = \ZDB\DB::getConnect();
+        $sql = "select i.id, i.iotype,i.amount, d.username, d.content,  d.document_id,  d.meta_name, d.document_number, date(i.document_date) as document_date ,i.amount    " ;
+        $sql .= " from documents_view  d   join iostate_view i on d.document_id = i.document_id where 1=1 " ;
+        $from = $this->filter->from->getDate();
+        $to = $this->filter->to->getDate();
+        $ttn=[] ;
         
-  
+        if($this->_tvars['bmode'] ==true) {
+            $sql .= " and coalesce(iotype,0) <> 50    " ; 
+        }        
+        $sqlttn="select coalesce(sum(e.partion * e.quantity),0) as sm,e.document_id, GROUP_CONCAT(DISTINCT e.item_id SEPARATOR ',') AS items  from entrylist_view e  where e.item_id > 0 and e.tag = -1 ";
         
-  
-        $this->_tvars['totalin']   = H::fa($this->_tvars['totalin']   );
-        $this->_tvars['totalout']  = H::fa($this->_tvars['totalout']   );
-        $this->_tvars['totaldiff'] = H::fa($this->_tvars['totalin'] - $this->_tvars['totalout'] );
-        $this->bookrep->setVisible(false);  
+        $sql .= " and  i.document_date >= " . $conn->DBDate($from);
+        $sql .= " and  i.document_date <= " . $conn->DBDate($to);
+        $sqlttn .= " and  e.document_date >= " . $conn->DBDate($from);
+        $sqlttn .= " and  e.document_date <= " . $conn->DBDate($to);
+ 
+        if($this->_tvars['bmode'] ==true) {
+             $ids= implode(',', array_keys($this->_ptlistb) );
+             $sql .= " and ( coalesce(iotype,0) in ({$ids})  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
+                 
+            
+        } else {
+            $sql .= " and coalesce(iotype,0) not in (30,31,80,81,82,0)  ";
+    
+            $author = $this->filter->fuser->getValue();
+            $type = $this->filter->ftype->getValue();
+
+            if ($type > 0) {
+                $sql .= " and coalesce(iotype,0)=" . $type;
+            }
+
+
+            if ($author > 0) {
+                $sql .= " and d.user_id=" . $author;
+            }
+         
+        }
+      
+        
+        $id = \App\System::getBranch(); //если  выбран  конкретный
+        if ($id > 0) {
+
+             $sql .= " and  d.branch_id = ".$id;
+             $sqlttn .= " and  d.branch_id = ".$id;
+        }        
+        $sql .= " order  by i.document_date   ";
+        
+        if($this->_tvars['bmode'] ==true) {
+            $sqlttn .= " GROUP BY e.document_id  " ;
+            foreach(  $conn->Execute($sqlttn) as $row){
+               $d = new \App\DataItem($row,'document_id');
+               
+               $doc = Document::load( $row['document_id']);
+               $doc->iotype=50;
+               $doc->outcome=abs( $row['sm']);
+               $doc->amount=abs( $row['sm']);
+               $doc->items= $row['items'];    
+ 
+               $ttn[$doc->document_id] = $doc;
+            }
+            
+           
+            
+        } 
+        
+        $this->_list=[];
+        foreach(Document::findBySql($sql) as $doc){
+            if($doc->getHD('iniostate',0)==1){
+              $doc->iotype= $doc->getHD('iniostatetype',0) ; 
+              $doc->amount= $doc->getHD('iniostateamount',0) ; 
+            }             
+            if($doc->iotype < 30) {
+               $doc->income = $doc->amount; 
+               $doc->outcome = 0; 
+            } else {
+               $doc->income = 0; 
+               $doc->outcome = 0-$doc->amount; 
+            }     
+            
+            if(isset($ttn[$doc->document_id]))  {
+               $doc->outcome += $ttn[$doc->document_id]->outcome  ;  
+               $doc->items= $doc->items;
+               $doc->iotypeo= 50;
+               unset($ttn[$doc->document_id]);
+            }
+              
+            $this->_list[$doc->document_id] =  $doc;
+        };
+        foreach($ttn as $t) {
+           $this->_list[$t->document_id] =  $t;  
+        }
+        unset($ttn)  ;
+       
+        usort( $this->_list,function ($a, $b) {
+            return $a->document_date > $b->document_date;
+        }) ;
+        
+      
+        $this->reload();
+        
                                     
           
     }
@@ -168,23 +262,29 @@ class IOState extends \App\Pages\Base
         $row->add(new Label('iotype', $this->_ptlist[$doc->iotype] ??''));
         $row->add(new ClickLink('show', $this, 'showOnClick'));
         $row->add(new ClickLink('delete', $this, 'deleteOnClick'));
-        $row->add(new BookmarkableLink('edit' ));
-        $d=date('Y-m-d', $doc->document_date);
-        $row->edit->setAttribute("onclick","editRow({$doc->id},'{$d}')");
-        
-        if($doc->iotype < 30) {
-           $row ->amountin->setText(H::fa($doc->amount));
-           $this->_tvars['totalin']  += $doc->amount;   
-        } else {
-           $row ->amountout->setText(H::fa(0-$doc->amount));
-           $this->_tvars['totalout'] += (0-$doc->amount);
-        }
-  
-             
-        
+       
+        if($doc->income > 0) {
+           $row ->amountin->setText(H::fa($doc->income));
+           $this->_tvars['totalin']  += $doc->income;   
+        } 
+        if($doc->outcome > 0) {        
+           $row ->amountout->setText(H::fa( $doc->outcome));
+           $this->_tvars['totalout'] += ( $doc->outcome);
+        }                
+    
     }
 
-   
+    public function reload( ) {
+        $this->_tvars['totalin'] = 0;
+        $this->_tvars['totalout'] = 0;
+      
+        $this->doclist->Reload();  
+        $this->_tvars['totalin']   = H::fa($this->_tvars['totalin']   );
+        $this->_tvars['totalout']  = H::fa($this->_tvars['totalout']   );
+        $this->_tvars['totaldiff'] = H::fa($this->_tvars['totalin'] - $this->_tvars['totalout'] );
+        $this->bookrep->setVisible(false);  
+        
+    }
     public function deleteOnClick($sender) {
 
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
@@ -193,20 +293,13 @@ class IOState extends \App\Pages\Base
         $this->_doc->save();
 
         $this->docview->setVisible(false);
-        $this->update();       
+        $this->update(); 
+       
+      
     }
   
-    public function editOnSubmit($sender) {
-
-        $dt=$sender->editdate->getDate();
-        $id=$sender->editio->getInt();
-        
-        $io = \App\Entity\IOState::load($id);
-        $io->iodate = $dt;
-        $io->save();
-        $this->update();       
-    }
   
+    
     public function showOnClick($sender) {
 
         $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
@@ -219,16 +312,9 @@ class IOState extends \App\Pages\Base
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
     }
-
-
-
-  
     
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1);
-
-      
-        
+          
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet1 = $spreadsheet->getActiveSheet();
         $sheet1->setTitle('Прибутки'); // Optionally set a title
@@ -239,7 +325,7 @@ class IOState extends \App\Pages\Base
 
         $i1 = 0;
         $i2 = 0;
-        foreach ($list as $doc) {
+        foreach ($this->_list as $doc) {
             if($doc->iotype < 30)  {
                $i1++; 
                $i =  $i1;
@@ -281,9 +367,10 @@ class IOState extends \App\Pages\Base
     
     public function onviewbook($sender) {
       
-       
+       $conn = \ZDB\DB::getConnect();
+    
        $list=[];
-       foreach($this->doclist->getDataSource()->getItems(-1, -1)  as $r){
+       foreach($this->_list  as $r){
           
            $d= H::fd(  $r->document_date )  ;
            if(!isset($list[$d])) $list[$d] =[];
@@ -301,55 +388,50 @@ class IOState extends \App\Pages\Base
            $row['date']  = $d;
            $c2=0; $c3=0; $c4=0; $c5=0;$c6=0;$c7=0;$c8=0;$c9=0;$c10=0;$c11=0;
            foreach($iolist as $io) {  
-              $doc=Document::load($io->document_id)  ;
-              if($doc->getHD('iniostatetype') > 0) {
-                 $io->iotype = $doc->getHD('iniostatetype') ;
-                 $io->amount = $doc->getHD('iniostateamount') ;
-              }
-               
-               
-             
-              if($doc->meta_name=='ReturnIssue') {  //возврат
+             // $doc=Document::load($io->document_id)  ;
+              
+              if($io->meta_name=='ReturnIssue') {  //возврат
                  $c3 +=  abs( $io->amount ); 
                  continue; 
               }              
-              if($doc->meta_name=='Invoice') {  //предоплата
-                 $c3 +=  abs( $io->amount ); 
+              if($io->meta_name=='Invoice') {  //предоплата
+                 $c3 +=  abs( $io->income ); 
                  continue; 
               }              
             
               if($io->iotype == 1 || $io->iotype == 2 || $io->iotype == 3 )  { //доходы
-                 $c2 +=  abs( $io->amount );
-                 continue; 
+                 $c2 +=  abs( $io->income );
+                // continue; 
               }
        
               //затраты
-              if($io->iotype == 50)  {   //закупка
-                 $c6 +=  abs( $io->amount );
+              if($io->iotype == 50 || intval( $io->iotypeo )  == 50  )  {   //закупка
+                 $c6 +=  abs( $io->outcome );
+                 if(strlen($io->items ??'')>0) {
+                     $sql=" SELECT distinct document_number,document_date FROM  documents  WHERE document_id IN(SELECT document_id FROM entrylist_view where  tag= -2 and  item_id in ({$io->items}) )    ORDER BY  document_date desc  limit 0, " . count(explode(',',$io->items)); 
+              
+                     foreach($conn->Execute($sql) as $d) {
+                         $docs[$d['document_number']]=$d['document_number'];
+                     }
+                 }
+                  
               }     
               if($io->iotype == 54)  {   //зарплата
-                 $c7 +=  abs( $io->amount );
+                 $c7 +=  abs( $io->outcome );
               }     
               if( in_array($io->iotype,[55,70,71])   )  {   //налоги
-                 $c8 +=  abs( $io->amount );
+                 $c8 +=  abs( $io->outcome );
               }     
               if(in_array($io->iotype,[53,57,60,63]))  {   
-                 $c9 +=  abs($io->amount);
+                 $c9 +=  abs($io->outcome);
               }     
               
                  
               if($io->iotype == 67)  {  
-                 $c10 +=  abs( $io->amount );
+                 $c10 +=  abs( $io->outcome );
               }        
               
-              $docs[]=  $io->document_number   ;
-  
-             
-    
-              
-              
-              
-                         
+                          
            }
            $c4 = $c2 - $c3;
             
@@ -425,88 +507,4 @@ class IOState extends \App\Pages\Base
   
       
 }
-
-/**
- *  Источник  данных  для   списка  документов
- */
-class IOStateListDataSource implements \Zippy\Interfaces\DataSource
-{
-    private $page;
-
-    public function __construct($page) {
-        $this->page = $page;
-    }
-
-    private function getWhere() {
-        $user = System::getUser();
-
-        $conn = \ZDB\DB::getConnect();
-
-        $where = "  1=1 ";
-        $from = $this->page->filter->from->getDate();
-        $to = $this->page->filter->to->getDate();
-
-        if ($from > 0) {
-            $where .= " and  d.document_date >= " . $conn->DBDate($from);
-        }
-        if ($to > 0) {
-            $where .= " and  d.document_date <= " . $conn->DBDate($to);
-        }
-
-        if($this->page->_tvars['bmode'] ==true) {
-             $ids= implode(',', array_keys($this->page->_ptlist) );
-             $where .= " and ( coalesce(iotype,0) in ({$ids})  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
-            
-        } else {
-            $where .= " and coalesce(iotype,0) not in (30,31,80,81,82,0)  ";
-    
-            $author = $this->page->filter->fuser->getValue();
-            $type = $this->page->filter->ftype->getValue();
-
-            if ($type > 0) {
-                $where .= " and coalesce(iotype,0)=" . $type;
-            }
-
-
-            if ($author > 0) {
-                $where .= " and d.user_id=" . $author;
-            }
-         
-        }
-
-        
-        $id = \App\System::getBranch(); //если  выбран  конкретный
-        if ($id > 0) {
-
-            return "d.branch_id = ".$id;
-        }        
  
-        return $where;
-    }
-
-    public function getItemCount() {
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(count(*),0) from documents_view  d   join iostate_view i on d.document_id = i.document_id where " . $this->getWhere();
-     //   H::log($sql);
-        return $conn->GetOne($sql);
-    }
-
-    public function getItems($start, $count, $sortfield = null, $asc = null) {
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select i.id, i.iotype,i.amount, d.username,  d.document_id,  d.document_number,i.document_date,i.amount  from documents_view  d   join iostate_view i on d.document_id = i.document_id where " . $this->getWhere() . " order  by d.document_date   ";
-        if ($count > 0) {
-            $limit =" limit {$start},{$count}";
-            $sql .= $limit;
-        }
-     
-        $docs =  Document::findBySql($sql);
-
-        return $docs;
-    }
-
-    public function getItem($id) {
-
-    }
-
-}

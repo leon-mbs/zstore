@@ -102,7 +102,7 @@ class User extends \ZCL\DB\Entity
 
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
-        $this->defpaytype = $options['defpaytype']??0;
+     
         $this->defsalesource = $options['defsalesource'] ??0 ;
         $this->pagesize = $options['pagesize'] ??0;
         $this->phone = $options['phone']?? '';
@@ -158,7 +158,7 @@ class User extends \ZCL\DB\Entity
         $options['defstore'] = $this->defstore;
 
 
-        $options['defpaytype'] = $this->defpaytype;
+
         $options['defmf'] = $this->defmf;
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;

@@ -40,13 +40,15 @@ class Order extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
        
-      //  $common = \App\System::getOptions("common");
-         
-        $dostore= false;
+        $user = \App\System::getUser() ;
+        
+        $dostore= true;
+        $paytype= 2;
         if($docid==0) {
-            $last = Document::getFirst("state > 3 and  meta_name='Order'","document_id desc");
+            $last = Document::getFirst("state > 3 and content like '%<manual>{$user->user_id}</manual>%' and meta_name='Order'","document_id desc");
             if($last != null){
                 $dostore = $last->getHD('dostore',0)==1;
+                $paytype = $last->getHD('paytype',2) ;
             }
         }
   
@@ -92,7 +94,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
  
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (напр. оплачено в IM)',2=>'Післяплата (в журналі розрахунків)',3=>'Оплата касовим чеком,РФ або ВН'], H::getDefPayType() ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (напр. оплачено в IM)',2=>'Післяплата (в журналі розрахунків)',3=>'Оплата касовим чеком,РФ або ВН'], $paytype ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
@@ -239,7 +241,8 @@ class Order extends \App\Pages\Base
         } else {
             $this->_doc = Document::create('Order');
             $this->docform->document_number->setText($this->_doc->nextNumber());
-           
+            $this->_doc->setHD('manual',$user->user_id);//создано вручную
+    
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
@@ -282,7 +285,7 @@ class Order extends \App\Pages\Base
             }
         }
 
-
+         
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -878,7 +881,7 @@ class Order extends \App\Pages\Base
     public function OnPayType($sender) {
          $t= intval($sender->getValue() );
          $this->docform->payed->setVisible($t==1);
-         $this->docform->payment->setVisible($t==1);
+         $this->docform->payment->setVisible($t!=3);
          $this->docform->dostore->setVisible($t!=3);
          if($t==3) {
            $this->docform->dostore->setChecked(false) ; 

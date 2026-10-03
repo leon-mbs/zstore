@@ -27,7 +27,7 @@
   //сокращенный  вызов callPageMethod
   function  callPM(method,params,postdata=null,callback =null   , callerror=null     )
   {
- 
+       
        var url = getMethodUrl(method,params)  
           
        var opt={
@@ -49,7 +49,7 @@
           })
           .then((answer) => {
                
-
+              
                if(answer.error)  {
                     if(callerror ){
                         callerror(answer.error);  
@@ -70,13 +70,18 @@
           
           
                 if(callback  ){
-                   callback(answer.data ) 
+                   if(answer.data) {
+                      callback(answer.data )      
+                   }  else {
+                      callback(answer )  
+                   }
+                  
                 }          
 
             
           })
           .catch(function (error) {
-            console.log('error '+error)
+            console.log( error)
             if(callerror != null){
                 callerror(error);  
             }             
