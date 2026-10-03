@@ -1,23 +1,31 @@
 <html>
     <body>
      <div   zippy="witempan" class="row">  
-        <div class="navbar">
-
-            <form zippy="wisfilter"  >
-                <div class="row  ">
-                <label class="col-form-label col-auto" for="wissearchkey">пошук</label>
-                 <div class="col-auto  ">
-                  <input class="form-control ms-sm-2" type="text" zippy="wissearchkey">
+           <form zippy="wisfilter"  >
+            <div class="row row-cols-sm-auto g-2 align-items-start mb-1">
+                 <div class="col-12">
+                   <div class="input-group">
+      
+                <label   for="wissearchkey">пошук</label>
+                
+                  <input   class="form-control ms-sm-2" type="text" zippy="wissearchkey">
                 </div>
-                <label class="col-form-label col-auto" for="wissearchcat">категорія</label>
-              <div class="col-auto  ">
-                <select class="form-control ms-sm-2" zippy="wissearchcat">
+                </div>
+                 <div class="col-12">
+                   <div class="input-group">
+               <label   for="wissearchcat">категорія</label>
+            
+                <select class="form-select  " zippy="wissearchcat">
                     <option value="0">Не задано</option>
                 </select>
                 </div>
+                </div>
+               <div class="col-12">
+                   <div class="input-group">
+                      
                 <label class="col-form-label col-auto" for="searchtype">Тип </label>
-                  <div class="col-auto  ">
-                   <select zippy="searchtype" class="form-control ms-sm-2">
+                
+                   <select zippy="searchtype" class="form-select  ">
                         <option value="0">Всі </option>
                         <option value="1">Товари</option>
                         <option value="2">Мат. та компл.</option>
@@ -27,8 +35,13 @@
                       
                     </select>
                   </div>
-                <label class="col-form-label col-auto" for="wissearchmanufacturer">Бренд </label>
-                <div class="col-auto  ">
+                  </div>
+                <div class="col-12">
+                   <div class="input-group">
+                
+                  
+                <label   for="wissearchmanufacturer">Бренд </label>
+               
                 <input autocomplete="off" list="wissearchmanlist" class="form-control me-2" zippy="wissearchmanufacturer"/>
                 <datalist id="wissearchmanlist">
                     {{#manlist}}
@@ -36,18 +49,20 @@
                         {{/manlist}}
                 </datalist>
                </div>   
-               <div class="col-auto  pt-2">    
+               </div>   
+               
+               <div class="col-12">    
                  <div class="form-check   ">
                    <label for="wissearchonstore" class="form-check-label">В наявності </label> 
                    <input type="checkbox" zippy="wissearchonstore" class="form-check-input  me-2"  >
                   </div>                  
               </div>    
-             <div class="col-auto  ">      
+               <div class="col-12  ">      
                 <input class="btn btn-success  " type="submit" value="ОК">
               </div>
               </div>
             </form>
-        </div>
+       
         <table class="table table-sm" zippy="witemselt">
 
         </table>
