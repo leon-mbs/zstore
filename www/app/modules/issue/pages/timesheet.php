@@ -159,10 +159,10 @@ class TimeSheet extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $user_id = $post->user_id;
+        $user_id = (int) $post->user_id;
 
         $user = System::getUser();
-        $project_id = $post->project_id;
+        $project_id = (int) $post->project_id;
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
         $where = " and project_id in (select project_id from  issue_projectlist where  status <>12) ";
@@ -245,13 +245,13 @@ class TimeSheet extends \App\Pages\Base
     public function del($args) {
 
 
-        TimeLine::delete($args[0]);
+        TimeLine::delete( (int) $args[0]);
 
 
     }
     public function loadprojects($args) {
 
-        $projects = Project::findArray("project_name", "project_id in (select project_id from issue_projectacc where  user_id={$args[0]}) and  project_id in (select project_id from  issue_projectlist where  status <>12) ", "project_name");
+        $projects = Project::findArray("project_name", "project_id in (select project_id from issue_projectacc where  user_id=" . intval($args[0]) . ") and  project_id in (select project_id from  issue_projectlist where  status <>12) ", "project_name");
 
 
         $ret =  \App\Util::tokv($projects);
@@ -260,7 +260,7 @@ class TimeSheet extends \App\Pages\Base
     }
     public function loadissues($args) {
 
-        $issues = Issue::findArray("issue_name", "project_id=".$args[0], "issue_name");
+        $issues = Issue::findArray("issue_name", "project_id=". intval($args[0]), "issue_name");
 
 
         $ret =  \App\Util::tokv($issues);

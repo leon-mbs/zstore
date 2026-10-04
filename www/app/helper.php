@@ -356,6 +356,8 @@ class Helper
      * @param mixed $itemtype тип  объекта (документ - 0 )
      */
     public static function addFile($file, $itemid, $comment, $itemtype = 0) {
+        $itemid= (int) $itemid;
+        $itemtype= (int) $itemtype;
         $conn = DB::getConnect();
         $filename = $file['name'];
         $imagedata = getimagesize($file["tmp_name"]);
@@ -394,6 +396,8 @@ class Helper
      */
     public static function getFileList($item_id, $item_type = 0) {
         $conn = \ZDB\DB::getConnect();
+        $item_id= (int) $item_id;
+        $item_type= (int) $item_type;
         $rs = $conn->Execute("select * from files where item_id={$item_id} and item_type={$item_type} ");
         $list = array();
         foreach($rs as $row) {

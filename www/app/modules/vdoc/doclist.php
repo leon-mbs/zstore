@@ -96,7 +96,7 @@ class DocList extends \App\Pages\Base
 
 
     public function mark($arg, $post=null) {
-        $ids = $post;
+        $ids = implode(',', array_map('intval', explode(',', (string)$post)));
         foreach(Document::findYield("document_id  in ({$ids})") as $doc) {
             $doc->headerdata['vdoc'] = 0;
             $doc->save();

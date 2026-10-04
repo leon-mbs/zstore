@@ -272,7 +272,7 @@ class DocView extends \Zippy\Html\PageFragment
     public function delmsg($arg, $post) {
 
 
-        \App\Entity\Message::delete($arg[0]);
+        \App\Entity\Message::delete( (int) $arg[0]);
 
     }
 

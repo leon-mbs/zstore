@@ -144,7 +144,7 @@ class IssueList extends \App\Pages\Base
         if (strlen($number) > 0) {
 
             $s = Issue::qstr('%' . $number . '%');
-            $where = "  (details like {$s} or issue_name like {$s} or issue_id={$number})  ";
+            $where = "  (details like {$s} or issue_name like {$s} or issue_id=" . intval($number) . ")  ";
             $orderby ="";
         }
 
@@ -322,7 +322,7 @@ class IssueList extends \App\Pages\Base
 
     public function delFile($args, $post) {
       
-        \App\Helper::deleteFile($args[0]);
+        \App\Helper::deleteFile( (int) $args[0]);
 
     }
 

@@ -210,7 +210,7 @@ class Customer extends \ZCL\DB\Entity
 
         }
         if ($type > 0) {
-            $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";
+            $where .= " and  (detail like '%<type>" . intval($type) . "</type>%'  or detail like '%<type>0</type>%' ) ";
         }
 
         return Customer::findArray("concat(customer_name,' ',phone)", $where, "customer_name");
@@ -221,7 +221,7 @@ class Customer extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "status=0 and detail like '%<isholding>1</isholding>%' ";
         if ($type > 0) {
-            $where .= " and  (detail like '%<type>{$type}</type>%'  or detail like '%<type>0</type>%' ) ";
+            $where .= " and  (detail like '%<type>" . intval($type) . "</type>%'  or detail like '%<type>0</type>%' ) ";
         }
 
         return Customer::findArray("customer_name", $where, "customer_name");

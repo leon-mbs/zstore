@@ -723,7 +723,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
-            $where .= " and store_id = " . $store_id;
+            $where .= " and store_id = " . intval($store_id);
         }
         if ($emp > 0) {
             $where .= " and coalesce(emp_id,0) = " . $emp;
@@ -779,7 +779,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $sql .= " and store_id = " . intval($store_id);
         }
         if ($emp_id > 0) {
             $sql .= " and coalesce(emp_id,0) = " . $emp_id;
@@ -817,7 +817,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select snumber  from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $sql .= " and store_id = " . intval($store_id);
         }
 
 
@@ -841,7 +841,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select coalesce(snumber,'') as snumber   from  store_stock_view where   item_id = {$this->item_id} and qty >0 and snumber <>'' and snumber is not null   and (  sdate is   null  or sdate >=  now()  )   ";
         if ($store_id > 0) {
-            $sql .= " and store_id = " . $store_id;
+            $sql .= " and store_id = " . intval($store_id);
         }
 
         $limit =" limit 0,1";
@@ -861,6 +861,8 @@ class Item extends \ZCL\DB\Entity
      * @static
      */
     public static function findArrayAC($partname, $store = 0, $cat = 0,$where='') {
+        $store = intval($store);
+        $cat = intval($cat);
 
         $criteria = "  disabled <> 1 ";
         if ($store > 0) {
