@@ -213,7 +213,10 @@ class RecList extends \App\Pages\Base
             $this->setWarn('Не більше чотирьох ')  ;
             return;
         }
-        $id = $this->recpanel->itemeditform->editrec->getKey();
+        $id = intval($this->recpanel->itemeditform->editrec->getKey());
+        if($id==0) {
+            return;
+        }
 
 
         $name = $this->recpanel->itemeditform->editrec->getText();

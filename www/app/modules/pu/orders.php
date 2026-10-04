@@ -96,7 +96,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['order_id']);
+                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['id']);
                     continue;
                 }
                 $tovar->quantity = H::fqty($product['quantity']);
@@ -143,9 +143,7 @@ class Orders extends \App\Pages\Base
    
             if ( is_array($puorder['payment_option']) &&   count($puorder['payment_option']) > 0) {
                 $neworder->notes .= " Оплата: "  ;
-                foreach($puorder['payment_option'] as $o) {
-                   $neworder->notes .= ($puorder['payment_option']['name'] . " ");    
-                }
+                $neworder->notes .= (($puorder['payment_option']['name'] ?? '') . " ");
                $neworder->notes .=  ";" ; 
             }            
             
@@ -188,7 +186,7 @@ class Orders extends \App\Pages\Base
         $row->add(new Label('customer', $order->headerdata['puclient']));
         $row->add(new Label('amount', round($order->amount)));
         $row->add(new Label('comment', $order->notes));
-        $row->add(new Label('date', \App\Helper::fdt(strtotime($order->document_date))));
+        $row->add(new Label('date', \App\Helper::fdt($order->document_date)));
     }
 
     public function onImport($sender) {

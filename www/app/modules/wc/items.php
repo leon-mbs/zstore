@@ -114,8 +114,8 @@ class Items extends \App\Pages\Base
         $row->add(new Label('name', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('qty', \App\Helper::fqty($item->qty)));
-        $row->add(new Label('price', $item->getPrice($modules['ocpricetype'])));
-        $row->add(new Label('desc', $item->desription));
+        $row->add(new Label('price', $item->getPrice($modules['wcpricetype'])));
+        $row->add(new Label('desc', $item->description));
     }
 
     //экспорт товара  в  магазин

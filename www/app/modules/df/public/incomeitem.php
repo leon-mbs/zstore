@@ -362,7 +362,7 @@ class IncomeItem extends Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+        $price = $item->getLastPartion($this->_store_id, "", true);
         $this->editdetail->editprice->setText(H::fa($price));
 
     }

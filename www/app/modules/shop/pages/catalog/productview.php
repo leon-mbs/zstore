@@ -99,7 +99,7 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->disabled == 1 || $product->noshop == 1) {
-            $this->onstore = 'Знято з продажу';
+            $this->onstore->setText('Знято з продажу');
             $this->buy->setVisible(false);
         } else {
 

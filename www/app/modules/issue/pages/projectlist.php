@@ -239,7 +239,7 @@ class ProjectList extends \App\Pages\Base
             'url'=>$url,
             'filename'=>$f->filename,
 
-            'candel'=>($user->user_id == $pr->user_id || $user->rolename  =='admins')
+            'candel'=>($user->user_id == $f->user_id || $user->user_id == $pr->creator_id || $user->rolename  =='admins')
             ) ;
         }
 

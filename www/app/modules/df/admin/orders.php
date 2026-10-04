@@ -156,7 +156,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         }           
         if(strlen($searchnumber) > 0) {
          
-           $where  = $wherebase . " and documant_bumber=".$conn->qstr($searchnumber);
+           $where  = $wherebase . " and document_number=".$conn->qstr($searchnumber);
            
         }       
 

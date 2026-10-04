@@ -114,7 +114,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product->name} в замовленні номер " .  $wcorder->order_id);
+                        $this->setWarn("Не знайдено артикул товара {$product->name} в замовленні номер " .  $wcorder->id);
                         continue;
                     }
                     $tovar->quantity = $product->quantity;
@@ -169,7 +169,7 @@ class Orders extends \App\Pages\Base
         $row->add(new Label('customer', $order->headerdata['wcclient']));
         $row->add(new Label('amount', H::fa($order->amount)));
         $row->add(new Label('comment', $order->notes));
-        $row->add(new Label('date', \App\Helper::fdt(strtotime($order->document_date))));
+        $row->add(new Label('date', \App\Helper::fdt($order->document_date)));
     }
 
     public function onImport($sender) {

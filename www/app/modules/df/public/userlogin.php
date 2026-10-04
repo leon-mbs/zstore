@@ -103,7 +103,7 @@ class UserLogin extends \Zippy\Html\WebPage
         parent::beforeRequest();
 
         if (System::getCustomer()  > 0) {
-            App::Redirect("\\App\\Modules\\Modules\\DF\\Public\\Main", 0);
+            App::Redirect("\\App\\Modules\\DF\\Public\\Main", 0);
 
         }
     }

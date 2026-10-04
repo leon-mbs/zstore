@@ -114,7 +114,7 @@ class DocList extends \App\Pages\Base
         if(strlen($firm['tin'])==0) {
             return "Компанія повинна мати ЄДРПОУ";
         }
-        if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
+        if($arg[1]=="true" && strlen($p->ppokeyid)==0 ) {
             return "Не заданий ключ для КЕП";
         }
       
@@ -141,7 +141,7 @@ class DocList extends \App\Pages\Base
             $pos = \App\Entity\Pos::load($arg[1])  ;
             
             //sign
-            if($arg[2] == true) {
+            if($arg[2] == "true") {
                  
                 $ret = \App\Modules\PPO\PPOHelper::send($pdf, "doc", $pos, true) ;
                 if($ret['success'] != true) {
@@ -169,7 +169,7 @@ class DocList extends \App\Pages\Base
             $filename = implode('_',$na) .'.pdf';
         //    $filename= "2475406556_3235608644_20170213_Рахунок_РН-026.pdf";
             
-            list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm->vdoc  )  ;
+            list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm['vdoc']  )  ;
             if($ok != "ok") {
                 return $name ." ".$data;
             }

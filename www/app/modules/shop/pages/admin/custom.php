@@ -231,8 +231,9 @@ class Custom extends \App\Pages\Base
         $row->add(new Label("newname", $i->itemname));
         $row->add(new ClickLink("newdel", $this, "newdelOnClick"));
         $item=\App\Entity\Item::load($i->item_id);
-        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl(true,true));
-        $row->imagelistitem->setAttribute('href', $item->getImageUrl(true,true));
+        $url = $item != null ? $item->getImageUrl(true,true) : '';
+        $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($url);
+        $row->imagelistitem->setAttribute('href', $url);
 
 
     }

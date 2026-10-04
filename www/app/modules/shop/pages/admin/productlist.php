@@ -92,7 +92,6 @@ class ProductList extends \App\Pages\Base
 
         $editform->onSubmit($this, 'onSubmitForm');
 
-        $this->listpanel->addnew->setVisible(false);
 
         $this->add(new Panel('editimagepanel'))->setVisible(false);
 

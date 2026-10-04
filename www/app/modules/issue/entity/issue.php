@@ -49,7 +49,7 @@ class Issue extends \ZCL\DB\Entity
 
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_ISSUE . " and item_id=" . $this->issue_id);
-        $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_DOC . " and item_id=" . $this->issue_id);
+        $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_ISSUE . " and item_id=" . $this->issue_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
         $conn->Execute("delete from issue_history where issue_id=" . $this->issue_id);
     }
