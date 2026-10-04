@@ -91,14 +91,15 @@ class ProjectList extends \App\Pages\Base
         }
         $user = System::getUser();
 
-        if ($user->rolename != 'admins') {
-            $where .= " and (details like '%<creator_id>{$user->user_id}</creator_id>%'     or project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )  ) ";
-        }
-
         if (strlen($number) > 0) {
             $s = Project::qstr('%' . $number . '%');
 
             $where = "   (details like {$s} or project_name like {$s}  )  ";
+        }
+
+        //после  поиска, иначе  поиск  отбрасывал  ограничение  доступа
+        if ($user->rolename != 'admins') {
+            $where .= " and (details like '%<creator_id>{$user->user_id}</creator_id>%'     or project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )  ) ";
         }
         $stlist = Project::getStatusList() ;
 

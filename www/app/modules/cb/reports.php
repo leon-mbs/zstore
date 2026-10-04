@@ -20,6 +20,11 @@ class Reports extends \App\Pages\Base
  
     public function __construct() {
         parent::__construct();
+        if (strpos(\App\System::getUser()->modules ?? '', 'checkbox') === false && \App\System::getUser()->rolename != 'admins') {
+            \App\System::setErrorMsg("Немає права доступу до сторінки");
+            App::RedirectError();
+            return;
+        }
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');

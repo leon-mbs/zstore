@@ -29,8 +29,31 @@ class Main extends \App\Pages\Base
 {
     public function __construct() {
         parent::__construct();
+        if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg("Немає права доступу до сторінки");
+            App::RedirectError();
+            return;
+        }
 
+    }
 
+    //просмотр: публичный, свой  или  открытый  пользователю
+    private function canRead($t) {
+        $user = System::getUser();
+        return $t != null && ($t->ispublic == 1 || $t->user_id == $user->user_id || in_array($user->user_id, $t->accusers ?? []));
+    }
+
+    //редактирование: свой  или  публичный  с  доступом  пользователю (как  canedit в  loadTopic)
+    private function canEdit($t) {
+        $user = System::getUser();
+        return $t != null && ($t->user_id == $user->user_id || ($t->ispublic == 1 && in_array($user->user_id, $t->accusers ?? [])));
+    }
+
+    //удалить, вырезать: автор  топика  или  владелец  узла (как  candelcut в  loadTopic)
+    private function canDelCut($t, $node_id) {
+        $user = System::getUser();
+        $n = Node::load((int)$node_id);
+        return $t != null && ($t->user_id == $user->user_id || ($n != null && $n->user_id == $user->user_id));
     }
 
     public function onSearch($args, $post=null) {
@@ -63,6 +86,11 @@ class Main extends \App\Pages\Base
     }
 
     public function onDelFile($args, $post=null) {
+        //только  файл  заметки, которую  можно  редактировать
+        $topic_id = (int) \ZDB\DB::getConnect()->GetOne("select item_id from files where item_type=4 and file_id=" . (int)$args[0]);
+        if (!$this->canEdit(Topic::load($topic_id))) {
+            return;
+        }
 
         Helper::deleteFile((int)$args[0]);
 
@@ -74,6 +102,9 @@ class Main extends \App\Pages\Base
         $file =  $_FILES['editfile']  ;
 
         if(strlen($file['tmp_name'] ?? '')==0) {
+            return;
+        }
+        if (!$this->canEdit(Topic::load((int) $args[0]))) {
             return;
         }
 
@@ -96,6 +127,12 @@ class Main extends \App\Pages\Base
 
     public function opTopic($args, $post=null) {
         $args[1]  = (int) $args[1];
+        //удалить, переместить - автор  топика  или  владелец  узла; вставить - если  топик  виден
+        $t = Topic::load($args[1]);
+        if (($args[0] == "delete" && !$this->canDelCut($t, $args[2])) || ($args[0] == "move" && !$this->canDelCut($t, $args[3]))
+            || (in_array($args[0], ["pastelink", "pastecopy"]) && !$this->canRead($t))) {
+            return "Немає права";
+        }
 
         if($args[0] =="delete") {
             if($args[3]=="true") {  //ссылка
@@ -168,7 +205,10 @@ class Main extends \App\Pages\Base
 
         $post = json_decode($post) ;
         if($args[0] > 0) {
-            $topic = Topic::load($args[0]);
+            $topic = Topic::load((int) $args[0]);
+            if (!$this->canEdit($topic)) {
+                return "Немає права редагування";
+            }
         } else {
             $topic = new  Topic();
             $topic->user_id = System::getUser()->user_id;
@@ -348,8 +388,10 @@ class Main extends \App\Pages\Base
         $t = Topic::load((int) $args[0]) ;
         $n = Node::load((int) $args[1]) ;
         $user = \App\System::getUser();
-  
-            
+        if (!$this->canRead($t)) {
+            return json_encode([], JSON_UNESCAPED_UNICODE);
+        }
+
         $ret = array();
         $ret['ispublic'] = $t->ispublic == "1" ;
         $ret['detail'] = $t->detail;
@@ -455,6 +497,10 @@ class Main extends \App\Pages\Base
     public function saveUsers($args, $post=null) {
         $post= json_decode($post)    ;
         $t = Topic::load((int) $args[0]) ;
+        //доступ  меняет  только  автор (как  canacc в  loadTopic)
+        if ($t == null || $t->user_id != System::getUser()->user_id) {
+            return;
+        }
         $t->accusers=[];
         foreach($post as $u){
             $t->accusers[]=$u->id;  
