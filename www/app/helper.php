@@ -1262,8 +1262,9 @@ class Helper
     */
     public static function getSalt() {
         $salt = self::getKeyVal('salt');
-        if(strlen($salt ?? '') == 0) {
-            $salt = '' . rand(1000, 999999);
+        //старая  соль (rand 1000-999999) подбиралась перебором - заменяем  длинной  случайной
+        if(strlen($salt ?? '') < 32) {
+            $salt = bin2hex(random_bytes(32));
             self::setKeyVal('salt', $salt);
         }
         return $salt;

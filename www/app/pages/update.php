@@ -174,7 +174,7 @@ class Update extends \App\Pages\Base
           \App\Session::getSession()->migrationcheck = false; 
           
       try{
-            $url = "https://store.zippy.com.ua/stat.php?h=".H::getSalt();
+            $url = "https://store.zippy.com.ua/stat.php?h=".hash('sha256', 'stat' . H::getSalt());
         
             $url.= "&v=".System::CURR_VERSION;
             $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
