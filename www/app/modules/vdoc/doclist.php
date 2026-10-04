@@ -70,7 +70,7 @@ class DocList extends \App\Pages\Base
         $p = \App\Entity\Pos::load( (int) $arg[2]);
         $arg[0]   = (int)$arg[0];
         $arg[1]   = \App\Entity\Pos::qstr($arg[1]) ;
-        $sql = "    meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        $sql = "    meta_name={$arg[1]} and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         } else {

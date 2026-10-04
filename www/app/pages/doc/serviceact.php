@@ -189,9 +189,9 @@ class ServiceAct extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);
-                        $this->docform->paytype->setValue($this->_doc->headerdata['paytype']);
-                        $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-                        $this->docform->store->setValue($this->_doc->headerdata['store']);
+                        $this->docform->paytype->setValue($basedoc->headerdata['paytype']??2);
+                        $this->docform->payment->setValue($basedoc->headerdata['payment']??0);
+                        $this->docform->store->setValue($basedoc->headerdata['store']??0);
                 
                       
 
