@@ -223,16 +223,16 @@ class CheckBox
 
             $g=[];
             $g['name'] = $item->itemname;
-            $g['price'] =intval($item->price*100);
+            $g['price'] =intval(round($item->price*100));
             $g['code'] = $item->item_id;
 
             $good["good"] = $g ;
 
-            $good["quantity"] = intval($item->quantity * 1000) ;
+            $good["quantity"] = intval(round($item->quantity * 1000)) ;
             //    $good["sum"] =1000000;
             $good["is_return"] = $doc->meta_name=="ReturnIssue";
 
-            $sum +=  intval($g['price'] * $item->quantity);
+            $sum +=  intval(round($g['price'] * $item->quantity));
 
             $check["goods"][] = $good;
 
@@ -244,16 +244,16 @@ class CheckBox
 
             $g=[];
             $g['name'] = $item->service_name;
-            $g['price'] = intval($item->price*100);
+            $g['price'] = intval(round($item->price*100));
             $g['code'] = $item->service_id;
 
             $good["good"] = $g ;
 
-            $good["quantity"] = intval($item->quantity * 1000) ;
+            $good["quantity"] = intval(round($item->quantity * 1000)) ;
             //    $good["sum"] =1000000;
             $good["is_return"] = false;
 
-            $sum += intval($g['price'] * $item->quantity);
+            $sum += intval(round($g['price'] * $item->quantity));
 
             $check["goods"][] = $good;
 
@@ -263,11 +263,13 @@ class CheckBox
 
         $check['total_sum'] = $sum  ;
 
-        $disc =  $sum - $doc->payamount*100 - doubleval($doc->headerdata["prepaid"]) * 100 ;
+        //все  суммы  в  копейках, целым  числом
+        $disc =  intval(round($sum - $doc->payamount*100 - doubleval($doc->headerdata["prepaid"]) * 100)) ;
         if($disc > 0) {
             if($doc->headerdata['bonus'] >0) {
-                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $doc->headerdata['bonus']*100,  "mode"=> "VALUE");
-                $disc  = $disc -  $doc->headerdata['bonus'] ;
+                $bonus = intval(round($doc->headerdata['bonus']*100));
+                $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Бонуси ". $doc->headerdata['bonus'] ." грн", "value"=> $bonus,  "mode"=> "VALUE");
+                $disc  = $disc -  $bonus ;
             }
             if($disc >0) {
                 $check["discounts"][] = array("type"=>"DISCOUNT","name"=> "Знижка ". $disc/100 ." грн", "value"=> $disc,  "mode"=> "VALUE");
@@ -288,43 +290,43 @@ class CheckBox
 
             $payed =  doubleval($doc->payed) ;
             if ($doc->headerdata['payment'] == 0 && $payed > 0) {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round($payed*100)));
                 $check["payments"][] = $payment;
 
             }
             if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
-                    $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);
+                    $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>intval(round($payed*100)));
                 } else {
-                    $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+                    $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round($payed*100)));
                 }
                 $check["payments"][] = $payment;
 
             }
         } else {
             if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$doc->headerdata['payed'] * 100);
+                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round($doc->headerdata['payed'] * 100)));
                 $check["payments"][] = $payment;
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$doc->headerdata['payedcard'] * 100);
+                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>intval(round($doc->headerdata['payedcard'] * 100)));
                 $check["payments"][] = $payment;
             }
 
         }
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
 
-        if ($payed < $doc->payamount) {
+        if (round($payed, 2) < round($doc->payamount, 2)) {
 
-            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> ($doc->payamount - $payed) * 100);
+            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> intval(round(($doc->payamount - $payed) * 100)));
             $check["payments"][] = $payment;
 
         }
 
 
         if($doc->headerdata["prepaid"] >0) {
-            $payment=array("type"=>"CASH","label"=>"Передплата","value"=> $doc->headerdata["prepaid"] * 100);
+            $payment=array("type"=>"CASH","label"=>"Передплата","value"=> intval(round($doc->headerdata["prepaid"] * 100)));
             $check["payments"][] = $payment;
         }
 
@@ -453,16 +455,16 @@ class CheckBox
         //   $check['total_rest'] = 0 ;
 
         if ($mf == 0 && $payed > 0) {
-            $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+            $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round($payed*100)));
             $check["payments"][] = $payment;
 
         }
         if ($mf > 0 && $payed > 0) {
             $mf = \App\Entity\MoneyFund::load($mf);
             if ($mf->beznal == 1) {
-                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);
+                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>intval(round($payed*100)));
             } else {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
+                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round($payed*100)));
             }
             $check["payments"][] = $payment;
 

@@ -1780,6 +1780,8 @@ class ARMPos extends \App\Pages\Base
 
                 if(is_array($ret)) {
                     $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $doc->headerdata["tax_url"] = $ret['tax_url'];
+                    $doc->headerdata["vkassa"] = $ret['checkid'];
                     $doc->headerdata["passfisc"] = 0;
                     $doc->save();
                   
