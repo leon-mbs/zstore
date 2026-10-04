@@ -206,7 +206,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
-        $cat = $form->searchcat->getValue();
+        $cat = intval($form->searchcat->getValue());
     
         if ($cat != 0) {
             if ($cat == -1) {

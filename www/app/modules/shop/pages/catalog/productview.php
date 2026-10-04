@@ -301,6 +301,9 @@ class ProductView extends Base
 
     //удалить коментарий
     public function OnDeleteComment($sender) {
+        if (System::getUser()->userlogin != 'admin') {
+            return;
+        }
         $comment = $sender->owner->getDataItem();
         $comment->moderated = 1;
         $comment->rating = 0;

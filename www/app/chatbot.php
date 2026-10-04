@@ -115,7 +115,7 @@ class ChatBot
                 return;
             }
 
-            if (($c->passw ??'') !== $s[2]) {
+            if (!$c->checkPassword($s[2])) {
                 $this->sendMessage($chat_id, "Login fail") ;
                 return;
             }

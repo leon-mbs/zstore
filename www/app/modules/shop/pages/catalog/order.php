@@ -371,7 +371,7 @@ class Order extends Base
         
         
         if($paytype == 1) {
-
+            System::getSession()->shoporderid = $order->document_id;
             App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
             return;
         }

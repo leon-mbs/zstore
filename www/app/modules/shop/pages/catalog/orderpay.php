@@ -35,6 +35,13 @@ class OrderPay extends Base
             App::RedirectHome() ;
             return;
         }
+        //только  свой  заказ: покупателя  или  только что  оформленный в  этой  сессии
+        $cid = System::getCustomer();
+        $own = ($cid > 0 && $this->order->customer_id == $cid) || intval(System::getSession()->shoporderid) == $this->order->document_id;
+        if(!$own || !in_array($this->order->meta_name, array('Order','OrderFood','POSCheck'))) {
+            App::RedirectHome() ;
+            return;
+        }
 
         $this->order = $this->order->cast();
 

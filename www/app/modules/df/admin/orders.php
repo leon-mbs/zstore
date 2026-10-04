@@ -133,7 +133,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
         $searchnumber= trim( $this->page->filter->searchnumber->getText());
         $status=  $this->page->filter->status->getValue() ;
-        $fpartner=  $this->page->filter->fpartner->getValue() ;
+        $fpartner=  intval($this->page->filter->fpartner->getValue()) ;
         $dfrom = $this->page->filter->from->getDate();
         $dto = $this->page->filter->to->getDate();
    
