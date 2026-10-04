@@ -66,20 +66,26 @@ class Items extends \App\Pages\Base
         $client = \App\Modules\WC\Helper::getClient();
         $skus = array();
 
-        try {
-            $data = $client->get('products', array('status' => 'publish'));
-        } catch(\Exception $ee) {
-            $this->setErrorTopPage($ee->getMessage());
-            return;
-        }
-          $qty =  count($data);
-        foreach ($data as $p) {
-            if (strlen($p->sku) > 0) {
-                $skus[] = $p->sku;
+        $page=1;
+        while(true) {
+            try {
+                $data = $client->get('products', array('status' => 'publish', 'page' => $page, 'per_page' => 100));
+            } catch(\Exception $ee) {
+                $this->setErrorTopPage($ee->getMessage());
+                return;
             }
+            if (count($data) == 0) {
+                break;
+            }
+            $page++;
+            foreach ($data as $p) {
+                if (strlen($p->sku) > 0) {
+                    $skus[] = $p->sku;
+                }
+            }
+            unset($data);
         }
-        unset($data);
-        $cat_id = $sender->searchcat->getValue();
+        $cat_id = intval($sender->searchcat->getValue());
 
         $w = "disabled <> 1";
         if ($cat_id > 0) {
@@ -162,7 +168,7 @@ class Items extends \App\Pages\Base
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval($this->upd->updcat->getValue());
 
         $page=1;
         $cnt =1;
@@ -210,16 +216,20 @@ class Items extends \App\Pages\Base
             $qty =  count($skuvarlist);
 
             $elist = array();
-            
+            $varlist = array(); //количество для  вариаций
+
             foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
-                if ($skulist[$item->item_code] > 0) {
+                if (($skulist[$item->item_code] ?? 0) > 0) {
                     $qty = $item->getQuantity();
                     if ($qty > 0) {
                         $elist[$item->item_code] = $qty;
                     }
+                }
+                if (is_array($skuvarlist[$item->item_code] ?? null)) {
+                    $varlist[$item->item_code] = $item->getQuantity();
                 }
             }
             $data = array('update' => array());
@@ -238,7 +248,10 @@ class Items extends \App\Pages\Base
 
 
             foreach ($skuvarlist as $sku => $arr) {
-                $qty =  $elist[$sku];
+                if (!isset($varlist[$sku])) {
+                    continue; //нет в  Zippy
+                }
+                $qty =  $varlist[$sku];
                 if(strlen($qty)==0) {
                     $qty=0;
                 }
@@ -254,7 +267,7 @@ class Items extends \App\Pages\Base
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval($this->upd->updcat->getValue());
 
         $page=1;
         $cnt =1;
@@ -302,7 +315,7 @@ class Items extends \App\Pages\Base
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
-                if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code])) {
+                if (($skulist[$item->item_code] ?? 0) > 0 || is_array($skuvarlist[$item->item_code] ?? null)) {
                     $price = $item->getPrice($modules['wcpricetype']);
                     if ($price > 0) {
                         $elist[$item->item_code] = $price;
@@ -311,6 +324,9 @@ class Items extends \App\Pages\Base
             }
             $data = array('update' => array());
             foreach ($elist as $sku => $price) {
+                if (($skulist[$sku] ?? 0) == 0) {
+                    continue; //вариация
+                }
                 $cnt++;
                 $data['update'][] = array('id' => $skulist[$sku], 'price' => (string)$price, 'regular_price' => (string)$price);
             }
@@ -325,6 +341,9 @@ class Items extends \App\Pages\Base
 
 
             foreach ($skuvarlist as $sku => $arr) {
+                if (!isset($elist[$sku])) {
+                    continue; //нет в  Zippy или  нет цены
+                }
                 $price =  $elist[$sku];
                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
                 $cnt++;
@@ -460,7 +479,6 @@ class Items extends \App\Pages\Base
 
                                 $image->save();
                                 $item->image_id = $image->image_id;
-                                break;
                             }
 
                         }

@@ -202,7 +202,7 @@ class Orders extends \App\Pages\Base
                 $tlist[$j] = $tovar;
             }
             if(count($tlist)==0) {
-                return;
+                continue;
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($total);

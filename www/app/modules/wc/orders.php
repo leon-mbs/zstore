@@ -125,7 +125,7 @@ class Orders extends \App\Pages\Base
                     $itlist[$j] = $tovar;
                 }
                 if(count($itlist)==0) {
-                    return;
+                    continue;
                 }
                 $neworder->packDetails('detaildata', $itlist);
                 $neworder->headerdata['pricetype'] = 'price1';

@@ -121,7 +121,7 @@ class Orders extends \App\Pages\Base
             }
 
             if(count($itlist)==0) {
-                return;
+                continue;
             }
             $neworder->packDetails('detaildata', $itlist);
             $neworder->headerdata['pricetype'] = 'price1';
@@ -217,9 +217,6 @@ class Orders extends \App\Pages\Base
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
-            if($modules['pusetpayamount']==1) {
-                $shoporder->updateStatus(Document::STATE_WP);
-            }
 
 
         }

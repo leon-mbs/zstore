@@ -147,7 +147,7 @@ class Items extends \App\Pages\Base
         
         if (count($articles)>0) {
 
-            $cat = $this->filter->searchcat->getValue();
+            $cat = intval($this->filter->searchcat->getValue());
             $where = "disabled <> 1   ";
             if ($cat > 0) {
                 $where .= " and cat_id=" . $cat;
@@ -246,7 +246,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval($this->upd->updcat->getValue());
         
         
         $articles = $this->getArticles();
@@ -284,14 +284,19 @@ class Items extends \App\Pages\Base
           $body['token'] =$token;
        
 
-          $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/importResidues", json_encode($body, JSON_UNESCAPED_UNICODE));
+          try {
+              $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/importResidues", json_encode($body, JSON_UNESCAPED_UNICODE));
+          } catch(\Exception $ee) {
+              $this->setErrorTopPage($ee->getMessage());
+              return;
+          }
   
           $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval($this->upd->updcat->getValue());
         
         
         $articles = $this->getArticles();
@@ -329,7 +334,12 @@ class Items extends \App\Pages\Base
           $body['token'] =$token;
        
 
-          $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/import/", json_encode($body, JSON_UNESCAPED_UNICODE));
+          try {
+              $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/import/", json_encode($body, JSON_UNESCAPED_UNICODE));
+          } catch(\Exception $ee) {
+              $this->setErrorTopPage($ee->getMessage());
+              return;
+          }
   
           $this->setSuccess('Оновлено');
     }

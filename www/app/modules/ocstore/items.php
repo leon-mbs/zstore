@@ -92,7 +92,7 @@ class Items extends \App\Pages\Base
         }
         if ($data['error'] == "") {
 
-            $cat = $this->filter->searchcat->getValue();
+            $cat = intval($this->filter->searchcat->getValue());
             $where = "disabled <> 1   ";
             if ($cat > 0) {
                 $where .= " and cat_id=" . $cat;
@@ -188,7 +188,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval($this->upd->updcat->getValue());
 
         $elist = array();
         
@@ -228,7 +228,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval($this->upd->updcat->getValue());
 
         $elist = array();
         

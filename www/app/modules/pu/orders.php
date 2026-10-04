@@ -108,7 +108,7 @@ class Orders extends \App\Pages\Base
             }
 
             if(count($itlist)==0) {
-                return;
+                continue;
             }
             $neworder->packDetails('detaildata', $itlist);
             $neworder->headerdata['pricetype'] = 'price1';
@@ -283,10 +283,7 @@ class Orders extends \App\Pages\Base
 
 
             try {
-                $json="{
-                \"status\":\"pending\",
-                \"ids\":[{$order->headerdata['ocorder']}]
-                }" ;
+                $json = json_encode(array('status' => $st, 'ids' => array(intval($order->headerdata['puorder']))));
                 Helper::make_request("POST", "/api/v1/orders/set_status", $json);
             } catch(\Exception $ee) {
                 $this->setErrorTopPage($ee->getMessage());
