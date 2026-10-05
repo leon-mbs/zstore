@@ -30,7 +30,7 @@ class Returnbayed extends \App\Pages\Base
         $this->detail->add(new Label('preview'));
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-           \App\Session::getSession()-> setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+           \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);

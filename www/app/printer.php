@@ -487,14 +487,14 @@ $b = json_encode( $this->buffer) ;
         $model = Printer::QR_MODEL_2   ;
         $cn = '1'; // Code type for QR code
         // Select model: 1, 2 or micro.
-        $this -> wrapperSend2dCodeData(chr(65), $cn, chr(48 + $model) . chr(0));
+        $this->wrapperSend2dCodeData(chr(65), $cn, chr(48 + $model) . chr(0));
         // Set dot size.
-        $this -> wrapperSend2dCodeData(chr(67), $cn, chr($size));
+        $this->wrapperSend2dCodeData(chr(67), $cn, chr($size));
         // Set error correction level: L, M, Q, or H
-        $this -> wrapperSend2dCodeData(chr(69), $cn, chr(48 + $ec));
+        $this->wrapperSend2dCodeData(chr(69), $cn, chr(48 + $ec));
         // Send content & print
-        $this -> wrapperSend2dCodeData(chr(80), $cn, $text, '0');
-        $this -> wrapperSend2dCodeData(chr(81), $cn, '', '0');
+        $this->wrapperSend2dCodeData(chr(80), $cn, $text, '0');
+        $this->wrapperSend2dCodeData(chr(81), $cn, '', '0');
   
      //   $b = json_encode( $this->buffer) ;
 
@@ -515,7 +515,7 @@ $b = json_encode( $this->buffer) ;
     protected function wrapperSend2dCodeData($fn, $cn, $data = '', $m = '')
     {
           $this->buffer[]= self::GS;
-        $header = $this -> intLowHigh(strlen($data) + strlen($m) + 2, 2);
+        $header = $this->intLowHigh(strlen($data) + strlen($m) + 2, 2);
         $str=  "(k" . $header . $cn . $fn . $m . $data ;
         
         $t = str_split($str) ;

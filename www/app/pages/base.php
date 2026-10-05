@@ -302,6 +302,8 @@ class Base extends \Zippy\Html\WebPage
          H::logout();
     }
 
+    
+    // переключение  филиала
     public function onnbFirm($sender) {
         $branch_id = $sender->getValue();
         System::setBranch($branch_id);
@@ -312,6 +314,17 @@ class Base extends \Zippy\Html\WebPage
         App::Redirect($page);
     }
 
+   // для  проверки  повторной  отправки 
+   public function isExecuted() {
+        if ($this->document_id == 0) {
+            return false;
+        }
+        $conn = \ZDB\DB::getConnect();
+        $state = intval($conn->GetOne("select state from documents where document_id=" . $this->document_id));
+
+        return $state >= self::STATE_EXECUTED;
+    }    
+    
     //вывод ошибки,  используется   в дочерних страницах
 
     public function setError($msg,$log=false ) {
@@ -396,8 +409,44 @@ class Base extends \Zippy\Html\WebPage
              
     }
 
+    
+    /**
+     * Після звичайного (не ajax) POST відповідаємо редиректом на GET цієї ж сторінки.
+     * Інакше в історії браузера лишається POST і кнопка «Назад» упирається
+     * в «Підтвердьте повторне надсилання форми».
+     * JavaScript, доданий обробником (фіскальний чек, друк, звук), переносимо через сесію.
+     */
+    public function afterRequest() {
+        parent::afterRequest();
+
+        $request = App::$app->getRequest();
+        if (($_SERVER['REQUEST_METHOD'] ?? '') != 'POST' || $request->isAjaxRequest() || $request->isBinaryRequest()) {
+            return;
+        }
+        $response = App::$app->getResponse();
+        if ($response->isRedirect()) {
+            return;    //обробник сам кудись перенаправив
+        }
+
+        Session::getSession()->prgjs = array($response->JSrender, $response->JSrenderDocReady);
+        $response->JSrender = '';
+        $response->JSrenderDocReady = '';
+        $response->toBaseUrl();
+    }
+    
     protected function afterRender() {
 
+        
+ //JavaScript, відкладений через редирект після POST (див. afterRequest)
+        $prgjs = Session::getSession()->prgjs;
+        if (is_array($prgjs)) {
+            Session::getSession()->prgjs = null;
+            $response = App::$app->getResponse();
+            $response->JSrender .= $prgjs[0];
+            $response->JSrenderDocReady .= $prgjs[1];
+        }        
+        
+        
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
            

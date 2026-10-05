@@ -17,7 +17,7 @@ class custitems extends JsonRPC
         $w = '1 = 1 ';
 
         if ($args['customer_id'] > 0) {
-            $w .= " and customer_id=" .  intval( $args['cat'] );
+            $w .= " and customer_id=" .  intval( $args['customer_id'] );
         } else {
             throw new \Exception('Не вказано  постачальника');            
         }

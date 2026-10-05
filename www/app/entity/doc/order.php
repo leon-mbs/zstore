@@ -285,6 +285,9 @@ class Order extends \App\Entity\Doc\Document
             if($this->getHD('paytype',0) != 1) {
                 return;
             }           
+            if($this->hasPayments()) {
+                return;
+            }           
             if(strlen($this->headerdata['promocode']??'') > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
             }
