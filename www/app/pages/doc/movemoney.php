@@ -72,6 +72,10 @@ class MoveMoney extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
+        if ($this->_doc->isExecuted()) {
+            $this->setError('Документ вже проведено. Спершу скасуйте проведення');
+            return;
+        }
         $this->_doc->notes = $this->docform->notes->getText();
 
         $this->_doc->headerdata['paymentto'] = $this->docform->paymentto->getValue();

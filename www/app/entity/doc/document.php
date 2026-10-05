@@ -1139,6 +1139,21 @@ class Document extends \ZCL\DB\Entity
     }
 
     /**
+     * документ  уже  проведен  - состояние  из  БД, а не  из  объекта
+     * (форма  могла  быть  открыта  до  проведения: вторая  вкладка, кнопка  "назад", двойной  клик).
+     * Повторное  проведение  без  отмены  задваивает  движения
+     */
+    public function isExecuted() {
+        if ($this->document_id == 0) {
+            return false;
+        }
+        $conn = \ZDB\DB::getConnect();
+        $state = intval($conn->GetOne("select state from documents where document_id=" . $this->document_id));
+
+        return $state >= self::STATE_EXECUTED;
+    }
+
+    /**
      * возвращает  тэг <img> со штрих кодом номера  документа
      *
      */

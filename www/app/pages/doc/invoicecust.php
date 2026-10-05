@@ -291,6 +291,10 @@ class InvoiceCust extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
+        if ($this->_doc->isExecuted()) {
+            $this->setError('Документ вже проведено. Спершу скасуйте проведення');
+            return;
+        }
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();
