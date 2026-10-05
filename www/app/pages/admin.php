@@ -84,6 +84,7 @@ class Admin extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnp', $modules['np']));
         $this->modules->add(new CheckBox('moddf', $modules['df']));
         $this->modules->add(new CheckBox('modpromua', $modules['promua']));
+        $this->modules->add(new CheckBox('modrozetka', $modules['rozetka'] ?? 0));
 
         $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
 
@@ -329,6 +330,7 @@ class Admin extends \App\Pages\Base
         $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
         $modules['df'] = $sender->moddf->isChecked() ? 1 : 0;
         $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
+        $modules['rozetka'] = $sender->modrozetka->isChecked() ? 1 : 0;
 
         $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
 
