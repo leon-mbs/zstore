@@ -290,9 +290,18 @@ class Order extends \App\Entity\Doc\Document
             }
 
             if($this->payed >0 || $this->headerdata['bonus'] > 0) {
-                $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment']);
-              
-                \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+                //при  повторном  переводе  в  работу вносим  только  то, что  еще  не  внесено
+                $was = $this->getPayed();
+                $amount = $this->payed - $was;
+                if($amount > 0 || $was == 0) {
+                    $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $amount, $this->headerdata['payment']);
+
+                    if($this->payed > $was) {
+                        \App\Entity\IOState::addIOState($this->document_id, $this->payed - $was, \App\Entity\IOState::TYPE_BASE_INCOME);
+                    }
+                } else {
+                    $this->payed = $was;
+                }
             }
             $this->DoBalans() ;
 
