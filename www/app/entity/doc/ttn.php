@@ -192,7 +192,7 @@ class TTN extends Document
 
 
             //оприходуем  с  производства
-            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD) || $item->item_type == Item::TYPE_HALFPROD) {
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD)) {
 
                 if ($item->autooutcome == 1) { //комплекты
                    $item->setToProd($required,$this->headerdata['store'],$this->document_id);
