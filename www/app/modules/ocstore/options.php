@@ -31,6 +31,8 @@ class Options extends \App\Pages\Base
         $form->add(new CheckBox('ssl', $modules['ocssl'] ?? 0));
 
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
+        $form->add(new CheckBox('dostore', $modules['ocdostore']));
+        $form->add(new CheckBox('reserve', $modules['ocreserve']));
 
         $form->add(new CheckBox('v4', $modules['ocv4'] ?? 0));
         $form->add(new TextArea('key', $modules['ockey']));
@@ -44,7 +46,7 @@ class Options extends \App\Pages\Base
         $pt[1] = 'Оплата на стороні IM ';
         $pt[2] = 'Постоплата';
         $pt[3] = 'Оплата касовим  чеком, РФ або ВН';
-        $pt[4] = 'Тільки списати зі складу';
+        $pt[4] = 'Тільки списати зі складу через ТТН';
       
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
 
@@ -66,6 +68,8 @@ class Options extends \App\Pages\Base
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $v4 = $this->cform->v4->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+        $reserve = $this->cform->reserve->isChecked() ? 1 : 0;
+        $dostore = $this->cform->dostore->isChecked() ? 1 : 0;
 
 
         if (strlen($pricetype) < 2) {
@@ -90,6 +94,12 @@ class Options extends \App\Pages\Base
             return;
         }
 
+        if ( ($reserve==1 || $dostore==1 ) && $store==0 ) {
+
+            $this->setError('Не вказано склад');
+            return;
+        }
+
         $site = trim($site, '/');
 
         $modules = System::getOptions("modules");
@@ -100,10 +110,12 @@ class Options extends \App\Pages\Base
 
         $modules['ocpricetype'] = $pricetype;
         $modules['ocsalesource'] = $salesource;
-        $modules['ocsalesource'] = $salesource;
+       
         $modules['ocssl'] = $ssl;
         $modules['ocv4'] = $v4;
         $modules['ocinsertcust'] = $insertcust;
+        $modules['ocdostore'] = $dostore;
+        $modules['ocreserve'] = $reserve;
 
 
         $modules['ocmf'] = $mf;
