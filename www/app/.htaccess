@@ -1,0 +1,8 @@
+# Application code is loaded by PHP only, direct HTTP access is not needed
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+</IfModule>

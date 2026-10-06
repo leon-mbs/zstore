@@ -171,7 +171,7 @@ class Order extends Base
         $delivery = $this->orderform->delivery->getValue();
         $paytype = intval($this->orderform->paytype->getValue());
         $address = $this->orderform->address->getValue();
-
+     
         if ($delivery == 0) {
 
             $this->setError("Виберіть тип доставки");
@@ -371,7 +371,8 @@ class Order extends Base
         
         
         if($paytype == 1) {
-
+            System::getSession()->shoporderid = $order->document_id;
+   
             App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
             return;
         }

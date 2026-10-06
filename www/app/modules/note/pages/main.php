@@ -30,7 +30,11 @@ class Main extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-
+        if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg("Немає права доступу до сторінки");
+            App::RedirectError();
+            return;
+        }
     }
 
     public function onSearch($args, $post=null) {
@@ -432,6 +436,11 @@ class Main extends \App\Pages\Base
         $user = \App\System::getUser();
      
         $t = Topic::load((int) $args[0]) ;
+      //доступ  меняет  только  автор (как  canacc в  loadTopic)
+        if ($t == null || $t->user_id != System::getUser()->user_id) {
+            return;
+        }      
+      
         $ret = ['allUsers'=>[],'accUsers'=>[]] ;
         
         foreach( \App\Entity\User::findArray('username', 'disabled <> 1','username') as $id=>$name ){
@@ -463,6 +472,34 @@ class Main extends \App\Pages\Base
         
     }
 
+ 
+    public function __construct() {
+        parent::__construct();
+        if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg("Немає права доступу до сторінки");
+            App::RedirectError();
+            return;
+        }
+
+    }
+
+    //просмотр: публичный, свой  или  открытый  пользователю
+    private function canRead($t) {
+        $user = System::getUser();
+        return $t != null && ($t->ispublic == 1 || $t->user_id == $user->user_id || in_array($user->user_id, $t->accusers ?? []));
+    }
+    //редактирование: свой  или  публичный  с  доступом  пользователю (как  canedit в  loadTopic)
+    private function canEdit($t) {
+        $user = System::getUser();
+        return $t != null && ($t->user_id == $user->user_id || ($t->ispublic == 1 && in_array($user->user_id, $t->accusers ?? [])));
+    }
+    //удалить, вырезать: автор  топика  или  владелец  узла (как  candelcut в  loadTopic)
+    private function canDelCut($t, $node_id) {
+        $user = System::getUser();
+        $n = Node::load((int)$node_id);
+        return $t != null && ($t->user_id == $user->user_id || ($n != null && $n->user_id == $user->user_id));
+    }    
+    
 }
 
 class Node2

@@ -67,8 +67,12 @@ class DocList extends \App\Pages\Base
         $ret = [];
         $ret['docs']  =  [];
                 
-        $p = \App\Entity\Pos::load($arg[2]);
-        $sql = "    meta_name='{$arg[1]}' and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";
+        $p = \App\Entity\Pos::load( (int) $arg[2]);
+        $arg[0]   = (int)$arg[0];
+        $arg[1]   = \App\Entity\Pos::qstr($arg[1]) ;
+
+        $sql = "    meta_name={$arg[1]} and state >4 and content  not  like '%vdoc%' and customer_id  >0 ";       
+         
         if($arg[0] > 0) {
             $sql .= " and customer_id={$arg[0]} ";
         } else {
@@ -94,7 +98,9 @@ class DocList extends \App\Pages\Base
 
 
     public function mark($arg, $post=null) {
-        $ids = $post;
+     
+        $ids = implode(',', array_map('intval', explode(',', (string)$post)));
+
         foreach(Document::findYield("document_id  in ({$ids})") as $doc) {
             $doc->headerdata['vdoc'] = 0;
             $doc->save();
@@ -112,6 +118,7 @@ class DocList extends \App\Pages\Base
         if(strlen($firm['tin'])==0) {
             return "Компанія повинна мати ЄДРПОУ";
         }
+     
         if($arg[1]==true && strlen($p->ppokeyid)==0 ) {
             return "Не заданий ключ для КЕП";
         }
@@ -167,7 +174,8 @@ class DocList extends \App\Pages\Base
             $filename = implode('_',$na) .'.pdf';
         //    $filename= "2475406556_3235608644_20170213_Рахунок_РН-026.pdf";
             
-            list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm->vdoc  )  ;
+            list($ok, $data) = Helper::senddoc( $pdf, $filename,$firm['vdoc']  )  ;
+     
             if($ok != "ok") {
                 return $name ." ".$data;
             }

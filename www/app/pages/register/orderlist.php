@@ -41,10 +41,13 @@ class OrderList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('OrderList')) {
             \App\Application::RedirectHome() ;
         }
+        
+         
         $this->_issms = (System::getOption('sms', 'smstype')??0) >0 ;
 
         $this->add(new Panel("listpanel"));
 
+          
         $this->listpanel->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
         $this->listpanel->filter->add(new TextInput('searchnumber'));
@@ -119,6 +122,7 @@ class OrderList extends \App\Pages\Base
         $this->splitpanel->splitform->add(new SubmitButton('splitsave'))->onClick($this, 'splitOnSubmit');
         $this->splitpanel->splitform->add(new DataView('splititemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_itemlist'), $this, 'splitlistOnRow'));
  
+    
         
     }
 
@@ -860,8 +864,6 @@ class OrderList extends \App\Pages\Base
         $this->editpanel->editform->edititemlist->Reload();
 
     }
-
-  
     
     public function editlistOnRow($row) {
         $item = $row->getDataItem();
@@ -907,7 +909,6 @@ class OrderList extends \App\Pages\Base
 
 
     }
-
    
     public function editOnSubmit($sender) {
 
@@ -1184,7 +1185,7 @@ class OrderList extends \App\Pages\Base
 
     }
 
-
+   
 }
 
 /**

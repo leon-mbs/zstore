@@ -723,7 +723,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
-            $where .= " and store_id = " . $store_id;
+            $where .= " and store_id = " . intval( $store_id);
         }
         if ($emp > 0) {
             $where .= " and coalesce(emp_id,0) = " . $emp;
@@ -782,7 +782,7 @@ class Item extends \ZCL\DB\Entity
             $sql .= " and store_id = " . $store_id;
         }
         if ($emp_id > 0) {
-            $sql .= " and coalesce(emp_id,0) = " . $emp_id;
+            $sql .= " and coalesce(emp_id,0) = " . intval( $emp_id);
         }
         $amount = $conn->GetOne($sql);
         return $amount;

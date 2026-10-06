@@ -112,6 +112,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('printoutqrcode'));
         $this->business->add(new CheckBox('storeemp'));
         $this->business->add(new CheckBox('usescanner'));
+        $this->business->add(new CheckBox('usescannermob'));
         $this->business->add(new CheckBox('usescale'));
 
    
@@ -143,6 +144,7 @@ class Options extends \App\Pages\Base
         $this->business->storepart->setValue($common['storepart']??0);
         $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->usescanner->setChecked($common['usescanner']);
+        $this->business->usescannermob->setChecked($common['usescannermob']);
         $this->business->usescale->setChecked($common['usescale']);
   
 
@@ -353,6 +355,10 @@ class Options extends \App\Pages\Base
         $common['actualdate'] = $this->business->actualdate->getDate();
         $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->business->usescanner->isChecked() ? 1 : 0;
+        $common['usescannermob'] = $this->business->usescannermob->isChecked() ? 1 : 0;
+        if($common['usescanner']==0)  {
+           $common['usescannermob'] = 0; 
+        }
         $common['usescale'] = $this->business->usescale->isChecked() ? 1 : 0;
  
         $common['storepart'] = $this->business->storepart->getValue() ;

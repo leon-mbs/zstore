@@ -45,6 +45,11 @@ class Main extends Base
         $cat = '';
         if ($id > 0) {
             $c = \App\Entity\Category::load($id);
+            if ($c == null) {
+                http_response_code(404);
+                die;
+            }
+  
             $ch = $c->getChildren();
             $cat = " cat_id in (" . implode(',', $ch) . ") and ";
         }

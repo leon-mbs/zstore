@@ -44,6 +44,15 @@ class ServiceAct extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
+        $paytype= 2;
+        if($docid==0) {
+            $last = Document::getFirst("state > 3 and  meta_name='ServiceAct'","document_id desc");
+            if($last != null){
+                $paytype = $last->getHD('paytype',2) ;
+            }
+        }     
+     
+     
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -59,7 +68,7 @@ class ServiceAct extends \App\Pages\Base
        
         $this->docform->add(new TextArea('notes'));
 
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], 2 ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $paytype ))->onChange($this, 'OnPayType');
   
     
         $this->docform->add(new TextInput('phone'));
@@ -130,6 +139,7 @@ class ServiceAct extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
+            $this->docform->paytype->setValue($this->_doc->headerdata['paytype']);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->totalnds->setText($this->_doc->headerdata['nds']);
@@ -179,7 +189,10 @@ class ServiceAct extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->OnChangeCustomer($this->docform->customer);
-                      
+                        $this->docform->paytype->setValue($basedoc->headerdata['paytype']);
+                        $this->docform->payment->setValue($basedoc->headerdata['payment']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                
                       
 
                         $this->_serlist = $basedoc->unpackDetails('detaildata');
@@ -528,7 +541,8 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->headerdata['devdesc'] = $this->docform->devdesc->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['contract_id'] = $this->docform->contract->getValue();
-      
+        $this->_doc->headerdata['paytype'] = $this->docform->paytype->getValue();
+                                                       
         $this->_doc->packDetails('detaildata', $this->_serlist);
         $this->_doc->packDetails('detail2data', $this->_itemlist);
 

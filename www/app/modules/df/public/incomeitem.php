@@ -89,6 +89,11 @@ class IncomeItem extends Base
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
+                 //только  свой  документ
+            if ($this->_doc == null || $this->_doc->customer_id != $this->_customer->customer_id || $this->_doc->meta_name != 'IncomeItem') {
+                App::Redirect("\\App\\Modules\\DF\\Public\\Main");
+                return;
+            }          
             $this->docform->document_number->setText($this->_doc->document_number);
             if($this->_doc->state== Document::STATE_NEW) {
                 $this->_doc->document_date = time() ;               
@@ -104,7 +109,7 @@ class IncomeItem extends Base
             $this->docform->document_number->setText($this->_doc->nextNumber());
             if ($basedocid > 0) {  //создание на  основании
                 $basedoc = Document::load($basedocid);
-                if ($basedoc instanceof Document) {
+                if ($basedoc instanceof Document  && $basedoc->customer_id == $this->_customer->customer_id)  {
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'OutcomeItem') {
 
@@ -362,7 +367,8 @@ class IncomeItem extends Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
-        $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+        $price = $item->getLastPartion($this->_store_id, "", true);
+    
         $this->editdetail->editprice->setText(H::fa($price));
 
     }

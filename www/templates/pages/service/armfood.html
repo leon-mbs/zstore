@@ -103,7 +103,7 @@
                        </div>
                     </div>
                
-                    <div class="mb-2">
+                    <div class="d-flex justify-content-end mb-2">
                       
                         <input type="submit" value="До замовлень >"   class="btn btn-success">
                     </div>
@@ -1234,8 +1234,8 @@
                   callPM('getProdItems',[],null,(itemlist)=> 
                   {
                            
-                 
-                     if(itemlist.length >0) {
+                    
+                     if( itemlist &&  itemlist.length >0) {
                          $("#ireadyp").show()
                          $("#ireadyc").text(itemlist.length)
                          var row="";

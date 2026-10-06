@@ -21,7 +21,12 @@ class Reports extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
+        if (strpos(System::getUser()->modules, 'cb') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg("Немає права доступу до сторінки");
 
+            App::RedirectError();
+            return;
+        }
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new DropDownChoice('pos',Pos::findArray("pos_name"," details like '%<usefisc>1</usefisc>%' ","pos_name"),0 ));
        

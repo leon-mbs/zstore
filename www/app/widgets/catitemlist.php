@@ -50,7 +50,7 @@ class CatItemList extends \Zippy\Html\PageFragment
 
     public function loaddata($args, $post=null) {
         $post = json_decode($post)   ;
-
+        $args[0] = (int) $args[0];
         $ret=[];
         $ret['cats'] = [];
         $ret['items']= [];

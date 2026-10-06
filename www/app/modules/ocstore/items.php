@@ -133,7 +133,7 @@ class Items extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('qty', \App\Helper::fqty($item->qty)));
         $row->add(new Label('price', $item->getPrice($modules['ocpricetype'])));
-        $row->add(new Label('desc', $item->desription));
+        $row->add(new Label('desc', $item->description));
     }
 
     public function exportOnSubmit($sender) {
@@ -228,7 +228,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
+        $cat = intval( $this->upd->updcat->getValue());
 
         $elist = array();
         

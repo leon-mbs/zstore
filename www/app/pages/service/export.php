@@ -343,6 +343,22 @@ class Export extends \App\Pages\Base
         H::exportXML($root, 'options_' . date('Y_m_d', time()) . '.xml');
 
 
+        
+        /*
+     $filename = 'options_' . date('Y_m_d', time()) . '.xml' ;
+
+          
+        header("Content-type: text/plain");
+        header("Content-Disposition: attachment;Filename={$filename}");
+        header("Content-Transfer-Encoding: binary");
+        header('Content-Length: '.strlen($xml));
+ 
+        echo $xml;
+        die;        
+        
+        
+        */
+        
     }
 
 

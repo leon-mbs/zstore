@@ -182,8 +182,10 @@ class Order extends \App\Entity\Doc\Document
     
     //резервирование товаров
     public function reserve() {
-
-        $this->unreserve();
+        if($this->hasReserve() ) {
+            $this->unreserve();
+        }
+        $this->insertLog(-2);
 
         
         $store_id = intval($this->headerdata['store']);
@@ -244,6 +246,11 @@ class Order extends \App\Entity\Doc\Document
     }
     //отмена  резерва
     public function unreserve() {
+       
+ 
+       
+        $this->insertLog(-2);
+
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where tag=".Entry::TAG_RESERV." and document_id =" . $this->document_id);
     }
@@ -278,6 +285,9 @@ class Order extends \App\Entity\Doc\Document
             if($this->getHD('paytype',0) != 1) {
                 return;
             }           
+            if($this->hasPayments()) {
+                return;
+            }           
             if(strlen($this->headerdata['promocode']??'') > 0){
                 \App\Entity\PromoCode::apply($this->headerdata['promocode'],$this);
             }
@@ -300,6 +310,7 @@ class Order extends \App\Entity\Doc\Document
         if($store_id==0) {
             return;
         }  
+        
         $conn = \ZDB\DB::getConnect();
         $conn->Execute("delete from entrylist where tag=".Entry::TAG_RESERV." and document_id =" . $this->document_id);
         
@@ -311,7 +322,8 @@ class Order extends \App\Entity\Doc\Document
         if($this->getHD('dostore',0) ==0 )  {
             return;  //не проводить  по  складу
         }
-       
+        $this->insertLog(-2);
+      
  
         $am =   $this->getAmountReg()   ;
         $k = 1;   //учитываем  скидку

@@ -96,7 +96,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['order_id']);
+                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $puorder['id']);
                     continue;
                 }
                 $tovar->quantity = H::fqty($product['quantity']);
@@ -108,7 +108,7 @@ class Orders extends \App\Pages\Base
             }
 
             if(count($itlist)==0) {
-                return;
+                continue;
             }
             $neworder->packDetails('detaildata', $itlist);
             $neworder->headerdata['pricetype'] = 'price1';
@@ -143,9 +143,7 @@ class Orders extends \App\Pages\Base
    
             if ( is_array($puorder['payment_option']) &&   count($puorder['payment_option']) > 0) {
                 $neworder->notes .= " Оплата: "  ;
-                foreach($puorder['payment_option'] as $o) {
-                   $neworder->notes .= ($puorder['payment_option']['name'] . " ");    
-                }
+               $neworder->notes .= (($puorder['payment_option']['name'] ?? '') . " ");
                $neworder->notes .=  ";" ; 
             }            
             
@@ -285,10 +283,8 @@ class Orders extends \App\Pages\Base
 
 
             try {
-                $json="{
-                \"status\":\"pending\",
-                \"ids\":[{$order->headerdata['ocorder']}]
-                }" ;
+ 
+                $json = json_encode(array('status' => $st, 'ids' => array(intval($order->headerdata['puorder']))));
                 Helper::make_request("POST", "/api/v1/orders/set_status", $json);
             } catch(\Exception $ee) {
                 $this->setErrorTopPage($ee->getMessage());

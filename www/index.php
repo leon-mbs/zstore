@@ -22,8 +22,12 @@ try {
             \App\Session::getSession()->clean();
 
             \App\System::setUser($user);
-            $user->lastactive = time();
-            $user->save() ;
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::SYSTEM;
+
+            $n->message = "Login: ".$user->username  ;
+            $n->save();  
+          
             if($user->rolename=="admins") {
                  \App\System::checkUpdate()  ; 
                  \App\Helper::cleanDB()  ; 

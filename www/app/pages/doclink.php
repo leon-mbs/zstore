@@ -17,12 +17,12 @@ class Doclink extends \Zippy\Html\WebPage
         }
         
         $conn= \ZDB\db::getConnect()  ;
-        
+        $hash = trim((string)$hash);    
         $hash = $conn->qstr('%'.$hash.'%') ;
         
         $id = intval( $conn->GetOne(" select document_id from documents where content like ".$hash) );
         
-        $doc = Document::load($id) ;
+        $doc = Document::load((int)$id) ;
         if ($doc == null) {
             header("HTTP/1.0 404 Not Found");
             die;

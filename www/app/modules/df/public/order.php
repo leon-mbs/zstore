@@ -124,6 +124,11 @@ class Order extends  Base
 
         if ($docid > 0) {    //загружаем   содержимое  документа настраницу
             $this->_doc = Document::load($docid)->cast();
+            if ($this->_doc == null || $this->_doc->customer_id != $this->_customer->customer_id || $this->_doc->meta_name != 'Order') {
+                App::Redirect("\\App\\Modules\\DF\\Public\\Main");
+                return;
+            }          
+          
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
@@ -189,7 +194,8 @@ class Order extends  Base
     }
 
     public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc)) {
+       
+        if ($this->_doc->state > 4) {
             return;
         }
         $item = $sender->owner->getDataItem();
@@ -630,7 +636,7 @@ class WISDataSource implements \Zippy\Interfaces\DataSource
 
         $text = trim($this->page->witempan->wisfilter->wissearchkey->getText());
         $man = trim($this->page->witempan->wisfilter->wissearchmanufacturer->getText());
-        $cat = $this->page->witempan->wisfilter->wissearchcat->getValue();
+        $cat =  intval($this->page->witempan->wisfilter->wissearchcat->getValue());
 
         if ($cat > 0) {
             $where = $where . " and cat_id=" . $cat;

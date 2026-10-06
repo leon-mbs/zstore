@@ -51,6 +51,7 @@ class Pay extends \ZCL\DB\Entity
      */
     public static function addPayment($document_id, $paydate=null, $amount=0, $mf_id=0, $comment = '', $nobank=false) {
         $doc = \App\Entity\Doc\Document::load($document_id);
+        $doc->insertLog(-1);
         if(strlen($paydate)==0){
             $paydate = $doc->documemt_date;
         }

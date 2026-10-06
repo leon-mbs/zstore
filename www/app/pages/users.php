@@ -72,6 +72,9 @@ class Users extends \App\Pages\Base
         // Очищаем  форму
         $this->editpan->editform->clean();
         $this->editpan->editform->brow->Reload();
+        $this->editpan->editform->srow->Reload();
+        $this->editpan->editform->mrow->Reload();
+        
 
         $this->user = new User();
     }
@@ -155,6 +158,7 @@ class Users extends \App\Pages\Base
                 }
             }
         }
+        $rolename= $this->editpan->editform->editrole->getValueName();
         $this->user->role_id = $this->editpan->editform->editrole->getValue();
         if($this->user->role_id==0) {
             $this->setError('Не вказана роль');
@@ -210,13 +214,13 @@ class Users extends \App\Pages\Base
                     $marr[] = $item->mf_id;
                 }
             }
-            if(count($sarr)==0) {
-                $this->setError('Не вибраний  жоден склад') ;
-                return;
+            if(count($sarr)==0 && $rolename != 'admins') {
+                $this->setWarn('Не вибраний  жоден склад') ;
+               
             }   
-            if(count($marr)==0) {
-                $this->setError('Не вибраний  жоден  грошовий рахунок') ;
-                return;
+            if(count($marr)==0 && $rolename != 'admins') {
+                $this->setWarn('Не вибраний  жоден  грошовий рахунок') ;
+               
             }   
  
             $this->user->aclstore = implode(',', $sarr);

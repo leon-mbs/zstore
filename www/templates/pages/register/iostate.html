@@ -17,7 +17,7 @@
                   {{/bmode}}
                 </b> 
                 </div>
-                 <div class="col-12  ">
+                 <div class="col-12  my-2">
                     <form zippy="filter"  >
                         <div class="row row-cols-sm-auto g-2 align-items-start ">
                           <div class="col-12">
@@ -58,7 +58,7 @@
                          </div>
                        {{/bmode}}
                         <div class="col-12  ">
-                           <input type="submit" class="  btn btn-success  " value="ОК">
+                           <input type="submit" zippy="bfilter" class="  btn btn-success  " value="ОК">
                         </div> 
                       </div>
                      
@@ -74,7 +74,7 @@
  
                              <label   for="docnumber"> Документ </label>
                          
-                             <input required="on" placeholder="Номер документа" class="form-control  me-2  " zippy="docnumber"  >
+                             <input style="width:125px" required="on" placeholder="Номер документа" class="form-control  me-2  " zippy="docnumber"  >
                            </div>
                            </div>
                          <div class="col-12">
@@ -87,11 +87,17 @@
                         </div>
                          <div class="col-12">
                            <div class="input-group">
+                              <label for="docdate">Дата:</label>
+                              <input   class="form-control  " type="text" zippy="docdate"  >
+                          </div>
+                          </div>
+                        <div class="col-12">
+                           <div class="input-group">
                             <label   for="docamount"> Сума </label>
-                            <input required="on"   class="form-control  me-2  " zippy="docamount"  >
+                            <input style="width:75px" required="on"   class="form-control  me-2  " zippy="docamount"  >
+                           </div>
                           </div>
                           
-                          </div>
                           <div class="col-12  ">
                              <input type="submit" class="  btn btn-success  " value="Додати">
                         </div>
@@ -111,14 +117,14 @@
             <div class="col-12 col-md-8 col-xl-6">
 
                   {{#bmode}} 
-                     <small><i class="fa fa-exclamation-triangle"></i> Редагування впливає тільки на  формування  книги. Оригінальні документи і касові операції не  змінюються</small>
+                     <small class="compact"><i class="fa fa-exclamation-triangle"></i> В  режимі книги витрати - собівартість реалізованого товару (а не  закупка). Редагування впливає тільки на  формування  книги. Оригінальні документи і касові операції не  змінюються</small>
                   {{/bmode}} 
                 <br>
                   {{^bmode}} 
                 <a zippy="csv">Експорт у Excel</a>
                  {{/bmode}} 
                   {{#bmode}} 
-                <a zippy="viewbook">Перегляд Книги</a>
+                <a zippy="viewbook"><i class="fa fa-book"></i> Перегляд Книги</a>
                   {{/bmode}} 
 
                 <table class="table   table-sm   ">
@@ -130,6 +136,7 @@
                         <th class="text-end">Витрата</th>
                         <th>Автор</th>     
                         <th>Тип прибутку/видатку</th>
+                        <th></th>
                         <th></th>
                         
 
@@ -146,13 +153,15 @@
                         <td zippy="username"></td>     
                         <td zippy="iotype"></td>
                       
-                        <td class="text-nowrap">
+                        <td  >
 
                             <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-                             {{#bmode}} 
-                             &nbsp;&nbsp;
-                             <a href="javascript:void(0) " zippy="edit" title="Редагувати" ><i class="fa fa-edit  "></i></a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
+                      
+                        </td>
+                         <td  >
+
+                            {{#bmode}} 
+                          
                              <a zippy="delete" title="Видалити"><i class="fa fa-trash text-danger"></i></a>
                              {{/bmode}} 
 
@@ -195,41 +204,21 @@
         </div>
    
       
-     <div id="modaledit" class="modal fade  " tabindex="-1" role="dialog"  >
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Редагування</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                              <form zippy="formedit">       
-                             <input   type="hidden" zippy="editio"  >
-                               
-                             <div class="mb-2">
-                             <label for="editdate">Дата:</label>
-                                <input   class="form-control  " type="text" zippy="editdate"  >
-                                 </div>
-                                <div class="mb-2">   
-                                    <input type="submit" value="Зберегти"   class="  btn btn-info  ">
-                                </div>
-                                
-                           
-                            </div>
-                              </form>
-                        </div>
-
-                    </div>
-                </div>     
-         
+      
 
      <script>
             function check_delete() {
                 return confirm("Видалити документ?")
             }
             function check_viewbook() {
+               document.getElementById('dialogwait').showModal()
+               return true;
+            }
+            function check_bmode() {
+               document.getElementById('dialogwait').showModal()
+               return true;
+            }
+            function check_bfilter() {
                document.getElementById('dialogwait').showModal()
                return true;
             }

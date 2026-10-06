@@ -69,6 +69,12 @@ class OutcomeItem extends  Base
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
+            if ($this->_doc == null || $this->_doc->customer_id != $this->_customer->customer_id || $this->_doc->meta_name != 'OutcomeItem') {
+                App::Redirect("\\App\\Modules\\DF\\Public\\Main");
+                return;
+            }          
+          
+          
             $this->docform->document_number->setText($this->_doc->document_number);
             if($this->_doc->state== Document::STATE_NEW) {
                 $this->_doc->document_date = time() ;               

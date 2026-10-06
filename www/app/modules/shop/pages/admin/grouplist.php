@@ -121,7 +121,7 @@ class GroupList extends \App\Pages\Base
         $datarow->add(new Label("itemtype", $attrlist[$item->attributetype]));
         $datarow->add(new Label("itemvalues", $item->valueslist));
         $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id );
-        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id && $item-> attributetype != 6);
+        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id && $item->attributetype != 6);
         $datarow->add(new ClickLink("orderup", $this, 'OnUp'))->setVisible($item->ordern > $this->mm["mi"]);
         $datarow->add(new ClickLink("orderdown", $this, 'OnDown'))->setVisible($item->ordern < $this->mm["mm"]);
 

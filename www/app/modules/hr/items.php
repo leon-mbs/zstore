@@ -180,9 +180,9 @@ class Items extends \App\Pages\Base
         $row->add(new CheckBox('ch', new Prop($item, 'ch')));
         $row->add(new Label('name', $item->itemname));
         $row->add(new Label('code', $item->item_code));
-        $row->add(new Label('qty', \App\Helper::fqty($item->qty)));
-        $row->add(new Label('price', $item->getPrice($modules['ocpricetype'])));
-        $row->add(new Label('desc', $item->desription));
+        $row->add(new Label('desc', $item->description));
+        $row->add(new Label('price', $item->getPrice($modules['hrpricetype'])));
+
     }
 
     public function exportOnSubmit($sender) {
@@ -246,7 +246,7 @@ class Items extends \App\Pages\Base
 
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
-        $cat = $this->upd->updcat->getValue();
+        $cat =intval( $this->upd->updcat->getValue() );
         
         
         $articles = $this->getArticles();
@@ -328,9 +328,12 @@ class Items extends \App\Pages\Base
          
           $body['token'] =$token;
        
-
-          $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/import/", json_encode($body, JSON_UNESCAPED_UNICODE));
-  
+      try {
+              $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/import/", json_encode($body, JSON_UNESCAPED_UNICODE));
+          } catch(\Exception $ee) {
+              $this->setErrorTopPage($ee->getMessage());
+              return;
+          }
           $this->setSuccess('Оновлено');
     }
 
@@ -388,8 +391,9 @@ class Items extends \App\Pages\Base
                 if ($cnt > 0) {
                     continue;
                 } //уже  есть с  таким  артикулом
-
-                $product->name = str_replace('&quot;', '"', $product['article']);
+               
+              //  $product->name = str_replace('&quot;', '"', $product['article']);
+  
                 $item = new Item();
                 $item->item_type=Item::TYPE_TOVAR ;
       
@@ -419,7 +423,7 @@ class Items extends \App\Pages\Base
                 if ($modules['hrpricetype'] == 'price4') {
                     $item->price4 = H::fa($product['price']);
                 }
-                if ($modules['hrcpricetype'] == 'price5') {
+                if ($modules['hrpricetype'] == 'price5') {
                     $item->price5 = H::fa($product['price']);
                 }
                 $item->manufacturer = $product['brand']['value']['ua'] ?? '';
@@ -457,7 +461,7 @@ class Items extends \App\Pages\Base
 
               
                 $item->save();
-        
+                $i++;
 
             }
         }
@@ -492,8 +496,8 @@ class Items extends \App\Pages\Base
                 $ret =   \App\Modules\HR\Helper::make_request("POST", "/api/catalog/export", json_encode($body, JSON_UNESCAPED_UNICODE));
             
             } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
+                $this->setError($ee->getMessage());
+                return [];
             }
             $page++;
 

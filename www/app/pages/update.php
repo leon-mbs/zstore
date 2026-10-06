@@ -175,7 +175,7 @@ class Update extends \App\Pages\Base
           
       try{
             $url = "https://store.zippy.com.ua/stat.php?h=".H::getSalt();
-        
+         
             $url.= "&v=".System::CURR_VERSION;
             $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
             if(strlen($json)>0) {

@@ -39,7 +39,7 @@ class EndDay extends \App\Pages\Base
 
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
-          \App\Session::getSession()-> setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
+          \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
 
 
         $this->detail->setVisible(true);
@@ -78,7 +78,7 @@ class EndDay extends \App\Pages\Base
               mf_name,
               username
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate={$date}   {$usr}  {$mfacl}
+            WHERE paytype <= 1000  and date(paydate)={$date}   {$usr}  {$mfacl}
             GROUP BY username,
                      mf_name
             ORDER BY username, mf_name ";
@@ -103,7 +103,7 @@ class EndDay extends \App\Pages\Base
               mf_name 
               
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate<{$date} {$mfacl}
+            WHERE paytype <= 1000  and date(paydate)<{$date} {$mfacl}
             GROUP BY  
                      mf_name
               ";
@@ -124,7 +124,7 @@ class EndDay extends \App\Pages\Base
               mf_name 
               
             FROM paylist_view
-            WHERE paytype <= 1000  and paydate={$date} {$mfacl}
+            WHERE paytype <= 1000  and date(paydate)={$date} {$mfacl}
             GROUP BY  
                      mf_name
             ORDER BY   mf_name ";

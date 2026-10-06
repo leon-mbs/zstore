@@ -25,6 +25,12 @@ class DocList extends \App\Pages\Base
  
     public function __construct() {
         parent::__construct();
+        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
+            System::setErrorMsg("Немає права доступу до сторінки");
+
+            App::RedirectError();
+            return;
+        }
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
@@ -102,7 +108,7 @@ class DocList extends \App\Pages\Base
             $row=[];
             $row['fn'] = $doc->headerdata['fiscalnumber']??  '';
             if($row['fn']=='') continue;
-            if(($doc->header['fiscaltest']?? false) ) continue;  //тестовый
+            if(($doc->headerdata['fiscaltest']?? false) ) continue;  //тестовый
             
             $row['amount'] = doubleval($doc->headerdata['fiscalamount']??  0);
             if($row['amount']==0) {

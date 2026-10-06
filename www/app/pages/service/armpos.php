@@ -1780,6 +1780,9 @@ class ARMPos extends \App\Pages\Base
 
                 if(is_array($ret)) {
                     $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $doc->headerdata["tax_url"] = $ret['tax_url'];
+                    $doc->headerdata["vkassa"] = $ret['checkid'];
+                    
                     $doc->headerdata["passfisc"] = 0;
                     $doc->save();
                   
@@ -1802,7 +1805,7 @@ class ARMPos extends \App\Pages\Base
                     //повторяем для  нового номера
                     $this->pos->fiscdocnumber = $ret['doclocnumber'];
                     $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
                 }
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['data']);

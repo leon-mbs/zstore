@@ -2495,6 +2495,9 @@ class ARMFood extends \App\Pages\Base
 
             if(is_array($ret)) {
                 $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                $doc->headerdata["tax_url"] = $ret['tax_url'];
+                $doc->headerdata["vkassa"] = $ret['checkid'];
+                  
                 $doc->headerdata["passfisc"] = 0;
                 $doc->save();
               
@@ -2516,7 +2519,7 @@ class ARMFood extends \App\Pages\Base
                 //повторяем для  нового номера
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'];
                 $this->_pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                $ret = \App\Modules\PPO\PPOHelper::check($doc);
             }
             if ($ret['success'] == false) {
                   throw new \Exception($ret['data']);
@@ -2846,6 +2849,10 @@ class ARMFood extends \App\Pages\Base
     
     public  function afterRequest() {
         parent::afterRequest() ;
+     
+        $isajax=  \App\Application::$app->getRequest()->isAjaxRequest() ;
+        if($isajax) return;
+     
         if($this->docpanel->listsform->isVisible()) {
            
             $this->docpanel->listsform->btosave->setVisible($this->_doc->state < 4 || $this->_doc->state== 16); 

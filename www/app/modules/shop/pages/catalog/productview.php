@@ -99,7 +99,7 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->disabled == 1 || $product->noshop == 1) {
-            $this->onstore = 'Знято з продажу';
+            $this->onstore->setText('Знято з продажу');
             $this->buy->setVisible(false);
         } else {
 
@@ -301,6 +301,10 @@ class ProductView extends Base
 
     //удалить коментарий
     public function OnDeleteComment($sender) {
+        if (System::getUser()->userlogin != 'admin') {
+            return;
+        }
+ 
         $comment = $sender->owner->getDataItem();
         $comment->moderated = 1;
         $comment->rating = 0;

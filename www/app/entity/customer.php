@@ -413,4 +413,20 @@ class Customer extends \ZCL\DB\Entity
         return "  detail like '%<type>{$user->custtype}</type>%'   ";
     }
 
+    
+   /**
+     * проверка  пароля  контрагента (кабинет, магазин, бот)
+     * в  профиле  пароль  сохраняется  хешем, старые  - открытым  текстом
+     *
+     * @param mixed $password
+     */
+    public function checkPassword($password) {
+        if(!is_string($password) || strlen($password) == 0 || strlen($this->passw ?? '') == 0) {
+            return false;
+        }
+        if(!empty(password_get_info((string)$this->passw)['algo'])) {
+            return password_verify($password, $this->passw);
+        }
+        return hash_equals((string)$this->passw, $password);
+      
 }

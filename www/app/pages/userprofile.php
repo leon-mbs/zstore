@@ -47,8 +47,7 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100, 200 => 200), $this->user->pagesize));
-        $form->add(new DropDownChoice('defpaytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $this->user->defpaytype ))  ;
-
+      
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
 
         $pages = array();
@@ -176,7 +175,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
-        $this->user->defpaytype = $sender->defpaytype->getValue();
+    
         $this->user->defsalesource = $sender->defsalesource->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();

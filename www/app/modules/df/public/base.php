@@ -28,8 +28,10 @@ class Base extends \Zippy\Html\WebPage
 
             if ($arr[0] > 0 && $arr[1] === md5($arr[0] . Helper::getSalt())) {
                 $customer = \App\Entity\Customer::load($arr[0]);
-                \App\System::setCustomer($customer->customer_id)  ;
-                $customer_id = $customer->customer_id;
+                if($customer != null && $customer->status == 0 ){
+                  \App\System::setCustomer($customer->customer_id)  ;
+                  $customer_id = $customer->customer_id;
+                }
 
             }
 
@@ -45,6 +47,11 @@ class Base extends \Zippy\Html\WebPage
      
         $this->_store_id = round($modules['dfstore'] );
         $this->_customer= Customer::load($customer_id);
+        //только  партнер (покупатель  магазина  в  ту же  сессии  - нет)
+        if ($this->_customer == null || intval($this->_customer->df) == 0) {
+            http_response_code(403);
+            die;
+        }       
         $this->_tvars["isds"] = $this->_customer->df == 1;  //дропшиппнг
         $this->_tvars["isff"] = $this->_customer->df == 2; //фулфилмент
    

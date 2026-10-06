@@ -426,7 +426,8 @@ class POSCheck extends Document
               
             }
         }
- 
+        $this->insertLog(-2);
+   
         $this->DoAcc() ;    
      
         return true;

@@ -202,7 +202,7 @@ class Orders extends \App\Pages\Base
                 $tlist[$j] = $tovar;
             }
             if(count($tlist)==0) {
-                return;
+                continue;
             }
             $neworder->packDetails('detaildata', $tlist);
             $neworder->amount = \App\Helper::fa($total);
@@ -349,7 +349,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder->order_id);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -393,7 +393,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
+                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder->order_id);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -407,7 +407,8 @@ class Orders extends \App\Pages\Base
                 $neworder->packDetails('detaildata', $tlist);
 
                 $neworder->headerdata['store'] = $store;
-                $neworder->headerdata['store_name'] = $this->filter2->store->getValueName();
+                $neworder->headerdata['store_name'] = \App\Entity\Store::load($store)->storename ?? '';
+                
                 $neworder->headerdata['ocorder'] = $shoporder->order_id;
                 $neworder->headerdata['outnumber'] = $shoporder->order_id;
 
