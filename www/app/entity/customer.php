@@ -429,4 +429,5 @@ class Customer extends \ZCL\DB\Entity
         }
         return hash_equals((string)$this->passw, $password);
       
+    }
 }

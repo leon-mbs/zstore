@@ -266,7 +266,7 @@ class Order extends \App\Pages\Base
                         $this->docform->payamount->setText($basedoc->payamount);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
                         $this->OnDelivery($this->docform->delivery);
-                        $this->docform->delivery->setValue($basedoc->headerdata['paytype']??0);
+                        $this->docform->paytype->setValue($basedoc->headerdata['paytype']??0);
                         $this->OnPayType($this->docform->paytype);
 
                         $this->_tovarlist = $basedoc->unpackDetails('detaildata');
