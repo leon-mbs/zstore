@@ -39,8 +39,8 @@ class Helper
         if($user->disabled == 1) {
             return null;
         }
-
-
+     
+ 
         if($user->userpass == $password) {
             return $user;
         }

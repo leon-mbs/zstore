@@ -213,6 +213,7 @@ class UserProfile extends \App\Pages\Base
 
         if (!$this->isError()) {
             $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
+         
             //  $this->user->userpass = $pass;
             $this->user->save();
 
