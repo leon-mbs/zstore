@@ -188,27 +188,7 @@ class Subscribes extends \App\Pages\Base
         $row->setAttribute('style', $sub->disabled == 1 ? 'color: #aaa' : null);
     }
   
-    public function sublisthOnRow($row) {
-        $sub = $row->getDataItem();
-
-        $row->add(new Label('sub_typenamehis', $sub->sub_typename));
-        $row->add(new Label('msg_typenamehis', $sub->msg_typename));
-        $row->add(new Label('reciever_typenamehis', $sub->reciever_typename));
-        $desc = array();
-        if ($sub->doctype > 0) {
-            $desc[] = $sub->doctypename;
-        }
-        if ($sub->state > 0) {
-            $desc[] = $sub->statename;
-        }
-        if ($sub->user_id > 0) {
-            $desc[] = $sub->username;
-        }
-        $row->add(new Label('deschis', implode(', ', $desc)));
-        $row->add(new Label('sub_dthis', H::fdt($sub->dt) ));
-
-    }
-
+  
     public function onAdd($sender) {
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
@@ -360,6 +340,17 @@ class Subscribes extends \App\Pages\Base
 
         $this->plist->subslist->Reload();
     }
+    public function sublisthOnRow($row) {
+        $sub = $row->getDataItem();
+
+        $row->add(new Label('sub_typehis', $sub->sub_typename));
+        $row->add(new Label('msg_typehis', $sub->msg_typename));
+        $row->add(new Label('recieverhis', $sub->reciever_typename));
+  
+        $row->add(new Label('deschis',  $sub->desc));
+        $row->add(new Label('sub_dthis', H::fdt($sub->dt) ));
+
+    }
 
 }
 
@@ -374,7 +365,7 @@ class SHDataSource implements \Zippy\Interfaces\DataSource
     
         $dt = $conn->DBDate(strtotime('-20 day', time())) ;
           
-        return  "category = 9 and  dt >= ". $dt ;
+        return  "category = 9 and date(dt) >= ". $dt ;
     }
 
     public function getItemCount() {
@@ -390,12 +381,30 @@ class SHDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
     
         $rs=$conn->Execute( "select * from stats where ". $this->getWhere() ." order by id desc  limit {$start},{$count}  ") ; 
-        $ret=[];  
+        $ret=[]; 
+        $i=1;
         foreach ($rs as $res){
            $sub= Subscribe::load($res['keyd']) ;
            if($sub != null) {
-              $sub->dt  = strtotime($res['dt']); 
-              $ret[] = $sub;               
+              
+              $di = new \App\DataItem();
+              $di->desc='';     
+     
+                if ($sub->doctype > 0) {
+                    $di->desc = $di->desc .' '. $sub->doctypename;
+                }
+                if ($sub->state > 0) {
+                   $di->desc = $di->desc .' '. $sub->statename;
+                }
+                         
+              
+             
+              $di->reciever_typename  = $sub->reciever_typename; 
+              $di->sub_typename  = $sub->sub_typename; 
+              $di->msg_typename  = $sub->msg_typename; 
+              $di->dt  = strtotime($res['dt']); 
+              $di->id=$i++; 
+              $ret[] = $di;               
            }
 
         }
