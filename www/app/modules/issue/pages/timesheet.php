@@ -159,10 +159,10 @@ class TimeSheet extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $user_id = $post->user_id;
+        $user_id = (int) $post->user_id;
 
         $user = System::getUser();
-        $project_id = $post->project_id;
+        $project_id = (int) $post->project_id;
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
         $where = " and project_id in (select project_id from  issue_projectlist where  status <>12) ";
@@ -245,7 +245,7 @@ class TimeSheet extends \App\Pages\Base
     public function del($args) {
 
 
-        TimeLine::delete($args[0]);
+        TimeLine::delete( (int)$args[0]);
 
 
     }
@@ -260,7 +260,7 @@ class TimeSheet extends \App\Pages\Base
     }
     public function loadissues($args) {
 
-        $issues = Issue::findArray("issue_name", "project_id=".$args[0], "issue_name");
+        $issues = Issue::findArray("issue_name", "project_id=".  (int) $args[0], "issue_name");
 
 
         $ret =  \App\Util::tokv($issues);
@@ -278,10 +278,10 @@ class TimeSheet extends \App\Pages\Base
             $time = TimeLine::load($args[0]);
         }
 
-        $time->issue_id = $post->issue_id;
+        $time->issue_id =  (int)$post->issue_id;
         $time->notes = $post->notes;
         $time->createdon = strtotime($post->date);
-        $time->user_id = $post->user_id;
+        $time->user_id =  (int)$post->user_id;
         if ($time->user_id == 0) {
 
             return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);

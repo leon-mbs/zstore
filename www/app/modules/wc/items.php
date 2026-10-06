@@ -115,7 +115,7 @@ class Items extends \App\Pages\Base
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('qty', \App\Helper::fqty($item->qty)));
         $row->add(new Label('price', $item->getPrice($modules['ocpricetype'])));
-        $row->add(new Label('desc', $item->desription));
+        $row->add(new Label('desc', $item->description));
     }
 
     //экспорт товара  в  магазин
@@ -239,6 +239,9 @@ class Items extends \App\Pages\Base
 
             foreach ($skuvarlist as $sku => $arr) {
                 $qty =  $elist[$sku];
+                if (!isset($varlist[$sku])) {
+                 //   continue; //нет в  Zippy
+                }               
                 if(strlen($qty)==0) {
                     $qty=0;
                 }

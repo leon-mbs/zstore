@@ -185,7 +185,9 @@ class IOState extends \App\Pages\Base
         if ($id > 0) {
 
              $sql .= " and  d.branch_id = ".$id;
-             $sqlttn .= " and  d.branch_id = ".$id;
+          
+             $sqlttn .= " and  e.document_id in (select document_id from documents where branch_id = {$id}) ";
+   
         }        
         $sql .= " order  by i.document_date   ";
         
@@ -223,7 +225,7 @@ class IOState extends \App\Pages\Base
             
             if(isset($ttn[$doc->document_id]))  {
                $doc->outcome += $ttn[$doc->document_id]->outcome  ;  
-               $doc->items= $doc->items;
+               $doc->items=  $ttn[$doc->document_id]->items;;
                $doc->iotypeo= 50;
                unset($ttn[$doc->document_id]);
             }
@@ -236,7 +238,8 @@ class IOState extends \App\Pages\Base
         unset($ttn)  ;
        
         usort( $this->_list,function ($a, $b) {
-            return $a->document_date > $b->document_date;
+          //  return $a->document_date > $b->document_date;
+            return $a->document_date <=> $b->document_date;
         }) ;
         
       

@@ -145,7 +145,7 @@ class Items extends Base
         $this->_item->itemname= trim( $this->itemdetail->editname->getText() );
         $this->_item->item_code= trim(  $this->itemdetail->editcode->getText()) ;
         $this->_item->item_barcode= trim(  $this->itemdetail->editbarcode->getText()) ;
-        $this->_item->msr= trim(  $this->itemdetail->edimsr->getText()) ;
+        $this->_item->msr= trim(  $this->itemdetail->editmsr->getText()) ;
         $this->_item->cat_id=   $this->itemdetail->editcat->getValue() ;
         $this->_item->manufacturer = trim(  $this->itemdetail->editbrand->getText()) ;
         $this->_item->price1 = trim(  $this->itemdetail->editprice->getText()) ;
@@ -206,7 +206,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
-        $cat = $form->searchcat->getValue();
+        $cat = intval($form->searchcat->getValue());
     
         if ($cat != 0) {
             if ($cat == -1) {

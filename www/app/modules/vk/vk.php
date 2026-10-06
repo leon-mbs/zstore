@@ -224,7 +224,9 @@ class VK
        foreach( $check["pays"] as $p) {
            $paysum += self::fa($p['sum']) ;    
        }        
-        
+    
+        $alldisc = $disc; //вся  скидка  с  бонусами - для  округления
+   
         $disc =    doubleval($doc->headerdata["totaldisc"])  + doubleval($doc->headerdata["bonus"])      ;
         if($disc > 0) {
             $check['disc'] = $disc;            
@@ -242,12 +244,10 @@ class VK
         }      
         
         
-   
-       
-       if(floatval( $check['sum'] - $disc) != floatval($paysum))  {
-           $check['round'] =  self::fa($paysum - ($check['sum'] - $disc )  ) ;  
+       if(self::fa( $check['sum'] - $alldisc) != self::fa($paysum))  {
+           $check['round'] =  self::fa($paysum - ($check['sum'] - $alldisc )  ) ;
        }
-        
+     
 
         $req=array('fiscal'=>array('task'=>$doc->meta_name=="ReturnIssue" ?2:1,
                  'cashier'=>self::getCashier($doc),
@@ -459,21 +459,16 @@ class VK
         }
 
 
-        $response = json_decode($response, true);
-        if($response['res_action']==0) {
-            return true;
-        } 
-
-        if(strlen($response['errortxt'])>0) {
+        
+        if(strlen($response['errortxt'] ?? '')>0) {
             return $response['errortxt'];
         }
-        if($response['res']>0) {
+        if(($response['res'] ?? 0)>0) {
             return "Помилка ".$response['res'];
         }
   
 
-
-        return $response['info']['shift_status']==1;
+        return ($response['info']['shift_status'] ?? 0)==1;
 
     }
 

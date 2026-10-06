@@ -56,15 +56,17 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError("Користувач з таким телефоном не знайдений");
             return;
         }
-        $p= substr(base64_encode(md5(time())), 0, 8);
-        $c->passw = $p;
-        $c->save();
+        $p= substr(bin2hex(random_bytes(8)), 0, 8);
         $ret = \App\Comm::sendSMS($phone, "ZStore: новий пароль " . $p);
-        if(strlen($ret)  >0) {
+        if(strlen($ret ?? '')  >0) {
             \App\Helper::logerror($ret) ;
             $this->setError('SMS error') ;
             return ;
-        }
+        }       
+       
+        $c->passw = $p;
+        $c->save();
+     
         $this->setSuccess("Пароль відправлено")  ;
         $this->loginform->setVisible(true) ;
         $this->recallform->setVisible(false) ;
@@ -125,7 +127,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $this->setError("Користувач з таким телефоном не знайдений");
             return;
         }
-        if (strlen($password)==0 ||  $c->passw != $password) {
+        if (!$c->checkPassword($password)) {
             $this->setError("Введіть пароль");
             return;
         }

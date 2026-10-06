@@ -91,15 +91,16 @@ class ProjectList extends \App\Pages\Base
         }
         $user = System::getUser();
 
-        if ($user->rolename != 'admins') {
-            $where .= " and (details like '%<creator_id>{$user->user_id}</creator_id>%'     or project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )  ) ";
-        }
+   
 
         if (strlen($number) > 0) {
             $s = Project::qstr('%' . $number . '%');
 
             $where = "   (details like {$s} or project_name like {$s}  )  ";
         }
+        if ($user->rolename != 'admins') {
+            $where .= " and (details like '%<creator_id>{$user->user_id}</creator_id>%'     or project_id in (select project_id from issue_projectacc where user_id = {$user->user_id} )  ) ";
+        }        
         $stlist = Project::getStatusList() ;
 
         $prlist = array();
@@ -224,7 +225,7 @@ class ProjectList extends \App\Pages\Base
         $pr = Project::load($args[0]);
 
         $filelist = array();
-        foreach(H::getFileList($args[0], \App\Entity\Message::TYPE_PROJECT) as $f) {
+        foreach(H::getFileList((int)$args[0], \App\Entity\Message::TYPE_PROJECT) as $f) {
 
 
             $url = _BASEURL . 'loadfile.php?id=' . $f->file_id;
@@ -239,7 +240,7 @@ class ProjectList extends \App\Pages\Base
             'url'=>$url,
             'filename'=>$f->filename,
 
-            'candel'=>($user->user_id == $pr->user_id || $user->rolename  =='admins')
+            'candel'=>($user->user_id == $f->user_id || $user->user_id == $pr->creator_id || $user->rolename  =='admins')
             ) ;
         }
 
@@ -257,19 +258,19 @@ class ProjectList extends \App\Pages\Base
             return;
         }
 
-        H::addFile($file, $args[0], '', \App\Entity\Message::TYPE_PROJECT);
+        H::addFile($file,   $args[0], '', \App\Entity\Message::TYPE_PROJECT);
 
 
     }
     public function delFile($args, $post) {
 
-        \App\Helper::deleteFile($args[0]);
+        \App\Helper::deleteFile( (int)$args[0]);
 
     }
 
     public function delMsg($args, $post) {
 
-        \App\Entity\Message::delete($args[0]);
+        \App\Entity\Message::delete( (int)$args[0]);
 
     }
     public function addMsg($args, $post) {

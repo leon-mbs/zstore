@@ -843,7 +843,7 @@ class GIList extends \App\Pages\Base
 
             $resultc = $api->model('Counterparty')->getCounterpartyContactPersons($result['data'][0]['Ref']);
             if ($resultc['success'] == false) {
-                $error = array_pop($result['errors'] );
+                $error = array_pop($resultc['errors'] );
                 $this->setError($error) ;
                 return;
             }

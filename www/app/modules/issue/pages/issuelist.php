@@ -322,7 +322,7 @@ class IssueList extends \App\Pages\Base
 
     public function delFile($args, $post) {
       
-        \App\Helper::deleteFile($args[0]);
+        \App\Helper::deleteFile( (int)$args[0]);
 
     }
 

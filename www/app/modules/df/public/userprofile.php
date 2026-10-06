@@ -40,6 +40,7 @@ class UserProfile extends Base
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
+        $this->add($form);
 
 
     }

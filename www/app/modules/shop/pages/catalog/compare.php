@@ -62,10 +62,11 @@ class Compare extends Base
                     $value = $pattr[$attr->attribute_id]->attributevalue ;
 
                     if ($attr->attributetype == 1) {
-                        if ($attr->attributevalue == 0) {
-                            $value = $no;
+                      //  if ($attr->attributevalue == 0) {
+                        if ($pattr[$attr->attribute_id]->attributevalue == 0) {
+                             $value = $no;
                         }
-                        if ($attr->attributevalue == 1) {
+                        if ($pattr[$attr->attribute_id]->attributevalue == 1) {
                             $value = $yes;
                         }
                     }
