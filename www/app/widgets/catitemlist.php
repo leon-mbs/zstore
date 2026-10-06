@@ -108,7 +108,7 @@ class CatItemList extends \Zippy\Html\PageFragment
         }
 
         if($post->searchcat > 0) {
-            $where = $where. " and cat_id= ". $post->searchcat;
+            $where = $where. " and cat_id= ". (int)$post->searchcat;
         }
         if(strlen($post->searchbrand) > 0) {
             $where = $where. " and manufacturer = ". Item::qstr($post->searchbrand);
