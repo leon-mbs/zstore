@@ -168,13 +168,16 @@ class ItemList extends \App\Pages\Base
 
  
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
-        if ($qty < 0) {
-            $row->itemname->setAttribute('class', 'text-danger');
-        }
         if ($qty == 0) {
             $row->itemname->setAttribute('class', 'text-warning');
         }
-
+        if ($qty < $item->minqty && $item->minqty > 0 ) {
+            $row->itemname->setAttribute('class', 'text-warning');
+        }
+        if ($qty < 0) {
+            $row->itemname->setAttribute('class', 'text-danger');
+        }
+ 
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue($item->getImageUrl());
         $row->imagelistitem->setAttribute('href', $item->getImageUrl());
         if ($item->image_id == 0) {
