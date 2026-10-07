@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\CB;
+namespace App\Modules\PPO;
 
 use App\Application as App;
 use App\System;
@@ -24,7 +24,7 @@ class XRep extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'cb') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
@@ -94,7 +94,7 @@ class XRep extends \App\Pages\Base
         $header['rnal'] =H::fa($header['rnal']);
         $header['rcard'] =H::fa($header['rcard']);
          
-        $report = new \App\Report('report/cb_report.tpl');
+        $report = new \App\Report('report/prro_report.tpl');
 
         $html = $report->generate($header);
 

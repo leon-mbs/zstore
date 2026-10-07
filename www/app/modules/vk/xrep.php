@@ -25,7 +25,7 @@ class XRep extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'cb') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules, 'vkassa') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
