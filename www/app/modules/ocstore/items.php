@@ -197,7 +197,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
 
-            $qty = $item->getQuantity();
+            $qty = $item->getQuantity($modules['ocstoreid']??0);
             $elist[$item->item_code] = round($qty);
         }
 

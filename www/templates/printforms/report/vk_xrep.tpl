@@ -1,0 +1,29 @@
+<table class="ctable" border="0" cellpadding="1" cellspacing="0" >
+    <tr>
+        <td align="center" colspan="2"> <b>Х-Звіт </b></td>
+    </tr>
+    <tr>
+
+        <td  > Створено</td> <td  > {{created_at}}</td>
+        
+    </tr>   
+   <tr>
+        <td  > Чеків продажу</td>        <td  > {{cnt}}</td>
+    </tr>    
+   <tr>
+        <td  > Чеків повернення</td>        <td  > {{rcnt}}</td>
+    </tr>    
+    <tr>
+        <td  > Готівка</td>        <td  > {{nal}}  {{#isrnal}} (повернення {{rnal}})  {{/isrnal}}   </td>
+    </tr>
+   <tr>
+        <td  > Картка</td>        <td  > {{card}}  {{#isrcard}} (повернення {{rcard}})  {{/isrcard}}</td>
+    </tr>
+  <tr>
+        <td  > <b>Всього</b></td>        <td  > <b>{{total}}</b></td>
+    </tr>
+ 
+ 
+
+</table>
+<br>

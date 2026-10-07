@@ -50,6 +50,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
         $this->editform->add(new TextInput('editurl'));
+        $this->editform->add(new TextInput('editurlh'));
         $this->editform->add(new TextInput('editchatid'));
         $this->editform->add(new TextInput('editemail'));
 
@@ -124,6 +125,7 @@ class Subscribes extends \App\Pages\Base
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
+            $this->editform->editurlh->setVisible($rt == Subscribed::RSV_WH);
             $this->editform->editchatid->setVisible($rt == Subscribe::RSV_TG);
             $this->editform->editmsgsubject->setVisible($rt == Subscribe::RSV_EMAIL);
             $this->editform->editemail->setVisible($rt == Subscribe::RSV_EMAIL);
@@ -188,27 +190,7 @@ class Subscribes extends \App\Pages\Base
         $row->setAttribute('style', $sub->disabled == 1 ? 'color: #aaa' : null);
     }
   
-    public function sublisthOnRow($row) {
-        $sub = $row->getDataItem();
-
-        $row->add(new Label('sub_typenamehis', $sub->sub_typename));
-        $row->add(new Label('msg_typenamehis', $sub->msg_typename));
-        $row->add(new Label('reciever_typenamehis', $sub->reciever_typename));
-        $desc = array();
-        if ($sub->doctype > 0) {
-            $desc[] = $sub->doctypename;
-        }
-        if ($sub->state > 0) {
-            $desc[] = $sub->statename;
-        }
-        if ($sub->user_id > 0) {
-            $desc[] = $sub->username;
-        }
-        $row->add(new Label('deschis', implode(', ', $desc)));
-        $row->add(new Label('sub_dthis', H::fdt($sub->dt) ));
-
-    }
-
+  
     public function onAdd($sender) {
         $this->plist->setVisible(false);
         $this->editform->setVisible(true);
@@ -242,6 +224,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgtext->setText($this->_sub->msgtext);
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
         $this->editform->editurl->setText($this->_sub->url);
+        $this->editform->editurlh->setText($this->_sub->urlh);
         $this->editform->editemail->setText($this->_sub->email);
         $this->editform->editchatid->setText($this->_sub->chat_id);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
@@ -274,6 +257,7 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
         $this->_sub->url = trim($this->editform->editurl->getText());
+        $this->_sub->urlh = trim($this->editform->editurlh->getText());
         $this->_sub->email = trim($this->editform->editemail->getText());
         $this->_sub->chat_id = trim($this->editform->editchatid->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;
@@ -360,6 +344,17 @@ class Subscribes extends \App\Pages\Base
 
         $this->plist->subslist->Reload();
     }
+    public function sublisthOnRow($row) {
+        $sub = $row->getDataItem();
+
+        $row->add(new Label('sub_typehis', $sub->sub_typename));
+        $row->add(new Label('msg_typehis', $sub->msg_typename));
+        $row->add(new Label('recieverhis', $sub->reciever_typename));
+  
+        $row->add(new Label('deschis',  $sub->desc));
+        $row->add(new Label('sub_dthis', H::fdt($sub->dt) ));
+
+    }
 
 }
 
@@ -374,7 +369,7 @@ class SHDataSource implements \Zippy\Interfaces\DataSource
     
         $dt = $conn->DBDate(strtotime('-20 day', time())) ;
           
-        return  "category = 9 and  dt >= ". $dt ;
+        return  "category = 9 and date(dt) >= ". $dt ;
     }
 
     public function getItemCount() {
@@ -390,12 +385,30 @@ class SHDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
     
         $rs=$conn->Execute( "select * from stats where ". $this->getWhere() ." order by id desc  limit {$start},{$count}  ") ; 
-        $ret=[];  
+        $ret=[]; 
+        $i=1;
         foreach ($rs as $res){
            $sub= Subscribe::load($res['keyd']) ;
            if($sub != null) {
-              $sub->dt  = strtotime($res['dt']); 
-              $ret[] = $sub;               
+              
+              $di = new \App\DataItem();
+              $di->desc='';     
+     
+                if ($sub->doctype > 0) {
+                    $di->desc = $di->desc .' '. $sub->doctypename;
+                }
+                if ($sub->state > 0) {
+                   $di->desc = $di->desc .' '. $sub->statename;
+                }
+                         
+              
+             
+              $di->reciever_typename  = $sub->reciever_typename; 
+              $di->sub_typename  = $sub->sub_typename; 
+              $di->msg_typename  = $sub->msg_typename; 
+              $di->dt  = strtotime($res['dt']); 
+              $di->id=$i++; 
+              $ret[] = $di;               
            }
 
         }

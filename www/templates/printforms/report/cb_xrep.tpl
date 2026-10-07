@@ -8,7 +8,10 @@
         
     </tr>   
    <tr>
-        <td  > Чеків</td>        <td  > {{cnt}}</td>
+        <td  > Чеків продажу</td>        <td  > {{cnt}}</td>
+    </tr>    
+   <tr>
+        <td  > Чеків повернення</td>        <td  > {{rcnt}}</td>
     </tr>    
     <tr>
         <td  > Готівка</td>        <td  > {{nal}}  {{#isrnal}} (повернення {{rnal}})  {{/isrnal}}   </td>

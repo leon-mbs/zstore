@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Modules\CB;
+namespace App\Modules\VK;
 
 use App\Application as App;
+use App\System;
 use App\Entity\Pos;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
@@ -15,13 +16,16 @@ use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\DataList\DataView;
 
  
-class Reports extends \App\Pages\Base
+ /**
+ * Х-отчет
+ */
+class XRep extends \App\Pages\Base
 {
  
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'cb') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules, 'vkassa') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
@@ -55,30 +59,32 @@ class Reports extends \App\Pages\Base
         
         
     public function generateReport($pos) {
-        $cb = new \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
+        $vk = new \App\Modules\VK\VK($pos->vktoken) ;
         
-        $ret = $cb->GetReports();
+        $ret = $vk->GetRep();
         if( !is_array($ret)){
             $this->setError($ret) ;
             return;
         }    
+       
         $header = [];
-        $header['created_at'] = H::fdt(  strtotime($ret['created_at'] ) );
-        $header['cnt'] =$ret['sell_receipts_count'];
+        $header['created_at'] = H::fdt(time() );
+        $header['cnt'] =$ret['receipt']['count_p'];
+        $header['rcnt'] =$ret['receipt']['count_m'];
         $header['nal'] =0;
         $header['card'] =0;
         $header['rnal'] =0;
         $header['rcard'] =0;
         
         
-        foreach($ret['payments'] as $p){
-             if($p['type']=='CASH') {
-                $header['nal'] += doubleval($p['sell_sum']/100) ;
-                $header['rnal'] += doubleval($p['return_sum']/100) ;
+        foreach($ret['pays'] as $p){
+             if($p['type']==0) {
+                $header['nal'] += doubleval($p['sum_p'] ) ;
+                $header['rnal'] += doubleval($p['sum_m'] ) ;
              }
-             if($p['type']=='CASHLESS') {
-                $header['card'] += doubleval($p['sell_sum']/100) ;
-                $header['rcard'] += doubleval($p['return_sum']/100) ;
+             if($p['type']==1) {
+                $header['card'] += doubleval($p['sum_p'] ) ;
+                $header['rcard'] += doubleval($p['sum_m'] ) ;
              }
         }
        
@@ -90,7 +96,7 @@ class Reports extends \App\Pages\Base
         $header['rnal'] =H::fa($header['rnal']);
         $header['rcard'] =H::fa($header['rcard']);
          
-        $report = new \App\Report('report/cb_report.tpl');
+        $report = new \App\Report('report/vk_xrep.tpl');
 
         $html = $report->generate($header);
 

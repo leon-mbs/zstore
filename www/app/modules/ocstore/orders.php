@@ -216,6 +216,8 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = 'price1';
             $neworder->headerdata['salesource'] = $modules['ocsalesource'];
+            $neworder->headerdata['doreserve'] = $modules['ocreserve'];
+            $neworder->headerdata['dostore'] = $modules['ocdostore'];
             $neworder->headerdata['paytype'] = $defpaytype;  
             $neworder->headerdata['paytypename'] = $this->filter2->paytype->getValueName() ;  
             $neworder->headerdata['payment'] = $defmf ; 
@@ -223,6 +225,8 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['waitpay'] =1;   //ждет оплату
             }
             $neworder->headerdata['store'] = $defstore ; 
+            $neworder->headerdata['dostore'] = $defstore ; 
+            $neworder->headerdata['reserve'] = $defstore ; 
       
             $neworder->notes = "OC номер: {$shoporder->order_id};";
 

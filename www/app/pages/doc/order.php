@@ -42,13 +42,23 @@ class Order extends \App\Pages\Base
        
         $user = \App\System::getUser() ;
         
+        $salesource= H::getDefSaleSource();
+        $store=   H::getDefStore();
         $dostore= true;
+        $doreserve= true;
+        $payment= H::getDefMF();
         $paytype= 2;
+        $pricetype= 'price1';
         if($docid==0) {
             $last = Document::getFirst("state > 3 and content like '%<manual>{$user->user_id}</manual>%' and meta_name='Order'","document_id desc");
             if($last != null){
-                $dostore = $last->getHD('dostore',0)==1;
-                $paytype = $last->getHD('paytype',2) ;
+                $doreserve = $last->getHD('doreserve',1) ;
+                $dostore = $last->getHD('dostore',1) ;
+                $paytype = $last->getHD('paytype',2 ) ;
+                $salesource = $last->getHD('salesource') ;
+                $store = $last->getHD('store' ) ;
+                $pricetype = $last->getHD('pricetype' ) ;
+                $payment = $last->getHD('payment' ) ;
             }
         }
   
@@ -64,8 +74,8 @@ class Order extends \App\Pages\Base
 
         $this->docform->add(new \Zippy\Html\Link\BookmarkableLink('cinfo'))->setVisible(false);
         $this->docform->add(new TextArea('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(),H::getDefMF()));
-        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), H::getDefSaleSource()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(),$payment));
+        $this->docform->add(new DropDownChoice('salesource', H::getSaleSources(), $salesource));
 
         $this->docform->add(new TextInput('editbonus'));
         $this->docform->add(new SubmitButton('bbonus'))->onClick($this, 'onBonus');
@@ -84,6 +94,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('totaldisc', 0));
 
         $this->docform->add(new CheckBox('dostore',$dostore));
+        $this->docform->add(new CheckBox('doreserve',$doreserve));
         
         $this->docform->add(new TextInput('editpayed'));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
@@ -92,7 +103,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('payamount', 0));
 
         $this->docform->add(new Label('custinfo'))->setVisible(false);
-        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
+        $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(),$pricetype))->onChange($this, 'OnChangePriceType');
  
         $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (напр. оплачено в IM)',2=>'Післяплата (в журналі розрахунків)',3=>'Оплата касовим чеком,РФ або ВН'], $paytype ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
@@ -116,7 +127,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(),$store));
 
         $this->docform->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
         $this->docform->baycity->onChange($this, 'onBayCity');
@@ -179,6 +190,7 @@ class Order extends \App\Pages\Base
             $this->docform->promocode->setText($this->_doc->headerdata['promocode']);
          
             $this->docform->dostore->setChecked($this->_doc->getHD('dostore',0));
+            $this->docform->doreserve->setChecked($this->_doc->getHD('doreserve',0));
 
 
             $this->docform->delivery->setValue($this->_doc->headerdata['delivery']);
@@ -574,6 +586,7 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['paytype'] = $this->docform->paytype->getValue() ;
         $this->_doc->headerdata['paytypename'] = $this->docform->paytype->getValueName() ;
  
+        $this->_doc->headerdata['doreserve'] = $this->docform->doreserve->isChecked() ? 1:0 ;
         $this->_doc->headerdata['dostore'] = $this->docform->dostore->isChecked() ? 1:0 ;
         if($this->_doc->headerdata['paytype'] ==3) {
             $this->_doc->headerdata['dostore'] = 0;

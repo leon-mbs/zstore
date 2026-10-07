@@ -29,6 +29,8 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('keyc', $modules['wckeyc']));
         $form->add(new TextInput('keys', $modules['wckeys']));
         $form->add(new CheckBox('insertcust', $modules['wcinsertcust']));
+        $form->add(new CheckBox('dostore', $modules['wcdostore']));
+        $form->add(new CheckBox('reserve', $modules['wcreserve']));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));
@@ -57,6 +59,8 @@ class Options extends \App\Pages\Base
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
    
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+        $dostore = $this->cform->dostore->isChecked() ? 1 : 0;
+        $reserve = $this->cform->reserve->isChecked() ? 1 : 0;
 
         $pricetype = $this->cform->defpricetype->getValue();
         $mf = $this->cform->defmf->getValue();
@@ -78,7 +82,11 @@ class Options extends \App\Pages\Base
             $this->setError('Не вказано касу');
             return;
         }
+        if ( ($reserve==1 || $dostore==1 ) && $store==0 ) {
 
+            $this->setError('Не вказано склад');
+            return;
+        }
         $site = trim($site, '/');
 
         $modules = System::getOptions("modules");
@@ -88,6 +96,8 @@ class Options extends \App\Pages\Base
         $modules['wckeys'] = $keys;
         $modules['wcapi'] = $api;
         $modules['wcinsertcust'] = $insertcust;
+        $modules['wcreserve'] = $reserve;
+        $modules['wcdostore'] = $dostore;
 
         $modules['wcpricetype'] = $pricetype;
         $modules['wcpaytype'] = $paytype;

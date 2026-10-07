@@ -52,6 +52,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->doctypename = (string)($xml->doctypename[0]);
         $this->msgsubject = (string)($xml->msgsubject[0]);
         $this->url = (string)($xml->url[0]);
+        $this->urlh = (string)($xml->urlh[0]);
         $this->email = (string)($xml->email[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
         $this->username = (string)($xml->username[0]);
@@ -82,6 +83,7 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<username>{$this->username}</username>";
         $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
         $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<urlh>{$this->urlh}</urlh>";
         $this->detail .= "<email>{$this->email}</email>";
         $this->detail .= "<chat_id>{$this->chat_id}</chat_id>";
 
@@ -401,7 +403,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
          
             if($this->reciever_type == self::RSV_WH) {
-                $ret =   \App\Comm::sendHook($this->url, true, $text) ;
+                $ret =   \App\Comm::sendHook($this->url, strlen(trim($text))>0, $text,$this->urlh ??'') ;
             }
 
             if(strlen($ret)>0) {

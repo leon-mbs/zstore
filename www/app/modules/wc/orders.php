@@ -134,6 +134,10 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
+                $neworder->headerdata['salesource'] = $modules['wcsalesource'];
+                $neworder->headerdata['doreserve'] = $modules['wcreserve'];
+                $neworder->headerdata['dostore'] = $modules['wcdostore'];
+
                 $neworder->headerdata['phone'] = strlen($wcorder->billing->phone ??'') > 0 ? $wcorder->billing->phone :  ($wcorder->billing->phone ??'')   ;
                 $neworder->headerdata['email'] = $wcorder->billing->email;
                 $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
