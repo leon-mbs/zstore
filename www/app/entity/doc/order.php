@@ -263,10 +263,12 @@ class Order extends \App\Entity\Doc\Document
             $this->unreserve()  ;
 
         }
-        if ( $state == self::STATE_INPROCESS && $this->getHD('doreserve',0)==1) {
+        if ( ($state == self::STATE_INPROCESS || $state == self::STATE_WAIT ) && $this->getHD('doreserve',0)==1) {
 
-           
-            $this->reserve()  ;
+            if(!$this->hasReserve()) {
+                $this->reserve()  ;    
+            }
+            
 
         }
         if ( $state == self::STATE_READYTOSHIP 

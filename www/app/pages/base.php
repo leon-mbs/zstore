@@ -239,6 +239,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["promua"] ||
             $this->_tvars["ppo"] ||
             $this->_tvars["checkbox"] ||
+            $this->_tvars["vkassa"] ||
             $this->_tvars["vdoc"] ||
             $this->_tvars["df"] ||
             $this->_tvars["np"]

@@ -313,14 +313,14 @@
                       
                         {{#showmodmenu}} 
                        <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmosules"
+                        <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodules"
                             aria-expanded="false" aria-controls="pages">
                             
                               <i class="nav-icon fa fa-puzzle-piece"></i>
                                  
                               <span>  Модулі  </span>  
                         </a>
-                        <ul id="mnmosules" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <ul id="mnmodules" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                               
                           {{#shop}}
                               <li class="sidebar-item  ps-3">
@@ -328,7 +328,7 @@
                                          Онлайн каталог    
                                     </a>
                             
-                                   <ul id="mnmodshop" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodshop" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/shop"     >
                                                  Перейти до каталогу    
@@ -384,7 +384,7 @@
                                          Обмін з ОпенКарт    
                                     </a>
                             
-                                   <ul id="mnmodocstore" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodocstore" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/OCStore/Orders"     >
                                                  Замовлення    
@@ -414,7 +414,7 @@
                                          Обмін з Woocommerce    
                                     </a>
                             
-                                   <ul id="mnmodwc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodwc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/WC/Orders"     >
                                                  Замовлення    
@@ -443,7 +443,7 @@
                                          Обмін з Хорошоп    
                                     </a>
                             
-                                   <ul id="mnmodhor" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodhor" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/HR/Orders"     >
                                                  Замовлення    
@@ -481,7 +481,7 @@
                                          Проекти та завдання    
                                     </a>
                             
-                                   <ul id="mnmodissue" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodissue" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/Issue/Pages/ProjectList"     >
                                                  Проекти    
@@ -511,7 +511,7 @@
                                          ПРРО    
                                     </a>
                             
-                                   <ul id="mnmodppo" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodppo" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PPO/PPOList"     >
                                                  Зареєстровані РРО    
@@ -546,15 +546,30 @@
                                          Чекбокс    
                                     </a>
                             
-                                   <ul id="mnmodcb" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodcb" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         <li class="sidebar-item  ">
-                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/CB/Reports"     >
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/CB/XRep"     >
                                                  Х-Звіт    
                                             </a>
                                         </li>
                                    </ul>
                           </li> 
                          {{/checkbox}}   
+                         {{#vkassa}}
+                              <li class="sidebar-item  ps-3">
+                                   <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#mnmodvk"     >
+                                         ВчасноКаса    
+                                    </a>
+                            
+                                   <ul id="mnmodvk" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
+                                        <li class="sidebar-item  ">
+                                            <a class="sidebar-link  "  href="/index.php?p=App/Modules/VK/XRep"     >
+                                                 Х-Звіт    
+                                            </a>
+                                        </li>
+                                   </ul>
+                          </li> 
+                         {{/vkassa}}   
                          
                           {{#df}}
                               <li class="sidebar-item  ps-3">
@@ -562,7 +577,7 @@
                                          Дропшипінг та  фулфілмент    
                                     </a>
                             
-                                   <ul id="mnmoddf" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmoddf" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/DF/Admin/Options"     >
@@ -585,7 +600,7 @@
                                          Нова Пошта    
                                     </a>
                             
-                                   <ul id="mnmodnp" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodnp" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/NP/Options"     >
@@ -608,7 +623,7 @@
                                          Вчасно Документооборот    
                                     </a>
                             
-                                   <ul id="mnmodvdoc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodvdoc" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/VDoc/Options"     >
@@ -630,7 +645,7 @@
                                          Обмін з PromUa 
                                     </a>
                             
-                                   <ul id="mnmodprom" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmosules">
+                                   <ul id="mnmodprom" class="sidebar-dropdown list-unstyled collapse ps-3" data-bs-parent="#mnmodules">
                                         {{#isadmins}}
                                         <li class="sidebar-item  ">
                                             <a class="sidebar-link  "  href="/index.php?p=App/Modules/PU/Options"     >

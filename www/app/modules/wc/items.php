@@ -216,7 +216,7 @@ class Items extends \App\Pages\Base
                     continue;
                 }
                 if ($skulist[$item->item_code] > 0) {
-                    $qty = $item->getQuantity();
+                    $qty = $item->getQuantity($modules['wcstoreid']??0);
                     if ($qty > 0) {
                         $elist[$item->item_code] = $qty;
                     }

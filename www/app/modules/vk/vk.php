@@ -2,8 +2,10 @@
 
 namespace App\Modules\VK;
 use App\Helper as H;
+
 /**
 * Хелперный класс для  ВчасноКасса
+* https://documenter.getpostman.com/view/26351974/2s93shy9To#d759bb8d-bb3c-4e57-82d4-84cebd1e22dc
 */
 class VK
 {
@@ -526,7 +528,65 @@ class VK
         return $cname;
     }   
     
-    
+    public function GetRep() {
+
+        
+        $req=array('fiscal'=>array('task'=>10,'cashier'=>self::getCashier())) ;
+       
+        
+        $body=json_encode($req, JSON_UNESCAPED_UNICODE);
+   
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => self::API_URL ,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $body ,           
+            CURLOPT_SSL_VERIFYPEER =>false,
+
+            CURLOPT_HTTPHEADER => [
+                "Authorization: {$this->access_token}" 
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        }
+
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        
+        curl_close($curl);
+        
+        if($status_code != 200) {
+           return "HTTP Error #:" . $status_code. ' ' . $response;
+        }
+
+
+        $response = json_decode($response, true);
+        if($response['res_action']==0) {
+            return $response['info'];
+        } 
+
+        if(strlen($response['errortxt'])>0) {
+            return $response['errortxt'];
+        }
+        if($response['res']>0) {
+            return "Помилка ".$response['res'];
+        }
+  
+        return $response['info'];
+
+    }
+   
         
 }
  

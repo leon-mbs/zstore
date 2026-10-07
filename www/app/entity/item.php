@@ -715,6 +715,9 @@ class Item extends \ZCL\DB\Entity
      * @param mixed $snumber партия проиводителя
      */
     public function getQuantity($store_id = 0, $snumber = "", $date=0, $emp=0) {
+      
+        $store_id = intval( $store_id);
+                
         $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0  ) {
             $cstr = "    store_id in ({$cstr})  and   ";
@@ -723,7 +726,7 @@ class Item extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
-            $where .= " and store_id = " . intval( $store_id);
+            $where .= " and store_id = " . $store_id;
         }
         if ($emp > 0) {
             $where .= " and coalesce(emp_id,0) = " . $emp;

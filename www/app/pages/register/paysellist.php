@@ -170,6 +170,7 @@ GROUP BY c.customer_name,
          
        $this->updateDocs();   
     }
+  
     public function topayOnClick($sender) {
 
         $this->_cust = $sender->owner->getDataItem();

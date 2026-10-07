@@ -319,7 +319,7 @@ class CheckBox
 
         if ($payed < $doc->payamount) {
 
-            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> intval(round(($doc->payamount - $payed) * 100));
+            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> intval(round(($doc->payamount - $payed) * 100)));
             $check["payments"][] = $payment;
 
         }
