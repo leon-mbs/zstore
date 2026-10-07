@@ -46,6 +46,19 @@ class XRep extends \App\Pages\Base
         
         $pos= Pos::load($this->filter->pos->getValue() );
         if($pos==  null) return "";
+      
+        $firm = \App\Helper::getFirmData( );
+
+        if( ($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name']  ;
+        }
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['ipn']  ;
+        }
+        if( ($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ;
+        }      
+      
         
         $html = $this->generateReport($pos);
         $this->detail->preview->setText($html, true);
@@ -58,32 +71,58 @@ class XRep extends \App\Pages\Base
         
         
     public function generateReport($pos) {
-        $cb = new \App\Modules\CB\CheckBox($pos->cbkey, $pos->cbpin) ;
-        
-        $ret = $cb->GetReports();
-        if( !is_array($ret)){
-            $this->setError($ret) ;
-            return;
-        }    
        
+       
+       $ret=  \App\Modules\PPO\PPOHelper::shiftTotal($pos->fiscalnumber,$pos);
+       if($ret == false) {
+            $this->setError("Сервер недоступний або зміна закрита");
+            return ;
+        }
+        if(!is_array($ret['Totals'])) {
+            $this->setError("Сервер недоступний або зміна закрита") ;
+            return ;
+        }
+        $zt="";
+    
         $header = [];
-        $header['created_at'] = H::fdt(  strtotime($ret['created_at'] ) );
-        $header['cnt'] =$ret['sell_receipts_count'];
+        
+        $header['firmname'] = $pos->firmname;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
+        $header['tin'] = $pos->tin;
+        $header['address'] = $pos->address;
+        $header['pointname'] = $pos->pointname;
+        $header['posnumber'] = $pos->fiscalnumber;
+            
+        
+        $header['created_at'] = H::fdt(time() );
+        $header['rcnt'] =$ret['Totals']['Ret']['OrdersCount']??0;
         $header['nal'] =0;
         $header['card'] =0;
         $header['rnal'] =0;
         $header['rcard'] =0;
         
         
-        foreach($ret['payments'] as $p){
-             if($p['type']=='CASH') {
-                $header['nal'] += doubleval($p['sell_sum']/100) ;
-                $header['rnal'] += doubleval($p['return_sum']/100) ;
+       foreach($ret['Totals']['Real']['PayForm'] as $form) {
+          
+             if($form['PayFormCode']==0) {
+                $header['nal'] += doubleval($form['Sum']) ;
              }
-             if($p['type']=='CASHLESS') {
-                $header['card'] += doubleval($p['sell_sum']/100) ;
-                $header['rcard'] += doubleval($p['return_sum']/100) ;
+             if($form['PayFormCode']==1) {
+                $header['card'] += doubleval($form['Sum']) ;
              }
+             
+        }  
+        
+        foreach($ret['Totals']['Ret']['PayForm'] as $form) {
+             if($form['PayFormCode']==0) {
+                $header['rnal'] += doubleval($form['Sum']) ;
+             }
+             if($form['PayFormCode']==1) {
+                $header['rcard'] += doubleval($form['Sum']) ;
+             }
+             
+       
+           
         }
        
         $header['total'] = H::fa($header['nal'] + $header['card'] - $header['rnal'] - $header['rcard']  );
@@ -94,7 +133,7 @@ class XRep extends \App\Pages\Base
         $header['rnal'] =H::fa($header['rnal']);
         $header['rcard'] =H::fa($header['rcard']);
          
-        $report = new \App\Report('report/prro_report.tpl');
+        $report = new \App\Report('report/prro_xrep.tpl');
 
         $html = $report->generate($header);
 
