@@ -50,6 +50,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->add(new TextArea('editmsgtext'));
         $this->editform->add(new TextInput('editmsgsubject'));
         $this->editform->add(new TextInput('editurl'));
+        $this->editform->add(new TextInput('editurlh'));
         $this->editform->add(new TextInput('editchatid'));
         $this->editform->add(new TextInput('editemail'));
 
@@ -124,6 +125,7 @@ class Subscribes extends \App\Pages\Base
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
+            $this->editform->editurlh->setVisible($rt == Subscribed::RSV_WH);
             $this->editform->editchatid->setVisible($rt == Subscribe::RSV_TG);
             $this->editform->editmsgsubject->setVisible($rt == Subscribe::RSV_EMAIL);
             $this->editform->editemail->setVisible($rt == Subscribe::RSV_EMAIL);
@@ -222,6 +224,7 @@ class Subscribes extends \App\Pages\Base
         $this->editform->editmsgtext->setText($this->_sub->msgtext);
         $this->editform->editmsgsubject->setText($this->_sub->msgsubject);
         $this->editform->editurl->setText($this->_sub->url);
+        $this->editform->editurlh->setText($this->_sub->urlh);
         $this->editform->editemail->setText($this->_sub->email);
         $this->editform->editchatid->setText($this->_sub->chat_id);
         $this->editform->editdisabled->setCheCked($this->_sub->disabled);
@@ -254,6 +257,7 @@ class Subscribes extends \App\Pages\Base
         $this->_sub->msgtext = trim($this->editform->editmsgtext->getText());
         $this->_sub->msgsubject = trim($this->editform->editmsgsubject->getText());
         $this->_sub->url = trim($this->editform->editurl->getText());
+        $this->_sub->urlh = trim($this->editform->editurlh->getText());
         $this->_sub->email = trim($this->editform->editemail->getText());
         $this->_sub->chat_id = trim($this->editform->editchatid->getText());
         $this->_sub->disabled = $this->editform->editdisabled->isCheCked() ? 1 : 0;

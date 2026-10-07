@@ -307,7 +307,7 @@ class Comm
     * @param mixed $text   если метод post
     * @return mixed
     */
-    public static function sendHook($url, $post=false, $text="") {
+    public static function sendHook($url, $post=false, $text="",$header="") {
 
         try {
             
@@ -316,6 +316,9 @@ class Comm
                 curl_setopt($curl, CURLOPT_POST, $post);
                 if($post && strlen($text) > 0) {
                    curl_setopt($curl, CURLOPT_POSTFIELDS, $text);                    
+                }
+                if(  strlen($header) > 0) {
+                   curl_setopt($curl, CURLOPT_HTTPHEADER, [$header]);                    
                 }
 
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
