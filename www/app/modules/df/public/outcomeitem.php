@@ -34,6 +34,12 @@ class OutcomeItem extends  Base
     */
     public function __construct($docid = 0) {
         parent::__construct();
+        $modules = \App\System::getOptions("modules");
+
+        if($modules['df'] != 1) {
+            http_response_code(404);
+            die;
+        } 
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
