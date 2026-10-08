@@ -125,7 +125,7 @@ class Subscribes extends \App\Pages\Base
             $this->editform->edituser->setVisible($rt==Subscribe::RSV_USER);
 
             $this->editform->editurl->setVisible($rt == Subscribe::RSV_WH);
-            $this->editform->editurlh->setVisible($rt == Subscribed::RSV_WH);
+            $this->editform->editurlh->setVisible($rt == Subscribe::RSV_WH);
             $this->editform->editchatid->setVisible($rt == Subscribe::RSV_TG);
             $this->editform->editmsgsubject->setVisible($rt == Subscribe::RSV_EMAIL);
             $this->editform->editemail->setVisible($rt == Subscribe::RSV_EMAIL);

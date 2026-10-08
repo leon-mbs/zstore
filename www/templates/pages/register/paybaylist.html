@@ -77,8 +77,10 @@
                <form zippy="payform"  >
               <div class="row ">
                <div class="col-12 col-lg-8 col-xl-6   " >
-                  <small>Щоб пропустити обробку документа поставте 0 в сумі</small>
-              
+                  <small> <i class="fa fa-exclamation text-success"></i>  Щоб пропустити обробку документа поставте 0 в сумі</small>
+                  {{#fiscal}}
+                 <br> <small><i class="fa fa-exclamation text-danger"></i>  Фіскалізовані чеки оплачуються  в  АРМ касира</small>
+                 {{/fiscal}}
                 <table class="table table-sm    ">
                     <tr>
 

@@ -473,16 +473,7 @@ class Main extends \App\Pages\Base
     }
 
  
-    public function __construct() {
-        parent::__construct();
-        if (strpos(System::getUser()->modules ?? '', 'note') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
-            App::RedirectError();
-            return;
-        }
-
-    }
-
+ 
     //просмотр: публичный, свой  или  открытый  пользователю
     private function canRead($t) {
         $user = System::getUser();

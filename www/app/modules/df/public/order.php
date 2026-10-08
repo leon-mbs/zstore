@@ -42,9 +42,13 @@ class Order extends  Base
     */
     public function __construct($docid = 0 ) {
         parent::__construct();
-       
-        $common =  System::getOptions("common");
         $modules = System::getOptions('modules');
+   
+        if($modules['df'] != 1) {
+            http_response_code(404);
+            die;
+        }       
+        $common =  System::getOptions("common");
 
  
         $this->_tvars["np"] = $modules['np'] == 1;

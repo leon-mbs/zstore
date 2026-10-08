@@ -4,6 +4,7 @@ namespace App\Modules\PPO;
 
 use App\Helper as H;
 use PPOLib\PPO as PPO;
+use App\System;
 
 /**
  * Вспомагательный  класс для  фискализации
@@ -177,10 +178,10 @@ class PPOHelper
             $pos->firmname = $firm['firm_name']  ;
         }
         if( ($pos->ipn ??'')=='') {
-            $pos->ipn = $firm['ipn']  ;
+            $pos->ipn = $firm['ipn'] ??'' ;
         }
         if( ($pos->tin ??'')=='') {
-            $pos->tin = $firm['tin']  ;
+            $pos->tin = $firm['tin'] ??'' ;
         }
 
         $header = array();

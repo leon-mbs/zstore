@@ -14,6 +14,12 @@ class UserLogin extends \Zippy\Html\WebPage
 {
     public function __construct() {
         parent::__construct();
+        $modules = \App\System::getOptions("modules");
+
+        if($modules['df'] != 1) {
+            http_response_code(404);
+            die;
+        } 
 
         $form = new \Zippy\Html\Form\Form('loginform');
         $form->add(new TextInput('useremail'));

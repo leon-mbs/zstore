@@ -22,7 +22,13 @@ class UserProfile extends Base
     public function __construct() {
         parent::__construct();
 
-       
+        $modules = \App\System::getOptions("modules");
+
+        if($modules['df'] != 1) {
+            http_response_code(404);
+            die;
+        } 
+     
        
         $form = new Form('profileform');
         $form->onSubmit($this, 'onsubmit');

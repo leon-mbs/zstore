@@ -22,7 +22,12 @@ class Main extends Base
 
     public function __construct( ) {
         parent::__construct();
-   
+        $modules = \App\System::getOptions("modules");
+
+        if($modules['df'] != 1) {
+            http_response_code(404);
+            die;
+        } 
         $doclist=$this->add(new DataView('doclist', new DocDataSource($this ), $this, 'doclistOnRow')) ;
         $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(25);
