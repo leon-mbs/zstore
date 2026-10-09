@@ -79,10 +79,10 @@ class XRep extends \App\Pages\Base
         
         foreach($ret['payments'] as $p){
             if($p['sell_sum']>0) {
-                $header['pays'][] = ['label'=>$p['label'],'sum'=>doubleval($p['sell_sum']/100)] ;    
+                $header['pays'][] = ['label'=>$p['label'],'sum'=>H::fa($p['sell_sum']/100)] ;    
             }
             if($p['return_sum']>0) {
-                $header['rpays'][] = ['label'=>$p['label'],'sum'=>doubleval($p['return_sum']/100)] ;    
+                $header['rpays'][] = ['label'=>$p['label'],'sum'=>H::fa($p['return_sum']/100)] ;    
             }
           
         }

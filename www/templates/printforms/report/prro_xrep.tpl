@@ -1,57 +1,75 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" >
    
     <tr>
-        <td  > <b>ФОП</b></td>        <td  > {{firmname}} </td>         
+        <td  > <b>ФОП</b></td>        <td colspan="2"  > {{firmname}} </td>         
     </tr> 
    <tr>
-        <td  > <b>ЄДРПОУ</b></td>        <td  > {{tin}} </td>        
+        <td  > <b>ЄДРПОУ</b></td>        <td colspan="2" > {{tin}} </td>        
     </tr> 
     <tr>  
-        <td  > <b>Торгова точка</b></td>        <td  >{{pointname}}  </td>     
+        <td  > <b>Торгова точка</b></td>        <td colspan="2"  >{{pointname}}  </td>     
     </tr>   
    <tr>  
-        <td  > <b>Адреса</b></td>        <td  >  {{address}}</td>       
+        <td  > <b>Адреса</b></td>        <td colspan="2"  >  {{address}}</td>       
     </tr>   
   <tr>  
-        <td  > <b>Термінал</b></td>        <td  >{{posnumber}}  </td>    
+        <td  > <b>Термінал</b></td>        <td colspan="2"  >{{posnumber}}  </td>    
     </tr>   
    
     <tr>
-        <td align="center" colspan="2"> <h4>Х-Звіт </h4></td>
+        <td align="center" colspan="3"> <h4>Х-Звіт </h4></td>
     </tr>
     <tr>
 
-        <td  > Дата</td> <td  > {{created_at}}</td>
+        <td  > Дата</td> <td colspan="2" > {{created_at}}</td>      
         
-    </tr>                                                 
-   <tr>
-        <td  > <b>Реалізація</b></td>        <td  >  </td>    
     </tr>    
    <tr>
-        <td  > Чеків</td>        <td  > {{cnt}}</td>
+
+        <td  > <td colspan="3" > &nbsp;</td>      
+        
+    </tr>    
+      {{#sin}} 
+    <tr>
+        <td  > Сдужбове  внесення</td>        <td   align="right" > {{sin}}</td>  <td  >  </td>   
+    </tr>  
+      {{/sin}}   
+     {{#sout}} 
+    <tr>
+        <td  > Службова  видача</td>        <td   align="right" > {{sout}}</td>  <td  >  </td>   
+    </tr>  
+      {{/sout}}                                                  
+   <tr>
+        <td  > <b>Реалізація</b></td>        <td  >  </td>        <td  >  </td>  
+    </tr>    
+   <tr>
+        <td  > Чеків</td>        <td style="width:100px" align="right"  > {{cnt}}</td>   <td  >  </td>   
     </tr>    
     <tr>
-        <td  > Готівка</td>        <td  > {{nal}}    </td>
-    </tr>
-   <tr>
-        <td  > Картка</td>        <td  > {{card}} </td>
-    </tr>
- 
+        <td  > Оплати:</td>        <td  >  </td>    <td  >  </td>   
+    </tr>  
+     {{#pays}} 
+    <tr>
+        <td  >  {{label}}</td>        <td  align="right"  > {{sum}}</td>   <td  >  </td>   
+    </tr>  
+      {{/pays}}   
   <tr>
-        <td  > <b>Повернення</b></td>        <td  >  </td>
+        <td  > <b>Повернення</b></td>        <td  >  </td>    <td  >  </td>   
     </tr>    
    <tr>
-        <td  > Чеків</td>        <td  > {{rcnt}}</td>
+        <td  > Чеків</td>        <td  align="right" > {{rcnt}}</td>     <td  >  </td>   
     </tr>    
     <tr>
-        <td  > Готівка</td>        <td  > {{rnal}}    </td>
-    </tr>
-   <tr>
-        <td  > Картка</td>        <td  > {{rcard}} </td>
-    </tr>
+        <td  > Оплати:</td>        <td  >  </td>     <td  >  </td>   
+    </tr>  
+     {{#rpays}} 
+    <tr>
+        <td  >  {{label}}</td>        <td   align="right" > {{sum}}</td>  <td  >  </td>   
+    </tr>  
+      {{/rpays}}   
  
- 
- 
+  
+
 
 </table>
 <br>

@@ -78,4 +78,15 @@
 
         </ZREPRETURN>
         {{/isret}}
+      
+      
+    <ZREPBODY>
+         {{#sin}}
+        <SERVICEINPUT>{{sin}}</SERVICEINPUT>
+         {{/sin}}
+          {{#sout}} 
+        <SERVICEOUTPUT>{{sout}}</SERVICEOUTPUT>
+          {{/sout}}
+    </ZREPBODY>      
+      
         </ZREP>

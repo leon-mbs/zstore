@@ -1899,7 +1899,7 @@ class ARMPos extends \App\Pages\Base
 
             \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
             
-            
+            /*
             if($this->_tvars['checkbox'] == true) {
 
                 $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
@@ -1965,7 +1965,7 @@ class ARMPos extends \App\Pages\Base
                 }
 
             }
-
+            */
         
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
@@ -2031,7 +2031,24 @@ class ARMPos extends \App\Pages\Base
                 }
 
             }
-            
+          if ($this->_tvars['ppo'] == true) {
+
+               
+
+                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
+                if ($ret['success'] == false  ) {
+                    //повторяем для  нового номера
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                    $this->pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                }
+                if ($ret['success'] == false) {
+                      throw new \Exception($ret['data']);
+
+                }  
+
+            }
+             
             
         } catch(\Throwable $ee) {
             global $logger;
@@ -2043,7 +2060,8 @@ class ARMPos extends \App\Pages\Base
             
             return;
         }       
-         
+        $sender->sinsum->setText(0) ;  
+        $sender->soutsum->setText(0) ;   
     }
     
     public function onEdit($sender) {

@@ -285,7 +285,11 @@ class PPOHelper
         $header['cntr'] = $cntr;
         $header['isreal'] = $cnt > 0;
         $header['isret'] = $cntr > 0;
+        $header['sin'] = $sin > 0 ?$sin :false;
+        $header['sout'] = $sout > 0 ?$sin :false;
 
+        
+        
         $report = new \App\Report('zform.xml');
 
         $xml = $report->generate($header);
@@ -580,6 +584,61 @@ class PPOHelper
 
         return $ret;
     }
+    /**
+     *  служебный внос  вынос
+     *
+     * @param mixed $doc
+     */
+      public static function sinout($sum, $type,$pos_id ) {
+
+        $pos = \App\Entity\Pos::load($pos_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if( ($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name'] ??'' ;
+        }
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['ipn'] ??'' ;
+        }
+        if( ($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ??'';
+        }
+        
+        $header = array();
+
+        $header['firmname'] = $pos->firmname ;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
+        $header['tin'] = $pos->tin;
+        $header['address'] = $pos->address;
+        $header['testing'] = $pos->testing==1;
+        $header['pointname'] = $pos->pointname;
+        $header['date'] = date('dmY');
+        $header['time'] = date('His');
+        $header['docnumber'] = $pos->fiscdocnumber;
+        $header['posinner'] = $pos->fiscallocnumber;
+        $header['posnumber'] = $pos->fiscalnumber;
+        $header['username'] = self::getCashier( );
+        $header['guid'] = \App\Util::guid();
+     
+        $header['sub'] = $type==1 ? 2:4 ;
+        $header['sum'] = number_format($sum    , 2, '.', '') ;
+
+       
+
+        
+        $report = new \App\Report('checkinout.xml');
+
+        $xml = $report->generate($header);
+
+        $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
+     
+        $ret = self::send($xml, 'doc', $pos);
+        if ($ret['success'] == true) {
+            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0,0,0);
+        }
+
+        return $ret;
+    }
 
     /**
      * отправка  доплаты
@@ -652,7 +711,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 2 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
 
         return $ret;

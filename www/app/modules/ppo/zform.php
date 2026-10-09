@@ -104,7 +104,13 @@ class ZForm extends \App\Pages\Base
             $amount1=$item->amount1;
 
         }
-
+       if($item->checktype == "4") {
+          $item->document_number  = 'Службове внесення'; 
+       }
+       if($item->checktype == "5") {
+          $item->document_number  = 'Службова видача'; 
+       }
+     
 
 
 
@@ -292,7 +298,7 @@ class ZForm extends \App\Pages\Base
             return ;
         }
         $zt="";
-        if(is_array($ret['Totals']['Real']['PayForm'])) {
+        if(is_array($ret['Totals']['Real']['PayForm'] ??null)) {
             $zt .="<b>Реалізація</b><br>";
             foreach($ret['Totals']['Real']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
@@ -300,7 +306,7 @@ class ZForm extends \App\Pages\Base
             }
             $zt .= " Чеків ".$ret['Totals']['Real']['OrdersCount'] ;
         }
-        if(is_array($ret['Totals']['Ret']['PayForm'])) {
+        if(is_array($ret['Totals']['Ret']['PayForm']??null)) {
             $zt .="<br><b>Повернення</b><br>";
             foreach($ret['Totals']['Ret']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
@@ -308,7 +314,12 @@ class ZForm extends \App\Pages\Base
             }
             $zt .= " Чеків ".$ret['Totals']['Ret']['OrdersCount'] ;
         }
-
+        if( ($ret['Totals']['ServiceInput'] ??0) >0) {
+             $zt .= "<br> Службове внесення ".$ret['Totals']['ServiceInput'] ;
+        }
+        if( ($ret['Totals']['ServiceOutput'] ??0) >0) {
+             $zt .= "<br> Службова видача ".$ret['Totals']['ServiceOutput'] ;
+        }
         $this->ztres->setText($zt, true);
 
     }

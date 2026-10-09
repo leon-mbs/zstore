@@ -26,7 +26,7 @@
       {{/pays}}   
  
   <tr>
-        <td  > <b>Поверненняz</b></td>        <td  >  </td>
+        <td  > <b>Повернення</b></td>        <td  >  </td>
     </tr>    
     <tr>
         <td  > Чеків  </td>        <td align="right" > {{rcnt}}</td>
