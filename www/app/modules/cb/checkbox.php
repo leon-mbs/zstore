@@ -518,6 +518,70 @@ class CheckBox
 
          
     }
+    
+    public function Sinout($sum, $type ) {
+        $ret = $this->PinCodeAuth() ;
+        if($ret !== true) {
+            return $ret;
+        }
+        $type = (int)$type;
+        $sum =  round($sum*100);
+      
+        if($type==2)  $sum = 0-$sum;
+        
+        $check = [] ;
+        $check["id"] = \App\Util::guid() ;
+        $check["payment"] = ['type'=>'CASH','value'=>$sum] ;
+       
+      
+
+        $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => self::API_URL."/receipts/service",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER =>false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $receipt,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
+                "Content-Type: application/json"
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        }
+
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($status_code !== 201) {
+            if($status_code == 422 || $status_code == 400) {
+                $response = json_decode($response, true);
+                return $response['message'] ;
+            }
+            return "HTTP Error #:" . $status_code. ' ' . $response;
+        }
+
+        $response = json_decode($response, true);
+
+        return '';
+
+         
+    }
 
 
     public function GetRawReceipt($receipt_id) {

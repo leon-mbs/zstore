@@ -5,9 +5,12 @@
     <tr>
 
         <td  > Створено</td> <td  > {{created_at}}</td>
-        
+         
     </tr>   
    <tr>
+         <td  > На  початок</td> <td align="right" > {{initial}}</td>
+    </tr>    
+  <tr>
         <td  > <b>Реалізація</b></td>        <td  >  </td>
     </tr>    
     <tr>
@@ -37,7 +40,10 @@
     </tr>  
       {{/rpays}}   
  
- 
+     <tr>
+         <td  > Баланс</td> <td align="right" > {{balance}}</td>
+    </tr>    
+
  
 
 </table>

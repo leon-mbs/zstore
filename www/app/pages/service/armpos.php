@@ -258,7 +258,13 @@ class ARMPos extends \App\Pages\Base
         $this->paydolg->add(new TextInput('pbsum'));
         $this->paydolg->add(new DropDownChoice('pbpay'));
 
-    
+        //служебное внесение
+        $this->add(new Form('paysin'))->onSubmit($this, 'onSinout') ;
+        $this->paysin->add(new TextInput('sinsum'));
+        //служебная выдача
+        $this->add(new Form('paysout'))->onSubmit($this, 'onSinout') ;
+        $this->paysout->add(new TextInput('soutsum'));
+  
 
         $this->add(new Label('qrimg')) ;
 
@@ -1857,6 +1863,7 @@ class ARMPos extends \App\Pages\Base
         $this->updatechecklist(null);
     }
 
+    //постоплата
     public function onBorg($sender) {
         $id =  $sender->pbid->getText();
         $sum =  $sender->pbsum->getText();
@@ -1976,10 +1983,58 @@ class ARMPos extends \App\Pages\Base
             
             return;
         }        
-        
+        $sender->pbpay->setValue(0) ;
         $this->updatechecklist(null);
     }
     
+    //служебные  внесения  выдачи
+    public function onSinout($sender) {
+        $sum=0;
+        $type=0;
+        if($sender->id=="paysin") {
+           $sum =  $sender->sinsum->getText();
+           $type=1;
+        }
+        if($sender->id=="paysout") {
+           $sum =  $sender->soutsum->getText();
+           $type=2;
+        }
+        
+        $sum = doubleval(trim($sum)) ;
+        
+        if($sum==0) return;
+        try {
+     
+            if($this->_tvars['checkbox'] == true) {
+
+                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
+                $ret = $cb->Sinout($sum,$type) ;
+
+                if($ret=='') {
+                    
+                    $this->setSuccess("Виконано");
+                } else {
+
+                    throw new \Exception($ret);
+
+                }
+
+
+            }
+            
+            
+        } catch(\Throwable $ee) {
+            global $logger;
+          
+            $this->setErrorTopPage($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+      
+            
+            return;
+        }       
+         
+    }
     
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();

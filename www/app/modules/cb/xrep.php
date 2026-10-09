@@ -73,8 +73,9 @@ class XRep extends \App\Pages\Base
         $header['rcnt'] =$ret['return_receipts_count'];
         $header['pays'] =[];
         $header['rpays'] =[];
-    
-        
+        $header['balance'] = doubleval($ret['balance']/100) ;
+        $header['initial'] = doubleval($ret['initial']/100) ;
+      
         
         foreach($ret['payments'] as $p){
             if($p['sell_sum']>0) {
