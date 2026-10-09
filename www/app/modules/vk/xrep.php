@@ -71,31 +71,21 @@ class XRep extends \App\Pages\Base
         $header['created_at'] = H::fdt(time() );
         $header['cnt'] =$ret['receipt']['count_p'];
         $header['rcnt'] =$ret['receipt']['count_m'];
-        $header['nal'] =0;
-        $header['card'] =0;
-        $header['rnal'] =0;
-        $header['rcard'] =0;
-        
-        
+        $header['pays'] =[];
+        $header['rpays'] =[];
+   
+    
         foreach($ret['pays'] as $p){
-             if($p['type']==0) {
-                $header['nal'] += doubleval($p['sum_p'] ) ;
-                $header['rnal'] += doubleval($p['sum_m'] ) ;
-             }
-             if($p['type']==1) {
-                $header['card'] += doubleval($p['sum_p'] ) ;
-                $header['rcard'] += doubleval($p['sum_m'] ) ;
-             }
-        }
+            if($p['sum_p']>0) {
+                $header['pays'][] = ['label'=>$p['name'],'sum'=>doubleval($p['sum_p'] )] ;    
+            }
+            if($p['sum_m']>0) {
+                $header['rpays'][] = ['label'=>$p['name'],'sum'=>doubleval($p['sum_m'] )] ;    
+            }
+          
+        }      
+      
        
-        $header['total'] = H::fa($header['nal'] + $header['card'] - $header['rnal'] - $header['rcard']  );
-        $header['isrnal'] = $header['rnal'] > 0;
-        $header['isrcard'] = $header['rcard'] > 0;
-        $header['nal'] = H::fa($header['nal']);
-        $header['card'] =H::fa($header['card']);
-        $header['rnal'] =H::fa($header['rnal']);
-        $header['rcard'] =H::fa($header['rcard']);
-         
         $report = new \App\Report('report/vk_xrep.tpl');
 
         $html = $report->generate($header);

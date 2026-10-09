@@ -148,6 +148,7 @@ class VK
             if ($doc->headerdata['payment'] == 0 && $doc->payed > 0) {
                 $payment=array(
                 "type"=>1,
+     
                 "sum"=>  self::fa($doc->headerdata['payed'] )  
                 );
                 if($doc->headerdata['exchange'] > 0) {
@@ -166,6 +167,7 @@ class VK
                 } else {
                    $payment=array(
                     "type"=>0,
+    
                     "sum"=>self::fa($doc->headerdata['payed']  )
                      );
                     if(($doc->headerdata['exchange'] ?? 0) > 0) {
@@ -200,17 +202,18 @@ class VK
 
         }
         $payed  =    doubleval($doc->headerdata['payed'] ??0) + doubleval($doc->headerdata['payedcard']??0);
-
+       
         if ($payed < $doc->payamount) {
             $payment=array(
             "type"=>0,
-            "comment"=>'Постоплата',
+            "name"=>'Післяплата',
+ 
             "sum"=> self::fa($doc->payamount - $payed ) 
             );
             $check["pays"][] = $payment;
 
         }
-
+         /*
 
         if(($doc->headerdata["prepaid"]??0) >0) {
             
@@ -221,21 +224,21 @@ class VK
             );
             $check["pays"][] = $payment;
         }
-
+       */
        $paysum = 0;
        foreach( $check["pays"] as $p) {
            $paysum += self::fa($p['sum']) ;    
        }        
     
-        $alldisc = $disc; //вся  скидка  с  бонусами - для  округления
+        $alldisc = $disc??0; //вся  скидка  с  бонусами - для  округления
    
-        $disc =    doubleval($doc->headerdata["totaldisc"])  + doubleval($doc->headerdata["bonus"])      ;
+        $disc =    doubleval($doc->headerdata["totaldisc"]??0)  + doubleval($doc->headerdata["bonus"]??0)      ;
         if($disc > 0) {
             $check['disc'] = $disc;            
             $check["disc_type"] = 0 ;
             if($doc->headerdata['bonus'] >0) {
                   $check["discounts"][] = array("disc"=>$doc->headerdata['bonus'],"disc_name"=> "Бонуси" );
-                  $disc  = $disc -  $doc->headerdata['bonus'] ;
+                  $disc  = $disc -  $doc->headerdata['bonus']??0 ;
             }
         
             if($disc > 0) {
@@ -314,76 +317,32 @@ class VK
 
     }
 
-    public function Payment($doc, $payed, $mf) {
+    public function Sinout($sum,$type) {
     
-
-        $check = [] ;
-        $check["goods"] = [] ;
-        $check["payments"] = [] ;
-        $check["discounts"] = [] ;
-
-        $sum = 0;
-
-        $payed =  doubleval($payed) ;
-
-
-        $good=[];
-
-        $g=[];
-        $g['name'] = $doc->document_number;
-        $g['price'] = $payed ;
-        $g['code'] = $doc->document_id;
-
-        $good["good"] = $g ;
-
-        $good["quantity"] =   1000 ;
-        //    $good["sum"] =1000000;
-        $good["is_return"] = false;
-
-        $sum +=   ($g['price'] * $good["quantity"]);
-
-        $check["goods"][] = $good;
-
-
-
-        $check['total_sum'] = $sum  ;
-
+        $type = (int)$type;
+        $sum =  doubleval(  $sum );
+       
  
-
-      
-        if ($mf == 0 && $payed > 0) {
-            $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
-            $check["payments"][] = $payment;
-
-        }
-        if ($mf > 0 && $payed > 0) {
-            $mf = \App\Entity\MoneyFund::load($mf);
-            if ($mf->beznal == 1) {
-                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>$payed*100);
-            } else {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>$payed*100);
-            }
-            $check["payments"][] = $payment;
-
-        }
-
-
-        $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);
+        $req=array('fiscal'=>array('task'=>$type==1?3:4, 'cash'=>$sum,   'cashier'=>self::getCashier())) ;
+        
+        
+        $body=json_encode($req, JSON_UNESCAPED_UNICODE);
+   
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => self::API_URL."/receipts/sell",
+            CURLOPT_URL => self::API_URL ,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
-            CURLOPT_SSL_VERIFYPEER =>false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $receipt,
+            CURLOPT_POSTFIELDS => $body ,           
+            CURLOPT_SSL_VERIFYPEER =>false,
+
             CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer {$this->access_token}",
-                "Content-Type: application/json"
+                "Authorization: {$this->access_token}" 
             ],
         ]);
 
@@ -391,27 +350,40 @@ class VK
         $err = curl_error($curl);
 
 
-
         if ($err) {
             return "cURL Error #:" . $err;
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        
         curl_close($curl);
-
-        if ($status_code !== 201) {
-            if($status_code == 422 || $status_code == 400) {
-                $response = json_decode($response, true);
-                return $response['message'] ;
-            }
-            return "HTTP Error #:" . $status_code. ' ' . $response;
+        
+        if($status_code != 200) {
+           return "HTTP Error #:" . $status_code. ' ' . $response;
         }
 
-        $response = json_decode($response, true);
 
+        $response = json_decode($response, true);
+        if($response['res_action']==0) {
+            return true;
+        } 
+
+        if(strlen($response['errortxt'])>0) {
+            return $response['errortxt'];
+        }
+        if($response['res']>0) {
+            return "Помилка ".$response['res'];
+        }
+  
+        return true;
+
+    }
+  public function Payment($doc, $payed, $mf) {
+    
+      
+ 
         $ret =[];
 
-        $ret["checkid"] = $response['id'];
       
         return $ret;
 

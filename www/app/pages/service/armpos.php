@@ -1923,12 +1923,7 @@ class ARMPos extends \App\Pages\Base
                 $ret = $vk->Check($doc) ;
 
                 if(is_array($ret)) {
-                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                    $doc->headerdata["tax_url"] = $ret['tax_url'];
-                    $doc->headerdata["vkassa"] = $ret['checkid'];
                     
-                    $doc->headerdata["passfisc"] = 0;
-                    $doc->save();
                   
                 } else {
                     throw new \Exception($ret);
@@ -2019,6 +2014,21 @@ class ARMPos extends \App\Pages\Base
 
                 }
 
+            }
+            
+           if($this->_tvars['vkassa'] == true) {
+               $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+               $ret = $vk->Sinout($sum,$type) ;
+
+               
+                if($ret=='') {
+                    
+                    $this->setSuccess("Виконано");
+                } else {
+
+                    throw new \Exception($ret);
+
+                }
 
             }
             
@@ -2028,7 +2038,7 @@ class ARMPos extends \App\Pages\Base
           
             $this->setErrorTopPage($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            $logger->error($ee->getMessage() );
       
             
             return;
