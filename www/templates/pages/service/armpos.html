@@ -687,6 +687,7 @@
                         <th ></th>
                         <th ></th>
                         <th ></th>
+                        <th ></th>
                    {{#fiscal}}      <th ></th>     {{/fiscal}}
                    {{#freg}}      <th ></th>     {{/freg}}
 
@@ -704,6 +705,7 @@
                         <td zippy="rownotes"></td>
                         <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         <td  ><a zippy="checkreturn" >Повернення</a></td>
+                        <td  ><span style="cursor:pointer"  zippy="checkdolg" >Оплата боргу</span></td>
                          {{#fiscal}}
                         <td  ><a zippy="checkfisc" >Фіскалізувати</a></td>
                          {{/fiscal}}
@@ -766,6 +768,65 @@
                 </div>
             </div>
         </form>
+      
+         <div id="modalpb" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 >
+                <div class="modal-dialog modal-sm modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3  class="modal-title ">Оплата боргу </h3>  
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div class="modal-body  ">
+                        <form zippy="paydolg">
+          
+                            <input type="hidden" zippy="pbid">
+                            <div class="row">
+                                
+                                    <div class="row mb-2">
+                                   
+                                     <label   class="col-4 col-form-label" for="pbnumber">Чек </label>
+                                      
+                                     <div class="col-8"> 
+                                        <input  class="form-control-plaintext"  zippy="pbnumber" readonly     />
+                                    </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                       
+                                       <label class="col-4 col-form-label" for for="pbsum">Сума</label>
+                                       
+                                       <div class="col-8"> 
+                                        <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="pbsum"/>
+                                      </div>    
+                                    </div>
+                                     <div class="row mb-2">
+                                     
+                                        <label class="col-4 col-form-label" for for="pbpay">Рахунок</label>
+                                          
+                                       <div class="col-8"> 
+                                     
+                                        <select   class="form-select"   zippy="pbpay"  >
+                                            <option value="0" selected="">Не вказано </option>
+                                            <option value="1">Готівка </option>
+                                            <option value="2">Картка </option>
+                                        </select>
+                                        </div> 
+                                    </div>
+                  
+                                    <div class="mb-2">
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+      
+                                       <input   type="submit" value="Оплатити" class="btn btn-primary">
+                                        
+                                    </div>
+                                </div>
+                             
+                        </form>
+                     </div>
+                    </div>
+                  </div>
 
     <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  >
@@ -896,6 +957,13 @@
             
         
        
+            function openborg(id,sum,dn) {
+                $("#pbid").val(id);
+                $("#pbsum").val(sum);
+                $("#pbnumber").val(dn);
+                openModal('modalpb')   
+                
+            }
             function check_openshift(ele) {
                 
                       document.getElementById('dialogwait').showModal()

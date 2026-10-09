@@ -250,6 +250,15 @@ class ARMPos extends \App\Pages\Base
 
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
+       
+        //оплата  долга  по  чеку
+        $this->add(new Form('paydolg'))->onSubmit($this, 'onBorg') ;
+        $this->paydolg->add(new TextInput('pbid'));
+        $this->paydolg->add(new TextInput('pbnumber'));
+        $this->paydolg->add(new TextInput('pbsum'));
+        $this->paydolg->add(new DropDownChoice('pbpay'));
+
+    
 
         $this->add(new Label('qrimg')) ;
 
@@ -1708,6 +1717,11 @@ class ARMPos extends \App\Pages\Base
         $row->checkreturn->setVisible($doc->state > 4);
         if($doc->meta_name=='ReturnIssue')   $row->checkreturn->setVisible(false);
  
+        $row->add(new Label('checkdolg' ))->setVisible($doc->state==21) ;
+        $sum= H::fa($doc->payamount -   $doc->payed);
+        $row->checkdolg->setAttribute('onclick',"openborg({$doc->document_id},{$sum},'{$doc->document_number}')") ;
+        
+        
         $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
         $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
         $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
@@ -1843,6 +1857,130 @@ class ARMPos extends \App\Pages\Base
         $this->updatechecklist(null);
     }
 
+    public function onBorg($sender) {
+        $id =  $sender->pbid->getText();
+        $sum =  $sender->pbsum->getText();
+        $pay =  $sender->pbpay->getValue();
+        
+        if($pay==0) {
+            $this->setError("Не вибрана  оплата");
+            return;
+        }
+        
+        $mf=0;
+        if($pay==1) {
+            $mf = $this->form1->mfnal->getValue() ; 
+        }
+        if($pay==2) {
+            $mf = $this->form1->mfbeznal->getValue() ; 
+        }
+ 
+        $doc = Document::load($id);
+        $am= H::fa($doc->payamount -   $doc->payed);
+        if( $sum==0 ) {
+            $this->setError("Не вказана  сума");
+            return;
+        }
+        if($sum > $am ) {
+            $this->setError("Сума більшк боргу");
+            return;
+        }
+      
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+            \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
+            
+            
+            if($this->_tvars['checkbox'] == true) {
+
+                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
+                $ret = $cb->Payment($sum,$pay,$doc) ;
+
+                if($ret=='') {
+                    if($sum == $am) {
+                        $doc->updateStatus(Document::STATE_PAYED);
+                    }
+                    $this->setSuccess("Виконано");
+                } else {
+
+                    throw new \Exception($ret);
+
+                }
+
+
+            }
+            if($this->_tvars['vkassa'] == true) {
+                $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+                $ret = $vk->Check($doc) ;
+
+                if(is_array($ret)) {
+                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $doc->headerdata["tax_url"] = $ret['tax_url'];
+                    $doc->headerdata["vkassa"] = $ret['checkid'];
+                    
+                    $doc->headerdata["passfisc"] = 0;
+                    $doc->save();
+                  
+                } else {
+                    throw new \Exception($ret);
+
+
+                }  
+            }
+
+
+            if ($this->_tvars['ppo'] == true) {
+
+
+                $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
+
+
+                $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                    //повторяем для  нового номера
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                    $this->pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                }
+                if ($ret['success'] == false) {
+                      throw new \Exception($ret['data']);
+
+                } else {
+                    //  $this->setSuccess("Выполнено") ;
+                    if ($ret['docnumber'] > 0) {
+                        $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $this->pos->save();
+                        $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                        $doc->headerdata["passfisc"] = 0;
+                        $doc->save();
+                        $this->setSuccess("Виконано");
+                    } else {
+                        throw new \Exception("Не повернено фіскальний номер");
+
+                    }
+                }
+
+            }
+
+        
+            $conn->CommitTrans();
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setErrorTopPage($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+      
+            
+            return;
+        }        
+        
+        $this->updatechecklist(null);
+    }
+    
+    
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);
@@ -2271,7 +2409,9 @@ class ARMPos extends \App\Pages\Base
             return;                        
         }        
     }
-    
+  
+  
+ 
     public function beforeRender() {
         
         $pn= intval( \App\Session::getSession()->armpass ?? 0 );        

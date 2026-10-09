@@ -363,17 +363,17 @@ class Subscribe extends \ZCL\DB\Entity
     
     private    function sendmsg($text, $options=[]){
         $ret='';    
-        if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
+        if (($options['notifyuser']??0) > 0 && $this->msg_type == self::MSG_NOTIFY) {
                Notify::sendNotify($options['notifyuser'], $text, Notify::SUBSCRIBE);
             }
             if (  $this->reciever_type== self::RSV_SYSTEM) {
                 Notify::sendNotify( Notify::SYSTEM, $text, Notify::SUBSCRIBE);
             }
 
-            if (strlen($options['phone']) > 0 && $this->msg_type == self::MSG_SMS) {
+            if (strlen($options['phone']??'') > 0 && $this->msg_type == self::MSG_SMS) {
                 $ret =   \App\Comm::sendSMS($options['phone'], $text);
             }
-            if (strlen($options['email']) > 0 && $this->msg_type == self::MSG_EMAIL) {
+            if (strlen($options['email']??'') > 0 && $this->msg_type == self::MSG_EMAIL) {
                 // отправляем  в  очередь если  включен  планировщик
                 if(System::useCron()) {
                     $task = new  \App\Entity\CronTask();
@@ -392,13 +392,13 @@ class Subscribe extends \ZCL\DB\Entity
 
             }
 
-            if(strlen($options['viber'])==0) {
-                $options['viber'] = $options['phone'];
+            if(strlen($options['viber']??'')==0) {
+                $options['viber'] = $options['phone']??'';
             }
-            if(strlen($options['viber'])>0 && $this->msg_type == self::MSG_VIBER) {
+            if(strlen($options['viber']??'')>0 && $this->msg_type == self::MSG_VIBER) {
                 $ret =   \App\Comm::sendViber($options['viber'], $text) ;
             }
-            if(strlen($options['chat_id'])>0 && $this->msg_type == self::MSG_BOT) {
+            if(strlen($options['chat_id']??'')>0 && $this->msg_type == self::MSG_BOT) {
                 $ret =   \App\Comm::sendBot($options['chat_id'], $text, $this->attach==1 ? $options['doc'] : null,$this->html==1) ;
             }
          

@@ -71,31 +71,22 @@ class XRep extends \App\Pages\Base
         $header['created_at'] = H::fdt(  strtotime($ret['created_at'] ) );
         $header['cnt'] =$ret['sell_receipts_count'];
         $header['rcnt'] =$ret['return_receipts_count'];
-        $header['nal'] =0;
-        $header['card'] =0;
-        $header['rnal'] =0;
-        $header['rcard'] =0;
+        $header['pays'] =[];
+        $header['rpays'] =[];
+    
         
         
         foreach($ret['payments'] as $p){
-             if($p['type']=='CASH') {
-                $header['nal'] += doubleval($p['sell_sum']/100) ;
-                $header['rnal'] += doubleval($p['return_sum']/100) ;
-             }
-             if($p['type']=='CASHLESS') {
-                $header['card'] += doubleval($p['sell_sum']/100) ;
-                $header['rcard'] += doubleval($p['return_sum']/100) ;
-             }
+            if($p['sell_sum']>0) {
+                $header['pays'][] = ['label'=>$p['label'],'sum'=>doubleval($p['sell_sum']/100)] ;    
+            }
+            if($p['return_sum']>0) {
+                $header['rpays'][] = ['label'=>$p['label'],'sum'=>doubleval($p['return_sum']/100)] ;    
+            }
+          
         }
        
-        $header['total'] = H::fa($header['nal'] + $header['card'] - $header['rnal'] - $header['rcard']  );
-        $header['isrnal'] = $header['rnal'] > 0;
-        $header['isrcard'] = $header['rcard'] > 0;
-        $header['nal'] = H::fa($header['nal']);
-        $header['card'] =H::fa($header['card']);
-        $header['rnal'] =H::fa($header['rnal']);
-        $header['rcard'] =H::fa($header['rcard']);
-         
+        
         $report = new \App\Report('report/cb_xrep.tpl');
 
         $html = $report->generate($header);

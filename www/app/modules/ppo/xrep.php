@@ -95,6 +95,7 @@ class XRep extends \App\Pages\Base
             
         
         $header['created_at'] = H::fdt(time() );
+        $header['cnt'] =$ret['Totals']['Real']['OrdersCount']??0;
         $header['rcnt'] =$ret['Totals']['Ret']['OrdersCount']??0;
         $header['nal'] =0;
         $header['card'] =0;
