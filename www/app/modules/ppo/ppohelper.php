@@ -208,78 +208,80 @@ class PPOHelper
         $header['paysr'] = array();
         $amount = 0;
         $amountr = 0;
-        $cnt = $stat['cnt'];
-        $cntr = $rstat['cnt'];
+        $cnt = $stat[1]['cnt'] ??0;
+        $cntr = $stat[2]['cnt']??0;
+        $sin = $stat[4]['amount0']??0;
+        $sout = $stat[5]['amount0']??0;
 
         //реализация
 
         $n = 1;
 
-        if ($stat['amount0'] > 0) {
+        if (($stat[1]['amount0']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_NAL,
                 'formcode' => 0,
-                'sum'      => number_format($stat['amount0'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount0']??0 , 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount0'];
+            $amount = $amount + $stat[1]['amount0']??0 ;
             $n++;
         }
-        if ($stat['amount1'] > 0) {
+        if (($stat[1]['amount1']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_CARD,
                 'formcode' => 1,
-                'sum'      => number_format($stat['amount1'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount1']??0, 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount1'];
+            $amount = $amount + $stat[1]['amount1']??0;
             $n++;
         }
-        if ($stat['amount2'] > 0) {
+        if (($stat[1]['amount2']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_CREDIT,
                 'formcode' => 2,
-                'sum'      => number_format($stat['amount2'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount2']??0 , 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount2'];
+            $amount = $amount + $stat[1]['amount2']??0 ;
             $n++;
         }
-        if ($stat['amount3'] > 0) {
+        if (($stat[1]['amount3']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_PREPAID,
                 'formcode' => 3,
-                'sum'      => number_format($stat['amount3'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount3']??0, 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount3'];
+            $amount = $amount + $stat[1]['amount3']??0;
             $n++;
         }
 
-       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
+      // \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
      //  \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
         $n = 1;
 
-        if ($rstat['amount0'] > 0) {
+        if (($stat[2]['amount0']??0) > 0) {
             $header['paysr'][] = array(
                 'formname' => self::FORM_NAL,
                 'formcode' => 0,
-                'sum'      => number_format($rstat['amount0'], 2, '.', ''),
+                'sum'      => number_format($stat[2]['amount0']??0 , 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amountr = $amountr + $rstat['amount0'];
+            $amountr = $amountr + $stat[2]['amount0']??0 ;
             $n++;
         }
-        if ($rstat['amount1'] > 0) {
+        if (($stat[2]['amount1']??0) > 0) {
             $header['paysr'][] = array(
                 'formname' => self::FORM_CARD,
                 'formcode' => 1,
-                'sum'      => number_format($rstat['amount1'], 2, '.', ''),
+                'sum'      => number_format($stat[2]['amount1']??0, 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amountr = $amountr + $rstat['amount1'];
+            $amountr = $amountr + $stat[2]['amount1']??0;
             $n++;
         }
 
@@ -290,8 +292,8 @@ class PPOHelper
         $header['cntr'] = $cntr;
         $header['isreal'] = $cnt > 0;
         $header['isret'] = $cntr > 0;
-        $header['sin'] = $sin > 0 ?$sin :false;
-        $header['sout'] = $sout > 0 ?$sin :false;
+        $header['sin'] = $sin > 0 ?number_format($sin, 2, '.', '') :false;
+        $header['sout'] = $sout > 0 ?number_format($sout, 2, '.', '')  :false;
 
         
         
@@ -639,7 +641,7 @@ class PPOHelper
      
         $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
-            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0,0,0);
+            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0, 0, 0, $type==1 ? 'Службове внесення':'Службова видача', $ret['docnumber']);
         }
 
         return $ret;
@@ -819,7 +821,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  
@@ -863,7 +865,7 @@ class PPOHelper
         $pos_id = (int) $pos_id;
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select checktype, count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id {$pos_id} group by  checktype " ;
+        $sql = "select checktype, count(*) as cnt, coalesce(sum(amount0),0)  as amount0,    coalesce(sum(amount1),0)  as amount1,   coalesce(sum(amount2),0) as amount2,   coalesce(sum(amount3),0) as amount3    from  ppo_zformstat where    pos_id = {$pos_id} group by  checktype " ;
        
         $ret=[]  ;
         

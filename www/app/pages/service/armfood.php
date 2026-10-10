@@ -2459,13 +2459,9 @@ class ARMFood extends \App\Pages\Base
             $this->setErrorTopPage($ret['data']);
             return false;
         } else {
-            $sc = \App\System::getSession()->shiftclose;
-            if(strlen($sc)>0) {
-               \App\System::getSession()->shiftclose="";
-               $this->setInfo("Зміна закрита. ".$sc );                               
-            } else {
+            
                $this->setSuccess("Зміна закрита");    
-            }
+          
             if ($ret['doclocnumber'] > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
@@ -2695,13 +2691,16 @@ class ARMFood extends \App\Pages\Base
     public function onSinout($sender) {
         $sum=0;
         $type=0;
-        if($sender->id=="paysin") {
+         if($sender->id=="paysin") {
            $sum =  $sender->sinsum->getText();
            $type=1;
+           $sender->sinsum->setText(0) ;  
+    
         }
         if($sender->id=="paysout") {
            $sum =  $sender->soutsum->getText();
            $type=2;
+           $sender->soutsum->setText(0) ;
         }
         
         $sum = doubleval(trim($sum)) ;
@@ -2749,8 +2748,15 @@ class ARMFood extends \App\Pages\Base
                     //повторяем для  нового номера
                     $this->pos->fiscdocnumber = $ret['doclocnumber'];
                     $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
+
                 }
+                if ($ret['docnumber'] > 0) {
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                    $this->pos->save();
+                } else {
+                    throw new \Exception("Не повернено фіскальний номер");
+                }                 
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['data']);
 
@@ -2769,8 +2775,7 @@ class ARMFood extends \App\Pages\Base
             
             return;
         }       
-        $sender->sinsum->setText(0) ;  
-        $sender->soutsum->setText(0) ;   
+           
     }
      
     

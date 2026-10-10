@@ -66,8 +66,8 @@ class ZForm extends \App\Pages\Base
 
         $data = \App\Modules\PPO\PPOHelper::getStat($pos_id );
 
-        foreach($data as $row)  {
-            if($row['checktype'] ==1) {
+        foreach($data as $ch=>$row)  {
+            if($ch ==1) {
                 $this->stat->nal->setText($row['amount0']);
                 $this->stat->bnal->setText($row['amount1']);
                 $this->stat->credit->setText($row['amount2']);
@@ -75,18 +75,18 @@ class ZForm extends \App\Pages\Base
                 $this->stat->cnt->setText($row['cnt']);
             }
             
-            if($row['checktype'] ==2) {
-                $this->stat->retnal->setText($data['amount0']);
-                $this->stat->retbnal->setText($data['amount1']);
-                $this->stat->retcnt->setText($data['cnt']);
+            if($ch ==2) {
+                $this->stat->retnal->setText($row['amount0']);
+                $this->stat->retbnal->setText($row['amount1']);
+                $this->stat->retcnt->setText($row['cnt']);
             }
         
-            if($row['checktype'] ==4) {
-                $this->stat->sin->setText($data['amount0']);
+            if($ch ==4) {
+                $this->stat->sin->setText($row['amount0']);
             }
          
-            if($row['checktype'] ==5) {
-                $this->stat->sout->setText($data['amount0']);
+            if($ch ==5) {
+                $this->stat->sout->setText($row['amount0']);
             }
             
             
@@ -119,15 +119,7 @@ class ZForm extends \App\Pages\Base
             $amount1=$item->amount1;
 
         }
-       if($item->checktype == "4") {
-          $item->document_number  = 'Службове внесення'; 
-       }
-       if($item->checktype == "5") {
-          $item->document_number  = 'Службова видача'; 
-       }
-     
-
-
+  
 
         $row->add(new Label("docnumber", $item->document_number));
         $row->add(new Label("amount0", H::fa($amount0)));
@@ -251,8 +243,8 @@ class ZForm extends \App\Pages\Base
         $row['cnt'] = $this->stat->retcnt->getInt();
         $stat[2]= $row;
      
-        $stat[4]= ['amount0'=>$this->stat->sin->getDouble();];
-        $stat[5]= ['amount0'=>$this->stat->sout->getDouble();];
+        $stat[4]= ['amount0'=>$this->stat->sin->getDouble()];
+        $stat[5]= ['amount0'=>$this->stat->sout->getDouble()];
      
         $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat );
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
