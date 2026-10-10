@@ -181,23 +181,36 @@
             </div>  
             
         </form>   
-       <h5>Скасування  документів </h5>  
+       <h5 class="mt-2">Скасування  документів </h5>  
            <form zippy="cdoc"   >   
                 <div class="row  ">
                     <div class="col-auto  ">  
                    <input required="on" class="form-control" placeholder="Номер документу" zippy="docn"> 
                      </div>  
                   <div class="col-auto  ">
-                   <input type="submit" value="Скасувати" class="btn   btn-secondary  ">
+                   <input type="submit" value="Скасувати" class="btn   btn-primary  ">
                 </div>       
               </div>       
           </form> 
-          <small>Скасування  документів які не можна  скасувати через журнал. Наприклад  фіскалізовані чеки</small>
-            
-      
+          <small class="compact" >Скасування  документів які не можна  скасувати через журнал. Наприклад  фіскалізовані чеки</small>
+       {{#hideblock}}       
+     <h5 class="mt-2">Експорт налаштувань</h5>
+
+                <form zippy="oeform" class="row">
+                     
+
+                        <div class="mb-2">
+                            <input class="btn btn-primary" type="submit" value="Експорт"/>
+                        </div>
+                  
+
+
+                </form>  
+       {{/hideblock}}        
+   
      </div>  
     <div class="col-12 col-lg-4 col-xl-3  "   >
-             <h5>Перевірка відправки пошти</h5>  
+             <h5 class="mt-2">Перевірка відправки пошти</h5>  
          <form class="mt-4" zippy="sendform" >
            
               <div class="mb-2">
@@ -244,7 +257,32 @@
                <div zippy="checkdbanswer"></div>           
          </form>
          
+  </div>  
+    {{#hideblock}}
+   <div class="col-12 col-lg-4 col-xl-3 col-xxl-2 border border-2 border-danger   "   >
+   
+         <h5  >Імпорт налаштувань</h5>
+
+                <form zippy="oiform" class="row" enctype="multipart/form-data">
+                    <div class="col-10 col-md-8 col-xl-6">
+                    
+                        <div class="mb-2">
+                            <label for="ofilename">Файл імпорту</label>
+                            <input type="file" zippy="ofilename" class="form-control  "/>
+
+                        </div>
+
+                        <div class="mb-2">
+                            <input class="btn btn-danger" type="submit" value="Завантажити"/>
+                        </div>
+                    </div>
+
+
+                </form>            
+            
+         
   </div>       
+   {{/hideblock}} 
    
 </div>        
       <script>

@@ -70,9 +70,7 @@ class Export extends \App\Pages\Base
 
         $form->onSubmit($this, "onDExport");
 
-        $form = $this->add(new Form("oform"));
-        $form->onSubmit($this, "onOExport");
-
+    
     }
 
     public function onType($sender) {
@@ -323,43 +321,6 @@ class Export extends \App\Pages\Base
         }
     }
 
-    public function onOExport($sender) {
-        $conn= \ZDB\DB::getConnect() ;
-
-        $list = $conn->Execute("select * from  options");
-
-        $root="<root>";
-
-        foreach ($list as $row) {
-
-            $root.="<item>";
-            $root.="<optname>" . $row['optname'] . "</optname>";
-            $root.="<optvalue><![CDATA[" . $row['optvalue'] . "]]></optvalue>";
-            $root.="</item>";
-
-        }
-        $root.="</root>";
-
-        H::exportXML($root, 'options_' . date('Y_m_d', time()) . '.xml');
-
-
-        
-        /*
-     $filename = 'options_' . date('Y_m_d', time()) . '.xml' ;
-
-          
-        header("Content-type: text/plain");
-        header("Content-Disposition: attachment;Filename={$filename}");
-        header("Content-Transfer-Encoding: binary");
-        header('Content-Length: '.strlen($xml));
- 
-        echo $xml;
-        die;        
-        
-        
-        */
-        
-    }
-
+   
 
 }

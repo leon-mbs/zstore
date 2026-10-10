@@ -49,6 +49,8 @@ class Document extends \ZCL\DB\Entity
     public const DEL_MEEST   = 6;    //  мест
     public const DEL_ROZ     = 7;    //  
 
+   
+    
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
      *
@@ -780,6 +782,7 @@ class Document extends \ZCL\DB\Entity
      * @param mixed $to конец  периода  или  null
      * @param mixed $header значения заголовка
      */
+     /*
     public static function search($type, $from, $to, $header = array()) {
         $conn = $conn = \ZDB\DB::getConnect();
         $where = "state= " . Document::STATE_EXECUTED;
@@ -804,7 +807,7 @@ class Document extends \ZCL\DB\Entity
 
         return Document::find($where);
     }
-
+    */
     /**
      * @see \ZDB\Entity
      *
@@ -1129,7 +1132,7 @@ class Document extends \ZCL\DB\Entity
      * есть ли  проводки  по  складу
      *
      */
-    public function hasStore() {
+    public function hasEntries() {
         $conn = \ZDB\DB::getConnect();
         $sql = "select coalesce(count(*),0) from entrylist where   document_id=" . $this->document_id;
         $am = round($conn->GetOne($sql));
