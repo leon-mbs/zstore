@@ -53,7 +53,7 @@ class XRep extends \App\Pages\Base
             $pos->firmname = $firm['firm_name']  ;
         }
         if( ($pos->ipn ??'')=='') {
-            $pos->ipn = $firm['ipn']  ;
+            $pos->ipn = $firm['ipn'] ??''  ;
         }
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
@@ -73,7 +73,7 @@ class XRep extends \App\Pages\Base
     public function generateReport($pos) {
        
        
-       $ret=  \App\Modules\PPO\PPOHelper::shiftTotal($pos->fiscalnumber,$pos);
+       $ret=  \App\Modules\PPO\PPOHelper::shiftTotal( $pos);
        if($ret == false) {
             $this->setError("Сервер недоступний або зміна закрита");
             return ;
@@ -95,43 +95,31 @@ class XRep extends \App\Pages\Base
             
         
         $header['created_at'] = H::fdt(time() );
+        $header['cnt'] =$ret['Totals']['Real']['OrdersCount']??0;
         $header['rcnt'] =$ret['Totals']['Ret']['OrdersCount']??0;
-        $header['nal'] =0;
-        $header['card'] =0;
-        $header['rnal'] =0;
-        $header['rcard'] =0;
+        $header['pays'] =[];
+        $header['rpays'] =[];
+        $header['sin'] =false;
+        $header['sout'] =false;
+
         
         
-       foreach($ret['Totals']['Real']['PayForm'] as $form) {
-          
-             if($form['PayFormCode']==0) {
-                $header['nal'] += doubleval($form['Sum']) ;
-             }
-             if($form['PayFormCode']==1) {
-                $header['card'] += doubleval($form['Sum']) ;
-             }
-             
+       foreach($ret['Totals']['Real']['PayForm'] ??[]  as $form) {
+             $header['pays'][]= [ 'label'=>$form['PayFormName'],  'sum'=> H::fa($form['Sum'])];
+         
         }  
         
-        foreach($ret['Totals']['Ret']['PayForm'] as $form) {
-             if($form['PayFormCode']==0) {
-                $header['rnal'] += doubleval($form['Sum']) ;
-             }
-             if($form['PayFormCode']==1) {
-                $header['rcard'] += doubleval($form['Sum']) ;
-             }
-             
-       
-           
+        foreach($ret['Totals']['Ret']['PayForm']??[]  as $form) {
+            $header['rpays'][]= [ 'label'=>$form['PayFormName'],  'sum'=> H::fa($form['Sum'])];
+    
         }
        
-        $header['total'] = H::fa($header['nal'] + $header['card'] - $header['rnal'] - $header['rcard']  );
-        $header['isrnal'] = $header['rnal'] > 0;
-        $header['isrcard'] = $header['rcard'] > 0;
-        $header['nal'] = H::fa($header['nal']);
-        $header['card'] =H::fa($header['card']);
-        $header['rnal'] =H::fa($header['rnal']);
-        $header['rcard'] =H::fa($header['rcard']);
+        if(($ret['Totals']['ServiceInput'] ??0) >0){
+             $header['sin'] =  H::fa( $ret['Totals']['ServiceInput']);
+        }
+        if(($ret['Totals']['ServiceOutput'] ??0) >0){
+             $header['sout'] =  H::fa( $ret['Totals']['ServiceOutput']);
+        }
          
         $report = new \App\Report('report/prro_xrep.tpl');
 

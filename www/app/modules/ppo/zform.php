@@ -36,6 +36,8 @@ class ZForm extends \App\Pages\Base
         $this->stat->add(new TextInput('retbnal'));
         $this->stat->add(new TextInput('cnt'));
         $this->stat->add(new TextInput('retcnt'));
+        $this->stat->add(new TextInput('sin'));
+        $this->stat->add(new TextInput('sout'));
         $this->stat->add(new CheckBox('onlyshift'));
         $this->stat->add(new SubmitButton("zclose"))->onClick($this, 'OnClose');
 
@@ -58,26 +60,39 @@ class ZForm extends \App\Pages\Base
         $this->_pos = \App\Entity\Pos::load($pos_id);
 
         $this->stat->setVisible(true);
+        $this->stat->clean();
 
         // $this->sync->setVisible(true);
 
-        $data = \App\Modules\PPO\PPOHelper::getStat($pos_id, false);
+        $data = \App\Modules\PPO\PPOHelper::getStat($pos_id );
 
-
-        $this->stat->nal->setText($data['amount0']);
-        $this->stat->bnal->setText($data['amount1']);
-        $this->stat->credit->setText($data['amount2']);
-        $this->stat->prepaid->setText($data['amount3']);
-        $this->stat->cnt->setText($data['cnt']);
-
-
-        $data = \App\Modules\PPO\PPOHelper::getStat($pos_id, true);
-
-
-        $this->stat->retnal->setText($data['amount0']);
-        $this->stat->retbnal->setText($data['amount1']);
-        $this->stat->retcnt->setText($data['cnt']);
-
+        foreach($data as $ch=>$row)  {
+            if($ch ==1) {
+                $this->stat->nal->setText($row['amount0']);
+                $this->stat->bnal->setText($row['amount1']);
+                $this->stat->credit->setText($row['amount2']);
+                $this->stat->prepaid->setText($row['amount3']);
+                $this->stat->cnt->setText($row['cnt']);
+            }
+            
+            if($ch ==2) {
+                $this->stat->retnal->setText($row['amount0']);
+                $this->stat->retbnal->setText($row['amount1']);
+                $this->stat->retcnt->setText($row['cnt']);
+            }
+        
+            if($ch ==4) {
+                $this->stat->sin->setText($row['amount0']);
+            }
+         
+            if($ch ==5) {
+                $this->stat->sout->setText($row['amount0']);
+            }
+            
+            
+        }
+        
+  
 
         $this->_list =  \App\Modules\PPO\PPOHelper::getStatList($pos_id);
         $this->list->Reload() ;
@@ -104,9 +119,7 @@ class ZForm extends \App\Pages\Base
             $amount1=$item->amount1;
 
         }
-
-
-
+  
 
         $row->add(new Label("docnumber", $item->document_number));
         $row->add(new Label("amount0", H::fa($amount0)));
@@ -213,21 +226,27 @@ class ZForm extends \App\Pages\Base
     public function zform() {
 
         $stat = array();
-        $rstat = array();
+        $row = array();
+        
+        $row['amount0'] = $this->stat->nal->getDouble();
+        $row['amount1'] = $this->stat->bnal->getDouble();
+        $row['amount2'] = $this->stat->credit->getDouble();
+        $row['amount3'] = $this->stat->prepaid->getDouble();
+        $row['cnt'] = $this->stat->cnt->getInt();
 
-        $stat['amount0'] = $this->stat->nal->getText();
-        $stat['amount1'] = $this->stat->bnal->getText();
-        $stat['amount2'] = $this->stat->credit->getText();
-        $stat['amount3'] = $this->stat->prepaid->getText();
-        $stat['cnt'] = $this->stat->cnt->getText();
-
-        $rstat['amount0'] = $this->stat->retnal->getText();
-        $rstat['amount1'] = $this->stat->retbnal->getText();
-        $rstat['amount2'] = 0;
-        $rstat['amount3'] = 0;
-        $rstat['cnt'] = $this->stat->retcnt->getText();
-
-        $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
+        $stat[1]= $row;
+        
+        $row = array();
+        $row['amount0'] = $this->stat->retnal->getDouble();
+        $row['amount1'] = $this->stat->retbnal->getDouble();
+ 
+        $row['cnt'] = $this->stat->retcnt->getInt();
+        $stat[2]= $row;
+     
+        $stat[4]= ['amount0'=>$this->stat->sin->getDouble()];
+        $stat[5]= ['amount0'=>$this->stat->sout->getDouble()];
+     
+        $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat );
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
@@ -270,7 +289,7 @@ class ZForm extends \App\Pages\Base
 
     }
 
-
+    // данные  с налоговой
     public function onZT($sender) {
         $this->ztres->setText("");
         $pos_id = $this->filter->pos->getValue();
@@ -282,7 +301,7 @@ class ZForm extends \App\Pages\Base
 
         $pos = \App\Entity\Pos::load($this->_pos->pos_id);
   
-        $ret = PPOHelper::shiftTotal($pos->fiscalnumber, $pos) ;
+        $ret = PPOHelper::shiftTotal(  $pos) ;
         if($ret == false) {
             $this->setError("Сервер недоступний або зміна закрита");
             return ;
@@ -292,7 +311,7 @@ class ZForm extends \App\Pages\Base
             return ;
         }
         $zt="";
-        if(is_array($ret['Totals']['Real']['PayForm'])) {
+        if(is_array($ret['Totals']['Real']['PayForm'] ??null)) {
             $zt .="<b>Реалізація</b><br>";
             foreach($ret['Totals']['Real']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
@@ -300,7 +319,7 @@ class ZForm extends \App\Pages\Base
             }
             $zt .= " Чеків ".$ret['Totals']['Real']['OrdersCount'] ;
         }
-        if(is_array($ret['Totals']['Ret']['PayForm'])) {
+        if(is_array($ret['Totals']['Ret']['PayForm']??null)) {
             $zt .="<br><b>Повернення</b><br>";
             foreach($ret['Totals']['Ret']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
@@ -308,7 +327,12 @@ class ZForm extends \App\Pages\Base
             }
             $zt .= " Чеків ".$ret['Totals']['Ret']['OrdersCount'] ;
         }
-
+        if( ($ret['Totals']['ServiceInput'] ??0) >0) {
+             $zt .= "<br> Службове внесення ".$ret['Totals']['ServiceInput'] ;
+        }
+        if( ($ret['Totals']['ServiceOutput'] ??0) >0) {
+             $zt .= "<br> Службова видача ".$ret['Totals']['ServiceOutput'] ;
+        }
         $this->ztres->setText($zt, true);
 
     }

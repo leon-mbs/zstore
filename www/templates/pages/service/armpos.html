@@ -87,20 +87,23 @@
             <h4 class="mb-2  ">Оформлення чеку</h4>
             <div zippy="navbar" class="navbar nav justify-content-start">
 
-            <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список чеків</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+            <a class="me-4" zippy="tochecklist"  ><i class="fa fa-list"></i> Список чеків</a>    
                 {{^simplemode}}
-               <a zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощений режим</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+               <a class="me-4" zippy="tosimple"     ><i class="fa fa-repeat"></i> Спрощений режим</a>    
                 {{/simplemode}}
                 {{#simplemode}}
-               <a zippy="tostandard"     ><i class="fa fa-repeat"></i> Стандартний режим</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
+               <a  class="me-4" zippy="tostandard"     ><i class="fa fa-repeat"></i> Стандартний режим</a>    
                {{/simplemode}}    
             
              {{#fiscal}}
                 
-                        <a zippy="openshift"><i class="fa fa-bullhorn"></i> Відкрити зміну</a>
-                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
+                        <a  class="me-4" zippy="openshift"><i class="fa fa-bullhorn"></i> Відкрити зміну</a>
+                        <a  class="me-4" zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
+                        <a data-bs-toggle="modal" data-bs-target="#modalsin" class="me-4" title="Службове внесення" ><i class="fa fa-coins"></i><i class="fa fa-arrow-down"></i>  </a>
+                        <a data-bs-toggle="modal" data-bs-target="#modalsout"  class="me-2" title="Службова видача" ><i class="fa fa-coins"></i><i class="fa fa-arrow-up"></i>  </a>
+                        
                         {{#fiscaltestmode}}
-                        &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
+                        <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
                         {{/fiscaltestmode}}
              
                 {{/fiscal}}
@@ -687,6 +690,7 @@
                         <th ></th>
                         <th ></th>
                         <th ></th>
+                        <th ></th>
                    {{#fiscal}}      <th ></th>     {{/fiscal}}
                    {{#freg}}      <th ></th>     {{/freg}}
 
@@ -704,6 +708,7 @@
                         <td zippy="rownotes"></td>
                         <td  ><a zippy="checkedit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         <td  ><a zippy="checkreturn" >Повернення</a></td>
+                        <td  ><span style="cursor:pointer"  zippy="checkdolg" >Оплата боргу</span></td>
                          {{#fiscal}}
                         <td  ><a zippy="checkfisc" >Фіскалізувати</a></td>
                          {{/fiscal}}
@@ -766,8 +771,148 @@
                 </div>
             </div>
         </form>
-
-    <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+      
+         <div id="modalpb" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                >
+                <div class="modal-dialog modal-sm modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3  class="modal-title ">Оплата боргу </h3>  
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div class="modal-body  ">
+                        <form zippy="paydolg">
+          
+                            <input type="hidden" zippy="pbid">
+                            <div class="row">
+                                
+                                    <div class="row mb-2">
+                                   
+                                     <label   class="col-4 col-form-label" for="pbnumber">Чек </label>
+                                      
+                                     <div class="col-8"> 
+                                        <input  class="form-control-plaintext"  zippy="pbnumber" readonly     />
+                                    </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                       
+                                       <label class="col-4 col-form-label" for for="pbsum">Сума</label>
+                                       
+                                       <div class="col-8"> 
+                                        <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="pbsum"/>
+                                      </div>    
+                                    </div>
+                                     <div class="row mb-2">
+                                     
+                                        <label class="col-4 col-form-label" for for="pbpay">Рахунок</label>
+                                          
+                                       <div class="col-8"> 
+                                     
+                                        <select   class="form-select"   zippy="pbpay"  >
+                                            <option value="0" selected="">Не вказано </option>
+                                            <option value="1">Готівка </option>
+                                            <option value="2">Картка </option>
+                                        </select>
+                                        </div> 
+                                    </div>
+                  
+                                    <div class="mb-2">
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+      
+                                       <input   type="submit" value="Оплатити" class="btn btn-primary">
+                                        
+                                    </div>
+                                </div>
+                             
+                        </form>
+                        </div>
+                    </div>
+                  </div>
+         </div> 
+         
+         <div id="modalsin" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                >
+                <div class="modal-dialog modal-sm modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4  class="modal-title ">Службове внесення </h4>  
+ 
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div class="modal-body  ">
+                        <form zippy="paysin">
+          
+                           
+                            <div class="row">
+                                
+                                    
+                                    <div class="row mb-2">
+                                       
+                                       <label class="col-4 col-form-label" for for="sinsum">Сума</label>
+                                       
+                                       <div class="col-8"> 
+                                        <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="sinsum"/>
+                                      </div>    
+                                    </div>
+                                   
+                  
+                                    <div class="mb-2">
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+      
+                                        <input   type="submit" value="Виконати" class="btn btn-primary">
+                                        
+                                    </div>
+                                </div>
+                             
+                        </form>
+                        </div>
+                    </div>
+                  </div>
+         </div>          
+         <div id="modalsout" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"                >
+                <div class="modal-dialog modal-sm modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4  class="modal-title ">Службова  видача </h4>  
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div class="modal-body  ">
+                        <form zippy="paysout">
+          
+                           
+                            <div class="row">
+                                
+                                    
+                                    <div class="row mb-2">
+                                       
+                                       <label class="col-4 col-form-label" for for="soutsum">Сума</label>
+                                       
+                                       <div class="col-8"> 
+                                        <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="soutsum"/>
+                                      </div>    
+                                    </div>
+                                   
+                  
+                                    <div class="mb-2">
+                                        <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
+      
+                                        <input   type="submit" value="Виконати" class="btn btn-primary">
+                                        
+                                    </div>
+                                </div>
+                             
+                        </form>
+                        </div>
+                    </div>
+                  </div>
+         </div>          
+         
+         
+          <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  >
                 <div class="modal-dialog modal-dialog-centered   ">
                     <div class="modal-content">
@@ -790,6 +935,8 @@
                     </div>
                 </div>
             </div> 
+            
+            
         <script>
             $(document).ready(function () {
 
@@ -896,6 +1043,13 @@
             
         
        
+            function openborg(id,sum,dn) {
+                $("#pbid").val(id);
+                $("#pbsum").val(sum);
+                $("#pbnumber").val(dn);
+                openModal('modalpb')   
+                
+            }
             function check_openshift(ele) {
                 
                       document.getElementById('dialogwait').showModal()
@@ -970,6 +1124,9 @@
             
         </script>
 
+    
+    
+    
     </body>
 
 </html>

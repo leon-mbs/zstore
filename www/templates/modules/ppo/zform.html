@@ -10,7 +10,7 @@
 
                 <h3>Закриття зміни</h3>
                 <small>Сторінка для ручного закриття зміни. На  випадок розходжень  з фіскальним сервером (наприклад, внаслідок  збою) 
-                можна  отримати підсумкові  дані (і підставити в z-звіт) з ФС  або  синхронізувати  документи  з тими,  що відправлені на ФС
+                можна  отримати підсумкові  дані (і підставити в z-звіт) з ФС   
                 щоб  сформувати  такий  самий  z-звіт </small>
                 <div class="navbar">
                     <form zippy="filter"  >
@@ -35,50 +35,82 @@
                 <a title="Підсумкові дані з  фіскального сервера" zippy="zt"><b>Отримати підсумки  з  ДПА</b></a>
                 <p zippy="ztres"></p>
                 <form zippy="stat">
-                    <div class="mb-2">
-                        <label for="nal">Готівка</label>
-                        <input style="width:100px" zippy="nal" pattern="[0-9,\.]+" class="form-control   qtyprice">
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="nal">Готівка</label>
+                        <div class="col-7">
+                        <input style="width:100px" zippy="nal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
-                    <div class="mb-2">
-                        <label for="bnal">Банківська карта</label>
-                        <input style="width:100px" zippy="bnal" pattern="[0-9,\.]+" class="form-control  qtyprice ">
                     </div>
-                    <div class="mb-2">
-                        <label for="credit">Кредит</label>
-                        <input style="width:100px" zippy="credit" pattern="[0-9,\.]+" class="form-control   qtyprice">
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="bnal">Банківська карта</label>
+                        <div class="col-7">
+                        <input style="width:100px" zippy="bnal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
-                    <div class="mb-2">
-                        <label for="prepaid">Передплата</label>
-                        <input style="width:100px" zippy="prepaid" pattern="[0-9,\.]+" class="form-control   qtyprice">
                     </div>
-                    <div class="mb-2">
-                        <label for="cnt">Кількість чеків</label>
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="credit">Кредит</label>
+                        <div class="col-7">
+                        <input style="width:100px" zippy="credit" pattern="[0-9\.]+" class="form-control    ">
+                    </div>
+                    </div>
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="prepaid">Передплата</label>
+                       <div class="col-7">
+                        <input style="width:100px" zippy="prepaid" pattern="[0-9\.]+" class="form-control    ">
+                    </div>
+                    </div>
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="cnt">Кількість чеків</label>
+                       <div class="col-7">
                         <input style="width:100px" zippy="cnt" pattern="[0-9]+" class="form-control  ">
                     </div>
+                    </div>
 
-                    <div class="mb-2">
-                        <label for="retnal">Повернення, готівка</label>
-                        <input style="width:100px" zippy="retnal" pattern="[0-9,\.]+" class="form-control   qtyprice">
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="retnal">Повернення, готівка</label>
+                       <div class="col-7">
+                        <input style="width:100px" zippy="retnal" pattern="[0-9\.]+" class="form-control    ">
                     </div>
-                    <div class="mb-2">
-                        <label for="retbnal">Повернення, банківська карта</label>
-                        <input style="width:100px" zippy="retbnal" pattern="[0-9,\.]+" class="form-control   qtyprice">
                     </div>
-                    <div class="mb-2">
-                        <label for="retcnt">Повернення, кількість чеків</label>
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="retbnal">Повернення, банківська карта</label>
+                      <div class="col-7">
+                        <input style="width:100px" zippy="retbnal" pattern="[0-9\.]+" class="form-control    ">
+                    </div>
+                    </div>
+                    <div class=" row">
+                        <label class="col-5 col-form-label" for="retcnt">Повернення, кількість чеків</label>
+                       <div class="col-7">
                         <input style="width:100px" zippy="retcnt" pattern="[0-9]+" class="form-control  ">
                     </div>
+                    </div>
+
+                     <div class=" row">
+                        <label class="col-5 col-form-label" for="sin">Службове внесення </label>
+                     <div class="col-7">
+                        <input style="width:100px" zippy="sin" pattern="[0-9\.]+" class="form-control  ">
+                    </div>
+                    </div>
+
+                     <div class=" row">
+                        <label class="col-5 col-form-label" for="sout">Службова видача</label>
+                       <div class="col-7">
+                        <input style="width:100px" zippy="sout" pattern="[0-9\.]+" class="form-control  ">
+                    </div>
+                    </div>
 
 
-                    <input zippy="zclose"  type="submit" class="  btn btn-success  " value="Закрити">     <input zippy="onlyshift" type="checkbox"> Не посилати  z-звіт
+                    <input zippy="zclose"  type="submit" class="  btn btn-success  " value="Закрити">    
+                     <input zippy="onlyshift" type="checkbox"> Не посилати  z-звіт
 
                 </form>
             </div>
             
             <div class="col-12 col-md-6 col-lg-8  "  >
                 Документи  в  z-звіті
+               {{#hideblock}}
                <br><a zippy="sync"><b>Синхронізація з  фіскальним  сервером</b></a> 
-                            
+               {{/hideblock}}             
                
                         
                 <table class="table table-sm">

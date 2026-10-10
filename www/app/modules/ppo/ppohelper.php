@@ -166,12 +166,16 @@ class PPOHelper
      * отправка  z-отчета
      *
      * @param mixed $posid pos  терминал
-     * @param mixed $stat данные  оплат
-     * @param mixed $rstat данные  оплат по возврату
+     * @param mixed $stat  статистика  извне
      */
-    public static function zform($posid, $stat, $rstat) {
+    public static function zform($posid,$stat=[] ) {
         $pos = \App\Entity\Pos::load($posid);
-
+        
+        if(count($stat)==0){
+           $stat = self::getStat($posid);     
+        }
+       
+        
         $firm = \App\Helper::getFirmData( );
 
         if( ($pos->firmname ??'')=='') {
@@ -183,6 +187,7 @@ class PPOHelper
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin'] ??'' ;
         }
+       
 
         $header = array();
         //    $header['doctype'] = $open == true ? 100 : 101;
@@ -203,78 +208,80 @@ class PPOHelper
         $header['paysr'] = array();
         $amount = 0;
         $amountr = 0;
-        $cnt = $stat['cnt'];
-        $cntr = $rstat['cnt'];
+        $cnt = $stat[1]['cnt'] ??0;
+        $cntr = $stat[2]['cnt']??0;
+        $sin = $stat[4]['amount0']??0;
+        $sout = $stat[5]['amount0']??0;
 
         //реализация
 
         $n = 1;
 
-        if ($stat['amount0'] > 0) {
+        if (($stat[1]['amount0']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_NAL,
                 'formcode' => 0,
-                'sum'      => number_format($stat['amount0'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount0']??0 , 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount0'];
+            $amount = $amount + $stat[1]['amount0']??0 ;
             $n++;
         }
-        if ($stat['amount1'] > 0) {
+        if (($stat[1]['amount1']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_CARD,
                 'formcode' => 1,
-                'sum'      => number_format($stat['amount1'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount1']??0, 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount1'];
+            $amount = $amount + $stat[1]['amount1']??0;
             $n++;
         }
-        if ($stat['amount2'] > 0) {
+        if (($stat[1]['amount2']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_CREDIT,
                 'formcode' => 2,
-                'sum'      => number_format($stat['amount2'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount2']??0 , 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount2'];
+            $amount = $amount + $stat[1]['amount2']??0 ;
             $n++;
         }
-        if ($stat['amount3'] > 0) {
+        if (($stat[1]['amount3']??0) > 0) {
             $header['pays'][] = array(
                 'formname' => self::FORM_PREPAID,
                 'formcode' => 3,
-                'sum'      => number_format($stat['amount3'], 2, '.', ''),
+                'sum'      => number_format($stat[1]['amount3']??0, 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amount = $amount + $stat['amount3'];
+            $amount = $amount + $stat[1]['amount3']??0;
             $n++;
         }
 
-       \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
+      // \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
      //  \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
         $n = 1;
 
-        if ($rstat['amount0'] > 0) {
+        if (($stat[2]['amount0']??0) > 0) {
             $header['paysr'][] = array(
                 'formname' => self::FORM_NAL,
                 'formcode' => 0,
-                'sum'      => number_format($rstat['amount0'], 2, '.', ''),
+                'sum'      => number_format($stat[2]['amount0']??0 , 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amountr = $amountr + $rstat['amount0'];
+            $amountr = $amountr + $stat[2]['amount0']??0 ;
             $n++;
         }
-        if ($rstat['amount1'] > 0) {
+        if (($stat[2]['amount1']??0) > 0) {
             $header['paysr'][] = array(
                 'formname' => self::FORM_CARD,
                 'formcode' => 1,
-                'sum'      => number_format($rstat['amount1'], 2, '.', ''),
+                'sum'      => number_format($stat[2]['amount1']??0, 2, '.', ''),
                 'num'      => "ROWNUM=\"{$n}\""
             );
-            $amountr = $amountr + $rstat['amount1'];
+            $amountr = $amountr + $stat[2]['amount1']??0;
             $n++;
         }
 
@@ -285,7 +292,11 @@ class PPOHelper
         $header['cntr'] = $cntr;
         $header['isreal'] = $cnt > 0;
         $header['isret'] = $cntr > 0;
+        $header['sin'] = $sin > 0 ?number_format($sin, 2, '.', '') :false;
+        $header['sout'] = $sout > 0 ?number_format($sout, 2, '.', '')  :false;
 
+        
+        
         $report = new \App\Report('zform.xml');
 
         $xml = $report->generate($header);
@@ -580,6 +591,61 @@ class PPOHelper
 
         return $ret;
     }
+    /**
+     *  служебный внос  вынос
+     *
+     * @param mixed $doc
+     */
+      public static function sinout($sum, $type,$pos_id ) {
+
+        $pos = \App\Entity\Pos::load($pos_id);
+        $firm = \App\Helper::getFirmData( );
+
+        if( ($pos->firmname ??'')=='') {
+            $pos->firmname = $firm['firm_name'] ??'' ;
+        }
+        if( ($pos->ipn ??'')=='') {
+            $pos->ipn = $firm['ipn'] ??'' ;
+        }
+        if( ($pos->tin ??'')=='') {
+            $pos->tin = $firm['tin']  ??'';
+        }
+        
+        $header = array();
+
+        $header['firmname'] = $pos->firmname ;
+        $header['inn'] = strlen($pos->ipn) > 0 ? $pos->ipn : false;
+        $header['tin'] = $pos->tin;
+        $header['address'] = $pos->address;
+        $header['testing'] = $pos->testing==1;
+        $header['pointname'] = $pos->pointname;
+        $header['date'] = date('dmY');
+        $header['time'] = date('His');
+        $header['docnumber'] = $pos->fiscdocnumber;
+        $header['posinner'] = $pos->fiscallocnumber;
+        $header['posnumber'] = $pos->fiscalnumber;
+        $header['username'] = self::getCashier( );
+        $header['guid'] = \App\Util::guid();
+     
+        $header['sub'] = $type==1 ? 2:4 ;
+        $header['sum'] = number_format($sum    , 2, '.', '') ;
+
+       
+
+        
+        $report = new \App\Report('checkinout.xml');
+
+        $xml = $report->generate($header);
+
+        $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
+     
+        $ret = self::send($xml, 'doc', $pos);
+        if ($ret['success'] == true) {
+            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0, 0, 0, $type==1 ? 'Службове внесення':'Службова видача', $ret['docnumber']);
+        }
+
+        return $ret;
+    }
 
     /**
      * отправка  доплаты
@@ -652,7 +718,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 2 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
 
         return $ret;
@@ -755,7 +821,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 3, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  
@@ -795,18 +861,19 @@ class PPOHelper
         $conn->Execute("delete from ppo_zformstat where  zf_id=" . $id);
     }
 
-    public static function getStat($pos_id, $ret = false) {
+    public static function getStat($pos_id ) {
+        $pos_id = (int) $pos_id;
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id=" . $pos_id;
-        if ($ret == true) {
-            $sql = $sql . "  and checktype =3"; //возврат
-        } else {
-            $sql = $sql . "  and checktype <>3";
+        $sql = "select checktype, count(*) as cnt, coalesce(sum(amount0),0)  as amount0,    coalesce(sum(amount1),0)  as amount1,   coalesce(sum(amount2),0) as amount2,   coalesce(sum(amount3),0) as amount3    from  ppo_zformstat where    pos_id = {$pos_id} group by  checktype " ;
+       
+        $ret=[]  ;
+        
+        foreach($conn->Execute($sql) as $row){
+           $ret[$row['checktype']] =  ['cnt'=>(int)$row['cnt'], 'cnt'=>$row['cnt'], 'amount0'=>$row['amount0'], 'amount1'=>$row['amount1'], 'amount2'=>$row['amount2'], 'amount3'=>$row['amount3']   ] ;
         }
 
-
-        return $conn->GetRow($sql);
+        return $ret;
     }
 
     public static function getStatList($pos_id) {
@@ -1005,12 +1072,14 @@ class PPOHelper
     * @param mixed $fiscnumber
     * @param mixed $pos
     */
-    public static function shiftTotal($fiscnumber, $pos) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
+    public static function shiftTotal(  $pos) {
+       
+        
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
-
+        
         $res = json_decode($res['data'], true);
         return  $res;
 
@@ -1066,10 +1135,8 @@ class PPOHelper
             return true;
         }
 
-        $stat = self::getStat($posid);
-        $rstat = self::getStat($posid, true);
-
-        $ret = self::zform($posid, $stat, $rstat);
+     
+        $ret = self::zform($posid );
         if ($ret['success']==true) {
             $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
             $pos->save();            

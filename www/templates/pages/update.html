@@ -25,12 +25,12 @@
                  {{#actual}}
               Версія   актуальна  
              {{/actual}}  
-                </td>
-              <td> 
-             {{#show}} 
-               Доступна       <a href="https://zippy.com.ua/update">нова версія <b>{{reqversionprg}}</b> </a>   
+             
+                 {{#show}} 
+               Доступна       <a href="https://zippy.com.ua/update">нова версія <b class="text-danger">{{reqversionprg}}</b> </a>   
              {{/show}}  
                 </td>
+          
                 </tr>
             <tr>
                 <td> Поточна версія БД  
@@ -43,11 +43,11 @@
                     Версія   актуальна  
                  {{/actualdb}} 
                
-                 
-                </td>  
-                <td>  {{^actualdb}}
+                {{^actualdb}}
                     Версія БД має  бути <b>{{reqversiondb}}</b>  
-                 {{/actualdb}}  </td>
+                 {{/actualdb}}   
+                </td>  
+              
               </tr>      
             
           <tr>
@@ -59,7 +59,7 @@
               <td> 
                 
                 </td>  
-                <td> </td>
+                 
               </tr>           
               
              </table>
@@ -74,7 +74,7 @@
   
          {{#tooold}}
        <div class="col-12 col-xl-8 mb-4">
-         <small>
+         <small class="compact">
         <i class="fa fa-exclamation-triangle text-danger" ></i>   Якщо пропущено кілька оновлень може знадобитись ручне  оновлення.
             Для цього перейдіть на  <a href="https://zippy.com.ua/update">історію оновлень </a> 
             і виконайте послідовне оновлення структури база данних у відповідності з інструкціями, починаючи з поточної версії.
@@ -152,7 +152,7 @@
      <div class="col-12 mt-2 ">  
 
            <b>Оновлення структури бази данних</b>
-           <br><small><i class="fa fa-exclamation-triangle"></i>  
+           <br><small  class="compact"><i class="fa fa-exclamation-triangle"></i>  
                Перед оновленням рекомендується зробити бакап БД.
                 Користувачі "коробкових" версій можуть просто скопіювати або заархівувати папку із сервером
                 (Попередньо його потрібно зупинити).

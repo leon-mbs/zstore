@@ -263,7 +263,7 @@ class CheckBox
 
         $check['total_sum'] = $sum  ;
 
-        $disc =  intval(round($sum - $doc->payamount*100 - doubleval($doc->headerdata["prepaid"]) * 100 ));
+        $disc =  intval(round($sum - $doc->payamount*100 - doubleval($doc->headerdata["prepaid"]??0) * 100 ));
         if($disc > 0) {
             if($doc->headerdata['bonus'] >0) {
                 $bonus = intval(round($doc->headerdata['bonus']*100));
@@ -284,9 +284,9 @@ class CheckBox
 
         // $check['total_payment'] = $doc->payamount*100;
         //   $check['total_rest'] = 0 ;
-
+      
         if(($doc->headerdata['payment']??0)  >0) {
-
+          
 
             $payed =  doubleval($doc->payed) ;
             if ($doc->headerdata['payment'] == 0 && $payed > 0) {
@@ -315,7 +315,7 @@ class CheckBox
             }
 
         }
-        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
+        $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']??0);
 
         if ($payed < $doc->payamount) {
 
@@ -401,7 +401,7 @@ class CheckBox
 
     }
 
-    public function Payment($doc, $payed, $mf) {
+    public function Payment($sum, $type=0,$doc=null) {
         $ret = $this->PinCodeAuth() ;
         if($ret !== true) {
             return $ret;
@@ -412,16 +412,18 @@ class CheckBox
         $check["payments"] = [] ;
         $check["discounts"] = [] ;
 
-        $sum = 0;
-
-        $payed =  doubleval($payed) ;
-
+      
+        $type = (int)$type;
+        $payed =  doubleval($sum) ;
+        if($payed==0  || $type==0)  {
+            return 'Невірні двні';
+        }
 
         $good=[];
 
         $g=[];
         $g['name'] = $doc->document_number;
-        $g['price'] = intval($payed*100);
+        $g['price'] = intval($sum*100);
         $g['code'] = $doc->document_id;
 
         $good["good"] = $g ;
@@ -430,14 +432,14 @@ class CheckBox
         //    $good["sum"] =1000000;
         $good["is_return"] = false;
 
-        $sum +=  intval($g['price'] * $good["quantity"]);
-
+        $sum =  intval($g['price'] * $good["quantity"]);
+       
         $check["goods"][] = $good;
 
 
 
         $check['total_sum'] = $sum  ;
-
+        /*
         $disc =  $sum - $doc->payamount*100;
         if($disc > 0) {
             if($doc->headerdata['bonus'] >0) {
@@ -450,21 +452,19 @@ class CheckBox
 
 
         }
-
+        */
         // $check['total_payment'] = $doc->payamount*100;
         //   $check['total_rest'] = 0 ;
 
-        if ($mf == 0 && $payed > 0) {
-            $payment=array("type"=>"CASH","label"=>"Готівка","value"=> intval(round($payed*100)));
-            $check["payments"][] = $payment;
-
-        }
-        if ($mf > 0 && $payed > 0) {
-            $mf = \App\Entity\MoneyFund::load($mf);
-            if ($mf->beznal == 1) {
-                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=> intval(round($payed*100)));
-            } else {
-                $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round($payed*100)));
+     
+        if (  $sum > 0) {
+         
+            if ($type == 2) {
+                $payment=array("type"=>"CASHLESS","label"=>"Післяплата","value"=> intval(round($payed*100)));
+            } 
+            
+           if ($type == 1) {
+                $payment=array("type"=>"CASH","label"=>"Післяплата","value"=>intval(round($payed*100)));
             }
             $check["payments"][] = $payment;
 
@@ -514,27 +514,73 @@ class CheckBox
 
         $response = json_decode($response, true);
 
-        $ret =[];
+        return '';
 
-        $ret["checkid"] = $response['id'];
-
-
-        $counter=10;
-        while (--$counter >0) {
-            sleep(1)  ;
-            $receipt = $this->GetRawReceipt($ret["checkid"]);
-            $response = json_decode($receipt, true);
-
-            $ret["fiscnumber"] = $response['fiscal_code']  ;
-            $ret["tax_url"] = $response['tax_url']  ;
-            if(strlen($ret["fiscnumber"]) >0) {
-                return $ret;  
-            }
-
-                
+         
+    }
+    
+    public function Sinout($sum, $type ) {
+        $ret = $this->PinCodeAuth() ;
+        if($ret !== true) {
+            return $ret;
         }
-  
-        throw new \Exception("Не повернено фіскальний номер");
+        $type = (int)$type;
+        $sum =  round($sum*100);
+      
+        if($type==2)  $sum = 0-$sum;
+        
+        $check = [] ;
+        $check["id"] = \App\Util::guid() ;
+        $check["payment"] = ['type'=>'CASH','value'=>$sum] ;
+       
+      
+
+        $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => self::API_URL."/receipts/service",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER =>false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $receipt,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer {$this->access_token}",
+                "X-Client-Name: Zippy CRM",
+                "X-Client-Version: 1.0",
+                "Content-Type: application/json"
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        }
+
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($status_code !== 201) {
+            if($status_code == 422 || $status_code == 400) {
+                $response = json_decode($response, true);
+                return $response['message'] ;
+            }
+            return "HTTP Error #:" . $status_code. ' ' . $response;
+        }
+
+        $response = json_decode($response, true);
+
+        return '';
+
+         
     }
 
 
