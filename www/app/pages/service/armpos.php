@@ -1642,10 +1642,8 @@ class ARMPos extends \App\Pages\Base
     //для ПРРО
     public function zform() {
 
-        $stat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id);
-        $rstat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id, true);
-
-        $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+        
+        $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id );
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
@@ -1653,7 +1651,7 @@ class ARMPos extends \App\Pages\Base
             //повторяем для  нового номера
             $this->pos->fiscdocnumber = $ret['doclocnumber'];
             $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
+            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id );
         }
         if ($ret['success'] == false) {
             $this->setErrorTopPage($ret['data']);

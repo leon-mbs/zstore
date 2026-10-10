@@ -73,7 +73,7 @@ class XRep extends \App\Pages\Base
     public function generateReport($pos) {
        
        
-       $ret=  \App\Modules\PPO\PPOHelper::shiftTotal($pos->fiscalnumber,$pos);
+       $ret=  \App\Modules\PPO\PPOHelper::shiftTotal( $pos);
        if($ret == false) {
             $this->setError("Сервер недоступний або зміна закрита");
             return ;

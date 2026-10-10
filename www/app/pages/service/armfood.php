@@ -295,6 +295,22 @@ class ARMFood extends \App\Pages\Base
         $this->trform->add(new AutocompleteTextInput('tritemto'))->onText($this, 'OnAutoItemTr');   
         $this->trform->add(new TextInput('tritemqty')) ; 
         $this->trform->add(new SubmitButton('btntr'))->onClick($this,"onTr",true) ; 
+      
+      
+    //оплата  долга  по  чеку
+        $this->add(new Form('paydolg'))->onSubmit($this, 'onBorg') ;
+        $this->paydolg->add(new TextInput('pbid'));
+        $this->paydolg->add(new TextInput('pbnumber'));
+        $this->paydolg->add(new TextInput('pbsum'));
+        $this->paydolg->add(new DropDownChoice('pbpay'));
+
+        //служебное внесение
+        $this->add(new Form('paysin'))->onSubmit($this, 'onSinout') ;
+        $this->paysin->add(new TextInput('sinsum'));
+        //служебная выдача
+        $this->add(new Form('paysout'))->onSubmit($this, 'onSinout') ;
+        $this->paysout->add(new TextInput('soutsum'));
+        
         
          
         if($this->_tvars['useimages'] == false || $filter->menuimages==0){
@@ -2402,10 +2418,8 @@ class ARMFood extends \App\Pages\Base
 
     public function zform() {
 
-        $stat = \App\Modules\PPO\PPOHelper::getStat($this->_pos->pos_id);
-        $rstat = \App\Modules\PPO\PPOHelper::getStat($this->_pos->pos_id, true);
-
-        $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
+      
+        $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id );
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
@@ -2413,7 +2427,7 @@ class ARMFood extends \App\Pages\Base
             //повторяем для  нового номера
             $this->_pos->fiscdocnumber = $ret['doclocnumber'];
             $this->_pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
+            $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id );
         }
         if ($ret['success'] == false) {
             $this->setErrorTopPage($ret['data']);
@@ -2557,6 +2571,209 @@ class ARMFood extends \App\Pages\Base
         $this->updateorderlist(null);
     }
 
+    
+   //постоплата
+    public function onBorg($sender) {
+        $id =  $sender->pbid->getText();
+        $sum =  $sender->pbsum->getText();
+        $pay =  $sender->pbpay->getValue();
+        
+        if($pay==0) {
+            $this->setError("Не вибрана  оплата");
+            return;
+        }
+        
+        $mf=0;
+        if($pay==1) {
+            $mf = $this->form1->mfnal->getValue() ; 
+        }
+        if($pay==2) {
+            $mf = $this->form1->mfbeznal->getValue() ; 
+        }
+ 
+        $doc = Document::load($id);
+        $am= H::fa($doc->payamount -   $doc->payed);
+        if( $sum==0 ) {
+            $this->setError("Не вказана  сума");
+            return;
+        }
+        if($sum > $am ) {
+            $this->setError("Сума більшк боргу");
+            return;
+        }
+      
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+            \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
+            
+            /*
+            if($this->_tvars['checkbox'] == true) {
+
+                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
+                $ret = $cb->Payment($sum,$pay,$doc) ;
+
+                if($ret=='') {
+                    if($sum == $am) {
+                        $doc->updateStatus(Document::STATE_PAYED);
+                    }
+                    $this->setSuccess("Виконано");
+                } else {
+
+                    throw new \Exception($ret);
+
+                }
+
+
+            }
+            if($this->_tvars['vkassa'] == true) {
+                $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+                $ret = $vk->Check($doc) ;
+
+                if(is_array($ret)) {
+                    
+                  
+                } else {
+                    throw new \Exception($ret);
+
+
+                }  
+            }
+
+
+            if ($this->_tvars['ppo'] == true) {
+
+
+                $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
+
+
+                $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                    //повторяем для  нового номера
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                    $this->pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                }
+                if ($ret['success'] == false) {
+                      throw new \Exception($ret['data']);
+
+                } else {
+                    //  $this->setSuccess("Выполнено") ;
+                    if ($ret['docnumber'] > 0) {
+                        $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+                        $this->pos->save();
+                        $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                        $doc->headerdata["passfisc"] = 0;
+                        $doc->save();
+                        $this->setSuccess("Виконано");
+                    } else {
+                        throw new \Exception("Не повернено фіскальний номер");
+
+                    }
+                }
+
+            }
+            */
+        
+            $conn->CommitTrans();
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setErrorTopPage($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+      
+            
+            return;
+        }        
+        $sender->pbpay->setValue(0) ;
+        $this->updatechecklist(null);
+    }
+    
+    //служебные  внесения  выдачи
+    public function onSinout($sender) {
+        $sum=0;
+        $type=0;
+        if($sender->id=="paysin") {
+           $sum =  $sender->sinsum->getText();
+           $type=1;
+        }
+        if($sender->id=="paysout") {
+           $sum =  $sender->soutsum->getText();
+           $type=2;
+        }
+        
+        $sum = doubleval(trim($sum)) ;
+        
+        if($sum==0) return;
+        try {
+     
+            if($this->_tvars['checkbox'] == true) {
+
+                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
+                $ret = $cb->Sinout($sum,$type) ;
+
+                if($ret=='') {
+                    
+                    $this->setSuccess("Виконано");
+                } else {
+
+                    throw new \Exception($ret);
+
+                }
+
+            }
+            
+           if($this->_tvars['vkassa'] == true) {
+               $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
+               $ret = $vk->Sinout($sum,$type) ;
+
+               
+                if($ret=='') {
+                    
+                    $this->setSuccess("Виконано");
+                } else {
+
+                    throw new \Exception($ret);
+
+                }
+
+            }
+          if ($this->_tvars['ppo'] == true) {
+
+               
+
+                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
+                if ($ret['success'] == false  ) {
+                    //повторяем для  нового номера
+                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                    $this->pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                }
+                if ($ret['success'] == false) {
+                      throw new \Exception($ret['data']);
+
+                }  
+
+            }
+             
+            
+        } catch(\Throwable $ee) {
+            global $logger;
+          
+            $this->setErrorTopPage($ee->getMessage());
+
+            $logger->error($ee->getMessage() );
+      
+            
+            return;
+        }       
+        $sender->sinsum->setText(0) ;  
+        $sender->soutsum->setText(0) ;   
+    }
+     
+    
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {

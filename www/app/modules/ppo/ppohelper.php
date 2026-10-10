@@ -166,12 +166,16 @@ class PPOHelper
      * отправка  z-отчета
      *
      * @param mixed $posid pos  терминал
-     * @param mixed $stat данные  оплат
-     * @param mixed $rstat данные  оплат по возврату
+     * @param mixed $stat  статистика  извне
      */
-    public static function zform($posid, $stat, $rstat) {
+    public static function zform($posid,$stat=[] ) {
         $pos = \App\Entity\Pos::load($posid);
-
+        
+        if(count($stat)==0){
+           $stat = self::getStat($posid);     
+        }
+       
+        
         $firm = \App\Helper::getFirmData( );
 
         if( ($pos->firmname ??'')=='') {
@@ -183,6 +187,7 @@ class PPOHelper
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin'] ??'' ;
         }
+       
 
         $header = array();
         //    $header['doctype'] = $open == true ? 100 : 101;
@@ -854,18 +859,19 @@ class PPOHelper
         $conn->Execute("delete from ppo_zformstat where  zf_id=" . $id);
     }
 
-    public static function getStat($pos_id, $ret = false) {
+    public static function getStat($pos_id ) {
+        $pos_id = (int) $pos_id;
         $conn = \ZDB\DB::getConnect();
 
-        $sql = "select count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id=" . $pos_id;
-        if ($ret == true) {
-            $sql = $sql . "  and checktype =3"; //возврат
-        } else {
-            $sql = $sql . "  and checktype <>3";
+        $sql = "select checktype, count(*) as cnt, coalesce(sum(amount0),0)  as amount0, coalesce(sum(amount1),0)  as amount1, coalesce(sum(amount2),0) as amount2, coalesce(sum(amount3),0) as amount3 from  ppo_zformstat where    pos_id {$pos_id} group by  checktype " ;
+       
+        $ret=[]  ;
+        
+        foreach($conn->Execute($sql) as $row){
+           $ret[$row['checktype']] =  ['cnt'=>(int)$row['cnt'], 'cnt'=>$row['cnt'], 'amount0'=>$row['amount0'], 'amount1'=>$row['amount1'], 'amount2'=>$row['amount2'], 'amount3'=>$row['amount3']   ] ;
         }
 
-
-        return $conn->GetRow($sql);
+        return $ret;
     }
 
     public static function getStatList($pos_id) {
@@ -1064,12 +1070,14 @@ class PPOHelper
     * @param mixed $fiscnumber
     * @param mixed $pos
     */
-    public static function shiftTotal($fiscnumber, $pos) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
+    public static function shiftTotal(  $pos) {
+       
+        
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
         if($res['success'] != true) {
             return  false;
         }
-
+        
         $res = json_decode($res['data'], true);
         return  $res;
 
@@ -1125,10 +1133,8 @@ class PPOHelper
             return true;
         }
 
-        $stat = self::getStat($posid);
-        $rstat = self::getStat($posid, true);
-
-        $ret = self::zform($posid, $stat, $rstat);
+     
+        $ret = self::zform($posid );
         if ($ret['success']==true) {
             $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
             $pos->save();            
