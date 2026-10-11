@@ -1028,9 +1028,7 @@ class ARMPos extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
-
-  
-
+ 
     public function OnChangeSer($sender) {
         $id = $sender->getValue();
         $ser = Service::load($id);
@@ -1893,7 +1891,7 @@ class ARMPos extends \App\Pages\Base
         $conn->BeginTrans();
         try {
 
-            \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
+          $doc->payed =  \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
             
             /*
             if($this->_tvars['checkbox'] == true) {
@@ -1927,8 +1925,8 @@ class ARMPos extends \App\Pages\Base
 
                 }  
             }
-
-
+             */
+           /*  
             if ($this->_tvars['ppo'] == true) {
 
 
@@ -1939,30 +1937,33 @@ class ARMPos extends \App\Pages\Base
                 if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                     //повторяем для  нового номера
                     $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                   
                     $this->pos->save();
                     $ret = \App\Modules\PPO\PPOHelper::check($doc);
                 }
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['data']);
 
-                } else {
-                    //  $this->setSuccess("Выполнено") ;
-                    if ($ret['docnumber'] > 0) {
-                        $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $this->pos->save();
-                        $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                        $doc->headerdata["passfisc"] = 0;
-                        $doc->save();
-                        $this->setSuccess("Виконано");
-                    } else {
-                        throw new \Exception("Не повернено фіскальний номер");
-
-                    }
-                }
+                }  
+                $this->pos->fiscdocnumber++;
+                $this->pos->save();
+ 
 
             }
-            */
-        
+           
+               */
+           
+            $doc->cast()->DoBalans();  
+            $am= H::fa($doc->payamount -   $doc->payed);
+            if($am==0) {  //оплачено
+               if( $doc->getHD('waitpay')==1) {
+                   $doc->setHD('waitpay',0) ;
+                   $doc->save(); 
+               }
+               if($doc->state==Document::STATE_WP) {
+                   $doc->updateStatus(Document::STATE_PAYED,true);
+               } 
+            }
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;
@@ -2202,9 +2203,7 @@ class ARMPos extends \App\Pages\Base
 
         return $this->_pt;
     }
-
-
-
+ 
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
@@ -2429,8 +2428,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->detail->Reload();
         $this->calcTotal();
     }
-    
-    
+     
     //ввод  в  упрощенном режиме
     public function addItemSmOnClick($sender) {
         $store = $this->form1->store->getValue();
@@ -2536,8 +2534,6 @@ class ARMPos extends \App\Pages\Base
         }        
     }
   
-  
- 
     public function beforeRender() {
         
         $pn= intval( \App\Session::getSession()->armpass ?? 0 );        

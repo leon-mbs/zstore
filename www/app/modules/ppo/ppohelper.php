@@ -836,9 +836,9 @@ class PPOHelper
  
         $conn = \ZDB\DB::getConnect();
 
-        if(strlen($document_number) >0) {
-            $conn->Execute("delete from ppo_zformstat  where   document_number=". $conn->qstr($document_number));
-        }
+   
+     //   $conn->Execute("delete from ppo_zformstat  where   document_number=". $conn->qstr($document_number));
+        
 
         $amount0 = number_format($amount0, 2, '.', '');
         $amount1 = number_format($amount1, 2, '.', '');
