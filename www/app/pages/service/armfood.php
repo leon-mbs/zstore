@@ -554,7 +554,7 @@ class ARMFood extends \App\Pages\Base
 
         $haspayment = $doc->hasPayments() ;
         $inprod = $doc->inProcess()  ;
-        $hasstore = $doc->hasStore()  ;
+        $hasstore = $doc->hasEntries()  ;
 
         if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS) {
             $row->bredit->setVisible(true);
@@ -687,7 +687,7 @@ class ARMFood extends \App\Pages\Base
 
         $haspayment = $doc->hasPayments() ;
         $inprod = $doc->inProcess()  ;
-        $hasstore = $doc->hasStore()  ;
+        $hasstore = $doc->hasEntries()  ;
 
         if ($doc->state < 4 || $doc->state == Document::STATE_INPROCESS) {
             $row->bredit_of->setVisible(true);
@@ -1544,7 +1544,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->prodpan->setVisible(false);
  
         if($this->_doc instanceof Document) {
-            if($this->_doc->hasPayments()  || $this->_doc->hasStore()  ){
+            if($this->_doc->hasPayments()  || $this->_doc->hasEntries()  ){
                 $this->setError("У документа  вже є проводки") ;
                 return;
             }    

@@ -1205,7 +1205,7 @@ class ARMPos extends \App\Pages\Base
     public function savedocOnClick($sender) {
 
         if($this->_doc->document_id >0) {
-            if($this->_doc->hasStore() || $this->_doc->hasPayments()) {
+            if($this->_doc->hasEntries() || $this->_doc->hasPayments()) {
                $this->setError("Чек вже був проведений. Створіть новий чек")  ;
                return;
             }

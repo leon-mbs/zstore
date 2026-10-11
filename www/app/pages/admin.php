@@ -96,7 +96,14 @@ class Admin extends \App\Pages\Base
         if($modules['freg']==1) $fisctype=4;
         $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
 
-   
+        $form = $this->add(new Form("oeform"));
+        $form->onSubmit($this, "onOExport");
+
+        $form = $this->add(new Form("oiform"));
+        $form->add(new \Zippy\Html\Form\File("ofilename"));
+        $form->onSubmit($this, "onOImport");
+
+ 
     }   
 
     
@@ -320,7 +327,7 @@ class Admin extends \App\Pages\Base
           $this->setSuccess('Структура OK')  ;
     }    
     
-   public function onModules($sender) {
+    public function onModules($sender) {
         $modules = System::getOptions("modules");
         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
         $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
@@ -349,6 +356,103 @@ class Admin extends \App\Pages\Base
 
     }
     
+    
+    public function onOExport($sender) {
+        $conn= \ZDB\DB::getConnect() ;
+
+        $list = $conn->Execute("select * from  options");
+
+        $root="<root>";
+
+        foreach ($list as $row) {
+
+            $root.="<item>";
+            $root.="<optname>" . $row['optname'] . "</optname>";
+            $root.="<optvalue><![CDATA[" . $row['optvalue'] . "]]></optvalue>";
+            $root.="</item>";
+
+        }
+        $root.="</root>";
+
+        H::exportXML($root, 'options_' . date('Y_m_d', time()) . '.xml');
+
+
+        
+        /*    todo
+     $filename = 'options_' . date('Y_m_d', time()) . '.xml' ;
+
+          
+        header("Content-type: text/plain");
+        header("Content-Disposition: attachment;Filename={$filename}");
+        header("Content-Transfer-Encoding: binary");
+        header('Content-Length: '.strlen($xml));
+ 
+        echo $xml;
+        die;        
+        
+        
+        */
+        
+    }
+  
+
+    public function onOImport($sender) {
+
+        $file = $this->oform->ofilename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
+            $this->setError('Не вибраний файл');
+            return;
+        }
+
+        $conn= \ZDB\DB::getConnect() ;
+
+        $xml = @simplexml_load_file($file['tmp_name']) ;
+        if($xml==false) {
+
+            $this->setError("Невірний  контент");
+
+            return;
+        }
+
+        $list=[];
+
+        foreach ($xml->children() as $row) {
+
+
+            $name= (string)$row->optname[0] ;
+            $value= (string)$row->optvalue[0] ;
+            $list[$name]=$value;
+
+        }
+
+
+        $conn->BeginTrans();
+
+
+        try {
+
+            foreach($list as $n=>$v) {
+                $n = $conn->qstr($n);
+                $v = $conn->qstr($v);
+
+                $conn->Execute("delete from options where  optname={$n}")  ;
+                $conn->Execute("insert into options (optname,optvalue) values({$n},{$v}) ")  ;
+
+            }
+
+            $conn->CommitTrans();
+
+        } catch(\Throwable $ee) {
+            $conn->RollbackTrans();
+            $this->setError($ee->getMessage());
+
+            return;
+        }
+
+
+        $this->setSuccess("Імпортовано  ");
+    }
+  
     
 }
  
