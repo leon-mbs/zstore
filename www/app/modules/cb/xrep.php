@@ -25,7 +25,7 @@ class XRep extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
 
-        if (strpos(System::getUser()->modules, 'cb') === false && System::getUser()->rolename != 'admins') {
+        if (strpos(System::getUser()->modules, 'checkbox') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
@@ -75,7 +75,8 @@ class XRep extends \App\Pages\Base
         $header['rpays'] =[];
         $header['balance'] = doubleval($ret['balance']/100) ;
         $header['initial'] = doubleval($ret['initial']/100) ;
-      
+        $header['sin'] = 0;
+        $header['sout'] = 0;
         
         foreach($ret['payments'] as $p){
             if($p['sell_sum']>0) {
@@ -85,8 +86,17 @@ class XRep extends \App\Pages\Base
                 $header['rpays'][] = ['label'=>$p['label'],'sum'=>H::fa($p['return_sum']/100)] ;    
             }
           
+            if($p['service_in']>0) {
+                $header['sin']  += doubleval($p['service_in']/100) ;    
+            }
+            if($p['service_out']>0) {
+                $header['sout']  += doubleval($p['service_out']/100) ;    
+            }
+          
         }
        
+        $header['sin']  = $header['sin'] >0 ? H::fa($header['sin'])  : false;
+        $header['sout']  = $header['sout'] >0 ? H::fa($header['sout'])  : false;
         
         $report = new \App\Report('report/cb_xrep.tpl');
 

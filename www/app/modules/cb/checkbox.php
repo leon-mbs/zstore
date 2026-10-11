@@ -358,7 +358,8 @@ class CheckBox
 
 
         if ($err) {
-            return "cURL Error #:" . $err;
+            $response['message'] ="cURL Error #:" . $err;
+            return $response;
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -519,7 +520,7 @@ class CheckBox
          
     }
     
-    public function Sinout($sum, $type ) {
+    public function sinout($sum, $type ) {
         $ret = $this->PinCodeAuth() ;
         if($ret !== true) {
             return $ret;
@@ -533,7 +534,6 @@ class CheckBox
         $check["id"] = \App\Util::guid() ;
         $check["payment"] = ['type'=>'CASH','value'=>$sum] ;
        
-      
 
         $receipt =  json_encode($check, JSON_UNESCAPED_UNICODE);
         $curl = curl_init();
@@ -578,7 +578,7 @@ class CheckBox
 
         $response = json_decode($response, true);
 
-        return '';
+        return ['fiscnumber'=>$response['serial']];
 
          
     }

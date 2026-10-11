@@ -11,7 +11,7 @@ class VK
 {
     protected string $access_token;  
  
-    protected const API_URL = 'https://kasa.vchasno.ua/api/v3/fiscal/execute';   //https://wiki.checkbox.ua/uk/api/specification
+    protected const API_URL = 'https://kasa.vchasno.ua/api/v3/fiscal/execute';   
 
     public function __construct($access_token ) {
         $this->access_token = $access_token;
@@ -317,7 +317,7 @@ class VK
 
     }
 
-    public function Sinout($sum,$type) {
+    public function sinout($sum,$type) {
     
         $type = (int)$type;
         $sum =  doubleval(  $sum );
@@ -375,7 +375,8 @@ class VK
             return "Помилка ".$response['res'];
         }
   
-        return true;
+        return ['fiscnumber'=>$response['serial']];
+
 
     }
   public function Payment($doc, $payed, $mf) {

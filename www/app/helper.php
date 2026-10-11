@@ -264,7 +264,17 @@ class Helper
         }
         if(($modules['checkbox'] ?? 0) == 1) {
             if($role->rolename == 'admins' || strpos($role->modules, 'checkbox') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10019, 'meta_name' => "/CB/Reports", 'meta_type' => 6, 'description' => "Х-Звіт (Чекбокс)"));
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10020, 'meta_name' => "/CB/XRep", 'meta_type' => 6, 'description' => "Х-Звіт"));
+            }
+        }
+        if(($modules['vkassa'] ?? 0) == 1) {
+            if($role->rolename == 'admins' || strpos($role->modules, 'vkassa') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10021, 'meta_name' => "/VK/XRep", 'meta_type' => 6, 'description' => "Х-Звіт"));
+            }
+        }
+        if(($modules['ppo'] ?? 0) == 1) {
+            if($role->rolename == 'admins' || strpos($role->modules, 'ppo') !== false) {
+                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10022, 'meta_name' => "/PPO/XRep", 'meta_type' => 6, 'description' => "Х-Звіт"));
             }
         }
       

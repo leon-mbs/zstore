@@ -39,7 +39,16 @@
         <td  >  {{label}}</td>        <td align="right" > {{sum}}</td>
     </tr>  
       {{/rpays}}   
- 
+        {{#sin}} 
+    <tr>
+        <td  > Сдужбове  внесення</td>        <td   align="right" > {{sin}}</td>      
+    </tr>  
+      {{/sin}}   
+     {{#sout}} 
+    <tr>
+        <td  > Службова  видача</td>        <td   align="right" > {{sout}}</td>    
+    </tr>  
+      {{/sout}}  
      <tr>
          <td  > Баланс</td> <td align="right" > {{balance}}</td>
     </tr>    

@@ -124,9 +124,10 @@
                        
                       <a class="me-4" zippy="openshift"><i class="fa fa-bullhorn"></i> Відкрити зміну</a>
                          <a class="me-4" zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
+                      {{#hideblock}}
                        <a data-bs-toggle="modal" data-bs-target="#modalsin" class="me-4" title="Службове внесення" ><i class="fa fa-coins"></i><i class="fa fa-arrow-down"></i>  </a>
                         <a data-bs-toggle="modal" data-bs-target="#modalsout"  class="me-2" title="Службова видача" ><i class="fa fa-coins"></i><i class="fa fa-arrow-up"></i>  </a>
-                     
+                      {{/hideblock}}
                       
                         {{#fiscaltestmode}}
                          <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
@@ -1173,7 +1174,7 @@
                                     </div>
                                      <div class="row mb-2">
                                      
-                                        <label class="col-4 col-form-label" for for="pbpay">Рахунок</label>
+                                        <label class="col-4 col-form-label"   for="pbpay">Рахунок</label>
                                           
                                        <div class="col-8"> 
                                      
@@ -1218,7 +1219,7 @@
                                     
                                     <div class="row mb-2">
                                        
-                                       <label class="col-4 col-form-label" for for="sinsum">Сума</label>
+                                       <label class="col-4 col-form-label"   for="sinsum">Сума</label>
                                        
                                        <div class="col-8"> 
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="sinsum"/>
@@ -1257,7 +1258,7 @@
                                     
                                     <div class="row mb-2">
                                        
-                                       <label class="col-4 col-form-label" for for="soutsum">Сума</label>
+                                       <label class="col-4 col-form-label"   for="soutsum">Сума</label>
                                        
                                        <div class="col-8"> 
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="soutsum"/>

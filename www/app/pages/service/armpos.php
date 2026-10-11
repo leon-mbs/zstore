@@ -261,10 +261,12 @@ class ARMPos extends \App\Pages\Base
         //служебное внесение
         $this->add(new Form('paysin'))->onSubmit($this, 'onSinout') ;
         $this->paysin->add(new TextInput('sinsum'));
+        $this->paysin->add(new DropDownChoice('siniostate',\App\Entity\IOState::getTypeListInM()));
         //служебная выдача
         $this->add(new Form('paysout'))->onSubmit($this, 'onSinout') ;
         $this->paysout->add(new TextInput('soutsum'));
-  
+        $this->paysout->add(new DropDownChoice('soutiostate', \App\Entity\IOState::getTypeListOutM()));
+ 
 
         $this->add(new Label('qrimg')) ;
 
@@ -1996,15 +1998,47 @@ class ARMPos extends \App\Pages\Base
         
         if($sum==0) return;
         try {
-     
+
+                           $doc=null;
+           if( $type==1) {
+               $doc= \App\Entity\Doc\Document::create('IncomeMoney') ;
+               $doc->setHD('type',   $sender->siniostate->getValue() );
+               $doc->setHD('detail', 0);
+               $doc->notes='Службове внесення';
+
+           }
+           if( $type==2) {
+               $doc= \App\Entity\Doc\Document::create('OutcomeMoney') ;
+               $doc->setHD('type',  $sender->soutiostate->getValue());
+               $doc->setHD('detail', 0);
+               $doc->notes='Службова  видача';
+
+           }
+           
+            
+             $doc->document_number = $doc->nextNumber() ;
+             $doc->amount = $sum ;
+             $doc->payamount = $sum ;
+             $doc->payed = 0 ;
+             $doc->document_date = time(); ;
+             $doc->setHD('payment' ,  $this->form1->mfnal->getValue() );
+             $doc->setHD('paymentname' ,  $this->form1->mfnal->getValueName() );
+             $doc->save();
+             $doc->updateStatus(Document::STATE_NEW);
+             $doc->updateStatus(Document::STATE_EXECUTED);         
+            
+    
+        
             if($this->_tvars['checkbox'] == true) {
 
                 $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
-                $ret = $cb->Sinout($sum,$type) ;
+                $ret = $cb->sinout($sum,$type ) ;
 
-                if($ret=='') {
-                    
-                    $this->setSuccess("Виконано");
+                if (strlen($ret['fiscnumber']??'') > 0) {
+                 
+                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $doc->save();    
+           
                 } else {
 
                     throw new \Exception($ret);
@@ -2015,12 +2049,14 @@ class ARMPos extends \App\Pages\Base
             
            if($this->_tvars['vkassa'] == true) {
                $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-               $ret = $vk->Sinout($sum,$type) ;
+               $ret = $vk->sinout($sum,$type ) ;
 
                
-                if($ret=='') {
-                    
-                    $this->setSuccess("Виконано");
+                if (strlen($ret['fiscnumber']??'') > 0) {
+              
+                     $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                     $doc->save();    
+   
                 } else {
 
                     throw new \Exception($ret);
@@ -2028,32 +2064,36 @@ class ARMPos extends \App\Pages\Base
                 }
 
             }
-          if ($this->_tvars['ppo'] == true) {
+            if ($this->_tvars['ppo'] == true) {
 
                
 
-                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
+                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id,$doc);
                 if ($ret['success'] == false  ) {
                     //повторяем для  нового номера
                     $this->pos->fiscdocnumber = $ret['doclocnumber'];
                     $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
+                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id,$doc);
             
                 }
-                if ($ret['docnumber'] > 0) {
+                if (strlen($ret['docnumber']??'') > 0) {
                     $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                     $this->pos->save();
+                   
+                    $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    $doc->save();    
                 } else {
                     throw new \Exception("Не повернено фіскальний номер");
                 }                
                 if ($ret['success'] == false) {
-                      throw new \Exception($ret['data']);
+                      throw new \Exception($ret['error']);
 
                 }  
 
             }
-             
             
+               
+            $this->setSuccess("Виконано");   
         } catch(\Throwable $ee) {
             global $logger;
           

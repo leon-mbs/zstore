@@ -596,7 +596,7 @@ class PPOHelper
      *
      * @param mixed $doc
      */
-      public static function sinout($sum, $type,$pos_id ) {
+      public static function sinout($sum, $type,$pos_id,$doc ) {
 
         $pos = \App\Entity\Pos::load($pos_id);
         $firm = \App\Helper::getFirmData( );
@@ -641,7 +641,7 @@ class PPOHelper
      
         $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
-            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0, 0, 0, $type==1 ? 'Службове внесення':'Службова видача', $ret['docnumber']);
+            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0, 0, 0, $doc->document_number, $ret['docnumber']);
         }
 
         return $ret;
