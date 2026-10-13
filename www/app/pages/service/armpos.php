@@ -1386,9 +1386,7 @@ class ARMPos extends \App\Pages\Base
                     }
                     if ($this->_tvars['ppo'] == true) {
 
-
                         $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
-
 
                         $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
                         if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
@@ -1402,15 +1400,14 @@ class ARMPos extends \App\Pages\Base
                             throw new \Exception($ret['data']);
                         } else {
                             
-                            if ($ret['docnumber'] > 0) {
-                                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                                $this->pos->save();
-                                $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                      
+           
+                                $this->_doc->headerdata["fiscalnumber"] = $this->pos->fiscdocnumber;
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
-                            } else {
-                                throw new \Exception("Не повернено фіскальний номер");
-                            }
+                                $this->pos->fiscdocnumber++;
+                                $this->pos->save();
+       
                         }
 
                     }
@@ -1575,11 +1572,11 @@ class ARMPos extends \App\Pages\Base
             return false;
         } else {
             $this->setSuccess("Зміна відкрита");
-            if ($ret['doclocnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
 
-            }
+            $this->pos->fiscdocnumber++;
+            $this->pos->save();
+
+          
             \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
             
             //задача  для  автозакрытия
@@ -1658,13 +1655,9 @@ class ARMPos extends \App\Pages\Base
             return false;
         } else {
 
-            if ($ret['doclocnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
-            } else {
-                $this->setError("Не повернено фіскальний номер");
-                return;
-            }
+            $this->pos->fiscdocnumber++;
+            $this->pos->save();
+
         }
 
 
@@ -1826,17 +1819,17 @@ class ARMPos extends \App\Pages\Base
 
                 } else {
                     //  $this->setSuccess("Выполнено") ;
-                    if ($ret['docnumber'] > 0) {
+                  
                         $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                         $this->pos->save();
-                        $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                        $doc->headerdata["fiscalnumber"] = $this->pos->fiscdocnumber;
                         $doc->headerdata["passfisc"] = 0;
                         $doc->save();
-                        $this->setSuccess("Виконано");
-                    } else {
-                        throw new \Exception("Не повернено фіскальний номер");
+                        $this->pos->fiscdocnumber++;
+                        $this->pos->save();
 
-                    }
+                        $this->setSuccess("Виконано");
+                   
                 }
 
             }
@@ -1893,7 +1886,7 @@ class ARMPos extends \App\Pages\Base
 
           $doc->payed =  \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
             
-            /*
+          
             if($this->_tvars['checkbox'] == true) {
 
                 $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
@@ -1912,9 +1905,10 @@ class ARMPos extends \App\Pages\Base
 
 
             }
+            
             if($this->_tvars['vkassa'] == true) {
                 $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-                $ret = $vk->Check($doc) ;
+                $ret = $vk->Payment($sum,$pay,$doc) ;
 
                 if(is_array($ret)) {
                     
@@ -1925,21 +1919,21 @@ class ARMPos extends \App\Pages\Base
 
                 }  
             }
-             */
-           /*  
+            
+           
             if ($this->_tvars['ppo'] == true) {
 
 
                 $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
 
 
-                $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                $ret = \App\Modules\PPO\PPOHelper::checkpay($doc,  $this->pos->pos_id,$sum,$mf->mf_id);
                 if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
                     //повторяем для  нового номера
                     $this->pos->fiscdocnumber = $ret['doclocnumber'];
                    
                     $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                    $ret = \App\Modules\PPO\PPOHelper::checkpay($doc,  $this->pos->pos_id,$sum,$mf->mf_id);
                 }
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['data']);
@@ -1951,7 +1945,7 @@ class ARMPos extends \App\Pages\Base
 
             }
            
-               */
+          
            
             $doc->cast()->DoBalans();  
             $am= H::fa($doc->payamount -   $doc->payed);
@@ -2078,11 +2072,12 @@ class ARMPos extends \App\Pages\Base
             
                 }
                 if (strlen($ret['docnumber']??'') > 0) {
-                    $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                    $this->pos->save();
                    
-                    $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
+                    $doc->headerdata["fiscalnumber"] = $this->pos->fiscdocnumber;
                     $doc->save();    
+                    $this->pos->fiscdocnumber++;
+                    $this->pos->save();
+  
                 } else {
                     throw new \Exception("Не повернено фіскальний номер");
                 }                

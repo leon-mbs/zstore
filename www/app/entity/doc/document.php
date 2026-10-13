@@ -279,6 +279,44 @@ class Document extends \ZCL\DB\Entity
        return  $this->headerdata[$name] ?? $def ;
     }    
      
+     
+    /**
+    * устанавливает склад
+    * 
+    * @param mixed $store_id
+    */
+    public function setStore(int $store_id)  {
+         $this->headerdata['store'] = $store_id;       
+    }
+ 
+    /**
+    * возвращает склад
+    * 
+    */
+    public function getStore( )  {    
+       return  intval($this->headerdata['store'] ?? 0)  ;
+    }    
+     
+  /**
+    * устанавливает  денежный  счет
+    * 
+    * @param mixed $mf_id
+    */
+    public function setMF(int $mf_id)  {
+         $this->headerdata['payment'] = $mf_id;       
+    }
+ 
+    /**
+    * возвращает  денежный  счет
+    * 
+    */
+    public function getMF( )  {    
+       return  intval($this->headerdata['payment'] ?? 0)  ;
+    }    
+     
+         
+     
+     
     /**
      * Генерация HTML  для  печатной формы
      *

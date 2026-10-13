@@ -821,7 +821,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 1 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  
@@ -1147,6 +1147,8 @@ class PPOHelper
           H::logerror($ret['data'])    ;
            return false;
         }
+        $pos->fiscdocnum++;
+        $pos->save();            
  
         return true;
        

@@ -8,7 +8,7 @@
          
     </tr>   
    <tr>
-         <td  > На  початок</td> <td align="right" > {{initial}}</td>
+         <td  >  Каса на  початок</td> <td align="right" > {{initial}}</td>
     </tr>    
   <tr>
         <td  > <b>Реалізація</b></td>        <td  >  </td>

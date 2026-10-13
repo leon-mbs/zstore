@@ -75,11 +75,11 @@ class XRep extends \App\Pages\Base
        
        $ret=  \App\Modules\PPO\PPOHelper::shiftTotal( $pos);
        if($ret == false) {
-            $this->setError("Сервер недоступний або зміна закрита");
+            $this->setError("Сервер недоступний або нема жодної фіскалізації ");
             return ;
         }
         if(!is_array($ret['Totals'])) {
-            $this->setError("Сервер недоступний або зміна закрита") ;
+            $this->setError("Сервер недоступний або нема жодної фіскалізації") ;
             return ;
         }
         $zt="";
@@ -101,8 +101,7 @@ class XRep extends \App\Pages\Base
         $header['rpays'] =[];
         $header['sin'] =false;
         $header['sout'] =false;
-
-        
+     
         
        foreach($ret['Totals']['Real']['PayForm'] ??[]  as $form) {
              $header['pays'][]= [ 'label'=>$form['PayFormName'],  'sum'=> H::fa($form['Sum'])];

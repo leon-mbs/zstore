@@ -28,7 +28,9 @@
 
         <td  > <td colspan="3" > &nbsp;</td>      
         
-    </tr>    
+    </tr> 
+    
+    
       {{#sin}} 
     <tr>
         <td  > Сдужбове  внесення</td>        <td   align="right" > {{sin}}</td>  <td  >  </td>   
@@ -68,7 +70,7 @@
     </tr>  
       {{/rpays}}   
  
-  
+     
 
 
 </table>

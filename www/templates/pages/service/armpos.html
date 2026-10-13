@@ -504,7 +504,7 @@
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-info">
                             &nbsp;&nbsp;<input type="submit" value="Провести чек  " zippy="save" class="btn  btn-success">
                             {{#fiscal}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фіскалізацію  
+                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> <label for="passfisc">Відкласти фіскалізацію</label>  
                            <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
@@ -858,11 +858,11 @@
                                     </div>
                                    <div class="  mb-2">
                                        
-                                       <label class=" form-label"   for="siniostate">Стаття</label>
+                                       <label class=" form-label"   for="siniostate">Стаття доходу</label>
                                        
                                       
                                          <select   class="form-select"   zippy="siniostate"  >
-                                            <option value="0" selected="">Не вказано (наприклад інкасація) </option>
+                                            <option value="0" selected="">Без статті (наприклад інкасація) </option>
                                           
                                         </select>
                              
@@ -909,11 +909,11 @@
                                     </div>
                                      <div class="  mb-2">
                                        
-                                       <label class=" form-label" for for="soutiostate">Стаття</label>
+                                       <label class=" form-label" for for="soutiostate">Стаття розходу</label>
                                        
                                       
                                          <select   class="form-select"   zippy="soutiostate"  >
-                                            <option value="0" selected="">Не вказано (наприклад інкасація) </option>
+                                            <option value="0" selected="">Без статті (наприклад інкасація) </option>
                                          
                                         </select>
                              
@@ -1040,15 +1040,24 @@
                         
                 });                
                 
-            });
+                
+                 if ($('#showcheck').length) {
+       
+                     setTimeout(function() {
+                        $('#newdoc').click();
+                     }, 60000);  
+                        
+                } ;                
+                
+                
+                
+            }); //readydoc 
   
           
             
             
                 $("#promocode").blur(function () {
                      var promodode = $("#promocode").val();  
-                     
-                   
                      
                       callPM('checkPromo',[promodode], null,(data)=> 
                       {

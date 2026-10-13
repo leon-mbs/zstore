@@ -297,7 +297,7 @@ class CheckBox
             if ($doc->headerdata['payment'] > 0 && $doc->payed > 0) {
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
-                    $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=>intval(round( $payed*100)));
+                    $payment=array("type"=>"CARD","label"=>"Банківська карта","value"=>intval(round( $payed*100)));
                 } else {
                     $payment=array("type"=>"CASH","label"=>"Готівка","value"=>intval(round( $payed*100)));
                 }
@@ -310,7 +310,7 @@ class CheckBox
                 $check["payments"][] = $payment;
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                $payment=array("type"=>"CASHLESS","label"=>"Банківська карта","value"=> intval(round($doc->headerdata['payedcard'] * 100)));
+                $payment=array("type"=>"CARD","label"=>"Банківська карта","value"=> intval(round($doc->headerdata['payedcard'] * 100)));
                 $check["payments"][] = $payment;
             }
 
@@ -319,14 +319,14 @@ class CheckBox
 
         if ($payed < $doc->payamount) {
 
-            $payment=array("type"=>"CASH","label"=>"Кредит","value"=> intval(round(($doc->payamount - $payed) * 100)));
+            $payment=array("type"=>"CASHLESS","label"=>"Кредит","value"=> intval(round(($doc->payamount - $payed) * 100)));
             $check["payments"][] = $payment;
 
         }
 
 
         if($doc->headerdata["prepaid"] >0) {
-            $payment=array("type"=>"CASH","label"=>"Передплата","value"=> intval(round($doc->headerdata["prepaid"] * 100)));
+            $payment=array("type"=>"CASHELESS","label"=>"Передплата","value"=> intval(round($doc->headerdata["prepaid"] * 100)));
             $check["payments"][] = $payment;
         }
 
@@ -461,7 +461,7 @@ class CheckBox
         if (  $sum > 0) {
          
             if ($type == 2) {
-                $payment=array("type"=>"CASHLESS","label"=>"Післяплата","value"=> intval(round($payed*100)));
+                $payment=array("type"=>"CARD","label"=>"Післяплата","value"=> intval(round($payed*100)));
             } 
             
            if ($type == 1) {
