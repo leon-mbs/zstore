@@ -596,7 +596,7 @@ class PPOHelper
      *
      * @param mixed $doc
      */
-      public static function sinout($sum, $type,$pos_id ) {
+      public static function sinout($sum, $type,$pos_id,$doc ) {
 
         $pos = \App\Entity\Pos::load($pos_id);
         $firm = \App\Helper::getFirmData( );
@@ -641,7 +641,7 @@ class PPOHelper
      
         $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
-            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0, 0, 0, $type==1 ? 'Службове внесення':'Службова видача', $ret['docnumber']);
+            self::insertStat($pos->pos_id, $type==1 ? 4:5 , $sum, 0, 0, 0, $doc->document_number, $ret['docnumber']);
         }
 
         return $ret;
@@ -821,7 +821,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 2, $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 1 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  
@@ -836,9 +836,9 @@ class PPOHelper
  
         $conn = \ZDB\DB::getConnect();
 
-        if(strlen($document_number) >0) {
-            $conn->Execute("delete from ppo_zformstat  where   document_number=". $conn->qstr($document_number));
-        }
+   
+     //   $conn->Execute("delete from ppo_zformstat  where   document_number=". $conn->qstr($document_number));
+        
 
         $amount0 = number_format($amount0, 2, '.', '');
         $amount1 = number_format($amount1, 2, '.', '');
@@ -1147,6 +1147,8 @@ class PPOHelper
           H::logerror($ret['data'])    ;
            return false;
         }
+        $pos->fiscdocnum++;
+        $pos->save();            
  
         return true;
        

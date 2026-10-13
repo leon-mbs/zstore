@@ -11,7 +11,7 @@ class VK
 {
     protected string $access_token;  
  
-    protected const API_URL = 'https://kasa.vchasno.ua/api/v3/fiscal/execute';   //https://wiki.checkbox.ua/uk/api/specification
+    protected const API_URL = 'https://kasa.vchasno.ua/api/v3/fiscal/execute';   
 
     public function __construct($access_token ) {
         $this->access_token = $access_token;
@@ -147,7 +147,7 @@ class VK
              
             if ($doc->headerdata['payment'] == 0 && $doc->payed > 0) {
                 $payment=array(
-                "type"=>1,
+                "type"=>0,
      
                 "sum"=>  self::fa($doc->headerdata['payed'] )  
                 );
@@ -161,7 +161,7 @@ class VK
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
                     $payment=array(
-                    "type"=>1,
+                    "type"=>2,
                     "sum"=>self::fa($doc->headerdata['payed'] )
                     );
                 } else {
@@ -194,7 +194,7 @@ class VK
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
                 $payment=array(
-                "type"=>1,
+                "type"=>2,
                 "sum"=>self::fa($doc->headerdata['payedcard'] ) 
                 );
                 $check["pays"][] = $payment;
@@ -205,8 +205,8 @@ class VK
        
         if ($payed < $doc->payamount) {
             $payment=array(
-            "type"=>0,
-            "name"=>'Післяплата',
+            "type"=>1,
+            "comment"=>'Кредит',
  
             "sum"=> self::fa($doc->payamount - $payed ) 
             );
@@ -317,7 +317,7 @@ class VK
 
     }
 
-    public function Sinout($sum,$type) {
+    public function sinout($sum,$type) {
     
         $type = (int)$type;
         $sum =  doubleval(  $sum );
@@ -327,7 +327,7 @@ class VK
         
         
         $body=json_encode($req, JSON_UNESCAPED_UNICODE);
-   
+       
         $curl = curl_init();
 
         curl_setopt_array($curl, [
@@ -362,7 +362,7 @@ class VK
            return "HTTP Error #:" . $status_code. ' ' . $response;
         }
 
-
+     
         $response = json_decode($response, true);
         if($response['res_action']==0) {
             return true;
@@ -375,16 +375,113 @@ class VK
             return "Помилка ".$response['res'];
         }
   
-        return true;
+        return ['fiscnumber'=>$response['serial']];
+
 
     }
-  public function Payment($doc, $payed, $mf) {
-    
-      
  
+    public function Payment($sum, $type=0,$doc=null) {
+    
+        $check = [] ;
+        $check["rows"] = [] ;
+        $check["pays"] = [] ;
+        
+  
+        $good=[];
+
+        $good['name'] = $doc->document_number;
+        $good['price'] = self::fa($sum); 
+        $good['code'] = $doc->document_id;
+        $good['disc'] = 0;
+        $good['taxgrp'] = 7;
+
+
+     
+        $good["cnt"] = 1  ;
+
+        $check["rows"][] = $good;
+        $check['sum'] =  self::fa($sum); 
+
+        if ($type == 2) {
+            $payment=array(
+            "type"=>2,
+            "sum"=>self::fa($sum )
+            );
+        } else {
+           $payment=array(
+            "type"=>0,
+
+            "sum"=>self::fa($sum )
+          );
+        }
+        $check["pays"][] = $payment;
+ 
+       $paysum = 0;
+       foreach( $check["pays"] as $p) {
+           $paysum += self::fa($p['sum']) ;    
+       }        
+    
+   
+
+        $req=array('fiscal'=>array('task'=> 1,
+                 'cashier'=>self::getCashier($doc),
+                 'receipt'=>$check));
+        
+        
+        $receipt=json_encode($req, JSON_UNESCAPED_UNICODE);
+      //  H::log($receipt);
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => self::API_URL,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER =>false,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $receipt,
+            CURLOPT_HTTPHEADER => [
+                 "Authorization: {$this->access_token}" 
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+        if ($err) {
+            return "cURL Error #:" . $err;
+        }
+
+        $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        
+        curl_close($curl);
+        
+        if($status_code != 200) {
+           return "HTTP Error #:" . $status_code. ' ' . $response;
+        }
+
+       
+        $response = json_decode($response, true);
+    
+
+        if(strlen($response['errortxt'])>0) {
+            return $response['errortxt'];
+        }
+        if($response['res']>0) {
+            return "Помилка ".$response['res'];
+        }
+  
+
         $ret =[];
 
-      
+        $ret["fiscnumber"] = $response['info']['doccode'];
+    //    $ret["tax_url"] = $response['info']['qr'];
+        $ret["tax_url"] = "https://kasa.vchasno.ua/check-viewer/". $response['info']['doccode'];
+        $ret["checkid"] = $response['info']['dataid'];
+    
         return $ret;
 
     }
@@ -541,8 +638,7 @@ class VK
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;
         }
-
-
+        
         $response = json_decode($response, true);
         if($response['res_action']==0) {
             return $response['info'];

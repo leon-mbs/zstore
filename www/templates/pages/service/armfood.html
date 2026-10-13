@@ -124,9 +124,11 @@
                        
                       <a class="me-4" zippy="openshift"><i class="fa fa-bullhorn"></i> Відкрити зміну</a>
                          <a class="me-4" zippy="closeshift"><i class="fa fa-gavel"></i> Закрити зміну</a>
-                       <a data-bs-toggle="modal" data-bs-target="#modalsin" class="me-4" title="Службове внесення" ><i class="fa fa-coins"></i><i class="fa fa-arrow-down"></i>  </a>
-                        <a data-bs-toggle="modal" data-bs-target="#modalsout"  class="me-2" title="Службова видача" ><i class="fa fa-coins"></i><i class="fa fa-arrow-up"></i>  </a>
                      
+                        <a data-bs-toggle="modal" data-bs-target="#modalsin" class="me-2" title="Службове внесення" ><i class="fa fa-coins"></i><i class="fa fa-arrow-down"></i>  </a>
+                        <a data-bs-toggle="modal" data-bs-target="#modalsout"  class="me-2" title="Службова видача" ><i class="fa fa-coins"></i><i class="fa fa-arrow-up"></i>  </a>
+                        
+                      
                       
                         {{#fiscaltestmode}}
                          <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
@@ -1173,7 +1175,7 @@
                                     </div>
                                      <div class="row mb-2">
                                      
-                                        <label class="col-4 col-form-label" for for="pbpay">Рахунок</label>
+                                        <label class="col-4 col-form-label"   for="pbpay">Рахунок</label>
                                           
                                        <div class="col-8"> 
                                      
@@ -1224,6 +1226,18 @@
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="sinsum"/>
                                       </div>    
                                     </div>
+                                   <div class="  mb-2">
+                                       
+                                       <label class=" form-label"   for="siniostate">Стаття доходу</label>
+                                       
+                                      
+                                         <select   class="form-select"   zippy="siniostate"  >
+                                            <option value="0" selected="">Без статті (наприклад інкасація) </option>
+                                          
+                                        </select>
+                             
+                                         
+                                    </div>
                                    
                   
                                     <div class="mb-2">
@@ -1263,7 +1277,20 @@
                                         <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="soutsum"/>
                                       </div>    
                                     </div>
+                                     <div class="  mb-2">
+                                       
+                                       <label class=" form-label" for for="soutiostate">Стаття розходу</label>
+                                       
+                                      
+                                         <select   class="form-select"   zippy="soutiostate"  >
+                                            <option value="0" selected="">Без статті (наприклад інкасація) </option>
+                                         
+                                        </select>
+                             
+                                          
+                                    </div>
                                    
+                      
                   
                                     <div class="mb-2">
                                         <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
@@ -1278,7 +1305,7 @@
                     </div>
                   </div>
          </div>          
-      
+ 
          
         <script>
             $(document).ready(function () {

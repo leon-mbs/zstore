@@ -8,7 +8,7 @@
          
     </tr>   
    <tr>
-         <td  > На  початок</td> <td align="right" > {{initial}}</td>
+         <td  >  Каса на  початок</td> <td align="right" > {{initial}}</td>
     </tr>    
   <tr>
         <td  > <b>Реалізація</b></td>        <td  >  </td>
@@ -39,7 +39,16 @@
         <td  >  {{label}}</td>        <td align="right" > {{sum}}</td>
     </tr>  
       {{/rpays}}   
- 
+        {{#sin}} 
+    <tr>
+        <td  > Сдужбове  внесення</td>        <td   align="right" > {{sin}}</td>      
+    </tr>  
+      {{/sin}}   
+     {{#sout}} 
+    <tr>
+        <td  > Службова  видача</td>        <td   align="right" > {{sout}}</td>    
+    </tr>  
+      {{/sout}}  
      <tr>
          <td  > Баланс</td> <td align="right" > {{balance}}</td>
     </tr>    

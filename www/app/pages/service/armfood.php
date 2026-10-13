@@ -304,13 +304,16 @@ class ARMFood extends \App\Pages\Base
         $this->paydolg->add(new TextInput('pbsum'));
         $this->paydolg->add(new DropDownChoice('pbpay'));
 
+  
         //служебное внесение
         $this->add(new Form('paysin'))->onSubmit($this, 'onSinout') ;
         $this->paysin->add(new TextInput('sinsum'));
+        $this->paysin->add(new DropDownChoice('siniostate',\App\Entity\IOState::getTypeListInM()));
         //служебная выдача
         $this->add(new Form('paysout'))->onSubmit($this, 'onSinout') ;
         $this->paysout->add(new TextInput('soutsum'));
-        
+        $this->paysout->add(new DropDownChoice('soutiostate', \App\Entity\IOState::getTypeListOutM()));
+         
         
          
         if($this->_tvars['useimages'] == false || $filter->menuimages==0){
@@ -2581,10 +2584,10 @@ class ARMFood extends \App\Pages\Base
         
         $mf=0;
         if($pay==1) {
-            $mf = $this->form1->mfnal->getValue() ; 
+            $mf = $this->setupform->nal->getValue() ; 
         }
         if($pay==2) {
-            $mf = $this->form1->mfbeznal->getValue() ; 
+            $mf = $this->setupform->fbeznal->getValue() ; 
         }
  
         $doc = Document::load($id);
@@ -2688,10 +2691,11 @@ class ARMFood extends \App\Pages\Base
     }
     
     //служебные  внесения  выдачи
+   
     public function onSinout($sender) {
         $sum=0;
         $type=0;
-         if($sender->id=="paysin") {
+        if($sender->id=="paysin") {
            $sum =  $sender->sinsum->getText();
            $type=1;
            $sender->sinsum->setText(0) ;  
@@ -2702,20 +2706,52 @@ class ARMFood extends \App\Pages\Base
            $type=2;
            $sender->soutsum->setText(0) ;
         }
-        
+      
         $sum = doubleval(trim($sum)) ;
         
         if($sum==0) return;
         try {
-     
+
+           $doc=null;
+           if( $type==1) {
+               $doc= \App\Entity\Doc\Document::create('IncomeMoney') ;
+               $doc->setHD('type',   $sender->siniostate->getValue() );
+               $doc->setHD('detail', 0);
+               $doc->notes='Службове внесення';
+
+           }
+           if( $type==2) {
+               $doc= \App\Entity\Doc\Document::create('OutcomeMoney') ;
+               $doc->setHD('type',  $sender->soutiostate->getValue());
+               $doc->setHD('detail', 0);
+               $doc->notes='Службова  видача';
+
+           }
+           
+            
+             $doc->document_number = $doc->nextNumber() ;
+             $doc->amount = $sum ;
+             $doc->payamount = $sum ;
+             $doc->payed = 0 ;
+             $doc->document_date = time(); ;
+             $doc->setHD('payment' ,  $this->setupform->nal->getValue() );
+             $doc->setHD('paymentname' ,  $this->setupform->nal->getValueName() );
+             $doc->save();
+             $doc->updateStatus(Document::STATE_NEW);
+             $doc->updateStatus(Document::STATE_EXECUTED);         
+            
+    
+        
             if($this->_tvars['checkbox'] == true) {
 
-                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
-                $ret = $cb->Sinout($sum,$type) ;
+                $cb = new  \App\Modules\CB\CheckBox($this->_pos->cbkey, $this->_pos->cbpin) ;
+                $ret = $cb->sinout($sum,$type ) ;
 
-                if($ret=='') {
-                    
-                    $this->setSuccess("Виконано");
+                if (strlen($ret['fiscnumber']??'') > 0) {
+                 
+                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                    $doc->save();    
+           
                 } else {
 
                     throw new \Exception($ret);
@@ -2725,13 +2761,15 @@ class ARMFood extends \App\Pages\Base
             }
             
            if($this->_tvars['vkassa'] == true) {
-               $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-               $ret = $vk->Sinout($sum,$type) ;
+               $vk = new  \App\Modules\VK\VK($this->_pos->vktoken) ;
+               $ret = $vk->sinout($sum,$type ) ;
 
                
-                if($ret=='') {
-                    
-                    $this->setSuccess("Виконано");
+                if (strlen($ret['fiscnumber']??'') > 0) {
+              
+                     $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                     $doc->save();    
+   
                 } else {
 
                     throw new \Exception($ret);
@@ -2739,32 +2777,37 @@ class ARMFood extends \App\Pages\Base
                 }
 
             }
-          if ($this->_tvars['ppo'] == true) {
+            if ($this->_tvars['ppo'] == true) {
 
                
 
-                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
+                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->_pos->pos_id,$doc);
                 if ($ret['success'] == false  ) {
                     //повторяем для  нового номера
-                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                    $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id);
-
+                    $this->_pos->fiscdocnumber = $ret['doclocnumber'];
+                    $this->_pos->save();
+                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->_pos->pos_id,$doc);
+            
                 }
-                if ($ret['docnumber'] > 0) {
-                    $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                    $this->pos->save();
+                if (strlen($ret['docnumber']??'') > 0) {
+                   
+                    $doc->headerdata["fiscalnumber"] = $this->_pos->fiscdocnumber;
+                    $doc->save();    
+                    $this->_pos->fiscdocnumber++;
+                    $this->_pos->save();
+  
                 } else {
                     throw new \Exception("Не повернено фіскальний номер");
-                }                 
+                }                
                 if ($ret['success'] == false) {
-                      throw new \Exception($ret['data']);
+                      throw new \Exception($ret['error']);
 
                 }  
 
             }
-             
             
+               
+            $this->setSuccess("Виконано");   
         } catch(\Throwable $ee) {
             global $logger;
           
@@ -2775,9 +2818,9 @@ class ARMFood extends \App\Pages\Base
             
             return;
         }       
-           
+          
     }
-     
+       
     
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;

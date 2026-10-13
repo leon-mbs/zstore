@@ -217,6 +217,8 @@ class ZForm extends \App\Pages\Base
                 $this->setSuccess('Зміна закрита');
                 $this->stat->clean();
                 $this->OnRefresh($this->filter) ;
+                $this->_pos->fiscdocnumber++;
+                $this->_pos->save();
 
             }
 
@@ -300,7 +302,7 @@ class ZForm extends \App\Pages\Base
         }
 
         $pos = \App\Entity\Pos::load($this->_pos->pos_id);
-  
+     
         $ret = PPOHelper::shiftTotal(  $pos) ;
         if($ret == false) {
             $this->setError("Сервер недоступний або зміна закрита");
