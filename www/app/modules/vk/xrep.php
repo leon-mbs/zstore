@@ -73,32 +73,24 @@ class XRep extends \App\Pages\Base
         $header['rcnt'] =$ret['receipt']['count_m'];
         $header['pays'] =[];
         $header['rpays'] =[];
-        $header['balance'] = doubleval($ret['safe'] ) ;
-        $header['initial'] = 0;
- 
+     
     
         foreach($ret['pays'] as $p){
             if($p['sum_p']>0) {
                 $header['pays'][] = ['label'=>$p['name'],'sum'=>H::fa($p['sum_p'] )] ;  
-                if($p['type']===0) {
-                   $header['initial'] = $header['balance'] -  doubleval($p['sum_p'])  ;
-                }
+           
            
                   
             }
             if($p['sum_m']>0) {
                 $header['rpays'][] = ['label'=>$p['name'],'sum'=>H::fa($p['sum_m'] )] ;    
                 if($p['type']===0) {
-                  if($p['type']===0) {
-                     $header['initial'] = $header['balance'] + doubleval($p['sum_m'])  ;
-                  }
+                
         
                 }
          }
           
         }      
-        $header['initial']  =  H::fa( $header['initial'] ) ;
-        $header['balance'] = H::fa($header['balance']  ) ;
       
         $report = new \App\Report('report/vk_xrep.tpl');
 
