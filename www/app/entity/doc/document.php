@@ -137,6 +137,16 @@ class Document extends \ZCL\DB\Entity
             System::setWarnMsg('Не унікальний номер документа');
         }
 
+        // этот документ уже записан: страница из сессии после «назад» в браузере или повторной отправки формы.
+        // hash выдаётся каждому новому документу в create() и одинаков у всех версий страницы
+        if ($this->document_id == 0 && strlen($this->headerdata['hash'] ?? '') > 0) {
+            $conn = \ZDB\DB::getConnect();
+            $number = $conn->GetOne("select document_number from documents where content like " . $conn->qstr('%' . $this->headerdata['hash'] . '%'));
+            if (strlen($number ?? '') > 0) {
+                throw new \Exception("Документ вже створено, номер {$number}. Відкрийте його з журналу документів");
+            }
+        }
+
         if ($this->parent_id > 0) {
             $p = Document::load($this->parent_id);
             $this->headerdata['parent_number'] = $p->document_number;

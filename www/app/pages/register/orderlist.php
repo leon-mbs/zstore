@@ -1016,6 +1016,7 @@ class OrderList extends \App\Pages\Base
                 $newdoc->document_id=0;
                 $newdoc->document_date=time();
                 $newdoc->document_number=$newdoc->nextNumber();;
+                $newdoc->headerdata['hash'] = bin2hex(random_bytes(16));   // у копии своя ссылка и свой признак повторной записи
                 $oldlist=[] ;
                 $newlist=[] ;
                 $totalold=0;

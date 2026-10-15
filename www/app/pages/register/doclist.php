@@ -723,6 +723,7 @@ class DocList extends \App\Pages\Base
         $doc->payed = 0;
         $doc->parent_id=0  ;
         $doc->headerdata['outnumber'] = '';
+        $doc->headerdata['hash'] = bin2hex(random_bytes(16));   // у копии своя ссылка и свой признак повторной записи
         $doc->headerdata['fiscalnumber'] = '';
         $doc->headerdata['waitpay'] = 0;
         $doc->headerdata['contract_id'] = 0;
