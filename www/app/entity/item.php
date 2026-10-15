@@ -849,7 +849,8 @@ class Item extends \ZCL\DB\Entity
 
         $limit =" limit 0,1";
   
-        $sql .= " order  by  sdate  desc ". $limit;
+        // ближайший срок первым; партии без срока — после партий со сроком
+        $sql .= " order  by  sdate is null, sdate  asc ". $limit;
 
 
         return $conn->GetOne($sql);
