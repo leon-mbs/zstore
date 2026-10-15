@@ -2695,14 +2695,17 @@ class ARMFood extends \App\Pages\Base
     public function onSinout($sender) {
         $sum=0;
         $type=0;
-        if($sender->id=="paysin") {
+        $paytype=0;
+         if($sender->id=="paysin") {
            $sum =  $sender->sinsum->getText();
+           $paytype =  $sender->siniostate->getValue();
            $type=1;
            $sender->sinsum->setText(0) ;  
     
         }
         if($sender->id=="paysout") {
            $sum =  $sender->soutsum->getText();
+           $paytype =  $sender->soutiostate->getValue();
            $type=2;
            $sender->soutsum->setText(0) ;
         }
@@ -2711,18 +2714,18 @@ class ARMFood extends \App\Pages\Base
         
         if($sum==0) return;
         try {
-
+           if($paytype>0) {
            $doc=null;
            if( $type==1) {
                $doc= \App\Entity\Doc\Document::create('IncomeMoney') ;
-               $doc->setHD('type',   $sender->siniostate->getValue() );
+               $doc->setHD('type',   $paytype );
                $doc->setHD('detail', 0);
                $doc->notes='Службове внесення';
 
            }
            if( $type==2) {
                $doc= \App\Entity\Doc\Document::create('OutcomeMoney') ;
-               $doc->setHD('type',  $sender->soutiostate->getValue());
+               $doc->setHD('type',  $paytype);
                $doc->setHD('detail', 0);
                $doc->notes='Службова  видача';
 
@@ -2739,7 +2742,7 @@ class ARMFood extends \App\Pages\Base
              $doc->save();
              $doc->updateStatus(Document::STATE_NEW);
              $doc->updateStatus(Document::STATE_EXECUTED);         
-            
+          }  
     
         
             if($this->_tvars['checkbox'] == true) {
@@ -2749,8 +2752,8 @@ class ARMFood extends \App\Pages\Base
 
                 if (strlen($ret['fiscnumber']??'') > 0) {
                  
-                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                    $doc->save();    
+                  //  $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                  //  $doc->save();    
            
                 } else {
 
@@ -2767,8 +2770,7 @@ class ARMFood extends \App\Pages\Base
                
                 if (strlen($ret['fiscnumber']??'') > 0) {
               
-                     $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                     $doc->save();    
+                      
    
                 } else {
 
@@ -2781,18 +2783,17 @@ class ARMFood extends \App\Pages\Base
 
                
 
-                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->_pos->pos_id,$doc);
+                $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->_pos->pos_id);
                 if ($ret['success'] == false  ) {
                     //повторяем для  нового номера
                     $this->_pos->fiscdocnumber = $ret['doclocnumber'];
                     $this->_pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->_pos->pos_id,$doc);
+                    $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->_pos->pos_id );
             
                 }
                 if (strlen($ret['docnumber']??'') > 0) {
                    
-                    $doc->headerdata["fiscalnumber"] = $this->_pos->fiscdocnumber;
-                    $doc->save();    
+                      
                     $this->_pos->fiscdocnumber++;
                     $this->_pos->save();
   

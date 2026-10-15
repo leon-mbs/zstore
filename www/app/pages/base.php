@@ -109,6 +109,7 @@ class Base extends \Zippy\Html\WebPage
         $this->add(new Form('pr_itemsform' ));
         $this->pr_itemsform->add(new DataView('pr_items', new ArrayDataSource(new Bind($this, '_pritems')), $this, 'pr_itemsOnRow'));
         $this->pr_itemsform->add(new SubmitButton('btn_pr_items' ))->onClick($this,'saveLabelForm');
+        $this->pr_itemsform->add(new SubmitButton('btn_del_items' ))->onClick($this,'delLabelForm');
       
         $this->add(new Label('pr_items_tag' ));
      
@@ -896,6 +897,11 @@ class Base extends \Zippy\Html\WebPage
         
     }
  
+    public function delLabelForm($sender) {
+        $this->_pritems=[]  ;
+        $this->pr_itemsform->pr_items->Reload();
+        $this->_printitems   =[];        
+    }
     public function saveLabelForm($sender) {
         $items=[];
         foreach($this->_pritems as $it) {
