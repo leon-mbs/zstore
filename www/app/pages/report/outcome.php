@@ -478,7 +478,7 @@ class Outcome extends \App\Pages\Base
                 $totsum += ($row['summa'] + $row['navar']);
             }
         }
-        if( $totsumself > 0) {
+        if( ($totsumself + $totnavar) != 0) {  // выручка 0 при выдаче по цене 0
            $totnavarproc = 100*$totnavar/($totsumself + $totnavar);
         }
         
