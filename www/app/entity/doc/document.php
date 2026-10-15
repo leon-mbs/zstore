@@ -523,6 +523,10 @@ class Document extends \ZCL\DB\Entity
             } else {
                 if ($state == self::STATE_EXECUTED) {
                     if($onlystate == false) {
+                        // повторное проведение удваивает движения (открыли проведённый документ, «назад» в браузере, вторая вкладка)
+                        if ($this->isExecuted()) {
+                            throw new \Exception("Документ {$this->document_number} вже проведений. Щоб провести його знову, спочатку скасуйте проведення");
+                        }
                         $this->Execute();
                     }
 
@@ -564,6 +568,20 @@ class Document extends \ZCL\DB\Entity
         }
 
         return true;
+    }
+
+    /**
+     * Документ сейчас проведён: последняя запись журнала среди «проведён» и «отменён» — «проведён».
+     * Состояние берётся из базы, а не из объекта: объект страницы в сессии может быть устаревшим.
+     */
+    public function isExecuted() {
+        if ($this->document_id == 0) {
+            return false;
+        }
+        $conn = \ZDB\DB::getConnect();
+        $last = $conn->GetOne("select docstate from docstatelog where document_id=" . intval($this->document_id) . " and docstate in (" . self::STATE_EXECUTED . "," . self::STATE_CANCELED . ") order by log_id desc limit 1");
+
+        return intval($last) == self::STATE_EXECUTED;
     }
 
     /**
