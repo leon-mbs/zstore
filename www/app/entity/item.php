@@ -876,6 +876,7 @@ class Item extends \ZCL\DB\Entity
 
         if (strlen($partname) > 0) {
             $like = self::qstr('%' . $partname . '%');
+            $start = self::qstr($partname . '%');
             $partname = self::qstr($partname);
             $criteria .= "  and  (itemname like {$like} or item_code like {$like}   or   bar_code like {$like} )";
         }
@@ -883,7 +884,13 @@ class Item extends \ZCL\DB\Entity
             $criteria .= "  and  ". $where;
         }
 
-        $itemlist = self::find($criteria);
+        // точное совпадение кода или штрихкода первым, затем код и название с начала строки
+        $order = "itemname";
+        if (strlen($partname) > 0) {
+            $order = "case when item_code = {$partname} or bar_code = {$partname} then 0 when item_code like {$start} then 1 when itemname like {$start} then 2 else 3 end, itemname";
+        }
+
+        $itemlist = self::find($criteria, $order);
 
         $list = array();
         foreach ($itemlist as $key => $value) {
