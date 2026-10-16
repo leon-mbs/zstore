@@ -9,6 +9,7 @@ use App\Entity\Store;
 use App\Helper as H;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
@@ -39,6 +40,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("item_type", Item::getTypes(), 0));
 
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
+        $form->add(new Date("docdate", time()));   // дата документа оприходования (например, дата начальных остатков)
 
         $form->add(new \Zippy\Html\Form\File("filename"));
         $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O','P' => 'P','Q' => 'Q' );
@@ -167,6 +169,7 @@ class Import extends \App\Pages\Base
 
         $this->iform->colqty->setVisible($t == 1);
         $this->iform->store->setVisible($t == 1);
+        $this->iform->docdate->setVisible($t == 1);
         $this->iform->colinprice->setVisible($t == 1);
 
 
@@ -437,7 +440,7 @@ class Import extends \App\Pages\Base
             if (strlen($doc->document_number) == 0) {
                 $doc->document_number = "ПТ-00001";
             }
-            $doc->document_date = time();
+            $doc->document_date = $this->iform->docdate->getDate() ?: time();
 
             $amount = 0;
             $itlist = array();
