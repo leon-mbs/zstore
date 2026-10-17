@@ -276,7 +276,7 @@ class DocList extends \App\Pages\Base
            $row->qr->setVisible(false);    
         }  
         if( $doc->meta_name == 'OfficeDoc' ){
-            
+            //управление в журнале  Офис
             $row->delete->setVisible(false);
             $row->cancel->setVisible(false);
             $row->hasscan->setVisible(false);
@@ -812,22 +812,22 @@ class DocList extends \App\Pages\Base
  */
 class DocDataSource implements \Zippy\Interfaces\DataSource
 {
-    private function getWhere($usedate=true) {
+    private function getWhere( ) {
         //$user = System::getUser();
 
         $conn = \ZDB\DB::getConnect();
         
-        $where = " 1=1 ";
+        $where = " ( priority >=80 or (1=1  ";
         
         $filter = Filter::getFilter("doclist");
-        if($usedate == true   ) {
+        
             if($filter->from > 0) {
                 $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
             }
             if($filter->to > 0) {
                 $where .= " and  document_date <= " . $conn->DBTimeStamp($filter->to+3600*24-1) ;
             }
-        }    
+         $where .= ") )";    
             
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";

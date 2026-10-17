@@ -245,7 +245,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
    
-        $items = Item::find($this->getWhere(), "itemname,disabled  ", $count, $start);         //         $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
+        $items = Item::find($this->getWhere(), "itemname,disabled  ", $count, $start);       
 
         return $items;
     }
