@@ -15,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -83,6 +84,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bshift')) ;
 
 
         $this->statuspan->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
@@ -123,7 +125,9 @@ class OrderList extends \App\Pages\Base
         $this->splitpanel->splitform->add(new DataView('splititemlist', new \Zippy\Html\DataList\ArrayDataSource($this, '_itemlist'), $this, 'splitlistOnRow'));
  
     
-        
+        $this->add(new Form("shiftform"))->onSubmit($this,'shiftOnSubmit');
+        $this->shiftform->add(new TextArea('shiftmsg'));
+         
     }
 
     public function filterOnSubmit($sender) {
@@ -153,6 +157,21 @@ class OrderList extends \App\Pages\Base
 
 
         $row->add(new Label('date', H::fd($doc->document_date)));
+        $sd=$doc->getHD('send_date',0) ;
+        $row->add(new Label('send_date', H::fd($sd)))->setVisible(false);
+        if($sd>0){
+            $row->send_date->setVisible(true) ;
+             if($sd <time() )  {
+                 $row->send_date->setAttribute('class','text-danger') ;
+            }            
+            if(date('Ymd')===date('Ymd',$sd) )  {
+                 $row->send_date->setAttribute('class','text-warning') ;
+            }
+
+            
+        }
+        
+        
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('emp', $doc->username));
 
@@ -192,6 +211,9 @@ class OrderList extends \App\Pages\Base
         }
         if ($doc->state == Document::STATE_FAIL) {
             $row->state->setText('<span class="badge  text-bg-danger">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_SHIFTED) {
+            $row->state->setText('<span class="badge  text-bg-warning">' . $stname . '</span>', true);
         }
      
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -435,7 +457,10 @@ class OrderList extends \App\Pages\Base
         //аннулирован
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED)) > 0;
 
+        $this->statuspan->statusform->bshift->setVisible($state==Document::STATE_INPROCESS);
+        
         $this->statuspan->statusform->btopay->setVisible(false);
+        
         $this->statuspan->statusform->brd->setVisible(false);
         $this->statuspan->statusform->brec->setVisible(false);
         $this->statuspan->statusform->bsent->setVisible(false);
@@ -450,7 +475,7 @@ class OrderList extends \App\Pages\Base
 
 
         //новый
-        if ($state < Document::STATE_EXECUTED) {
+        if ($state < Document::STATE_EXECUTED  ) {
             $this->statuspan->statusform->btask->setVisible(false);
 
             $this->statuspan->statusform->bclose->setVisible(false);
@@ -548,6 +573,24 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(false);
             $this->statuspan->statusform->bsent->setVisible(false);
             $this->statuspan->statusform->bscan->setVisible(false);
+            $this->statuspan->resform->setVisible(false);
+            $this->statuspan->moveform->setVisible(false);
+       }
+        if ($state == Document::STATE_SHIFTED) {
+
+            $this->statuspan->statusform->bclose->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->bgi->setVisible(false);
+            $this->statuspan->statusform->bginv->setVisible(false);
+            $this->statuspan->statusform->binp->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(true);
+            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->brd->setVisible(false);
+            $this->statuspan->statusform->bsent->setVisible(false);
+            $this->statuspan->statusform->bscan->setVisible(false);
+            $this->statuspan->resform->setVisible(false);
+            $this->statuspan->moveform->setVisible(false);
         }
 
         if ($state == Document::STATE_WP) {
@@ -1016,6 +1059,7 @@ class OrderList extends \App\Pages\Base
                 $newdoc->document_id=0;
                 $newdoc->document_date=time();
                 $newdoc->document_number=$newdoc->nextNumber();;
+                $newdoc->headerdata['hash'] = bin2hex(random_bytes(16));   
                 $oldlist=[] ;
                 $newlist=[] ;
                 $totalold=0;
@@ -1077,6 +1121,46 @@ class OrderList extends \App\Pages\Base
        
         $this->splitpanel->setVisible(false);
         $this->listpanel->setVisible(true);
+
+    }
+ 
+    public function shiftOnSubmit($sender) {
+
+            $text = trim($this->shiftform->shiftmsg->getText() );
+                 
+            if(strlen($text)==0) {
+                return;
+            }
+        
+            $conn = \ZDB\DB::getConnect();
+            $conn->BeginTrans();
+
+            try {
+                $msg = new \App\Entity\Message();
+                $msg->message = $text;
+                $msg->created = time();
+                $msg->user_id = System::getUser()->user_id;
+                $msg->item_id =  $this->_doc->document_id;
+                $msg->item_type = \App\Entity\Message::TYPE_DOC;
+
+                $msg->save();    
+                
+                
+                $this->_doc->updateStatus(Document::STATE_SHIFTED);
+             
+                $this->listpanel->doclist->Reload();
+
+                $this->shiftform->shiftmsg->setText('')  ;
+                
+                $conn->CommitTrans();
+
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage()) ;
+            $conn->RollbackTrans();
+            return;
+        }
+       
+    
 
     }
   

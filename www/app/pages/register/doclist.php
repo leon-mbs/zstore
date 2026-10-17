@@ -727,6 +727,7 @@ class DocList extends \App\Pages\Base
         $doc->headerdata['waitpay'] = 0;
         $doc->headerdata['contract_id'] = 0;
         $doc->headerdata['_state_before_approve_'] = '';
+        $doc->headerdata['hash'] = bin2hex(random_bytes(16));  
         $doc->save();
         $doc->updateStatus(Document::STATE_NEW);
        

@@ -997,7 +997,7 @@ class ItemList extends \App\Pages\Base
     //печать  списка
     public function printlistOnClick($sender) {
            if(count($this->_printitems)==0) {
-               $this->setWarn('Пустий список друку') ;
+               $this->setWarn('Пустий список друку. Виділіть строки і додайте  в  список  іконкою внизу ') ;
                return;
            }
            $this->printLabelForm($this->_printitems);

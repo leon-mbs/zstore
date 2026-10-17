@@ -66,6 +66,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
+        $this->docform->add(new Date('send_date'))  ;
 
 
 
@@ -185,6 +186,10 @@ class Order extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->document_date->setDate($this->_doc->document_date);
+            if($this->_doc->headerdata['send_date'] > 0) {
+                $this->docform->send_date->setDate($this->_doc->headerdata['send_date']);
+            }
+            
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
             $this->docform->promocode->setText($this->_doc->headerdata['promocode']);
@@ -532,6 +537,10 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
+        if($this->docform->send_date->getDate() >0) {
+           $this->_doc->headerdata['send_date'] = $this->docform->send_date->getDate();
+        }
+       
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
         $this->_doc->headerdata['deliverynp'] = $this->docform->deliverynp->getValue();
 

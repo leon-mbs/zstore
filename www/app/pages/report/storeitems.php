@@ -56,7 +56,7 @@ class StoreItems extends \App\Pages\Base
         $fver = $this->filter->fver->isChecked();
   
         $html = $fver ? $this->generateReportVer() : $this->generateReport();
-        \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+        \App\Session::getSession()->setExportReport("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>");
         $this->detail->preview->setText($html, true);
 
         // $this->addJavaScript("loadRep()",true) ;
