@@ -73,7 +73,11 @@ class Orders extends \App\Pages\Base
         }
         $modules = System::getOptions("modules");
 
-        $status = $this->filter->status->getValue();
+        $status = intval( $this->filter->status->getValue() );
+        
+        if($status==0) {
+            return;
+        }
 
         $this->_neworders = array();
         $fields = array(

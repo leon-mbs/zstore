@@ -102,6 +102,7 @@ class Import extends \App\Pages\Base
         $form = $this->add(new Form("nform"));
 
         $form->add(new DropDownChoice("nstore", Store::getList(), H::getDefStore()));
+        $form->add(new Date("ndocdate", time()));   
 
         $form->add(new AutocompleteTextInput("ncust"))->onText($this, 'OnAutoCustomer');
         $form->add(new \Zippy\Html\Form\File("nfilename"));
@@ -712,7 +713,7 @@ class Import extends \App\Pages\Base
             if (strlen($doc->document_number) == 0) {
                 $doc->document_number = "ПН-00001";
             }
-            $doc->document_date = time();
+            $doc->document_date = $this->nform->ndocdate->getTDate() ?? time();
 
             $amount = 0;
             $itlist = array();

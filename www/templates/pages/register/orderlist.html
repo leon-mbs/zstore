@@ -64,7 +64,7 @@
                     <tr>
 
                         <th>Номер</th>
-                        <th>Дата</th>
+                        <th>Дата/Дата відправки</th>
                         <th>Замовник</th>
                         <th class="text-end">Сума</th>
                         <th>Статус</th>
@@ -83,7 +83,7 @@
                     <tr zippy="doclist">
 
                         <td class="text-nowrap" ><a zippy="number"></a></td>
-                        <td class="text-nowrap" zippy="date"></td>
+                        <td class="text-nowrap" ><span zippy="date"></span> <span zippy="send_date"></span>  </td>
                         <td  class="text-nowrap"><a href="return false; void(0)" zippy="customer"></a></td>
                         <td zippy="amount" class="text-end"></td>
 
@@ -224,6 +224,8 @@
                          
                          <button zippy="bsent" class="btn btn-success  me-2">  Відправлений</button>
                         
+                         <button   data-bs-toggle="modal" data-bs-target="#modalshift" zippy="bshift" class="btn btn-warning  me-2">  Відкласти</button>
+                        
                          
                          <button zippy="brec" class="btn btn-success  me-2">  Доставлений</button>
                          
@@ -263,11 +265,11 @@
                           
                             
                     </form> 
-                       </div>
+                 </div>
                        <div class="col-12 mb-2">      
-                       
-                       <div class="row mt-1"> 
-                       <div class="col-auto"> 
+                       <div class="row">      
+                      <div class="col-auto">  
+                        
                      <form zippy="resform" class="row align-items-start " >
                          <div class="col-auto"> 
                            <div class="input-group">
@@ -277,7 +279,7 @@
                          
                         <select class=" form-select  "  zippy="store"></select>
                            </div>
-                           </div>
+                         </div>
                          <div class="col-auto">  
                         <button zippy="bres" class="btn btn-success  ">OK                 </button>
                          </div>
@@ -285,7 +287,8 @@
                        
                         <button zippy="bunres" class="btn btn-primary "> Зняти з резерву                </button>
                           </div>
-                        </div>
+                         
+                          
                          
                     </form>       
                       </div>
@@ -294,7 +297,7 @@
                     <form zippy="moveform" class="row align-items-start "  >
                         <div class="col-auto"> 
                                 
-                        <label   class="form-label me-2">Перевести на: </label>
+                        <label   class="  me-2 pt-1">Перевести на: </label>
                            </div> 
                        {{#usebranch}}
                          <div class="col-auto"> 
@@ -312,7 +315,7 @@
                          <div class="col-auto"> 
                           <div class="input-group">
 
-                        <label  class="form-label me-2" for="usmove">користувача </label>
+                        <label  class="  me-2" for="usmove">користувача </label>
                      
                          <select class="form-select  " zippy="usmove"  >
 
@@ -324,8 +327,11 @@
                          </div> 
                      </form>                
                     </div>
-                    </div>
-                     </div>  
+                   </div>
+                 </div>
+             </div>
+                    
+                       
                    
             <div class="row ">  
             <div class="col-12 ">  
@@ -413,6 +419,35 @@
         </div>        
         
     
+        <div id="modalshift" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"   >
+                <div class="modal-dialog modal-dialog-centered  modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Відкласти виконання</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form  zippy="shiftform">
+                            <div  >
+                                <label class="form-label" for="shiftmsg">Коментар </label>
+                                <textarea required="on" class="form-control  "   zippy="shiftmsg" ></textarea>
+                                <small>Коментар буде додано до документу</small>
+                            </div>
+                            <div  >
+                             <button type="submit"   class="btn btn-primary ">  OK    </button>
+                         
+                            </div>
+                            
+                             </form >
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
       
         
          {{={| |}=}}   

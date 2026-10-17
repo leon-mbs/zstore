@@ -15,7 +15,7 @@
                         <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="mb-2">
-                        <label for="customer">Покупець</label>
+                        <label class="dorm-label" for="customer">Покупець</label>
                         <div class="input-group  ">
                              <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
                            
@@ -28,18 +28,23 @@
 
                     </div>
                     <div class="mb-2">
-                        <label for="phone">Телефон</label>
+                        <label class="dorm-label" for="phone">Телефон</label>
 
                         <input zippy="phone" class="form-control">
 
                     </div>
                     <div class="mb-2">
-                        <label for="email">E-mail</label>
+                        <label class="dorm-label" for="email">E-mail</label>
 
                         <input zippy="email" class="form-control">
 
                     </div>
-              
+                     <div class="mb-2">
+                        <label class="dorm-label" for="salesource">Джерело продаж</label>
+                        <select class="form-select" zippy="salesource">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>           
                     <div class="mb-2">
                         <label for="notes">Примітка </label>
 
@@ -51,36 +56,35 @@
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="mb-2">
-                        <label for="document_date"> Дата</label>
+                        <label class="dorm-label" for="document_date"> Дата</label>
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="mb-2">
-                        <label for="salesource">Джерело продаж</label>
-                        <select class="form-control" zippy="salesource">
-                            <option value="0">Не обрано</option>
-                        </select>
+                        <label class="dorm-label" for="send_date"> Орієнтовна дата відправки</label>
+                        <input class="form-control" type="text" zippy="send_date"   >
                     </div>
+                  
 
 
                     <div class="mb-2">
-                        <label for="pricetype">Тип ціни</label>
-                        <select class="form-control" zippy="pricetype">
+                        <label class="dorm-label" for="pricetype">Тип ціни</label>
+                        <select class="form-select" zippy="pricetype">
                         </select>
                     </div>
                         <div class="mb-2">
-                            <label for="store">Склад  </label>
-                            <select zippy="store" class="form-control     ">
+                            <label class="dorm-label" for="store">Склад  </label>
+                            <select zippy="store" class="form-select     ">
                                 <option value="0">Не задано</option>
                             </select>
                             
                         </div>                  
                        <div class="form-check">
-                            <input zippy="dostore" type="checkbox" class="form-check-input">
+                            <input class="dorm-label" zippy="dostore" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="dostore">Списати зі складу </label>
                              <small style="display:block" data-label="dostore">Не ставити якщо списання через ТТН, чек  або ВН </small>
                        </div>
                         <div class="form-check">
-                            <input zippy="doreserve" type="checkbox" class="form-check-input">
+                            <input class="dorm-label" zippy="doreserve" type="checkbox" class="form-check-input">
                             <label class="form-check-label" for="doreserve">Резервувати товари </label>
                              <small style="display:block" data-label="dostore"> Резервувати при відправці в обробку </small>
                        </div>
@@ -105,60 +109,62 @@
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="mb-2">
-                        <label for="paytype">Спосіб оплати</label>
+                        <label class="dorm-label" for="paytype">Спосіб оплати</label>
 
-                        <select class="form-control" zippy="paytype">
+                        <select class="form-select" zippy="paytype">
                                
                         </select>
 
                     </div>
                     <div class="mb-2">
-                                <label for="payment">Каса, рахунок</label>
-                                <select class="form-control" zippy="payment">
+                                <label class="dorm-label" for="payment">Каса, рахунок</label>
+                                <select class="form-select" zippy="payment">
                                     <option value="0">Не обрано</option>
                                 </select>
                                
                             </div>                    
                     
                     <div class="mb-2">
-                        <label for="delivery">Доставка</label>
+                        <label class="dorm-label" for="delivery">Доставка</label>
 
-                        <select class="form-control" zippy="delivery">
+                        <select class="form-select" zippy="delivery">
 
                         </select>
 
                     </div>
                      {{#np}}
                         <div class="mb-2">
-                            <label for="deliverynp">Тип доставки НП</label>
-                             <select zippy="deliverynp" class="form-control     ">
+                            <label class="dorm-label" for="deliverynp">Тип доставки НП</label>
+                             <select zippy="deliverynp" class="form-select     ">
                                 <option value="0">Відділення</option>
                                 <option value="1">Поштомат</option>
                                 <option value="2">За адресою</option>
                             </select>
                         </div>                     
                        <div class="mb-2">
-                        <label for="baycity">Населений пункт</label>
+                        <label class="dorm-label" for="baycity">Населений пункт</label>
 
                         <input placeholder="Почніть вводити..." zippy="baycity" class="form-control   "/>
 
                     </div>
                     <div class="mb-2">
-                        <label for="baypoint">Відділення</label>
+                        <label class="dorm-label" for="baypoint">Відділення</label>
 
                         <input placeholder="Почніть вводити..." zippy="baypoint" class="form-control   "/>
                          <small>Для пошуку по номеру додайте перед цифрами №</small>
                     </div>                    
                        {{/np}}
                     <div class="mb-2">
-                        <label data-label="address" for="address">Адреса</label>
+                        <label class="dorm-label" data-label="address" for="address">Адреса</label>
                         <textarea zippy="address" class="form-control"></textarea>
                     </div>
-                     <div class="mb-2 row">
+                     <div class="mb-2 ">
+                            <div class="input-group">  
                             <label for="bayhouse">Буд.</label>
-                            <input style="width:75px" type="text" zippy="bayhouse" class="form-control"/>
+                            <input style="width:75px" type="text" zippy="bayhouse" class="form-control me-2"/>
                             <label for="bayflat">Кв. </label>
                             <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
+                     </div>                    
                      </div>                    
                 </div>
             </div>
@@ -463,7 +469,7 @@
                     <div class="mb-2">
                         <label for="editnewcat">Категорія</label>
 
-                        <select class="form-control" zippy="editnewcat">
+                        <select class="form-select" zippy="editnewcat">
                             <option value="0">Не вказано</option>
                         </select>
 
