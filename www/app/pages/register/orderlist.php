@@ -31,6 +31,7 @@ class OrderList extends \App\Pages\Base
     private $_doc = null;
     private $_issms = false; //подключен  смс  сервис
     public $_itemlist =[];
+    public $_ss =[];
 
     /**
      *
@@ -45,6 +46,7 @@ class OrderList extends \App\Pages\Base
         
          
         $this->_issms = (System::getOption('sms', 'smstype')??0) >0 ;
+        $this->_ss = H::getSaleSources();
 
         $this->add(new Panel("listpanel"));
 
@@ -54,7 +56,7 @@ class OrderList extends \App\Pages\Base
         $this->listpanel->filter->add(new TextInput('searchnumber'));
         $this->listpanel->filter->add(new TextInput('searchtext'));
         $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові',2 => 'До сплати', 3 => 'Всі'), 0));
-        $this->listpanel->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
+        $this->listpanel->filter->add(new DropDownChoice('salesource',$this->_ss , 0));
 
         $doclist = $this->listpanel->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
 
@@ -174,6 +176,7 @@ class OrderList extends \App\Pages\Base
         
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('emp', $doc->username));
+        $row->add(new Label('source', $this->_ss[$doc->getHD('salesource')]??''));
 
 
         $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer'))->setValue($doc->customer_name);
