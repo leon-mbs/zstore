@@ -142,8 +142,8 @@ class Document extends \ZCL\DB\Entity
         // hash выдаётся каждому новому документу в create() и одинаков у всех версий страницы
         if ($this->document_id == 0 && strlen($this->headerdata['hash'] ?? '') > 0) {
             $conn = \ZDB\DB::getConnect();
-            $cnt = $conn->GetOne("select count(*) from documents where meta_id={$this->meta_id} and document_date >= DATE_SUB(NOW(), INTERVAL 2 DAY)  and   content like " . $conn->qstr('%' . $this->headerdata['hash'] . '%'));
-            if ($cnt > 0) {           
+            $cnt = $conn->GetOne("select count(*) from documents where meta_id= ". intval($this->meta_id) ." AND user_id=". intval($this->user_id) ." AND  document_id  > (SELECT MAX(document_id) - 10  FROM documents)  and document_date >= DATE_SUB(NOW(), INTERVAL 2 DAY)  and   content like " . $conn->qstr('%' . $this->headerdata['hash'] . '%'));
+            if (intval($cnt) > 0) {           
                 throw new \Exception("Дублювання документу {$this->document_number}");
             }
         }        
