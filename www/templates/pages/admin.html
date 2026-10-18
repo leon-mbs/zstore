@@ -7,7 +7,7 @@
   
      
  <div class="row">
-  <div class="col-12 col-lg-4 col-xl-3  " > 
+  <div class="col-12 col-lg-6 col-xl-3  " > 
           <h5>Конфігурація системи</h5>  
          <small>Після зміни налаштувань слід перелогінитись</small>
      
@@ -147,10 +147,10 @@
                         </form>        
                       
     </div>        
-    <div class="col-12 col-lg-4 col-xl-3  "   >
-        <h5>Налаштування безпеки</h5>   
+    <div class="col-12 col-lg-6 col-xl-3  "   >
+       <h5>Налаштування безпеки</h5>   
          <form zippy="optionsform"  class="mb-4"> 
-             
+              
                  <div class="form-check">
                     <input zippy="capcha" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="capcha">Капча на формі логіну</label>
@@ -193,29 +193,17 @@
               </div>       
           </form> 
           <small class="compact" >Скасування  документів які не можна  скасувати через журнал. Наприклад  фіскалізовані чеки</small>
-       {{#hideblock}}       
-     <h5 class="mt-2">Експорт налаштувань</h5>
-
-                <form zippy="oeform" class="row">
-                     
-
-                        <div class="mb-2">
-                            <input class="btn btn-primary" type="submit" value="Експорт"/>
-                        </div>
-                  
-
-
-                </form>  
-       {{/hideblock}}        
-   
-     </div>  
-    <div class="col-12 col-lg-4 col-xl-3  "   >
-             <h5 class="mt-2">Перевірка відправки пошти</h5>  
-         <form class="mt-4" zippy="sendform" >
-           
+ 
+        <form class="mt-4 mb-2" zippy="sendform" >
+            <div class="mb-2">
+             <h5  >Перевірка відправки пошти</h5>  
+           </div> 
               <div class="mb-2">
-                   <label class="form-label" for="email">Email</label>
+               <div class="input-group ">
+             
+                   <label   for="email">Email</label>
                    <input class="form-control" type="text" zippy="email">
+               </div>
                </div>
                <div class="mb-2">
                     <input zippy="sendemail" type="submit" value="Відправити" class="btn   btn-primary  ">
@@ -226,8 +214,11 @@
                 <h5>Перевірка відправки SMS</h5>  
              </div>
               <div class="mb-2">
-                   <label class="form-label" for="phone">Телефон</label>
+               <div class="input-group ">
+             
+                   <label   for="phone">Телефон</label>
                    <input class="form-control" type="text" zippy="phone">
+               </div>
                </div>
                <div class="mb-2">
                     <input zippy="sendphone" type="submit" value="Відправити" class="btn   btn-primary  ">
@@ -238,9 +229,11 @@
              <div class="mb-2">
                 <h5>Перевірка відправки в  телеграм</h5>  
              </div>
-              <div class="mb-2">
-                   <label class="form-label" for="chat_id">Chat ID</label>
+              <div class="mb-2  ">
+              <div class="input-group ">
+                   <label   for="chat_id">Chat ID</label>
                    <input class="form-control" type="text" zippy="chat_id">
+               </div>
                </div>
                <div class="mb-2">
                     <input zippy="sendbot" type="submit" value="Відправити" class="btn   btn-primary  ">
@@ -255,34 +248,77 @@
                  
                </div>
                <div zippy="checkdbanswer"></div>           
-         </form>
+         </form>               
+          
+     </div>  
+    <div class="col-12 col-lg-6 col-xl-3  "   >
          
-  </div>  
-    {{#hideblock}}
-   <div class="col-12 col-lg-4 col-xl-3 col-xxl-2 border border-2 border-danger   "   >
+   
+   
+ <h5 class="mt-2">Експорт налаштувань</h5>
+
+         <form zippy="oeform"  class="mb-4"  >
+             <div class="form-check">
+                 <input zippy="oecommon" type="checkbox" class="form-check-input">
+                 <label class="form-check-label" for="oecommon">Загальні налаштування та налаштування  модулів </label>
+             </div> 
+            
+              <div class="form-check">
+                  <input zippy="oeusers" type="checkbox" class="form-check-input">
+                  <label class="form-check-label" for="oeusers">Користувачі та ролі </label>
+              </div>
+              <div class="form-check">
+                  <input zippy="oemf" type="checkbox" class="form-check-input">
+                  <label class="form-check-label" for="oemf">POS термiнали та грощові рахунки </label>
+              </div>
+                      
+               <div class="mt-2">
+                  <input class="btn btn-primary" type="submit" value="Експорт"/>
+              </div>
+ 
+         </form>      
+     
+<div class="py-2  px-2   border border-2 border-danger   "   >
    
          <h5  >Імпорт налаштувань</h5>
 
-                <form zippy="oiform" class="row" enctype="multipart/form-data">
-                    <div class="col-10 col-md-8 col-xl-6">
+         <form class="mb-2" zippy="oiform"   enctype="multipart/form-data">
+                     
+                        <div class="mb-2">
+                            <label class="form-label" for="oifilename">Файл імпорту</label>
+                            <input type="file" zippy="oifilename" class="form-control  "/>
+
+                        </div>
+                      <div class="form-check">
+                         <input zippy="oicommon" type="checkbox" class="form-check-input">
+                         <label class="form-check-label" for="oicommon">Загальні налаштування та налаштування  модулів </label>
+                     </div> 
                     
-                        <div class="mb-2">
-                            <label for="ofilename">Файл імпорту</label>
-                            <input type="file" zippy="ofilename" class="form-control  "/>
-
+                      <div class="form-check">
+                          <input zippy="oiusers" type="checkbox" class="form-check-input">
+                          <label class="form-check-label" for="oiusers">Користувачі та ролі </label>
+                      </div>
+                      <div class="form-check">
+                          <input zippy="oimf" type="checkbox" class="form-check-input">
+                          <label class="form-check-label" for="oimf">POS термiнали та грощові рахунки </label>
+                      </div>
+                        <div class="mt-2">
+                            <input zippy="oib" class="btn btn-danger" type="submit" value="Завантажити"/>
                         </div>
-
-                        <div class="mb-2">
-                            <input class="btn btn-danger" type="submit" value="Завантажити"/>
-                        </div>
-                    </div>
+                   
 
 
-                </form>            
-            
+                </form>   
+                
+                  
+  </div>      
          
-  </div>       
-   {{/hideblock}} 
+  </div>  
+   
+         
+       
+        
+  
    
 </div>        
       <script>
@@ -296,6 +332,10 @@
            
             document.getElementById('dialogwait').showModal()
             return true;     
+        }       
+        function check_oib(ele){
+            return confirm("Налаштування будуть перезаписані! Продовжити?")
+          
         }       
       </script>
 </body>
