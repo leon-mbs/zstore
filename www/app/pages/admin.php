@@ -97,12 +97,19 @@ class Admin extends \App\Pages\Base
         $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
 
         $form = $this->add(new Form("oeform"));
+        $form->add(new CheckBox('oecommon' ));
+        $form->add(new CheckBox('oeusers' ));
+        $form->add(new CheckBox('oemf' ));
         $form->onSubmit($this, "onOExport");
 
         $form = $this->add(new Form("oiform"));
-        $form->add(new \Zippy\Html\Form\File("ofilename"));
-        $form->onSubmit($this, "onOImport");
-
+        $form->add(new \Zippy\Html\Form\File("oifilename"));
+        $form->add(new CheckBox('oicommon' ));
+        $form->add(new CheckBox('oiusers' ));
+        $form->add(new CheckBox('oimf' ));
+   
+        $form->add(new SubmitButton('oib'))->onClick($this, 'onOImport');
+   
  
     }   
 
@@ -186,6 +193,7 @@ class Admin extends \App\Pages\Base
         $this->setSuccess('Збережено')  ; 
         App::Redirect("\\App\\Pages\\Admin");               
     }
+
     public function sendEmail($sender) {
         $email = trim( $this->sendform->email->getText() );
         try{
@@ -207,9 +215,7 @@ class Admin extends \App\Pages\Base
         }
         
     }
-
-        
-        
+         
     public function sendBot($sender) {
         $chat_id = trim( $this->sendform->chat_id->getText() );
         try{
@@ -220,10 +226,7 @@ class Admin extends \App\Pages\Base
         }
         
     }
-
-
-
-
+ 
     public function onCancelDoc($sender) {
         $dn = trim($this->cdoc->docn->getText() );
         $conn = \ZDB\DB::getConnect();
@@ -258,8 +261,6 @@ class Admin extends \App\Pages\Base
         $this->setSuccess("Документ скасовано")  ;
          
     }        
-
-
        
     public function checkDB($sender) {
            $this->checkdbanswer->setText('');
@@ -356,91 +357,114 @@ class Admin extends \App\Pages\Base
 
     }
     
-    
     public function onOExport($sender) {
         $conn= \ZDB\DB::getConnect() ;
-
-        $list = $conn->Execute("select * from  options");
-
-        $root="<root>";
-
-        foreach ($list as $row) {
-
-            $root.="<item>";
-            $root.="<optname>" . $row['optname'] . "</optname>";
-            $root.="<optvalue><![CDATA[" . $row['optvalue'] . "]]></optvalue>";
-            $root.="</item>";
-
+        $a=[];
+        $a['options']=[];
+        $a['users']=[];
+        $a['roles']=[];
+        $a['mf']=[];
+        $a['pos']=[];
+        if($sender->oecommon->isChecked()){    
+            foreach( $conn->Execute("select * from  options") as $o){
+               $a['options'][$o['optname']]=$o['optvalue'] ;
+            }
         }
-        $root.="</root>";
+        if($sender->oeusers->isChecked()){    
+            foreach( \App\Entity\User::find("userlogin <> 'admin' and  disabled<>1")  as $u){
+               $a['users'][]= $u;
+            }
+            foreach( \App\Entity\UserRole::find("rolename <> 'admins' and disabled<>1")  as $r){
+               $a['roles'][]= $r;
+            }
+        }
+        if($sender->oemf->isChecked()){    
+            foreach( \App\Entity\MoneyFund::find("disabled<>1")  as $m){
+               $a['mf'][]= $m;
+            }
+            foreach( \App\Entity\Pos::find("")  as $p){
+               $a['pos'][]= $p;
+            }
+            
+        }
 
-        H::exportXML($root, 'options_' . date('Y_m_d', time()) . '.xml');
-
-
-        
-        /*    todo
-     $filename = 'options_' . date('Y_m_d', time()) . '.xml' ;
+        $file = serialize($a) ;
+         
+    
+       $filename = 'options_' . date('Y_m_d', time()) . '.bak' ;
 
           
         header("Content-type: text/plain");
         header("Content-Disposition: attachment;Filename={$filename}");
         header("Content-Transfer-Encoding: binary");
-        header('Content-Length: '.strlen($xml));
+        header('Content-Length: '.strlen($file));
  
-        echo $xml;
+        echo $file;
         die;        
         
-        
-        */
+     
         
     }
-  
 
     public function onOImport($sender) {
 
-        $file = $this->oform->ofilename->getFile();
+        $file = $this->oiform->oifilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
             $this->setError('Не вибраний файл');
             return;
         }
 
-        $conn= \ZDB\DB::getConnect() ;
-
-        $xml = @simplexml_load_file($file['tmp_name']) ;
-        if($xml==false) {
-
-            $this->setError("Невірний  контент");
-
+         
+        $a = unserialize( file_get_contents( $file['tmp_name'] ) ) ;
+        
+        if(!is_array($a) ) {
+            $this->setError('Некоректний файл');
             return;
         }
-
-        $list=[];
-
-        foreach ($xml->children() as $row) {
-
-
-            $name= (string)$row->optname[0] ;
-            $value= (string)$row->optvalue[0] ;
-            $list[$name]=$value;
-
-        }
-
-
+            
+        $conn= \ZDB\DB::getConnect() ;
+ 
         $conn->BeginTrans();
-
-
         try {
+          if($this->oiform->oicommon->isChecked()){    
+              Session::getSession()->options =[]; 
+              $conn->Execute("delete from options") ;
 
-            foreach($list as $n=>$v) {
-                $n = $conn->qstr($n);
-                $v = $conn->qstr($v);
-
-                $conn->Execute("delete from options where  optname={$n}")  ;
-                $conn->Execute("insert into options (optname,optvalue) values({$n},{$v}) ")  ;
-
-            }
-
-            $conn->CommitTrans();
+              foreach ($a['options'] as $n=>$v) {
+                 $conn->Execute("insert options (optname,optvalue) values (". $conn->qStr($n)  .",". $conn->qStr($v)   .")  ") ;
+              }
+          }
+          if($this->oiform->oiusers->isChecked()){   
+              $conn->Execute("delete from users where  userlogin <>'admin' ") ;
+              $conn->Execute("delete from roles where  rolename <>'admins' ") ;
+          
+           
+              foreach ($a['roles'] as  $r) {
+                 $r->role_id=0;
+                 $r->save() ;
+                
+              }
+              foreach ($a['users'] as  $u) {
+                $u->user_id=0;
+                $u->save() ;
+              }
+          }
+          if($this->oiform->oimf->isChecked()){    
+              $conn->Execute("delete from poslist") ;
+              $conn->Execute("delete from mfund") ;
+             
+              
+              foreach ($a['mf'] as  $m) {
+                 $m->mf_id=0;   
+                 $m->save() ;
+              }
+              foreach ($a['pos'] as  $p) {
+                 $p->pos_id=0; 
+                 $p->save() ;
+              }
+          }
+       
+          $conn->CommitTrans();
 
         } catch(\Throwable $ee) {
             $conn->RollbackTrans();
@@ -450,7 +474,7 @@ class Admin extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("Імпортовано  ");
+        $this->setSuccess("Імпортовано");
     }
   
     
