@@ -257,6 +257,7 @@ class ARMPos extends \App\Pages\Base
         $this->paydolg->add(new TextInput('pbnumber'));
         $this->paydolg->add(new TextInput('pbsum'));
         $this->paydolg->add(new DropDownChoice('pbpay'));
+        $this->paydolg->add(new CheckBox('onlystate'));
 
         //служебное внесение
         $this->add(new Form('paysin'))->onSubmit($this, 'onSinout') ;
@@ -1734,22 +1735,30 @@ class ARMPos extends \App\Pages\Base
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
 
-        $where = "(meta_name='PosCheck' ||  ( meta_name='ReturnIssue' and parent_id  in (select document_id from documents_view where meta_name='PosCheck' ) ) ) and  document_date  >= " . $conn->DBDate(strtotime('-14 day'))    ;
-
-
+        $this->_doclist=[];
+          
+        $where = "(meta_name='PosCheck' ||  ( meta_name='ReturnIssue' and parent_id  in (select document_id from documents_view where meta_name='PosCheck' ) ) ) and  document_date  >= " . $conn->DBDate(strtotime('-7 day'))    ;
+        $text='';
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
-            if (strlen($text) > 0) {
-                $where .= " and document_number=" . Document::qstr($text);
-            }
+         
             if (strlen($text) == 0 && $cust > 0) {
                 $where .= " and customer_id=" . $cust;
             }
-
-
         }
-        $this->_doclist = Document::find($where, ' document_id desc');
+        if(strlen($text) > 0) {
+            $where = "  document_number=" . Document::qstr($text);
+        }
+        foreach( Document::find($where, ' document_id desc') as $d){
+           $this->_doclist[$d->document_id] = $d ; 
+        };
+        
+        $where = "meta_name='PosCheck'  and ( state = 21 or  content like '%<waitpay>1</waitpay>%' )  "  ;
+        foreach( Document::find($where ) as $d){
+           $this->_doclist[$d->document_id] = $d ; 
+        };         
+        
         $this->checklistpan->checklist->Reload();
     }
 
@@ -1855,12 +1864,9 @@ class ARMPos extends \App\Pages\Base
         $id =  $sender->pbid->getText();
         $sum =  $sender->pbsum->getText();
         $pay =  $sender->pbpay->getValue();
+        $onlystate =  $sender->onlystate->isChecked();
         
-        if($pay==0) {
-            $this->setError("Не вибрана  оплата");
-            return;
-        }
-        
+     
         $mf=0;
         if($pay==1) {
             $mf = $this->form1->mfnal->getValue() ; 
@@ -1870,6 +1876,25 @@ class ARMPos extends \App\Pages\Base
         }
  
         $doc = Document::load($id);
+       
+        if($onlystate) {
+           if( $doc->getHD('waitpay')==1) {
+               $doc->setHD('waitpay',0) ;
+               $doc->save(); 
+           }
+           if($doc->state==Document::STATE_WP) {
+               $doc->updateStatus(Document::STATE_EXECUTED,true);
+           }       
+           $sender->clean();
+           $this->updatechecklist(null); 
+           return;
+        }       
+        if($pay==0) {
+            $this->setError("Не вибрана  оплата");
+            return;
+        }
+              
+       
         $am= H::fa($doc->payamount -   $doc->payed);
         if( $sum==0 ) {
             $this->setError("Не вказана  сума");
@@ -1880,11 +1905,13 @@ class ARMPos extends \App\Pages\Base
             return;
         }
       
+
+      
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
 
-          $doc->payed =  \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
+            $doc->payed =  \App\Entity\Pay::addPayment($id,time(),$sum,$mf) ;
             
           
             if($this->_tvars['checkbox'] == true) {
@@ -1959,6 +1986,7 @@ class ARMPos extends \App\Pages\Base
                } 
             }
             $conn->CommitTrans();
+            $sender->clean();
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -2323,7 +2351,7 @@ class ARMPos extends \App\Pages\Base
 
     }
 
-    //штриз код
+    //штрих код
     public function addcodeOnClick($sender) {
         $barcode = trim($this->docpanel->form2->barcode->getText());
         $code0 = $barcode;

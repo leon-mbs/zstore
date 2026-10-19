@@ -126,23 +126,7 @@ GROUP BY c.customer_name,
      
             $this->_custlist[$_c->customer_id]=$_c;
         }
-        /*
-        $sql = "SELECT c.customer_name,c.phone, c.customer_id
-             FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state not in (1,2,3,9,22) and  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}   and   c.detail not like '%<df>%' 
-             group by c.customer_name,c.phone, c.customer_id
-             order by c.customer_name
-             ";
-
-        $ids = array_keys($this->_custlist)  ;
-        foreach(\App\DataItem::query($sql) as $_c) {
-            if(!in_array($_c->customer_id, $ids)) {
-                $this->_custlist[$_c->customer_id]  = $_c  ;
-   
-            }
-
-        }
-           */
+ 
         $this->_totamountc = 0;
         $this->_totamountd = 0;
 
@@ -206,7 +190,7 @@ GROUP BY c.customer_name,
         $this->_doclist = array();
                                                                                                                                                                       
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and  ( state = 21 or  content like '%<waitpay>1</waitpay>%' ) and content not like '%<fiscalnumber>%'   and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ") as $d) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and  ( state = 21 or  content like '%<waitpay>1</waitpay>%' )  and meta_name in('Order','Invoice' ,'ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ") as $d) {
             
             $pm=intval($d->getHD('payment')) ; //денежный счет
             if($pt == 0 || $pm==$pt) {
@@ -372,7 +356,7 @@ GROUP BY c.customer_name,
                    $doc->updateStatus(Document::STATE_PAYED,true);
                }    
                if($sender->id=='paybtn') {   //создаем  оплаты
-                 if (in_array($doc->meta_name, array( 'Order','Invoice','POSCheck', 'GoodsIssue','ServiceAct'))) {
+                 if (in_array($doc->meta_name, array( 'Order','Invoice',  'GoodsIssue','ServiceAct'))) {
                     \App\Entity\IOState::addIOState($doc->document_id, $am, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
                     Pay::addPayment($doc->document_id, $pdate,  $am,$mf , $pcomment);
        

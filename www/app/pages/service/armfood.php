@@ -115,6 +115,7 @@ class ARMFood extends \App\Pages\Base
         $this->orderlistpan->add(new DataView('orderlist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
         $this->orderlistpan->add(new \Zippy\Html\DataList\Paginator('pag', $this->orderlistpan->orderlist));
         $this->orderlistpan->orderlist->setPageSize(H::getPG());
+
         $this->orderlistpan->add(new DataView('orderlist_of', new ArrayDataSource($this, '_doclist'), $this, 'onDocRowOf'));
  
         $this->orderlistpan->add(new ClickLink('refresh'))->onClick($this, 'updateorderlist');
@@ -296,14 +297,7 @@ class ARMFood extends \App\Pages\Base
         $this->trform->add(new TextInput('tritemqty')) ; 
         $this->trform->add(new SubmitButton('btntr'))->onClick($this,"onTr",true) ; 
       
-      
-    //оплата  долга  по  чеку
-        $this->add(new Form('paydolg'))->onSubmit($this, 'onBorg') ;
-        $this->paydolg->add(new TextInput('pbid'));
-        $this->paydolg->add(new TextInput('pbnumber'));
-        $this->paydolg->add(new TextInput('pbsum'));
-        $this->paydolg->add(new DropDownChoice('pbpay'));
-
+   
   
         //служебное внесение
         $this->add(new Form('paysin'))->onSubmit($this, 'onSinout') ;
@@ -472,9 +466,7 @@ class ARMFood extends \App\Pages\Base
          
         return Item::findArray('itemname',"disabled<>1  and  item_type in (1,4,5 )  and  (itemname like {$like} or item_code like {$like} ) and cat_id in (select cat_id from item_cat where detail  not  like '%<nofastfood>1</nofastfood>%')  and detail  not  like '%<isbasevarfood>1</isbasevarfood>%' "  );        
     }
-    
-
-    
+     
     public function addnewposOnClick($sender) {
         $this->docpanel->catpan->setVisible(true);
         $this->docpanel->prodpan->setVisible(false);
@@ -2575,7 +2567,22 @@ class ARMFood extends \App\Pages\Base
     public function onBorg($sender) {
         $id =  $sender->pbid->getText();
         $sum =  $sender->pbsum->getText();
+        $onlystate =  $sender->onlystate->isChecked();
         $pay =  $sender->pbpay->getValue();
+        $doc = Document::load($id);
+     
+        if($onlystate) {
+           if( $doc->getHD('waitpay')==1) {
+               $doc->setHD('waitpay',0) ;
+               $doc->save(); 
+           }
+           if($doc->state==Document::STATE_WP) {
+               $doc->updateStatus(Document::STATE_EXECUTED,true);
+           }       
+           $sender->clean();
+           $this->updatechecklist(null); 
+           return;
+        }        
         
         if($pay==0) {
             $this->setError("Не вибрана  оплата");
@@ -2590,8 +2597,7 @@ class ARMFood extends \App\Pages\Base
             $mf = $this->setupform->fbeznal->getValue() ; 
         }
  
-        $doc = Document::load($id);
-        $am= H::fa($doc->payamount -   $doc->payed);
+         $am= H::fa($doc->payamount -   $doc->payed);
         if( $sum==0 ) {
             $this->setError("Не вказана  сума");
             return;
