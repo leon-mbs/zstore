@@ -28,8 +28,7 @@ class Options extends \App\Pages\Base
         $form = $this->add(new Form("cform"));
         $form->add(new TextInput('site', $modules['ocsite']));
         $form->add(new TextInput('apiname', $modules['ocapiname']));
-        $form->add(new CheckBox('ssl', $modules['ocssl'] ?? 0));
-
+     
         $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
         $form->add(new CheckBox('dostore', $modules['ocdostore']));
         $form->add(new CheckBox('reserve', $modules['ocreserve']));
@@ -45,7 +44,7 @@ class Options extends \App\Pages\Base
         $pt=[];
         $pt[1] = 'Оплата на стороні IM ';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата касовим  чеком, РФ або ВН';
+        $pt[3] = 'Оплата касовим  чеком ';
         $pt[4] = 'Тільки списати зі складу через ТТН';
       
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
@@ -65,7 +64,6 @@ class Options extends \App\Pages\Base
         $store = $this->cform->defstore->getValue();
         $paytype = intval($this->cform->defpaytype->getValue() );
 
-        $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
         $v4 = $this->cform->v4->isChecked() ? 1 : 0;
         $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         $reserve = $this->cform->reserve->isChecked() ? 1 : 0;
@@ -111,7 +109,6 @@ class Options extends \App\Pages\Base
         $modules['ocpricetype'] = $pricetype;
         $modules['ocsalesource'] = $salesource;
        
-        $modules['ocssl'] = $ssl;
         $modules['ocv4'] = $v4;
         $modules['ocinsertcust'] = $insertcust;
         $modules['ocdostore'] = $dostore;

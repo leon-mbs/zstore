@@ -69,7 +69,7 @@ class GoodsIssue extends Document
                         "isfirm"          =>  strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "store_name"      => $this->headerdata["store_name"],
-                        "order"           => strlen($this->headerdata["order"]) > 0 ? $this->headerdata["order"] : false,
+                       
                         "weight"          => $weight > 0 ? round($weight, 3) : false,
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
@@ -321,28 +321,7 @@ class GoodsIssue extends Document
                       
                 }
                  
-                if($order->meta_name == 'Order' && $order->state > 4) {
-
-                          
-                    if( count( $order->getNotSendedItem() ) >0 ) return;
-            
-                    if($order->state == Document::STATE_INSHIPMENT || 
-                        $order->state == Document::STATE_INPROCESS ||  
-                        $order->state == Document::STATE_FINISHED ||  
-                        $order->state == Document::STATE_READYTOSHIP) {
-                            
-                        $order->updateStatus(Document::STATE_DELIVERED);
-                    }                            
                
-                    if($this->payed  >= $this->payamount  ) {  //если  оплачено  
-                        if ($order->state == Document::STATE_DELIVERED) {
-                            $order->updateStatus(Document::STATE_CLOSED);
-                        }
-                    }
-                    
-                
-
-                }
             }
         }
     }

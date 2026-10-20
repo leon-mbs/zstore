@@ -6,72 +6,81 @@
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
                 <h4>Налаштування з'єднання</h4>
                 <form zippy="cform">
-                
-                    <div class="mb-2">
-                        <label for="apitoken">Ключ</label>
-                        <input  zippy="apitoken" class="form-control" required="required"/>
-                    </div>
-
-          
-                 <div class="mb-2">
-                        <label for="salesource">Джерело продаж</label>
+                     <div class="row">
+                        <label class="col-4 col-form-label" for="salesource">Джерело продаж</label>
+                         <div class="col-8">
                         <select class="form-control" zippy="salesource">
                             <option value="0">Не обрано</option>
                         </select>
-                    </div>                    
-                     
-                    <div class="mb-2">
-                        <label for="defpricetype">Тип ціни </label>
+                        <small> Виконує також роль назви магазану  </small>
+                         
+                    </div>    
+                    </div>    
+                    <div class="row">
+                        <label class="col-4 col-form-label" for="apitoken">Ключ</label>
+                        <div class="col-8">
+                        <input  zippy="apitoken" class="form-control" required="required"/>
+                      </div>
+                    </div>
 
+          
+                      
+                     
+                    <div class="row">
+                        <label class="col-4 col-form-label" for="defpricetype">Тип ціни </label>
+                         <div class="col-8">
+ 
                         <select class="form-control" zippy="defpricetype">
                             <option value="0">Не обрано</option>
 
                         </select>
 
+                       </div>
                     </div>
-       <div class="mb-2">
-                        <label for="defpaytype">Тип оплати </label>
-
+                    <div class="row">
+                        <label class="col-4 col-form-label" for="defpaytype">Тип оплати </label>
+                           <div class="col-8">
+                  
                         <select class="form-control" zippy="defpaytype">
                             <option value="0">Не вказано</option>
 
                         </select>
-                        
-
+       
+                       </div>                    
                     </div>                    
-                     <div class="mb-2">
-                        <label for="defmf">Каса  </label>
-
+                     <div class="row">
+                        <label class="col-4 col-form-label" for="defmf">Каса  </label>
+                         <div class="col-8">
+ 
                         <select class="form-control" zippy="defmf">
                             <option value="0">Не вказана</option>
 
                         </select>
                          <small class="form-text text-muted">Обов'язкова  якщо тип оплати  - передплата </small>
   
+                      </div>
                     </div>
-                      <div class="mb-2">
-                        <label for="defstore">Склад</label>
-
+                      <div class="row">
+                        <label class="col-4 col-form-label" for="defstore">Склад</label>
+                         <div class="col-8">
+ 
                         <select class="form-control" zippy="defstore">
                             <option value="0">Не вказаний</option>
 
                         </select>
                         <small class="form-text text-muted">Для  автоматичного резервування товару  </small>
 
+                      </div>
                     </div>
                     
                  
                      <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="insertcust">Імпортувати контрагентів  </label>
-                        <small class="form-text text-muted">Імпортувати клієнтів з ІМ в довідник контрагентів .</small>
-                        <br>
+                       <br>  <small class="form-text text-muted">Імпортувати клієнтів з ІМ в довідник контрагентів .</small>
+                       
                     </div>
-                    <div class="form-check">
-                        <input zippy="ssl" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="ssl">Перевірка SSL сертифіката </label>
-
-                    </div>                                  
+                                                  
                     <div class="mb-2">
                         <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary me-2"/>
                         

@@ -34,8 +34,7 @@ class GoodsIssue extends \App\Pages\Base
     private $_basedocid = 0;
     private $_rowid     = -1;
     private $_rownumber = 1;
-    private $_orderid   = 0;
- 
+   
     private $_changedpos  = false;
 
     /**
@@ -85,7 +84,7 @@ class GoodsIssue extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
 
-        $this->docform->add(new TextInput('order'));
+  
 
         $this->docform->add(new TextInput('notes'));
         $fops=[];
@@ -163,10 +162,7 @@ class GoodsIssue extends \App\Pages\Base
             }
 
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->order->setText($this->_doc->headerdata['order']);
-            $this->_orderid = $this->_doc->headerdata['order_id'];
-
-
+          
              $this->OnChangeCustomer($this->docform->customer);
 
             $this->docform->contract->setValue($this->_doc->headerdata['contract_id']);
@@ -181,78 +177,7 @@ class GoodsIssue extends \App\Pages\Base
                 if ($basedoc instanceof Document) {
 
                     $this->_basedocid = $basedocid;
-                    if ($basedoc->meta_name == 'Order') {
-                        if($basedoc->getHD('paytype',0) != 3){
-                            $this->_doc->headerdata['prepaid']  = $basedoc->payamount ;
-                        }         
-
-                        $this->docform->customer->setKey($basedoc->customer_id);
-                        $this->docform->customer->setText($basedoc->customer_name);
-
-                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
-                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
-                        $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
-                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
-                        // $this->docform->store->setValue($basedoc->headerdata['store']);
-                        $this->_orderid = $basedocid;
-                        $this->docform->order->setText($basedoc->document_number);
-                   
-                        
-                        $order = $basedoc->cast();
-
-                        
-                        $this->_itemlist = $order->unpackDetails('detaildata');
-                                               
-                        $nosent = $order->getNotSendedItem();
-                        
-                        if( count($nosent)  == 0){
-                           $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
-                        } else
-                        { 
-                           $this->_itemlist = [];
-                           $nosentids=array_keys($nosent) ;
-                           foreach($order->unpackDetails('detaildata') as $oit){
-                              if(in_array($oit->item_id,$nosentids)) {
-                                  $oit->quantity= $nosent[$oit->item_id];
-                                  $this->_itemlist[$oit->item_id] = $oit;
-                                  
-                              }
-                           } 
-                        }
-
-                        
-                       
-                       
-                        if($basedoc->state == Document::STATE_WP || $basedoc->hasPayments()) {
-                            $this->_doc->headerdata['prepaid']  = abs($basedoc->payamount);
-                        }
-
                     
-                        
-                        if($order->headerdata['store']>0) {
-                            $this->docform->store->setValue($order->headerdata['store']);
-                            $order->unreserve();  
-                     
-                        }
-                        if($order->headerdata['payment']>0) {
-                            $this->docform->payment->setValue($order->headerdata['payment']);
-                        }
-
-
-
-                        $this->calcTotal();
-                        
-                        $this->calcPay();
-
-
-
-                        //  $this->docform->editpayed->setText($this->docform->editpayamount->getText());
-                        //   $this->docform->payed->setText($this->docform->payamount->getText());
-
-
-
-
-                    }
                     if ($basedoc->meta_name == 'Invoice') {
 
                         $this->docform->customer->setKey($basedoc->customer_id);
@@ -323,9 +248,7 @@ class GoodsIssue extends \App\Pages\Base
                             $item->price = $item->getPrice($basedoc->headerdata['pricetype']); //последние  цены
                             $this->_itemlist[ ] = $item;
                         }
-                        // $this->OnChangeCustomer($this->docform->customer);
-                        //$this->calcTotal();
-                        //$this->calcPay();
+                    
                         $this->docform->total->setText($basedoc->amount);
                         $this->calcTotal();
                         $this->calcPay();
@@ -343,8 +266,7 @@ class GoodsIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
                         $this->_doc->headerdata['prepaid']  = $basedoc->payed ;
 
-                        // $this->docform->order->setText(  $basedoc->document_number);
-
+                       
                     }
 
 
@@ -732,7 +654,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
-        //   $this->_doc->order = $this->docform->order->getText();
+
         $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
@@ -757,8 +679,8 @@ class GoodsIssue extends \App\Pages\Base
             return;
         }
 
-        $this->_doc->headerdata['order_id'] = $this->_orderid;
-        $this->_doc->headerdata['order'] = $this->docform->order->getText();
+  
+
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['store_name'] = $this->docform->store->getValueName();
@@ -767,8 +689,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
         $this->_doc->headerdata['pricetypename'] = $this->docform->pricetype->getValueName();
 
-        $this->_doc->headerdata['order_id'] = $this->_orderid;
-
+       
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
@@ -787,21 +708,7 @@ class GoodsIssue extends \App\Pages\Base
 
             if ($sender->id == 'execdoc') {
        
-               if ($this->_doc->parent_id > 0) {   //закрываем заказ
-                    $order = Document::load($this->_doc->parent_id)->cast();
-
-                    if($this->_changedpos) {
-                        $msg= "В документі {$this->_doc->document_number}, створеному на підставі {$order->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ " ;
-                        \App\Entity\Notify::toSystemLog($msg) ;
-                    }
-                    if($order->meta_name == 'Order') {
-                        $nosent = $order->getNotSendedItem(); 
-                         
-                        if(count($nosent)==0 && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP )) {
-                            $order->updateStatus(Document::STATE_INSHIPMENT);
-                        }   
-                    }  
-                }
+             
        
        
                 if (!$isEdited) {
