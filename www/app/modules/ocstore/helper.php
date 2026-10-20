@@ -18,15 +18,14 @@ class Helper
      */
     public static function do_curl_request($url, $params = array()) {
 
-        $ssl = \App\System::getSession()->ocssl == 1;
-
+      
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_COOKIEJAR, _ROOT . 'upload/apicookie.txt');
         curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/apicookie.txt');
 
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $ssl);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $params_string = '';
         if (is_array($params) && count($params)) {

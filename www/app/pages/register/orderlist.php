@@ -14,12 +14,14 @@ use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
+use Zippy\Html\Form\Button;
 use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
+
 use Zippy\Html\Panel;
 use App\Entity\Pay;
 
@@ -31,6 +33,7 @@ class OrderList extends \App\Pages\Base
     private $_doc = null;
     private $_issms = false; //подключен  смс  сервис
     public $_itemlist =[];
+    public $_ss =[];
 
     /**
      *
@@ -45,6 +48,7 @@ class OrderList extends \App\Pages\Base
         
          
         $this->_issms = (System::getOption('sms', 'smstype')??0) >0 ;
+        $this->_ss = H::getSaleSources();
 
         $this->add(new Panel("listpanel"));
 
@@ -54,7 +58,7 @@ class OrderList extends \App\Pages\Base
         $this->listpanel->filter->add(new TextInput('searchnumber'));
         $this->listpanel->filter->add(new TextInput('searchtext'));
         $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові',2 => 'До сплати', 3 => 'Всі'), 0));
-        $this->listpanel->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
+        $this->listpanel->filter->add(new DropDownChoice('salesource',$this->_ss , 0));
 
         $doclist = $this->listpanel->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
 
@@ -72,12 +76,11 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('brd'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('brec'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bsent'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bscan'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bsplit'))->onClick($this, 'statusOnSubmit');
-
+        $this->statuspan->statusform->add(new SubmitButton('bwp'))->onClick($this, 'statusOnSubmit');
+    
 
         $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new SubmitButton('bgi'))->onClick($this, 'statusOnSubmit');
+
         $this->statuspan->statusform->add(new SubmitButton('bginv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
@@ -87,7 +90,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bshift')) ;
 
 
-        $this->statuspan->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
+        $this->statuspan->statusform->add(new Button('btopay'));
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -101,6 +104,8 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->resform->add(new SubmitButton('bres'))->onClick($this, 'resOnSubmit');
         $this->statuspan->resform->add(new SubmitButton('bunres'))->onClick($this, 'resOnSubmit');
         $this->statuspan->resform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
+        $this->statuspan->resform->add(new SubmitButton('bscan'))->onClick($this, 'resOnSubmit');
+        $this->statuspan->resform->add(new SubmitButton('bsplit'))->onClick($this, 'resOnSubmit');
 
 
         $this->listpanel->doclist->Reload();
@@ -127,6 +132,11 @@ class OrderList extends \App\Pages\Base
     
         $this->add(new Form("shiftform"))->onSubmit($this,'shiftOnSubmit');
         $this->shiftform->add(new TextArea('shiftmsg'));
+    
+        $this->add(new Form("paydolg"))->onSubmit($this,'pbOnSubmit');
+        $this->paydolg->add(new TextInput('pbnumber'));
+        $this->paydolg->add(new TextInput('pbsum'));
+        $this->paydolg->add(new DropDownChoice('pbpay', \App\Entity\MoneyFund::getList() ));
          
     }
 
@@ -174,6 +184,7 @@ class OrderList extends \App\Pages\Base
         
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('emp', $doc->username));
+        $row->add(new Label('source', $this->_ss[$doc->getHD('salesource')]??''));
 
 
         $row->add(new  \Zippy\Html\Link\BookmarkableLink('customer'))->setValue($doc->customer_name);
@@ -181,15 +192,18 @@ class OrderList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 
 
-        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') < 3 && $doc->state>3 && $doc->state<>9);
         
-        if($doc->getHD('waitpay')==1){
+       
+        if($doc->payed < $doc->payamount ) {
             $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
             $row->ispay->setAttribute('title','До сплати');            
-        }   else {
+        }  
+        else  {
             $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
             $row->ispay->setAttribute('title','Оплачено');            
         }
+      
         $row->add(new Label('isreserved'))->setVisible($doc->hasReserve());
 
         $stname = Document::getStateName($doc->state);
@@ -224,7 +238,7 @@ class OrderList extends \App\Pages\Base
             $row->edit->setVisible(false);
         }
         $row->setAttribute('data-did', $doc->document_id);
-     
+       
 
         $ch = $this->checkChat($doc);
         if($ch) {
@@ -246,6 +260,9 @@ class OrderList extends \App\Pages\Base
 
     private function checkChat($doc) {
         $ret = false ;
+        if($doc->state<5 || $doc->state==Document::STATE_CLOSED ) {
+            return false;
+        }
         if($this->_issms && ($doc->state < Document::STATE_EXECUTED || $doc->state == Document::STATE_INPROCESS)) {
 
             $phone= $doc->headerdata['phone'] ??'';
@@ -262,6 +279,16 @@ class OrderList extends \App\Pages\Base
     }
 
     public function resOnSubmit($sender) {
+        if ($sender->id == "bscan") {
+            $this->openedit();
+            return;
+        }
+        if ($sender->id == "bsplit") {
+            $this->openSplit();
+            return;
+        }
+      
+      
         if ($sender->id == "bres") {
             $store = $this->statuspan->resform->store->getValue();
             if($store == 0) {
@@ -353,12 +380,7 @@ class OrderList extends \App\Pages\Base
             App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
             return;
         }
-
-        if ($sender->id == "bgi") {
-
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
-            return;
-        }
+  
         if ($sender->id == "bginv") {
 
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
@@ -370,14 +392,7 @@ class OrderList extends \App\Pages\Base
             return;
         }
 
-        if ($sender->id == "bscan") {
-            $this->openedit();
-            return;
-        }
-        if ($sender->id == "bsplit") {
-            $this->openSplit();
-            return;
-        }
+ 
       
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -399,6 +414,11 @@ class OrderList extends \App\Pages\Base
             }
             if ($sender->id == "bsent") {
                 $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
+            }
+            if ($sender->id == "bwp") {
+                $this->_doc->setHD('waitpay',1); 
+                $this->_doc->save(); 
+                $this->_doc->updateStatus(Document::STATE_WP);
             }
 
             if ($sender->id == "bref") {
@@ -461,19 +481,18 @@ class OrderList extends \App\Pages\Base
         
         $this->statuspan->statusform->btopay->setVisible(false);
         
+        $this->statuspan->statusform->bwp->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
         $this->statuspan->statusform->brec->setVisible(false);
         $this->statuspan->statusform->bsent->setVisible(false);
-        $this->statuspan->statusform->bscan->setVisible(false);
-        $this->statuspan->statusform->bsplit->setVisible(false);
+        $this->statuspan->resform->bscan->setVisible(false);
+        $this->statuspan->resform->bsplit->setVisible(false);
         $this->statuspan->moveform->setVisible(false);
 
         $this->statuspan->resform->setVisible(false);
 
 
-     //   $this->statuspan->statusform->bscan->setAttribute('onclick', "openscan({$this->_doc->document_id})");
-
-
+     
         //новый
         if ($state < Document::STATE_EXECUTED  ) {
             $this->statuspan->statusform->btask->setVisible(false);
@@ -483,15 +502,15 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bcopy->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->bco->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(false);
             $this->statuspan->statusform->brec->setVisible(false);
             $this->statuspan->statusform->bsent->setVisible(false);
-            $this->statuspan->statusform->bscan->setVisible(false);
-            $this->statuspan->statusform->bsplit->setVisible(false);
+            $this->statuspan->resform->bscan->setVisible(false);
+            $this->statuspan->resform->bsplit->setVisible(false);
         } else {
 
             $this->statuspan->statusform->bclose->setVisible(true);
@@ -507,21 +526,25 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
-            $this->statuspan->statusform->bscan->setVisible(false);
+            $this->statuspan->resform->bscan->setVisible(false);
         }
 
         if ($state == Document::STATE_INPROCESS) {
             $this->statuspan->statusform->bsent->setVisible(true);
             $this->statuspan->statusform->brd->setVisible(true);
-            $this->statuspan->statusform->bscan->setVisible(true);
-            $this->statuspan->statusform->bsplit->setVisible(true);
+            $this->statuspan->resform->bscan->setVisible(true);
+            $this->statuspan->resform->bsplit->setVisible(true);
 
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
-            $this->statuspan->statusform->bgi->setVisible(true);
+    
             $this->statuspan->statusform->bginv->setVisible(true);
+            
+            $this->statuspan->statusform->bwp->setVisible(true);
+              
+            
         }
         if ($state == Document::STATE_READYTOSHIP) {
             $this->statuspan->statusform->bsent->setVisible(true);
@@ -529,7 +552,7 @@ class OrderList extends \App\Pages\Base
            
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
-            $this->statuspan->statusform->bgi->setVisible(true);
+
             $this->statuspan->statusform->bginv->setVisible(true);      
         }
       
@@ -538,7 +561,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brec->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
         }
@@ -546,7 +569,7 @@ class OrderList extends \App\Pages\Base
 
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(true);
+
             $this->statuspan->statusform->bginv->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(false);
         }
@@ -554,7 +577,7 @@ class OrderList extends \App\Pages\Base
 
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
@@ -565,14 +588,14 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
             $this->statuspan->statusform->bsent->setVisible(false);
-            $this->statuspan->statusform->bscan->setVisible(false);
+            $this->statuspan->resform->bscan->setVisible(false);
             $this->statuspan->resform->setVisible(false);
             $this->statuspan->moveform->setVisible(false);
        }
@@ -581,23 +604,23 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
             $this->statuspan->statusform->bsent->setVisible(false);
-            $this->statuspan->statusform->bscan->setVisible(false);
+            $this->statuspan->resform->bscan->setVisible(false);
             $this->statuspan->resform->setVisible(false);
             $this->statuspan->moveform->setVisible(false);
         }
 
-        if ($state == Document::STATE_WP) {
+        if ($this->_doc->getHD('paytype') < 3 && $this->_doc->state>3 && $this->_doc->state<>9 )      {
 
-            if($this->_doc->getHD('waitpay')==1) {
+            if($this->_doc->payamount > $this->_doc->payed ) {
                 $this->statuspan->statusform->btopay->setVisible(true);
-                $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
+                
             }
 
         }
@@ -620,7 +643,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->binp->setVisible(true);
         }
 
-        if($this->_doc->hasPayments() == false && ($state<4 || $state==Document::STATE_INPROCESS)) {
+        if(  $state<4 || $state==Document::STATE_INPROCESS) {
             $this->statuspan->moveform->setVisible(true);
         }
 
@@ -654,7 +677,7 @@ class OrderList extends \App\Pages\Base
         
         if ($pt ==1 ||  $pt==2) {
             $this->statuspan->statusform->bpos->setVisible(false);
-            $this->statuspan->statusform->bgi->setVisible(false);
+
             $this->statuspan->statusform->bginv->setVisible(false);
         }
 
@@ -807,8 +830,12 @@ class OrderList extends \App\Pages\Base
         $this->onBranch($this->statuspan->moveform->brmove);
         $this->statuspan->moveform->usmove->setValue($this->_doc->user_id);
         
+        $this->paydolg->pbpay->setValue($this->_doc->getMF()) ;
+        $this->paydolg->pbnumber->setText($this->_doc->document_number) ;
+        $this->paydolg->pbsum->setText( H::fa( $this->_doc->payamount - $this->_doc->payed )) ;
+        
         $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-active') ",true)  ;
- 
+        $this->goAnkor('statusform') ;
     }
 
     public function editOnClick($sender) {
@@ -1123,7 +1150,7 @@ class OrderList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
 
     }
- 
+     
     public function shiftOnSubmit($sender) {
 
             $text = trim($this->shiftform->shiftmsg->getText() );
@@ -1163,6 +1190,42 @@ class OrderList extends \App\Pages\Base
     
 
     }
+
+    public function pbOnSubmit($sender) {
+        
+        $sum = $sender->pbsum->getDouble() ;
+        $mf = intval( $sender->pbpay->getValue() );
+  
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+            $this->_doc->payed =  \App\Entity\Pay::addPayment($this->_doc->document_id,time(),$sum,$mf) ;
+          
+            if( $this->_doc->state==Document::STATE_WP) {
+               $this->_doc->updateStatus(Document::STATE_PAYED);
+            }     
+            if( $this->_doc->getHD('waitpay')==1) {
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();
+            }     
+          
+            $this->listpanel->doclist->Reload();
+        
+            $conn->CommitTrans();
+            $sender->clean();
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setError($ee->getMessage());
+
+    
+            return;
+        }       
+        
+    }
+ 
+
   
     //vue
 
@@ -1331,7 +1394,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);
+        $docs = Document::find($this->getWhere(), "priority desc ", $count, $start);
         //         $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
 
         return $docs;

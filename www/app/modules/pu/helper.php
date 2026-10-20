@@ -38,8 +38,7 @@ class Helper
     public static function make_request($method, $url, $body='') {
 
         $modules = System::getOptions("modules");
-        $usessl = $modules['pussl'];
-
+        
 
         $headers = array(
             'Authorization: Bearer ' . $modules['puapitoken'],
@@ -59,7 +58,8 @@ class Helper
         }
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $usessl == 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
       //  \App\Helper::log(json_encode($body, JSON_UNESCAPED_UNICODE)) ;
         $result = curl_exec($ch);
         if (curl_errno($ch) > 0) {

@@ -713,7 +713,7 @@ class Import extends \App\Pages\Base
             if (strlen($doc->document_number) == 0) {
                 $doc->document_number = "ПН-00001";
             }
-            $doc->document_date = $this->nform->ndocdate->getTDate() ?? time();
+            $doc->document_date = $this->nform->ndocdate->getDate() ?? time();
 
             $amount = 0;
             $itlist = array();

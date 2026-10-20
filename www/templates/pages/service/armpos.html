@@ -163,7 +163,8 @@
                               <div class="col-auto">
                             <input autofocus="on" autocomplete="off" style="width:120px"  type="text" zippy="barcode" onkeydown="onBarCode()">
                              <a zippy="addcode" class="btn btn-success btn-sm me-1">+</a>
-                       
+                             <i  id="mscannericon" onclick="showScanner()" class="fa fa-mobile-alt fw-bold  me-2 " style="display:none;cursor:pointer" ></i>
+                 
                             
                             </div> 
                             
@@ -800,7 +801,7 @@
                                        <label class="col-4 col-form-label"   for="pbsum">Сума</label>
                                        
                                        <div class="col-8"> 
-                                        <input style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="pbsum"/>
+                                        <input required="on" style="width:120px" pattern="[0-9\.]+" class="form-control" type="text" zippy="pbsum"/>
                                       </div>    
                                     </div>
                                      <div class="row mb-2">
@@ -816,7 +817,12 @@
                                         </select>
                                         </div> 
                                     </div>
-                  
+                                    <div class="form-check  mb-2">
+                                        <input zippy="onlystate" type="checkbox" class="form-check-input">
+                                        <label class="form-check-label" for="onlystate">Тільки змінити статус </label>
+                                        <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
+                                           title="Наприклад, оплата виконана касовим  ордером "></i>
+                                    </div>
                                     <div class="mb-2">
                                         <button type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal">Скасувати</button>
       

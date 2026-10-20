@@ -43,8 +43,7 @@ class Options extends \App\Pages\Base
 
 
         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['pusalesource']));
-        $form->add(new CheckBox('ssl', $modules['pussl']));
-
+      
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $form->add(new CheckBox('insertcust', $modules['puinsertcust']));
 
@@ -91,8 +90,7 @@ class Options extends \App\Pages\Base
         $modules['pupricetype'] = $pricetype;
         $modules['pusalesource'] = $salesource;
         $modules['puinsertcust'] = $insertcust;
-        $modules['pussl'] = $this->cform->ssl->isChecked() ? 1 : 0;
-
+       
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
 

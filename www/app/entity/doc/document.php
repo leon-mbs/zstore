@@ -12,25 +12,25 @@ use App\System;
 class Document extends \ZCL\DB\Entity
 {
     // состояния  документа
-    public const STATE_NEW         = 1;     //Новый
-    public const STATE_EDITED      = 2;  //Отредактирован
-    public const STATE_CANCELED    = 3;      //Отменен
-    public const STATE_EXECUTED    = 5;      // Проведен
-    public const STATE_DELETED     = 6;       //  Удален
-    public const STATE_INPROCESS   = 7; // в  работе
-    public const STATE_WA          = 8; // ждет подтверждения
-    public const STATE_CLOSED      = 9; // Закрыт (выполнен и оплачен)
-    public const STATE_INSHIPMENT  = 11; // В доставке
-    public const STATE_DELIVERED   = 14; // доставлен
-    public const STATE_REFUSED     = 15; // отклонен
-    public const STATE_SHIFTED     = 16; // отложен
-    public const STATE_FAIL        = 17; // Аннулирован
-    public const STATE_FINISHED    = 18; // Закончен
-    public const STATE_APPROVED    = 19;      //  Утвержден
-    public const STATE_READYTOSHIP = 20; // готов к отправке
-    public const STATE_WP          = 21; // ждет  оплату
-    public const STATE_PAYED       = 22; // Оплачен
-    public const STATE_WAIT        = 23; // Ожидает обработки
+    public const STATE_NEW         = 1;  // Новый                         98
+    public const STATE_EDITED      = 2;  // Отредактирован                80
+    public const STATE_CANCELED    = 3;  // Отменен                       92
+    public const STATE_EXECUTED    = 5;  // Проведен                      42
+    public const STATE_DELETED     = 6;  // Удален                        10
+    public const STATE_INPROCESS   = 7;  // в работе                      45
+    public const STATE_WA          = 8;  // ждет подтверждения            90
+    public const STATE_CLOSED      = 9;  // Закрыт (выполнен и оплачен)   3
+    public const STATE_INSHIPMENT  = 11; // В доставке                    44
+    public const STATE_DELIVERED   = 14; // доставлен                     30
+    public const STATE_REFUSED     = 15; // отклонен                      3
+    public const STATE_SHIFTED     = 16; // отложен                       44
+    public const STATE_FAIL        = 17; // Аннулирован                   20
+    public const STATE_FINISHED    = 18; // Закончен                      40
+    public const STATE_APPROVED    = 19; // Утвержден                     80
+    public const STATE_READYTOSHIP = 20; // готов к отправке              88
+    public const STATE_WP          = 21; // ждет  оплату                  75
+    public const STATE_PAYED       = 22; // Оплачен                       53
+    public const STATE_WAIT        = 23; // Ожидает обработки             90
 
     // типы  экспорта
     public const EX_WORD  = 1;    //  Word
@@ -142,8 +142,8 @@ class Document extends \ZCL\DB\Entity
         // hash выдаётся каждому новому документу в create() и одинаков у всех версий страницы
         if ($this->document_id == 0 && strlen($this->headerdata['hash'] ?? '') > 0) {
             $conn = \ZDB\DB::getConnect();
-            $cnt = $conn->GetOne("select count(*) from documents where meta_id={$this->meta_id} and document_date >= DATE_SUB(NOW(), INTERVAL 2 DAY)  and   content like " . $conn->qstr('%' . $this->headerdata['hash'] . '%'));
-            if ($cnt > 0) {           
+            $cnt = $conn->GetOne("select count(*) from documents where meta_id= ". intval($this->meta_id) ." AND user_id=". intval($this->user_id) ." AND  document_id  > (SELECT MAX(document_id) - 10  FROM documents)  and document_date >= DATE_SUB(NOW(), INTERVAL 2 DAY)  and   content like " . $conn->qstr('%' . $this->headerdata['hash'] . '%'));
+            if (intval($cnt) > 0) {           
                 throw new \Exception("Дублювання документу {$this->document_number}");
             }
         }        
@@ -543,8 +543,7 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
      
-   //     $this->priority = $this->getPriorytyByState($this->state) ;
-
+   
         $this->save();
         $this->insertLog($state);
         if ($oldstate != $state) {
@@ -586,72 +585,7 @@ class Document extends \ZCL\DB\Entity
 
     }
 
-    //deprecated
-    public function getPriorytyByState($state) {
-       
-        if($state == self::STATE_CLOSED) {
-            return 1;
-        }
-        if($state == self::STATE_REFUSED) {
-            return 3;
-        }
-        if($state == self::STATE_DELETED) {
-            return 2;
-        }
-        if($state == self::STATE_FAIL) {
-            return 3;
-        }        
-        if($state == self::STATE_EXECUTED) {
-            return 10;
-        }
-        if($state == self::STATE_PAYED) {
-            return 15;
-        }        
-        if($state == self::STATE_FINISHED) {
-            return 20;
-        }
-        if($state == self::STATE_DELIVERED) {
-            return 30;
-        }
-        if($state == self::STATE_SHIFTED) {
-            return 40;
-        }        
-        if($state == self::STATE_INPROCESS) {
-            return 50;
-        }
   
-        if($state == self::STATE_INSHIPMENT) {
-            return 50;
-        }
-        if($state == self::STATE_READYTOSHIP) {
-            return 50;
-        }        
-        if($state == self::STATE_CANCELED) {
-            return 70;
-        }        
-        if($state == self::STATE_WP) {
-            return 75;
-        }  
-        if($state == self::STATE_APPROVED) {
-            return 80;
-        }
-        if($state == self::STATE_WAIT) {
-            return 80;
-        }
-     
-        if($state == self::STATE_EDITED) {
-            return 80;
-        }
-        if($state == self::STATE_WA) {
-            return 90;
-        }        
-       
-        if($state == self::STATE_NEW) {
-            return 100;
-        }
-        return 50;
-    }
-
     /**
      * Возвращает название  статуса  документа
      *
