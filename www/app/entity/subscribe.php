@@ -374,21 +374,10 @@ class Subscribe extends \ZCL\DB\Entity
                 $ret =   \App\Comm::sendSMS($options['phone'], $text);
             }
             if (strlen($options['email']??'') > 0 && $this->msg_type == self::MSG_EMAIL) {
-                // отправляем  в  очередь если  включен  планировщик
-                if(System::useCron()) {
-                    $task = new  \App\Entity\CronTask();
-                    $task->tasktype=\App\Entity\CronTask::TYPE_SUBSEMAIL;
-                    $task->taskdata= serialize(array(
-                       'email'=>$options['email'] ,
-                       'subject'=>$this->msgsubject ,
-                       'text'=>$text ,
-                       'document_id'=> $this->attach==1 ?  $options['doc']->document_id : 0
-                    ));
-
-                    $task->save();
-                } else {
+                
+              
                     $ret =   \App\Comm::sendEmail($options['email'], $text, $this->msgsubject, $this->attach==1 ? $options['doc'] : null);
-                }
+               
 
             }
 

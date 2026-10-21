@@ -10,15 +10,29 @@ class Comm
 {
      
     public static function sendEmail($email, $text, $subject, $doc=null) {
-        global $_config;
+       $opt = self::getEmailOptions();        
+       if(($opt['usecron']?? false)==true  && \App\System::useCron() ) {
+            $task = new  \App\Entity\CronTask();
+            $task->tasktype=\App\Entity\CronTask::TYPE_EMAIL;
+            $task->taskdata= serialize(array(
+               'email'=>$email,
+               'subject'=>$subject,
+               'text'=>$text ,
+               'document_id'=> $doc <> null ? $doc->document_id : 0
+            ));
 
+            $task->save();        
+            return;
+       }
        
-
-        $emailfrom = $_config['smtp']['emailfrom'];
-        if(strlen($emailfrom)==0) {
-            $emailfrom = $_config['smtp']['user'];
-
-        }
+       self::_sendEmail($email, $text, $subject, $doc ) ;
+        
+    }
+    public static function _sendEmail($email, $text, $subject, $doc=null) {
+    
+                  
+        $opt = self::getEmailOptions();        
+        
         $filename = '';
         $f = '';
         try {
@@ -44,25 +58,23 @@ class Comm
                 file_put_contents($f, $data);
 
             }
-
-
-
+  
             $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
-            if ($_config['smtp']['usesmtp'] == true) {
+            if ($opt['usesmtp'] == true) {
                 $mail->isSMTP();
-                $mail->Host = $_config['smtp']['host'];
-                $mail->Port = $_config['smtp']['port'];
-                $mail->Username = $_config['smtp']['user'];
-                $mail->Password = $_config['smtp']['pass'];
+                $mail->Host = $opt['host'];
+                $mail->Port = $opt['port'];
+                $mail->Username = $opt['user'];
+                $mail->Password = $opt['pass'];
                 $mail->SMTPAuth = true;
-                if ($_config['smtp']['tls'] == true) {
+                if ($opt['tls'] == true) {
                     $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                 }
             }
+            $mail->Timeout = 15;
 
-
-            $mail->setFrom($emailfrom);
+            $mail->setFrom($opt['emailfrom']);
             $mail->addAddress($email);
             $mail->Subject = $subject;
             $mail->msgHTML($text);
@@ -88,6 +100,23 @@ class Comm
         return '';
     }
 
+    public static function getEmailOptions() {
+        global $_config;
+ 
+
+        $ret = System::getOptions('email')   ;
+        if(count($ret)==0 &&  count($_config['smtp']??[])>0) {
+            $ret = $_config['smtp'];
+            if(strlen($ret['emailfrom'] ?? '')==0) {
+                $ret['emailfrom'] = $ret['user'] ?? '';
+            }           
+        }
+   
+        return $ret;
+      
+                  
+    }
+    
     public static function sendViber($phone, $text) {
 
         $sms = System::getOptions("sms");

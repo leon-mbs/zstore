@@ -145,7 +145,29 @@
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                             </div>
                         </form>        
+                      <h5 class="mt-4  ">Налаштування API</h5>
+                        <small> API для доступу до даних з інших систем.  
+                        <a target="_blank" href="/api/help"> Опис</a></small>
+                 
+                        <form zippy="api">
+
+                            <div class="mb-2">
+                                <label class="form-label" for="atype">Тип авторизації</label>
+                                <select class="form-select" zippy="atype">
+                                </select>
+                            </div>
                       
+                            <div class="mb-2">
+                                <label class="form-label" data-label="aexp" for="aexp">Час життя токену в хв.</label>
+                                <input zippy="aexp" pattern="[0-9]+" class="form-control" value="0">
+
+                            </div>
+
+
+                            <div class="mb-2">
+                                <button class="btn btn-success" type="submit">Зберегти</button>
+                            </div>
+                        </form>                       
     </div>        
     <div class="col-12 col-lg-6 col-xl-3  "   >
        <h5>Налаштування безпеки</h5>   
@@ -193,64 +215,215 @@
               </div>       
           </form> 
           <small class="compact" >Скасування  документів які не можна  скасувати через журнал. Наприклад  фіскалізовані чеки</small>
- 
-        <form class="mt-4 mb-2" zippy="sendform" >
-            <div class="mb-2">
-             <h5  >Перевірка відправки пошти</h5>  
-           </div> 
-              <div class="mb-2">
-               <div class="input-group ">
+           
+                <h5 class="mt-2">Перевірка  структури бази данних</h5>  
+                           
              
-                   <label   for="email">Email</label>
-                   <input class="form-control" type="text" zippy="email">
-               </div>
-               </div>
-               <div class="mb-2">
-                    <input zippy="sendemail" type="submit" value="Відправити" class="btn   btn-primary  ">
+                <a zippy="checkdb"   class="btn   btn-primary  ">Перевірити</a>
                  
-               </div>
-               {{#issms}}
-             <div class="mb-2">
-                <h5>Перевірка відправки SMS</h5>  
-             </div>
-              <div class="mb-2">
-               <div class="input-group ">
-             
-                   <label   for="phone">Телефон</label>
-                   <input class="form-control" type="text" zippy="phone">
-               </div>
-               </div>
-               <div class="mb-2">
-                    <input zippy="sendphone" type="submit" value="Відправити" class="btn   btn-primary  ">
+              
+               <div zippy="checkdbanswer"></div>  
                  
-               </div>
-              {{/issms}}               
-             {{#isbot}}
-             <div class="mb-2">
-                <h5>Перевірка відправки в  телеграм</h5>  
-             </div>
-              <div class="mb-2  ">
-              <div class="input-group ">
-                   <label   for="chat_id">Chat ID</label>
-                   <input class="form-control" type="text" zippy="chat_id">
-               </div>
-               </div>
-               <div class="mb-2">
-                    <input zippy="sendbot" type="submit" value="Відправити" class="btn   btn-primary  ">
-                 
-               </div>
-                 {{/isbot}} 
-     <div class="mb-2">
-                <h5>Перевірка  структури бази данних</h5>  
-             </div>               
-              <div class="mb-2">
-                    <input zippy="checkdb" type="submit" value="Перевірити" class="btn   btn-primary  ">
-                 
-               </div>
-               <div zippy="checkdbanswer"></div>           
-         </form>               
           
      </div>  
+    <div class="col-12 col-lg-6 col-xl-3  "   >
+          <h5  >Налаштування пошти</h5>  
+       
+         <form class=" mb-2" zippy="emailform" >
+         
+               <div class="row">
+                   <label   class="col-5 col-form-label"   for="emailfrom">Email відправниека</label>
+                  <div class="col-7">  
+                    <input class="form-control" type="text" zippy="emailfrom">
+                 </div>
+              </div> 
+              <div class="row">
+                   <label   class="col-5 col-form-label"   for="emailtype">Відправка</label>
+                  <div class="col-7">  
+                            <select class="form-select" zippy="emailtype">
+                                <option value="0">Внутрішній сервіс (sendmail тощо)</option>
+                                <option value="1">SMTP</option>
+                            </select>
+                 </div>
+              </div> 
+               <div class="row">
+                   <label   class="col-5 col-form-label"   for="emailuser">Користувач</label>
+                  <div class="col-7">  
+                    <input class="form-control" type="text" zippy="emailuser">
+                 </div>
+              </div> 
+              <div class="row">
+                   <label   class="col-5 col-form-label"   for="emailhost">Хост</label>
+                  <div class="col-7">  
+                    <input class="form-control" type="text" zippy="emailhost">
+                 </div>
+              </div> 
+            <div class="row">
+                   <label   class="col-5 col-form-label"   for="emailport">Порт</label>
+                  <div class="col-7">  
+                    <input class="form-control" type="text" zippy="emailport">
+                 </div>
+              </div> 
+           <div class="row">
+                   <label   class="col-5 col-form-label"   for="emailpass">Пароль</label>
+                  <div class="col-7">  
+                    <input class="form-control" type="text" zippy="emailpass">
+                 </div>
+              </div> 
+                  
+                
+               <div class="form-check">
+                 <input zippy="tls" type="checkbox" class="form-check-input">
+                 <label class="form-check-label" for="tls"> TLS </label>
+           
+               </div>
+             
+               <div class="form-check">
+                 <input zippy="usecron" type="checkbox" class="form-check-input">
+                 <label class="form-check-label" for="usecron"> Фонова  відправка </label>
+                  <br><small>Має бути ввімкнений планувальник </small>
+               </div>
+               <div class="mb-2">
+                    <input zippy="saveemail" type="submit" value="Зберегти" class="btn   btn-primary  ">
+                 
+               </div>
+                <div class="mb-2">
+                    <small  ><i class="fa fa-exclamation-triangle"></i> Перед перевіркою збережіть налаштування    </small> 
+                </div>
+                <div class="input-group">
+                    <label  for="testemail">E-Mail</label>
+                    <input style="width:200px" zippy="testemail"   class="form-control"  >
+               
+                    <button zippy="emailtest" class="btn btn-success" type="submit">Відправити </button>
+                </div>    
+                      
+         </form>   
+         
+            <h5 class="mt-4  ">Налаштування SMS сервісу    </h5>
+                        <form zippy="sms">    
+                           
+                            <div class="mb-2">
+                                <label class="form-label" for="smstype">Сервіс</label>
+                                <select class="form-select" zippy="smstype">
+                                    <option value="0">Не використовується</option>
+                                </select>
+                                <span data-label="smssemytoken" ><a href="https://semysms.net/" target="_blank">https://semysms.net/</a></span>
+                                <span data-label="smscluban" ><a href="https://smsclub.mobi/" target="_blank">https://smsclub.mobi/</a></span>
+                                <span data-label="flysmsan"><a href="https://sms-fly.ua/" target="_blank">https://sms-fly.ua/</a></span>
+                            
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smssemytoken" for="smssemytoken">Токен</label>
+                                <input zippy="smssemytoken"   class="form-control">
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smssemydevid" for="smssemydevid">Device ID</label>
+                                <input zippy="smssemydevid"   class="form-control"  >
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="flysmslogin" for="flysmslogin">Логін</label>
+                                <input zippy="flysmslogin"   class="form-control">
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="flysmspass" for="flysmspass">Пароль</label>
+                                <input zippy="flysmspass"   class="form-control"  >
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="flysmsan" for="flysmsan">Альфа ім'я</label>
+                                <input zippy="flysmsan"   class="form-control"  >
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smscluban" for="smscluban">Альфа ім'я (sms)</label>
+                                <input zippy="smscluban"   class="form-control">
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smsclubtoken" for="smsclubtoken">Токен (sms)</label>
+                                <input zippy="smsclubtoken"   class="form-control">
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smsclublogin" for="smsclublogin">Логін (Viber)</label>
+                                <input zippy="smsclublogin"   class="form-control">
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smsclubpass" for="smsclubpass">Пароль (Viber)</label>
+                                <input zippy="smsclubpass"   class="form-control">
+
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-label="smsclubvan" for="smsclubvan">Альфа ім'я (Viber)</label>
+                                <input zippy="smsclubvan"   class="form-control">
+             
+                            </div>
+
+                             <div class="mb-2">
+                                <label class="form-label" for="smscustlang">Мова скрипту</label>
+                                <select class="form-select" zippy="smscustlang">
+                          
+                                </select>
+                                  <small data-label="smscustlang">JS не підходить для відправки в  фоновому  режимі, наприклад з планувальника</small>
+                            </div>
+                              <div class="mb-2">
+                                <label class="form-label" for="smscustscript">Код скрипту</label>
+                                <textarea style="height:400px" class="form-control" zippy="smscustscript">
+                          
+                                </textarea>
+                               
+                                 <small data-label="smscustscript" >
+                                   <details >
+                        <summary  >Опис</summary>
+                                   <b>JS</b><br>
+                                   Скрипт, що виконує  запит  до  вибраного  SMS сервісу, має реалізувати 
+                                   тіло вбудованої функції яка буде викликатись системою з двома  строковими параметрами: phone i sms. 
+                                   Третій параметр - функція callback що приймає  строковий параметр. В  callback можна передати  строку помилки, якщо така  виникне.
+                                   Якщо помилок  нема  callback викликається  з  порожньою строкою.
+                                   <br>  <b>PHP</b><br>
+                                   Для PHP скрипту на  вході автоматично  створяться  змінні $phone i $sms з даними. 
+                                   Скрипт  має повернути пусту  строку  або  текст  помилки, якщо така  виникла 
+                                   <br><br>Технічно під виглядом  SMS  відправки  може бути реалізований будь який  сервіс  повідомлень що має  відповідний API
+                                 </details>
+                                 </small>     
+                                 
+                            </div>
+                               
+                            <div class="mb-2">
+                                <button zippy="smssubmit" class="btn btn-success" type="submit">Зберегти</button>
+                            </div>
+                            <div class="mb-2">
+                                <small data-label="smstestphone"><i class="fa fa-exclamation-triangle"></i> Перед перевіркою збережіть налаштування    </small> 
+                            </div>
+                            <div class="input-group">
+                                <label    for="smstestphone">Телефон</label>
+                                <input style="width:200px" zippy="smstestphone"   class="form-control"  >
+                           
+                                <button zippy="smstest" class="btn btn-success" type="submit">Відправити </button>
+                            </div>
+                        </form> 
+         
+                        <h5 class="mt-4 ">Телеграм бот</h5>
+                        <form zippy="tbform">
+                           
+                             <div class="mb-2">
+                                <label class="form-label" for="tbtoken">Токен бота </label>
+                                <input     class="form-control" type="text" zippy="tbtoken">
+                            </div>
+              
+                            <input    type="submit"  value="Зберегти" class="btn  btn-success">
+
+                        </form>            
+                         <span>Перевірка відправки </span> <a zippy="sendbot" class="btn btn-success btn-sm">Відправки</a>
+         
+                       
+         
+     </div> 
+     
     <div class="col-12 col-lg-6 col-xl-3  "   >
          
    
@@ -333,7 +506,16 @@
             document.getElementById('dialogwait').showModal()
             return true;     
         }       
+        function check_emailtest(ele){
+           
+            document.getElementById('dialogwait').showModal()
+            return true;     
+        }       
         function check_oib(ele){
+            return confirm("Налаштування будуть перезаписані! Продовжити?")
+          
+        }       
+     function check_oib(ele){
             return confirm("Налаштування будуть перезаписані! Продовжити?")
           
         }       

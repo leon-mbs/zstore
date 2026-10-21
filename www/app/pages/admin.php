@@ -57,18 +57,7 @@ class Admin extends \App\Pages\Base
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOptions');
         
         
-        $form = $this->add(new Form('sendform'));
-        $form->add(new TextInput('email'))  ;
-        $form->add(new SubmitButton('sendemail'))->onClick($this, 'sendEmail');
-        $form->add(new TextInput('phone'))  ;
-        $form->add(new SubmitButton('sendphone'))->onClick($this, 'sendSms');
-        $form->add(new TextInput('chat_id'))  ;
-        $form->add(new SubmitButton('sendbot'))->onClick($this, 'sendBot');
-        
-        $form->add(new SubmitButton('checkdb'))->onClick($this, 'checkDB');
-        $this->add(new Label('checkdbanswer'))  ;
-
-
+     
         $this->add(new Form('cdoc'))->onSubmit($this,"onCancelDoc");
         $this->cdoc->add(new TextInput('docn'))  ;
 
@@ -110,7 +99,102 @@ class Admin extends \App\Pages\Base
    
         $form->add(new SubmitButton('oib'))->onClick($this, 'onOImport');
    
+        $this->add(new ClickLink('checkdb'))->onClick($this, 'checkDB') ;
+        $this->add(new Label('checkdbanswer'))  ;
+
+        
+
+        //API
+        $this->add(new Form('api'))->onSubmit($this, 'saveApiOnClick');
+
+  
+        $this->api->add(new TextInput('aexp'));
+        $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
+        $api = System::getOptions("api",true);
+        if (!is_array($api)) {
+            $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
+        }
  
+        $this->api->aexp->setValue($api['exp']);
+        $this->api->atype->setValue($api['atype']);
+
+        $this->onApiType($this->api->atype);        
+        
+        //телеграм бот
+
+        $this->add(new Form('tbform'))->onSubmit($this, "onBot");
+        $this->tbform->add(new TextInput('tbtoken', $options['tbtoken'] ?? ''));
+
+   
+        $this->add(new ClickLink('sendbot'))->onClick($this, 'sendBot');
+        
+
+ 
+        //SMS
+        $this->add(new Form('sms'));
+
+        $this->sms->add(new SubmitButton('smssubmit'))->onClick($this, 'saveSMSOnClick');
+        $this->sms->add(new SubmitButton('smstest'))->onClick($this, 'testSMSOnClick');
+ 
+        $this->sms->add(new TextInput('smsclubtoken'));
+        $this->sms->add(new TextInput('smsclublogin'));
+        $this->sms->add(new TextInput('smsclubpass'));
+        $this->sms->add(new TextInput('smscluban'));
+        $this->sms->add(new TextInput('smsclubvan'));
+        $this->sms->add(new TextInput('smssemytoken'));
+        $this->sms->add(new TextInput('smssemydevid'));
+        $this->sms->add(new TextInput('smstestphone'));
+    
+        $this->sms->add(new TextInput('flysmslogin'));
+        $this->sms->add(new TextInput('flysmspass'));
+        $this->sms->add(new TextInput('flysmsan'));
+
+        $this->sms->add(new TextArea('smscustscript'));
+        $this->sms->add(new DropDownChoice('smscustlang', array('js' => "JavaScript",  'php' => "PHP"), 'js')) ;
+
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",   '3' => 'SMS-Fly', '4' => 'Кастомний скрипт'), 0))->onChange($this, 'onSMSType');
+       
+        $sms = System::getOptions("sms",true);
+
+        $this->sms->smssemytoken->setText($sms['smssemytoken']);
+        $this->sms->smssemydevid->setText($sms['smssemydevid']);
+        $this->sms->flysmslogin->setText($sms['flysmslogin']);
+        $this->sms->flysmspass->setText($sms['flysmspass']);
+        $this->sms->flysmsan->setText($sms['flysmsan']);
+        $this->sms->smsclubtoken->setText($sms['smsclubtoken']);
+        $this->sms->smsclublogin->setText($sms['smsclublogin']);
+        $this->sms->smsclubpass->setText($sms['smsclubpass']);
+        $this->sms->smscluban->setText($sms['smscluban']);
+        $this->sms->smsclubvan->setText($sms['smsclubvan']);
+
+        $this->sms->smscustlang->setValue($sms['smscustlang']);
+        $this->sms->smscustscript->setText( base64_decode($sms['smscustscript'] ));
+
+        $this->sms->smstype->setValue($sms['smstype']);
+
+        $this->onSMSType($this->sms->smstype);
+
+        //email
+        
+        $opt =   \App\Comm::getEmailOptions();        
+     
+        $form = $this->add(new Form('emailform'));     
+        $form->add(new TextInput('emailfrom',$opt['emailfrom']))  ;
+
+        $form->add(new DropDownChoice('emailtype',[],$opt['usesmtp'] ? 1:0))->onChange($this, 'onEmailType');  ;
+        $form->add(new TextInput('emailuser',$opt['user']))  ;
+        $form->add(new TextInput('emailhost',$opt['host']))  ;
+        $form->add(new TextInput('emailport',$opt['port']))  ;
+        $form->add(new TextInput('emailpass',$opt['pass']))  ;
+        $form->add(new CheckBox('tls',$opt['tls']))  ;
+        $form->add(new CheckBox('usecron',$opt['usecron']?? false))  ;
+         
+        $form->add(new SubmitButton('saveemail'))->onClick($this, 'saveEmailOnClick');
+       
+        $form->add(new TextInput('testemail'))  ;
+        $form->add(new SubmitButton('emailtest'))->onClick($this, 'sendEmail');
+     
+        $this->onEmailType($form->emailtype);
     }   
 
     
@@ -194,39 +278,42 @@ class Admin extends \App\Pages\Base
         App::Redirect("\\App\\Pages\\Admin");               
     }
 
+    public function onEmailType($sender) {
+       $smtp = $this->emailform->emailtype->getValue() == 1 ;
+       $this->emailform->emailuser->setVisible($smtp);
+       $this->emailform->emailhost->setVisible($smtp);
+       $this->emailform->emailport->setVisible($smtp);
+       $this->emailform->emailpass->setVisible($smtp);
+       $this->emailform->tls->setVisible($smtp);
+     
+    }
+    public function saveEmailOnClick($sender) {
+        $email = array();
+        $email['emailfrom'] = $this->emailform->emailfrom->getText();
+        $email['user'] = $this->emailform->emailuser->getText();
+        $email['host'] = $this->emailform->emailhost->getText();
+        $email['port'] = $this->emailform->emailport->getText();
+        $email['pass'] = $this->emailform->emailpass->getText();
+        $email['tls'] = $this->emailform->tls->isChecked();
+        $email['usecron'] = $this->emailform->usecron->isChecked();
+        $email['usesmtp'] = $this->emailform->emailtype->getValue()=="1";
+       
+         
+        System::setOptions("email", $email);
+        $this->setSuccess('Збережено');
+    }
+ 
     public function sendEmail($sender) {
-        $email = trim( $this->sendform->email->getText() );
+        $email = trim( $this->emailform->testemail->getText() );
         try{
-          H::sendLetter($email,"test body","test email")   ;
+           \App\Comm::sendEmail($email,"test body","test email")   ;
         } catch(\Exception $e) {
             H::logerror($e->getMessage()) ;
             $this->setError($e->getMessage())  ;
         }
    
     }
-  
-    public function sendSms($sender) {
-        $phone = trim( $this->sendform->phone->getText() );
-        try{
-            \App\Comm::sendSMS($phone,"test sms");
-        } catch(\Exception $e) {
-            H::logerror($e->getMessage()) ;
-            $this->setError($e->getMessage())  ;
-        }
-        
-    }
-         
-    public function sendBot($sender) {
-        $chat_id = trim( $this->sendform->chat_id->getText() );
-        try{
-            \App\Comm::sendBot($chat_id,"test bot");
-        } catch(\Exception $e) {
-            H::logerror($e->getMessage()) ;
-            $this->setError($e->getMessage())  ;
-        }
-        
-    }
- 
+    
     public function onCancelDoc($sender) {
         $dn = trim($this->cdoc->docn->getText() );
         $conn = \ZDB\DB::getConnect();
@@ -475,6 +562,137 @@ class Admin extends \App\Pages\Base
 
 
         $this->setSuccess("Імпортовано");
+    }
+  
+    public function onApiType($sender) {
+        $type = $this->api->atype->getValue();
+        $this->api->aexp->setVisible($type == 1);
+     
+      
+    }
+
+    public function saveApiOnClick($sender) {
+        $api = array();
+        $api['exp'] = $this->api->aexp->getText();
+ 
+        $api['atype'] = $this->api->atype->getValue();
+
+        System::setOptions("api", $api);
+        $this->setSuccess('Збережено');
+    }
+
+    public function onBot($sender) {
+
+
+        $common = System::getOptions("common",true);
+        if (!is_array($common)) {
+            $common = array();
+        }
+
+        $common['tbtoken'] = $sender->tbtoken->getText()  ;
+      //  $common['tbname'] = $sender->tbname->getText()  ;
+        if( strlen($common['tbtoken'] )==0 ) {
+            $this->setWarn("Не задано токен") ;
+            System::setOptions("common", $common);            
+            return;
+        }
+        
+        $url= _BASEURL. 'chatbot.php' ;
+
+        $bot = new \App\ChatBot($common['tbtoken']) ;
+//        $res = $bot->doGet('getWebhookInfo') ;
+        $res = $bot->doGet('deleteWebhook') ;
+        $res = $bot->doGet('setWebhook', array('url'=>$url)) ;
+        if($res['error_code'] == 404) {
+            $this->setError("Невірний токен") ;
+            return;
+        }
+        if($res['ok'] != true) {
+            $this->setError($res['error_code']. ' ' .$res['description']) ;
+            return;
+        }
+
+        H::log("set hook ".$url);
+
+        System::setOptions("common", $common);
+        $this->setSuccess('Збережено');
+
+    }
+  
+    public function sendBot($sender) {
+       
+        $options = System::getOptions("common");       
+       
+        $chat_id = $options['tbtoken'] ?? '';
+
+        try{
+            \App\Comm::sendBot($chat_id,"test bot");
+        } catch(\Exception $e) {
+            H::logerror($e->getMessage()) ;
+            $this->setError($e->getMessage())  ;
+        }
+        
+    }
+ 
+
+    public function onSMSType($sender) {
+        $type = $this->sms->smstype->getValue();
+        $this->sms->smssemytoken->setVisible($type == 1);
+        $this->sms->smssemydevid->setVisible($type == 1);
+   
+        $this->sms->smsclubtoken->setVisible($type == 2);
+        $this->sms->smsclublogin->setVisible($type == 2);
+        $this->sms->smsclubpass->setVisible($type == 2);
+        $this->sms->smscluban->setVisible($type == 2);
+        $this->sms->smsclubvan->setVisible($type == 2);
+     
+        $this->sms->flysmslogin->setVisible($type == 3);
+        $this->sms->flysmspass->setVisible($type == 3);
+        $this->sms->flysmsan->setVisible($type == 3);
+
+     
+        $this->sms->smscustlang->setVisible($type == 4);
+        $this->sms->smscustscript->setVisible($type == 4);
+
+        $this->sms->smstestphone->setVisible($type >0 );
+      
+        $this->sms->smstest->setVisible($type >0 );
+
+      //  $this->goAnkor('smstype');
+    }
+
+    public function saveSMSOnClick($sender) {
+        $sms = array();
+        $sms['smstype'] = $this->sms->smstype->getValue();
+
+        $sms['smsclubtoken'] = $this->sms->smsclubtoken->getText();
+        $sms['smsclublogin'] = $this->sms->smsclublogin->getText();
+        $sms['smsclubpass'] = $this->sms->smsclubpass->getText();
+        $sms['smscluban'] = $this->sms->smscluban->getText();
+        $sms['smsclubvan'] = $this->sms->smsclubvan->getText();
+        $sms['smssemytoken'] = $this->sms->smssemytoken->getText();
+        $sms['smssemydevid'] = $this->sms->smssemydevid->getText();
+        $sms['flysmslogin'] = $this->sms->flysmslogin->getText();
+        $sms['flysmspass'] = $this->sms->flysmspass->getText();
+        $sms['flysmsan'] = $this->sms->flysmsan->getText();
+        $sms['smscustlang'] = $this->sms->smscustlang->getValue();
+        $sms['smscustscript'] = base64_encode($this->sms->smscustscript->getText() );
+
+        System::setOptions("sms", $sms);
+        $this->setSuccess('Збережено');
+    }
+
+    public function testSMSOnClick($sender) {
+     
+        $res = \App\Comm::sendSMS($this->sms->smstestphone->getText(), 'Тест');
+        if (strlen($res) == 0) {
+           
+            $res = \App\Comm::sendViber($this->sms->smstestphone->getText(), 'Тест');
+
+        } else {
+            $this->setError($res);
+        }
+
     }
   
     
