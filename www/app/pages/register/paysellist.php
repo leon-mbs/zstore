@@ -200,7 +200,7 @@ GROUP BY c.customer_name,
 
          foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = 21    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
             $pm=intval($d->getHD('payment')) ; //денежный счет
-            if($pt == 0 || $pm==$pt) {
+            if($pm == 0 || $pm==$pt) {
                 $this->_doclist[] = $d;    
             }
             
