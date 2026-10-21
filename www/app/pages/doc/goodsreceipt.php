@@ -718,7 +718,7 @@ class GoodsReceipt extends \App\Pages\Base
      
 
         if ($this->_doc->payed == 0) {
-            $this->_doc->headerdata['payment'] = 0;
+          //  $this->_doc->headerdata['payment'] = 0;
         }
 
         $common = System::getOptions("common");

@@ -193,7 +193,7 @@ GROUP BY c.customer_name,
         foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and  ( state = 21 or  content like '%<waitpay>1</waitpay>%' )  and meta_name in('Order','Invoice' ,'ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ") as $d) {
             
             $pm=intval($d->getHD('payment')) ; //денежный счет
-            if($pt == 0 || $pm==$pt) {
+            if($pm == 0 || $pm==$pt) {
                 $this->_doclist[] = $d;    
             }
             
