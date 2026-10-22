@@ -63,41 +63,35 @@ class Helper
     }
 
 
-    public static function connect() {
-        $modules = System::getOptions("modules");
-
-
-        $site = $modules['ocsite'];
-        $apiname = $modules['ocapiname'];
-        $key = $modules['ockey'];
-        $site = trim($site, '/');
-        $ssl = $modules['ocssl'];
-
-        $url = $site . '/index.php?route=api/login';
-        if($modules['ocv4']==1) {
-            $url = $site . '/index.php?route=api/account/login';
+    public static function connect($m) {
+         
+        System::getSession()->statuses=null;
+        System::getSession()->cats=null;
+       
+        $url = $m->site . '/index.php?route=api/login';
+        if($m->ocv4==1) {
+            $url = $m->site . '/index.php?route=api/account/login';
         }
         $fields = array(
-            'username' => $apiname,
-            'key'      => $key
+            'username' => $m->apiname,
+            'key'      => $m->key
         );
-        System::getSession()->ocssl = $ssl;
-
+       
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
 
-            return;
+            return false;
         }
 
         $data = json_decode($json, true);
         if ($data === null) {
             System::setErrorMsg($json);
-            return;
+            return false;
         }
         if (is_array($data) && count($data) == 0) {
 
             System::setErrorMsg('Немає даних відповіді');
-            return;
+            return false;
         }
 
         if (is_array($data['error'] ?? null)) {
@@ -105,6 +99,7 @@ class Helper
         } else {
             if (strlen($data['error']?? null) > 0) {
                 System::setErrorMsg($data['error']);
+                 return false;
             }
         }
 
@@ -117,39 +112,40 @@ class Helper
                 System::getSession()->octoken = "token=" . $data['token'];
             }
 
-
-            System::setSuccessMsg("Успішне з`єднання");
-
+          
+        
             //загружаем список статусов
-            $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
-            if($modules['ocv4']==1) {
-                $url = $site . '/index.php?route=api/zstore.statuses&' . System::getSession()->octoken;
+            $url = $m->site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
+            if($m->site->ocv4==1) {
+                $url = $m->site . '/index.php?route=api/zstore.statuses&' .System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
                 System::setErrorMsg($data['error']);
+                 return false;
             } else {
 
                 System::getSession()->statuses = $data['statuses'];
             }
             //загружаем список категорий
-            $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
-            if($modules['ocv4']==1) {
-                $url = $site . '/index.php?route=api/zstore.cats&' . System::getSession()->octoken;
+            $url = $m->site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
+            if($m->ocv4==1) {  
+                $url = $m->site . '/index.php?route=api/zstore.cats&' . System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
 
             if ($data['error'] != "") {
                 System::setErrorMsg($data['error']);
+                 return false;
             } else {
 
                 System::getSession()->cats = $data['cats'];
             }
         }
-
+        return true;
     }
 
 }

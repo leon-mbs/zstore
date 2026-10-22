@@ -37,7 +37,7 @@ class Options extends \App\Pages\Base
         $pt=[];
         $pt[1] = 'Оплата на стороні IM ';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата касовим  чеком, РФ або ВН';
+        $pt[3] = 'Оплата касовим  чеком  або РФ';
          
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['pupaytype']??0));
 

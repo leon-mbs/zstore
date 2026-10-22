@@ -20,6 +20,7 @@ class Orders extends \App\Pages\Base
 {
     public $_neworders = array();
     public $_eorders   = array();
+    private $_m=null;
 
     public function __construct() {
         parent::__construct();
@@ -31,48 +32,60 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $modules = System::getOptions("modules");
-        $statuses = System::getSession()->statuses;
-        if (is_array($statuses) == false) {
-            $statuses = array();
-            $this->setWarn('Натисніть Перевірити з`єднання  ');
-        }
-
-        $defpaytype=intval($modules['ocpaytype']??0);
-        $defstore=intval($modules['ocstore']);
-        $defmf=intval($modules['ocmf']??0);
-           
+        $mlist=[] ;
         
+        foreach( System::getOption("modules","oclist",[]) as $m){
+            $mlist[$m->id]=$m->salesourcename;
+        };
+     
+    
+        
+        $this->add(new Form('mform'))->onSubmit($this, 'mOnSubmit');
+        $this->mform->add(new DropDownChoice('mlist', $mlist ));
+        
+      
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('status', $statuses, 0));
+        $this->filter->add(new DropDownChoice('status',System::getSession()->statuses??[] ));
         $this->add(new Form('filter2'))->onSubmit($this, 'onImport');
-        $pt=[];
-        $pt[1] = 'Оплата зразу (передплата)';
-        $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата в Чеку або ВН';
-        $pt[4] = 'Тільки списати зі складу';
-          
-        $this->filter2->add(new DropDownChoice('paytype',$pt, $defpaytype));
          
-        $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
-
-        
+       
+        $this->filter2->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
+         
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', $statuses, 0));
+        $this->updateform->add(new DropDownChoice('estatus',System::getSession()->statuses??[] ));
 
-        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-
+       
     }
 
+    public function mOnSubmit($sender) {  
+        $mlist=System::getOption("modules","oclist",[])  ;
+        $id=  $this->mform->mlist->getValue();
+        $this->_m= $mlist[ $id] ?? null;
+       
+        if($this->_m== null) {
+            $this->setError('Не вибраний магазин  ');
+            return;
+         
+        }
+        $c=Helper::connect($this->_m);
+        if( $c)  {
+          $this->setSuccess('Ok') ;
+        }
+        $statuses = System::getSession()->statuses;
+        if (is_array($statuses)  ) {
+           $this->filter->status->setOptionlist($statuses) ;
+           $this->updateform->estatus->setOptionlist($statuses) ;
+
+        }
+                 
+    }
+  
     public function filterOnSubmit($sender) {
    
-        if(strlen(System::getSession()->octoken)==0) {
-            Helper::connect();
-        }
-        $modules = System::getOptions("modules");
-
+        
+        
         $status = intval( $this->filter->status->getValue() );
         
         if($status==0) {
@@ -83,12 +96,14 @@ class Orders extends \App\Pages\Base
         $fields = array(
             'status_id' => $status,
         );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.orders&' . System::getSession()->octoken;
+        $url = $this->_m->site. '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.orders&' . System::getSession()->octoken;
         }
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
+             $this->setError("Невірна відповідь");
+      
             return;
         }
         $data = json_decode($json, true);
@@ -103,8 +118,10 @@ class Orders extends \App\Pages\Base
 
             foreach ($data['orders'] as $ocorder) {
 
-
-                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$ocorder['order_id']}</ocorder>%'  and (CURRENT_DATE - INTERVAL 1 MONTH) < document_date  ")  ;
+                $oldocid= $ocorder['order_id'].'g' ;
+                $ocid= ''.$this->_m->id.'_'.$ocorder['order_id'] ;
+                
+                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and (content like '%<ocorder>{$oldocid}</ocorder>%' or content like '%<ocorder><![CDATA[{$ocid}]]></ocorder>%'  )  ")  ;
 
                 if (intval($cnt) > 0) { //уже импортирован
                     continue;
@@ -121,7 +138,7 @@ class Orders extends \App\Pages\Base
                 $this->_neworders[$ocorder['order_id']] = $order;
             }
 
-            $this->neworderslist->Reload();
+            $this->filter2->neworderslist->Reload();
         } else {
             $data['error']  = str_replace("'", "`", $data['error']) ;
 
@@ -131,7 +148,8 @@ class Orders extends \App\Pages\Base
 
     public function noOnRow($row) {
         $order = $row->getDataItem();
-
+        $row->add(new CheckBox('ch', new Prop($order, 'ch')));
+ 
         $row->add(new Label('number', $order->order_id));
         $row->add(new Label('customer', $order->firstname . ' ' . $order->lastname));
         $row->add(new Label('amount', \App\Helper::fa($order->total)));
@@ -140,12 +158,8 @@ class Orders extends \App\Pages\Base
     }
 
     public function onImport($sender) {
-        $pt=$sender->paytype->getValue() ;
-        if($pt==0){
-            $this->setError('Не вказано тип оплати')  ;
-            return;
-        } 
-        if($sender->paytype->getValue() ==4) {
+       
+        if($this->_m->usettn==1) {
             $this->onOutcome( );            
         }   else{
             $this->onOrder( ); 
@@ -153,12 +167,7 @@ class Orders extends \App\Pages\Base
         
     }
     public function onOrder(  ) {
-        $defpaytype = $this->filter2->paytype->getValue() ;
-            
-        $modules = System::getOptions("modules");
-        $defstore=intval($modules['ocstoreid']);
-        $defmf=intval($modules['ocmf']);
- 
+     
         $i = 0;
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -166,10 +175,11 @@ class Orders extends \App\Pages\Base
         try{     
            foreach ($this->_neworders as $shoporder) {
 
-
+            if(!$shoporder->ch ) continue;
             $neworder = Document::create('Order');
-            $neworder->document_date = strtotime($shoporder->date_added);
-  
+         //   $neworder->document_date = strtotime($shoporder->date_added);
+            $neworder->document_date = time();
+            
             $neworder->document_number = $neworder->nextNumber();
             if (strlen($neworder->document_number) == 0) {
                 $neworder->document_number = 'OC00001';
@@ -215,28 +225,29 @@ class Orders extends \App\Pages\Base
             $neworder->headerdata['totaldisc']  = $neworder->amount - $neworder->payamount;
 
 
-            $neworder->headerdata['outnumber'] = $shoporder->order_id;
-            $neworder->headerdata['ocorder'] = $shoporder->order_id;
+            $neworder->headerdata['outnumber'] = ''.$this->_m->id.'_'.$shoporder->order_id;
+            $neworder->headerdata['ocshopid'] =  $this->_m->id ;
+            $neworder->headerdata['ocorder'] =  ''.$this->_m->id.'_'.$shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
-            $neworder->headerdata['pricetype'] = 'price1';
-            $neworder->headerdata['salesource'] = $modules['ocsalesource'];
-            $neworder->headerdata['doreserve'] = $modules['ocreserve'];
-            $neworder->headerdata['dostore'] = $modules['ocdostore'];
-            $neworder->headerdata['paytype'] = $defpaytype;  
-            $neworder->headerdata['paytypename'] = $this->filter2->paytype->getValueName() ;  
-            $neworder->headerdata['payment'] = $defmf ; 
+            $neworder->headerdata['pricetype'] = $this->_m->pricetype;
+            $neworder->headerdata['salesource'] = $this->_m->salesource;
+            $neworder->headerdata['doreserve'] = $this->_m->reserve;
+            $neworder->headerdata['dostore'] = $this->_m->dostore;
+            $neworder->headerdata['paytype'] = $this->_m->paytype;  
+            $neworder->headerdata['paytypename'] = $this->_m->paytypename ;  
+            $neworder->headerdata['payment'] = $this->_m->mf ; 
             if($neworder->headerdata['paytype']==2) {
                 $neworder->headerdata['waitpay'] =1;   //ждет оплату
             }
-            $neworder->headerdata['store'] = $defstore ; 
-            $neworder->headerdata['dostore'] = $defstore ; 
-            $neworder->headerdata['reserve'] = $defstore ; 
+            $neworder->headerdata['store'] = $this->_m->storeid ; 
+            $neworder->headerdata['dostore'] = $this->_m->dostore ; 
+            $neworder->headerdata['reserve'] = $this->_m->reserve ; 
       
             $neworder->notes = "OC номер: {$shoporder->order_id};";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
             $neworder->notes .= " Клієнт : " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
-            if( $modules['ocinsertcust'] == 1  && strlen($shoporder->telephone ??'' )>0 ) {
+            if( $this->_m->insertcust == 1  && strlen($shoporder->telephone ??'' )>0 ) {
                 $cust=null;
  
                 $phone=\App\Util::handlePhone($shoporder->telephone);
@@ -296,10 +307,10 @@ class Orders extends \App\Pages\Base
                  
                 $neworder->updateStatus(Document::STATE_NEW);
       
-                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WAIT);
+                $neworder->updateStatus(\App\Entity\Doc\Document::STATE_WAIT );
               
                 if($neworder->headerdata['store']>0) {
-                    $neworder->reserve();   //если задан  склад резервируем товары
+                 //   $neworder->reserve();   //если задан  склад резервируем товары
                 }  
       
            
@@ -323,25 +334,15 @@ class Orders extends \App\Pages\Base
         $this->setInfo("Імпортовано {$i} замовлень");
         
         $this->_neworders = array();
-        $this->neworderslist->Reload();
+        $this->filter2->neworderslist->Reload();
     }
 
     //только  списание
     public function onOutcome( ) {
-        $modules = System::getOptions("modules");
-       
-        $store=intval($modules['ocstoreid']);
-        $kassa=intval($modules['ocmf']);
         
-        
-        if ($store == 0) {
-            $this->setError("Не задано склад");
-            return;
-        }
-        if ($kassa == 0) {
-            $this->setError("Не задано касу");
-            return;
-        }
+      
+        $store = $this->_m->storeid;
+  
         $allowminus = \App\System::getOption("common", "allowminus");
 
         if ($allowminus != 1) {
@@ -417,9 +418,10 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['store'] = $store;
                 $neworder->headerdata['store_name'] = \App\Entity\Store::load($store)->storename ?? '';
                 
-                $neworder->headerdata['ocorder'] = $shoporder->order_id;
-                $neworder->headerdata['outnumber'] = $shoporder->order_id;
-
+                $neworder->headerdata['outnumber'] = ''.$this->_m->id.'_'.$shoporder->order_id;
+                $neworder->headerdata['ocshopid'] =  $this->_m->id ;
+                $neworder->headerdata['ocorder'] =  ''.$this->_m->id.'_'.$shoporder->order_id;
+    
 
 
                 $neworder->amount = \App\Helper::fa($totalpr);
@@ -467,18 +469,13 @@ class Orders extends \App\Pages\Base
         $this->setInfo("Імпортовано {$i} замовлень");
 
         $this->_neworders = array();
-        $this->neworderslist->Reload();
+        $this->filter2->neworderslist->Reload();
     }
+ 
 
-    public function onCheck($sender) {
-
-        Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\OCStore\\Orders");
-    }
-
-    public function onRefresh($sender) {
-
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);
+    public function onRefresh($sender) {                                                                             
+          
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%'  and state <>1 and state <>23   and content like '%<ocshopid>{$this->_m->id}</ocshopid>%'    " );
         $this->updateform->orderslist->Reload();
     }
 
@@ -494,8 +491,7 @@ class Orders extends \App\Pages\Base
     }
 
     public function exportOnSubmit($sender) {
-        $modules = System::getOptions("modules");
-
+         
         $st = $this->updateform->estatus->getValue();
         if ($st == 0) {
 
@@ -519,11 +515,12 @@ class Orders extends \App\Pages\Base
         $fields = array(
             'data' => $data
         );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateorder&' . System::getSession()->octoken;
+   
+        $url = $this->_m->site. '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.updateorder&' . System::getSession()->octoken;
         }
-
+  
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;

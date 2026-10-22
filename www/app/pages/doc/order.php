@@ -597,9 +597,7 @@ class Order extends \App\Pages\Base
  
         $this->_doc->headerdata['doreserve'] = $this->docform->doreserve->isChecked() ? 1:0 ;
         $this->_doc->headerdata['dostore'] = $this->docform->dostore->isChecked() ? 1:0 ;
-        if($this->_doc->headerdata['paytype'] ==3) {
-            $this->_doc->headerdata['dostore'] = 0;
-        }
+     
         if ($this->checkForm() == false) {
             return;
         }
@@ -741,6 +739,18 @@ class Order extends \App\Pages\Base
             $this->setError("Не задано тип оплати");
        }
 
+       
+        if ( $this->_doc->headerdata['dostore']==1 && $this->_doc->headerdata['store']==0) {
+
+            $this->setError('Не вказано склад');
+           
+        }        
+        if ( $this->_doc->headerdata['doreserve']==1 && $this->_doc->headerdata['store']==0) {
+
+            $this->setError('Не вказано склад');
+           
+        }        
+           
        return !$this->isError();
     }
 

@@ -114,11 +114,11 @@ class System
      * @param mixed $group
      * @param mixed $option
      */
-    public static function getOption($group, $option) {
+    public static function getOption($group, $option,$def='') {
 
         $options = self::getOptions($group);
 
-        return $options[$option] ??'';
+        return $options[$option] ??$def;
     }
 
     /**

@@ -6,8 +6,24 @@
             <div class="col-12 col-xl-10    ">
 
                 <h3>Імпорт замовлень</h3>
-                  <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевірити з'єднання</a>
-  
+                
+                <div class="navbar    ">
+                    <form zippy="mform"  >
+                       <div class="row  ">
+
+                        <label class="col-form-label col-auto" for="mlist">Магазин </label>
+                         <div class="col-auto  ">
+                        <select class="form-control me-2" zippy="mlist">
+                            
+                        </select>
+                        </div>
+                         <div class="col-auto  ">
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" me-2 btn btn-success  "
+                               value="З`єднати">
+
+                       </div> </div>
+                    </form>
+                </div>
 
                 <div class="navbar    ">
                     <form zippy="filter"  >
@@ -26,11 +42,12 @@
                        </div> </div>
                     </form>
                 </div>
-
+               <form zippy="filter2"  >
 
                 <table class="table   table-sm   ">
                     <tr>
 
+                        <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
 
                         <th>Номер</th>
                         <th>Дата</th>
@@ -42,7 +59,8 @@
 
                     </tr>
                     <tr zippy="neworderslist">
-
+                        <td><input type="checkbox" zippy="ch" class="chc"></td>
+                        
 
                         <td zippy="number"></td>
                         <td class="text-nowrap" zippy="date"></td>
@@ -56,30 +74,25 @@
 
                 </table>                
                 <div class="navbar    ">
-                       <form zippy="filter2"  >
+                      
 
-                        <div class="row  ">
-                        <label class="col-form-label col-auto" for="paytype"  >Тип оплати</label>
-                       <div class="col-auto  ">
-                        <select class="form-control me-2" zippy="paytype">
-                              <option value="0">Не вибрано</option>
-                        </select>
-                      </div>
-                       <div class="col-auto  ">
-
+                        <div class="   ">
+                    
+                       
                         <input type="submit" class=" me-2 btn btn-success  "
                                value="Імпортувати">
-                      </div>
+                      
                     </div>
-                    </form>
+                    
 
                 </div>
+                </form>
             </div>
             <div class="col-12 col-xl-10       ">
 
                 <h3>Експорт статусів в магазин</h3>
                 <div class="navbar nav justify-content-start">
-                    <a zippy="refreshbtn" class="  btn btn-success  ">Оновити</a>
+                    <a onclick="document.getElementById('dialogwait').showModal()" zippy="refreshbtn" class="  btn btn-success  ">Оновити</a>
 
                 </div>
                 <form zippy="updateform">
