@@ -2,7 +2,8 @@ SET NAMES 'utf8mb4';
 
  
 ALTER TABLE users ADD otpcode int DEFAULT NULL ;
-ALTER TABLE store_stock ADD tag int DEFAULT NULL ;
+ALTER TABLE store_stock ADD tag int DEFAULT 0 ;
+ALTER TABLE documents ADD tag int DEFAULT 0 ;
  
 
 DROP  VIEW users_view; 
@@ -140,6 +141,7 @@ SELECT
   d.payamount AS payamount,
   d.payed AS payed,
   d.parent_id AS parent_id,
+  d.tag AS tag,
   d.branch_id AS branch_id,
   b.branch_name AS branch_name,
   (  
