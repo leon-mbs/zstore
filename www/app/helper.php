@@ -299,6 +299,13 @@ class Helper
         return $template;
     }
 
+    /**
+    * deprecated
+    * 
+    * @param mixed $emailto
+    * @param mixed $text
+    * @param mixed $subject
+    */
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 

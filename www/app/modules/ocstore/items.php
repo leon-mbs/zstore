@@ -29,13 +29,19 @@ class Items extends \App\Pages\Base
             App::RedirectError();
             return;
         }
-        $modules = System::getOptions("modules");
+ 
         $cats = System::getSession()->cats;
-        if (is_array($cats) == false) {
-            $cats = array();
-            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
-        }
-
+        $mlist=[] ;
+        
+        foreach( System::getOption("modules","oclist",[]) as $m){
+            $mlist[$m->id]=$m->salesourcename;
+        };
+     
+    
+        
+        $this->add(new Form('mform'))->onSubmit($this, 'mOnSubmit');
+        $this->mform->add(new DropDownChoice('mlist', $mlist ));
+        
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
         $this->filter->add(new DropDownChoice('searchcat', \App\Entity\Category::getList(), 0));
 
@@ -52,11 +58,7 @@ class Items extends \App\Pages\Base
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
      
-
-        $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-
-
-
+ 
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
         $this->importform->add(new CheckBox('createcat'));
 
@@ -65,20 +67,38 @@ class Items extends \App\Pages\Base
 
     }
 
-    public function onCheck($sender) {
-
-        Helper::connect();
-        \App\Application::Redirect("\\App\\Modules\\OCStore\\Items");
+    public function mOnSubmit($sender) {  
+        $mlist=System::getOption("modules","oclist",[])  ;
+        $id=  $this->mform->mlist->getValue();
+        $this->_m= $mlist[ $id] ?? null;
+       
+        if($this->_m== null) {
+            $this->setError('Не вибраний магазин  ');
+            return;
+         
+        }
+        $c=Helper::connect($this->_m);
+        if( $c)  {
+          $this->setSuccess('Ok') ;
+        }
+        $cats = System::getSession()->cats;
+        if (is_array($cats)  ) {
+           $this->exportform->ecat->setOptionlist($cats) ;
+           
+        }
+                 
     }
+  
 
 
     public function filterOnSubmit($sender) {
         $this->_items = array();
-        $modules = System::getOptions("modules");
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
+ 
+        $url = $this->_m->site. '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
         }
+
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
@@ -125,19 +145,17 @@ class Items extends \App\Pages\Base
     }
 
     public function itemOnRow($row) {
-        $modules = System::getOptions("modules");
-
+       
         $item = $row->getDataItem();
         $row->add(new CheckBox('ch', new Prop($item, 'ch')));
         $row->add(new Label('name', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('qty', \App\Helper::fqty($item->qty)));
-        $row->add(new Label('price', $item->getPrice($modules['ocpricetype'])));
+        $row->add(new Label('price', $item->getPrice($this->_m->pricetype)));
         $row->add(new Label('desc', $item->description));
     }
 
     public function exportOnSubmit($sender) {
-        $modules = System::getOptions("modules");
         $cat = $this->exportform->ecat->getValue();
 
         $elist = array();
@@ -163,9 +181,10 @@ class Items extends \App\Pages\Base
             'cat'  => $cat
         );
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
+ 
+        $url = $this->_m->site. '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
         }
 
         $json = Helper::do_curl_request($url, $fields);
@@ -187,7 +206,7 @@ class Items extends \App\Pages\Base
     }
 
     public function onUpdateQty($sender) {
-        $modules = System::getOptions("modules");
+      
         $cat = $this->upd->updcat->getValue();
 
         $elist = array();
@@ -206,10 +225,12 @@ class Items extends \App\Pages\Base
         $fields = array(
             'data' => $data
         );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
+ 
+        $url = $this->_m->site. '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
         }
+        
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -227,7 +248,7 @@ class Items extends \App\Pages\Base
 
 
     public function onUpdatePrice($sender) {
-        $modules = System::getOptions("modules");
+      
         $cat = intval( $this->upd->updcat->getValue());
 
         $elist = array();
@@ -244,9 +265,10 @@ class Items extends \App\Pages\Base
         $fields = array(
             'data' => $data
         );
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
+   
+        $url = $this->_m->site. '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
         }
 
         $json = Helper::do_curl_request($url, $fields);
@@ -265,7 +287,7 @@ class Items extends \App\Pages\Base
     }
 
     public function importOnSubmit($sender) {
-        $modules = System::getOptions("modules");
+      
         $common = System::getOptions("common");
 
         $cats = System::getSession()->cats;
@@ -279,9 +301,10 @@ class Items extends \App\Pages\Base
 
         $elist = array();
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.getproducts&' . System::getSession()->octoken;
+ 
+        $url = $this->_m->site. '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.getproducts&' . System::getSession()->octoken;
         }
 
         $json = Helper::do_curl_request($url);
@@ -322,25 +345,25 @@ class Items extends \App\Pages\Base
             if ($w > 0) {
                 $item->weight = floatval($w);
             }
-            if ($modules['ocpricetype'] == 'price1') {
+            if ($this->_m->pricetype == 'price1') {
                 $item->price1 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price2') {
+            if ($this->_m->pricetype == 'price2') {
                 $item->price2 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price3') {
+            if ($this->_m->pricetype== 'price3') {
                 $item->price3 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price4') {
+            if ($this->_m->pricetype == 'price4') {
                 $item->price4 = $product['price'];
             }
-            if ($modules['ocpricetype'] == 'price5') {
+            if ($this->_m->pricetype == 'price5') {
                 $item->price5 = $product['price'];
             }
 
 
             if ($common['useimages'] == 1) {
-                $im = $modules['ocsite'] . '/image/' . $product['image'];
+                $im = $this->_m->site. '/image/' . $product['image'];
                 $im = @file_get_contents($im);
                 if (strlen($im) > 0) {
                     $imagedata = getimagesizefromstring($im);
@@ -386,16 +409,16 @@ class Items extends \App\Pages\Base
 
     
     public function onImportNames($sender) {
-        $modules = System::getOptions("modules");
+        
         $common = System::getOptions("common");
   
         $elist = array();
 
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/getnames&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.getnames&' . System::getSession()->octoken;
+ 
+        $url = $this->_m->site. '/index.php?route=api/zstore/getnames&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.getnames&' . System::getSession()->octoken;
         }
-
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
@@ -434,7 +457,7 @@ class Items extends \App\Pages\Base
   
     }    
     public function onExportNames($sender) {
-        $modules = System::getOptions("modules");
+       
         $common = System::getOptions("common");
   
         $names = array();
@@ -458,11 +481,12 @@ class Items extends \App\Pages\Base
              
         );     
         
-        $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatenames&' . System::getSession()->octoken;
-        if($modules['ocv4']==1) {
-            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updatenames&' . System::getSession()->octoken;
+    
+        $url = $this->_m->site. '/index.php?route=api/zstore/updatenames&' . System::getSession()->octoken;
+        if($this->_m->ocv4==1) {
+            $url = $this->_m->site. '/index.php?route=api/zstore.updatenames&' . System::getSession()->octoken;
         }
-
+   
         $json = Helper::do_curl_request($url,$fields);
         if ($json === false) {
             return;

@@ -7,8 +7,23 @@
                 &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i>Спецсимволи (типу <b> &amp; ' " `</b>)
                     в назві або описі можуть викликати проблеми з вивантаженням</small>
 
-            <br><a zippy="checkconn"><i class="fa   fa-sync"></i> Перевірити з'єднання</a>        
-                
+                 <div class="navbar    ">
+                    <form zippy="mform"  >
+                       <div class="row  ">
+
+                        <label class="col-form-label col-auto" for="mlist">Магазин </label>
+                         <div class="col-auto  ">
+                        <select class="form-control me-2" zippy="mlist">
+                            
+                        </select>
+                        </div>
+                         <div class="col-auto  ">
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" me-2 btn btn-success  "
+                               value="З`єднати">
+
+                       </div> </div>
+                    </form>
+                </div>    
                 <div class="navbar">
                     <form zippy="filter"  >
                        <div class="row  ">

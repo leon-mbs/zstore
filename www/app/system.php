@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "8.2.9"; // текущая  версия
-    public const PREV_VERSION = "8.2.8"; // предыдущая версия (для отката кода в случае  проблем)
+    public const CURR_VERSION = "8.2.10"; // текущая  версия
+    public const PREV_VERSION = "8.2.9"; // предыдущая версия (для отката кода в случае  проблем)
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
      
 
@@ -114,11 +114,11 @@ class System
      * @param mixed $group
      * @param mixed $option
      */
-    public static function getOption($group, $option) {
+    public static function getOption($group, $option,$def='') {
 
         $options = self::getOptions($group);
 
-        return $options[$option] ??'';
+        return $options[$option] ??$def;
     }
 
     /**

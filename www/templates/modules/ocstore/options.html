@@ -1,10 +1,30 @@
 <html>
 
     <body>
+           <div class="row" zippy="listpan" >
+            <div class="col-12    col-md-10    col-xl-8  col-xxl-6  ">
+                  <a zippy="addnew" class="btn btn-success">Додати новий</a> 
+                  <table class="table   table-sm   ">
+         
+                    <tr zippy="list">
 
+
+                        <td zippy="rsite"></td>
+                        <td zippy="rsalesourcname"></td>
+                        <td > <a zippy="rtest">Тест </a> </td>
+                        <td > <a zippy="redit"><i class="fa fa-edit"></i> </a> </td>
+                        <td > <a zippy="rdel"><i class="fa fa-trash"></i> </a> </td>
+                         
+                        
+                    </tr>
+
+                </table> 
+             </div> 
+           </div> 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Налаштування підключення</h4>
+
+                
                 <form zippy="cform">
                   
                      <div class="row">
@@ -109,6 +129,12 @@
                         <br><small class="form-text text-muted">Якщо не використовується ТТН, Чек  або ВН  </small>
   
                     </div>
+                     <div class="form-check">
+                        <input zippy="usettn" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="usettn">Формувати ТТН </label>
+                        <br><small class="form-text text-muted">Якщо потрiьно тiльки списати  товари зi складу  </small>
+  
+                    </div>
               
                     <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
@@ -118,7 +144,8 @@
               
                             
                     <div class="mt-2">
-                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary me-2"/>
+                        <a zippy="cancel"   zippy="save" class="btn btn-secondary ">Скасувати</a>
+                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary ms-4"/>
                             
 
                     </div>
@@ -127,9 +154,13 @@
         </div>
         <script>
 
-            function check_check() {
+            function check_rtest() {
 
                  document.getElementById('dialogwait').showModal()
+            }
+            function check_rdel() {
+                return confirm("Видалити магазин?")
+                
             }
 
         </script>

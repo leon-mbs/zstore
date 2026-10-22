@@ -9,10 +9,20 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Panel;
+use Zippy\Html\DataList\DataView;
+use Zippy\Binding\PropertyBinding as Prop;
+use Zippy\Html\DataList\ArrayDataSource;
+use Zippy\Html\Link\ClickLink;
 use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
+    
+    private $_m=null;
+    public $_list = [];
+    
     public function __construct() {
         parent::__construct();
 
@@ -22,112 +32,204 @@ class Options extends \App\Pages\Base
             App::RedirectError();
             return;
         }
-
-        $modules = System::getOptions("modules");
-
-        $form = $this->add(new Form("cform"));
-        $form->add(new TextInput('site', $modules['ocsite']));
-        $form->add(new TextInput('apiname', $modules['ocapiname']));
+        
+        $ss = \App\Helper::getSaleSources();
+        
+        $this->_list = System::getOption("modules",'oclist',[]);
+        if(count($this->_list)==0) {
+            $modules = System::getOptions("modules");
+            if(strlen($modules['ocsite']) >0) {
+                $oc = new \App\DataItem() ;
+                $oc->site = $modules['ocsite'];
+                $oc->salesource = $modules['ocsalesource'];
+                $oc->salesourcename =$ss[$oc->salesourcid] ??'';
+                $oc->apiname = $modules['ocapiname'];
+                $oc->insertcust = $modules['ocinsertcust'];
+                $oc->dostore = $modules['ocdostore'];
+                $oc->reserve = $modules['ocreserve'];
+                $oc->v4 = $modules['ocv4'];
+                $oc->key = $modules['ockey'];
+                $oc->pricetype = $modules['ocpricetype'];
+                $oc->mf = $modules['ocmf'];
+                $oc->storeid = $modules['ocstoreid'];
+                $oc->paytype = $modules['ocpaytype'];
+                $oc->id = 1;
+               
+                $this->_list[$oc->id]=$oc;
+            }
+        }
+         
+        $this->add(new Panel("listpan"));
+        $this->listpan->add(new ClickLink("addnew",$this,"onAdd"));
      
-        $form->add(new CheckBox('insertcust', $modules['ocinsertcust']));
-        $form->add(new CheckBox('dostore', $modules['ocdostore']));
-        $form->add(new CheckBox('reserve', $modules['ocreserve']));
+        $this->listpan->add(new DataView('list', new ArrayDataSource(new Prop($this, '_list')), $this, 'OnRow')) ;
+        $this->listpan->list->Reload();
+         
+        $form = $this->add(new Form("cform"));
+        $form->setVisible(false);
+        $form->add(new TextInput('site'));
+        $form->add(new TextInput('apiname'));
+     
+        $form->add(new CheckBox('insertcust' ));
+        $form->add(new CheckBox('dostore' ));
+        $form->add(new CheckBox('reserve' ));
+        $form->add(new CheckBox('usettn' ));
 
-        $form->add(new CheckBox('v4', $modules['ocv4'] ?? 0));
-        $form->add(new TextArea('key', $modules['ockey']));
+        $form->add(new CheckBox('v4' ));
+        $form->add(new TextArea('key', ));
 
-        $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['ocpricetype']));
-        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['ocsalesource']??0));
-        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
-        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['ocstoreid']??0));
+        $form->add(new DropDownChoice('defpricetype',\App\Entity\Item::getPriceTypeList() ));
+        $form->add(new DropDownChoice('salesource', $ss ));
+        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList() ));
+        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList() ));
       
         $pt=[];
         $pt[1] = 'Оплата на стороні IM ';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата касовим  чеком ';
-        $pt[4] = 'Тільки списати зі складу через ТТН';
+        $pt[3] = 'Оплата касовим чеком або РФ';
       
-        $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
+        $form->add(new DropDownChoice('defpaytype',$pt ));
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
+        $form->add(new ClickLink('cancel'))->onClick($this, 'onCancel');
     }
 
 
+   public function onAdd($sender) {
+       $this->_m = new \App\DataItem() ;  
+       
+       $this->_m->id = intval( max(  array_keys($this->_list) )) +1  ;
+       $this->cform->clean();
+       $this->cform->setVisible(true) ; 
+       $this->listpan->setVisible(false) ; 
+   }   
+
+   public function onCancel($sender) {
+       $this->cform->setVisible(false) ; 
+       $this->listpan->setVisible(true) ; 
+   }   
+   
+
+   public function OnRow($row) {
+        $oc = $row->getDataItem();
+
+        $row->add(new Label('rsite', $oc->site));
+        $row->add(new Label('rsalesourcname', $oc->salesourcename));
+        $row->add(new ClickLink('redit', $this,'edit' ));
+        $row->add(new ClickLink('rdel', $this,'del' ));
+        $row->add(new ClickLink('rtest', $this,'test' ));
+        
+   }    
+ 
+   public function edit($sender) {
+        $this->_m = $sender->getOwner()->getDataItem();
+        $this->cform->setVisible(true) ; 
+        $this->listpan->setVisible(false) ; 
+
+        $this->cform->site->setText($this->_m->site) ;
+        $this->cform->apiname->setText($this->_m->apiname) ;
+        $this->cform->key->setText($this->_m->key) ;
+        $this->cform->salesource->setValue($this->_m->salesource) ;
+        $this->cform->defpricetype->setValue($this->_m->pricetype) ;
+        $this->cform->defmf->setValue($this->_m->mf) ;
+        $this->cform->defstore->setValue($this->_m->storeid) ;
+        $this->cform->defpaytype->setValue($this->_m->paytype) ;
+        $this->cform->insertcust->setChecked($this->_m->insertcust) ;
+        $this->cform->dostore->setChecked($this->_m->dostore) ;
+        $this->cform->reserve->setChecked($this->_m->reserve) ;
+        $this->cform->v4->setChecked($this->_m->v4) ;
+        $this->cform->usettn->setChecked($this->_m->usettn) ;
+        
+    } 
+  
+    public function del($sender) {
+        $m = $sender->getOwner()->getDataItem();
+        
+        unset($this->_list[$m->id]) ;
+        
+        $modules = System::getOptions("modules");
+
+        $modules['oclist'] =  $this->_list;
+
+        System::setOptions("modules", $modules);
+
+        $this->listpan->list->Reload();
+      
+    } 
+        
     public function saveOnClick($sender) {
-        $site = $this->cform->site->getText();
-        $apiname = $this->cform->apiname->getText();
-        $key = $this->cform->key->getText();
+       
+        $this->_m->apiname = $this->cform->apiname->getText();
+        $this->_m->key = $this->cform->key->getText();
+        $this->_m->site = $this->cform->site->getText();
 
-        $pricetype = $this->cform->defpricetype->getValue();
-        $salesource = $this->cform->salesource->getValue();
-        $mf = $this->cform->defmf->getValue();
-        $store = $this->cform->defstore->getValue();
-        $paytype = intval($this->cform->defpaytype->getValue() );
+        $this->_m->pricetype = $this->cform->defpricetype->getValue();
+        $this->_m->salesource = $this->cform->salesource->getValue();
+        $this->_m->salesourcename = $this->cform->salesource->getValueName();
+        $this->_m->mf = $this->cform->defmf->getValue();
+        $this->_m->storeid = $this->cform->defstore->getValue();
+        $this->_m->paytype = intval($this->cform->defpaytype->getValue() );
+        $this->_m->paytypename = intval($this->cform->defpaytype->getValueName() );
 
-        $v4 = $this->cform->v4->isChecked() ? 1 : 0;
-        $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
-        $reserve = $this->cform->reserve->isChecked() ? 1 : 0;
-        $dostore = $this->cform->dostore->isChecked() ? 1 : 0;
-
-
-        if (strlen($pricetype) < 2) {
+        $this->_m->v4 = $this->cform->v4->isChecked() ? 1 : 0;
+        $this->_m->insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+        $this->_m->reserve = $this->cform->reserve->isChecked() ? 1 : 0;
+        $this->_m->dostore = $this->cform->dostore->isChecked() ? 1 : 0;
+        $this->_m->usettn = $this->cform->usettn->isChecked() ? 1 : 0;
+         
+        if (strlen($this->_m->pricetype) < 2) {
 
             $this->setError('Не вказано тип ціни');
             return;
         }
 
-        if ( $paytype==0) {
+        if ( $this->_m->paytype==0) {
 
             $this->setError('Не вказано тип оплати');
             return;
         }
-        if ( $paytype==1 && $mf==0) {
+        if ( $this->_m->paytype < 2 && $this->_m->mf==0) {
 
             $this->setError('Не вказано касу');
             return;
         }
-        if ( $paytype==4 && $store==0) {
+        if ( $this->_m->reserve==1 && $this->_m->storeid==0) {
 
             $this->setError('Не вказано склад');
             return;
         }
-
-        if ( ($reserve==1 || $dostore==1 ) && $store==0 ) {
+        if ( $this->_m->dostore==1 && $this->_m->storeid==0) {
 
             $this->setError('Не вказано склад');
             return;
         }
-
-        $site = trim($site, '/');
+       
+         
+        $this->_m->site = trim($this->_m->site, '/');
+        $this->_list[$this->_m->id]=$this->_m ;
 
         $modules = System::getOptions("modules");
-
-        $modules['ocsite'] = $site;
-        $modules['ocapiname'] = $apiname;
-        $modules['ockey'] = $key;
-
-        $modules['ocpricetype'] = $pricetype;
-        $modules['ocsalesource'] = $salesource;
-       
-        $modules['ocv4'] = $v4;
-        $modules['ocinsertcust'] = $insertcust;
-        $modules['ocdostore'] = $dostore;
-        $modules['ocreserve'] = $reserve;
-
-
-        $modules['ocmf'] = $mf;
-        $modules['ocstoreid'] = $store;
-        $modules['ocpaytype'] = $paytype;
+         
+        $modules['oclist'] =  $this->_list;
 
         System::setOptions("modules", $modules);
 
-
-        $this->setSuccess('Збережено');
-
-        \App\Modules\OCStore\Helper::connect();
-
-
+        $this->listpan->list->Reload();
+      
+        $this->cform->setVisible(false) ; 
+        $this->listpan->setVisible(true) ; 
+     
     }
+ 
+    public function test($sender) {
+        $m = $sender->getOwner()->getDataItem();
 
+      $c=  \App\Modules\OCStore\Helper::connect($m);
+      if( $c)  {
+          $this->setSuccess('Ok') ;
+      }
+ 
+   }    
+   
+   
 }
-//2Ru8ToJTb4ZoH8qgk1oh64mSRVC2chloDDSeD2SMY8g1n1JJ8dlXGUwF06FZl2qUmrQF0H8Kru7gSpW7O4kHRd2zX2wUGUUqBd2joQQbS0cP8frArUFxgNBCBppRUjlbZqbhaAhBaIPQUA24ykK7DjjsVKALcaYXr6RqmPCcmAEvHqMRwE088O00hx8F2ANoUrxCVHifygaTh4K2bdXCkVTVefiaDdeEaBCsAIW4ctrXZmLhtUUF8kmFdvVnXeTh

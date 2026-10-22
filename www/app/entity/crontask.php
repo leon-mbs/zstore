@@ -16,6 +16,7 @@ use App\Entity\Notify;
 class CronTask extends \ZCL\DB\Entity
 {
     public const MIN_INTERVAL=300 ;
+    public const TYPE_EMAIL='email' ;
     public const TYPE_SUBSEMAIL='subsemail' ;
     public const TYPE_EVENTCUST='eventcust' ;
     public const TYPE_AUTOSHIFT='autoshift' ;
@@ -148,10 +149,10 @@ class CronTask extends \ZCL\DB\Entity
         foreach($queue as $task) {
             try {
                 $done = false;
-                if($task->tasktype==self::TYPE_SUBSEMAIL) {
+                if($task->tasktype==self::TYPE_SUBSEMAIL || $task->tasktype==self::TYPE_EMAIL) {
                     $msg =unserialize($task->taskdata);
 
-                    $ret = \App\Comm::sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
+                    $ret = \App\Comm::_sendEmail($msg['email'], $msg['text'], $msg['subject'], $msg['document_id'] > 0 ? \App\Entity\Doc\Document::load($msg['document_id']) : null);
                     if(strlen($ret)==0) {
                         $done = true;
                     }
@@ -166,7 +167,7 @@ class CronTask extends \ZCL\DB\Entity
                     if(strlen($user->chat_id) >0) {
                         $ret= \App\Comm::sendBot($user->chat_id, $text) ;
                     } elseif(strlen($user->email) >0  ) {
-                        $ret= \App\Comm::sendEmail($user->email, $text, "ZStore  notify") ;
+                        $ret= \App\Comm::_sendEmail($user->email, $text, "ZStore  notify") ;
                     }
                     if(strlen($ret ??'')==0) {
                         $done = true;
@@ -219,7 +220,8 @@ class CronTask extends \ZCL\DB\Entity
  
     public static function getTypes() {
         $ret=[];
-        $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
+        $ret[self::TYPE_EMAIL]  = 'E-mail    ';
+        $ret[self::TYPE_SUBSEMAIL]  = 'E-mail по  підписці  ';
         $ret[self::TYPE_EVENTCUST]  = 'Подія з контрагентом ';
         $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ПРРО';
             
