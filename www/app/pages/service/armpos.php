@@ -175,7 +175,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->add(new SubmitLink('additemsm'))->onClick($this, 'addItemSmOnClick');
         $this->docpanel->form2->add(new TextInput('bonus'));
         $this->docpanel->form2->add(new TextInput('totaldisc'));
-        $this->docpanel->form2->add(new TextInput('prepaid'));
+     
         $this->docpanel->form2->add(new TextInput('akitemid'));
         $this->docpanel->form2->add(new TextArea('aklist'));
         $this->docpanel->form2->add(new CheckBox('akpass'));
@@ -466,7 +466,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->exchange->setText('0');
         $this->docpanel->form2->custinfo->setText('');
         $this->docpanel->form3->trans->setText('') ;
-        $this->docpanel->form2->prepaid->setText('') ;
+       
         $this->docpanel->form3->passfisc->setChecked(false) ;
         $this->docpanel->form2->setVisible(true);
 
@@ -536,9 +536,8 @@ class ARMPos extends \App\Pages\Base
         $total =   floatval($this->docpanel->form2->total->getText()) ;
         $bonus =   floatval($this->docpanel->form2->bonus->getText()) ;
         $totaldisc =   floatval($this->docpanel->form2->totaldisc->getText()) ;
-        $prepaid =   floatval($this->docpanel->form2->prepaid->getText()) ;
-
-        $payamount = $total - $bonus - $totaldisc - $prepaid;
+        
+        $payamount = $total - $bonus - $totaldisc  ;
 
         if($this->_tvars['onlynal']==true) {
             $this->_paytype=1;
@@ -594,13 +593,7 @@ class ARMPos extends \App\Pages\Base
             }
         }
 
-        //если  предоплата
-        $hidep = ($payamount ==0 && $prepaid >0) ;
-        $this->docpanel->form3->payed->setVisible(!$hidep);
-        $this->docpanel->form3->payedcard->setVisible(!$hidep);
-        $this->docpanel->form3->exchange->setVisible(!$hidep);
-        $this->docpanel->form3->exch2b->setVisible(!$hidep);
-
+      
         
         $bonus = intval($this->docpanel->form2->bonus->getText());
         $customer_id = $this->docpanel->form2->customer->getKey();
@@ -1182,7 +1175,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
         $this->_doc->headerdata['promocode'] = $this->docpanel->form2->promocode->getText();
         $this->_doc->headerdata['bonus'] = $this->docpanel->form2->bonus->getText();
-        $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText();
+
         $this->_doc->headerdata['pricetype'] = $this->getPriceType();
 
         
@@ -1236,7 +1229,7 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->headerdata['payedcard'] = $this->docpanel->form3->payedcard->getText();
         $this->_doc->headerdata['exchange'] = $this->docpanel->form3->exchange->getText();
         $this->_doc->headerdata['exch2b'] = $this->docpanel->form3->exch2b->getText() ;
-        $this->_doc->headerdata['prepaid'] = $this->docpanel->form2->prepaid->getText() ;
+
         $this->_doc->headerdata['trans'] = trim($this->docpanel->form3->trans->getText());
         $this->_doc->notes = trim($this->_doc->notes . ' ' . $this->_doc->headerdata['trans']) ;
         //        $this->_doc->headerdata['totaldisc'] = $this->docpanel->form2->totaldisc->getText();
@@ -1261,10 +1254,7 @@ class ARMPos extends \App\Pages\Base
             $this->setError("Для нарахування бонуса має бути обраний контрагент");
             return;
         }
-        if (doubleval($this->_doc->headerdata['prepaid']) >0 && $this->_doc->customer_id == 0) {
-            $this->setError("Якщо передоплата має бути обраний контрагент");
-            return;
-        }
+      
         if (doubleval($this->_doc->headerdata['exchange']) >0 && doubleval($this->_doc->headerdata['payedcard'] >0)) {
             $this->setError("При оплаті карткою решта має бути 0");
             return;
@@ -2188,7 +2178,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->promocode->setText($this->_doc->headerdata['promocode']);
         $this->docpanel->form2->bonus->setText($this->_doc->headerdata['bonus']);
         $this->docpanel->form2->totaldisc->setText($this->_doc->headerdata['totaldisc']);
-        $this->docpanel->form2->prepaid->setText($this->_doc->headerdata['prepaid']);
+
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');
         $this->docpanel->form3->payedcard->setText('0');

@@ -95,7 +95,7 @@ class Items extends \App\Pages\Base
         $this->_items = array();
  
         $url = $this->_m->site. '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
         }
 
@@ -166,7 +166,7 @@ class Items extends \App\Pages\Base
             $elist[] = array('name'     => $item->itemname,
                              'sku'      => $item->item_code,
                              'quantity' => \App\Helper::fqty($item->qty),
-                             'price'    => $item->getPrice($modules['ocpricetype'])
+                             'price'    => $item->getPrice($this->_m->pricetype)
             );
         }
         if (count($elist) == 0) {
@@ -183,7 +183,7 @@ class Items extends \App\Pages\Base
 
  
         $url = $this->_m->site. '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
         }
 
@@ -216,7 +216,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
 
-            $qty = $item->getQuantity($modules['ocstoreid']??0);
+            $qty = $item->getQuantity($this->_m->storeid??0);
             $elist[$item->item_code] = round($qty);
         }
 
@@ -227,7 +227,7 @@ class Items extends \App\Pages\Base
         );
  
         $url = $this->_m->site. '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
         }
         
@@ -257,7 +257,7 @@ class Items extends \App\Pages\Base
             if (strlen($item->item_code) == 0) {
                 continue;
             }
-            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
+            $elist[$item->item_code] = $item->getPrice($this->_m->pricetype);
         }
 
         $data = json_encode($elist);
@@ -267,7 +267,7 @@ class Items extends \App\Pages\Base
         );
    
         $url = $this->_m->site. '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
         }
 
@@ -303,7 +303,7 @@ class Items extends \App\Pages\Base
 
  
         $url = $this->_m->site. '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.getproducts&' . System::getSession()->octoken;
         }
 
@@ -416,7 +416,7 @@ class Items extends \App\Pages\Base
 
  
         $url = $this->_m->site. '/index.php?route=api/zstore/getnames&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.getnames&' . System::getSession()->octoken;
         }
         $json = Helper::do_curl_request($url);
@@ -483,7 +483,7 @@ class Items extends \App\Pages\Base
         
     
         $url = $this->_m->site. '/index.php?route=api/zstore/updatenames&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updatenames&' . System::getSession()->octoken;
         }
    

@@ -1,43 +1,11 @@
 SET NAMES 'utf8mb4'; 
 
  
-ALTER TABLE users ADD otpcode int DEFAULT NULL ;
+
 ALTER TABLE store_stock ADD tag int DEFAULT 0 ;
 ALTER TABLE documents ADD tag int DEFAULT 0 ;
  
-
-DROP  VIEW users_view; 
-
-CREATE
-VIEW users_view
-AS
-SELECT
-  users.user_id AS user_id,
-  users.userlogin AS userlogin,
-  users.userpass AS userpass,
-  users.createdon AS createdon,
-  users.email AS email,
-  users.acl AS acl,
-  users.options AS options,
-  users.disabled AS disabled,
-  users.lastactive AS lastactive,
-  roles.rolename AS rolename,
-  users.role_id AS role_id,
-  roles.acl AS roleacl,
-  roles.otpcode AS otpcode,
-  COALESCE(employees.employee_id, 0) AS employee_id,
-  (CASE WHEN ISNULL(employees.emp_name) THEN users.userlogin ELSE employees.emp_name END) AS username
-FROM ((users
-  LEFT JOIN employees
-    ON (((users.userlogin = employees.login)
-    AND (employees.disabled <> 1))))
-  LEFT JOIN roles
-    ON ((users.role_id = roles.role_id))) ;
-
-
-
-
-
+ 
  
 DROP  VIEW store_stock_view; 
  
@@ -113,7 +81,7 @@ SELECT
   u.username AS username,
   d.document_number AS document_number,
  
-  d.meta_id AS meta_id
+  d.meta_id AS meta_id,
   d.meta_name AS meta_name
 FROM ((docstatelog dl
   LEFT JOIN users_view u
@@ -146,19 +114,19 @@ SELECT
   b.branch_name AS branch_name,
   (  
   case   
-    when d.state=1 then 98 
-    when d.state=2 then 80  
-    when d.state=3 then 92  
-    when d.state=5 then 42  
-    when d.state=6 then 10  
-    when d.state=7 then 45  
-    when d.state=8 then 90  
-    when d.state=9 then 3  
+    when d.state = 1 then 95 
+    when d.state = 2 then 80  
+    when d.state = 3 then 92  
+    when d.state = 5 then 42  
+    when d.state = 6 then 10  
+    when d.state = 7 then 45  
+    when d.state = 8 then 90  
+    when d.state = 9 then 5  
     when d.state = 11 then 44  
     when d.state = 14 then 30  
-    when d.state = 15 then 3  
+    when d.state = 15 then 5  
     when d.state = 16 then 44  
-    when d.state = 17 then 20  
+    when d.state = 17 then 5  
     when d.state = 18 then 40  
     when d.state = 19 then 80  
     when d.state = 20 then 88  

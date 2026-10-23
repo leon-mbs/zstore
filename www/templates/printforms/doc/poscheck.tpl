@@ -81,12 +81,7 @@
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
-   {{#prepaid}}
-    <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Передплата:</td>
-        <td align="right">{{prepaid}}</td>
-    </tr>
-    {{/prepaid}} 
+ 
 
    {{#payamount}}
     <tr style="font-weight: bolder;">

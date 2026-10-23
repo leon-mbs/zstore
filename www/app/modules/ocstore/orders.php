@@ -97,7 +97,7 @@ class Orders extends \App\Pages\Base
             'status_id' => $status,
         );
         $url = $this->_m->site. '/index.php?route=api/zstore/orders&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.orders&' . System::getSession()->octoken;
         }
         $json = Helper::do_curl_request($url, $fields);
@@ -118,10 +118,8 @@ class Orders extends \App\Pages\Base
 
             foreach ($data['orders'] as $ocorder) {
 
-                $oldocid= $ocorder['order_id'].'g' ;
-                $ocid= ''.$this->_m->id.'_'.$ocorder['order_id'] ;
-                
-                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and (content like '%<ocorder>{$oldocid}</ocorder>%' or content like '%<ocorder><![CDATA[{$ocid}]]></ocorder>%'  )  ")  ;
+                $id = $ocorder['order_id'];
+                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and content like '%<ocorder>{$id}</ocorder>%' and content like '%<ocshopid>{$this->_m->id}</ocshopid>%'    ")  ;
 
                 if (intval($cnt) > 0) { //уже импортирован
                     continue;
@@ -227,7 +225,7 @@ class Orders extends \App\Pages\Base
 
             $neworder->headerdata['outnumber'] = ''.$this->_m->id.'_'.$shoporder->order_id;
             $neworder->headerdata['ocshopid'] =  $this->_m->id ;
-            $neworder->headerdata['ocorder'] =  ''.$this->_m->id.'_'.$shoporder->order_id;
+            $neworder->headerdata['ocorder'] =   $shoporder->order_id;
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = $this->_m->pricetype;
             $neworder->headerdata['salesource'] = $this->_m->salesource;
@@ -293,10 +291,9 @@ class Orders extends \App\Pages\Base
             
             $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
             
-            if($modules['ocmf'] >0) {
-               $neworder->headerdata['payment'] = $modules['ocmf'];
-        
-            }
+         
+            $neworder->headerdata['payment'] = intval( $this->_m->mf);
+          
             if ($neworder->headerdata['paytype'] == 2) {
                 $neworder->setHD('waitpay',1); 
             }        
@@ -420,7 +417,7 @@ class Orders extends \App\Pages\Base
                 
                 $neworder->headerdata['outnumber'] = ''.$this->_m->id.'_'.$shoporder->order_id;
                 $neworder->headerdata['ocshopid'] =  $this->_m->id ;
-                $neworder->headerdata['ocorder'] =  ''.$this->_m->id.'_'.$shoporder->order_id;
+                $neworder->headerdata['ocorder'] =   $shoporder->order_id;
     
 
 
@@ -503,7 +500,10 @@ class Orders extends \App\Pages\Base
             if ($order->ch == false) {
                 continue;
             }
-            $elist[$order->headerdata['ocorder']] = $st;
+            
+            $id= (int) $order->headerdata['ocorder']?? 0;
+        
+            $elist[$id] = $st;
         }
         if (count($elist) == 0) {
 
@@ -511,13 +511,13 @@ class Orders extends \App\Pages\Base
             return;
         }
         $data = json_encode($elist);
-
+ 
         $fields = array(
             'data' => $data
         );
    
         $url = $this->_m->site. '/index.php?route=api/zstore/updateorder&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updateorder&' . System::getSession()->octoken;
         }
   
@@ -545,7 +545,7 @@ class Orders extends \App\Pages\Base
         }
 
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%'  and state <>1 and state <>23   and content like '%<ocshopid>{$this->_m->id}</ocshopid>%'    " );
         $this->updateform->orderslist->Reload();
     }
 

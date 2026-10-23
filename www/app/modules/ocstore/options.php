@@ -97,8 +97,10 @@ class Options extends \App\Pages\Base
 
    public function onAdd($sender) {
        $this->_m = new \App\DataItem() ;  
-       
-       $this->_m->id = intval( max(  array_keys($this->_list) )) +1  ;
+       $this->_m->id=1;
+       if(count($this->_list)>0) {
+           $this->_m->id = intval( max(  array_keys($this->_list) )) +1  ;
+       }
        $this->cform->clean();
        $this->cform->setVisible(true) ; 
        $this->listpan->setVisible(false) ; 

@@ -86,8 +86,7 @@ class POSCheck extends Document
                         "total"           => H::fasell($this->amount),
                         "payed"           => H::fasell($pp),
                         "totaldisc"       => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
-                        "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
-
+                       
                         "docqrcode"       => $this->getQRCodeImage(),
                         "payamount"       => H::fasell($this->payamount)
         );
@@ -191,8 +190,7 @@ class POSCheck extends Document
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]?? null) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
                         "notes"           => nl2br($this->notes),
-                        "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
-                        "exciseval"         => $this->getHD('exciseval',0) > 0 ? H::fa($this->getHD('exciseval')) : false   ,
+                          "exciseval"         => $this->getHD('exciseval',0) > 0 ? H::fa($this->getHD('exciseval')) : false   ,
 
 
                         "pos_name"        => $this->headerdata["pos_name"],

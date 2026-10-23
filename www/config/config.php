@@ -1,7 +1,7 @@
 <?php
 
 
-$_config = array('common'=>[],'db'=>[],'smtp'=>[]) ;
+$_config = array('common'=>[],'db'=>[] ) ;
 
  
 $_config['db']['host'] = 'localhost:3306'  ;
