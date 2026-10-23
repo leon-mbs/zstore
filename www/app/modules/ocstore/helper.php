@@ -69,7 +69,7 @@ class Helper
         System::getSession()->cats=null;
        
         $url = $m->site . '/index.php?route=api/login';
-        if($m->ocv4==1) {
+        if($m->v4==1) {
             $url = $m->site . '/index.php?route=api/account/login';
         }
         $fields = array(
@@ -116,7 +116,7 @@ class Helper
         
             //загружаем список статусов
             $url = $m->site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
-            if($m->site->ocv4==1) {
+            if($m->site->v4==1) {
                 $url = $m->site . '/index.php?route=api/zstore.statuses&' .System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());
@@ -131,7 +131,7 @@ class Helper
             }
             //загружаем список категорий
             $url = $m->site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
-            if($m->ocv4==1) {  
+            if($m->v4==1) {  
                 $url = $m->site . '/index.php?route=api/zstore.cats&' . System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());

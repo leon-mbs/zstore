@@ -95,7 +95,7 @@ class Items extends \App\Pages\Base
         $this->_items = array();
  
         $url = $this->_m->site. '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
         }
 
@@ -183,7 +183,7 @@ class Items extends \App\Pages\Base
 
  
         $url = $this->_m->site. '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
         }
 
@@ -227,7 +227,7 @@ class Items extends \App\Pages\Base
         );
  
         $url = $this->_m->site. '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
         }
         
@@ -267,7 +267,7 @@ class Items extends \App\Pages\Base
         );
    
         $url = $this->_m->site. '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
         }
 
@@ -303,7 +303,7 @@ class Items extends \App\Pages\Base
 
  
         $url = $this->_m->site. '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.getproducts&' . System::getSession()->octoken;
         }
 
@@ -416,7 +416,7 @@ class Items extends \App\Pages\Base
 
  
         $url = $this->_m->site. '/index.php?route=api/zstore/getnames&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.getnames&' . System::getSession()->octoken;
         }
         $json = Helper::do_curl_request($url);
@@ -483,7 +483,7 @@ class Items extends \App\Pages\Base
         
     
         $url = $this->_m->site. '/index.php?route=api/zstore/updatenames&' . System::getSession()->octoken;
-        if($this->_m->ocv4==1) {
+        if($this->_m->v4==1) {
             $url = $this->_m->site. '/index.php?route=api/zstore.updatenames&' . System::getSession()->octoken;
         }
    
