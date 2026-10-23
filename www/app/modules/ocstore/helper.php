@@ -63,8 +63,58 @@ class Helper
     }
 
 
+    /**
+    * список  магазинов
+    * при  первом  вызове  переносит  магазин  из  старых  настроек (ocsite, ockey...)  и  сразу  сохраняет,
+    * чтобы  импорт  работал  без  захода  в  настройки
+    */
+    public static function getList() {
+        $list = System::getOption("modules", 'oclist', []);
+        if (count($list) > 0) {
+            return $list;
+        }
+        $modules = System::getOptions("modules");
+        if (strlen($modules['ocsite'] ?? '') == 0) {
+            return [];
+        }
+        $ss = \App\Helper::getSaleSources();
+
+        $oc = new \App\DataItem() ;
+        $oc->id = 1;
+        $oc->site = trim($modules['ocsite'], '/');
+        $oc->salesource = $modules['ocsalesource'] ?? 0;
+        $oc->salesourcename = $ss[$oc->salesource] ?? '';
+        $oc->apiname = $modules['ocapiname'] ?? '';
+        $oc->insertcust = $modules['ocinsertcust'] ?? 0;
+        $oc->dostore = $modules['ocdostore'] ?? 0;
+        $oc->reserve = $modules['ocreserve'] ?? 0;
+        $oc->ocv4 = $modules['ocv4'] ?? 0;
+        $oc->key = $modules['ockey'] ?? '';
+        $oc->pricetype = $modules['ocpricetype'] ?? '';
+        $oc->mf = $modules['ocmf'] ?? 0;
+        $oc->storeid = $modules['ocstoreid'] ?? 0;
+        $oc->paytype = $modules['ocpaytype'] ?? 0;
+
+        $list[$oc->id] = $oc;
+        $modules['oclist'] = $list;
+        System::setOptions("modules", $modules);
+
+        return $list;
+    }
+
+    /**
+    * список  магазинов  для  выбора  (если  источник  продаж  не  задан  - адрес  сайта)
+    */
+    public static function getSelectList() {
+        $mlist = [];
+        foreach (Helper::getList() as $m) {
+            $mlist[$m->id] = strlen($m->salesourcename ?? '') > 0 ? $m->salesourcename : $m->site;
+        }
+        return $mlist;
+    }
+
     public static function connect($m) {
-         
+
         System::getSession()->statuses=null;
         System::getSession()->cats=null;
        
@@ -116,7 +166,7 @@ class Helper
         
             //загружаем список статусов
             $url = $m->site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
-            if($m->site->ocv4==1) {
+            if($m->ocv4==1) {
                 $url = $m->site . '/index.php?route=api/zstore.statuses&' .System::getSession()->octoken;
             }
             $json = Helper::do_curl_request($url, array());

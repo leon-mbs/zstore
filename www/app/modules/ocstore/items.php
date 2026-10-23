@@ -31,12 +31,8 @@ class Items extends \App\Pages\Base
         }
  
         $cats = System::getSession()->cats;
-        $mlist=[] ;
-        
-        foreach( System::getOption("modules","oclist",[]) as $m){
-            $mlist[$m->id]=$m->salesourcename;
-        };
-     
+        $mlist= Helper::getSelectList() ;
+
     
         
         $this->add(new Form('mform'))->onSubmit($this, 'mOnSubmit');
@@ -68,7 +64,7 @@ class Items extends \App\Pages\Base
     }
 
     public function mOnSubmit($sender) {  
-        $mlist=System::getOption("modules","oclist",[])  ;
+        $mlist=Helper::getList()  ;
         $id=  $this->mform->mlist->getValue();
         $this->_m= $mlist[ $id] ?? null;
        

@@ -24,7 +24,7 @@ SELECT
   roles.rolename AS rolename,
   users.role_id AS role_id,
   roles.acl AS roleacl,
-  roles.otpcode AS otpcode,
+  users.otpcode AS otpcode,
   COALESCE(employees.employee_id, 0) AS employee_id,
   (CASE WHEN ISNULL(employees.emp_name) THEN users.userlogin ELSE employees.emp_name END) AS username
 FROM ((users
@@ -113,7 +113,7 @@ SELECT
   u.username AS username,
   d.document_number AS document_number,
  
-  d.meta_id AS meta_id
+  d.meta_id AS meta_id,
   d.meta_name AS meta_name
 FROM ((docstatelog dl
   LEFT JOIN users_view u

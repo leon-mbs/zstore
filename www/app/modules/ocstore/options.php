@@ -35,29 +35,7 @@ class Options extends \App\Pages\Base
         
         $ss = \App\Helper::getSaleSources();
         
-        $this->_list = System::getOption("modules",'oclist',[]);
-        if(count($this->_list)==0) {
-            $modules = System::getOptions("modules");
-            if(strlen($modules['ocsite']) >0) {
-                $oc = new \App\DataItem() ;
-                $oc->site = $modules['ocsite'];
-                $oc->salesource = $modules['ocsalesource'];
-                $oc->salesourcename =$ss[$oc->salesourcid] ??'';
-                $oc->apiname = $modules['ocapiname'];
-                $oc->insertcust = $modules['ocinsertcust'];
-                $oc->dostore = $modules['ocdostore'];
-                $oc->reserve = $modules['ocreserve'];
-                $oc->v4 = $modules['ocv4'];
-                $oc->key = $modules['ockey'];
-                $oc->pricetype = $modules['ocpricetype'];
-                $oc->mf = $modules['ocmf'];
-                $oc->storeid = $modules['ocstoreid'];
-                $oc->paytype = $modules['ocpaytype'];
-                $oc->id = 1;
-               
-                $this->_list[$oc->id]=$oc;
-            }
-        }
+        $this->_list = Helper::getList();   //перенос  из  старых  настроек  внутри
          
         $this->add(new Panel("listpan"));
         $this->listpan->add(new ClickLink("addnew",$this,"onAdd"));
@@ -139,7 +117,7 @@ class Options extends \App\Pages\Base
         $this->cform->insertcust->setChecked($this->_m->insertcust) ;
         $this->cform->dostore->setChecked($this->_m->dostore) ;
         $this->cform->reserve->setChecked($this->_m->reserve) ;
-        $this->cform->v4->setChecked($this->_m->v4) ;
+        $this->cform->v4->setChecked($this->_m->ocv4) ;
         $this->cform->usettn->setChecked($this->_m->usettn) ;
         
     } 
@@ -171,9 +149,9 @@ class Options extends \App\Pages\Base
         $this->_m->mf = $this->cform->defmf->getValue();
         $this->_m->storeid = $this->cform->defstore->getValue();
         $this->_m->paytype = intval($this->cform->defpaytype->getValue() );
-        $this->_m->paytypename = intval($this->cform->defpaytype->getValueName() );
+        $this->_m->paytypename = $this->cform->defpaytype->getValueName() ;
 
-        $this->_m->v4 = $this->cform->v4->isChecked() ? 1 : 0;
+        $this->_m->ocv4 = $this->cform->v4->isChecked() ? 1 : 0;   //читается  как  ocv4  в  helper, orders, items
         $this->_m->insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
         $this->_m->reserve = $this->cform->reserve->isChecked() ? 1 : 0;
         $this->_m->dostore = $this->cform->dostore->isChecked() ? 1 : 0;

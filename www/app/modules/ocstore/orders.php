@@ -32,12 +32,8 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $mlist=[] ;
-        
-        foreach( System::getOption("modules","oclist",[]) as $m){
-            $mlist[$m->id]=$m->salesourcename;
-        };
-     
+        $mlist= Helper::getSelectList() ;
+
     
         
         $this->add(new Form('mform'))->onSubmit($this, 'mOnSubmit');
@@ -60,7 +56,7 @@ class Orders extends \App\Pages\Base
     }
 
     public function mOnSubmit($sender) {  
-        $mlist=System::getOption("modules","oclist",[])  ;
+        $mlist=Helper::getList()  ;
         $id=  $this->mform->mlist->getValue();
         $this->_m= $mlist[ $id] ?? null;
        
@@ -118,10 +114,14 @@ class Orders extends \App\Pages\Base
 
             foreach ($data['orders'] as $ocorder) {
 
-                $oldocid= $ocorder['order_id'].'g' ;
-                $ocid= ''.$this->_m->id.'_'.$ocorder['order_id'] ;
-                
-                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and (content like '%<ocorder>{$oldocid}</ocorder>%' or content like '%<ocorder><![CDATA[{$ocid}]]></ocorder>%'  )  ")  ;
+                //дубль  = магазин + номер.  ocorder - номер  заказа  в  магазине  как  раньше
+                $ocid= intval($ocorder['order_id']) ;
+                $shopid= intval($this->_m->id) ;
+                $w = "content like '%<ocshopid>{$shopid}</ocshopid>%' and (content like '%<ocorder>{$ocid}</ocorder>%' or content like '%<ocorder><![CDATA[{$ocid}]]></ocorder>%' or content like '%<ocorder><![CDATA[{$shopid}_{$ocid}]]></ocorder>%')";
+                if($shopid==1) {  //заказы  импортированные  до  нескольких  магазинов  (без  ocshopid)
+                    $w = "({$w}) or (content not like '%<ocshopid>%' and (content like '%<ocorder>{$ocid}</ocorder>%' or content like '%<ocorder><![CDATA[{$ocid}]]></ocorder>%'))";
+                }
+                $cnt  = $conn->getOne("select count(*) from documents_view where (meta_name='Order' or meta_name='TTN') and ({$w})  ")  ;
 
                 if (intval($cnt) > 0) { //уже импортирован
                     continue;
@@ -227,7 +227,7 @@ class Orders extends \App\Pages\Base
 
             $neworder->headerdata['outnumber'] = ''.$this->_m->id.'_'.$shoporder->order_id;
             $neworder->headerdata['ocshopid'] =  $this->_m->id ;
-            $neworder->headerdata['ocorder'] =  ''.$this->_m->id.'_'.$shoporder->order_id;
+            $neworder->headerdata['ocorder'] =  intval($shoporder->order_id);   //номер  в  магазине  без  префикса - уходит  обратно  в  updateorder
             $neworder->headerdata['ocorderback'] = 0;
             $neworder->headerdata['pricetype'] = $this->_m->pricetype;
             $neworder->headerdata['salesource'] = $this->_m->salesource;
@@ -419,8 +419,8 @@ class Orders extends \App\Pages\Base
                 
                 $neworder->headerdata['outnumber'] = ''.$this->_m->id.'_'.$shoporder->order_id;
                 $neworder->headerdata['ocshopid'] =  $this->_m->id ;
-                $neworder->headerdata['ocorder'] =  ''.$this->_m->id.'_'.$shoporder->order_id;
-    
+                $neworder->headerdata['ocorder'] =  intval($shoporder->order_id);
+
 
 
                 $neworder->amount = \App\Helper::fa($totalpr);
@@ -474,7 +474,12 @@ class Orders extends \App\Pages\Base
 
     public function onRefresh($sender) {                                                                             
           
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%'  and state <>1 and state <>23   and content like '%<ocshopid>{$this->_m->id}</ocshopid>%'    " );
+        $shopid = intval($this->_m->id);
+        $w = "content like '%<ocshopid>{$shopid}</ocshopid>%'";
+        if($shopid==1) {  //заказы  импортированные  до  нескольких  магазинов
+            $w = "({$w} or (content not like '%<ocshopid>%' and content like '%<ocorder>%'))";
+        }
+        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%'  and state <>1 and state <>23   and {$w}    " );
         $this->updateform->orderslist->Reload();
     }
 
@@ -502,7 +507,11 @@ class Orders extends \App\Pages\Base
             if ($order->ch == false) {
                 continue;
             }
-            $elist[$order->headerdata['ocorder']] = $st;
+            $num = ''.$order->headerdata['ocorder'];
+            if(strpos($num, '_') !== false) {   //заказы, импортированные  с  префиксом  магазина  (1_101)
+                $num = substr($num, strpos($num, '_') + 1);
+            }
+            $elist[intval($num)] = $st;   //в  магазин  только  номер,  иначе  (int)'1_101' = 1
         }
         if (count($elist) == 0) {
 
@@ -544,8 +553,7 @@ class Orders extends \App\Pages\Base
         }
 
 
-        $this->_eorders = Document::find("meta_name='Order' and content like '%<ocorderback>0</ocorderback>%' and state <> " . Document::STATE_NEW);
-        $this->updateform->orderslist->Reload();
+        $this->onRefresh(null);   //список  только  этого  магазина
     }
 
 }
