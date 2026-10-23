@@ -140,12 +140,7 @@
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
-   {{#prepaid}}
-    <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Передплата:</td>
-        <td align="right">{{prepaid}}</td>
-    </tr>
-    {{/prepaid}}
+ 
 
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">До сплати:</td>

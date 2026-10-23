@@ -468,11 +468,7 @@ class PPOHelper
                   //  $pay['rest'] = number_format($doc->headerdata["exchange"], 2, '.', '');
                     $pay['rest'] = number_format($payed- $doc->headerdata["exchange"], 2, '.', '');
                 }
-                // в долг
-                if ($payed < $doc->payamount) {
-                    $pay['paysum'] = number_format($payamount, 2, '.', '');
-                    $pay['payed'] = number_format($payed, 2, '.', '');
-                }
+                
 
                 $header['pays'][] = $pay;
                 $n++;

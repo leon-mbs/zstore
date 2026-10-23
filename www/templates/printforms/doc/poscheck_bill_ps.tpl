@@ -92,10 +92,7 @@
  <text>Списано бонусів: {{delbonus}}</text>
  
     {{/delbonus}}
-   {{#prepaid}}
- <text>Передплата: {{prepaid}}</text>
  
-    {{/prepaid}}
  {{#exciseval}}
  <text>В т.ч. акциз: {{exciseval}}</text>
  

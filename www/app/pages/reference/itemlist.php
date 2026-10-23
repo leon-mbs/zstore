@@ -301,7 +301,7 @@ class ItemList extends \App\Pages\Base
         $row->imagelistitem->setAttribute('href', $url);
         $row->imagelistitem->setAttribute('data-gallery', $item->item_id);
         
-        if (  strlen($url)==0) {
+        if (  strlen($url??'')==0) {
             $row->imagelistitem->setVisible(false);
         }
 
