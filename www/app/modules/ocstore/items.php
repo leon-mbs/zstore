@@ -166,7 +166,7 @@ class Items extends \App\Pages\Base
             $elist[] = array('name'     => $item->itemname,
                              'sku'      => $item->item_code,
                              'quantity' => \App\Helper::fqty($item->qty),
-                             'price'    => $item->getPrice($modules['ocpricetype'])
+                             'price'    => $item->getPrice($this->_m->pricetype)
             );
         }
         if (count($elist) == 0) {
@@ -216,7 +216,7 @@ class Items extends \App\Pages\Base
                 continue;
             }
 
-            $qty = $item->getQuantity($modules['ocstoreid']??0);
+            $qty = $item->getQuantity($this->_m->storeid??0);
             $elist[$item->item_code] = round($qty);
         }
 
@@ -257,7 +257,7 @@ class Items extends \App\Pages\Base
             if (strlen($item->item_code) == 0) {
                 continue;
             }
-            $elist[$item->item_code] = $item->getPrice($modules['ocpricetype']);
+            $elist[$item->item_code] = $item->getPrice($this->_m->pricetype);
         }
 
         $data = json_encode($elist);

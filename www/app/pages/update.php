@@ -50,6 +50,8 @@ class Update extends \App\Pages\Base
         $this->_sql['6.17.0']='update6170to6180.sql';
         $this->_sql['6.18.0']='update6180to800.sql';
         $this->_sql['8.0.0']='update800to810.sql';
+        $this->_sql['8.1.0']='update810to820.sql';
+        $this->_sql['8.2.0']='update820to830.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -172,33 +174,7 @@ class Update extends \App\Pages\Base
          
          
           \App\Session::getSession()->migrationcheck = false; 
-          
-      try{
-            $url = "https://store.zippy.com.ua/stat.php?h=".H::getSalt();
-         
-            $url.= "&v=".System::CURR_VERSION;
-            $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
-            if(strlen($json)>0) {
-                $json = json_decode($json,true) ;
-                $fv  = $json['ver'] ?? '0.0.0';
-                $url.= "&f=".$fv;
-                    
-            }    
-              
-         //   $conn = \ZDB\DB::getConnect() ;
-          //  $v= $conn->GetOne('SELECT VERSION()');
-          //  $url.= "&b=".$v; 
-            $url.= "&p=". phpversion() ; 
-            
-            
-            
-            @file_get_contents($url) ;
-            
-        }
-        catch(\Exception $e){
-            
-        }          
-          
+     
           
     }   
 

@@ -682,7 +682,7 @@ class OrderList extends \App\Pages\Base
         }
 
         if ($pt ==3  ) {
-            $this->statuspan->statusform->bttn->setVisible(false);
+        //    $this->statuspan->statusform->bttn->setVisible(false);
         }
 
         if ( $this->_doc->getHD('dostore',0) ==1) {

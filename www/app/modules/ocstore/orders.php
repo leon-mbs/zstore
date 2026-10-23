@@ -293,10 +293,9 @@ class Orders extends \App\Pages\Base
             
             $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
             
-            if($modules['ocmf'] >0) {
-               $neworder->headerdata['payment'] = $modules['ocmf'];
-        
-            }
+         
+            $neworder->headerdata['payment'] = intval( $this->_m->mf);
+          
             if ($neworder->headerdata['paytype'] == 2) {
                 $neworder->setHD('waitpay',1); 
             }        
