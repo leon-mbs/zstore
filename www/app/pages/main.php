@@ -227,7 +227,7 @@ class Main extends Base
                     
                   ";
 
-            $ser = abs(round($conn->GetOne($sql)));
+            $ser = abs(round($conn->GetOne($sql)??0));
 
             $ts[] = [$m['name'],$ser,$tov];
 

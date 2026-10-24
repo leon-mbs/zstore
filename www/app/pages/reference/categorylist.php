@@ -136,7 +136,7 @@ class CategoryList extends \App\Pages\Base
         }
 
         usort($this->_catlist, function ($a, $b) {
-            return $a->order > $b->order;
+            return $a->order??0 > $b->order??0;
         });      
         $this->_rn=0;
 
