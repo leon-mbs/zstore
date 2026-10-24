@@ -6,7 +6,6 @@
         <DOCTYPE>0</DOCTYPE>
         <DOCSUBTYPE>0</DOCSUBTYPE>
 
-
         <UID>{{guid}}</UID>
 
           {{#tin}}
@@ -29,10 +28,9 @@
 
         <ORDERNUM>{{docnumber}}</ORDERNUM>
 
-
         <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
-        <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
 
+        <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
 
         <CASHIER>{{username}}</CASHIER>
 
@@ -44,12 +42,13 @@
 
     <CHECKTOTAL>
         <SUM>{{amount}}</SUM>
-
-
+        <PARTPAYORDPREPAYNUM>{{parentcheck}}</PARTPAYORDPREPAYNUM>
+   
+        <PARTPAYTYPE>{{partpaytype}}</PARTPAYTYPE>
+        <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+      
     </CHECKTOTAL>
-
-
-    {{#pay}}
+  
     <CHECKPAY>
         <ROW ROWNUM="1">
 
@@ -59,24 +58,7 @@
 
             <SUM>{{paysum}}</SUM>
 
-            <PROVIDED>{{payed}}</PROVIDED>
-
         </ROW>
     </CHECKPAY>
-    {{/pay}}
-
-    <CHECKBODY>
-
-        <ROW ROWNUM="1">
-
-            <NAME>{{parentcheck}}</NAME>
-
-            <AMOUNT>1</AMOUNT>
-            <PRICE>{{amount}}</PRICE>
-
-            <COST>{{amount}}</COST>
-        </ROW>
-
-    </CHECKBODY>
-
+ 
 </CHECK>

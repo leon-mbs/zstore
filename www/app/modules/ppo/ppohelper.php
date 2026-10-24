@@ -421,7 +421,7 @@ class PPOHelper
           
        
          // к  оплате
-        $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
+        $payamount  =    doubleval($doc->payamount) ;
         // оплачено
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
        
@@ -511,39 +511,15 @@ class PPOHelper
             }
 
         }
-
+        $header['ispartpay']  = false;
         // в долг
         if ($payed < $doc->payamount) {
-            $pay = array(
-                'formname' => self::FORM_CREDIT,
-                'formcode' => 2,
-                'paysum'   => number_format($payamount - $payed, 2, '.', ''),
-                'payed'    => number_format($payamount - $payed, 2, '.', ''),
-                'rest'     => false,
-                'num'      => "ROWNUM=\"{$n}\""
-            );
-            $header['pays'][] = $pay;
-            $n++;
-
-            $amount2 = $pay['paysum'];
+           $header['ispartpay']  = true;
+           $header['partpaysum']  = number_format($payed, 2, '.', '') ;
+           $header['partpaytype']  = 1;  //первый чек
+           
         }
-        // предоплата
-        if ($doc->headerdata['prepaid']>0) {
-            $pay = array(
-                'formname' => self::FORM_PREPAID,
-                'formcode' => 3,
-                'paysum'   => number_format($doc->headerdata['prepaid'], 2, '.', ''),
-                'payed'    => number_format($doc->headerdata['prepaid'], 2, '.', ''),
-                'rest'     => false,
-                'num'      => "ROWNUM=\"{$n}\""
-            );
-            $header['pays'][] = $pay;
-            $n++;
-
-            $amount3 = $pay['paysum'];
-            $header['amount'] += $doc->headerdata['prepaid'];
-        }
-      
+        
         
         $header['pay'] = count($header['pays']) > 0;
      
@@ -647,11 +623,16 @@ class PPOHelper
     }
 
     /**
-     * отправка  доплаты
-     *
-     * @param mixed $doc
-     */
-    public static function checkpay($doc, $pos_id, $payed, $payment) {
+    * отправка  доплаты
+    * 
+    * @param int $pos_id  постерминал
+    * @param int $mf_id  касса
+    * @param decimal $payed  сума
+    * @param string $parentnumber  роительский  документ
+    * @param decimal $parentsum   исходная сума
+    * @param bool $isallpay  помследняя доплата
+    */
+    public static function checkpay( $pos_id, $mf_id,$parentfnumber, $payed, $parentsum,$isallpay) {
 
 
         $pos = \App\Entity\Pos::load($pos_id);
@@ -666,7 +647,7 @@ class PPOHelper
         if( ($pos->tin ??'')=='') {
             $pos->tin = $firm['tin']  ;
         }
-        $mf = \App\Entity\MoneyFund::load($payment);
+        $mf = \App\Entity\MoneyFund::load($mf_id);
 
         $header = array();
 
@@ -699,14 +680,17 @@ class PPOHelper
             $header['formcode'] = 0;
             $amount0 = number_format($payed, 2, '.', '');
         }
-        //  $header['amount'] = number_format($doc->amount, 2, '.', '');
-        $header['pay'] = $payed > 0;
-        $header['paysum'] = number_format($payed, 2, '.', '');
-        $header['payed'] = number_format($payed, 2, '.', '');
+    
+        $header['amount'] = number_format($parentsum, 2, '.', '');
 
-        $header['parentcheck'] = $doc->document_number;
-        $header['amount'] = number_format($payed, 2, '.', '');
-
+        $header['parentcheck'] = $parentnumber;
+         
+       
+        $header['partpaysum']  = number_format($payed, 2, '.', '') ;
+        $header['partpaytype']  = $isallpay ?3:2;   
+         
+        
+        
         $report = new \App\Report('checkpay.xml');
 
         $xml = $report->generate($header);
