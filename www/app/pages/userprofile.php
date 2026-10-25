@@ -95,23 +95,7 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
-         //форма  OTP
-        $form = new Form('otpform');       
-        $form->add(new CheckBox('otpemail', $this->user->otpemail));
-        $form->add(new CheckBox('otpsms', $this->user->otpsms));
-        $form->add(new CheckBox('otptg', $this->user->otptg));
-        $form->add(new SubmitButton('otpsave'))->onClick($this, 'saveOtpOnClick');
-        $form->add(new SubmitLink('otprefresh'))->onClick($this, 'refreshOtpOnClick');
-        $form->add(new SubmitLink('otptest'))->onClick($this, 'testOtpOnClick');
-        if(strlen($this->user->otpcode)==0){
-             $this->user->otpcode = rand(100000,999999) ;
-             $this->user->save();
-        } 
-        $form->add(new Label('otpcode',$this->user->otpcode));
-     
-        $this->add($form);
-   
-             
+  
      
         if(strlen($this->user->prtype) == 0) {
             $this->user->prtype = 0 ;
@@ -350,23 +334,8 @@ class UserProfile extends \App\Pages\Base
          
     }
     
-    public function saveOtpOnClick($sender) {
-             
-         
-    }
-    
-    public function refreshOtpOnClick($sender) {
-        $this->user->otpcode = rand(100000,999999) ;
-        $this->user->save();
-
-        $this->otpform->otpcode->setText($this->user->otpcode);
-         
-    }
-
-    public function testOtpOnClick($sender) {
-             
-         
-    }
+     
+   
     
     
 }

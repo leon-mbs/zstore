@@ -170,7 +170,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
-        $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);         //         $docs = Document::find($this->getWhere(), "priority desc,document_id desc", $count, $start);
+        $docs = Document::find($this->getWhere(), "document_id desc", $count, $start);        
 
         return $docs;
     }

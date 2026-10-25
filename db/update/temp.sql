@@ -1,10 +1,8 @@
 SET NAMES 'utf8mb4'; 
 
- 
 
 ALTER TABLE store_stock ADD tag int DEFAULT 0 ;
 ALTER TABLE documents ADD tag int DEFAULT 0 ;
- 
  
  
 DROP  VIEW store_stock_view; 
@@ -40,11 +38,46 @@ FROM  store_stock st
   LEFT JOIN employees
     ON  employees.employee_id  = st.emp_id ;
     
-     
+
+DROP  VIEW documents_view;     
+    
+CREATE VIEW documents_view
+AS
+SELECT
+  d.document_id AS document_id,
+  d.document_number AS document_number,
+  d.document_date AS document_date,
+  d.user_id AS user_id,
+  d.content AS content,
+  d.amount AS amount,
+  d.meta_id AS meta_id,
+  u.username AS username,
+  d.customer_id AS customer_id,
+  c.customer_name AS customer_name,
+  d.state AS state,
+  d.notes AS notes,
+  d.payamount AS payamount,
+  d.payed AS payed,
+  d.parent_id AS parent_id,
+  d.tag AS tag,
+  d.branch_id AS branch_id,
+  b.branch_name AS branch_name,
  
+  metadata.meta_name AS meta_name,
+  metadata.description AS meta_desc
+FROM documents d
+  LEFT JOIN users_view u
+    ON d.user_id = u.user_id
+  LEFT JOIN customers c
+    ON d.customer_id = c.customer_id
+  JOIN metadata
+    ON metadata.meta_id = d.meta_id
+  LEFT JOIN branches b
+    ON d.branch_id = b.branch_id ;
+   
+  
  
 DROP  VIEW acc_entry_view; 
- 
  
 CREATE VIEW acc_entry_view
 AS
@@ -79,76 +112,15 @@ SELECT
   dl.createdon AS createdon,
   dl.hostname AS hostname,
   u.username AS username,
-  d.document_number AS document_number,
+  d.document_number AS document_number 
  
-  d.meta_id AS meta_id,
-  d.meta_name AS meta_name
+ 
 FROM ((docstatelog dl
   LEFT JOIN users_view u
     ON ((dl.user_id = u.user_id)))
-  JOIN documents_view d
+  JOIN documents d
     ON ((d.document_id = dl.document_id))) ;
 
-DROP  VIEW documents_view;     
-    
-CREATE VIEW documents_view
-AS
-SELECT
-  d.document_id AS document_id,
-  d.document_number AS document_number,
-  d.document_date AS document_date,
-  d.user_id AS user_id,
-  d.content AS content,
-  d.amount AS amount,
-  d.meta_id AS meta_id,
-  u.username AS username,
-  d.customer_id AS customer_id,
-  c.customer_name AS customer_name,
-  d.state AS state,
-  d.notes AS notes,
-  d.payamount AS payamount,
-  d.payed AS payed,
-  d.parent_id AS parent_id,
-  d.tag AS tag,
-  d.branch_id AS branch_id,
-  b.branch_name AS branch_name,
-  (  
-  case   
-    when d.state = 1 then 95 
-    when d.state = 2 then 80  
-    when d.state = 3 then 92  
-    when d.state = 5 then 42  
-    when d.state = 6 then 10  
-    when d.state = 7 then 45  
-    when d.state = 8 then 90  
-    when d.state = 9 then 5  
-    when d.state = 11 then 44  
-    when d.state = 14 then 30  
-    when d.state = 15 then 5  
-    when d.state = 16 then 44  
-    when d.state = 17 then 5  
-    when d.state = 18 then 40  
-    when d.state = 19 then 80  
-    when d.state = 20 then 88  
-    when d.state = 21 then 75  
-    when d.state = 22 then 53  
-    when d.state = 23 then 90  
-         
-    else 50 end ) AS priority ,
-    
- 
-  metadata.meta_name AS meta_name,
-  metadata.description AS meta_desc
-FROM documents d
-  LEFT JOIN users_view u
-    ON d.user_id = u.user_id
-  LEFT JOIN customers c
-    ON d.customer_id = c.customer_id
-  JOIN metadata
-    ON metadata.meta_id = d.meta_id
-  LEFT JOIN branches b
-    ON d.branch_id = b.branch_id ;
-   
  
  
 delete from options where  optname='version' ;

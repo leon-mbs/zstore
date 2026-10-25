@@ -9,7 +9,7 @@
         <div class="row ">
             <div class="col-10  col-md-8 col-lg-6 col-xl-5">
             <div class="card">
-             
+             <div class="card-body">
                 <h4>Мій профіль</h4>
                 <form role="form" zippy="profileform">
                     <div class="row ">
@@ -121,64 +121,11 @@
             
             </div>
             </div>
-            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
-               <div class="card">
-               
-                <h4>Зміна пароля</h4>
-                <form role="form" zippy="passwordform">
-
-                    <div class="mb-2">
-                        <label class="form-label" for="userpassword">Новий пароль</label>
-                        <input autocomplete="off" type="password" class="form-control" zippy="userpassword"  required="on" >
-                        <small class="compact">Перед введенням перевірте розкладку та регістр клавіатури </small>
-                    </div>
-
-                    <div class="mb-2">
-                        <label class="form-label" for="userpassword">Підтвердження</label>
-                        <input autocomplete="off" type="password" class="form-control " zippy="confirmpassword"  required="on" >
-                    </div>
-                    <div class="  d-flex justify-content-end  mt-2">
-                     <button type="submit"   class="btn btn-primary">Зберегти</button>
-                  </div>   
-                </form>
-                
-                {{#hideblock}}
-                 <h5>Двофакторна аутентифікація</h5>   
-                 <small class="compact">Відправка коду підтвердження  після логіну. Якщо нічого не вибрано - не використовується </small>
-                <form   zippy="otpform">
-                    <div class="form-check">
-                        <input zippy="otpemail" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="otpemail">E-Mail </label>
-                    </div>  
-                       
-                    <div class="form-check">
-                        <input zippy="otpsms" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="otpsms">SMS </label>
-                    </div>  
-                    <div class="form-check">
-                        <input zippy="otptg" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="otptg">Телеграм </label>
-                    </div>  
-                           
-                   <div class="  d-flex justify-content-end  mt-2">         
-                     
-                   <button zippy="otpsave" type="submit"   class="btn btn-primary">Зберегти</button>
-                   </div>
-                    <a  zippy="otptest" >Тестова відправка </a> <br>   
-                    <span>Резервний код:</span> <b zippy="otpcode">44444</b> 
-                     <small> 
-                    <a zippy="otprefresh" >  <i title="Оновити" class="fa fa-refresh"></i> </a>  
-                        <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
-                                title=" Зберегти на випадок якщо відправка не спрацює "></i>
-                   </small>    
-                   
-                </form>
-               {{/hideblock}}
-            </div>
-            </div>
-            <div class="col-10  col-md-4 col-xl-2">
+			</div>
+          
+            <div class="col-10  col-md-4 col-xl-3">
                          <div class="card">
-                       
+                       <div class="card-body">
                         
                           
                          <small>  <a href="/index.php?p=App/Pages/Options#printer">Параметри для етикеток і цінників</a> </small>
@@ -268,38 +215,63 @@
                                 <a   zippy="pstestlabel" >Тест принтера</a>
                             </div>                            
                          </form>   
-                          </div>
-                           
-                          
-                </div>
-                  {{#usescale}}   
-                <div class="col-10  col-md-4 col-xl-2">
-                   <div class="card">
-                          
-                         <h4>Електронні ваги</h4>
-                          <small><a href="https://zippy.com.ua/ext#id17">Опис</a></small>
+            {{#usescale}}                  
+                       <h4>Електронні ваги  <a class=" fs-5" title="Опис" href="https://zippy.com.ua/ext#id17"> <i  class="fa fa-info-circle" ></i></a> </h4>
+                         
                    
                   
                          <form zippy="scaleform">
                            
                              <div class="mb-2">
                                 <label class="form-label"   for="scalescript">Скрипт</label>
-                                <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
+                                <textarea style="height:200px" class="form-control" zippy="scalescript"></textarea>
                                  
                             </div>
                               <div class="mb-2">
-                                <input   class="btn btn-primary" type="submit" value="Зберегти">
+                                <input   class="btn btn-primary me-4" type="submit" value="Зберегти">
+                                 <a id="testscale" href="#"    >Тест </a>
                             </div>     
-                                               
-                             <div class="mb-2">
-                                <a id="testscale" href="#"    >Тест </a>
-                            </div> 
+                           
                                                                          
                         </form>       
-
-                  </div>
+                  
+                         {{/usescale}}  
+                        
+                          </div>
+                           
+                          
                 </div>
-                {{/usescale}}    
+				</div>
+               
+          
+                  
+   
+                
+  <div class="col-10 col-lg-3 col-md-3 col-xl-2">
+               <div class="card">
+               <div class="card-body">
+                <h4>Зміна пароля</h4>
+                <form role="form" zippy="passwordform">
+
+                    <div class="mb-2">
+                        <label class="form-label" for="userpassword">Новий пароль</label>
+                        <input autocomplete="off" type="password" class="form-control" zippy="userpassword"  required="on" >
+                        <small class="compact">Перед введенням перевірте розкладку та регістр клавіатури </small>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label" for="userpassword">Підтвердження</label>
+                        <input autocomplete="off" type="password" class="form-control " zippy="confirmpassword"  required="on" >
+                    </div>
+                    <div class="  d-flex justify-content-end  mt-2">
+                     <button type="submit"   class="btn btn-primary">Зберегти</button>
+                  </div>   
+                </form>
+        
+            </div>
+            </div>
+            </div>                
+                  
         </div>
        <script>
          $(document).ready(function () {

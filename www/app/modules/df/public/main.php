@@ -31,7 +31,7 @@ class Main extends Base
         $doclist=$this->add(new DataView('doclist', new DocDataSource($this ), $this, 'doclistOnRow')) ;
         $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(25);
-        $this->doclist->setSorting('priority desc,document_id desc', '');
+        $this->doclist->setSorting(' CASE WHEN state IN (9,17) then 1   else 0  end asc,document_id desc', '');
         $doclist->Reload();
         
         $this->add(new Panel('docpan'))->setVisible(false);
@@ -131,7 +131,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
-        $order = strlen($sortfield ?? '') > 0 ? $sortfield . " " . $asc : "document_date desc, document_id desc"; 
+        $order = strlen($sortfield ?? '') > 0 ? $sortfield . " " . $asc : "  document_id desc"; 
        
         $docs = Document::findBySql("select * from documents_view where " . $this->getWhere() . " order by {$order} limit " . intval($start) . "," . intval($count));
 

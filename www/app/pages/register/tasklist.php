@@ -38,7 +38,7 @@ class TaskList extends \App\Pages\Base
             \App\Application::RedirectHome() ;
         }
 
-        $this->_taskds = new EDS('\App\Entity\Doc\Document', "", "priority desc,document_date desc");
+        $this->_taskds = new EDS('\App\Entity\Doc\Document', "", " document_date desc");
 
         $this->add(new ClickLink('tabc', $this, 'onTab'));
         $this->add(new ClickLink('tabs', $this, 'onTab'));
