@@ -96,7 +96,7 @@ class DocList extends \App\Pages\Base
         $this->add(new Pager('pag', $doclist));
         $doclist->setPageSize(H::getPG());
         $this->doclist->setCurrentPage($filter->page);
-        $this->doclist->setSorting('priority desc,document_id desc', '');
+        $this->doclist->setSorting('CASE WHEN state IN (1,2,3,8,23,16) then 0 WHEN state IN (9,17) then 2 else 1  end asc ,document_id desc', '');
         $doclist->Reload();
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
         $this->add(new Form('statusform'))->SetVisible(false);
@@ -817,7 +817,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
         $conn = \ZDB\DB::getConnect();
         
-        $where = " ( priority >=80 or (1=1  ";
+        $where = " ( state IN (1,2,3,8,23,16) or (1=1  ";
         
         $filter = Filter::getFilter("doclist");
         
@@ -882,7 +882,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         }
 
         $fav =  trim(implode(',', $favs), ',');
-        //todo  сортировка  по  приоритету
+      
         if(strlen($fav)==0) {
             $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);
         } else {
