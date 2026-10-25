@@ -16,6 +16,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -61,11 +62,13 @@ class SerList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('binvoice'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bwarranty'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
-
+        $this->statuspan->statusform->add(new SubmitButton('bshift')) ;
+        $this->statuspan->statusform->add(new SubmitButton('btopay')) ;
+    
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
-        $this->statuspan->statusform->add(new \Zippy\Html\Link\RedirectLink('btopay'));
+
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -96,7 +99,16 @@ class SerList extends \App\Pages\Base
         $this->editpan->add(new DataView('slist', new ArrayDataSource($this, "_serlist"), $this, 'slistOnRow'));
         $this->editpan->add(new DataView('ilist', new ArrayDataSource($this, "_itemlist"), $this, 'ilistOnRow'));
 
+        $this->add(new Form("shiftform"))->onSubmit($this,'shiftOnSubmit');
+        $this->shiftform->add(new TextArea('shiftmsg'));
 
+   
+        $this->add(new Form("paydolg"))->onSubmit($this,'pbOnSubmit');
+        $this->paydolg->add(new TextInput('pbnumber'));
+        $this->paydolg->add(new TextInput('pbsum'));
+        $this->paydolg->add(new DropDownChoice('pbpay', \App\Entity\MoneyFund::getList() ));
+        
+        
     }
 
     public function filterOnSubmit($sender) {
@@ -119,8 +131,29 @@ class SerList extends \App\Pages\Base
         $row->add(new Label('customer', $doc->customer_name));
         $row->add(new Label('customerphone', $doc->headerdata['customerphone'] ?? ''));
 
-        $row->add(new Label('state', Document::getStateName($doc->state)));
+        $stname = Document::getStateName($doc->state);
 
+        $row->add(new Label('state', $stname));
+        $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+        if ($doc->state == Document::STATE_NEW) {
+            $row->state->setText('<span class="badge  text-bg-info">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED) {
+            $row->state->setText('<span class="badge  text-bg-success">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_INPROCESS) {
+            $row->state->setText('<span class="badge  text-bg-primary">' . $stname . '</span>', true);
+        }
+
+        if ($doc->state == Document::STATE_CLOSED || $doc->state == Document::STATE_EXECUTED) {
+            $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_FAIL) {
+            $row->state->setText('<span class="badge  text-bg-danger">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_SHIFTED) {
+            $row->state->setText('<span class="badge  text-bg-warning">' . $stname . '</span>', true);
+        }
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         if ($doc->state < Document::STATE_EXECUTED || ($doc->state == Document::STATE_INPROCESS && floatval($doc->payed) ==0)) {
@@ -128,19 +161,22 @@ class SerList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == ($this->_doc->document_id ??0)) {
-            $row->setAttribute('class', 'table-success');
-        }
+      
          
-        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
- 
-        if($doc->getHD('waitpay')==1){
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') < 3 && $doc->state>3  );
+        
+       
+        if($doc->payed < $doc->payamount ) {
             $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
             $row->ispay->setAttribute('title','До сплати');            
-        }   else {
+        }  
+        else  {
             $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
             $row->ispay->setAttribute('title','Оплачено');            
         }
+      
+        $row->setAttribute('data-did', $doc->document_id);
+             
     }
 
     public function statusOnSubmit($sender) {
@@ -223,6 +259,7 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->statusform->bpos->setVisible(false);
         $this->statuspan->statusform->binvoice->setVisible(false);
+        $this->statuspan->statusform->bshift->setVisible(false);
 
         //новый
         if ($state < Document::STATE_EXECUTED) {
@@ -244,6 +281,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
             $this->statuspan->statusform->bfin->setVisible(true);
+            $this->statuspan->statusform->bshift->setVisible(true);
         }
 
         // выполнен
@@ -266,6 +304,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
+            
         }
 
         //к  оплате
@@ -273,18 +312,44 @@ class SerList extends \App\Pages\Base
 
             if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
                 $this->statuspan->statusform->btopay->setVisible(true);
-                $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
+           
             }
 
         }
-        //закрыт
+   
       if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0) == 3) {
 
                 $this->statuspan->statusform->bpos->setVisible(true);
                 $this->statuspan->statusform->binvoice->setVisible(true);
-            
+                $this->statuspan->statusform->btopay->setVisible(false);
+               
 
         }
+        if ($state == Document::STATE_SHIFTED ) {
+
+                $this->statuspan->statusform->binproc->setVisible(true);
+                $this->statuspan->statusform->bref->setVisible(true);
+
+                $this->statuspan->statusform->btask->setVisible(false);
+                $this->statuspan->statusform->bfin->setVisible(false);
+                $this->statuspan->statusform->btopay->setVisible(false);
+                $this->statuspan->statusform->bwarranty->setVisible(false);
+             
+
+        }
+        
+    if ($state == Document::STATE_PAYED) {
+
+            $this->statuspan->statusform->binproc->setVisible(false);
+
+            $this->statuspan->statusform->bwarranty->setVisible(true);
+            $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->btask->setVisible(false);
+            $this->statuspan->statusform->btopay->setVisible(false);
+            $this->statuspan->statusform->bfin->setVisible(true);
+        }
+            
+        
         //закрыт
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);
@@ -318,8 +383,15 @@ class SerList extends \App\Pages\Base
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
-        $this->listpan->doclist->Reload(false);
+        $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-active') ",true)  ;
+
         $this->updateStatusButtons();
+        
+        $this->paydolg->pbpay->setValue($this->_doc->getMF()) ;
+        $this->paydolg->pbnumber->setText($this->_doc->document_number) ;
+        $this->paydolg->pbsum->setText( H::fa( $this->_doc->payamount - $this->_doc->payed )) ;
+         
+        
         $this->goAnkor('dankor');
     }
 
@@ -562,6 +634,82 @@ class SerList extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'serlist.xlsx');
     }
+    
+    public function shiftOnSubmit($sender) {
+
+            $text = trim($this->shiftform->shiftmsg->getText() );
+                 
+            if(strlen($text)==0) {
+                return;
+            }
+        
+            $conn = \ZDB\DB::getConnect();
+            $conn->BeginTrans();
+
+            try {
+                $msg = new \App\Entity\Message();
+                $msg->message = $text;
+                $msg->created = time();
+                $msg->user_id = System::getUser()->user_id;
+                $msg->item_id =  $this->_doc->document_id;
+                $msg->item_type = \App\Entity\Message::TYPE_DOC;
+
+                $msg->save();    
+                
+                
+                $this->_doc->updateStatus(Document::STATE_SHIFTED);
+             
+                $this->listpan->doclist->Reload();
+
+                $this->shiftform->shiftmsg->setText('')  ;
+                
+                $conn->CommitTrans();
+
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage()) ;
+            $conn->RollbackTrans();
+            return;
+        }
+       
+    
+
+    }
+
+    public function pbOnSubmit($sender) {
+        
+        $sum = $sender->pbsum->getDouble() ;
+        $mf = intval( $sender->pbpay->getValue() );
+  
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+        try {
+
+            $this->_doc->payed =  \App\Entity\Pay::addPayment($this->_doc->document_id,time(),$sum,$mf) ;
+          
+            if( $this->_doc->state==Document::STATE_WP) {
+               $this->_doc->updateStatus(Document::STATE_PAYED);
+            }     
+            if( $this->_doc->getHD('waitpay')==1) {
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();
+            }     
+          
+            $this->listpan->doclist->Reload();
+
+      
+            $conn->CommitTrans();
+            $sender->clean();
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+            $this->setError($ee->getMessage());
+
+    
+            return;
+        }       
+        
+    }
+     
 
 }
 
