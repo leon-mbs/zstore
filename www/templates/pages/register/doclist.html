@@ -218,7 +218,13 @@
                 <div class=" navbar">
                     <form zippy="statusform"  >
                        <div class="row  ">
-                         <label class="col-form-label col-auto" data-label="mstates" for="mstates"> Статус </label>
+                        <div class="col-auto  pt-2">
+                         <label   data-label="mstates" for="mstates"> Статус </label>
+                            <small>   <i class="fa fa-info-circle  " data-bs-toggle="tooltip" data-bs-placement="top"
+                                 title="Не всі статуси мають сенс для всіх типів документів  "></i> </small> 
+                   
+                        </div>
+
                            <div class="col-auto  ">
                            <select zippy="mstates" class="form-select me-2">
                              <option value="0">Не обрано</option>

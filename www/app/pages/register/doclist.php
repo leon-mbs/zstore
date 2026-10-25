@@ -882,7 +882,7 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         }
 
         $fav =  trim(implode(',', $favs), ',');
-
+        //todo  сортировка  по  приоритету
         if(strlen($fav)==0) {
             $docs = Document::find($this->getWhere(), $sortfield . " " . $asc, $count, $start);
         } else {
