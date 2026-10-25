@@ -204,9 +204,37 @@ class DocList extends \App\Pages\Base
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 
-        $row->add(new Label('state', Document::getStateName($doc->state)));
-        $row->add(new Label('waitapp'))->setVisible($doc->state == Document::STATE_WA);
+  
+        $stname = Document::getStateName($doc->state);
 
+        $row->add(new Label('state', $stname));
+     //   $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+   
+        if ($doc->state == Document::STATE_NEW || $doc->state == Document::STATE_WAIT ) {
+            $row->state->setText('<span class="badge  text-bg-primary">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_EDITED) {
+            $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_CANCELED) {
+            $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+        }
+        if ($doc->state == Document::STATE_READYTOSHIP || 
+            $doc->state == Document::STATE_INSHIPMENT || 
+            $doc->state == Document::STATE_APPROVED || 
+            $doc->state == Document::STATE_INPROCESS  
+           ) {
+            $row->state->setText('<span class="badge  text-bg-success">' . $stname . '</span>', true);
+        }
+       
+       
+        if ($doc->state == Document::STATE_SHIFTED || $doc->state == Document::STATE_WA) {
+            $row->state->setText('<span class="badge  text-bg-warning">' . $stname . '</span>', true);
+        }        
+      
+              
+        
+         
         $date = new \App\DateTime();
 
         $date = $date->addDay(1);
