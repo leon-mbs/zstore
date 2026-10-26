@@ -2092,11 +2092,11 @@ class ARMPos extends \App\Pages\Base
                     $ret = \App\Modules\PPO\PPOHelper::sinout($sum,$type,$this->pos->pos_id );
             
                 }
-                if (strlen($ret['docnumber']??'') > 0) {
+                if (strlen($ret['doclocnumber']??'') > 0) {
                    
                       
-                    $this->pos->fiscdocnumber++;
-                    $this->pos->save();
+                   $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                   $this->pos->save();
   
                 } else {
                     throw new \Exception("Не повернено фіскальний номер");

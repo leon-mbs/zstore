@@ -252,9 +252,9 @@ class ZForm extends \App\Pages\Base
         if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
             return true;
         }
-        if ($ret['success'] == false && ( $ret['docnumber'] ??0) > 0) {
+        if ($ret['success'] == false && ( $ret['doclocnumber'] ??0) > 0) {
             //повторяем для  нового номера
-            $this->_pos->fiscdocnumber = $ret['docnumber'];
+            $this->_pos->fiscdocnumber = $ret['doclocnumber'];
             $this->_pos->save();
             $ret = \App\Modules\PPO\PPOHelper::zform($this->_pos->pos_id, $stat, $rstat);
         }
@@ -263,7 +263,7 @@ class ZForm extends \App\Pages\Base
             return false;
         } else {
 
-            if (($ret['docnumber'] ?? 0) > 0) {
+            if (($ret['doclocnumber'] ?? 0) > 0) {
                 $this->_pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                 $this->_pos->save();
                 return true;
