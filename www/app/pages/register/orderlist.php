@@ -1364,7 +1364,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17,15)   ";
+            $where .= " and  state not in (9,17,15,3)   ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";
