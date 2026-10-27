@@ -796,7 +796,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->docpanel->editdetail->editquantity->setText("1");
 
-        $this->docpanel->editdetail->editprice->setText("");
+        $this->docpanel->editdetail->editprice->setText("0");
         $this->docpanel->editdetail->editserial->setText("");
         //  $this->docpanel->wselitem->setVisible(false);
 
