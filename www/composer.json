@@ -12,7 +12,7 @@
     "monolog/monolog": "~3.8.1",
     "dompdf/dompdf": "^3.1.0",
     "firebase/php-jwt": "~7.0.0",
-    "roave/security-advisories": "dev-master",
+   
     "picqer/php-barcode-generator": "2.4.2",
     "endroid/qr-code": "~5.1.0",
     "masterexploder/phpthumb": "2.1",
@@ -30,7 +30,12 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-simplexml": "*"
-  }
+  } ,
+   "config": {
+        "audit": {
+            "block-insecure": false
+        }
+    }
 }
            
 
