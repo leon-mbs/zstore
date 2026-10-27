@@ -257,7 +257,7 @@ class RetCustIssue extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
     }
 
     public function savedocOnClick($sender) {

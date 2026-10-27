@@ -292,7 +292,7 @@ class ServiceAct extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsnumber->setText("");
         $this->docform->setVisible(false);
         $this->wselitem->setVisible(false);
@@ -436,7 +436,7 @@ class ServiceAct extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
     }
 
     public function saveserrowOnClick($sender) {

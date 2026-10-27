@@ -206,7 +206,7 @@ class Warranty extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsn->setText("");
         $this->editdetail->editwarranty->setText("");
     }
@@ -220,7 +220,7 @@ class Warranty extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsn->setText("");
         $this->editdetail->editwarranty->setText("");
     }

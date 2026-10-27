@@ -244,7 +244,7 @@ class IncomeItem extends Base
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
     }
