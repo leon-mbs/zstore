@@ -209,19 +209,19 @@ class OrderList extends \App\Pages\Base
         $stname = Document::getStateName($doc->state);
 
         $row->add(new Label('state', $stname));
-        $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
-        if ($doc->state == Document::STATE_NEW) {
-            $row->state->setText('<span class="badge  text-bg-info">' . $stname . '</span>', true);
+     //   $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+        if ($doc->state == Document::STATE_NEW || $doc->state == Document::STATE_WAIT ) {
+            $row->state->setText('<span class="badge  text-bg-primary">' . $stname . '</span>', true);
         }
         if ($doc->state == Document::STATE_READYTOSHIP || $doc->state == Document::STATE_INSHIPMENT || $doc->state == Document::STATE_DELIVERED) {
             $row->state->setText('<span class="badge  text-bg-success">' . $stname . '</span>', true);
         }
         if ($doc->state == Document::STATE_INPROCESS) {
-            $row->state->setText('<span class="badge  text-bg-primary">' . $stname . '</span>', true);
+            $row->state->setText('<span class="badge  text-bg-success">' . $stname . '</span>', true);
         }
 
-        if ($doc->state == Document::STATE_CLOSED || $doc->state == Document::STATE_EXECUTED) {
-            $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
+        if ($doc->state == Document::STATE_EDITED || $doc->state == Document::STATE_CANCELED) {
+             $row->state->setText('<span class="badge  text-bg-secondary">' . $stname . '</span>', true);
         }
         if ($doc->state == Document::STATE_FAIL) {
             $row->state->setText('<span class="badge  text-bg-danger">' . $stname . '</span>', true);
@@ -1364,7 +1364,7 @@ class OrderDataSource implements \Zippy\Interfaces\DataSource
 
         $status = $filter->status->getValue();
         if ($status == 0) {
-            $where .= " and  state not in (9,17,15)   ";
+            $where .= " and  state not in (9,17,15,3)   ";
         }
         if ($status == 1) {
             $where .= " and  state =1 ";

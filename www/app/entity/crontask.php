@@ -179,15 +179,22 @@ class CronTask extends \ZCL\DB\Entity
                     $msg = unserialize($task->taskdata);
 
                     $b=false;  
-                    if($msg['type']=='ppro') {
-                       $b=  \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
-                    }
-                    if($msg['type']=='cb') {
-                       $b=  \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
-                    }
-                    if($msg['type']=='vk') {
-                       $b=  \App\Modules\VK\VK::autoshift($msg['pos_id']) ;
-                    }                    
+                    try {
+                        if($msg['type']=='ppro') {
+                           $b=  \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
+                        }
+                        if($msg['type']=='cb') {
+                           $b=  \App\Modules\CB\CheckBox::autoshift($msg['pos_id']) ;
+                        }
+                        if($msg['type']=='vk') {
+                           $b=  \App\Modules\VK\VK::autoshift($msg['pos_id']) ;
+                        }       
+                    } catch(\Throwable  $e) {
+                        $msg = $e->getMessage();
+                        $logger->error($msg);
+                        
+                        
+                    }              
                     if(!$b) {
                         $admin = \App\Entity\User::getByLogin('admin');
 
