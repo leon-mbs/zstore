@@ -445,7 +445,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editsnumber->setText("");
         $this->editdetail->editsdate->setText("");
         $this->editdetail->editsellprice->setText("");

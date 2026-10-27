@@ -267,9 +267,8 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->edittovar->setValue(0);
 
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editprice->setText("");
-
+        $this->editdetail->editprice->setText("0");
+        
 
         $this->calcTotal();
         $this->calcPay();
@@ -284,9 +283,8 @@ class OrderFood extends \App\Pages\Base
         $this->editdetail->edittovar->setValue(0);
 
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editprice->setText("");
-
+        $this->editdetail->editprice->setText("0");
+        
     }
 
     public function savedocOnClick($sender) {

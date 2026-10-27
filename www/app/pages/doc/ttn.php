@@ -558,7 +558,7 @@ class TTN extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
         $this->editdetail->editserial->setText("");
         $this->calcTotal();
         $this->_changedpos = true;
@@ -575,7 +575,7 @@ class TTN extends \App\Pages\Base
 
         $this->editdetail->editquantity->setText("1");
 
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
     }
 
     public function savedocOnClick($sender) {

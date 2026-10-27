@@ -32,16 +32,20 @@ class Orders extends \App\Pages\Base
             return;
         }
 
+        $_mlist=System::getOption("modules","oclist",[] );
         $mlist=[] ;
         
-        foreach( System::getOption("modules","oclist",[]) as $m){
+        foreach( $_mlist as $m){
             $mlist[$m->id]=$m->salesourcename;
         };
-     
+      
+        $id=  System::getSession()->im ??0;
+        $this->_m= $_mlist[ $id] ?? null;
+       
     
         
         $this->add(new Form('mform'))->onSubmit($this, 'mOnSubmit');
-        $this->mform->add(new DropDownChoice('mlist', $mlist ));
+        $this->mform->add(new DropDownChoice('mlist', $mlist,$id ));
         
       
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -79,7 +83,7 @@ class Orders extends \App\Pages\Base
            $this->updateform->estatus->setOptionlist($statuses) ;
 
         }
-                 
+        System::getSession()->im= $id;
     }
   
     public function filterOnSubmit($sender) {

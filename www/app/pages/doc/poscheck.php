@@ -430,8 +430,8 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
+
         $this->editdetail->qtystock->setText("");
 
         $this->calcTotal();
@@ -483,8 +483,8 @@ class POSCheck extends \App\Pages\Base
         $this->editdetail->edittovar->setKey(0);
         $this->editdetail->edittovar->setText('');
         $this->editdetail->editquantity->setText("1");
-        $this->editdetail->editprice->setText("");
-        $this->editdetail->editprice->setText("");
+        $this->editdetail->editprice->setText("0");
+
         $this->editdetail->qtystock->setText("");
         $this->editserdetail->editser->setKey(0);
         $this->editserdetail->editser->setText('');
