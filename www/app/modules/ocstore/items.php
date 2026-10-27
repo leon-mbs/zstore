@@ -33,11 +33,17 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         $mlist=[] ;
         
-        foreach( System::getOption("modules","oclist",[]) as $m){
+        $_mlist=System::getOption("modules","oclist",[] );
+        $mlist=[] ;
+        
+        foreach( $_mlist as $m){
             $mlist[$m->id]=$m->salesourcename;
         };
-     
-    
+      
+        $id=  System::getSession()->im ??0;
+        $this->_m= $_mlist[ $id] ?? null;
+       
+        
         
         $this->add(new Form('mform'))->onSubmit($this, 'mOnSubmit');
         $this->mform->add(new DropDownChoice('mlist', $mlist ));

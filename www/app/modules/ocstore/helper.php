@@ -21,10 +21,13 @@ class Helper
       
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, _ROOT . 'upload/apicookie.txt');
-        curl_setopt($ch, CURLOPT_COOKIEFILE, _ROOT . 'upload/apicookie.txt');
-
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_ENCODING, "");
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+ 
+ 
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $params_string = '';
@@ -35,10 +38,12 @@ class Helper
             curl_setopt($ch, CURLOPT_POST, count($params));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params_string);
         }
-
+     
         //execute post
         $result = curl_exec($ch);
         if ($result === false) {
+            $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+               
             $error = curl_error($ch);
             \App\System::setErrorMsg($error);
             return false;
