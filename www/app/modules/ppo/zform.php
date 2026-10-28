@@ -283,7 +283,7 @@ class ZForm extends \App\Pages\Base
         $zt .= "<br>Чеків повернення ". ( $ret['Totals']['Ret']['OrdersCount'] ??0 );
         
         if(is_array($ret['Totals']['Real']['PayForm'] ??null)) {
-            $zt .="<b>Реалізація</b><br>";
+            $zt .="<br><b>Реалізація</b><br>";
             foreach($ret['Totals']['Real']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
