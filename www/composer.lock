@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7247953c2abf069f9610cd285b9cda57",
+    "content-hash": "ea894b30584d77a2209741a13ffb696a",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -685,16 +685,16 @@
         },
         {
             "name": "leon-mbs/zippy",
-            "version": "2.8.3",
+            "version": "2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leon-mbs/zippy.git",
-                "reference": "f5bd215ef6c2b7a29964673455297822c0a7c451"
+                "reference": "f9f711d935b44dc4d081968c20f96c5663ff15cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/f5bd215ef6c2b7a29964673455297822c0a7c451",
-                "reference": "f5bd215ef6c2b7a29964673455297822c0a7c451",
+                "url": "https://api.github.com/repos/leon-mbs/zippy/zipball/f9f711d935b44dc4d081968c20f96c5663ff15cd",
+                "reference": "f9f711d935b44dc4d081968c20f96c5663ff15cd",
                 "shasum": ""
             },
             "require": {
@@ -721,9 +721,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leon-mbs/zippy/issues",
-                "source": "https://github.com/leon-mbs/zippy/tree/2.8.3"
+                "source": "https://github.com/leon-mbs/zippy/tree/2.8.5"
             },
-            "time": "2026-10-27T19:46:32+00:00"
+            "time": "2026-10-28T11:54:45+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -1942,16 +1942,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.43.0",
+            "version": "v1.43.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72"
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
-                "reference": "4d5d331bf731e0aedbc6b2f5e61135b7b7996a72",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/122889ed24dc000165bcbfd77ec412f15cbdfc6a",
+                "reference": "122889ed24dc000165bcbfd77ec412f15cbdfc6a",
                 "shasum": ""
             },
             "require": {
@@ -2003,7 +2003,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.43.3"
             },
             "funding": [
                 {
@@ -2023,7 +2023,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-24T15:19:04+00:00"
+            "time": "2026-10-28T09:35:49+00:00"
         },
         {
             "name": "symfony/polyfill-uuid",
