@@ -319,7 +319,7 @@ class System
               $json = json_decode($json,true) ;
               $fv  = $json['ver'] ?? '0.0.0';
             
-              $b= version_compare($fv ,'2.8.2');
+              $b= version_compare($fv ,'2.8.5');
               if($b == -1) {
                  return false ;  
               }  else {

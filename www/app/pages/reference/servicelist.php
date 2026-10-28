@@ -36,13 +36,14 @@ class ServiceList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchcat'))->setDataList(Service::getCategoryList());
 
         $this->add(new Panel('servicetable'))->setVisible(true);
-        $this->servicetable->add(new DataView('servicelist', new ServiceDataSource($this), $this, 'servicelistOnRow'))->Reload();
+        $this->servicetable->add(new DataView('servicelist', new ServiceDataSource($this), $this, 'servicelistOnRow')) ;
+        $this->servicetable->servicelist->setPageSize(H::getPG());
+        $this->servicetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->servicetable->servicelist));
+      
         $this->servicetable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->servicetable->add(new ClickLink('toexport'))->onClick($this, 'ExportOnClick');
         $this->servicetable->add(new ClickLink('toimport'))->onClick($this, 'ImportOnClick');
-        $this->servicetable->servicelist->setPageSize(H::getPG());
-        $this->servicetable->add(new \Zippy\Html\DataList\Paginator('pag', $this->servicetable->servicelist));
-
+  
         $this->add(new Form('servicedetail'))->setVisible(false);
         $this->servicedetail->add(new TextInput('editservice_name'));
         $this->servicedetail->add(new TextInput('editprice'));
@@ -92,6 +93,8 @@ class ServiceList extends \App\Pages\Base
         $form->add(new \Zippy\Html\Form\File("cfilename"));
 
         $form->onSubmit($this, "onImport");
+        
+        $this->servicetable->servicelist->Reload();
        
     }
 
