@@ -58,7 +58,10 @@
         <DISCOUNTSUM>{{disc}}</DISCOUNTSUM>
         {{/disc}}
         
- 
+        {{#ispartpay}}
+        <PARTPAYTYPE>{{partpaytype}}</PARTPAYTYPE>
+        <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+        {{/ispartpay}}
         
     </CHECKTOTAL>
 

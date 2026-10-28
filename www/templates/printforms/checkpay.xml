@@ -6,7 +6,6 @@
         <DOCTYPE>0</DOCTYPE>
         <DOCSUBTYPE>0</DOCSUBTYPE>
 
-
         <UID>{{guid}}</UID>
 
           {{#tin}}
@@ -29,10 +28,9 @@
 
         <ORDERNUM>{{docnumber}}</ORDERNUM>
 
-
         <CASHDESKNUM>{{posinner}}</CASHDESKNUM>
-        <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
 
+        <CASHREGISTERNUM>{{posnumber}}</CASHREGISTERNUM>
 
         <CASHIER>{{username}}</CASHIER>
 
@@ -43,13 +41,13 @@
    </CHECKHEAD>
 
     <CHECKTOTAL>
-        <SUM>{{amount}}</SUM>
-
-
+        <SUM>{{parentsum}}</SUM>
+        <PARTPAYTYPE>{{partpaytype}}</PARTPAYTYPE>
+        <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+        <PARTPAYORDPREPAYNUM>{{parentcheck}}</PARTPAYORDPREPAYNUM>
+      
     </CHECKTOTAL>
-
-
-    {{#pay}}
+  
     <CHECKPAY>
         <ROW ROWNUM="1">
 
@@ -57,26 +55,19 @@
 
             <PAYFORMNM>{{formname}}</PAYFORMNM>
 
-            <SUM>{{paysum}}</SUM>
-
-            <PROVIDED>{{payed}}</PROVIDED>
+            <SUM>{{partpaysum}}</SUM>
 
         </ROW>
     </CHECKPAY>
-    {{/pay}}
-
     <CHECKBODY>
-
-        <ROW ROWNUM="1">
-
-            <NAME>{{parentcheck}}</NAME>
-
-            <AMOUNT>1</AMOUNT>
-            <PRICE>{{amount}}</PRICE>
-
-            <COST>{{amount}}</COST>
-        </ROW>
-
+     <ROW ROWNUM="1">
+  
+      <NAME>Часткова оплата</NAME>
+ 
+      <AMOUNT>1.000</AMOUNT>
+      <PRICE>{{parentsum}}</PRICE>
+      <COST>{{parentsum}}</COST>
+      <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+    </ROW>
     </CHECKBODY>
-
 </CHECK>

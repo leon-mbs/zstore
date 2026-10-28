@@ -56,8 +56,8 @@ class IncomeMoney extends Document
             "notes"           => nl2br($this->notes),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,
             "contract"        => $this->headerdata["contract_id"] > 0 ? $this->headerdata["contract_number"] : false,
-            "emp"             => strlen($this->headerdata["emp_name"]) > 0 ? $this->headerdata["emp_name"] : false,
-            "type"            => $pt[$this->headerdata["type"]],
+            "emp"             => strlen($this->headerdata["emp_name"] ??'') > 0 ? $this->headerdata["emp_name"] : false,
+            "type"            => $pt[$this->headerdata["type"]]??'',
             "to"              => $this->headerdata["paymentname"],
             "document_number" => $this->document_number
         );

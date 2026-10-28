@@ -3,7 +3,8 @@ SET NAMES 'utf8mb4';
 
 ALTER TABLE store_stock ADD tag int DEFAULT 0 ;
 ALTER TABLE documents ADD tag int DEFAULT 0 ;
- 
+ALTER TABLE crontask ADD state int DEFAULT 0 ;
+  
  
 DROP  VIEW store_stock_view; 
  

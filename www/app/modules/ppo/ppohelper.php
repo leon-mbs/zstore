@@ -292,6 +292,8 @@ class PPOHelper
         $header['cntr'] = $cntr;
         $header['isreal'] = $cnt > 0;
         $header['isret'] = $cntr > 0;
+        $header['ispays'] =  count($header['pays']) > 0 ;
+        $header['ispaysr'] =  count($header['paysr']) > 0 ;
         $header['sin'] = $sin > 0 ?number_format($sin, 2, '.', '') :false;
         $header['sout'] = $sout > 0 ?number_format($sout, 2, '.', '')  :false;
 
@@ -305,7 +307,7 @@ class PPOHelper
      
         $ret =  self::send($xml, 'doc', $pos);
       
-        if($ret['success']==true && strlen($ret['docnumber']??'')>0 && $pos->testing != 1  ) {
+        if($ret['success']==true   && $pos->testing != 1  ) {
             $r = new ZRecord();
             $r->createdon = time();
             $r->amount = $amount;
@@ -421,7 +423,7 @@ class PPOHelper
           
        
          // к  оплате
-        $payamount  =    doubleval($doc->payamount) - doubleval($doc->headerdata['prepaid']);
+        $payamount  =    doubleval($doc->payamount) ;
         // оплачено
         $payed  =    doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']);
        
@@ -511,39 +513,15 @@ class PPOHelper
             }
 
         }
-
+        $header['ispartpay']  = false;
         // в долг
         if ($payed < $doc->payamount) {
-            $pay = array(
-                'formname' => self::FORM_CREDIT,
-                'formcode' => 2,
-                'paysum'   => number_format($payamount - $payed, 2, '.', ''),
-                'payed'    => number_format($payamount - $payed, 2, '.', ''),
-                'rest'     => false,
-                'num'      => "ROWNUM=\"{$n}\""
-            );
-            $header['pays'][] = $pay;
-            $n++;
-
-            $amount2 = $pay['paysum'];
+           $header['ispartpay']  = true;
+           $header['partpaysum']  = number_format($payed, 2, '.', '') ;
+           $header['partpaytype']  = 1;  //первый чек
+           
         }
-        // предоплата
-        if ($doc->headerdata['prepaid']>0) {
-            $pay = array(
-                'formname' => self::FORM_PREPAID,
-                'formcode' => 3,
-                'paysum'   => number_format($doc->headerdata['prepaid'], 2, '.', ''),
-                'payed'    => number_format($doc->headerdata['prepaid'], 2, '.', ''),
-                'rest'     => false,
-                'num'      => "ROWNUM=\"{$n}\""
-            );
-            $header['pays'][] = $pay;
-            $n++;
-
-            $amount3 = $pay['paysum'];
-            $header['amount'] += $doc->headerdata['prepaid'];
-        }
-      
+        
         
         $header['pay'] = count($header['pays']) > 0;
      
@@ -559,7 +537,7 @@ class PPOHelper
           //  $sumpay  += $header['disc'];
         }        
 
-        $header['amount'] = number_format($sumpay, 2, '.', '');
+        $header['amount'] = number_format($payamount, 2, '.', '');
         $header['rnd']  =  false;
         $header['nrnd']  =  false;
         if(floatval($sum) !=floatval($sumpay) )  {
@@ -647,11 +625,16 @@ class PPOHelper
     }
 
     /**
-     * отправка  доплаты
-     *
-     * @param mixed $doc
-     */
-    public static function checkpay($doc, $pos_id, $payed, $payment) {
+    * отправка  доплаты
+    * 
+    * @param int $pos_id  постерминал
+    * @param int $mf_id  касса
+    * @param decimal $payed  сума
+    * @param string $parentnumber  роительский  документ
+    * @param decimal $parentsum   исходная сума
+    * @param bool $isallpay  помследняя доплата
+    */
+    public static function checkpay( $pos_id, $mf_id,$parentnumber, $payed, $parentsum,$isallpay) {
 
 
         $pos = \App\Entity\Pos::load($pos_id);
@@ -661,12 +644,12 @@ class PPOHelper
             $pos->firmname = $firm['firm_name']  ;
         }
         if( ($pos->ipn ??'')=='') {
-            $pos->ipn = $firm['ipn']  ;
+            $pos->ipn = $firm['ipn'] ??'' ;
         }
         if( ($pos->tin ??'')=='') {
-            $pos->tin = $firm['tin']  ;
+            $pos->tin = $firm['tin'] ??'' ;
         }
-        $mf = \App\Entity\MoneyFund::load($payment);
+        $mf = \App\Entity\MoneyFund::load($mf_id);
 
         $header = array();
 
@@ -681,7 +664,7 @@ class PPOHelper
         $header['docnumber'] = $pos->fiscdocnumber;
         $header['posinner'] = $pos->fiscallocnumber;
         $header['posnumber'] = $pos->fiscalnumber;
-        $header['username'] = self::getCashier($doc);
+        $header['username'] = self::getCashier( );
         $header['guid'] = \App\Util::guid();
 
         $amount0 = 0;
@@ -699,27 +682,30 @@ class PPOHelper
             $header['formcode'] = 0;
             $amount0 = number_format($payed, 2, '.', '');
         }
-        //  $header['amount'] = number_format($doc->amount, 2, '.', '');
-        $header['pay'] = $payed > 0;
-        $header['paysum'] = number_format($payed, 2, '.', '');
-        $header['payed'] = number_format($payed, 2, '.', '');
+    
+        $header['parentsum'] = number_format($parentsum, 2, '.', '');
 
-        $header['parentcheck'] = $doc->document_number;
-        $header['amount'] = number_format($payed, 2, '.', '');
-
+        $header['parentcheck'] = $parentnumber;
+         
+       
+        $header['partpaysum']  = number_format($payed, 2, '.', '') ;
+        $header['partpaytype']  = $isallpay ?3:2;   
+         
+        
+        
         $report = new \App\Report('checkpay.xml');
 
         $xml = $report->generate($header);
-
+     
         $xml = mb_convert_encoding($xml, "windows-1251", "utf-8");
      
         $ret = self::send($xml, 'doc', $pos);
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 2 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 1 , $amount0, $amount1, $amount2, $amount3, $parentnumber. ' (доплата)', $ret['docnumber']);
         }
-
+      
         return $ret;
     }
 
@@ -820,7 +806,7 @@ class PPOHelper
         if ($ret['success'] == true) {
 
 
-            self::insertStat($pos->pos_id, 1 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
+            self::insertStat($pos->pos_id, 2 , $amount0, $amount1, $amount2, $amount3, $doc->document_number, $ret['docnumber']);
         }
         $ret['fiscalamount']=  $header['amount'];
  
@@ -895,7 +881,133 @@ class PPOHelper
     }
 
 
-    public static function sync($pos_id) {
+   
+    /**
+    * состояние фискального сервера
+    *
+    * @param mixed $pos
+    */
+    public static function checkServer($pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $pos);
+        if($res['success'] != true) {
+            return  false;
+        }
+        $data = json_decode($res['data'], true);
+        $ts = strtotime($data['Timestamp']) ;
+        if($ts===false) {
+            return  false;
+        }
+
+        return true;
+    }
+
+    /**
+    * состояние  регистратора
+    *
+    * @param mixed $fiscnumber
+    * @param mixed $pos
+    */
+    public static function rroState($fiscnumber, $pos) {
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
+        if($res['success'] != true) {
+            return  false;
+        }
+        $res = json_decode($res['data'], true);
+        return  $res;
+
+    }
+
+    /**
+    * получение итоговых  данных по смене  для  z отчета
+    *
+    * @param mixed $fiscnumber
+    * @param mixed $pos
+    */
+    public static function shiftTotal(  $pos) {
+       
+        
+        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
+        if($res['success'] != true) {
+            return  false;
+        }
+        
+        $res = json_decode($res['data'], true);
+        return  $res;
+
+
+    }
+
+    private static function getCashier($doc=null) {
+
+        $cname = \App\System::getUser()->username;
+        if($doc instanceof \App\Entity\Doc\Document) {
+            if(strlen($doc->headerdata['cashier']) >0) {
+                $cname = $doc->headerdata['cashier'];
+            } else {
+                $cname = $doc->username;
+            }
+            return $cname;            
+        }
+        
+        return $cname;
+    }
+
+  /**
+    * состояние сессии
+    *
+    * @param mixed $pos
+    */
+    public static function checkSession($pos) {
+       
+       
+      
+        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
+        if($res['success'] != true) {
+            return  false;
+        }
+
+        $res = json_decode($res['data'], true);
+      
+        return  $res['ShiftState'] == 1  ;
+        
+    }
+    
+    
+    
+    /**
+    * автоматическое  закрытие  смены
+    * 
+    * @param mixed $posid
+    */
+    public static function autoshift($posid ) {
+     
+        $pos = \App\Entity\Pos::load($posid);
+        if(self::checkSession($pos) != true) {
+            return true;
+        }
+
+     
+        $ret = self::zform($posid );
+        if ($ret['success']==true) {
+            $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
+            $pos->save();            
+            $ret =  self::shift($posid,false) ;
+
+        }
+        if($ret['success'] == false) {
+          H::logerror($ret['data'])    ;
+           return false;
+        }
+        $pos->fiscdocnum++;
+        $pos->save();            
+ 
+        return true;
+       
+
+   }    
+    
+ //deprecated
+ public static function sync($pos_id) {
         $pos = \App\Entity\Pos::load($pos_id);
 
 
@@ -1029,129 +1141,5 @@ class PPOHelper
 
         }
     }
-
-    /**
-    * состояние фискального сервера
-    *
-    * @param mixed $pos
-    */
-    public static function checkServer($pos) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'ServerState')), 'cmd', $pos);
-        if($res['success'] != true) {
-            return  false;
-        }
-        $data = json_decode($res['data'], true);
-        $ts = strtotime($data['Timestamp']) ;
-        if($ts===false) {
-            return  false;
-        }
-
-        return true;
-    }
-
-    /**
-    * состояние  регистратора
-    *
-    * @param mixed $fiscnumber
-    * @param mixed $pos
-    */
-    public static function rroState($fiscnumber, $pos) {
-        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$fiscnumber)), 'cmd', $pos);
-        if($res['success'] != true) {
-            return  false;
-        }
-        $res = json_decode($res['data'], true);
-        return  $res;
-
-    }
-
-    /**
-    * получение итоговых  данных по смене  для  z отчета
-    *
-    * @param mixed $fiscnumber
-    * @param mixed $pos
-    */
-    public static function shiftTotal(  $pos) {
-       
-        
-        $res = PPOHelper::send(json_encode(array('Command' => 'LastShiftTotals','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
-        if($res['success'] != true) {
-            return  false;
-        }
-        
-        $res = json_decode($res['data'], true);
-        return  $res;
-
-
-    }
-
-    private static function getCashier($doc=null) {
-
-        $cname = \App\System::getUser()->username;
-        if($doc instanceof \App\Entity\Doc\Document) {
-            if(strlen($doc->headerdata['cashier']) >0) {
-                $cname = $doc->headerdata['cashier'];
-            } else {
-                $cname = $doc->username;
-            }
-            return $cname;            
-        }
-        
-        return $cname;
-    }
-
-  /**
-    * состояние сессии
-    *
-    * @param mixed $pos
-    */
-    public static function checkSession($pos) {
-       
-       
-      
-        $res = PPOHelper::send(json_encode(array('Command' => 'TransactionsRegistrarState','NumFiscal'=>$pos->fiscalnumber)), 'cmd', $pos);
-        if($res['success'] != true) {
-            return  false;
-        }
-
-        $res = json_decode($res['data'], true);
-      
-        return  $res['ShiftState'] == 1  ;
-        
-    }
-    
-    
-    
-    /**
-    * автоматическое  закрытие  смены
-    * 
-    * @param mixed $posid
-    */
-    public static function autoshift($posid ) {
-     
-        $pos = \App\Entity\Pos::load($posid);
-        if(self::checkSession($pos) != true) {
-            return true;
-        }
-
-     
-        $ret = self::zform($posid );
-        if ($ret['success']==true) {
-            $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-            $pos->save();            
-            $ret =  self::shift($posid,false) ;
-
-        }
-        if($ret['success'] == false) {
-          H::logerror($ret['data'])    ;
-           return false;
-        }
-        $pos->fiscdocnum++;
-        $pos->save();            
- 
-        return true;
-       
-
-   }    
     
 }
