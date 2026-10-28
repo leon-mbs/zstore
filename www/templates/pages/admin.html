@@ -175,11 +175,11 @@
               
                  <div class="form-check">
                     <input zippy="capcha" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="capcha">Капча на формі логіну</label>
+                    <label class="fw-bold form-check-label" for="capcha">Капча на формі логіну</label>
                   </div> 
                  <div class="form-check">
                     <input zippy="noupdate" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="noupdate">Не перевіряти оновлення</label>
+                    <label class="fw-bold form-check-label" for="noupdate">Не перевіряти оновлення</label>
                  <br><small class='compact'>   Якщо кастомна  версія і є ризик  затерти зміни  
                      <br><i class="fa fa-exclamation text-danger"></i> Якщо пропустити кілька  версій, оновлення до актуальної доведеться  виконувати вручну 
                  </small>
@@ -188,16 +188,44 @@
               
                <div class="form-check mt-4">
                     <input zippy="checkip" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="checkip">Перевіряти вхідні запити</label>
-                     <br><small   class='compact'>Перевіряти вхідні запити для скриптів  та  API  на  відповідність  IP адреси списку  нижче    </small>
+                    <label class="fw-bold  form-check-label" for="checkip">Перевіряти вхідні запити</label>
+                     <br><small   class='compact'>Перевіряти вхідні запити для скриптів  та  API  на  відповідність  IP адреси списку  
+                       (по одній IP адресі на строку)   </small>
                </div> 
                <div class="mb-2">
-                   <label class="form-label" for="email">IP адреси</label>
-                   <textarea style="height:100px" class="form-control"   zippy="iplist"> </textarea>
-                   <small>По одній на  строку</small>
+                     <textarea style="height:100px;width:200px" class="form-control ms-4"   zippy="iplist"> </textarea>
+                   
                </div>
+                {{#hideblock}} 
+                <div class="mb-2">
+                   <label   class=" fw-semibold   form-label"   for="emailfrom">Двухфакторна (OTP) аутентифікація</label>
+                   <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+                       data-bs-toggle="popover"
+                       data-bs-placement="bottom" data-bs-content="При вв"></i>
+                     
+                    <select class="form-select "  zippy="otp">
+                        <option value="0">Не використовується</option>
+                        <option value="1">Віправляти код по  e-mail </option>
+                        <option value="2">Віправляти код по SMS</option>
+                    </select>
+                
+                    
+                 </div>
+           
              
-             <div class="mb-2"> 
+                <div class="row">  
+                    
+                     <label    class="col-4 col-form-label"    >Резервний код:</label>
+                    <div class="col-4">
+                       <div class="input-group">
+                       <input   class="form-control "   >
+                      
+                        <a class="mt-2 ms-1  me-4"  title="Оновити"  >   <i class="fa fa-undo"></i> </a>
+                    </div>
+                  </div>
+                 </div>   
+                 {{/hideblock}}   
+             <div class="mb-2 mt-2 "> 
         
              <input zippy="save" type="submit" value="Зберегти" class="btn btn-success  ">
             </div>  

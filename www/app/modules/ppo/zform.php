@@ -43,7 +43,7 @@ class ZForm extends \App\Pages\Base
 
 
         $this->stat->setVisible(false);
-        $this->add(new  ClickLink("sync", $this, "onSync")) ;
+       
         $this->add(new  ClickLink("zt", $this, "onZT")) ;
         $this->add(new  Label("ztres"));
 
@@ -101,34 +101,13 @@ class ZForm extends \App\Pages\Base
 
     public function onRow($row) {
         $item = $row->getDataItem();
-
-
-        $amount0=0;
-        $amount1=0;
-        $amount0r=0;
-        $amount1r=0;
-        $amount2=$item->amount2;
-        $amount3=$item->amount3;
-
-        if($item->checktype == "3") {
-            $amount0r=$item->amount0;
-            $amount1r=$item->amount1;
-
-        } else {
-            $amount0=$item->amount0;
-            $amount1=$item->amount1;
-
-        }
-  
+   
 
         $row->add(new Label("docnumber", $item->document_number));
-        $row->add(new Label("amount0", H::fa($amount0)));
-        $row->add(new Label("amount1", H::fa($amount1)));
-        $row->add(new Label("amount2", H::fa($amount2)));
-        $row->add(new Label("amount3", H::fa($amount3)));
-        $row->add(new Label("amount0r", H::fa($amount0r)));
-        $row->add(new Label("amount1r", H::fa($amount1r)));
-
+        $row->add(new Label("fiscnumber", $item->fiscnumber));
+        $row->add(new Label("amount0", H::fa($item->amount0)));
+        $row->add(new Label("amount1", H::fa($item->amount1)));
+  
         //    $row->add(new ClickLink("fisc", $this,"onFisc" ))->setVisible( strlen($item->fiscnumber) == 0 );
         $row->add(new ClickLink("del", $this, "onDel"))->setVisible(strlen($item->fiscnumber) == 0);
 
@@ -277,20 +256,7 @@ class ZForm extends \App\Pages\Base
 
     }
 
-    public function onSync($sender) {
-
-        $pos_id = $this->filter->pos->getValue();
-        if ($pos_id == 0) {
-            $this->setError('Не вибраний термінал');
-            return;
-        }
-
-        \App\Modules\PPO\PPOHelper::sync($pos_id)  ;
-
-        $this->OnRefresh($this->filter)   ;
-
-    }
-
+    
     // данные  с налоговой
     public function onZT($sender) {
         $this->ztres->setText("");
@@ -313,13 +279,16 @@ class ZForm extends \App\Pages\Base
             return ;
         }
         $zt="";
+        $zt .= "Чеків ". ($ret['Totals']['Real']['OrdersCount'] ??0);
+        $zt .= "<br>Чеків повернення ". ( $ret['Totals']['Ret']['OrdersCount'] ??0 );
+        
         if(is_array($ret['Totals']['Real']['PayForm'] ??null)) {
             $zt .="<b>Реалізація</b><br>";
             foreach($ret['Totals']['Real']['PayForm'] as $form) {
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
             }
-            $zt .= " Чеків ".$ret['Totals']['Real']['OrdersCount'] ;
+            
         }
         if(is_array($ret['Totals']['Ret']['PayForm']??null)) {
             $zt .="<br><b>Повернення</b><br>";
@@ -327,7 +296,6 @@ class ZForm extends \App\Pages\Base
                 $zt .= $form['PayFormName']." ".$form['Sum']."<br>" ;
 
             }
-            $zt .= " Чеків ".$ret['Totals']['Ret']['OrdersCount'] ;
         }
         if( ($ret['Totals']['ServiceInput'] ??0) >0) {
              $zt .= "<br> Службове внесення ".$ret['Totals']['ServiceInput'] ;

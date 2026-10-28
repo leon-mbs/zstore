@@ -1380,20 +1380,21 @@ class ARMPos extends \App\Pages\Base
                         $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
 
                         $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                        if ($ret['success'] == false  ) {
                             //повторяем для  нового номера
-                            $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                            $this->pos->save();
-                            $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                            if(strlen($ret['doclocnumber'] ??'') > 0) {
+                                $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                                $this->pos->save();
+                                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
+                            }
                         }
                         if ($ret['success'] == false) {
                             $this->setErrorTopPage($ret['data']);
                             throw new \Exception($ret['data']);
                         } else {
                             
-                      
-           
-                                $this->_doc->headerdata["fiscalnumber"] = $this->pos->fiscdocnumber;
+            
+                                $this->_doc->headerdata["fiscalnumber"] = $ret['doclocnumber'];
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
                                 $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
                                 $this->pos->fiscdocnumber++;
@@ -1552,11 +1553,14 @@ class ARMPos extends \App\Pages\Base
             return;
         }
         $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+        if ($ret['success'] == false ) {
             //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
+            if(strlen($ret['doclocnumber']??'') > 0)  {
+                $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                $this->pos->save();
+                $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
+            }
+            
         }
         if ($ret['success'] == false) {
             $this->setErrorTopPage($ret['data']);
@@ -1807,11 +1811,13 @@ class ARMPos extends \App\Pages\Base
 
 
                 $ret = \App\Modules\PPO\PPOHelper::check($doc);
-                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                if ($ret['success'] == false ) {
                     //повторяем для  нового номера
-                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                    $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                    if(strlen($ret['doclocnumber']??'') > 0)  {
+                      $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                      $this->pos->save();
+                      $ret = \App\Modules\PPO\PPOHelper::check($doc);
+                    }
                 }
                 if ($ret['success'] == false) {
                       throw new \Exception($ret['data']);
@@ -1882,7 +1888,7 @@ class ARMPos extends \App\Pages\Base
         if($pay==0) {
             $this->setError("Не вибрана  оплата");
             return;
-        }
+        }                       
               
        
         $am= H::fa($doc->payamount -   $doc->payed);
@@ -1943,13 +1949,15 @@ class ARMPos extends \App\Pages\Base
 
                     
 
-                    $ret = \App\Modules\PPO\PPOHelper::checkpay(  $this->pos->pos_id,$mf->mf_id,$sum,$doc->headerdata["fiscalnumber"],$doc->payamount, $doc->payed >= $doc->payamount);
-                    if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                    $ret = \App\Modules\PPO\PPOHelper::checkpay(  $this->pos->pos_id,$mf,$doc->headerdata["fiscalnumber"],$sum,$doc->payamount, $doc->payed >= $doc->payamount);
+                    if ($ret['success'] == false   ) {
                         //повторяем для  нового номера
-                        $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                        if(strlen($ret['doclocnumber'] ??'')> 0){
+                           $this->pos->fiscdocnumber = $ret['doclocnumber'];
+                           $this->pos->save();
+                           $ret = \App\Modules\PPO\PPOHelper::checkpay(  $this->pos->pos_id,$mf,$sum,$doc->headerdata["fiscalnumber"],$doc->payamount, $doc->payed >= $doc->payamount);
+                        }
                        
-                        $this->pos->save();
-                        $ret = \App\Modules\PPO\PPOHelper::checkpay(  $this->pos->pos_id,$mf->mf_id,$sum,$doc->headerdata["fiscalnumber"],$doc->payamount, $doc->payed >= $doc->payamount);
   
                     }
                     if ($ret['success'] == false) {
@@ -2175,9 +2183,9 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        $this->docpanel->form2->promocode->setText($this->_doc->headerdata['promocode']);
-        $this->docpanel->form2->bonus->setText($this->_doc->headerdata['bonus']);
-        $this->docpanel->form2->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+        $this->docpanel->form2->promocode->setText($this->_doc->headerdata['promocode']??'');
+        $this->docpanel->form2->bonus->setText($this->_doc->headerdata['bonus']??'');
+        $this->docpanel->form2->totaldisc->setText($this->_doc->headerdata['totaldisc']??'');
 
         $this->docpanel->form3->payamount->setText('0');
         $this->docpanel->form3->payed->setText('0');

@@ -41,11 +41,10 @@
    </CHECKHEAD>
 
     <CHECKTOTAL>
-        <SUM>{{amount}}</SUM>
-        <PARTPAYORDPREPAYNUM>{{parentcheck}}</PARTPAYORDPREPAYNUM>
-   
+        <SUM>{{parentsum}}</SUM>
         <PARTPAYTYPE>{{partpaytype}}</PARTPAYTYPE>
         <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+        <PARTPAYORDPREPAYNUM>{{parentcheck}}</PARTPAYORDPREPAYNUM>
       
     </CHECKTOTAL>
   
@@ -56,9 +55,19 @@
 
             <PAYFORMNM>{{formname}}</PAYFORMNM>
 
-            <SUM>{{paysum}}</SUM>
+            <SUM>{{partpaysum}}</SUM>
 
         </ROW>
     </CHECKPAY>
+    <CHECKBODY>
+     <ROW ROWNUM="1">
+  
+      <NAME>Часткова оплата</NAME>
  
+      <AMOUNT>1.000</AMOUNT>
+      <PRICE>{{parentsum}}</PRICE>
+      <COST>{{parentsum}}</COST>
+      <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+    </ROW>
+    </CHECKBODY>
 </CHECK>

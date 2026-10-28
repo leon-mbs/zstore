@@ -404,12 +404,14 @@ class ReturnIssue extends \App\Pages\Base
                         $this->_doc->headerdata["pos"] = $pos->pos_id;
 
                         $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
+                        if ($ret['success'] == false  ) {
                             //повторяем для  нового номера
-                            $pos->fiscdocnumber = $ret['doclocnumber'];
-                            $pos->save();
-                            $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                        }
+                            if(strlen($ret['doclocnumber'] ??'') > 0) {
+                                $pos->fiscdocnumber = $ret['doclocnumber'];
+                                $pos->save();
+                                $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
+                                }
+                            }
                         if ($ret['success'] == false) {
 
                             throw new \Exception($ret['data']);

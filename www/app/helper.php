@@ -413,8 +413,8 @@ class Helper
      * @param mixed $item_type
      */
     public static function getFileList($item_id, $item_type = 0) {
-        $itemid= (int) $itemid;
-        $itemtype= (int) $itemtype;
+        $item_id= (int) $item_id;
+        $item_type= (int) $item_type;
 
         $conn = \ZDB\DB::getConnect();
         $rs = $conn->Execute("select * from files where item_id={$item_id} and item_type={$item_type} ");
