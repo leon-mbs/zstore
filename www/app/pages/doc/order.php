@@ -106,7 +106,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(),$pricetype))->onChange($this, 'OnChangePriceType');
  
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (оплачено в IM)',2=>'Післяплата',3=>'Оплата  чеком, РФ або ВН'], $paytype ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Внести зразу (оплачено в IM)',2=>'Післяплата в замовленні',3=>'Оплата  в чекові, РФ або ВН'], $paytype ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
