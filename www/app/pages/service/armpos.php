@@ -1396,7 +1396,7 @@ class ARMPos extends \App\Pages\Base
             
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['doclocnumber'];
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
-                                $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
+
                                 $this->pos->fiscdocnumber++;
                                 $this->pos->save();
        
@@ -1827,7 +1827,7 @@ class ARMPos extends \App\Pages\Base
                   
                         $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
                         $this->pos->save();
-                        $doc->headerdata["fiscalnumber"] = $this->pos->fiscdocnumber;
+                        $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                         $doc->headerdata["passfisc"] = 0;
                         $doc->save();
                         $this->pos->fiscdocnumber++;

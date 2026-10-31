@@ -56,12 +56,7 @@ class DocList extends \App\Pages\Base
         $row->add(new Label("typedoc", $item->fndoc));
         $row->add(new Label("amount", H::fa($item->amount)));
 
-
-   //     $this->_tcnt += $item->cnt;
-     //   $this->_tamount += H::fa($item->amount) ;
-   //     $this->_trcnt += $item->rcnt;
-    //    $this->_tramount += H::fa($item->ramount);
-
+ 
     }
 
     public function OnSubmit($sender) {
@@ -109,8 +104,7 @@ class DocList extends \App\Pages\Base
             $row=[];
             $row['fn'] = $doc->headerdata['fiscalnumber']??  '';
             if($row['fn']=='') continue;
-            if(($doc->headerdata['fiscaltest']?? false) ) continue;  //тестовый
-            
+              
             $row['amount'] = doubleval($doc->headerdata['fiscalamount']??  0);
             if($row['amount']==0) {
                $row['amount']  = $doc->amount;               
