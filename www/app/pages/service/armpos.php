@@ -1886,7 +1886,7 @@ class ARMPos extends \App\Pages\Base
            return;
         }       
         if($pay==0) {
-            $this->setError("Не вибрана  оплата");
+            $this->setError("Не вибрана оплата");
             return;
         }                       
               
@@ -1897,7 +1897,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
         if($sum > $am ) {
-            $this->setError("Сума більшк боргу");
+            $this->setError("Сума більше боргу");
             return;
         }
       

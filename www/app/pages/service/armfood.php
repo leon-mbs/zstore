@@ -2603,7 +2603,7 @@ class ARMFood extends \App\Pages\Base
             return;
         }
         if($sum > $am ) {
-            $this->setError("Сума більшк боргу");
+            $this->setError("Сума більше боргу");
             return;
         }
       
