@@ -254,6 +254,33 @@ class GoodsIssue extends \App\Pages\Base
                         $this->calcPay();
 
                     }
+                    if ($basedoc->meta_name == 'Order') {
+
+                        $this->docform->customer->setKey($basedoc->customer_id);
+                        if ($basedoc->customer_id > 0) {
+                            $this->docform->customer->setText($basedoc->customer_name);
+                        } else {
+                            $this->docform->customer->setText($basedoc->headerdata['customer_name']);
+                        }
+
+
+                        $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
+                        $this->docform->store->setValue($basedoc->headerdata['store']);
+                        $this->docform->totaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->edittotaldisc->setText($basedoc->headerdata['totaldisc']);
+                        $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
+
+                    
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                           $this->_itemlist[ ] = $item;
+                        }
+                    
+                        $this->docform->total->setText($basedoc->amount);
+                        $this->calcTotal();
+                        $this->calcPay();
+
+                    }
+                    
                     if ($basedoc->meta_name == 'ServiceAct') {
 
                         $this->docform->notes->setText('Підстава ' . $basedoc->document_number);

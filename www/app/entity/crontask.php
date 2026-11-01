@@ -216,8 +216,8 @@ class CronTask extends \ZCL\DB\Entity
             } catch(\Throwable  $e) {
                 $msg = $e->getMessage();
                 $logger->error($msg);
-                $task->starton +=  (12 *3600) ;
-                $task->save() ;//откладываем
+             //   $task->starton +=  (12 *3600) ;
+             //   $task->save() ;//откладываем  //todo
                 
             }    
 

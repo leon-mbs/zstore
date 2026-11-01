@@ -62,7 +62,7 @@
     <CHECKBODY>
      <ROW ROWNUM="1">
   
-      <NAME>Часткова оплата</NAME>
+      <NAME>Р§Р°СЃС‚РєРѕРІР° РѕРїР»Р°С‚Р°</NAME>
  
       <AMOUNT>1.000</AMOUNT>
       <PRICE>{{parentsum}}</PRICE>

@@ -447,11 +447,7 @@ class PPOHelper
                     'rest'     => false,                    
                     'num'      => "ROWNUM=\"{$n}\""
                 );
-                // в долг  ($payamount - $payed >= 0.005
-                if ($payed < $doc->payamount) {
-                    $pay['paysum'] = number_format($payamount, 2, '.', '');
-                    $pay['payed'] = number_format($payed, 2, '.', '');
-                }
+             
                 $header['pays'][] = $pay;
                 $n++;
                 $amount1 = $pay['paysum'];
@@ -540,7 +536,7 @@ class PPOHelper
         $header['amount'] = number_format($payamount, 2, '.', '');
         $header['rnd']  =  false;
         $header['nrnd']  =  false;
-        if(floatval($sum) !=floatval($sumpay) )  {
+        if(floatval($sum) !=floatval($sumpay) && $header['ispartpay'] != true)  {
            $header['rnd']  = number_format( $sum-$sumpay        , 2, '.', '');
            $header['nrnd']  = number_format( $sum  , 2, '.', '');
            

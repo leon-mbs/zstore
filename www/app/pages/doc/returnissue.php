@@ -423,7 +423,7 @@ class ReturnIssue extends \App\Pages\Base
                                 $pos->save();
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
                                 $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
-                                $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
+                               
                             } else {
 
                                 throw new \Exception("Не повернено фіскальний номер");
