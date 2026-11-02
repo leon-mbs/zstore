@@ -59,7 +59,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["useacc"] = $options['useacc'] == 1;
         $this->_tvars["useexcise"] = $options['useexcise'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
-        $this->_tvars["noupdate"] = $options['noupdate'] == 1;
+
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
         $this->_tvars["storeemp"] = $options['storeemp'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;

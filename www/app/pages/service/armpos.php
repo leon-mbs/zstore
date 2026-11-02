@@ -2352,20 +2352,14 @@ class ARMPos extends \App\Pages\Base
     //штрих код
     public function addcodeOnClick($sender) {
         $barcode = trim($this->docpanel->form2->barcode->getText());
-        $code0 = $barcode;
-        $code = ltrim($barcode, '0');
-
+        if ($barcode == '') {
+            return;
+        }   
         $store = $this->form1->store->getValue();
         $this->docpanel->form2->barcode->setText('');
-        if ($code == '') {
-            return;
-        }
-
-
-        $code_ = Item::qstr($code);
-        $code__ = trim($code_,"'") ;        
-        $item = Item::getFirst(" disabled = 0 and  (item_code = {$code_} or bar_code = {$code_}   or detail like '%<bar_code1><![CDATA[{$code__}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code__}]]></bar_code2>%'   )");
-      
+  
+        $item = Item::findBarCode($barcode,$store);
+     
         // проверка  на  стикер
         if ($item == null) {
        
