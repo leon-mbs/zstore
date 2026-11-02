@@ -39,7 +39,9 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('phone', $this->user->phone));
         $form->add(new TextInput('viber', $this->user->viber));
 
-        $form->add(new CheckBox('darkmode', $this->user->darkmode));
+        $form->add(new CheckBox('useotp', $this->user->useotp??0))->setVisible(H::getKeyValInt('otp')>0);
+        
+        $form->add(new CheckBox('darkmode', $this->user->darkmode??0));
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('collapsesidebar', $this->user->collapsesidebar));
         $form->add(new CheckBox('usebotfornotify', $this->user->usebotfornotify));
@@ -152,6 +154,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->phone = $sender->phone->getText();
         $this->user->viber = $sender->viber->getText();
 
+        $this->user->useotp = $sender->useotp->isChecked() ? 1 : 0;
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
         $this->user->collapsesidebar = $sender->collapsesidebar->isChecked() ? 1 : 0;
         $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;

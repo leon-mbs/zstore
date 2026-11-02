@@ -2387,7 +2387,7 @@ class ARMPos extends \App\Pages\Base
      
        
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code) {
+            if ($_item->item_id == $item->item_id ) {
               
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docpanel->form2->detail->Reload();
