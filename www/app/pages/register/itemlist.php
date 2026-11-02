@@ -297,7 +297,7 @@ class ItemList extends \App\Pages\Base
         }
     
      
-        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st}  and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and tag = -1 {$st}  ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
            $this->_tvars["i_lastsell"] =  $d->document_number .' від '. H::fd($d->document_date) .'.'  ; 
@@ -306,7 +306,7 @@ class ItemList extends \App\Pages\Base
 
         $this->detailpanel->iformbay->setVisible(false);
 
-        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity > 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsReceipt')  ) ","entry_id desc")  ;
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and tag = -2 {$st}    ","entry_id desc")  ;
         if($e != null)  {
            $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
            $this->_tvars["i_lastbay"] =  $d->document_number .' від '. H::fd($d->document_date) .'.'  ; 
@@ -325,7 +325,7 @@ class ItemList extends \App\Pages\Base
         
         
         $this->_tvars["i_avgout"] ='';
-        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ","entry_id asc")  ;
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st} and tag = -1   ","entry_id asc")  ;
         if($e != null) {
 
 
@@ -336,10 +336,10 @@ class ItemList extends \App\Pages\Base
 
             if($interval->days >30)  {
                 $conn=\ZDB\DB::getConnect()  ;
-                $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
+                $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and tag = -1   ";
                 $sell =   $conn->GetOne($sql)  ;
                 $sell =  number_format($sell/$interval->days*30, 1, '.', '');
-                $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в міс.";
+                $this->_tvars["i_avgout"] = "<b>Середня продажа</b>  {$sell} в міс.<br>";
                 
                 
             }  

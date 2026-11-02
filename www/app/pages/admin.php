@@ -34,6 +34,8 @@ class Admin extends \App\Pages\Base
             \App\Application::RedirectError();
             return  ;
         }  
+        
+       
         $options = System::getOptions("common");       
               
         $this->_tvars['issms'] = ($options['smstype'] ?? 0)>0;
@@ -51,13 +53,15 @@ class Admin extends \App\Pages\Base
           
         $form = $this->add(new Form('optionsform'));
         $form->add(new CheckBox('capcha',$options['capcha']??0));
-        $form->add(new CheckBox('noupdate',$options['noupdate']??0));
+
         $form->add(new CheckBox('checkip',$options['checkip'] ??0));
         $form->add(new TextArea('iplist',$options['iplist'] ??'' ));
+        $form->add(new DropDownChoice('otp',[],H::getKeyValInt('otp',0)));
+        $form->add(new TextInput('otpcode',H::getKeyVal('otpcode',random_int(100000,999999))  ));
+        $form->add(new ClickLink('otpcodeupdate'))->onClick($this,'onotpcodeupdate',true);
+          
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOptions');
-        
-        
-     
+      
         $this->add(new Form('cdoc'))->onSubmit($this,"onCancelDoc");
         $this->cdoc->add(new TextInput('docn'))  ;
 
@@ -198,6 +202,9 @@ class Admin extends \App\Pages\Base
     }   
 
     
+    public function onotpcodeupdate($sender) {
+       $this->optionsform->otpcode->setText(  random_int(100000,999999) ); 
+    }
     public function saveConfig($sender) {
         $options = System::getOptions("common");       
         $options['usebranch']  =  $this->configform->usebranch->isChecked() ? 1 : 0;
@@ -266,10 +273,12 @@ class Admin extends \App\Pages\Base
     public function saveOptions($sender) {
         $options = System::getOptions("common");       
         $options['capcha']  =  $this->optionsform->capcha->isChecked() ? 1 : 0;
-        $options['noupdate']  =  $this->optionsform->noupdate->isChecked() ? 1 : 0;
-        $options['checkip']  =  $this->optionsform->checkip->isChecked() ? 1 : 0;
-        $options['iplist']  =  $this->optionsform->iplist->getText();
 
+        $options['checkip']  =  $this->optionsform->checkip->isChecked() ? 1 : 0;
+        $options['iplist']   =  $this->optionsform->iplist->getText();
+       
+        H::setKeyVal('otp',$this->optionsform->otp->getValue()) ;
+        H::setKeyVal('otpcode',$this->optionsform->otpcode->getText()) ;
 
         System::setOptions("common",$options) ;
         Session::getSession()->menu = [];       
@@ -633,7 +642,6 @@ class Admin extends \App\Pages\Base
         }
         
     }
- 
 
     public function onSMSType($sender) {
         $type = $this->sms->smstype->getValue();

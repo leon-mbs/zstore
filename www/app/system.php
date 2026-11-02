@@ -268,9 +268,7 @@ class System
                 $n->save();                 
             }          
           
-            if(($options['noupdate'] ??0)==1) {
-              return;  
-            }    
+               
                  
             $b=0;
             $data = System::checkVersion() ;

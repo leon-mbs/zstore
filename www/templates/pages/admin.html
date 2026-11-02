@@ -170,38 +170,32 @@
                         </form>                       
     </div>        
     <div class="col-12 col-lg-6 col-xl-3  "   >
-       <h5>Налаштування безпеки</h5>   
+       <h5>Налаштування безпеки  
+        <a href="https://zippy.com.ua/zstore#secur" target="_blank"> <i class="fa fa-info-circle" style="font-size:16px;">  </i> </a>
+          </h5>   
          <form zippy="optionsform"  class="mb-4"> 
               
                  <div class="form-check">
                     <input zippy="capcha" type="checkbox" class="form-check-input">
                     <label class="fw-bold form-check-label" for="capcha">Капча на формі логіну</label>
                   </div> 
-                 <div class="form-check">
-                    <input zippy="noupdate" type="checkbox" class="form-check-input">
-                    <label class="fw-bold form-check-label" for="noupdate">Не перевіряти оновлення</label>
-                 <br><small class='compact'>   Якщо кастомна  версія і є ризик  затерти зміни  
-                     <br><i class="fa fa-exclamation text-danger"></i> Якщо пропустити кілька  версій, оновлення до актуальної доведеться  виконувати вручну 
-                 </small>
-                  </div> 
+                
            
               
                <div class="form-check mt-4">
                     <input zippy="checkip" type="checkbox" class="form-check-input">
                     <label class="fw-bold  form-check-label" for="checkip">Перевіряти вхідні запити</label>
-                     <br><small   class='compact'>Перевіряти вхідні запити для скриптів  та  API  на  відповідність  IP адреси списку  
-                       (по одній IP адресі на строку)   </small>
+                    
                </div> 
                <div class="mb-2">
                      <textarea style="height:100px;width:200px" class="form-control ms-4"   zippy="iplist"> </textarea>
-                   
+                    <br><small   class='compact'>Перевіряти вхідні запити для скриптів  та  API  на  відповідність  IP адреси списку  
+                       По одній IP адресі на строку   </small>
                </div>
-                {{#hideblock}} 
+             
+               {{#hideblock}}
                 <div class="mb-2">
-                   <label   class=" fw-semibold   form-label"   for="emailfrom">Двухфакторна (OTP) аутентифікація</label>
-                   <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
-                       data-bs-toggle="popover"
-                       data-bs-placement="bottom" data-bs-content="При вв"></i>
+                   <label   class=" fw-semibold   form-label"   for="emailfrom">Двохфакторна (OTP) аутентифікація</label>
                      
                     <select class="form-select "  zippy="otp">
                         <option value="0">Не використовується</option>
@@ -211,20 +205,20 @@
                 
                     
                  </div>
-           
+               {{/hideblock}}
              
                 <div class="row">  
                     
                      <label    class="col-4 col-form-label"    >Резервний код:</label>
                     <div class="col-4">
                        <div class="input-group">
-                       <input   class="form-control "   >
+                       <input zippy="otpcode"  class="form-control "   >
                       
-                        <a class="mt-2 ms-1  me-4"  title="Оновити"  >   <i class="fa fa-undo"></i> </a>
+                        <a zippy="otpcodeupdate" class="mt-2 ms-1  me-4"  title="Оновити"  >   <i class="fa fa-undo"></i> </a>
                     </div>
                   </div>
                  </div>   
-                 {{/hideblock}}   
+               
              <div class="mb-2 mt-2 "> 
         
              <input zippy="save" type="submit" value="Зберегти" class="btn btn-success  ">
