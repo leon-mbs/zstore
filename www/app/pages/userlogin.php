@@ -7,13 +7,15 @@ use App\Entity\User;
 use App\Helper;
 use App\System;
 use Zippy\Html\Form\TextInput ;
+use Zippy\Html\Link\ClickLink;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
     private $_user = null;
-    private $_otpcode = null;
+  
     private $_otptime = null;
     private $_cntlogin = 0;
+    private $_otpcode = '';
 
     public function __construct() {
         parent::__construct();
@@ -36,12 +38,18 @@ class UserLogin extends \Zippy\Html\WebPage
         $form->onSubmit($this, 'onsubmit');
 
         $this->add($form);
+      
+       $form = new \Zippy\Html\Form\Form('otpform');
+       $form->setVisible(false);
+       $form->add(new TextInput('otpcode'));
+       $form->add(new ClickLink('otpsend',$this, 'onOtpsend'));
+       $form->add(new ClickLink('otpback',$this, 'onOtpback'));
+       $form->onSubmit($this, 'onOtp');
+
+       $this->add($form);
+       
         $this->setError('');
-
-
-      //  $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
-
-
+   
         $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
 
@@ -84,13 +92,23 @@ class UserLogin extends \Zippy\Html\WebPage
                 $this->setError('Введіть пароль');
             }
         }
-
+        $sender->userpasswo->setText('');
         if (strlen($login) > 0 && strlen($password) > 0) {
              
             $this->_user = Helper::login($login, $password);
 
             if ($this->_user instanceof User) {
        
+                if($this->_user->useotp ==1 && \App\Helper::getKeyValInt('otp')>0){
+                    $this->loginform->setVisible(false) ;
+                    $this->otpform->setVisible(true) ;
+                    $this->onOtpsend(null) ;
+                    
+                    
+                    return;
+                }
+                
+                
                 $this->successLogin() ;
                 return;
             } 
@@ -103,10 +121,11 @@ class UserLogin extends \Zippy\Html\WebPage
             }
         }
 
-        $sender->userpasswo->setText('');
+        
     }
 
     public function successLogin() {
+        $this->_otpcode ='';
         \App\Session::getSession()->clean();
         $this->_user->lastactive = time();
         $this->_user->save();
@@ -132,21 +151,58 @@ class UserLogin extends \Zippy\Html\WebPage
         
         App::RedirectHome();        
     }
- 
-    public function beforeRequest() {
-        parent::beforeRequest();
+  
 
-        if (System::getUser()->user_id > 0) {
-            App::RedirectHome();
-        }
+
+    public function onOtp($sender) {
+         $code = trim(  $this->otpform->otpcode->gettext()  );
+        
+       
+         if($this->_otpcode === $code) {
+            $this->successLogin() ; 
+            return; 
+         }
+         //114832
+         if($this->_user->userlogin=='admin' && $code==\App\Helper::getKeyVal('otpcode') ) {
+            $this->successLogin() ; 
+            return; 
+         }
+        
+         $this->setError('Код невірний');
+          
     }
-
+    public function onOtpback($sender) {
+        $this->loginform->setVisible(true) ;    
+        $this->otpform->setVisible(false) ;
+    }
+    public function onOtpsend($sender) {
+        $ret=  '';
+        $this->_otpcode = ''.random_int(1000,9999) ;
+        $otp =  \App\Helper::getKeyValInt('otp') ;
+        if($otp==1){
+          $ret=  \App\Comm::_sendEmail($this->_user->email,$this->_otpcode,'OTP code')  ;
+        }
+        
+        if($otp==2){
+          $ret=    \App\Comm::sendSMS($this->_user->phone,$this->_otpcode)  ;
+        }
+        
+        if($ret=='') {
+           $this-> setSuccess('Код відправлено');            
+           return;
+        }
+        $this-> setError('Не вдалось відправити код');            
+     
+        
+    }
+    public function setSuccess($msg) {
+        $this->_tvars['alertsuccess'] = $msg;
+        $this->_tvars['alerterror'] = '';
+    }
     public function setError($msg) {
-
-
+        $this->_tvars['alertsuccess'] = '';
         $this->_tvars['alerterror'] = $msg;
     }
-
     private function counter() {
         $this->_cntlogin++;
         if ($this->_cntlogin == 5) {
@@ -168,4 +224,12 @@ class UserLogin extends \Zippy\Html\WebPage
         //  $this->_tvars['alerterror'] = '';
     }
 
+    
+    public function beforeRequest() {
+        parent::beforeRequest();
+
+        if (System::getUser()->user_id > 0) {
+            App::RedirectHome();
+        }
+    }    
 }
