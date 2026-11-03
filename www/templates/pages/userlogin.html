@@ -32,6 +32,11 @@
                     {{{alerterror}}}
                 </div>
                 {{/alerterror}}
+               {{#alertsuccess}}
+                <div class="alert alert-success" role="alert">
+                    {{{alertsuccess}}}
+                </div>
+                {{/alertsuccess}}
 
             </div>
         </div>
@@ -75,7 +80,7 @@
                             </div>
                            
                             <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block btn-flat">Увійти</button>
+                                <button type="submit" class="btn btn-success btn-block btn-flat">Увійти</button>
                             </div>
                              <div class="col-12">
                                 <small><a target="_blank" href="https://zippy.com.ua/zstore#lostpass">Забули пароль?</a></small>
@@ -85,7 +90,21 @@
                        
                     </form>
                             
-
+                     <form zippy="otpform">
+                        <div class="input-group">
+                          <label    for="otpcode">Отриманий код</label>
+                          <input autofocus="on" zippy="otpcode"  required="on"   class="form-control ms-1"     >
+                         
+                        </div> 
+                      <div class="input-group my-2">
+                         <a  zippy="otpsend"  >Відправити код повторно</a> 
+                              
+                        </div> 
+                        <div   >
+                                <a zippy="otpback" class="btn btn-secondary btn-block btn-flat me-4">< Назад</a>
+                                <button type="submit" class="btn btn-success btn-block btn-flat  ms-4"> Увійти</button>
+                            </div>  
+                    </form>
                 </div>
                 <!-- /.login-card-body -->
             </div>
