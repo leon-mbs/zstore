@@ -257,9 +257,6 @@ class PPOHelper
             $amount = $amount + $stat[1]['amount3']??0;
             $n++;
         }
-
-      // \App\System::getSession()->shiftclose = "Продажа: каса ". \App\Helper::fa($stat['amount0']). ", банк ". \App\Helper::fa($stat['amount1']) ." Повернення: каса ". \App\Helper::fa($rstat['amount0']). ", банк ". \App\Helper::fa($rstat['amount1'] );
-     //  \App\Helper::log(\App\System::getSession()->shiftclose) ;
         //возврат
 
         $n = 1;
@@ -307,7 +304,7 @@ class PPOHelper
      
         $ret =  self::send($xml, 'doc', $pos);
       
-        if($ret['success']==true   && $pos->testing != 1  ) {
+        if($ret['success']==true   && $pos->testing != 1      ) {
             $r = new ZRecord();
             $r->createdon = time();
             $r->amount = $amount;
@@ -791,6 +788,18 @@ class PPOHelper
 
         $header['amount'] = number_format($header['amount'], 2, '.', '');
 
+        
+        
+        $header['ispartpay']  = false;
+        // в долг
+        if ($doc->payed < $doc->payamount) {
+           $header['ispartpay']  = true;
+           $header['partpaysum']  = number_format($doc->payed, 2, '.', '') ;
+           $header['partpaytype']  = 1;  //первый чек
+           
+        }        
+        
+        
         $report = new \App\Report('checkback.xml');
 
         $xml = $report->generate($header);

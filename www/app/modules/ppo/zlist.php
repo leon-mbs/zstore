@@ -41,7 +41,7 @@ class ZList extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
-        $this->filter->add(new Date('to', time()));
+        $this->filter->add(new Date('to' ));
         $this->filter->add(new TextInput('pos'));
         $this->filter->add(new TextInput('doc'));
 
@@ -59,6 +59,8 @@ class ZList extends \App\Pages\Base
         $this->detail->add(new Label('preview'));
         $this->detail->add(new ClickLink('download', $this, 'onfile'));
 
+        
+        $this->OnSubmit($this->filter);
     }
 
     public function onRow($row) {
@@ -91,7 +93,12 @@ class ZList extends \App\Pages\Base
         $to = $this->filter->to->getDate();
 
 
-        $where = " DATE(createdon) >= " . $conn->DBDate($from) . "               AND DATE(createdon) <= " . $conn->DBDate($to)  ;
+        $where = " DATE(createdon) >= " . $conn->DBDate($from)   ;
+        if($to >0) {
+           $where =  $where . "   AND DATE(createdon) <= " . $conn->DBDate($to)  ;
+        }
+    
+    
         $fnpos =  $sender->pos->getText();
         $fndoc =  $sender->doc->getText();
         if(strlen($fnpos)>0) {
