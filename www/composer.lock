@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea894b30584d77a2209741a13ffb696a",
+    "content-hash": "6a886753eefbe9d5c7286d20132e989e",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -909,57 +909,6 @@
                 "source": "https://github.com/MarkBaker/PHPMatrix/tree/3.0.1"
             },
             "time": "2022-12-02T22:17:43+00:00"
-        },
-        {
-            "name": "masterexploder/phpthumb",
-            "version": "2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/masterexploder/PHPThumb.git",
-                "reference": "01f6aa65aa3d136e175f67da2b4ea3e316770d02"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/masterexploder/PHPThumb/zipball/01f6aa65aa3d136e175f67da2b4ea3e316770d02",
-                "reference": "01f6aa65aa3d136e175f67da2b4ea3e316770d02",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "PHPThumb": "src",
-                    "PHPThumb\\Tests": "tests"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jarrod Nettles",
-                    "email": "jarrod.nettles@icloud.com"
-                },
-                {
-                    "name": "Ian Selby",
-                    "email": "ian@gxdlabs.com"
-                }
-            ],
-            "description": "A library for manipulating images in PHP.",
-            "homepage": "https://github.com/masterexploder/PHPThumb",
-            "keywords": [
-                "image",
-                "resize",
-                "rotate"
-            ],
-            "support": {
-                "issues": "https://github.com/masterexploder/PHPThumb/issues",
-                "source": "https://github.com/masterexploder/PHPThumb/tree/2.1"
-            },
-            "time": "2015-09-08T22:55:44+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -1873,16 +1822,16 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v6.4.45",
+            "version": "v6.4.49",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "5484e316cd8125f5215bbf829151e2211aa6d101"
+                "reference": "31cc7fec959d3e2ae24384ac31d593de00045151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/5484e316cd8125f5215bbf829151e2211aa6d101",
-                "reference": "5484e316cd8125f5215bbf829151e2211aa6d101",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/31cc7fec959d3e2ae24384ac31d593de00045151",
+                "reference": "31cc7fec959d3e2ae24384ac31d593de00045151",
                 "shasum": ""
             },
             "require": {
@@ -1918,7 +1867,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v6.4.45"
+                "source": "https://github.com/symfony/css-selector/tree/v6.4.49"
             },
             "funding": [
                 {
@@ -1938,7 +1887,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-23T07:35:46+00:00"
+            "time": "2026-10-18T12:24:59+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
