@@ -102,7 +102,7 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->_basedocid = $this->_doc->parent_id;
 
-
+            $this->calcTotal();
 
 
         } else {
@@ -130,6 +130,9 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setText($basedoc->customer_name);
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->calcTotal();
+                        $this->docform->editpayed->setText(H::fa($this->_doc->payed));
+                        $this->docform->payed->setText(H::fa($this->_doc->payed));
 
 
                     }
@@ -160,7 +163,9 @@ class ReturnIssue extends \App\Pages\Base
                             }
 
                         }
-
+                        $this->calcTotal();
+                        $this->docform->editpayed->setText(H::fa($basedoc->payed));
+                        $this->docform->payed->setText(H::fa($basedoc->payed));
 
 
                     }
@@ -172,7 +177,7 @@ class ReturnIssue extends \App\Pages\Base
               
             }
         }
-        $this->calcTotal();
+        
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;

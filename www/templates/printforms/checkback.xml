@@ -45,7 +45,10 @@
     <CHECKTOTAL>
         <SUM>{{amount}}</SUM>
 
-
+         {{#ispartpay}}
+        <PARTPAYTYPE>{{partpaytype}}</PARTPAYTYPE>
+        <PARTPAYSUM>{{partpaysum}}</PARTPAYSUM>
+        {{/ispartpay}}
     </CHECKTOTAL>
 
 

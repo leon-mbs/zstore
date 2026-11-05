@@ -65,12 +65,13 @@ class Helper
     public static function logout() {
 
         System::clean();
-        System::getSession()->clean();
-
+        
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
         $_SESSION['userlogin'] = 'Гість';
+        unset( $_SESSION['App_session']  ); 
+        unset( $_SESSION['zippy_pagemanager']  ); //сериализованные  страницы фреймыорка
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 

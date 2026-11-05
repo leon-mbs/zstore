@@ -12,6 +12,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
@@ -41,7 +42,7 @@ class GRList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті',   1 => 'Не сплачені', 2 => 'Всі'), 0));
+        $this->filter->add(new CheckBox('allstate'));
 
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -246,19 +247,11 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
   
         $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue','PayComitent' )   and document_date >= ".$actualdate;
 
-        $status = $this->page->filter->status->getValue();
-
-        if ($status == 0) {
-            $where .= "  and    state >3 and  state  not in(14,5,9 )        ";
+         
+        if (!$this->page->filter->allstate->isChecked()) {
+            $where .= " and state not in (5,9,17,22 ) " ;
         }
-      
-        if ($status == 1) {
-            $where .= " and state=". Document::STATE_WP;
-        }
-        if ($status == 2) {
-
-        }
-
+        
       
         $cust = $this->page->filter->searchcust->getKey();
         if ($cust > 0) {
@@ -281,7 +274,7 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  and document_number like  {$sn} ";
         }
-
+   
         return $where;
     }
 
