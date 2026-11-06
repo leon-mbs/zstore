@@ -167,7 +167,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
         $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
         $this->_tvars["freg"] = $modules['freg'] == 1;
-       
+        $this->_tvars["rozetka"] = ($modules['rozetka'] ?? 0) == 1;
+
 
 
         //  $printer = System::getOptions('printer');
@@ -227,6 +228,9 @@ class Base extends \Zippy\Html\WebPage
         if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["vdoc"] = false;
         }
+        if (strpos(System::getUser()->modules ?? '', 'rozetka') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["rozetka"] = false;
+        }
        
 
         $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"] ;
@@ -243,6 +247,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["vkassa"] ||
             $this->_tvars["vdoc"] ||
             $this->_tvars["df"] ||
+            $this->_tvars["rozetka"] ||
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;

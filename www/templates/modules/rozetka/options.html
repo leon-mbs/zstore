@@ -1,0 +1,97 @@
+<html>
+    <body>
+        <div class="row">
+            <div class="col-12 col-md-8 col-xl-5">
+                <h4>Налаштування Rozetka</h4>
+                <form zippy="cform" autocomplete="off">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="login">Логін кабінету продавця</label>
+                        <input zippy="login" class="form-control" required="required" autocomplete="off"/>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Пароль</label>
+                        <input zippy="password" type="password" class="form-control" autocomplete="new-password" placeholder="залиште порожнім, щоб не міняти"/>
+                        <small class="form-text text-muted">Ті самі логін і пароль, що для seller.rozetka.com.ua. Пароль зберігається в налаштуваннях, токен оновлюється сам.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="salesource">Джерело продаж</label>
+                        <select class="form-select" zippy="salesource">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="defpricetype">Тип ціни</label>
+                        <select class="form-select" zippy="defpricetype">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <small class="form-text text-muted">Ціна для прайсу й для оновлення цін на Rozetka</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="defstore">Склад</label>
+                        <select class="form-select" zippy="defstore">
+                            <option value="0">Усі склади</option>
+                        </select>
+                        <small class="form-text text-muted">Залишки для прайсу та резерв у замовленні</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="defpaytype">Тип оплати</label>
+                        <select class="form-select" zippy="defpaytype">
+                            <option value="0">Не вказано</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="defmf">Каса</label>
+                        <select class="form-select" zippy="defmf">
+                            <option value="0">Не вказана</option>
+                        </select>
+                        <small class="form-text text-muted">Обов'язкова, якщо оплата на стороні маркетплейсу</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="vendor">Виробник за замовчуванням</label>
+                        <input zippy="vendor" class="form-control"/>
+                        <small class="form-text text-muted">Rozetka вимагає &lt;vendor&gt; у кожній позиції прайсу; підставляється, якщо в номенклатурі не вказано</small>
+                    </div>
+
+                    <div class="form-check">
+                        <input zippy="insertcust" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="insertcust">Імпортувати контрагентів</label>
+                        <small class="form-text text-muted d-block">Створювати покупця в довіднику за телефоном або email</small>
+                    </div>
+                    <div class="form-check">
+                        <input zippy="setprocessing" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="setprocessing">Після імпорту переводити замовлення на Rozetka в «Опрацьовується менеджером»</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input zippy="ssl" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="ssl">Перевірка SSL-сертифіката</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="submit" value="Зберегти" zippy="save" class="btn btn-primary me-2"/>
+                        <a zippy="checkconn" class="btn btn-secondary">Перевірити з'єднання</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-12 col-md-8 col-xl-5">
+                <h4>XML-прайс для Rozetka</h4>
+                <p class="text-muted">Rozetka забирає ціни й залишки з прайсу за статичною адресою. Вкажіть її в кабінеті продавця
+                    (Товари → Завантаження прайсу). Ключ у адресі захищає прайс від сторонніх.</p>
+                {{#hasfeed}}
+                <div class="mb-3">
+                    <label class="form-label">Адреса прайсу</label>
+                    <input class="form-control" readonly value="{{feedurl}}" onclick="this.select()">
+                </div>
+                {{/hasfeed}}
+                {{^hasfeed}}
+                <p><i class="fa fa-exclamation-triangle text-warning"></i> Ключ ще не створено — прайс недоступний.</p>
+                {{/hasfeed}}
+                <a zippy="genkey" class="btn btn-secondary" onclick="return confirm('Стара адреса перестане працювати. Продовжити?')">
+                    {{#hasfeed}}Створити нову адресу{{/hasfeed}}{{^hasfeed}}Створити адресу прайсу{{/hasfeed}}
+                </a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,69 @@
+<html>
+    <body>
+        <div class="row">
+            <div class="col-12 col-xl-10">
+                <h3>Товари на Rozetka</h3>
+                <p class="text-muted">Товари з'являються на Rozetka з XML-прайсу (див. налаштування) і проходять модерацію.
+                    Тут можна звірити артикули і разом надіслати актуальні ціни та залишки через API.</p>
+                {{#hasfeed}}
+                <p><small>Адреса прайсу: <code>{{feedurl}}</code></small></p>
+                {{/hasfeed}}
+
+                <div class="navbar">
+                    <form zippy="filter">
+                        <div class="row align-items-center">
+                            <label class="col-form-label col-auto" for="searchcat">Категорія</label>
+                            <div class="col-auto">
+                                <select class="form-select" zippy="searchcat">
+                                    <option value="0">Усі</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <select class="form-select" zippy="show"></select>
+                            </div>
+                            <div class="col-auto">
+                                <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="btn btn-success" value="Звірити з Rozetka">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <form zippy="updform">
+                    <table class="table table-sm">
+                        <tr>
+                            <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
+                            <th>Найменування</th>
+                            <th>Артикул</th>
+                            <th class="text-end">Кіл. Zippy</th>
+                            <th class="text-end">Ціна Zippy</th>
+                            <th class="text-end">Кіл. Rozetka</th>
+                            <th class="text-end">Ціна Rozetka</th>
+                            <th>На Rozetka</th>
+                        </tr>
+                        <tr zippy="itemlist">
+                            <td><input type="checkbox" zippy="ch" class="chc"></td>
+                            <td zippy="name"></td>
+                            <td zippy="code"></td>
+                            <td zippy="qty" class="text-end"></td>
+                            <td zippy="price" class="text-end"></td>
+                            <td zippy="rozqty" class="text-end"></td>
+                            <td zippy="rozprice" class="text-end"></td>
+                            <td zippy="found"></td>
+                        </tr>
+                    </table>
+                    <div zippy="pag"></div>
+                    <div class="mb-3">
+                        <a zippy="updsel" class="btn btn-success me-2" onclick="document.getElementById('dialogwait').showModal()">Оновити обрані</a>
+                        <a zippy="updall" class="btn btn-secondary" onclick="document.getElementById('dialogwait').showModal()">Оновити всі у списку</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            function chclick() {
+                var ch = $("#chall").prop('checked');
+                $('.chc').prop('checked', ch)
+            }
+        </script>
+    </body>
+</html>
