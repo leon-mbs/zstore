@@ -1,158 +1,128 @@
 <html>
      <head>
-        <title> Експорт    </title>
-
-    </head>
-
+        <title>Експорт</title>
+	</head>
     <body>
-        <div class="row">
-            <div class="col-12 col-md-6 col-xl-4 card">
-                <h3>Експорт документів</h3>
-                <form zippy="dform" class="row">
-                    <div class="col-10">
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card p-3 h-100">
+                    <h3>Експорт документів</h3>
+                    <form zippy="dform">
                         <div class="mb-2 row">
                             <label for="dtype" class="col-sm-4 form-label">Тип експорту</label>
                             <div class="col-sm-8">
-                                <select zippy="dtype" class="form-select   ">
-                                </select>
+                                <select zippy="dtype" class="form-control"></select>
                             </div>
                         </div>
                         <div class="mb-2 row">
                             <label for="dfrom" class="col-sm-4 form-label">З</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control ms-sm-2  " zippy="dfrom" style="width:110px">
-
+                                <input type="text" class="form-control ms-sm-2" zippy="dfrom" style="width:110px">
                             </div>
                         </div>
                         <div class="mb-2 row">
                             <label for="dto" class="col-sm-4 form-label">По</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control ms-sm-2  " zippy="dto" style="width:110px">
-
+                                <input type="text" class="form-control ms-sm-2" zippy="dto" style="width:110px">
                             </div>
                         </div>
-
-
                         <div class="mb-2">
                             <input class="btn btn-info" type="submit" value="Перегляд"/>
                         </div>
+                    </form>
+                    <form zippy="dformlist" class="mt-3">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <tr>
+                                    <th><input type="checkbox" id="dchall" onchange="chclick()"></th>
+                                    <th>Номер</th>
+                                    <th>Дата</th>
+                                    <th>Контрагент</th>
+                                    <th class="text-end">Сума</th>
+                                </tr>
+                                <tr zippy="doclist">
+                                    <td><input type="checkbox" zippy="dch" class="dchc"></td>
+                                    <td zippy="dnumber"></td>
+                                    <td zippy="ddate" class="text-nowrap"></td>
+                                    <td zippy="dcustomer"></td>
+                                    <td zippy="damount" class="text-end"></td>
+                                </tr>
+                            </table>
+                        </div>
 
-                    </div>
-                </form>
-                <form zippy="dformlist" class="row">
-                    <div class="col-12">
-                        <table class="table table-sm table-hover">
-                            <tr>
-                                <th><input type="checkbox" id="dchall" onchange="chclick()"></th>
-                                <th>Номер</th>
-                                <th>Дата</th>
-                                <th>Контрагент</th>
-                                <th class="text-end">Сума</th>
-                            </tr>
-                            <tr zippy="doclist">
-                                <td><input type="checkbox" zippy="dch" class="dchc"></td>
-                                <td zippy="dnumber"></td>
-                                <td zippy="ddate" class="text-nowrap "></td>
-                                <td zippy="dcustomer"></td>
-                                <td zippy="damount" class="text-end"></td>
-
-                            </tr>
-
-                        </table>
-                       <div class="form-check">
-
-                            <input   class="form-check-input" type="checkbox" zippy="docxml">
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" zippy="docxml" id="docxml">
                             <label class="form-check-label me-3" for="docxml">Експорт у XML</label>
                         </div>
 
-                        
                         <div class="mb-2">
                             <input class="btn btn-info" type="submit" value="Експорт"/>
                         </div>
-                    </div>
-
-                </form>
+                    </form>
+                </div>
             </div>
-            <div class="col-12 col-md-6 col-xl-4 card">
-                <h3>Експорт номенклатури</h3>
-
-
-                <form zippy="iform" class="row">
-                    <div class="col-10">
-
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card p-3 h-100">
+                    <h3>Експорт номенклатури</h3>
+                    <form zippy="iform">
                         <div class="mb-2">
                             <label for="itype">Тип експорту</label>
-                            <select zippy="itype" class="form-select   ">
+                            <select zippy="itype" class="form-control">
                                 <option value="0">Тільки довідник</option>
                                 <option value="1">Дані складу</option>
                             </select>
                         </div>
                         <div class="mb-2">
                             <label for="item_type">Тип ТМЦ</label>
-                            <select zippy="item_type" class="form-select   ">
+                            <select zippy="item_type" class="form-control">
                                 <option value="0">Всі</option>
                             </select>
                         </div>
                         <div class="mb-2">
                             <label for="cat">Категорія</label>
-                            <select zippy="cat" class="form-select   ">
-                                     <option value="0">Не вказано</option>
-                           </select>
-                        </div>
-                        <div class="mb-2">
-                            <label for="brand" >Бренд</label>
-                            <input zippy="brand" class="form-control   ">
-                            
-                        </div>
-                        <div class="mb-2">
-                            <label data-label="store" for="store">Склад</label>
-                            <select zippy="store" class="form-select   ">
+                            <select zippy="cat" class="form-control">
+                                <option value="0">Не вказано</option>
                             </select>
                         </div>
-                       <div class="form-check">
-
-                            <input   class="form-check-input" type="checkbox" zippy="itemxml">
+                        <div class="mb-2">
+                            <label for="brand">Бренд</label>
+                            <input zippy="brand" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label for="store">Склад</label>
+                            <select zippy="store" class="form-control"></select>
+                        </div>
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" zippy="itemxml" id="itemxml">
                             <label class="form-check-label me-3" for="itemxml">Експорт у XML</label>
                         </div>
-
-
                         <div class="mb-2">
                             <input class="btn btn-info" type="submit" value="Експорт"/>
                         </div>
-                    </div>
-
-
-                </form>
+                    </form>
+                </div>
             </div>
-            <div class="col-12 col-md-6 col-xl-4  card">
-                <h3>Експорт контрагентів</h3>
-
-                <form zippy="cform" class="row">
-                    <div class="col-10  ">
-
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card p-3 h-100">
+                    <h3>Експорт контрагентів</h3>
+                    <form zippy="cform">
                         <div class="mb-2">
-                            <label for="ctype">Тип </label>
-                            <select zippy="ctype" class="form-select ">
+                            <label for="ctype">Тип</label>
+                            <select zippy="ctype" class="form-control">
                                 <option value="0">Всі</option>
                                 <option value="1">Покупці</option>
                                 <option value="2">Постачальники</option>
                             </select>
                         </div>
-
-                         <div class="form-check">
-
-                            <input   class="form-check-input" type="checkbox" zippy="custxml">
+                        <div class="form-check my-2">
+                            <input class="form-check-input" type="checkbox" zippy="custxml" id="custxml">
                             <label class="form-check-label me-3" for="custxml">Експорт у XML</label>
                         </div>
-
                         <div class="mb-2">
                             <input class="btn btn-info" type="submit" value="Експорт"/>
                         </div>
-                    </div>
-
-
-                </form>  
-             
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -160,10 +130,8 @@
         <script>
             function chclick() {
                 var ch = $("#dchall").prop('checked');
-                $('.dchc').prop('checked', ch)
+                $('.dchc').prop('checked', ch);
             }
-
-
         </script>
     </body>
 </html>
