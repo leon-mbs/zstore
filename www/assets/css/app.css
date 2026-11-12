@@ -183,7 +183,7 @@ small.compact {
     color: #e9ecef;
     font-size: 1.25rem;
     font-weight: 600;
-}/* Sidebar collapse */
+}
 
 #sidebar.collapsed {
     margin-left: -300px;
@@ -248,7 +248,28 @@ a.sidebar-link {
   font-size: 0.6rem;
   font-weight: 400;
 }
+/* Вместо card */
+div.p-box {
+  --bs-card-spacer-y: 1rem;
+  --bs-card-spacer-x: 1rem;
+ 
+  --bs-card-border-width: var(--bs-border-width);
 
+  --bs-card-border-radius: var(--bs-border-radius);
+  --bs-card-inner-border-radius: calc(var(--bs-border-radius) - (var(--bs-border-width)));
+ 
+  --bs-card-color: ;
+  --bs-card-bg: var(--bs-body-bg);
+   
+   padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+  color: var(--bs-card-color); 
+  background-color: var(--bs-card-bg);
+ 
+  border: var(--bs-card-border-width) solid var(--bs-card-border-color);
+  border-radius: var(--bs-card-border-radius);
+
+ }
+ 
 .info-box {
   border-radius: 0.25rem;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.125), 0 1px 3px rgba(0, 0, 0, 0.2);
