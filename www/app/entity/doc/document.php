@@ -410,12 +410,10 @@ class Document extends \ZCL\DB\Entity
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
           
-            if( System::getOption("common",'useacc')==1) {
-                $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-            }
-            if( System::getOption("common",'useexcise')==1) {
-                $conn->Execute("delete from excisestamps where document_id=" . $this->document_id);
-            }
+            $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+    
+            $conn->Execute("delete from excisestamps where document_id=" . $this->document_id);
+    
  
     }
 
@@ -825,7 +823,7 @@ class Document extends \ZCL\DB\Entity
     /**
      *
      *  запись состояния в  лог документа
-     * @param mixed $state
+     * @param mixed $state     (-1 оплата, -2 проводки без смены статуса)
      * @param mixed $user_id  если переназначен  юзер документа
      */
     public function insertLog($state,$user_id=0) {

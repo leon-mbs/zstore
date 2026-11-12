@@ -703,10 +703,10 @@ class POSCheck extends \App\Pages\Base
     }
 
     private function calcPay() {
-        $prepaid =  doubleval($this->docform->prepaid->getText());
-        $total = $this->docform->total->getText();
-        $disc = $this->docform->totaldisc->getText();
-        $disc = doubleval($disc) ;
+        $prepaid = doubleval($this->docform->prepaid->setText() );
+        $total = doubleval($this->docform->total->setText());
+        $disc  = doubleval($this->docform->totaldisc->setText());
+        
 
         $payamount= $total - $disc - $prepaid;
 

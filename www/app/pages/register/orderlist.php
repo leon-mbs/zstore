@@ -430,8 +430,9 @@ class OrderList extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_WP);
             }
 
-            if ($sender->id == "bref") {
-                $this->_doc->setHD('waitpay',0) ;
+            if ($sender->id == "bref") {         
+     
+                $this->_doc->updateStatus(Document::STATE_CANCELED);
                 $this->_doc->updateStatus(Document::STATE_FAIL);
                 $this->_doc->setHD('waitpay',0); 
                 $this->_doc->save();     
