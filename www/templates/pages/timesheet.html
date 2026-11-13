@@ -5,10 +5,9 @@
  
         <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
 
-        <script language="javascript" src="/assets/js/moment/moment.min.js"></script>
-        <script language="javascript" src="/assets/js/moment/locale/ua.js"></script>
+        
         <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
-        <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
+        <script language="javascript" src="/assets/js/fullcalendar/locales/uk.js"></script>
 
 
     </head>
@@ -394,11 +393,9 @@ var calendar
         center: 'title',
         right : 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-//      initialView: '{$this->view}' ,
-      
-      themeSystem: 'bootstrap' ,
-     // editable: true,
-  //    droppable: true,
+     firstDay: 1 ,
+       locale: 'uk' , 
+       themeSystem: 'bootstrap' ,
      
          eventClick: function(info) {
                      
@@ -423,8 +420,8 @@ var calendar
                
            
 
-  } ,        
-         locale: 'ua' 
+  }         
+       
        
     
       
