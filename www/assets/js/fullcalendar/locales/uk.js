@@ -1,8 +1,8 @@
 FullCalendar.globalLocales.push(function () {
   'use strict';
 
-  var ua = {
-    code: 'ua',
+  var uk = {
+    code: 'uk',
     week: {
       dow: 1, // Monday is the first day of the week.
       doy: 4, // The week that contains Jan 4th is the first week of the year.
@@ -24,6 +24,6 @@ FullCalendar.globalLocales.push(function () {
     noEventsText: 'Нема  подiй',
   };
 
-  return ua;
+  return uk;
 
 }());
