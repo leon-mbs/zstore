@@ -311,13 +311,13 @@ class System
     }
     
     public static function isVendorActual(){
-         
+          $ver = '2.8.7';
           $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
           if(strlen($json)>0) {
               $json = json_decode($json,true) ;
               $fv  = $json['ver'] ?? '0.0.0';
             
-              $b= version_compare($fv ,'2.8.5');
+              $b= version_compare($fv ,$ver);
               if($b == -1) {
                  return false ;  
               }  else {

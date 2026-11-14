@@ -188,6 +188,9 @@ class EQ extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
          
         $eq_id= $this->docform->eq->getKey();
+        
+        $eq = Equipment::load($eq_id)  ;
+        
         $this->_doc->headerdata = [];
         $this->_doc->headerdata['optype'] = $this->docform->optype->getValue();
         $this->_doc->headerdata['optypename'] = $this->docform->optype->getValueName();
@@ -197,6 +200,8 @@ class EQ extends \App\Pages\Base
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
         if($this->_doc->headerdata['emp_id'] >0) {
             $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
+           
+            
         }
         
         $this->_doc->headerdata['store_id'] = $this->docform->store->getValue();
@@ -206,6 +211,8 @@ class EQ extends \App\Pages\Base
         $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
         if($this->_doc->headerdata['pa_id'] >0) {
             $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();            
+            $eq->lastpa_id =  $this->_doc->headerdata['pa_id'];
+            $eq->lastpa_name =  $this->_doc->headerdata['pa_name'];
         }
       
         $this->_doc->headerdata['item_id'] = $this->docform->item->getKey();
@@ -234,6 +241,8 @@ class EQ extends \App\Pages\Base
         $conn->BeginTrans();
         try {
 
+            $eq->save();
+            
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {

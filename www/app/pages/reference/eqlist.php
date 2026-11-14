@@ -54,7 +54,7 @@ class EqList extends \App\Pages\Base
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('eqlist', new EQDS($this), $this, 'eqlistOnRow'));
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
-
+     
         $this->itemtable->eqlist->setPageSize(Helper::getPG());
         $this->itemtable->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->eqlist));
 
@@ -81,6 +81,10 @@ class EqList extends \App\Pages\Base
         $this->infopan->add(new ClickLink('addop',$this,'createDoc'));
         $this->infopan->add(new ClickLink('showall',$this,'showAll'));
         $this->infopan->add(new Label('oname' ));
+      
+      
+        $this->itemtable->add(new ClickLink('csv', $this, 'oncsv'));
+      
         
         if($id>0) {
             $this->show($id)  ;
@@ -91,17 +95,8 @@ class EqList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->add(new Label('eq_name', $item->eq_name));
         $row->add(new Label('invnumber', $item->invnumber));
-        
-        $pa_name='';
-        
-        $eq= \App\Entity\EqEntry::getFirst('optype=5 and eq_id='.$item->eq_id,'id desc') ;
-        
-        if($eq != null) {
-            $d = \App\Entity\Doc\Document::load($eq->document_id)  ;
-            $pa_name = $d->headerdata['pa_name'] ??'';
-        }
-        
-        $row->add(new Label('pa_name', $pa_name));
+       
+        $row->add(new Label('pa_name', $item->lastpa_name ??''));
         $row->add(new Label('notes', $item->description));
       
         $row->add(new Label('branch', $this->_blist[$item->branch_id] ??''));
@@ -176,9 +171,11 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
 
         $this->_item->eq_name = $this->itemdetail->editname->getText();
-        $this->_item->resemp_id = $this->itemdetail->editemp->getValue();
-        $this->_item->resemp_name = $this->itemdetail->editemp->getValueName();
-      
+        $this->_item->resemp_id = intval( $this->itemdetail->editemp->getValue() );
+        if($this->_item->resemp_id >0) {
+           $this->_item->resemp_name = $this->itemdetail->editemp->getValueName();
+        }
+       
         $this->_item->invnumber = $this->itemdetail->editinvnumber->getText();
         $this->_item->branch_id = $this->itemdetail->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_item->branch_id == 0) {
@@ -259,7 +256,7 @@ class EqList extends \App\Pages\Base
     public function createDoc($sender) {
         \App\Application::Redirect("\\App\\Pages\\Doc\\EQ",0,$this->_item->eq_id);
     }
-  public function printOnClick($sender) {
+    public function printOnClick($sender) {
 
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
@@ -324,6 +321,48 @@ class EqList extends \App\Pages\Base
 
     }
 
+    
+    public function oncsv($sender) {
+        $list = $this->itemtable->eqlist->getDataSource()->getItems(-1, -1, 'eq_name');
+
+        $header = array();
+        $data = array();
+
+        $header['A1']='Найменування';
+        $header['B1']='Інв. номер';
+        $header['C1']='Введено';
+        $header['D1']='Списано';
+        $header['E1']='Баланс';
+        $header['F1']='Вир. ділянка';
+        $header['G1']='Відповідальний';
+        
+        $i = 1;
+        foreach ($list as $eq) {
+           
+            $in= EqEntry::getFirst("eq_id = {$eq->eq_id} and  optype=".EqEntry::OP_INCOME ," id asc") ;  
+            $out= EqEntry::getFirst("eq_id = {$eq->eq_id} and  optype=".EqEntry::OP_OUTCOME ," id asc") ;  
+            $am=0;
+            foreach(EqEntry::findArray("amount","eq_id = {$eq->eq_id}  " ) as $id=>$a) {
+                $am += $a ;
+            }
+            
+            $i++;
+            $data['A' . $i] = $eq->eq_name;
+            $data['B' . $i] = $eq->invnumber;
+            $data['C' . $i] = $in==null ?'' :  Helper::fd($in->document_date);
+            $data['D' . $i] = $out==null ?'' :  Helper::fd($out->document_date);
+            $data['E' . $i] =['value'=>Helper::fa($am),'format'=>'number'];
+            $data['F' . $i] = $eq->lastpa_name??'';
+            $data['G' . $i] = $eq->resemp_name??'';
+            $data['H' . $i] = $eq->description??'';
+        
+        }
+    
+      Helper::exportExcel($data, $header, 'eqlist.xlsx');
+    
+   }
+    
+    
 }
 
 class EQDS implements \Zippy\Interfaces\DataSource

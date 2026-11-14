@@ -19,15 +19,22 @@ class Equipment extends \ZCL\DB\Entity
     protected function init() {
         $this->eq_id = 0;
         $this->branch_id = 0;
+        $this->bal = 0;
         $this->resemp_id = 0;
+        $this->lastpa_id = 0;
+        $this->resemp_name = '';
+        $this->lastpa_name = '';
     }
 
     protected function beforeSave() {
         parent::beforeSave();
         //упаковываем  данные в detail
         $this->detail = "<detail><resemp_id>{$this->resemp_id}</resemp_id>";
+        $this->detail = "<detail><lastpa_id>{$this->lastpa_id}</lastpa_id>";
         $this->detail .= "<resemp_name>{$this->resemp_name}</resemp_name>";
+        $this->detail .= "<lastpa_name>{$this->lastpa_name}</lastpa_name>";
         $this->detail .= "<serial>{$this->serial}</serial>";
+        $this->detail .= "<bal>{$this->bal}</bal>";
             
         $this->detail .= "</detail>";
 
@@ -40,6 +47,9 @@ class Equipment extends \ZCL\DB\Entity
         $this->resemp_id = (int)($xml->resemp_id[0]);
         $this->serial = (string)($xml->serial[0]);
         $this->resemp_name = (string)($xml->resemp_name[0]);
+        $this->lastpa_name = (string)($xml->lastpa_name[0]);
+        $this->lastpa_id = (int)($xml->lastpa_id[0]);
+        $this->bal = (double)($xml->bal[0]);
  
      
         parent::afterLoad();
