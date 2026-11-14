@@ -42,7 +42,7 @@ class EQ extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('emp',\App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name'),0 ));
         $this->docform->add(new DropDownChoice('parea',\App\Entity\ProdArea::findArray('pa_name','disabled<>1','pa_name'),0 ));
         $this->docform->add(new TextInput('amount'));
-        $this->docform->add(new Label('tip'));
+
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this,'onCust');
         $this->docform->add(new AutocompleteTextInput('eq'))->onText($this,'oneqItem');
         $this->docform->eq->onChange($this,"onEQSelect");
@@ -98,7 +98,7 @@ class EQ extends \App\Pages\Base
          $this->docform->amount->setVisible(false);
          $this->docform->customer->setVisible(false);
          $this->docform->item->setVisible(false);
-         $this->docform->tip->setText("");
+
          
          $op=intval($sender->getValue());
  
@@ -138,7 +138,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setAttribute('readonly' );
        
             $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахунків  ");
+
          }
          if($op==EqEntry::OP_PROD){
            $this->docform->amount->setAttribute('readonly' );
@@ -155,7 +155,7 @@ class EQ extends \App\Pages\Base
             $this->docform->amount->setVisible(true);
             $this->docform->amount->setAttribute('readonly' );
             $this->docform->customer->setVisible(true);
-            $this->docform->tip->setText("Оплата через журнал розрахунків  ");
+
        
          }
          if($op==EqEntry::OP_TOSTORE){
@@ -188,6 +188,9 @@ class EQ extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
          
         $eq_id= $this->docform->eq->getKey();
+        
+        $eq = Equipment::load($eq_id)  ;
+        
         $this->_doc->headerdata = [];
         $this->_doc->headerdata['optype'] = $this->docform->optype->getValue();
         $this->_doc->headerdata['optypename'] = $this->docform->optype->getValueName();
@@ -197,6 +200,8 @@ class EQ extends \App\Pages\Base
         $this->_doc->headerdata['emp_id'] = $this->docform->emp->getValue();
         if($this->_doc->headerdata['emp_id'] >0) {
             $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
+           
+            
         }
         
         $this->_doc->headerdata['store_id'] = $this->docform->store->getValue();
@@ -206,6 +211,8 @@ class EQ extends \App\Pages\Base
         $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
         if($this->_doc->headerdata['pa_id'] >0) {
             $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();            
+            $eq->lastpa_id =  $this->_doc->headerdata['pa_id'];
+            $eq->lastpa_name =  $this->_doc->headerdata['pa_name'];
         }
       
         $this->_doc->headerdata['item_id'] = $this->docform->item->getKey();
@@ -234,6 +241,8 @@ class EQ extends \App\Pages\Base
         $conn->BeginTrans();
         try {
 
+            $eq->save();
+            
             $this->_doc->save();
 
             if ($sender->id == 'execdoc') {
@@ -366,7 +375,7 @@ class EQ extends \App\Pages\Base
     }
 
     public function onCust($sender) {
-        return \App\Entity\Customer::getList($sender->getText(), 1, true);
+        return \App\Entity\Customer::getList($sender->getText(), 0, true);
     } 
     public function oneqItem($sender) {
         return \App\Entity\Equipment::getList(trim($sender->getText() )   );
