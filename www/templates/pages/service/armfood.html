@@ -451,42 +451,33 @@
                                 </div>
                                 <div class="mb-2">
                                     <label   for="delivery">Доставка</label>
-
                                     <select class="form-select" zippy="delivery">
                                         <option value="0">Без доставки </option>
+                                        <option value="1">Самовивіз </option>
+                                        <option value="2">Кур`єр </option>
                                     </select>
 
 
                                 </div>
+                                                         
                                 <div class="mb-2">
-
-                                    <label   for="contact" >Контакт</label>
-
-
-                                    <input    zippy="contact" class="form-control">
-
-                                </div>                           
-                                <div class="mb-2">
-
                                     <label   data-label="address" for="address"  >Адреса</label>
-
-
                                     <input   zippy="address" class="form-control"> 
 
                                 </div>
 
-                                <div class="mb-2 row">
-
-                                    <label  class="col-5 col-form-label" for="time" >Час доставки</label>
-                                     <div class="col-5">
-                                        <input   class="form-control"   zippy="dt"  >
-                                    </div> 
-                                     <div class="col-1">
-
-                                        <input   zippy="time" class="form-control">
-                                    </div> 
+                                <div class="mb-2 input-group">
+                                    <label   for="time" >Час доставки</label>
+                                    <input   class="form-control"   zippy="dt"  >
+                                    <input   zippy="time" class="form-control">
+                                      
                                 </div>                        
+                                <div class="mb-2">
 
+                                    <label   for="contact" >Контакт</label>
+                                    <input    zippy="contact" class="form-control">
+
+                                </div>
 
                                 {{/delivery}}                          
                                 {{/modeof}} 

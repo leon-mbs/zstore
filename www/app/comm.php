@@ -154,7 +154,7 @@ class Comm
 
 
             $encoded = json_decode($response, true);
-            curl_close($ch);
+           unset($ch);
 
 
             if ($httpcode > 200) {
@@ -213,7 +213,7 @@ class Comm
 
                     return 'Curl error: ' . curl_error($curl);
                 }
-                curl_close($curl);
+               unset($curl);
                 $output = json_decode($output, true);
                 if ($output['code'] <> 0) {
 
@@ -255,7 +255,7 @@ class Comm
 
 
                 $encoded = json_decode($response, true);
-                curl_close($ch);
+               unset($ch);
 
                 if ($httpcode >200) {
                     H::logerror("code ".$httpcode) ;
@@ -299,7 +299,7 @@ class Comm
 
                     return 'Curl error: ' . curl_error($ch);
                 }
-                curl_close($ch);
+               unset($ch);
                 if (strpos($response, 'ACCEPT') > 0) {
                     return '';
                 }
@@ -367,7 +367,7 @@ class Comm
                 }
                  
                 
-                curl_close($curl);
+               unset($curl);
                 return '';
 
         } catch(\Exception $e) {

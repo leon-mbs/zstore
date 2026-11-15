@@ -6,6 +6,7 @@ ALTER TABLE documents ADD tag int DEFAULT 0 ;
 ALTER TABLE crontask ADD state int DEFAULT 0
   
  
+  
 DROP  VIEW store_stock_view; 
  
 CREATE VIEW store_stock_view

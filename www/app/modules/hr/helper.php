@@ -72,7 +72,7 @@ class Helper
         if($httpcode >=300) {
             throw new  \Exception("http code ".$httpcode);
         }
-        curl_close($ch);
+       unset($ch);
 
         $ret = json_decode($result, true)  ;
         if (strlen($ret['status']=='ERROR') ) {

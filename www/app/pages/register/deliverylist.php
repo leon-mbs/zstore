@@ -180,7 +180,7 @@ class DeliveryList extends \App\Pages\Base
 
 
         }
-        $where .= " and meta_name='OrderFood'   ";
+        $where .= " and (meta_name='OrderFood' or (meta_name='Order'  and content like '%<delivery>2</delivery>%' ) )  ";
 
 
         $this->_doclist = Document::find($where, '  document_id desc');

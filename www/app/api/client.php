@@ -106,7 +106,7 @@ class ApiClient
         if($status_code >= 300) {
             return ['error'=>'http code '. $status_code,'data'=>[]];   
         }
-        curl_close($ch);        
+       unset($ch);        
         
         $data = json_decode($result, true);
         if(isset($data['error'])  ) {

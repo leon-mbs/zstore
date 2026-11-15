@@ -57,7 +57,7 @@ class VK
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         
-        curl_close($curl);
+       unset($curl);
         
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;
@@ -288,7 +288,7 @@ class VK
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         
-        curl_close($curl);
+       unset($curl);
         
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;
@@ -356,7 +356,7 @@ class VK
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         
-        curl_close($curl);
+       unset($curl);
         
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;
@@ -457,7 +457,7 @@ class VK
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         
-        curl_close($curl);
+       unset($curl);
         
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;
@@ -523,7 +523,7 @@ class VK
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         
-        curl_close($curl);
+       unset($curl);
         
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;
@@ -633,7 +633,7 @@ class VK
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         
-        curl_close($curl);
+       unset($curl);
         
         if($status_code != 200) {
            return "HTTP Error #:" . $status_code. ' ' . $response;

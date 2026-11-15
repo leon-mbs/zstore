@@ -1361,7 +1361,7 @@ class Helper
         $response = curl_exec($ch);
         $err = curl_error($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+       unset($ch);
    
         if ($err) {
            \App\Helper::logerror("cURL Error #:" . $err) ;
@@ -1731,6 +1731,24 @@ class Helper
                  }
         
   
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+  
+  
+        $migration8212 = \App\Helper::getKeyVal('migration8212'); 
+        if($migration8212 != "done"  ) {
+            Helper::log("Міграція 828");
+         
+            \App\Helper::setKeyVal('migration8212', "done");           
+        
+            try {
+ 
+                $conn->Execute("UPDATE metadata  set menugroup ='', disabled = 0  where meta_name = 'DeliveryList' ");                     
+                $conn->Execute("UPDATE metadata  set menugroup ='', description='Звіт по кафе'  where meta_name = 'OutFood' ");                     
+    
             } catch(\Throwable $ee) {
                 $logger->error($ee->getMessage());
             }           

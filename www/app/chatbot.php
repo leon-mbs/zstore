@@ -34,7 +34,7 @@ class ChatBot
         curl_setopt($ch, CURLOPT_HEADER, false);
 
         $resultQuery = curl_exec($ch);
-        curl_close($ch);
+       unset($ch);
 
         $res =  json_decode($resultQuery, true);
 
@@ -198,7 +198,7 @@ class ChatBot
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $resultQuery = curl_exec($ch);
-        curl_close($ch);
+       unset($ch);
 
         return json_decode($resultQuery, true);
     }

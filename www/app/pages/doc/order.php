@@ -111,8 +111,11 @@ class Order extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
-        $this->docform->add(new TextArea('address'))->setVisible(false);
+        $this->docform->add(new TextInput('address'))->setVisible(false);
 
+        $this->docform->add(new Date('dt', time()))->setVisible(false);
+        $this->docform->add(new \Zippy\Html\Form\Time('time'))->setVisible(false);
+        
         $this->docform->add(new SubmitLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docform->addcust->setVisible(       \App\ACL::checkEditRef('CustomerList',false));
 
@@ -188,6 +191,10 @@ class Order extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             if($this->_doc->headerdata['send_date'] > 0) {
                 $this->docform->send_date->setDate($this->_doc->headerdata['send_date']);
+            }
+            if($this->_doc->headerdata['deltime'] > 0) {
+                $this->docform->dt->setDate($this->_doc->headerdata['deltime']);
+                $this->docform->time->setDateTime($this->_doc->headerdata['deltime']);
             }
             
             $this->docform->pricetype->setValue($this->_doc->headerdata['pricetype']);
@@ -520,7 +527,7 @@ class Order extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->customer_id = $this->docform->customer->getKey();
         $this->_doc->headerdata['ship_address'] = $this->docform->address->getText();
-
+     
         if ($this->_doc->customer_id > 0) {
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
@@ -576,7 +583,10 @@ class Order extends \App\Pages\Base
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['email'] = $this->docform->email->getText();
         $this->_doc->headerdata['pricetype'] = $this->docform->pricetype->getValue();
-
+        $this->_doc->headerdata['contact'] = $this->_doc->headerdata['phone'];
+        $dt = $this->docform->dt->getDate();
+        $this->_doc->headerdata['deltime'] = $this->docform->time->getDateTime($dt);
+   
 
         $this->_doc->packDetails('detaildata', $this->_tovarlist);
 
@@ -922,20 +932,22 @@ class Order extends \App\Pages\Base
     }
     
     public function OnDelivery($sender) {
-        $dt = $sender->getValue() ;
-        if ($dt > 1) {
+        $dtype = $sender->getValue() ;
+        if ($dtype > 1) {
             $this->docform->address->setVisible(true);
         } else {
             $this->docform->address->setVisible(false);
         }
+        $this->docform->dt->setVisible($dtype==2);
+        $this->docform->time->setVisible($dtype==2);
+  
+        $this->docform->deliverynp->setVisible($dtype == Document::DEL_NP);
 
-        $this->docform->deliverynp->setVisible($dt == Document::DEL_NP);
-
-        $this->docform->baycity->setVisible($dt  == Document::DEL_NP ) ;
-        $this->docform->baypoint->setVisible($dt == Document::DEL_NP ) ;
-        $this->docform->bayhouse->setVisible($dt == Document::DEL_NP ) ;
-        $this->docform->bayflat->setVisible($dt == Document::DEL_NP ) ;
-        if ($dt == Document::DEL_NP) {
+        $this->docform->baycity->setVisible($dtype  == Document::DEL_NP ) ;
+        $this->docform->baypoint->setVisible($dtype == Document::DEL_NP ) ;
+        $this->docform->bayhouse->setVisible($dtype == Document::DEL_NP ) ;
+        $this->docform->bayflat->setVisible($dtype == Document::DEL_NP ) ;
+        if ($dtype == Document::DEL_NP) {
             $this->docform->deliverynp->setValue(0);
             $this->OnDeliverynp($this->docform->deliverynp) ;
         }

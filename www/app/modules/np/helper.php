@@ -277,7 +277,7 @@ class Helper
                     $result = array('success' => false, 'errors' => "Код  ".$status_code);
          
                 }                
-                curl_close($ch);
+               unset($ch);
 
         } else {
             $result = file_get_contents($url, false, stream_context_create(array(

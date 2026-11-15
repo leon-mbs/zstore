@@ -36,7 +36,7 @@ class Helper
         if ($httpcode != 200) {
             return  array('error','http '.$httpcode) ;
         }
-        curl_close($ch);
+       unset($ch);
         $ret = @json_decode($result, true) ;
         if(is_array($ret)) {
             if( is_array( $ret['documents'] )) {
@@ -102,7 +102,7 @@ class Helper
         if ($httpcode > 201) {
             return  array('error','http '.$httpcode.' ' . ($ret['reason'] ?? '') ) ;
         }
-        curl_close($ch);
+       unset($ch);
         
         return  array('ok') ;
 
