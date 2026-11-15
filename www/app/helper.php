@@ -1746,8 +1746,9 @@ class Helper
         
             try {
  
-                $conn->Execute("UPDATE metadata  set menugroup ='', disabled = 0  where meta_name = 'DeliveryList' ");                     
-                $conn->Execute("UPDATE metadata  set menugroup ='', description='Звіт по кафе'  where meta_name = 'OutFood' ");                     
+                $conn->Execute("UPDATE metadata  set menugroup ='Продажі',description='Доставки', disabled = 0  where meta_name = 'DeliveryList' ");                     
+                $conn->Execute("UPDATE metadata  set menugroup ='Продажі', description='Звіт по кафе'  where meta_name = 'OutFood' ");                     
+                $conn->Execute("UPDATE metadata  set menugroup ='Продажі' , disabled = 1 where meta_name = 'OrderFood' ");                     
     
             } catch(\Throwable $ee) {
                 $logger->error($ee->getMessage());

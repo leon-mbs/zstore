@@ -26,6 +26,9 @@ class Update extends \App\Pages\Base
      public function __construct() {
         global $_config; 
         parent::__construct();
+     
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+     
        
         if (System::getUser()->userlogin != 'admin') {
             System::setErrorMsg('До сторінки має доступ тільки адміністратор');

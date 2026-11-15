@@ -45,6 +45,12 @@ class DeliveryList extends \App\Pages\Base
         $sf->add(new  SubmitButton('bsend'))->onClick($this, 'onStatus');
         $sf->add(new  SubmitButton('bdelivered'))->onClick($this, 'onStatus');
 
+        $tf = $this->statuspan->add(new Form('timeform')) ;
+        $tf->add(new  SubmitButton('btime'))->onClick($this, 'onStatus');
+    
+        $tf->add(new \Zippy\Html\Form\Date('dt' )) ;
+        $tf->add(new \Zippy\Html\Form\Time('time')) ;
+             
         $pf = $this->statuspan->add(new Form('payform'));
         $pf->add(new  SubmitButton('bpay'))->onClick($this, 'onStatus');
         $pf->add(new  TextInput('payamount'));
@@ -67,10 +73,10 @@ class DeliveryList extends \App\Pages\Base
         $row->add(new Label('emp_name', $doc->headerdata['emp_name']));
         $row->add(new Label('contact', $doc->headerdata['contact']));
         $row->add(new Label('docnotes', $doc->notes));
-        $row->add(new Label('wp'))->setVisible($doc->payamount > $doc->payed);
+        $row->add(new Label('wp'))->setVisible($doc->getHD('waitpay')==1);
 
         if ($doc->document_id == ($this->_doc->document_id  ?? 0)) {
-            $row->setAttribute('class', 'table-success');
+            $row->setAttribute('class', 'table-active');
         }
 
     }
@@ -87,14 +93,24 @@ class DeliveryList extends \App\Pages\Base
 
         $sf = $this->statuspan->statusform;
         $pf = $this->statuspan->payform;
+        $tf = $this->statuspan->timeform;
 
         $pf->setVisible(false);
         $sf->bsend->setVisible(false);
         $sf->emp->setVisible(false);
         $sf->bdelivered->setVisible(false);
+        $tf->setVisible(false);
 
         if ($this->_doc->state == Document::STATE_READYTOSHIP) { //готов  к  отправке
             $sf->bsend->setVisible(true);
+            $sf->emp->setVisible(true);
+            $tf->setVisible(true);
+            if($this->_doc->headerdata['deltime'] > 0) {
+                $tf->dt->setDate($this->_doc->headerdata['deltime']);
+                $tf->time->setDateTime($this->_doc->headerdata['deltime']);
+            }
+       
+            
         }
         if ($this->_doc->state == Document::STATE_INSHIPMENT) { //в  пути
             $sf->bdelivered->setVisible(true);
@@ -105,7 +121,7 @@ class DeliveryList extends \App\Pages\Base
 
         }
 
-        if ($this->_doc->payamount > $this->_doc->payed) { //к  оплате
+        if ($this->_doc->payamount > $this->_doc->payed &&  $this->_doc->getHD('waitpay') ==1) { //к  оплате
             $pf->setVisible(true);
             $pf->payamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
             $pf->mf->setValue(0);
@@ -121,6 +137,11 @@ class DeliveryList extends \App\Pages\Base
     public function onStatus($sender) {
 
 
+        if ($sender->id == 'btime') {
+           $dt = $this->statuspan->timeform->dt->getDate();
+           $this->_doc->headerdata['deltime'] = $this->statuspan->timeform->time->getDateTime($dt);
+           $this->_doc->save() ;
+        }
         if ($sender->id == 'bpay') {
 
             $am = doubleval($this->statuspan->payform->payamount->getText());
@@ -133,12 +154,18 @@ class DeliveryList extends \App\Pages\Base
                 $this->_doc->headerdata['payed'] = $am;
                 $this->_doc->headerdata['exchange'] = 0;
                 if ($am > $this->_doc->payamount) {
-                    $this->_doc->headerdata['exchange'] = $am - $this->_doc->payamount;
+                  //  $this->_doc->headerdata['exchange'] = $am - $this->_doc->payamount;
                 }
                 $this->_doc->save();
                 $this->_doc = $this->_doc->cast();
                 $this->_doc->DoPayment();
 
+                if ($this->_doc->payamount == $this->_doc->payed &&  $this->_doc->getHD('waitpay') ==1) { //к  оплате
+                   $this->_doc->setHD('waitpay',0) ;
+                   $this->_doc->save() ;  
+                }                
+                
+                
                 if ($this->_doc->payamount == $this->_doc->payed && $this->_doc->state == Document::STATE_DELIVERED) {     //оплачен
                     $this->_doc->updateStatus(Document::STATE_CLOSED);
                 }
@@ -169,7 +196,7 @@ class DeliveryList extends \App\Pages\Base
     }
 
     public function updateorderlist($sender) {
-        $where = " state   in(11,14,20) ";
+        $where = " ( state   in(11,20) or (state=14 and payed < payamount )  )  ";
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
 
