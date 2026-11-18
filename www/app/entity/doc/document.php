@@ -509,6 +509,9 @@ class Document extends \ZCL\DB\Entity
         if ($this->document_id == 0) {
             return false;
         }
+        if ($this->state == $state) {
+            return false;
+        }
 
         //если нет права  выполнять
         if ($state >= self::STATE_EXECUTED && \App\ACL::checkExeDoc($this, false, false) == false) {

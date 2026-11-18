@@ -279,6 +279,13 @@ class Order extends \App\Entity\Doc\Document
         }
         
         
+        if ($state == self::STATE_DELIVERED) {
+           if( $this->payed== $this->payamount || $this->getHD('waitpay',0)==0 || $this->checkStates([self::STATE_PAYED])>0) {
+               $this->updateStatus(self::STATE_CLOSED) ;
+               return; 
+           } 
+            
+        }
         if ($state == self::STATE_INPROCESS) {
 
             if($this->getHD('paytype',0) != 1) {
