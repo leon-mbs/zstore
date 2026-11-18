@@ -308,7 +308,7 @@ GROUP BY c.customer_name,
       
         foreach($this->_doclist  as $doc){
            $am = doubleval($doc->forpay); 
-           $amount +=$am;
+         
            if($doc->meta_name=="ReturnIssue"){
               $ret +=$am;  
            } else {
