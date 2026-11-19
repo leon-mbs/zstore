@@ -367,7 +367,7 @@ class Order extends \App\Entity\Doc\Document
             }
 
             if (false == $item->checkMinus($item->quantity, $store_id)) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname} з необхідних {$item->quantity} . Списання у мінус заборонено");
 
             }
 

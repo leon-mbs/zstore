@@ -366,6 +366,8 @@ class OrderList extends \App\Pages\Base
             if ($ttn) {
                 $this->setWarn('У замовлення вже є відправки');
             }
+            
+           
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
@@ -442,19 +444,15 @@ class OrderList extends \App\Pages\Base
 
             if ($sender->id == "bclose") {
 
-  
-
-                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
-                    $this->setWarn('"Замовлення закрито без оплати"');
-                }
-                                          
-                if($ttn== false && $gi == false && $this->_doc->getHD('dostore',0) ==0) {
-                    $this->setWarn('Замовлення закрито без доставки');
-                }
-
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
                 $this->_doc->setHD('waitpay',0); 
-                $this->_doc->save();     
+                $this->_doc->save();  
+
+                if($this->_doc->hasPayments()==false  || $this->_doc->hasEntries()==false) {
+                    $this->setWarn('"Замовлення закрито без оплати  або доставки"');
+                }
+              
+                   
 
             }
             $conn->CommitTrans();
@@ -668,7 +666,7 @@ class OrderList extends \App\Pages\Base
 
 
         $this->_tvars['askclose'] = false;
-        if ($inproc == false || $closed == false) {
+        if ($this->_doc->getHD('waitpay')==1 || $this->_doc->checkStates([Document::STATE_READYTOSHIP,Document::STATE_DELIVERED,Document::STATE_INSHIPMENT]) ==0){
             $this->_tvars['askclose'] = true;
         }
 
