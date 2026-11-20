@@ -64,6 +64,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
         $this->editpan->editform->add(new CheckBox('editpu'));
+        $this->editpan->editform->add(new CheckBox('editrozetka'));
 
         $this->editpan->editform->add(new CheckBox('editcb'));
         $this->editpan->editform->add(new CheckBox('editvk'));
@@ -177,6 +178,9 @@ class Roles extends \App\Pages\Base
         }
         if (strpos($this->role->modules, 'promua') !== false) {
             $this->editpan->editform->editpu->setChecked(true);
+        }
+        if (strpos($this->role->modules ?? '', 'rozetka') !== false) {
+            $this->editpan->editform->editrozetka->setChecked(true);
         }
         if (strpos($this->role->modules, 'checkbox') !== false) {
             $this->editpan->editform->editcb->setChecked(true);
@@ -308,6 +312,9 @@ class Roles extends \App\Pages\Base
         }
         if ($this->editpan->editform->editpu->isChecked()) {
             $modules = $modules . ',promua';
+        }
+        if ($this->editpan->editform->editrozetka->isChecked()) {
+            $modules = $modules . ',rozetka';
         }
         if ($this->editpan->editform->editcb->isChecked()) {
             $modules = $modules . ',checkbox';
