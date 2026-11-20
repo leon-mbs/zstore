@@ -20,9 +20,7 @@ class ProdMove extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
+          
                 $name = $item->itemname;
                 if (strlen($item->snumber) > 0) {
                     $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
@@ -35,7 +33,7 @@ class ProdMove extends Document
                                   "msr"        => $item->msr,
                                   "quantity"   => H::fqty($item->quantity)
                 );
-            }
+            
         }
 
 

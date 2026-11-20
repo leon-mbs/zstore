@@ -21,9 +21,7 @@ class Order extends \App\Entity\Doc\Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
+    
 
 
                 $detail[] = array("no"         => $i++,
@@ -35,7 +33,7 @@ class Order extends \App\Entity\Doc\Document
                                   "desc"       => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
-            }
+             
         }
         $addbonus = $this->getBonus() ;
         $delbonus = $this->getBonus(false) ;
@@ -473,10 +471,7 @@ class Order extends \App\Entity\Doc\Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
-
+        
 
                 $detail[] = array( 
                                   "tovar_name" => $item->itemname,
@@ -488,7 +483,7 @@ class Order extends \App\Entity\Doc\Document
                                   "desc"       => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
-            }
+            
         }
         
         $da=  trim($this->headerdata["npaddressfull"] ??'') ;

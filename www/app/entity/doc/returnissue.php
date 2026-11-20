@@ -19,9 +19,7 @@ class ReturnIssue extends Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
+      
                 $name = $item->itemname;
                 if (strlen($item->snumber) > 0) {
                     $name .= ' (' . $item->snumber . ',' . H::fd($item->sdate) . ')';
@@ -35,7 +33,7 @@ class ReturnIssue extends Document
                                   "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
-            }
+             
         }
 
 
