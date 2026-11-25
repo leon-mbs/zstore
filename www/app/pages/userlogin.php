@@ -20,6 +20,8 @@ class UserLogin extends \Zippy\Html\WebPage
     public function __construct() {
         parent::__construct();
 
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+ 
      //   System::clean() ;
         System::getSession()->clean();
 

@@ -268,7 +268,14 @@ GROUP BY c.customer_name,
        if(strpos($sender->id,'stpayed')===0   ) {
           if($doc->state == Document::STATE_WP) {
              $doc->updateStatus(Document::STATE_PAYED);            
-          }      
+          }  
+          
+          if ($doc->meta_name == 'Order')  {
+               if($doc->checkStates([Document::STATE_DELIVERED])>0) {
+                   $doc->updateStatus(Document::STATE_CLOSED) ; 
+               } 
+           }          
+              
        }      
        if(strpos($sender->id,'stdone')===0) {
            if($doc->state == Document::STATE_WP) {
@@ -308,7 +315,12 @@ GROUP BY c.customer_name,
       
         foreach($this->_doclist  as $doc){
            $am = doubleval($doc->forpay); 
-           $amount +=$am;
+           $need = doubleval($doc->payamount - $doc->payed ); 
+           if($am > $need ) {
+               $this->setError('Невірна сума для '.$doc->document_number);
+    
+               return;
+           }       
            if($doc->meta_name=="ReturnIssue"){
               $ret +=$am;  
            } else {
@@ -328,15 +340,7 @@ GROUP BY c.customer_name,
                 return;
             }
         }  
-        foreach($this->_doclist  as $doc){
-           $am = doubleval($doc->forpay); 
-           if($am==0 ) {
-               continue;
-           }    
-           if($doc->meta_name=="RetIssue"){
-              continue; 
-           }    
-        } 
+        
      
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -347,31 +351,42 @@ GROUP BY c.customer_name,
                if($am==0 ) {
                    continue;
                }    
-               //отмечаем  оплаченными
-               if( $doc->getHD('waitpay')==1) {
-                   $doc->setHD('waitpay',0) ;
-                   $doc->save(); 
-               }
-               if($doc->state==Document::STATE_WP) {
-                   $doc->updateStatus(Document::STATE_PAYED,true);
-               }    
+               
+                  
                if($sender->id=='paybtn') {   //создаем  оплаты
                  if (in_array($doc->meta_name, array( 'Order','Invoice',  'GoodsIssue','ServiceAct'))) {
                     \App\Entity\IOState::addIOState($doc->document_id, $am, \App\Entity\IOState::TYPE_BASE_INCOME,false,$pdate);
-                    Pay::addPayment($doc->document_id, $pdate,  $am,$mf , $pcomment);
+                    $doc->payed= Pay::addPayment($doc->document_id, $pdate,  $am,$mf , $pcomment);
        
                  }    
 
                  if (in_array($doc->meta_name, array( 'ReturnIssue'))) {
                    
                     \App\Entity\IOState::addIOState($doc->document_id, 0 - $am, \App\Entity\IOState::TYPE_BASE_INCOME, true, $pdate);
-                    Pay::addPayment($doc->document_id, $pdate, 0- $am,$mf , $pcomment);
+                    $doc->payed=  Pay::addPayment($doc->document_id, $pdate, 0- $am,$mf , $pcomment);
        
            
                  }          
                  $doc = \App\Entity\Doc\Document::load($doc->document_id)->cast();
                  $doc->DoBalans();
    
+                   //отмечаем  оплаченными
+                   if($doc->payed == $doc->payamount) {
+                       if( $doc->getHD('waitpay')==1) {
+                           $doc->setHD('waitpay',0) ;
+                           $doc->save(); 
+                       }
+                       if($doc->state==Document::STATE_WP) {
+                           $doc->updateStatus(Document::STATE_PAYED,true);
+                       }
+           
+                       if ($doc->meta_name == 'Order')  {
+                           if($doc->checkStates([Document::STATE_DELIVERED])>0) {
+                               $doc->updateStatus(Document::STATE_CLOSED) ; 
+                           } 
+                       }
+       
+                   }
                }
             }    
             if($sender->id=='payorder') {//создаем  КО

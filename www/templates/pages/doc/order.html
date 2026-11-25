@@ -154,18 +154,23 @@
                          <small>Для пошуку по номеру додайте перед цифрами №</small>
                     </div>                    
                        {{/np}}
-                    <div class="mb-2">
-                        <label class="dorm-label" data-label="address" for="address">Адреса</label>
-                        <textarea zippy="address" class="form-control"></textarea>
-                    </div>
-                     <div class="mb-2 ">
-                            <div class="input-group">  
+                         <div class="input-group mb-2 ">  
                             <label for="bayhouse">Буд.</label>
                             <input style="width:75px" type="text" zippy="bayhouse" class="form-control me-2"/>
                             <label for="bayflat">Кв. </label>
                             <input style="width:75px" type="text" zippy="bayflat" class="form-control"/>
-                     </div>                    
-                     </div>                    
+                        </div>  
+                    <div class="mb-2">
+                        <label class="dorm-label" data-label="address" for="address">Адреса</label>
+                        <input zippy="address" class="form-control"> 
+                    </div>
+                      <div class="mb-2 input-group">
+                                    <label   for="time" >Час доставки</label>
+                                    <input   class="form-control"   zippy="dt"  >
+                                    <input   zippy="time" class="form-control">
+                                      
+                                </div>                        
+                            
                 </div>
             </div>
             <div class="row">

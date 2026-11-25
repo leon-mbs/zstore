@@ -48,7 +48,7 @@ class Helper
             \App\System::setErrorMsg($error);
             return false;
         }
-        curl_close($ch);
+       unset($ch);
         
         $data = json_decode($result, true);
         if ($data === null) {

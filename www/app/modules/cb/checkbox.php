@@ -70,7 +70,7 @@ class CheckBox
         $this->access_token = $response['access_token'];
 
 
-        curl_close($curl);
+       unset($curl);
 
         return true;
     }
@@ -126,7 +126,7 @@ class CheckBox
         $response = json_decode($response, true);
         //  $this->shift_id = $response['id'];
 
-        curl_close($curl);
+       unset($curl);
     
          
         return true;
@@ -184,7 +184,7 @@ class CheckBox
         $response = json_decode($response, true);
         //  $this->shift_id = $response['id'];
 
-        curl_close($curl);
+       unset($curl);
 
         return true;
 
@@ -363,7 +363,7 @@ class CheckBox
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+       unset($curl);
 
         if ($status_code !== 201) {
             if($status_code == 422 || $status_code == 400) {
@@ -503,7 +503,7 @@ class CheckBox
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+       unset($curl);
 
         if ($status_code !== 201) {
             if($status_code == 422 || $status_code == 400) {
@@ -566,7 +566,7 @@ class CheckBox
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+       unset($curl);
 
         if ($status_code !== 201) {
             if($status_code == 422 || $status_code == 400) {
@@ -613,7 +613,7 @@ class CheckBox
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+       unset($curl);
         if ($status_code !== 200) {
 
             if($status_code == 422 || $status_code == 400) {
@@ -661,7 +661,7 @@ class CheckBox
         }
 
         $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+       unset($curl);
         if ($status_code !== 201) {
 
             if($status_code == 422 || $status_code == 400) {
@@ -725,7 +725,7 @@ class CheckBox
         $response = json_decode($response, true);
         //  $this->shift_id = $response['status'];
 
-        curl_close($curl);
+       unset($curl);
 
         return $response['status']=='OPENED';
 

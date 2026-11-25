@@ -21,9 +21,7 @@ class Order extends \App\Entity\Doc\Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
+    
 
 
                 $detail[] = array("no"         => $i++,
@@ -35,7 +33,7 @@ class Order extends \App\Entity\Doc\Document
                                   "desc"       => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
-            }
+             
         }
         $addbonus = $this->getBonus() ;
         $delbonus = $this->getBonus(false) ;
@@ -279,6 +277,13 @@ class Order extends \App\Entity\Doc\Document
         }
         
         
+        if ($state == self::STATE_DELIVERED) {
+           if( $this->payed== $this->payamount || $this->getHD('waitpay',0)==0 || $this->checkStates([self::STATE_PAYED])>0) {
+               $this->updateStatus(self::STATE_CLOSED) ;
+               return; 
+           } 
+            
+        }
         if ($state == self::STATE_INPROCESS) {
 
             if($this->getHD('paytype',0) != 1) {
@@ -360,7 +365,7 @@ class Order extends \App\Entity\Doc\Document
             }
 
             if (false == $item->checkMinus($item->quantity, $store_id)) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($store_id))." ТМЦ {$item->itemname} з необхідних {$item->quantity} . Списання у мінус заборонено");
 
             }
 
@@ -466,10 +471,7 @@ class Order extends \App\Entity\Doc\Document
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
-
+        
 
                 $detail[] = array( 
                                   "tovar_name" => $item->itemname,
@@ -481,7 +483,7 @@ class Order extends \App\Entity\Doc\Document
                                   "desc"       => $item->desc,
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
-            }
+            
         }
         
         $da=  trim($this->headerdata["npaddressfull"] ??'') ;

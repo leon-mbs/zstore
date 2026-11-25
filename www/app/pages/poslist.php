@@ -305,7 +305,7 @@ class PosList extends \App\Pages\Base
                     //$msg = curl_error($ch);
 
                 }
-                curl_close($ch) ;
+               unset($ch) ;
 
 
 

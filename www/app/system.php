@@ -10,8 +10,8 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "8.2.11"; // текущая  версия
-    public const PREV_VERSION = "8.2.10"; // предыдущая версия (для отката кода в случае  проблем)
+    public const CURR_VERSION = "8.2.12"; // текущая  версия
+    public const PREV_VERSION = "8.2.11"; // предыдущая версия (для отката кода в случае  проблем)
     public const REQUIRED_DB  = "8.2.0"; // требуемая  версия  структуры БД
      
 
@@ -311,13 +311,13 @@ class System
     }
     
     public static function isVendorActual(){
-         
+          $ver = '2.8.7';
           $json = @file_get_contents(_ROOT. "/vendor/leon-mbs/zippy/composer.json")   ;
           if(strlen($json)>0) {
               $json = json_decode($json,true) ;
               $fv  = $json['ver'] ?? '0.0.0';
             
-              $b= version_compare($fv ,'2.8.5');
+              $b= version_compare($fv ,$ver);
               if($b == -1) {
                  return false ;  
               }  else {

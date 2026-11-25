@@ -366,6 +366,8 @@ class OrderList extends \App\Pages\Base
             if ($ttn) {
                 $this->setWarn('У замовлення вже є відправки');
             }
+            
+           
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
         }
@@ -442,19 +444,15 @@ class OrderList extends \App\Pages\Base
 
             if ($sender->id == "bclose") {
 
-  
-
-                if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
-                    $this->setWarn('"Замовлення закрито без оплати"');
-                }
-                                          
-                if($ttn== false && $gi == false && $this->_doc->getHD('dostore',0) ==0) {
-                    $this->setWarn('Замовлення закрито без доставки');
-                }
-
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
                 $this->_doc->setHD('waitpay',0); 
-                $this->_doc->save();     
+                $this->_doc->save();  
+
+                if($this->_doc->hasPayments()==false  || $this->_doc->hasEntries()==false) {
+                    $this->setWarn('"Замовлення закрито без оплати  або доставки"');
+                }
+              
+                   
 
             }
             $conn->CommitTrans();
@@ -547,6 +545,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->brd->setVisible(true);
             $this->statuspan->resform->bscan->setVisible(true);
             $this->statuspan->resform->bsplit->setVisible(true);
+            $this->statuspan->statusform->brec->setVisible(true);
 
             $this->statuspan->statusform->bttn->setVisible(true);
             $this->statuspan->statusform->bpos->setVisible(true);
@@ -667,7 +666,7 @@ class OrderList extends \App\Pages\Base
 
 
         $this->_tvars['askclose'] = false;
-        if ($inproc == false || $closed == false) {
+        if ($this->_doc->getHD('waitpay')==1 || $this->_doc->checkStates([Document::STATE_READYTOSHIP,Document::STATE_DELIVERED,Document::STATE_INSHIPMENT]) ==0){
             $this->_tvars['askclose'] = true;
         }
 
@@ -1215,21 +1214,29 @@ class OrderList extends \App\Pages\Base
         
         $sum = $sender->pbsum->getDouble() ;
         $mf = intval( $sender->pbpay->getValue() );
-  
+        if( ( $sum >0 &&  $sum <= ( $this->_doc->payamount - $this->_doc->payed ))==false ) {
+            $this->setError('Невірна сума');
+            return;      
+        }
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
 
             $this->_doc->payed =  \App\Entity\Pay::addPayment($this->_doc->document_id,time(),$sum,$mf) ;
-          
-            if( $this->_doc->state==Document::STATE_WP) {
-               $this->_doc->updateStatus(Document::STATE_PAYED);
+            if( $this->_doc->payed ==  $this->_doc->payamount) {   //оплачено
+                if( $this->_doc->state==Document::STATE_WP) {
+                   $this->_doc->updateStatus(Document::STATE_PAYED);
+                }     
+                if( $this->_doc->getHD('waitpay')==1) {
+                    $this->_doc->setHD('waitpay',0); 
+                    $this->_doc->save();
+                }   
+                if($this->_doc->checkStates([Document::STATE_DELIVERED])>0) {
+                     $this->_doc->updateStatus(Document::STATE_CLOSED) ; 
+                } 
             }     
-            if( $this->_doc->getHD('waitpay')==1) {
-                $this->_doc->setHD('waitpay',0); 
-                $this->_doc->save();
-            }     
-          
+            $this->statuspan->setVisible(false);    
+            $this->_doc = null;           
             $this->listpanel->doclist->Reload();
         
             $conn->CommitTrans();
@@ -1238,9 +1245,7 @@ class OrderList extends \App\Pages\Base
             global $logger;
             $conn->RollbackTrans();
             $this->setError($ee->getMessage());
-
-    
-            return;
+            
         }       
         
     }

@@ -191,7 +191,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->add(new TextInput('notes'));
         $this->docpanel->listsform->add(new TextInput('contact'));
         $this->docpanel->listsform->add(new TextInput('table'));
-        $this->docpanel->listsform->add(new DropDownChoice('delivery', Document::getDeliveryTypes(), 0))->onChange($this, 'OnDelivery');
+        $this->docpanel->listsform->add(new DropDownChoice('delivery', [], 0))->onChange($this, 'OnDelivery');
         $this->docpanel->listsform->add(new ClickLink('addcust'))->onClick($this, 'addcustOnClick');
         $this->docpanel->listsform->add(new Label('custinfo'))->setVisible(false);
 
@@ -2039,8 +2039,11 @@ class ARMFood extends \App\Pages\Base
             $customer = Customer::load($customer_id);
             if ("" == trim($this->docpanel->listsform->address->getText())) {
                 $this->docpanel->listsform->address->setText($customer->address);
-
             }
+            if ("" == trim($this->docpanel->listsform->contact->getText())) {
+                $this->docpanel->listsform->contact->setText($customer->phone);
+            }
+          
             if ("" == trim($this->docpanel->listsform->contact->getText())) {
 
                 $this->docpanel->listsform->contact->setText($customer->customer_name . ', ' . $customer->phone);

@@ -8,6 +8,7 @@
 
             <div class="col-12 col-md-4 col-xl-3   " >
                 <h3>Журнал доставок</h3>
+                <small>Журнал для  кур`єрів</small>
                 <div id="newordersalert" style="display:none;"  class="alert alert-success  ms-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
@@ -39,9 +40,9 @@
    
                     <table class="table  table-sm">
                         <tr>
-                            <th>Дата</th>
+                         
                             <th>Номер</th>
-
+                            <th>Дата</th>
                             <th >Статус</th>
                             <th >Час доставки</th>
                             <th >Адреса </th>
@@ -53,10 +54,11 @@
                             <th ></th>
                         </tr>
                         <tr zippy="orderlist">
-                            <td zippy="docdate"  >   </td>
+                           
 
                             <td ><a zippy="docnumber"></a></td>
-                   <td zippy="state"> </td>
+                             <td zippy="docdate"  >   </td>
+                            <td zippy="state"> </td>
 
                             <td class="text-nowrap  " zippy="deltime">  </td>
                             <td  zippy="address">   </td>
@@ -66,7 +68,7 @@
 
                             <td class="text-end" zippy="docamount"></td>
 
-                            <td   ><i   zippy="wp" class="fa fa-credit-card" ></i></td>
+                            <td   ><i title="Дл сплати"  zippy="wp" class="fa fa-credit-card" ></i></td>
                             <td zippy="docnotes"></td>
                         </tr>
 
@@ -78,36 +80,47 @@
 
                        
                          
-                                <div class="navbar">
-                                    <form zippy="statusform"  >
-                                    <div class="row  ">
-                                          <div class="col-auto  ">
+                                <div class="navbar justify-content-start">
+                                    <form zippy="timeform" class="  me-4"  >
+                                       <div class="input-group  ">
+                                           <label    >Час доставки</label>
+                                           <input required="on"  class="form-control"   zippy="dt"  >
+                                           <input required="on"  zippy="time" class="form-control">
+                                           <button zippy="btime"  type="submit" class="  btn btn-primary ms-2   ">  Змінити</button>
+                                      
+                                       </div>
+                                    </form>  
+                                             
+                                   <form zippy="statusform" class="  me-4"  >
+                                       <div class="input-group  ">
+                                          
                                         <button zippy="bdelivered" type="submit" class="  btn btn-success  me-2 ">Доставлено</button>   
-                                        </div>
-                                        <label class="col-form-label col-auto" data-label="emp" for="emp">Відповідальний</label>
-                                           <div class="col-auto  ">
+                                         
+                                        <label   data-label="emp" for="emp">Відповідальний</label>
+                                           
                                         <select zippy="emp" class="form-select me-2">
                                             <option value="0">Не вказано</option>
-                                        </select>   </div>
-                                           <div class="col-auto  ">
+                                        </select>    
+                                           
                                         <button zippy="bsend" type="submit" class="  btn btn-success ms-2  me-2 ">Відправити </button>   
-                                       </div></div>
+                                       
+                                       </div>
                                     </form>
 
-                                    <form zippy="payform"  >
-                                    <div class="row  ">
-                                        <label class="col-form-label col-auto" data-label="payamount" for="payamount">До сплати</label>
-                                          <div class="col-auto  ">
-                                       <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice me-2">
-                                        </div>
-                                        <label class="col-form-label col-auto" data-label="mf" for="mf">Рахунок</label>
-                                           <div class="col-auto  ">
+                                    <form zippy="payform" class="  me-4" >
+                                    <div class="input-group   ">
+                                        <label   data-label="payamount" for="payamount">До сплати</label>
+                                           
+                                       <input   style="width:75px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice me-2">
+                                         
+                                        <label   data-label="mf" for="mf">Рахунок</label>
+                                          
                                         <select zippy="mf" class="form-select">
                                             <option value="0">Не вказано</option>
-                                        </select>   </div>
-                                          <div class="col-auto  ">
+                                        </select>    
+                                        
                                         <button zippy="bpay" type="submit" class="  btn btn-primary ms-2  me-2 ">Внести оплату</button>
-                                       </div></div> 
+                                       </div>  
                                     </form>
                                 </div>
                            
