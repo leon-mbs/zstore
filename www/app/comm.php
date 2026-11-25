@@ -94,7 +94,7 @@ class Comm
         } catch(\Exception $e) {
 
             H::logerror($e->getMessage()) ;
-            return "See log";
+            return "Не вiдправлено. Деталі в логах";
 
         }
         return '';
