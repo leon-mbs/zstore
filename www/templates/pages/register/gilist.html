@@ -176,6 +176,9 @@
                                  <div class="col-12  ">
                                 <button zippy="bret" type="submit" class="  btn btn-primary  me-2 ">Повернення</button>
                                 </div>
+                                <div class="col-12  ">
+                                  <button zippy="bsendemail" type="submit" class="  btn btn-primary  me-2 "> <i class="fa fa-envelope"></i> Відправити PDF</button>
+                                </div>
                                  <div class="col-12  ">
                                       <div class="input-group">
 
@@ -414,12 +417,15 @@
         </div>
         
      <script>   
-     function check_bnp(ele){
+       function check_bnp(ele){
             document.getElementById('dialogwait').showModal()
-          
             return true;
-       
         }        
+        function check_bsendemail(ele){
+            document.getElementById('dialogwait').showModal()
+            return true;
+        }        
+        
      </script>        
      
     </body>

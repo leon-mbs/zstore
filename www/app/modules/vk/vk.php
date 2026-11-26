@@ -161,7 +161,7 @@ class VK
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
                 if ($mf->beznal == 1) {
                     $payment=array(
-                    "type"=>2,
+                    "type"=>1,
                     "sum"=>self::fa($doc->headerdata['payed'] )
                     );
                 } else {
@@ -194,7 +194,7 @@ class VK
             }
             if($doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
                 $payment=array(
-                "type"=>2,
+                "type"=>1,
                 "sum"=>self::fa($doc->headerdata['payedcard'] ) 
                 );
                 $check["pays"][] = $payment;
@@ -206,8 +206,7 @@ class VK
         if ($payed < $doc->payamount) {
             $payment=array(
             "type"=>1,
-            "comment"=>'Кредит',
- 
+           
             "sum"=> self::fa($doc->payamount - $payed ) 
             );
             $check["pays"][] = $payment;
@@ -219,8 +218,7 @@ class VK
             
             $payment=array(
             "type"=>0,
-            "comment"=>'Передплата',
-            "sum"=>self::fa( $doc->headerdata["prepaid"]  )  
+             "sum"=>self::fa( $doc->headerdata["prepaid"]  )  
             );
             $check["pays"][] = $payment;
         }
@@ -404,7 +402,7 @@ class VK
 
         if ($type == 2) {
             $payment=array(
-            "type"=>2,
+            "type"=>1,
             "sum"=>self::fa($sum )
             );
         } else {

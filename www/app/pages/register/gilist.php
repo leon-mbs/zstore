@@ -71,6 +71,7 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bnp'))->onClick($this, 'npshowOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bdecl'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bsendemail'))->onClick($this, 'seOnSubmit');
 
         $this->statuspan->statusform->add(new TextInput('ship_number'));
 
@@ -196,6 +197,21 @@ class GIList extends \App\Pages\Base
         }
     }
 
+    public function seOnSubmit($sender) {
+        $c=  Customer::load($this->_doc->customer_id) ;
+        if(strlen($c->email)==0) {
+            $this->setError('Для контрагента не  задано e-mail') ;
+            return;
+        }
+        
+        $r=\App\Comm::_sendEmail($c->email,'Рахунок-фактура '.$this->_doc->document_number,'',$this->_doc);
+        if($r=='') {
+           $this->setSuccess('Вiдправлено') ;
+        }
+        else {
+           $this->setError($r) ;
+        }
+    }
     public function statusOnSubmit($sender) {
         if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
@@ -270,9 +286,10 @@ class GIList extends \App\Pages\Base
         $this->statuspan->statusform->bnp->setVisible(false);
         $this->statuspan->statusform->ship_number->setVisible(false);
         $this->statuspan->statusform->bdecl->setVisible(false);
+        $this->statuspan->statusform->bsendemail->setVisible(false);
 
 
-        $state = $this->_doc->state;
+        $state = intval($this->_doc->state);
 
         //готов  к  отправке
         if ($state == Document::STATE_READYTOSHIP) {
@@ -284,6 +301,7 @@ class GIList extends \App\Pages\Base
         if ($state == Document::STATE_INSHIPMENT) {
             $this->statuspan->statusform->bsend->setVisible(false);
         }
+    
         // Доставлен
         if ($state == Document::STATE_DELIVERED) {
 
@@ -347,7 +365,12 @@ class GIList extends \App\Pages\Base
 
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bgi->setVisible(false);
-        }        
+        }  
+        
+        //отправка  PDF по  email
+        if ($state>3 && $this->_doc->meta_name=='Invoice') {
+            $this->statuspan->statusform->bsendemail->setVisible(true);
+        }              
     }
 
     //просмотр
