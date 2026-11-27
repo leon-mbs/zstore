@@ -1,0 +1,99 @@
+<html>
+    <body>
+        <div class="row">
+            <div class="col-12 col-xl-10">
+                <h3>Замовлення з Rozetka</h3>
+                {{^configured}}
+                <p><i class="fa fa-exclamation-triangle text-warning"></i> Не вказано логін і пароль — див. <a href="/index.php?p=App/Modules/Rozetka/Options">налаштування</a>.</p>
+                {{/configured}}
+
+                <div class="navbar">
+                    <form zippy="filter">
+                        <div class="row align-items-center">
+                            <label class="col-form-label col-auto" for="types">Група на Rozetka</label>
+                            <div class="col-auto">
+                                <select class="form-select" zippy="types"></select>
+                            </div>
+                            <div class="col-auto">
+                                <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="btn btn-success" value="Завантажити">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <table class="table table-sm">
+                    <tr>
+                        <th>№ Rozetka</th>
+                        <th>Дата</th>
+                        <th>Покупець</th>
+                        <th>Статус на Rozetka</th>
+                        <th class="text-end">Сума</th>
+                        <th>Деталі</th>
+                    </tr>
+                    <tr zippy="neworderslist">
+                        <td zippy="number"></td>
+                        <td class="text-nowrap" zippy="date"></td>
+                        <td zippy="customer"></td>
+                        <td zippy="rstatus"></td>
+                        <td zippy="amount" class="text-end"></td>
+                        <td zippy="comment"><small></small></td>
+                    </tr>
+                </table>
+                <div>
+                    <a zippy="importbtn" class="btn btn-primary">Імпортувати</a>
+                </div>
+            </div>
+
+            <div class="col-12 col-xl-10 pt-4">
+                <h3>Статуси на Rozetka</h3>
+                <p class="text-muted">Замовлення, статус яких ще не відправлено. Після ТТН Rozetka веде замовлення сама за трекінгом.</p>
+                <a zippy="refreshbtn" class="btn btn-secondary mb-2">Оновити список</a>
+
+                <form zippy="updateform">
+                    <table class="table table-sm">
+                        <tr>
+                            <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
+                            <th>Номер</th>
+                            <th>№ Rozetka</th>
+                            <th>Дата</th>
+                            <th>Покупець</th>
+                            <th class="text-end">Сума</th>
+                            <th>Стан у Zippy</th>
+                            <th>Статус на Rozetka</th>
+                            <th>ТТН</th>
+                        </tr>
+                        <tr zippy="orderslist">
+                            <td><input type="checkbox" zippy="ch" class="chc"></td>
+                            <td zippy="number2"></td>
+                            <td zippy="number3"></td>
+                            <td class="text-nowrap" zippy="date2"></td>
+                            <td zippy="customer2"></td>
+                            <td zippy="amount2" class="text-end"></td>
+                            <td zippy="state"></td>
+                            <td zippy="rstatus2"></td>
+                            <td><input zippy="ttn" class="form-control form-control-sm" placeholder="номер ТТН"></td>
+                        </tr>
+                    </table>
+
+                    <div class="row align-items-center">
+                        <label class="col-form-label col-auto" for="estatus">Новий статус</label>
+                        <div class="col-auto">
+                            <select class="form-select" zippy="estatus"></select>
+                        </div>
+                        <div class="col-auto">
+                            <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="btn btn-success" value="Відправити">
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">Для «Передано в службу доставки» і «Заплановано передачу перевізникові» ТТН обов'язкова.</small>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function chclick() {
+                var ch = $("#chall").prop('checked');
+                $('.chc').prop('checked', ch)
+            }
+        </script>
+    </body>
+</html>
