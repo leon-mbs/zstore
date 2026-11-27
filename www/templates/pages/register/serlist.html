@@ -67,7 +67,7 @@
 
                         <td class="text-nowrap" zippy="state"></td>
                         <td>
-                            <i  zippy="ispay"   class="fa fa-credit-card "></i>
+                            <i  zippy="ispay"  title="До сплати" class="fa fa-credit-card  text-warning"></i>
                         </td>
                                         
                         <td zippy="onotes"></td>
@@ -111,7 +111,7 @@
                          <button zippy="bpos" class="btn btn-primary  me-2">   {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}    </button>
                          
                        
-                           <button zippy="binvoice" type="submit" class="  btn btn-primary me-2 "  >Рахунок  </button>
+                         <button zippy="binvoice" type="submit" class="  btn btn-primary me-2 "  >Рахунок  </button>
                        
                         
                          <button zippy="bwarranty" type="submit" class="  btn btn-primary me-2 "  >Гар. талон  </button>
@@ -123,10 +123,11 @@
                          {{/useprod}}
                        
                           <button   data-bs-toggle="modal" data-bs-target="#modalshift" zippy="bshift" class="btn btn-warning  me-2">  Відкласти</button>
+                          <button zippy="bcancel" class="btn btn-secondary  me-2">  Скасувати                </button>
                          
                           <button zippy="bref" type="submit" class="  btn btn-danger me-2 ">Анулювано</button>
                       
-                       
+                          
                        </div>
                     </form>
                 </div>

@@ -12,6 +12,7 @@ use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
 use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\Date;
+use Zippy\Html\Form\Button;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
@@ -63,11 +64,13 @@ class SerList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bwarranty'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bshift')) ;
-        $this->statuspan->statusform->add(new SubmitButton('btopay')) ;
+        $this->statuspan->statusform->add(new Button('btopay')) ;
     
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
+       
 
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
@@ -112,10 +115,7 @@ class SerList extends \App\Pages\Base
     }
 
     public function filterOnSubmit($sender) {
-
-
         $this->statuspan->setVisible(false);
-
         $this->listpan->doclist->Reload();
     }
 
@@ -163,18 +163,9 @@ class SerList extends \App\Pages\Base
         }
       
          
-        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') < 3 && $doc->state>3  );
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('waitpay')==1 && $doc->state>3  );
         
-       
-        if($doc->payed < $doc->payamount ) {
-            $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
-            $row->ispay->setAttribute('title','До сплати');            
-        }  
-        else  {
-            $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
-            $row->ispay->setAttribute('title','Оплачено');            
-        }
-      
+   
         $row->setAttribute('data-did', $doc->document_id);
              
     }
@@ -224,7 +215,20 @@ class SerList extends \App\Pages\Base
 
                 $this->setWarn('Були створені документи Наряд та/або Видаткова накладна');
             }
+            $this->_doc->setHD('waitpay',0); 
+            $this->_doc->save();  
+            
+            $this->_doc->updateStatus(Document::STATE_CANCELED);
             $this->_doc->updateStatus(Document::STATE_REFUSED);
+        }
+        if ($sender->id == "bcancel") {
+            if ($gi || $task) {
+
+                $this->setWarn('Були створені документи Наряд та/або Видаткова накладна');
+            }
+            $this->_doc->setHD('waitpay',0); 
+            $this->_doc->save();  
+            $this->_doc->updateStatus(Document::STATE_CANCELED);
         }
 
         if ($sender->id == "binproc") {
@@ -255,12 +259,14 @@ class SerList extends \App\Pages\Base
 
         $state = $this->_doc->state;
 
-        $this->statuspan->statusform->btopay->setVisible(false);
-
+       
         $this->statuspan->statusform->bpos->setVisible(false);
         $this->statuspan->statusform->binvoice->setVisible(false);
         $this->statuspan->statusform->bshift->setVisible(false);
-
+        $this->statuspan->statusform->bcancel->setVisible(false);
+        $this->statuspan->statusform->bref->setVisible(false);
+        $this->statuspan->statusform->btopay->setVisible(false);
+   
         //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
@@ -282,6 +288,7 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->btask->setVisible(true);
             $this->statuspan->statusform->bfin->setVisible(true);
             $this->statuspan->statusform->bshift->setVisible(true);
+            $this->statuspan->statusform->bcancel->setVisible(true);
         }
 
         // выполнен
@@ -308,7 +315,7 @@ class SerList extends \App\Pages\Base
         }
 
         //к  оплате
-        if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0) != 3) {
+        if ($state >3 && $this->_doc->getHD('paytype',0) < 3) {
 
             if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
                 $this->statuspan->statusform->btopay->setVisible(true);
@@ -329,6 +336,7 @@ class SerList extends \App\Pages\Base
 
                 $this->statuspan->statusform->binproc->setVisible(true);
                 $this->statuspan->statusform->bref->setVisible(true);
+                $this->statuspan->statusform->bcancel->setVisible(true);
 
                 $this->statuspan->statusform->btask->setVisible(false);
                 $this->statuspan->statusform->bfin->setVisible(false);
@@ -358,12 +366,13 @@ class SerList extends \App\Pages\Base
             $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->bcancel->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
-        
-        $pt= $this->_doc->getHD('paytype');
+               
+         $pt= $this->_doc->getHD('paytype');
         
         if ($pt ==1 ||  $pt==2) {
             $this->statuspan->statusform->bpos->setVisible(false);
@@ -402,7 +411,7 @@ class SerList extends \App\Pages\Base
         }
         if($doc->state == Document::STATE_INPROCESS) {
             $this->listpan->setVisible(false);
-            $this->statuspan->setVisible(false);
+
             $this->editpan->setVisible(true);
             $this->_doc = $doc->cast();
             $this->_serlist =  $this->_doc->unpackDetails('detaildata') ;
@@ -685,6 +694,7 @@ class SerList extends \App\Pages\Base
         try {
 
             $this->_doc->payed =  \App\Entity\Pay::addPayment($this->_doc->document_id,time(),$sum,$mf) ;
+     
           
             if( $this->_doc->state==Document::STATE_WP) {
                $this->_doc->updateStatus(Document::STATE_PAYED);
@@ -695,7 +705,8 @@ class SerList extends \App\Pages\Base
             }     
           
             $this->listpan->doclist->Reload();
-
+            $this->statuspan->setVisible(false);
+ 
       
             $conn->CommitTrans();
             $sender->clean();
