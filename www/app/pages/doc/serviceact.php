@@ -44,11 +44,13 @@ class ServiceAct extends \App\Pages\Base
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
+        $mf = H::getDefMF();
         $paytype= 2;
         if($docid==0) {
             $last = Document::getFirst("state > 3 and  meta_name='ServiceAct'","document_id desc");
             if($last != null){
                 $paytype = $last->getHD('paytype',2) ;
+                $mf = $last->getHD('payment',H::getDefMF()) ;
             }
         }     
      
@@ -68,7 +70,7 @@ class ServiceAct extends \App\Pages\Base
        
         $this->docform->add(new TextArea('notes'));
 
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $paytype ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата (вноситься зразу)',2=>'Післяплата в замовленні',3=>'Оплата РФ або чеком'], $paytype ))->onChange($this, 'OnPayType');
   
     
         $this->docform->add(new TextInput('phone'));
@@ -80,7 +82,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(),$mf ));
         
         $this->docform->add(new Label('custdisc'));
         $this->docform->add(new Label('totalnds'));
@@ -551,6 +553,14 @@ class ServiceAct extends \App\Pages\Base
         $this->_doc->payamount = $this->docform->payamount->getText();
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
+        $this->_doc->headerdata['waitpay'] = 0; 
+        if($this->_doc->headerdata['paytype']==2) {
+           $this->_doc->payed=0;
+           $this->_doc->headerdata['waitpay'] =1;    
+        }
+        if($this->_doc->headerdata['paytype']==1 && $this->_doc->payed < $this->_doc->payamount) {
+           $this->_doc->headerdata['waitpay'] = 1;    
+        }
   
         $isEdited = $this->_doc->document_id > 0;
 
@@ -576,16 +586,9 @@ class ServiceAct extends \App\Pages\Base
 
 
             $conn->CommitTrans();
-            if ($sender->id == 'execdoc') {
-                // App::Redirect("\\App\\Pages\\Register\\GList");
-                //  return;
-            }
-
-            if ($isEdited) {
-                App::RedirectBack();
-            } else {
-                App::Redirect("\\App\\Pages\\Register\\SerList" );
-            }
+        
+            App::Redirect("\\App\\Pages\\Register\\SerList" );
+       
         } catch(\Throwable $ee) {
             global $logger;
             $conn->RollbackTrans();
@@ -691,6 +694,9 @@ class ServiceAct extends \App\Pages\Base
         if ( count($this->_itemlist) > 0 && ($this->docform->store->getValue() > 0) == false) {
             $this->setError("Не обрано склад");
         }
+        if ($this->_doc->getHD('paytype') ==1 && $this->_doc->getHD('payment')==0) {
+            $this->setError("Не обрано касу");
+        }
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
@@ -702,7 +708,8 @@ class ServiceAct extends \App\Pages\Base
 
     public function OnPayType($sender) {
          $this->docform->payed->setVisible($sender->getValue()==1);
-         $this->docform->payment->setVisible($sender->getValue()==1);
+         $this->docform->payment->setVisible($sender->getValue() !=2);
+        
     }
 
     public function backtolistOnClick($sender) {

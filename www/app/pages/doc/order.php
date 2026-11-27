@@ -629,7 +629,7 @@ class Order extends \App\Pages\Base
           
             $this->_doc->headerdata['payment'] = intval( $this->docform->payment->getValue() );
 
-            
+            $this->_doc->setHD('waitpay',0);   
             if ($this->_doc->headerdata['paytype'] == 1) {
                 $this->_doc->payed = doubleval($this->docform->payed->getText());
                 $this->_doc->headerdata['payed'] = $this->_doc->payed;
@@ -645,7 +645,7 @@ class Order extends \App\Pages\Base
                 if ($this->_doc->payed == 0) {
                     return;
                 }
-         
+              
                 if ($this->_doc->payed < $this->_doc->payamount) {
                     $this->_doc->setHD('waitpay',1);
                 }

@@ -72,7 +72,7 @@ class ServiceAct extends Document
         if($this->customer_id > 0) {
             $c = \App\Entity\Customer::load($this->customer_id) ;
             if(strlen(   $this->headerdata['phone']??0)>0) {
-                $header['customer_name']  =   $header['customer_name'] .', '. $this->headerdata['phone'];
+                $header['customer_name']  =   $header['customer_name'] .', '. $this->headerdata['phone']??'';
             }
             else if(strlen($c->phone)>0) {
                 $header['customer_name']  =   $header['customer_name'] .', '. $c->phone ;

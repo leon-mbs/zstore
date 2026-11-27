@@ -85,6 +85,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->statusform->add(new SubmitButton('bginv'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bco'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bref'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bcancel'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bcopy'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('btask'))->onClick($this, 'statusOnSubmit');
@@ -441,6 +442,15 @@ class OrderList extends \App\Pages\Base
 
                 $this->setWarn('Замовлення анульовано');
             }
+            if ($sender->id == "bcancel") {         
+     
+                $this->_doc->updateStatus(Document::STATE_CANCELED);
+
+                $this->_doc->setHD('waitpay',0); 
+                $this->_doc->save();     
+
+               
+            }
 
             if ($sender->id == "bclose") {
 
@@ -486,9 +496,10 @@ class OrderList extends \App\Pages\Base
         $ref = $this->_doc->checkStates(array(Document::STATE_REFUSED)) > 0;
 
         $this->statuspan->statusform->bshift->setVisible($state==Document::STATE_INPROCESS);
-        
+         
         $this->statuspan->statusform->btopay->setVisible(false);
         
+        $this->statuspan->statusform->bcancel->setVisible(false);
         $this->statuspan->statusform->bwp->setVisible(false);
         $this->statuspan->statusform->brd->setVisible(false);
         $this->statuspan->statusform->brec->setVisible(false);
@@ -507,6 +518,7 @@ class OrderList extends \App\Pages\Base
 
             $this->statuspan->statusform->bclose->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
+            $this->statuspan->statusform->bcancel->setVisible(false);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bcopy->setVisible(false);
             $this->statuspan->statusform->bpos->setVisible(false);
@@ -554,6 +566,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bginv->setVisible(true);
             
             $this->statuspan->statusform->bwp->setVisible(true);
+            $this->statuspan->statusform->bcancel->setVisible(true);
               
             
         }
@@ -625,6 +638,7 @@ class OrderList extends \App\Pages\Base
             $this->statuspan->statusform->bginv->setVisible(false);
             $this->statuspan->statusform->binp->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
+            $this->statuspan->statusform->bcancel->setVisible(true);
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->brd->setVisible(false);
             $this->statuspan->statusform->bsent->setVisible(false);
