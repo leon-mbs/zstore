@@ -200,7 +200,7 @@ class DocList extends \App\Pages\Base
         $row->add(new ClickLink('number',$this, 'showOnClick'))->setValue($doc->document_number);
    
         $row->add(new Label('cust', $doc->customer_name));
-        $row->add(new Label('branch', $doc->branch_name));
+        $row->add(new Label('branch', $doc->headerdata['branch_name']??''));
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amount', H::fa($doc->getAmountReg() )));
 

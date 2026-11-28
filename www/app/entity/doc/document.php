@@ -460,7 +460,10 @@ class Document extends \ZCL\DB\Entity
         if ($branch_id == 0) {
             $doc->branch_id = \App\ACL::checkCurrentBranch();
         }
-
+        if($doc->branch_id >0) {
+            $b= \App\Entity\Branch::load($doc->branch_id);
+            $doc->headerdata['branch_name'] = $b->branch_name; 
+        }
         $doc->headerdata['cashier'] = $user->username;
         $common = \App\System::getOptions("common");
         if(strlen($common['cashier'])>0) {

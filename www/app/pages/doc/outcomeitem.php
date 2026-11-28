@@ -311,6 +311,8 @@ class OutcomeItem extends \App\Pages\Base
                         $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
+                            $doc->headerdata['branch_name'] = $br->branch_name; 
+    
                             $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
@@ -330,7 +332,7 @@ class OutcomeItem extends \App\Pages\Base
                         $indoc->save();
                         $indoc->updateStatus(Document::STATE_NEW);
 
-                        if ($indoc->branch_id == 0) {
+                        if ($indoc->user_id == 0) {
                             $indoc->user_id = \App\System::getUser()->user_id;
                             $indoc->save();                            
                             $indoc->updateStatus(Document::STATE_EXECUTED);
