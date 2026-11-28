@@ -210,7 +210,7 @@ GROUP BY c.customer_name,
         $row->add(new ClickLink('name',$this, 'showOnClick'))->setValue($doc->meta_desc);
        
         $row->add(new Label('number', $doc->document_number));
-        $row->add(new Label('branch_name', $doc->branch_name));
+        $row->add(new Label('branch_name', $doc->headerdata['branch_name']??''));
         $row->add(new Label('date', H::fd($doc->document_date)));
 
         $doc->forpay =   H::fa($doc->payamount  - $doc->payed)  ;
@@ -546,7 +546,7 @@ GROUP BY c.customer_name,
 
         $row->add(new Label('dname', $doc->meta_desc));
         $row->add(new Label('dnumber', $doc->document_number));
-        $row->add(new Label('dbranch_name', $doc->branch_name));
+        $row->add(new Label('dbranch_name', $doc->headerdata['branch_name']??''));
         $row->add(new Label('ddate', H::fd($doc->document_date)));
 
         $row->add(new Label('in', $doc->b_passive > 0 ? H::fa($doc->b_passive) : ""));

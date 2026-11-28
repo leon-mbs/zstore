@@ -927,6 +927,7 @@ class OrderList extends \App\Pages\Base
         $us = $this->statuspan->moveform->usmove->getValue();
         if($br>0) {
             $this->_doc->branch_id = $br;
+            $this->_doc->headerdata['branch_name'] = $this->statuspan->moveform->brmove->getValueName();
         }
         if($us>0) {
             $this->_doc->user_id = $us;

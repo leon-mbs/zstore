@@ -252,6 +252,9 @@ class docs extends JsonRPC
         if ($options['usebranch'] == 1) {
             if ($args['branch_id'] > 0) {
                 $doc->branch_id = $args['branch_id'] ;
+                $br= \App\Entity\Branch::load($doc->branch_id);
+                $doc->headerdata['branch_name'] = $br->branch_name; 
+    
             } else {
                 throw new \Exception("Не вказано філію");
             }
@@ -349,7 +352,9 @@ class docs extends JsonRPC
         $doc->headerdata["email"] = $args['email']??'';
         $doc->headerdata["ship_address"] = $args['ship_address']??'';
         $doc->branch_id = intval($args['branch_id']);
- 
+        $br= \App\Entity\Branch::load($doc->branch_id);
+        $doc->headerdata['branch_name'] = $br->branch_name; 
+
         $doc->notes = @base64_decode($args['description']);
         $details = array();
         $total = 0;
@@ -431,6 +436,8 @@ class docs extends JsonRPC
         $doc->headerdata["apinumber"] = $args['number'];
         $doc->headerdata["payment"] = $args['mf'];
         $doc->branch_id = intval($args['branch_id']);
+        $br= \App\Entity\Branch::load($doc->branch_id);
+        $doc->headerdata['branch_name'] = $br->branch_name; 
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -522,6 +529,8 @@ class docs extends JsonRPC
         $doc->headerdata["nds"] = 0;
         $doc->headerdata["disc"] = 0;
         $doc->branch_id = intval($args['branch_id']);
+        $br= \App\Entity\Branch::load($doc->branch_id);
+        $doc->headerdata['branch_name'] = $br->branch_name; 
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -603,6 +612,8 @@ class docs extends JsonRPC
         $doc->document_date = time();
         $doc->headerdata["apinumber"] = $args['number']??'';
         $doc->branch_id = intval($args['branch_id']);
+        $br= \App\Entity\Branch::load($doc->branch_id);
+        $doc->headerdata['branch_name'] = $br->branch_name; 
 
 
         $doc->notes = @base64_decode($args['description']);
@@ -686,6 +697,8 @@ class docs extends JsonRPC
         $doc->headerdata["payment"] = $args['mf'];
         $doc->headerdata["device"] = $args['device']??'';
         $doc->branch_id = intval($args['branch_id']);
+        $br= \App\Entity\Branch::load($doc->branch_id);
+        $doc->headerdata['branch_name'] = $br->branch_name; 
 
 
         //    $doc->notes = @base64_decode($args['description']);
@@ -764,6 +777,8 @@ class docs extends JsonRPC
         $doc->headerdata['paymentname'] = $mf->mf_name;
         $doc->headerdata['detail'] = 0;
         $doc->branch_id = intval($args['branch_id']);
+        $br= \App\Entity\Branch::load($doc->branch_id);
+        $doc->headerdata['branch_name'] = $br->branch_name; 
  
         $doc->customer_id = intval($args['customer_id']);
         if($doc->customer_id > 0){
